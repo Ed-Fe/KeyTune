@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+import time
 
 import wx
 
@@ -9,11 +10,15 @@ from player.youtube_music import (
     YouTubeMusicBrowserAuthDialog,
     YouTubeMusicService,
     YouTubeMusicTabPanel,
+    configure_youtube_dependency_management,
+    install_or_update_youtube_dependencies,
+    is_youtube_dependency_auto_update_due,
     is_youtube_music_media,
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
     get_search_scope_option,
 )
+from player.youtube_music.auth import sanitize_sensitive_text
 
 from ..playlists import PlaylistState, ScreenTabState
 
@@ -68,7 +73,117 @@ class FrameYouTubeMusicMixin:
         self._announce(messages.get(action_kind, "Aguarde o término da operação do YouTube Music."))
         return True
 
+    def _configure_youtube_music_dependency_management(self):
+        configure_youtube_dependency_management(
+            managed_install_enabled=bool(getattr(self.settings, "youtube_music_manage_dependencies", False)),
+            auto_update_enabled=bool(getattr(self.settings, "youtube_music_auto_update_dependencies", True)),
+        )
+
+    def _youtube_music_dependency_update_interval_hours(self):
+        try:
+            interval_hours = int(getattr(self.settings, "youtube_music_dependency_update_interval_hours", 24))
+        except (TypeError, ValueError):
+            interval_hours = 24
+        return max(1, min(720, interval_hours))
+
+    def _youtube_music_dependency_versions_text(self, versions):
+        normalized_versions = dict(versions or {})
+        if not normalized_versions:
+            return "versão indisponível"
+
+        ordered_labels = []
+        for package_name in sorted(normalized_versions.keys()):
+            package_version = str(normalized_versions.get(package_name) or "desconhecida").strip() or "desconhecida"
+            ordered_labels.append(f"{package_name} {package_version}")
+
+        return ", ".join(ordered_labels)
+
+    def _format_youtube_music_error_detail(self, error):
+        normalized_error_detail = sanitize_sensitive_text(error)
+        if normalized_error_detail:
+            return normalized_error_detail
+        return "Falha desconhecida."
+
+    def _start_youtube_music_dependency_update(self, *, force_update, manual):
+        self._configure_youtube_music_dependency_management()
+        if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
+            return False
+
+        def worker():
+            return install_or_update_youtube_dependencies(force=force_update)
+
+        def on_success(result):
+            self.settings.youtube_music_dependency_last_auto_update_epoch = int(time.time())
+            self._save_settings()
+
+            versions_text = self._youtube_music_dependency_versions_text(getattr(result, "versions", {}))
+            if getattr(result, "updated", False):
+                status_message = f"Recursos adicionais do YouTube Music atualizados ({versions_text})."
+            else:
+                status_message = f"Recursos adicionais do YouTube Music prontos ({versions_text})."
+
+            self._youtube_music_library_status_message = status_message
+            self._refresh_youtube_music_screen_later()
+            if manual or getattr(result, "updated", False):
+                self._announce(status_message)
+
+            service = self._get_youtube_music_service()
+            if service.has_saved_browser_auth() and not self._youtube_music_library_has_loaded():
+                self.on_refresh_youtube_music_library(None, announce=False)
+
+        def on_error(exc):
+            status_message = "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
+            self._youtube_music_library_status_message = status_message
+            self._refresh_youtube_music_screen_later()
+            if manual:
+                wx.MessageBox(
+                    f"{status_message}\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                    "YouTube Music",
+                    wx.OK | wx.ICON_ERROR,
+                    self,
+                )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _maybe_auto_update_youtube_music_dependencies(self):
+        self._configure_youtube_music_dependency_management()
+        if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
+            return False
+
+        if not bool(getattr(self.settings, "youtube_music_auto_update_dependencies", True)):
+            return False
+
+        interval_hours = self._youtube_music_dependency_update_interval_hours()
+        last_update_epoch = getattr(self.settings, "youtube_music_dependency_last_auto_update_epoch", 0)
+        if not is_youtube_dependency_auto_update_due(
+            last_update_epoch,
+            interval_hours=interval_hours,
+        ):
+            return False
+
+        return self._start_youtube_music_dependency_update(force_update=True, manual=False)
+
+    def _handle_youtube_music_preferences_change(self, previous_settings):
+        self._configure_youtube_music_dependency_management()
+
+        had_managed_dependencies = bool(getattr(previous_settings, "youtube_music_manage_dependencies", False))
+        has_managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
+        if has_managed_dependencies and not had_managed_dependencies:
+            self._youtube_music_library_status_message = "Recursos adicionais do YouTube Music ativados. Preparando dependências..."
+            self._refresh_youtube_music_screen_later()
+            self._start_youtube_music_dependency_update(force_update=False, manual=True)
+            return
+
+        if has_managed_dependencies:
+            self._maybe_auto_update_youtube_music_dependencies()
+
+    def _on_manual_check_for_additional_updates(self):
+        if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
+            return False
+        return self._start_youtube_music_dependency_update(force_update=True, manual=True)
+
     def _get_youtube_music_service(self):
+        self._configure_youtube_music_dependency_management()
         service = getattr(self, "_youtube_music_service", None)
         if service is None:
             service = YouTubeMusicService()
@@ -432,6 +547,10 @@ class FrameYouTubeMusicMixin:
             on_activate=self._refresh_youtube_music_screen_later,
         )
 
+        dependency_update_started = self._maybe_auto_update_youtube_music_dependencies()
+        if dependency_update_started:
+            return
+
         if self._get_youtube_music_service().has_saved_browser_auth() and not self._youtube_music_library_has_loaded():
             self.on_refresh_youtube_music_library(None, announce=False)
 
@@ -548,7 +667,8 @@ class FrameYouTubeMusicMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível salvar o resultado no YouTube Music.\n\nDetalhes: {exc}",
+                "Não foi possível salvar o resultado no YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -582,7 +702,8 @@ class FrameYouTubeMusicMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível avaliar a mídia atual no YouTube Music.\n\nDetalhes: {exc}",
+                "Não foi possível avaliar a mídia atual no YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -621,7 +742,8 @@ class FrameYouTubeMusicMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível adicionar o resultado à playlist selecionada.\n\nDetalhes: {exc}",
+                "Não foi possível adicionar o resultado à playlist selecionada.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -667,7 +789,7 @@ class FrameYouTubeMusicMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível concluir a busca agora.\n\nDetalhes: {exc}",
+                f"Não foi possível concluir a busca agora.\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -705,7 +827,8 @@ class FrameYouTubeMusicMixin:
             self._youtube_music_library_status_message = "Não foi possível atualizar a biblioteca do YouTube Music."
             self._refresh_youtube_music_screen_later()
             wx.MessageBox(
-                f"Não foi possível listar as playlists do YouTube Music.\n\nDetalhes: {exc}",
+                "Não foi possível listar as playlists do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -742,7 +865,8 @@ class FrameYouTubeMusicMixin:
             service.clear_client_cache()
             self._set_youtube_music_account_name("")
             wx.MessageBox(
-                f"Não foi possível conectar a conta do YouTube Music.\n\nDetalhes: {exc}",
+                "Não foi possível conectar a conta do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -872,7 +996,8 @@ class FrameYouTubeMusicMixin:
             service.clear_client_cache()
             self._refresh_youtube_music_menu_state()
             wx.MessageBox(
-                f"Não foi possível carregar a playlist do YouTube Music.\n\nDetalhes: {exc}",
+                "Não foi possível carregar a playlist do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,

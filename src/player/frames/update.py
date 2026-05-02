@@ -26,7 +26,11 @@ class FrameUpdateMixin:
         wx.CallLater(STARTUP_UPDATE_CHECK_DELAY_MS, self._start_update_check, False)
 
     def on_check_for_updates(self, _event):
+        self._on_manual_check_for_additional_updates()
         self._start_update_check(manual=True)
+
+    def _on_manual_check_for_additional_updates(self):
+        return None
 
     def _start_update_check(self, manual=False):
         if self._update_check_in_progress:

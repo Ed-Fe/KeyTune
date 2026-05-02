@@ -431,6 +431,10 @@ class FrameCommandMixin:
         else:
             self._save_settings()
 
+        handle_youtube_music_preferences_change = getattr(self, "_handle_youtube_music_preferences_change", None)
+        if callable(handle_youtube_music_preferences_change):
+            handle_youtube_music_preferences_change(previous_settings)
+
         if audio_output_updated:
             self._announce("Preferências salvas.")
         else:

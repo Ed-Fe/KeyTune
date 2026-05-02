@@ -1,4 +1,13 @@
 from .auth import YTMUSIC_BROWSER_AUTH_FILE_NAME, get_browser_auth_file_path, prepare_browser_auth_input, read_auth_file_text
+from .dependencies import (
+    configure_youtube_dependency_management,
+    get_installed_youtube_dependency_versions,
+    import_yt_dlp_module,
+    import_ytmusicapi_module,
+    install_or_update_youtube_dependencies,
+    is_youtube_dependency_auto_update_due,
+    youtube_dependencies_available,
+)
 from .dialog import YouTubeMusicBrowserAuthDialog
 from .models import (
     YOUTUBE_MUSIC_SCREEN_ID,
@@ -66,4 +75,11 @@ __all__ = [
     "resolve_stream_url",
     "search_youtube_videos",
     "track_display_label",
+    "configure_youtube_dependency_management",
+    "get_installed_youtube_dependency_versions",
+    "import_yt_dlp_module",
+    "import_ytmusicapi_module",
+    "install_or_update_youtube_dependencies",
+    "is_youtube_dependency_auto_update_due",
+    "youtube_dependencies_available",
 ]

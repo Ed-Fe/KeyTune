@@ -11,6 +11,9 @@ from ..constants import (
     DEFAULT_REMEMBER_WINDOW_SIZE,
     DEFAULT_RESTORE_SESSION_ON_STARTUP,
     DEFAULT_VOLUME,
+    DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES,
+    DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS,
+    DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES,
     MAX_CROSSFADE_SECONDS,
     REPEAT_MODES,
     REPEAT_OFF,
@@ -35,6 +38,10 @@ class AppSettings:
     seek_step_seconds: int = SEEK_STEP_MS // 1000
     shuffle_new_playlists: bool = DEFAULT_NEW_PLAYLIST_SHUFFLE
     repeat_mode_new_playlists: str = REPEAT_OFF
+    youtube_music_manage_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES
+    youtube_music_auto_update_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES
+    youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
+    youtube_music_dependency_last_auto_update_epoch: int = 0
     last_open_dir: str = ""
     recent_media_files: list[str] = field(default_factory=list)
     recent_folders: list[str] = field(default_factory=list)
@@ -62,6 +69,10 @@ class AppSettings:
             "seek_step_seconds": self.seek_step_seconds,
             "shuffle_new_playlists": self.shuffle_new_playlists,
             "repeat_mode_new_playlists": self.repeat_mode_new_playlists,
+            "youtube_music_manage_dependencies": self.youtube_music_manage_dependencies,
+            "youtube_music_auto_update_dependencies": self.youtube_music_auto_update_dependencies,
+            "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
+            "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "last_open_dir": self.last_open_dir if self.remember_last_folder else "",
             "recent_media_files": list(self.recent_media_files),
             "recent_folders": list(self.recent_folders),
@@ -100,6 +111,30 @@ class AppSettings:
 
         repeat_mode = data.get("repeat_mode_new_playlists", settings.repeat_mode_new_playlists)
         settings.repeat_mode_new_playlists = repeat_mode if repeat_mode in REPEAT_MODES else REPEAT_OFF
+        settings.youtube_music_manage_dependencies = bool(
+            data.get("youtube_music_manage_dependencies", settings.youtube_music_manage_dependencies)
+        )
+        settings.youtube_music_auto_update_dependencies = bool(
+            data.get("youtube_music_auto_update_dependencies", settings.youtube_music_auto_update_dependencies)
+        )
+        settings.youtube_music_dependency_update_interval_hours = _clamp_int(
+            data.get(
+                "youtube_music_dependency_update_interval_hours",
+                settings.youtube_music_dependency_update_interval_hours,
+            ),
+            minimum=1,
+            maximum=720,
+            fallback=settings.youtube_music_dependency_update_interval_hours,
+        )
+        settings.youtube_music_dependency_last_auto_update_epoch = _clamp_int(
+            data.get(
+                "youtube_music_dependency_last_auto_update_epoch",
+                settings.youtube_music_dependency_last_auto_update_epoch,
+            ),
+            minimum=0,
+            maximum=32503680000,
+            fallback=settings.youtube_music_dependency_last_auto_update_epoch,
+        )
 
         last_open_dir = str(data.get("last_open_dir") or "").strip()
         settings.last_open_dir = last_open_dir if settings.remember_last_folder else ""

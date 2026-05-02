@@ -33,6 +33,7 @@ class PlayerEventType(Enum):
 @dataclass(slots=True)
 class MPVMedia:
     path: str
+    http_headers: dict[str, str] | None = None
 
 
 class MPVEventManager:
@@ -69,6 +70,7 @@ class MPVPlayer:
             "input_vo_keyboard": False,
             "osc": False,
             "keep_open": "yes",
+            "ytdl": False,
         }
         if not video_output_enabled:
             player_kwargs["video"] = False
@@ -195,11 +197,25 @@ class MPVPlayer:
             self._set_window_handle(self._bound_handle)
         if self._needs_load or self._loaded_media_path != self._media.path:
             self._player.pause = False
+            self._apply_media_http_headers()
             self._player.loadfile(self._media.path, "replace")
             self._loaded_media_path = self._media.path
             self._needs_load = False
             return
         self._player.pause = False
+
+    def _apply_media_http_headers(self):
+        raw_http_headers = getattr(self._media, "http_headers", None) if self._media is not None else None
+        normalized_http_header_fields = []
+        if isinstance(raw_http_headers, dict):
+            for key, value in raw_http_headers.items():
+                normalized_key = str(key or "").strip()
+                normalized_value = str(value or "").strip()
+                if not normalized_key or not normalized_value:
+                    continue
+                normalized_http_header_fields.append(f"{normalized_key}: {normalized_value}")
+
+        self._set_option("http-header-fields", normalized_http_header_fields)
 
     def pause(self):
         self._player.pause = True
@@ -295,8 +311,8 @@ class MPVInstance:
             audio_output_device_id=self._audio_output_device_id,
         )
 
-    def media_new(self, media_path):
-        return MPVMedia(path=str(media_path or "").strip())
+    def media_new(self, media_path, *, http_headers=None):
+        return MPVMedia(path=str(media_path or "").strip(), http_headers=dict(http_headers or {}))
 
     def release(self):
         return None

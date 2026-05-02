@@ -792,8 +792,8 @@ class FramePlaybackMixin:
             try:
                 if player_instance is None:
                     raise RuntimeError("Instância do backend de reprodução indisponível.")
-                playback_media_path = self._resolve_media_path_for_playback(request["media_path"])
-                media = player_instance.media_new(playback_media_path)
+                playback_media_path, playback_http_headers = self._resolve_media_for_playback(request["media_path"])
+                media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
                 if player is None:
                     raise RuntimeError("Player de reprodução indisponível.")
                 player.stop()
@@ -1055,7 +1055,8 @@ class FramePlaybackMixin:
         if player_instance is None:
             raise RuntimeError("Instância do backend de reprodução indisponível.")
 
-        media = player_instance.media_new(media_path)
+        playback_media_path, playback_http_headers = self._resolve_media_for_playback(media_path)
+        media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
         self.player.set_media(media)
         self._set_player_loaded_media_path(self._active_player_key, media_path)
         self._update_title()
@@ -1074,15 +1075,16 @@ class FramePlaybackMixin:
 
         return self._media_paths_match(media_path, loaded_media_path)
 
-    def _resolve_media_path_for_playback(self, media_path):
+    def _resolve_media_for_playback(self, media_path):
         if not is_youtube_music_media(media_path):
-            return media_path
+            return media_path, {}
 
         youtube_music_service = self._youtube_music_service_for_playback()
         if youtube_music_service is None:
-            return media_path
+            return media_path, {}
 
-        return youtube_music_service.resolve_stream_url(media_path)
+        resolved_playback = youtube_music_service.resolve_stream_playback(media_path)
+        return resolved_playback.stream_url, dict(getattr(resolved_playback, "http_headers", {}) or {})
 
     def _media_label_from_playlist_state(self, state, media_path):
         if not isinstance(state, PlaylistState):

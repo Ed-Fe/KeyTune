@@ -13,3 +13,5 @@ MPV/
 build/
 dist/
 *.zip
+.copilot_*
+test_final.py

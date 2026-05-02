@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from .dependencies import import_yt_dlp_module
 from .models import (
     YOUTUBE_SEARCH_SOURCE_MUSIC,
     YOUTUBE_SEARCH_SOURCE_YOUTUBE,
@@ -38,12 +39,7 @@ def search_youtube_videos(query, *, limit=15):
     if not normalized_query:
         return []
 
-    try:
-        import yt_dlp
-    except ImportError as exc:
-        raise RuntimeError(
-            "A dependência yt-dlp não está instalada. Atualize o ambiente com o requirements.txt."
-        ) from exc
+    yt_dlp = import_yt_dlp_module()
 
     normalized_limit = max(1, int(limit or 15))
     search_query = f"ytsearch{normalized_limit}:{normalized_query}"

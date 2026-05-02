@@ -1,13 +1,18 @@
 import os
 import threading
 import time
+from urllib.parse import parse_qs, urlparse
 
 from .auth import (
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
     get_browser_auth_file_path,
+    get_browser_auth_cookie_file_path,
+    harden_sensitive_file_permissions,
     prepare_browser_auth_input,
     read_auth_file_text,
+    write_browser_auth_cookie_file,
 )
+from .dependencies import import_ytmusicapi_module
 from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
 from .playlists import (
     build_playlist_source as build_playlist_source_fn,
@@ -21,11 +26,12 @@ from .playlists import (
     track_display_label,
 )
 from .search import normalize_music_search_results, search_youtube_videos
-from .streams import resolve_stream_url as resolve_music_stream_url
+from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_music_stream_playback
 
 
 class YouTubeMusicService:
-    _STREAM_CACHE_TTL_SECONDS = 1800
+    _STREAM_CACHE_TTL_SECONDS = 300
+    _STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS = 30
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 60
 
     def __init__(self):
@@ -42,6 +48,10 @@ class YouTubeMusicService:
     @property
     def token_file_path(self):
         return self.browser_auth_file_path
+
+    @property
+    def browser_auth_cookie_file_path(self):
+        return get_browser_auth_cookie_file_path()
 
     def has_saved_browser_auth(self):
         return os.path.isfile(self.browser_auth_file_path)
@@ -72,6 +82,12 @@ class YouTubeMusicService:
         return str(media_path or "").strip()
 
     def get_cached_stream_url(self, media_path):
+        cached_playback = self.get_cached_stream_playback(media_path)
+        if cached_playback is None:
+            return None
+        return cached_playback.stream_url
+
+    def get_cached_stream_playback(self, media_path):
         cache_key = self._normalize_stream_cache_key(media_path)
         if not is_youtube_music_media_fn(cache_key):
             return None
@@ -86,21 +102,54 @@ class YouTubeMusicService:
                 self._stream_cache.pop(cache_key, None)
                 return None
 
-            return cache_entry["resolved_url"]
+            return ResolvedStreamPlayback(
+                stream_url=cache_entry["resolved_url"],
+                http_headers=dict(cache_entry.get("http_headers") or {}),
+            )
 
-    def _cache_stream_url(self, media_path, resolved_url):
+    def _cache_stream_playback(self, media_path, resolved_playback):
         cache_key = self._normalize_stream_cache_key(media_path)
-        normalized_resolved_url = str(resolved_url or "").strip()
+        normalized_resolved_url = str(getattr(resolved_playback, "stream_url", "") or "").strip()
+        normalized_http_headers = dict(getattr(resolved_playback, "http_headers", {}) or {})
         if not cache_key or not normalized_resolved_url or not is_youtube_music_media_fn(cache_key):
-            return normalized_resolved_url
+            return resolved_playback
+
+        cache_ttl_seconds = self._stream_cache_ttl_seconds(normalized_resolved_url)
+        if cache_ttl_seconds <= 0:
+            return ResolvedStreamPlayback(
+                stream_url=normalized_resolved_url,
+                http_headers=normalized_http_headers,
+            )
 
         with self._stream_cache_lock:
             self._stream_cache[cache_key] = {
                 "resolved_url": normalized_resolved_url,
-                "expires_at": time.monotonic() + self._STREAM_CACHE_TTL_SECONDS,
+                "http_headers": normalized_http_headers,
+                "expires_at": time.monotonic() + cache_ttl_seconds,
             }
 
-        return normalized_resolved_url
+        return ResolvedStreamPlayback(
+            stream_url=normalized_resolved_url,
+            http_headers=normalized_http_headers,
+        )
+
+    def _stream_cache_ttl_seconds(self, stream_url):
+        default_ttl_seconds = int(self._STREAM_CACHE_TTL_SECONDS)
+        normalized_stream_url = str(stream_url or "").strip()
+        if not normalized_stream_url:
+            return default_ttl_seconds
+
+        try:
+            expire_value = parse_qs(urlparse(normalized_stream_url).query).get("expire", [""])[0]
+            expiration_timestamp = int(float(expire_value))
+        except (TypeError, ValueError):
+            return default_ttl_seconds
+
+        remaining_seconds = expiration_timestamp - int(time.time()) - self._STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS
+        if remaining_seconds <= 0:
+            return 0
+
+        return min(default_ttl_seconds, remaining_seconds)
 
     def prefetch_stream_url(self, media_path):
         cache_key = self._normalize_stream_cache_key(media_path)
@@ -129,40 +178,55 @@ class YouTubeMusicService:
 
     def disconnect(self):
         self.clear_client_cache()
+        removed = False
         try:
             os.remove(self.browser_auth_file_path)
+            removed = True
         except FileNotFoundError:
-            return False
-        return True
+            pass
+        try:
+            os.remove(self.browser_auth_cookie_file_path)
+            removed = True
+        except FileNotFoundError:
+            pass
+        return removed
 
     def save_browser_auth(self, headers_raw=None, source_file_path=None):
         target_path = self.browser_auth_file_path
+        target_cookie_file_path = self.browser_auth_cookie_file_path
 
         normalized_headers_raw = ""
+        raw_auth_input = ""
+        source_name = "texto colado"
         if source_file_path:
             normalized_source_file_path = os.path.abspath(os.path.normpath(str(source_file_path or "").strip()))
             if not normalized_source_file_path or not os.path.isfile(normalized_source_file_path):
                 raise RuntimeError("Selecione um arquivo browser.json, JSON de cookies ou cookies.txt válido.")
+            raw_auth_input = read_auth_file_text(normalized_source_file_path)
+            source_name = os.path.basename(normalized_source_file_path)
             normalized_headers_raw = prepare_browser_auth_input(
-                read_auth_file_text(normalized_source_file_path),
-                source_name=os.path.basename(normalized_source_file_path),
+                raw_auth_input,
+                source_name=source_name,
             )
         else:
-            normalized_headers_raw = prepare_browser_auth_input(headers_raw, source_name="texto colado")
+            raw_auth_input = str(headers_raw or "")
+            normalized_headers_raw = prepare_browser_auth_input(raw_auth_input, source_name=source_name)
 
         if not normalized_headers_raw:
             raise RuntimeError(
                 "Cole os cabeçalhos do navegador ou selecione um browser.json, JSON de cookies ou cookies.txt válido."
             )
 
-        try:
-            import ytmusicapi
-        except ImportError as exc:
-            raise RuntimeError(
-                "A dependência ytmusicapi não está instalada. Atualize o ambiente com o requirements.txt."
-            ) from exc
-
+        ytmusicapi = import_ytmusicapi_module()
         ytmusicapi.setup(filepath=target_path, headers_raw=normalized_headers_raw)
+        harden_sensitive_file_permissions(target_path)
+        write_browser_auth_cookie_file(
+            raw_auth_input,
+            target_cookie_file_path,
+            source_name=source_name,
+            fallback_headers_raw=normalized_headers_raw,
+        )
+        harden_sensitive_file_permissions(target_cookie_file_path)
         self.clear_client_cache()
         return target_path
 
@@ -280,7 +344,8 @@ class YouTubeMusicService:
         if self._client is not None:
             return self._client
 
-        from ytmusicapi import YTMusic
+        ytmusicapi = import_ytmusicapi_module()
+        YTMusic = ytmusicapi.YTMusic
 
         if not self.has_saved_browser_auth():
             raise RuntimeError("Faça a autenticação do navegador antes de buscar playlists.")
@@ -297,12 +362,8 @@ class YouTubeMusicService:
         feedback_add_token = str(getattr(search_result, "feedback_add_token", "") or "").strip()
         feedback_remove_token = str(getattr(search_result, "feedback_remove_token", "") or "").strip()
 
-        try:
-            from ytmusicapi import LikeStatus
-        except ImportError as exc:
-            raise RuntimeError(
-                "A dependência ytmusicapi não está instalada. Atualize o ambiente com o requirements.txt."
-            ) from exc
+        ytmusicapi = import_ytmusicapi_module()
+        LikeStatus = ytmusicapi.LikeStatus
 
         if result_type == "playlist" and playlist_id:
             client.rate_playlist(playlist_id, LikeStatus.LIKE)
@@ -327,12 +388,8 @@ class YouTubeMusicService:
         if not video_id:
             raise RuntimeError("A mídia atual não tem um vídeo compatível para curtir ou marcar como não gostei.")
 
-        try:
-            from ytmusicapi import LikeStatus
-        except ImportError as exc:
-            raise RuntimeError(
-                "A dependência ytmusicapi não está instalada. Atualize o ambiente com o requirements.txt."
-            ) from exc
+        ytmusicapi = import_ytmusicapi_module()
+        LikeStatus = ytmusicapi.LikeStatus
 
         normalized_rating = str(rating or "").strip().upper()
         rating_map = {
@@ -381,13 +438,16 @@ class YouTubeMusicService:
         return getattr(response, "status_code", None) == 204
 
     def resolve_stream_url(self, media_path):
-        normalized_media_path = self._normalize_stream_cache_key(media_path)
-        cached_stream_url = self.get_cached_stream_url(normalized_media_path)
-        if cached_stream_url:
-            return cached_stream_url
+        return self.resolve_stream_playback(media_path).stream_url
 
-        resolved_stream_url = resolve_music_stream_url(normalized_media_path)
-        return self._cache_stream_url(normalized_media_path, resolved_stream_url)
+    def resolve_stream_playback(self, media_path):
+        normalized_media_path = self._normalize_stream_cache_key(media_path)
+        cached_stream_playback = self.get_cached_stream_playback(normalized_media_path)
+        if cached_stream_playback is not None:
+            return cached_stream_playback
+
+        resolved_stream_playback = resolve_music_stream_playback(normalized_media_path)
+        return self._cache_stream_playback(normalized_media_path, resolved_stream_playback)
 
     def build_watch_url(self, video_id, playlist_id=None):
         return build_watch_url_fn(video_id, playlist_id=playlist_id)

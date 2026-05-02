@@ -31,6 +31,7 @@ class _FakePlayerCore:
         self.terminated = 0
         self.callbacks = {}
         self.option_sets = []
+        self.http_header_fields = []
 
     def event_callback(self, *event_names):
         def decorator(callback):
@@ -152,6 +153,13 @@ class MPVPlayerTests(unittest.TestCase):
 
         self.assertIn(("audio-device", expected_option), core.option_sets)
 
+    def test_disables_internal_ytdl_hook(self):
+        mpv_backend.MPVPlayer(video_output_enabled=False)
+
+        core = self.fake_module.created_players[0]
+
+        self.assertIn("ytdl", core.created_with_kwargs)
+        self.assertFalse(core.created_with_kwargs["ytdl"])
 
     def test_normalizes_default_audio_output_device(self):
         player = mpv_backend.MPVPlayer(video_output_enabled=False)
@@ -176,6 +184,28 @@ class MPVPlayerTests(unittest.TestCase):
         core.audio_device = "wasapi"
 
         self.assertEqual(player.get_audio_output_device(), "")
+
+    def test_applies_http_headers_before_loading_media(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(
+            path="https://example.invalid/audio",
+            http_headers={
+                "User-Agent": "Teste/1.0",
+                "Cookie": "SID=abc",
+            },
+        )
+        player.set_media(media)
+
+        player.play()
+
+        core = self.fake_module.created_players[0]
+        self.assertIn(
+            (
+                "http-header-fields",
+                ["User-Agent: Teste/1.0", "Cookie: SID=abc"],
+            ),
+            core.option_sets,
+        )
 
 
 if __name__ == "__main__":

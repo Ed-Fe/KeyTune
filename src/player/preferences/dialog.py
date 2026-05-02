@@ -33,11 +33,14 @@ class PreferencesDialog(wx.Dialog):
 
         self.notebook = wx.Notebook(panel)
         self.notebook.SetName("Categorias de preferências")
-        self.notebook.SetHelpText("Use as guias Geral, Reprodução e Acessibilidade para navegar pelas configurações.")
+        self.notebook.SetHelpText(
+            "Use as guias Geral, Reprodução, Acessibilidade e Recursos adicionais para navegar pelas configurações."
+        )
 
         self._build_general_tab()
         self._build_playback_tab()
         self._build_accessibility_tab()
+        self._build_additional_resources_tab()
 
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
@@ -273,6 +276,81 @@ class PreferencesDialog(wx.Dialog):
 
         self.notebook.AddPage(page, "Acessibilidade")
 
+    def _build_additional_resources_tab(self):
+        page, page_sizer = self._create_tab_page("Recursos adicionais")
+
+        info_label = wx.StaticText(
+            page,
+            label=(
+                "Gerencie recursos baixados sob demanda para o YouTube Music. "
+                "Quando ativado, o player usa o pip do próprio Python para instalar e atualizar yt-dlp e ytmusicapi."
+            ),
+        )
+        info_label.Wrap(520)
+
+        resources_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Dependências do YouTube Music"), wx.VERTICAL)
+        self.youtube_music_manage_dependencies_checkbox = wx.CheckBox(
+            page,
+            label="Ativar &recursos adicionais do YouTube Music (yt-dlp e ytmusicapi)",
+        )
+        self.youtube_music_auto_update_dependencies_checkbox = wx.CheckBox(
+            page,
+            label="Atualizar automaticamente as dependências do YouTube Music",
+        )
+
+        self._configure_checkbox(
+            self.youtube_music_manage_dependencies_checkbox,
+            "Ativar recursos adicionais do YouTube Music",
+            (
+                "Baixa e mantém yt-dlp e ytmusicapi em uma pasta local de recursos adicionais "
+                "para reduzir dependência do pacote distribuído."
+            ),
+        )
+        self._configure_checkbox(
+            self.youtube_music_auto_update_dependencies_checkbox,
+            "Atualizar automaticamente dependências do YouTube Music",
+            "Verifica e aplica atualização automática das dependências no intervalo definido abaixo.",
+        )
+
+        interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
+            page,
+            label_text="Intervalo de atualização (horas)",
+            help_text=(
+                "Define de quanto em quanto tempo o player tenta atualizar yt-dlp e ytmusicapi "
+                "quando a aba YouTube Music é aberta."
+            ),
+            min_value=1,
+            max_value=720,
+        )
+
+        resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        resources_box.Add(interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+
+        note_label = wx.StaticText(
+            page,
+            label=(
+                "Na primeira execução, o download pode levar alguns minutos e exige internet. "
+                "Se desativado, o player volta a depender apenas das bibliotecas já disponíveis no ambiente."
+            ),
+        )
+        note_label.Wrap(520)
+
+        self.youtube_music_manage_dependencies_checkbox.Bind(
+            wx.EVT_CHECKBOX,
+            self._on_toggle_youtube_music_manage_dependencies,
+        )
+        self.youtube_music_auto_update_dependencies_checkbox.Bind(
+            wx.EVT_CHECKBOX,
+            self._on_toggle_youtube_music_auto_update_dependencies,
+        )
+
+        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+
+        self.notebook.AddPage(page, "Recursos adicionais")
+
     def _create_tab_page(self, name):
         page = wx.Panel(self.notebook)
         page.SetName(name)
@@ -313,6 +391,18 @@ class PreferencesDialog(wx.Dialog):
         box_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         return box_sizer
 
+    def _on_toggle_youtube_music_manage_dependencies(self, _event):
+        self._refresh_additional_resources_controls()
+
+    def _on_toggle_youtube_music_auto_update_dependencies(self, _event):
+        self._refresh_additional_resources_controls()
+
+    def _refresh_additional_resources_controls(self):
+        managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()
+        auto_update_enabled = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
+        self.youtube_music_auto_update_dependencies_checkbox.Enable(managed_dependencies_enabled)
+        self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
+
     def _audio_output_choice_labels(self):
         self._audio_output_choice_ids = [""]
         labels = ["Padrão do sistema"]
@@ -348,6 +438,9 @@ class PreferencesDialog(wx.Dialog):
         self.volume_step_ctrl.SetValue(settings.volume_step)
         self.seek_step_ctrl.SetValue(settings.seek_step_seconds)
         self.shuffle_new_playlists_checkbox.SetValue(settings.shuffle_new_playlists)
+        self.youtube_music_manage_dependencies_checkbox.SetValue(settings.youtube_music_manage_dependencies)
+        self.youtube_music_auto_update_dependencies_checkbox.SetValue(settings.youtube_music_auto_update_dependencies)
+        self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
 
         repeat_mode_index = REPEAT_MODES.index(settings.repeat_mode_new_playlists)
         self.repeat_mode_choice.SetSelection(repeat_mode_index)
@@ -360,6 +453,7 @@ class PreferencesDialog(wx.Dialog):
         except ValueError:
             audio_output_index = 0
         self.audio_output_choice.SetSelection(audio_output_index)
+        self._refresh_additional_resources_controls()
 
     def get_settings(self):
         settings = replace(self._settings)
@@ -375,6 +469,11 @@ class PreferencesDialog(wx.Dialog):
         settings.seek_step_seconds = int(self.seek_step_ctrl.GetValue())
         settings.shuffle_new_playlists = self.shuffle_new_playlists_checkbox.GetValue()
         settings.repeat_mode_new_playlists = REPEAT_MODES[self.repeat_mode_choice.GetSelection()]
+        settings.youtube_music_manage_dependencies = self.youtube_music_manage_dependencies_checkbox.GetValue()
+        settings.youtube_music_auto_update_dependencies = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
+        settings.youtube_music_dependency_update_interval_hours = int(
+            self.youtube_music_dependency_update_interval_ctrl.GetValue()
+        )
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]
