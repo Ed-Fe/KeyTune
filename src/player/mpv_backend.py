@@ -190,15 +190,33 @@ class MPVPlayer:
     def get_media(self):
         return self._media
 
-    def play(self):
+    def play(self, *, start_seconds: float | None = None, pause_on_start: bool = False):
         if self._media is None:
             return
         if self._bound_handle and self._bound_video_output:
             self._set_window_handle(self._bound_handle)
         if self._needs_load or self._loaded_media_path != self._media.path:
-            self._player.pause = False
             self._apply_media_http_headers()
-            self._player.loadfile(self._media.path, "replace")
+            loadfile_options: dict[str, str] = {}
+            if start_seconds is not None:
+                try:
+                    normalized_start_seconds = max(0.0, float(start_seconds))
+                except (TypeError, ValueError):
+                    normalized_start_seconds = 0.0
+                if normalized_start_seconds > 0.0:
+                    # Apply the resume position atomically as a load option so MPV
+                    # honors it as soon as the file is ready. Setting time-pos via
+                    # a follow-up command races with the asynchronous load and is
+                    # unreliable for network streams (e.g. YouTube Music), where
+                    # the seek can fail silently or be re-applied later, blocking
+                    # subsequent user-initiated seeks.
+                    loadfile_options["start"] = f"{normalized_start_seconds:.3f}"
+            if pause_on_start:
+                loadfile_options["pause"] = "yes"
+                self._player.pause = True
+            else:
+                self._player.pause = False
+            self._player.loadfile(self._media.path, "replace", **loadfile_options)
             self._loaded_media_path = self._media.path
             self._needs_load = False
             return

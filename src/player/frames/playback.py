@@ -8,7 +8,7 @@ import time
 import wx
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
-from ..constants import PROGRESS_GAUGE_RANGE, RESTORE_DELAY_MS
+from ..constants import PROGRESS_GAUGE_RANGE
 from ..library import folder_display_name, is_audio_playback_media
 from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playlists import PlaylistState
@@ -810,7 +810,18 @@ class FramePlaybackMixin:
                     player.audio_set_volume(max(0, min(100, int(initial_volume))))
                 except Exception:
                     pass
-                player.play()
+                play_kwargs = {}
+                if not request.get("crossfade"):
+                    raw_restore_position_ms = request.get("restore_position_ms", 0) or 0
+                    try:
+                        normalized_restore_position_ms = int(raw_restore_position_ms)
+                    except (TypeError, ValueError):
+                        normalized_restore_position_ms = 0
+                    if normalized_restore_position_ms > 0:
+                        play_kwargs["start_seconds"] = normalized_restore_position_ms / 1000.0
+                    if request.get("pause_after_start"):
+                        play_kwargs["pause_on_start"] = True
+                player.play(**play_kwargs)
                 if request.get("crossfade"):
                     try:
                         player.audio_set_volume(0)
@@ -939,16 +950,11 @@ class FramePlaybackMixin:
         self._apply_equalizer_state()
         self._prepare_youtube_music_history_tracking(media_path)
 
-        restore_position_ms = request.get("restore_position_ms", 0)
-        pause_after_start = request.get("pause_after_start", False)
         self._apply_current_volume()
-        wx.CallLater(
-            RESTORE_DELAY_MS,
-            self._restore_media_state,
-            media_path,
-            restore_position_ms,
-            pause_after_start,
-        )
+        # The MPV backend already applies the resume position and pause-on-start
+        # via loadfile options, so we just refresh the UI here. Avoid re-issuing
+        # set_time after-the-fact: it raced with the user's first arrow seeks on
+        # YouTube Music streams and snapped playback back to the saved position.
 
         self._update_title()
         self._update_time_bar()

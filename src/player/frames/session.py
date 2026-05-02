@@ -20,21 +20,6 @@ class FrameSessionMixin:
 
         self._capture_tab_state(active_index)
 
-    def _restore_media_state(self, media_path, position_ms=0, pause_after_restore=False):
-        state = self._get_playlist_state()
-        if not state or state.current_media_path != media_path:
-            return
-
-        self._apply_current_volume()
-
-        if position_ms > 0:
-            self.player.set_time(position_ms)
-
-        if pause_after_restore:
-            self.player.pause()
-
-        self._update_time_bar()
-
     def _restore_session(self):
         session_payload = load_session()
         if not session_payload:
