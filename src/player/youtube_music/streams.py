@@ -7,7 +7,12 @@ from .auth import (
     load_saved_playback_auth,
     sanitize_sensitive_text,
 )
-from .dependencies import import_yt_dlp_module
+from .dependencies import (
+    find_all_available_javascript_runtimes,
+    import_yt_dlp_module,
+    install_or_update_youtube_dependencies,
+    youtube_dependency_management_enabled,
+)
 from .playlists import is_youtube_music_media
 
 
@@ -28,6 +33,16 @@ _COOKIE_FORWARDING_ALLOWED_HOST_SUFFIXES = (
     "ytimg.com",
 )
 
+_STREAM_DIAGNOSTIC_SIGNAL_LABELS = {
+    "auth_blocked": "autenticação/bloqueio do YouTube",
+    "js_challenge": "desafio JavaScript (EJS)",
+    "po_token": "PO Token ausente",
+    "sabr_missing_url": "formatos SABR sem URL direta",
+    "only_images": "somente formatos de imagem",
+}
+
+_PRERELEASE_SELF_HEAL_ATTEMPTED = False
+
 
 @dataclass(slots=True)
 class ResolvedStreamPlayback:
@@ -35,28 +50,91 @@ class ResolvedStreamPlayback:
     http_headers: dict[str, str] | None = None
 
 
+class _YtDlpWarningCollector:
+    def __init__(self):
+        self.messages: list[str] = []
+
+    def debug(self, message):
+        self._capture_if_relevant(message, only_warning_like=True)
+
+    def info(self, _message):
+        return
+
+    def warning(self, message):
+        self._capture_if_relevant(message)
+
+    def error(self, message):
+        self._capture_if_relevant(message)
+
+    def _capture_if_relevant(self, message, *, only_warning_like=False):
+        normalized_message = str(message or "").strip()
+        if not normalized_message:
+            return
+
+        lowered_message = normalized_message.casefold()
+        if only_warning_like and not any(
+            marker in lowered_message
+            for marker in (
+                "warning:",
+                "error:",
+                "n challenge",
+                "js challenge",
+                "only images",
+                "sabr",
+                "po token",
+                "missing_pot",
+                "not a bot",
+                "captcha",
+            )
+        ):
+            return
+
+        cleaned_message = _clean_external_tool_error(normalized_message)
+        if cleaned_message:
+            self.messages.append(cleaned_message)
+
+
 def resolve_stream_url(media_path):
     return resolve_stream_playback(media_path).stream_url
 
 
 def resolve_stream_playback(media_path):
+    global _PRERELEASE_SELF_HEAL_ATTEMPTED
+
     normalized_media_path = str(media_path or "").strip()
     if not is_youtube_music_media(normalized_media_path):
         return ResolvedStreamPlayback(stream_url=normalized_media_path, http_headers={})
 
+    available_js_runtimes = find_all_available_javascript_runtimes()
+    if not available_js_runtimes:
+        raise RuntimeError(
+            "Para reproduzir do YouTube Music é necessário um runtime JavaScript instalado no sistema "
+            "(Node.js 20+, Deno 2+ ou Bun). Sem ele, o yt-dlp não consegue resolver as assinaturas "
+            "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
+            "Instale o Node.js a partir de https://nodejs.org/ (versão LTS) e tente novamente."
+        )
+
     yt_dlp = import_yt_dlp_module()
+    warning_collector = _YtDlpWarningCollector()
 
     playback_auth = load_saved_playback_auth()
 
     base_options = {
         "quiet": True,
-        "no_warnings": True,
+        "no_warnings": False,
         "noplaylist": True,
         "skip_download": True,
         "extract_flat": False,
         "ignore_no_formats_error": True,
-        "format": "bestaudio/best",
         "socket_timeout": YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS,
+        "logger": warning_collector,
+        # yt-dlp only enables JS challenge providers (NodeJCP, DenoJCP, BunJCP) when
+        # the corresponding runtime appears in the ``js_runtimes`` parameter. Without
+        # this, even with Node.js installed and on PATH, yt-dlp logs
+        # "JS Challenge Providers: ... node (unavailable)" and falls back to image-only
+        # storyboard formats. Pass the runtimes we discovered with empty configs so
+        # yt-dlp resolves their paths via PATH.
+        "js_runtimes": {name: {} for name in available_js_runtimes},
     }
     temporary_cookie_file_path = ""
     if playback_auth.cookie_header:
@@ -70,48 +148,111 @@ def resolve_stream_playback(media_path):
     if playback_auth.yt_dlp_http_headers:
         base_options["http_headers"] = dict(playback_auth.yt_dlp_http_headers)
 
-    extractor_profiles = [
-        {},
-        {"extractor_args": {"youtube": {"player_client": ["web", "android", "ios"]}}},
-        {"extractor_args": {"youtube": {"player_client": ["web_music", "web"]}}},
-    ]
+    has_account_cookies = bool(playback_auth.cookie_header) or bool(playback_auth.cookie_file_path)
+
+    # Per yt-dlp PO Token guide (https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide):
+    # - "tv" does NOT require PO Token; with account cookies it returns playable formats.
+    # - "tv_simply" also avoids PO Token but does NOT accept account cookies.
+    # - "default" (web) needs PO Token in theory, but works in practice for many tracks
+    #   and is kept as a last fallback for redundancy.
+    # Keep this list short: each profile is a full extractor round-trip and they are slow.
+    if has_account_cookies:
+        extractor_profiles = [
+            {"extractor_args": {"youtube": {"player_client": ["tv"]}}},
+            {"extractor_args": {"youtube": {"player_client": ["default"]}}},
+        ]
+    else:
+        extractor_profiles = [
+            {"extractor_args": {"youtube": {"player_client": ["tv_simply"]}}},
+            {"extractor_args": {"youtube": {"player_client": ["default"]}}},
+        ]
+
+    format_selectors = ["bestaudio/best"]
+
+    def _attempt_resolution(active_yt_dlp_module):
+        local_last_error = ""
+        local_attempted_profiles = 0
+        for format_selector in format_selectors:
+            for profile in extractor_profiles:
+                local_attempted_profiles += 1
+                try:
+                    with active_yt_dlp_module.YoutubeDL({**base_options, "format": format_selector, **profile}) as ydl:
+                        info = ydl.extract_info(normalized_media_path, download=False)
+                except Exception as exc:
+                    local_last_error = _clean_external_tool_error(exc)
+                    continue
+
+                if not info:
+                    local_last_error = "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
+                    continue
+
+                try:
+                    resolved_playback = _preferred_stream_from_info(
+                        info,
+                        playback_auth_headers=playback_auth.playback_http_headers,
+                    )
+                except RuntimeError as exc:
+                    local_last_error = _clean_external_tool_error(exc) or str(exc)
+                    continue
+
+                if resolved_playback.stream_url:
+                    return resolved_playback, local_last_error, local_attempted_profiles
+
+                local_last_error = "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
+
+        return None, local_last_error, local_attempted_profiles
 
     last_error = ""
     attempted_profiles = 0
+    prerelease_retry_attempted = False
     try:
-        for profile in extractor_profiles:
-            attempted_profiles += 1
+        resolved_playback, last_error, attempted_profiles = _attempt_resolution(yt_dlp)
+        if resolved_playback is not None:
+            return resolved_playback
+
+        diagnostic_signals = _collect_stream_resolution_diagnostic_signals(
+            warning_collector.messages,
+            last_error,
+        )
+        if (
+            not _PRERELEASE_SELF_HEAL_ATTEMPTED
+            and _should_retry_stream_resolution_with_prerelease(
+                diagnostic_signals,
+                management_enabled=youtube_dependency_management_enabled(),
+            )
+        ):
+            _PRERELEASE_SELF_HEAL_ATTEMPTED = True
+            prerelease_retry_attempted = True
             try:
-                with yt_dlp.YoutubeDL({**base_options, **profile}) as ydl:
-                    info = ydl.extract_info(normalized_media_path, download=False)
+                install_or_update_youtube_dependencies(force=True, include_prerelease=True)
+                refreshed_yt_dlp = import_yt_dlp_module(reload=True)
+                resolved_playback, retry_last_error, retry_attempted_profiles = _attempt_resolution(refreshed_yt_dlp)
+                attempted_profiles += retry_attempted_profiles
+                if retry_last_error:
+                    last_error = retry_last_error
+                if resolved_playback is not None:
+                    return resolved_playback
             except Exception as exc:
-                last_error = _clean_external_tool_error(exc)
-                continue
-
-            if not info:
-                last_error = "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
-                continue
-
-            try:
-                resolved_playback = _preferred_stream_from_info(
-                    info,
-                    playback_auth_headers=playback_auth.playback_http_headers,
-                )
-            except RuntimeError as exc:
-                last_error = _clean_external_tool_error(exc) or str(exc)
-                continue
-
-            if resolved_playback.stream_url:
-                return resolved_playback
-
-            last_error = "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
+                retry_error = _clean_external_tool_error(exc) or str(exc)
+                if retry_error:
+                    if last_error:
+                        last_error = f"{last_error} Atualização avançada: {retry_error}"
+                    else:
+                        last_error = f"Atualização avançada: {retry_error}"
     finally:
         _remove_temporary_cookie_file(temporary_cookie_file_path)
+
+    diagnostic_signals = _collect_stream_resolution_diagnostic_signals(
+        warning_collector.messages,
+        last_error,
+    )
 
     raise RuntimeError(
         _build_stream_resolution_error_message(
             last_error,
             attempted_profiles=attempted_profiles,
+            diagnostic_signals=diagnostic_signals,
+            prerelease_retry_attempted=prerelease_retry_attempted,
         )
     )
 
@@ -120,8 +261,9 @@ def _preferred_stream_url_from_info(info):
     return _preferred_stream_from_info(info).stream_url
 
 
-def _preferred_stream_from_info(info, *, playback_auth_headers=None):
-    direct_url = str(info.get("url") or "").strip()
+def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
+    direct_stream_urls = _iter_direct_stream_url_candidates(info)
+    direct_url = direct_stream_urls[0] if direct_stream_urls else ""
     top_level_http_headers = _merge_playback_http_headers(
         info.get("http_headers"),
         playback_auth_headers,
@@ -130,20 +272,62 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None):
 
     formats = _iter_stream_format_candidates(info)
     if not formats:
-        if _is_direct_media_stream_url(direct_url):
-            return ResolvedStreamPlayback(stream_url=direct_url, http_headers=top_level_http_headers)
+        direct_stream_playback = _resolved_playback_from_direct_stream_urls(
+            direct_stream_urls,
+            http_headers=top_level_http_headers,
+        )
+        if direct_stream_playback is not None:
+            return direct_stream_playback
+        nested_entry_stream_playback = _preferred_stream_from_nested_entries(
+            info,
+            playback_auth_headers=playback_auth_headers,
+            depth=_depth,
+        )
+        if nested_entry_stream_playback is not None:
+            return nested_entry_stream_playback
         raise RuntimeError("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music.")
 
     audio_only_formats = [fmt for fmt in formats if _is_audio_only_stream_format(fmt)]
     audio_capable_formats = [fmt for fmt in formats if _is_audio_capable_stream_format(fmt)]
-    preferred_formats = audio_only_formats or audio_capable_formats
+    requested_fallback_formats = [fmt for fmt in formats if _is_requested_stream_format(fmt)]
+    preferred_formats = audio_only_formats or audio_capable_formats or requested_fallback_formats
     if not preferred_formats:
-        if _is_direct_media_stream_url(direct_url):
-            return ResolvedStreamPlayback(stream_url=direct_url, http_headers=top_level_http_headers)
+        direct_stream_playback = _resolved_playback_from_direct_stream_urls(
+            direct_stream_urls,
+            http_headers=top_level_http_headers,
+        )
+        if direct_stream_playback is not None:
+            return direct_stream_playback
+        nested_entry_stream_playback = _preferred_stream_from_nested_entries(
+            info,
+            playback_auth_headers=playback_auth_headers,
+            depth=_depth,
+        )
+        if nested_entry_stream_playback is not None:
+            return nested_entry_stream_playback
         raise RuntimeError("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music.")
 
     best_format = max(preferred_formats, key=_stream_format_score)
-    selected_stream_url = str(best_format.get("url") or direct_url).strip()
+    selected_stream_url = _stream_url_from_candidate(best_format)
+    if not selected_stream_url:
+        selected_stream_url = direct_url
+
+    if not selected_stream_url:
+        direct_stream_playback = _resolved_playback_from_direct_stream_urls(
+            direct_stream_urls,
+            http_headers=top_level_http_headers,
+        )
+        if direct_stream_playback is not None:
+            return direct_stream_playback
+        nested_entry_stream_playback = _preferred_stream_from_nested_entries(
+            info,
+            playback_auth_headers=playback_auth_headers,
+            depth=_depth,
+        )
+        if nested_entry_stream_playback is not None:
+            return nested_entry_stream_playback
+        raise RuntimeError("O yt-dlp não retornou uma URL reproduzível para esta faixa do YouTube Music.")
+
     return ResolvedStreamPlayback(
         stream_url=selected_stream_url,
         http_headers=_merge_playback_http_headers(
@@ -171,7 +355,7 @@ def _iter_stream_format_candidates(info):
             if not isinstance(fmt, dict):
                 continue
 
-            stream_url = str(fmt.get("url") or "").strip()
+            stream_url = _stream_url_from_candidate(fmt)
             if not stream_url:
                 continue
 
@@ -180,9 +364,74 @@ def _iter_stream_format_candidates(info):
                 continue
 
             seen_formats.add(format_key)
-            collected_formats.append(fmt)
+            candidate = dict(fmt)
+            candidate["_stream_url"] = stream_url
+            candidate["_source_key"] = key
+            collected_formats.append(candidate)
 
     return collected_formats
+
+
+def _iter_direct_stream_url_candidates(info):
+    direct_stream_urls = []
+    seen_stream_urls = set()
+    for key in ("url", "manifest_url", "hls_manifest_url"):
+        stream_url = str(info.get(key) or "").strip()
+        if not stream_url or stream_url in seen_stream_urls:
+            continue
+        seen_stream_urls.add(stream_url)
+        direct_stream_urls.append(stream_url)
+
+    return direct_stream_urls
+
+
+def _resolved_playback_from_direct_stream_urls(direct_stream_urls, *, http_headers):
+    for stream_url in direct_stream_urls or []:
+        if not _is_direct_media_stream_url(stream_url):
+            continue
+        return ResolvedStreamPlayback(stream_url=stream_url, http_headers=dict(http_headers or {}))
+
+    return None
+
+
+def _preferred_stream_from_nested_entries(info, *, playback_auth_headers=None, depth=0):
+    if depth >= 2:
+        return None
+
+    raw_entries = info.get("entries")
+    if isinstance(raw_entries, dict):
+        normalized_entries = [raw_entries]
+    elif isinstance(raw_entries, list):
+        normalized_entries = raw_entries
+    else:
+        return None
+
+    for entry in normalized_entries[:10]:
+        if not isinstance(entry, dict):
+            continue
+
+        try:
+            return _preferred_stream_from_info(
+                entry,
+                playback_auth_headers=playback_auth_headers,
+                _depth=depth + 1,
+            )
+        except RuntimeError:
+            continue
+
+    return None
+
+
+def _stream_url_from_candidate(fmt):
+    if not isinstance(fmt, dict):
+        return ""
+
+    for key in ("_stream_url", "url", "manifest_url", "hls_manifest_url"):
+        stream_url = str(fmt.get(key) or "").strip()
+        if stream_url:
+            return stream_url
+
+    return ""
 
 
 def _is_audio_only_stream_format(fmt):
@@ -217,6 +466,11 @@ def _is_audio_capable_stream_format(fmt):
         return True
 
     return False
+
+
+def _is_requested_stream_format(fmt):
+    source_key = str(fmt.get("_source_key") or "").strip().lower()
+    return source_key in {"requested_formats", "requested_downloads"}
 
 
 def _is_direct_media_stream_url(stream_url):
@@ -278,10 +532,16 @@ def _is_cookie_forwarding_allowed(stream_url):
 
 def _stream_format_score(fmt):
     protocol = str(fmt.get("protocol") or "").lower()
+    stream_url = _stream_url_from_candidate(fmt)
+    parsed_stream_url = urlparse(stream_url)
+    host = str(parsed_stream_url.hostname or "").strip().lower()
+    is_googlevideo_stream = host.endswith("googlevideo.com") if host else False
     return (
+        1 if _is_requested_stream_format(fmt) else 0,
         1 if _is_audio_only_stream_format(fmt) else 0,
         1 if _is_audio_capable_stream_format(fmt) else 0,
         1 if protocol in {"https", "http"} else 0,
+        1 if is_googlevideo_stream else 0,
         _safe_float(fmt.get("abr")),
         _safe_float(fmt.get("tbr")),
         _safe_float(fmt.get("asr")),
@@ -315,8 +575,60 @@ def _remove_temporary_cookie_file(temp_cookie_file_path):
         return
 
 
-def _build_stream_resolution_error_message(last_error, *, attempted_profiles):
+def _collect_stream_resolution_diagnostic_signals(messages, last_error):
+    normalized_messages = [str(message or "").strip() for message in (messages or []) if str(message or "").strip()]
+    normalized_last_error = str(last_error or "").strip()
+    combined_text = "\n".join([*normalized_messages, normalized_last_error]).casefold()
+    signals = set()
+
+    if any(term in combined_text for term in ("not a bot", "sign in", "captcha", "429", "403")):
+        signals.add("auth_blocked")
+
+    if any(
+        term in combined_text
+        for term in (
+            "n challenge",
+            "js challenge",
+            "challenge solver",
+            "yt-dlp/wiki/ejs",
+            "js runtime",
+            "jsc",
+        )
+    ):
+        signals.add("js_challenge")
+
+    if any(term in combined_text for term in ("po token", "missing_pot", " gvs ", "pot")):
+        signals.add("po_token")
+
+    if "only images" in combined_text:
+        signals.add("only_images")
+
+    if "sabr" in combined_text and any(term in combined_text for term in ("missing a url", "forcing")):
+        signals.add("sabr_missing_url")
+
+    return signals
+
+
+def _should_retry_stream_resolution_with_prerelease(diagnostic_signals, *, management_enabled):
+    if not management_enabled:
+        return False
+
+    normalized_diagnostic_signals = set(diagnostic_signals or ())
+    # Only the JS/N challenge symptom can plausibly be helped by updating yt-dlp /
+    # yt-dlp-ejs to a prerelease. SABR/only-images is caused by missing PO Token
+    # and cannot be fixed by upgrading yt-dlp itself, so do not waste time retrying.
+    return "js_challenge" in normalized_diagnostic_signals
+
+
+def _build_stream_resolution_error_message(
+    last_error,
+    *,
+    attempted_profiles,
+    diagnostic_signals=None,
+    prerelease_retry_attempted=False,
+):
     normalized_last_error = sanitize_sensitive_text(last_error)
+    normalized_diagnostic_signals = set(diagnostic_signals or ())
     base_message = "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
 
     if normalized_last_error:
@@ -324,6 +636,45 @@ def _build_stream_resolution_error_message(last_error, *, attempted_profiles):
 
     if attempted_profiles > 1:
         base_message = f"{base_message} Perfis testados: {attempted_profiles}."
+
+    if prerelease_retry_attempted:
+        base_message = f"{base_message} Foi tentada uma atualização avançada do yt-dlp."
+
+    if normalized_diagnostic_signals:
+        signal_labels = [
+            _STREAM_DIAGNOSTIC_SIGNAL_LABELS.get(signal, signal)
+            for signal in sorted(normalized_diagnostic_signals)
+        ]
+        base_message = f"{base_message} Sinais detectados: {', '.join(signal_labels)}."
+
+    guidance_parts = []
+    if "auth_blocked" in normalized_diagnostic_signals:
+        guidance_parts.append(
+            "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente."
+        )
+
+    if "js_challenge" in normalized_diagnostic_signals:
+        guidance_parts.append(
+            "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Node.js 20+ ou Deno 2+ instalado e tente novamente após atualizar os recursos adicionais."
+        )
+
+    if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:
+        guidance_parts.append(
+            "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. "
+            "Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de "
+            "uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. "
+            "Se já estiver autenticado, refaça o login com cookies recém-exportados."
+        )
+
+    if "po_token" in normalized_diagnostic_signals:
+        guidance_parts.append(
+            "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. "
+            "Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", "
+            "que dispensa PO Token quando há cookies de conta válidos."
+        )
+
+    if guidance_parts:
+        return f"{base_message} {' '.join(guidance_parts)}"
 
     lowered_error = normalized_last_error.lower()
     if any(term in lowered_error for term in ("not a bot", "sign in", "captcha", "429", "403")):

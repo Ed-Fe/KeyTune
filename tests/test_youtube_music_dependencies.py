@@ -107,7 +107,35 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
         command = run_args[0]
         self.assertIn("--target", command)
         self.assertIn(str(target_dir), command)
+        self.assertIn("yt-dlp[default]", command)
+        self.assertIn("ytmusicapi", command)
         self.assertEqual(run_kwargs["timeout_seconds"], 33)
+
+    def test_install_update_uses_pre_flag_when_requested(self):
+        target_dir = pathlib.Path("C:/tmp/ytmusic-site-packages")
+        completed_process = subprocess.CompletedProcess(
+            args=["pip"],
+            returncode=0,
+            stdout="ok",
+            stderr="",
+        )
+
+        with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir", return_value=target_dir):
+            with patch("player.youtube_music.dependencies._run_pip_install", return_value=completed_process) as run_mock:
+                with patch("player.youtube_music.dependencies.youtube_dependencies_available", return_value=True):
+                    with patch(
+                        "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
+                        return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.11.5"},
+                    ):
+                        result = install_or_update_youtube_dependencies(
+                            force=True,
+                            include_prerelease=True,
+                        )
+
+        self.assertTrue(result.updated)
+        run_args, _run_kwargs = run_mock.call_args
+        command = run_args[0]
+        self.assertIn("--pre", command)
 
 
 if __name__ == "__main__":

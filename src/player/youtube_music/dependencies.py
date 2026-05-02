@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import importlib
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import threading
@@ -14,7 +15,10 @@ from ..session import get_app_storage_dir
 
 YTDLP_IMPORT_NAME = "yt_dlp"
 YTMUSICAPI_IMPORT_NAME = "ytmusicapi"
-YOUTUBE_DEPENDENCY_PACKAGES = ("yt-dlp", "ytmusicapi")
+# yt-dlp[default] does NOT install yt-dlp-ejs (it pulls curl_cffi/websockets).
+# yt-dlp-ejs is needed for solving JS/N challenges via Node.js or Deno when the
+# bundled solver fails. List it explicitly so the package is always present.
+YOUTUBE_DEPENDENCY_PACKAGES = ("yt-dlp[default]", "yt-dlp-ejs", "ytmusicapi")
 YOUTUBE_DEPENDENCY_INSTALL_TIMEOUT_SECONDS = 240
 
 
@@ -49,6 +53,32 @@ def youtube_dependency_management_enabled() -> bool:
 def youtube_dependency_auto_update_enabled() -> bool:
     with _RUNTIME_CONFIG_LOCK:
         return bool(_RUNTIME_CONFIG.auto_update_enabled)
+
+
+# JS runtimes that yt-dlp-ejs (the EJS solver bundled with yt-dlp[default]) can use
+# to solve YouTube's signature/n-challenge JavaScript. Without one of these in PATH
+# the YouTube extractor returns only storyboards (mhtml) for every player_client
+# (web, tv, ios, android, etc.), making playback impossible.
+SUPPORTED_JS_RUNTIME_EXECUTABLES = ("node", "deno", "bun")
+
+
+def find_available_javascript_runtime() -> str:
+    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
+        if shutil.which(executable_name):
+            return executable_name
+    return ""
+
+
+def find_all_available_javascript_runtimes() -> dict[str, str]:
+    """Return a mapping of runtime name -> executable path for every supported
+    JS runtime found on PATH. Used to populate yt-dlp's ``js_runtimes`` option
+    so the EJS solver can actually use them."""
+    discovered: dict[str, str] = {}
+    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
+        path = shutil.which(executable_name)
+        if path:
+            discovered[executable_name] = path
+    return discovered
 
 
 def get_youtube_dependency_target_dir() -> Path:
@@ -110,6 +140,7 @@ def install_or_update_youtube_dependencies(
     *,
     force: bool = False,
     timeout_seconds: int = YOUTUBE_DEPENDENCY_INSTALL_TIMEOUT_SECONDS,
+    include_prerelease: bool = False,
 ) -> YouTubeDependencyUpdateResult:
     target_dir = activate_youtube_dependency_target_dir()
     if not force and youtube_dependencies_available():
@@ -129,8 +160,10 @@ def install_or_update_youtube_dependencies(
         "--upgrade",
         "--target",
         str(target_dir),
-        *YOUTUBE_DEPENDENCY_PACKAGES,
     ]
+    if include_prerelease:
+        command.append("--pre")
+    command.extend(YOUTUBE_DEPENDENCY_PACKAGES)
 
     completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
 
@@ -155,22 +188,27 @@ def install_or_update_youtube_dependencies(
     )
 
 
-def import_yt_dlp_module():
+def import_yt_dlp_module(*, reload: bool = False):
     return _import_dependency_module(
         import_name=YTDLP_IMPORT_NAME,
         display_name="yt-dlp",
+        reload=reload,
     )
 
 
-def import_ytmusicapi_module():
+def import_ytmusicapi_module(*, reload: bool = False):
     return _import_dependency_module(
         import_name=YTMUSICAPI_IMPORT_NAME,
         display_name="ytmusicapi",
+        reload=reload,
     )
 
 
-def _import_dependency_module(*, import_name: str, display_name: str):
+def _import_dependency_module(*, import_name: str, display_name: str, reload: bool = False):
     activate_youtube_dependency_target_dir()
+    if reload:
+        _clear_dependency_modules((import_name,))
+        importlib.invalidate_caches()
 
     try:
         return importlib.import_module(import_name)
@@ -195,6 +233,20 @@ def _import_dependency_module(*, import_name: str, display_name: str):
                 f"A dependência {display_name} foi baixada, mas não pôde ser carregada. "
                 "Reinicie o aplicativo e tente novamente."
             ) from final_error
+
+
+def _clear_dependency_modules(module_names: tuple[str, ...]) -> None:
+    normalized_module_names = [str(module_name or "").strip() for module_name in module_names]
+    normalized_module_names = [module_name for module_name in normalized_module_names if module_name]
+    if not normalized_module_names:
+        return
+
+    for loaded_module_name in list(sys.modules.keys()):
+        if any(
+            loaded_module_name == module_name or loaded_module_name.startswith(f"{module_name}.")
+            for module_name in normalized_module_names
+        ):
+            sys.modules.pop(loaded_module_name, None)
 
 
 def _run_pip_install(command: list[str], *, timeout_seconds: int) -> subprocess.CompletedProcess:
