@@ -53,7 +53,8 @@
 - Install dependencies from `requirements.txt` in a virtual environment.
 - Run the app with `python src/main.py`.
 - Use `python -m compileall src` as the quick validation step after Python changes.
-- There is no automated test suite yet, so for UI changes do a focused manual check of the affected keyboard flows, dialogs, playlist behavior, and announcements.
+- Run `python -m unittest discover -s tests` for automated regression checks when touching backend/services or parsing logic.
+- For UI changes, do a focused manual check of the affected keyboard flows, dialogs, playlist behavior, and announcements.
 - The app depends on an MPV runtime being available on the system or bundled locally.
 - For packaged Windows updater work, use `scripts/build_windows_release.ps1` for a local build and `docs/update-testing.md` for the end-to-end validation checklist.
 
@@ -79,3 +80,4 @@
 - Use `.github/instructions/update-release.instructions.md` when editing the updater, Windows release packaging, GitHub release notes, or `CHANGELOG.md`.
 - Use `.github/instructions/git-workflow.instructions.md` when finalizing a large feature, preparing a commit, or pushing repository changes.
 - Use `.github/prompts/accessibility-smoke-test.prompt.md` for a focused post-change accessibility verification pass after UI or accessibility work.
+- Use `.github/prompts/release-readiness.prompt.md` for a focused pre-release readiness review of version sync, release assets, updater compatibility, and docs alignment.
