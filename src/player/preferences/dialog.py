@@ -4,7 +4,15 @@ import sys
 import wx
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
-from ..constants import MAX_CROSSFADE_SECONDS, REPEAT_MODE_LABELS, REPEAT_MODES
+from ..constants import (
+    MAX_CROSSFADE_SECONDS,
+    MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+    MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+    REPEAT_MODE_LABELS,
+    REPEAT_MODES,
+)
 
 
 class PreferencesDialog(wx.Dialog):
@@ -282,8 +290,8 @@ class PreferencesDialog(wx.Dialog):
         info_label = wx.StaticText(
             page,
             label=(
-                "Gerencie recursos baixados sob demanda para o YouTube Music. "
-                "Quando ativado, o player usa o pip do próprio Python para instalar e atualizar yt-dlp e ytmusicapi."
+                "Configure os recursos adicionais do YouTube Music. "
+                "Você pode controlar como as dependências são gerenciadas e como a biblioteca é carregada."
             ),
         )
         info_label.Wrap(520)
@@ -327,14 +335,45 @@ class PreferencesDialog(wx.Dialog):
         resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         resources_box.Add(interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
-        note_label = wx.StaticText(
+        dependencies_note_label = wx.StaticText(
             page,
             label=(
                 "Na primeira execução, o download pode levar alguns minutos e exige internet. "
                 "Se desativado, o player volta a depender apenas das bibliotecas já disponíveis no ambiente."
             ),
         )
-        note_label.Wrap(520)
+        dependencies_note_label.Wrap(520)
+        resources_box.Add(dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+
+        library_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label="Carregamento da biblioteca do YouTube Music"),
+            wx.VERTICAL,
+        )
+
+        page_size_group, self.youtube_music_library_page_size_ctrl = self._build_spin_control_group(
+            page,
+            label_text="Playlists carregadas por vez",
+            help_text=(
+                "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. "
+                "Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
+            ),
+            min_value=MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+            max_value=MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+        )
+
+        home_limit_group, self.youtube_music_home_discovery_limit_ctrl = self._build_spin_control_group(
+            page,
+            label_text="Mixes personalizadas para descobrir",
+            help_text=(
+                "Limite máximo de itens varridos na página inicial do YouTube Music para encontrar "
+                "mixes personalizadas. Valores menores deixam a sincronização mais rápida."
+            ),
+            min_value=MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+            max_value=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+        )
+
+        library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
+        library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
             wx.EVT_CHECKBOX,
@@ -347,7 +386,7 @@ class PreferencesDialog(wx.Dialog):
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, "Recursos adicionais")
 
@@ -441,6 +480,8 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_manage_dependencies_checkbox.SetValue(settings.youtube_music_manage_dependencies)
         self.youtube_music_auto_update_dependencies_checkbox.SetValue(settings.youtube_music_auto_update_dependencies)
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
+        self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
+        self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
 
         repeat_mode_index = REPEAT_MODES.index(settings.repeat_mode_new_playlists)
         self.repeat_mode_choice.SetSelection(repeat_mode_index)
@@ -474,6 +515,8 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_dependency_update_interval_hours = int(
             self.youtube_music_dependency_update_interval_ctrl.GetValue()
         )
+        settings.youtube_music_library_page_size = int(self.youtube_music_library_page_size_ctrl.GetValue())
+        settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]

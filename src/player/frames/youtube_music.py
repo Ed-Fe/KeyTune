@@ -24,7 +24,35 @@ from ..playlists import PlaylistState, ScreenTabState
 
 
 class FrameYouTubeMusicMixin:
-    _YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS = 20000
+    _YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS = 45000
+    _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
+    _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
+    _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MIN = 5
+    _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MAX = 200
+    _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MIN = 5
+    _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MAX = 200
+
+    def _youtube_music_library_page_size(self):
+        try:
+            value = int(getattr(self.settings, "youtube_music_library_page_size", self._YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE))
+        except (TypeError, ValueError):
+            value = self._YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
+        return max(
+            self._YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MIN,
+            min(self._YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MAX, value),
+        )
+
+    def _youtube_music_home_discovery_limit(self):
+        try:
+            value = int(
+                getattr(self.settings, "youtube_music_home_discovery_limit", self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT)
+            )
+        except (TypeError, ValueError):
+            value = self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT
+        return max(
+            self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MIN,
+            min(self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MAX, value),
+        )
 
     def _is_youtube_music_operation_in_progress(self):
         return bool(getattr(self, "_youtube_music_operation_in_progress", False))
@@ -205,12 +233,26 @@ class FrameYouTubeMusicMixin:
     def _youtube_music_search_summary(self):
         return str(getattr(self, "_youtube_music_search_summary_message", "") or "").strip()
 
-    def _set_youtube_music_library_cache(self, playlists, *, status_message=None):
+    def _set_youtube_music_library_cache(self, playlists, *, status_message=None, has_more_playlists=None):
         self._youtube_music_library_playlists = list(playlists or [])
         self._youtube_music_library_loaded = True
         if status_message is not None:
             self._youtube_music_library_status_message = str(status_message or "").strip()
+        if has_more_playlists is not None:
+            self._youtube_music_library_more_playlists_available = bool(has_more_playlists)
         self._refresh_youtube_music_screen_later()
+
+    def _youtube_music_library_has_more_playlists(self):
+        return bool(getattr(self, "_youtube_music_library_more_playlists_available", False))
+
+    def _youtube_music_current_library_limit(self):
+        return int(
+            getattr(
+                self,
+                "_youtube_music_library_limit",
+                self._youtube_music_library_page_size(),
+            )
+        )
 
     def _set_youtube_music_search_results(self, search_results, *, search_summary=None, status_message=None):
         self._youtube_music_search_results_cache = list(search_results or [])
@@ -223,6 +265,8 @@ class FrameYouTubeMusicMixin:
     def _clear_youtube_music_library_cache(self, *, loaded=False, status_message=None):
         self._youtube_music_library_playlists = []
         self._youtube_music_library_loaded = bool(loaded)
+        self._youtube_music_library_more_playlists_available = False
+        self._youtube_music_library_limit = self._youtube_music_library_page_size()
         if status_message is not None:
             self._youtube_music_library_status_message = str(status_message or "").strip()
         self._refresh_youtube_music_screen_later()
@@ -245,6 +289,7 @@ class FrameYouTubeMusicMixin:
             on_open_search_result=self._on_youtube_music_open_search_result_button,
             on_save_search_result=self._on_youtube_music_save_search_result_button,
             on_add_search_result_to_playlist=self._on_youtube_music_add_search_result_to_playlist_button,
+            on_load_more_playlists=self._on_youtube_music_load_more_playlists_button,
         )
 
     def _get_youtube_music_panel(self):
@@ -276,6 +321,7 @@ class FrameYouTubeMusicMixin:
             status_message=self._youtube_music_status_message(),
             search_results=self._youtube_music_search_results(),
             search_summary=self._youtube_music_search_summary(),
+            has_more_playlists=self._youtube_music_library_has_more_playlists(),
         )
 
     def _playlist_summary_by_id(self, playlist_id):
@@ -805,22 +851,40 @@ class FrameYouTubeMusicMixin:
         if announce:
             self._announce("Atualizando playlists e mixes do YouTube Music.")
 
+        page_size = int(self._youtube_music_library_page_size())
+        self._youtube_music_library_limit = page_size
+
         def worker():
             account_name = service.get_connected_account_name()
-            playlists = service.get_library_playlists()
-            return account_name, playlists
+            playlists, has_more = service.get_user_library_playlists(limit=page_size)
+            return account_name, playlists, has_more
 
         def on_success(result):
-            account_name, playlists = result
+            account_name, playlists, has_more = result
             self._set_youtube_music_account_name(account_name)
             playlist_count = len(playlists)
-            summary_message = (
-                f"Biblioteca do YouTube Music atualizada: {playlist_count} playlist(s) e mix(es)."
+            if has_more:
+                summary_message = (
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
+                    " Use 'Carregar mais' ou desça até o final da lista para trazer mais."
+                    " Carregando mixes personalizadas..."
+                )
+            else:
+                summary_message = (
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
+                    " Carregando mixes personalizadas..."
+                )
+            self._set_youtube_music_library_cache(
+                playlists,
+                status_message=summary_message,
+                has_more_playlists=has_more,
             )
-            self._set_youtube_music_library_cache(playlists, status_message=summary_message)
             self._refresh_youtube_music_menu_state()
             if announce:
-                self._announce(summary_message)
+                self._announce(
+                    f"Biblioteca do YouTube Music atualizada: {playlist_count} playlist(s)."
+                )
+            self._refresh_youtube_music_personalized_mixes(announce=announce)
 
         def on_error(exc):
             self._refresh_youtube_music_menu_state()
@@ -835,6 +899,126 @@ class FrameYouTubeMusicMixin:
             )
 
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _on_youtube_music_load_more_playlists_button(self):
+        self._load_more_youtube_music_playlists()
+
+    def _load_more_youtube_music_playlists(self):
+        if not self._youtube_music_library_has_more_playlists():
+            self._announce("Não há mais playlists para carregar.")
+            return False
+
+        if not self._ensure_youtube_music_authenticated():
+            return False
+
+        service = self._get_youtube_music_service()
+        next_limit = self._youtube_music_current_library_limit() + int(self._youtube_music_library_page_size())
+        self._announce("Carregando mais playlists do YouTube Music.")
+
+        def worker():
+            return service.get_user_library_playlists(limit=next_limit)
+
+        def on_success(result):
+            playlists, has_more = result
+            existing_playlists = self._youtube_music_library_cache()
+            existing_mix_ids = {
+                playlist.playlist_id
+                for playlist in existing_playlists
+                if str(getattr(playlist, "source_badge", "") or "").strip()
+            }
+            existing_mixes = [
+                playlist
+                for playlist in existing_playlists
+                if playlist.playlist_id in existing_mix_ids
+            ]
+            previous_user_playlist_count = sum(
+                1
+                for playlist in existing_playlists
+                if playlist.playlist_id not in existing_mix_ids
+            )
+
+            new_playlist_ids = {playlist.playlist_id for playlist in playlists}
+            merged = list(playlists)
+            for mix in existing_mixes:
+                if mix.playlist_id in new_playlist_ids:
+                    continue
+                merged.append(mix)
+                new_playlist_ids.add(mix.playlist_id)
+            merged.sort(key=lambda playlist: playlist.title.casefold())
+
+            playlist_count = len(playlists)
+            if playlist_count <= previous_user_playlist_count:
+                has_more = False
+
+            self._youtube_music_library_limit = next_limit
+            if has_more:
+                summary_message = (
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
+                    " Há mais para carregar."
+                )
+            else:
+                summary_message = (
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s) (todas)."
+                )
+            self._set_youtube_music_library_cache(
+                merged,
+                status_message=summary_message,
+                has_more_playlists=has_more,
+            )
+            self._refresh_youtube_music_menu_state()
+            self._announce(f"{playlist_count} playlist(s) na biblioteca agora.")
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível carregar mais playlists do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _refresh_youtube_music_personalized_mixes(self, announce=False):
+        service = self._get_youtube_music_service()
+        home_limit = self._youtube_music_home_discovery_limit()
+
+        def worker():
+            return service.get_personalized_mixes(limit=home_limit)
+
+        def on_success(mixes):
+            existing_playlists = self._youtube_music_library_cache()
+            existing_ids = {playlist.playlist_id for playlist in existing_playlists}
+            merged = list(existing_playlists)
+            added = 0
+            for mix in mixes or []:
+                if mix.playlist_id in existing_ids:
+                    continue
+                merged.append(mix)
+                existing_ids.add(mix.playlist_id)
+                added += 1
+            merged.sort(key=lambda playlist: playlist.title.casefold())
+            summary_message = (
+                f"Biblioteca do YouTube Music: {len(merged)} item(ns) "
+                f"({added} mix(es) personalizada(s) adicionada(s))."
+            )
+            self._set_youtube_music_library_cache(merged, status_message=summary_message)
+            self._refresh_youtube_music_menu_state()
+            if announce and added:
+                self._announce(f"{added} mix(es) personalizada(s) carregada(s).")
+
+        def on_error(_exc):
+            existing_playlists = self._youtube_music_library_cache()
+            summary_message = (
+                f"Biblioteca do YouTube Music: {len(existing_playlists)} item(ns)."
+                " Não foi possível carregar mixes personalizadas."
+            )
+            self._youtube_music_library_status_message = summary_message
+            self._refresh_youtube_music_screen_later()
+            self._refresh_youtube_music_menu_state()
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
 
     def on_connect_youtube_music(self, _event):
         service = self._get_youtube_music_service()

@@ -20,6 +20,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		on_open_search_result,
 		on_save_search_result,
 		on_add_search_result_to_playlist,
+		on_load_more_playlists,
 	):
 		super().__init__(parent, style=wx.TAB_TRAVERSAL)
 
@@ -30,6 +31,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._visible_search_result_ids = []
 		self._connected = False
 		self._operation_in_progress = False
+		self._has_more_playlists = False
 		self._on_connect = on_connect
 		self._on_disconnect = on_disconnect
 		self._on_refresh_library = on_refresh_library
@@ -39,6 +41,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._on_open_search_result = on_open_search_result
 		self._on_save_search_result = on_save_search_result
 		self._on_add_search_result_to_playlist = on_add_search_result_to_playlist
+		self._on_load_more_playlists = on_load_more_playlists
 
 		root_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -262,10 +265,21 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.playlists_list.SetName("Lista de playlists do YouTube Music")
 		self.playlists_list.SetHelpText(
 			"Mostra as playlists e mixes disponíveis. Use setas para navegar, Enter para abrir e Tab para sair da aba."
+			" Pressione Page Down ou desça até o último item para carregar mais playlists."
 		)
+		self.load_more_button = wx.Button(self, label="Carregar &mais playlists")
+		self.load_more_button.SetName("Carregar mais playlists do YouTube Music")
+		self.load_more_button.SetHelpText(
+			"Busca o próximo lote de playlists da biblioteca quando ainda existem mais a carregar."
+		)
+		self.load_more_button.SetToolTip(self.load_more_button.GetHelpText())
+		self.load_more_button.Disable()
 		help_label = wx.StaticText(
 			self,
-			label="Enter abre a seleção atual. Esc fecha a aba. Tab volta para a navegação padrão entre controles da tela.",
+			label=(
+				"Enter abre a seleção atual. Esc fecha a aba. Tab volta para a navegação padrão entre controles da tela."
+				" Page Down no fim da lista carrega mais playlists."
+			),
 		)
 		help_label.Wrap(620)
 
@@ -273,6 +287,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		library_box.Add(self.filter_ctrl, 0, wx.ALL | wx.EXPAND, 6)
 		library_box.Add(self.results_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		library_box.Add(self.playlists_list, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+		library_box.Add(self.load_more_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_LEFT, 6)
 		library_box.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		root_sizer.Add(library_box, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
@@ -287,6 +302,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.open_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_search_result())
 		self.save_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_save_search_result())
 		self.add_to_playlist_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_add_search_result_to_playlist())
+		self.load_more_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_load_more_playlists())
 
 		self.manual_source_ctrl.Bind(wx.EVT_TEXT_ENTER, self._on_manual_source_enter)
 		self.search_query_ctrl.Bind(wx.EVT_TEXT, self._on_search_query_changed)
@@ -382,6 +398,12 @@ class YouTubeMusicTabPanel(wx.Panel):
 			and self.get_selected_playlist_id() is not None
 		)
 		self.open_selected_button.Enable(can_open_selected)
+		can_load_more = (
+			self._connected
+			and not self._operation_in_progress
+			and self._has_more_playlists
+		)
+		self.load_more_button.Enable(can_load_more)
 
 	def _mnemonic_save_action_label(self, selected_result):
 		if selected_result is None:
@@ -454,6 +476,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		status_message,
 		search_results,
 		search_summary,
+		has_more_playlists=False,
 	):
 		self.Freeze()
 		try:
@@ -463,12 +486,14 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 			self._all_playlists = list(playlists or [])
 			self._all_search_results = list(search_results or [])
+			self._has_more_playlists = bool(has_more_playlists)
 			self.connection_label.SetLabel(
 				f"Conta: {account_name}." if connected and account_name else "Conta: não conectada."
 			)
 			if connected:
+				summary_suffix = " Há mais para carregar." if self._has_more_playlists else ""
 				self.library_summary_label.SetLabel(
-					f"Biblioteca: {len(self._all_playlists)} playlist(s) e mix(es) disponíveis."
+					f"Biblioteca: {len(self._all_playlists)} playlist(s) e mix(es) disponíveis.{summary_suffix}"
 				)
 			else:
 				self.library_summary_label.SetLabel("Biblioteca: conecte uma conta para listar playlists e mixes.")
@@ -558,7 +583,28 @@ class YouTubeMusicTabPanel(wx.Panel):
 				self._on_open_selected()
 				return
 
+		if key_code in (wx.WXK_PAGEDOWN, wx.WXK_NUMPAD_PAGEDOWN):
+			if self._maybe_trigger_load_more_playlists():
+				return
+
+		if key_code in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
+			selection = self.playlists_list.GetSelection()
+			last_index = len(self._visible_playlist_ids) - 1
+			if selection != wx.NOT_FOUND and selection >= last_index:
+				if self._maybe_trigger_load_more_playlists():
+					return
+
 		event.Skip()
+
+	def _maybe_trigger_load_more_playlists(self):
+		if not self._has_more_playlists:
+			return False
+		if self._operation_in_progress or not self._connected:
+			return False
+		if self._normalized_filter_text():
+			return False
+		self._on_load_more_playlists()
+		return True
 
 	def _on_search_list_key_down(self, event):
 		key_code = event.GetKeyCode()

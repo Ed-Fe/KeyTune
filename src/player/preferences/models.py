@@ -13,8 +13,14 @@ from ..constants import (
     DEFAULT_VOLUME,
     DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES,
     DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS,
+    DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES,
     MAX_CROSSFADE_SECONDS,
+    MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+    MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     REPEAT_MODES,
     REPEAT_OFF,
     SEEK_STEP_MS,
@@ -42,6 +48,8 @@ class AppSettings:
     youtube_music_auto_update_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
     youtube_music_dependency_last_auto_update_epoch: int = 0
+    youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
+    youtube_music_home_discovery_limit: int = DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT
     last_open_dir: str = ""
     recent_media_files: list[str] = field(default_factory=list)
     recent_folders: list[str] = field(default_factory=list)
@@ -73,6 +81,8 @@ class AppSettings:
             "youtube_music_auto_update_dependencies": self.youtube_music_auto_update_dependencies,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
+            "youtube_music_library_page_size": self.youtube_music_library_page_size,
+            "youtube_music_home_discovery_limit": self.youtube_music_home_discovery_limit,
             "last_open_dir": self.last_open_dir if self.remember_last_folder else "",
             "recent_media_files": list(self.recent_media_files),
             "recent_folders": list(self.recent_folders),
@@ -134,6 +144,18 @@ class AppSettings:
             minimum=0,
             maximum=32503680000,
             fallback=settings.youtube_music_dependency_last_auto_update_epoch,
+        )
+        settings.youtube_music_library_page_size = _clamp_int(
+            data.get("youtube_music_library_page_size", settings.youtube_music_library_page_size),
+            minimum=MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+            maximum=MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+            fallback=settings.youtube_music_library_page_size,
+        )
+        settings.youtube_music_home_discovery_limit = _clamp_int(
+            data.get("youtube_music_home_discovery_limit", settings.youtube_music_home_discovery_limit),
+            minimum=MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+            maximum=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+            fallback=settings.youtube_music_home_discovery_limit,
         )
 
         last_open_dir = str(data.get("last_open_dir") or "").strip()

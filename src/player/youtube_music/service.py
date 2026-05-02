@@ -32,7 +32,7 @@ from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_
 class YouTubeMusicService:
     _STREAM_CACHE_TTL_SECONDS = 300
     _STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS = 30
-    _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 60
+    _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
 
     def __init__(self):
         self._client = None
@@ -268,12 +268,21 @@ class YouTubeMusicService:
 
         return search_youtube_videos(normalized_query, limit=scope_option.limit)
 
-    def get_library_playlists(self):
+    def get_user_library_playlists(self, *, limit=None):
         client = self.get_client()
+        normalized_limit = None
+        if limit is not None:
+            try:
+                normalized_limit = max(1, int(limit))
+            except (TypeError, ValueError):
+                normalized_limit = None
+
         try:
-            raw_playlists = client.get_library_playlists(limit=None)
+            raw_playlists = client.get_library_playlists(limit=normalized_limit)
         except TypeError:
             raw_playlists = client.get_library_playlists()
+
+        raw_playlist_count = len(raw_playlists or [])
 
         playlists = []
         seen_playlist_ids = set()
@@ -295,16 +304,42 @@ class YouTubeMusicService:
             )
             seen_playlist_ids.add(playlist_id)
 
+        has_more = bool(normalized_limit) and raw_playlist_count >= normalized_limit
+        playlists.sort(key=lambda playlist: playlist.title.casefold())
+        return playlists, has_more
+
+    def get_personalized_mixes(self, *, limit=None):
+        client = self.get_client()
         try:
-            home_rows = client.get_home(limit=self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT)
+            home_limit = int(limit) if limit is not None else self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
+        except (TypeError, ValueError):
+            home_limit = self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
+        home_limit = max(1, home_limit)
+        try:
+            home_rows = client.get_home(limit=home_limit)
         except Exception:
             home_rows = []
 
+        mixes = []
+        seen_playlist_ids = set()
         for item in extract_personalized_mix_summaries(home_rows):
             if item.playlist_id in seen_playlist_ids:
                 continue
-            playlists.append(item)
+            mixes.append(item)
             seen_playlist_ids.add(item.playlist_id)
+
+        mixes.sort(key=lambda playlist: playlist.title.casefold())
+        return mixes
+
+    def get_library_playlists(self):
+        playlists, _ = self.get_user_library_playlists(limit=None)
+        seen_playlist_ids = {playlist.playlist_id for playlist in playlists}
+
+        for mix in self.get_personalized_mixes():
+            if mix.playlist_id in seen_playlist_ids:
+                continue
+            playlists.append(mix)
+            seen_playlist_ids.add(mix.playlist_id)
 
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists
