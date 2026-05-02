@@ -87,10 +87,10 @@ class OpenSourceDialog(wx.Dialog):
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         if button_sizer is not None:
-            ok_button = self.FindWindowById(wx.ID_OK)
+            ok_button = self.FindWindow(wx.ID_OK)
             if ok_button is not None:
                 ok_button.SetLabel("&Abrir")
-            cancel_button = self.FindWindowById(wx.ID_CANCEL)
+            cancel_button = self.FindWindow(wx.ID_CANCEL)
             if cancel_button is not None:
                 cancel_button.SetLabel("&Cancelar")
 
@@ -106,6 +106,9 @@ class OpenSourceDialog(wx.Dialog):
 
         self.SetSizerAndFit(root_sizer)
         self.SetMinSize((500, 260))
+        self.SetEscapeId(wx.ID_CANCEL)
+
+        self._last_announced_source_kind = None
 
         self.Bind(wx.EVT_BUTTON, self._on_confirm, id=wx.ID_OK)
         self.source_text.Bind(wx.EVT_TEXT, self._on_source_changed)
@@ -231,3 +234,10 @@ class OpenSourceDialog(wx.Dialog):
         self.status_label.SetLabel(status_message)
         self.status_label.Wrap(max(320, self.GetClientSize().Width - 24))
         self.Layout()
+
+        if status_message and source_kind != self._last_announced_source_kind:
+            self._last_announced_source_kind = source_kind
+            parent = self.GetParent()
+            announce = getattr(parent, "_announce", None)
+            if callable(announce):
+                announce(status_message)

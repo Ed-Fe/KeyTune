@@ -137,10 +137,13 @@ class UpdateDownloadDialog(wx.Dialog):
         frame_sizer.Add(panel, 1, wx.EXPAND)
         self.SetSizerAndFit(frame_sizer)
         self.SetMinSize((480, 220))
-        self.SetEscapeId(wx.ID_CANCEL)
+        # ESC must trigger a graceful cancel (waiting for the worker thread)
+        # instead of letting wx end the modal directly via the Cancel button.
+        self.SetEscapeId(wx.ID_NONE)
 
         self.cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel)
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
         wx.CallAfter(self._start_download)
 
     def _start_download(self):
@@ -221,6 +224,12 @@ class UpdateDownloadDialog(wx.Dialog):
 
     def on_cancel(self, _event):
         self._request_cancel()
+
+    def on_key_down(self, event):
+        if event.GetKeyCode() == wx.WXK_ESCAPE:
+            self._request_cancel()
+            return
+        event.Skip()
 
     def on_close(self, event):
         if self._finished:

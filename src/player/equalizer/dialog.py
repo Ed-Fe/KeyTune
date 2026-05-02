@@ -123,7 +123,8 @@ class EqualizerPresetDialog(wx.Dialog):
         )
 
         self.Bind(wx.EVT_BUTTON, self.on_confirm, id=wx.ID_OK)
-        self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
+        # ESC handling is provided by SetEscapeId(wx.ID_CANCEL) above;
+        # an extra EVT_CHAR_HOOK would duplicate that behavior.
 
     def configure_dialog(self, *, title, intro_text, preset_name, preamp_db, band_gains_db, validate_name, band_frequencies_hz):
         self.SetTitle(title)
@@ -160,6 +161,9 @@ class EqualizerPresetDialog(wx.Dialog):
             value_provider=lambda current_control=control: f"{float(current_control.GetValue()):+.1f} dB",
         )
         self._gain_control_names[control.GetId()] = name
+        # NVDA/JAWS read the native value of wx.SpinCtrlDouble and ignore the
+        # wx.Accessible Name on this composite control, so we explicitly
+        # announce the labeled value on focus and on change.
         control.Bind(wx.EVT_SET_FOCUS, self.on_gain_control_focus)
         control.Bind(wx.EVT_SPINCTRLDOUBLE, self.on_gain_control_changed)
         return control
@@ -235,16 +239,6 @@ class EqualizerPresetDialog(wx.Dialog):
                 )
                 self.name_ctrl.SetFocus()
                 return
-
-        event.Skip()
-
-    def on_key_down(self, event):
-        if event.GetKeyCode() == wx.WXK_ESCAPE:
-            if self.IsModal():
-                self.EndModal(wx.ID_CANCEL)
-            else:
-                self.Close()
-            return
 
         event.Skip()
 

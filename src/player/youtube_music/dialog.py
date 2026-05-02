@@ -14,6 +14,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         self.SetMinSize((640, 480))
         self._build_ui()
         self.SetSize((780, 560))
+        self.Layout()
+        self.SetEscapeId(wx.ID_CANCEL)
 
     def _configure_file_picker_accessibility(self):
         picker_text_ctrl = None
@@ -95,7 +97,10 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         note.Wrap(720)
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
-        ok_button = self.FindWindowById(wx.ID_OK)
+        # Use FindWindow (descendant-scoped) instead of FindWindowById, which is
+        # static and searches all top-level windows globally and could rename
+        # buttons that share wx.ID_OK in other open dialogs.
+        ok_button = self.FindWindow(wx.ID_OK)
         if ok_button is not None:
             ok_button.SetLabel("&Conectar")
             ok_button.SetName("Conectar ao YouTube Music")
@@ -103,9 +108,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
                 "Valida os cabeçalhos ou o arquivo informado e conecta a conta do YouTube Music."
             )
             ok_button.SetToolTip(ok_button.GetHelpText())
-        cancel_button = self.FindWindowById(wx.ID_CANCEL)
+        cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:
-            cancel_button.SetLabel("Cancelar")
+            cancel_button.SetLabel("&Cancelar")
 
         root_sizer.Add(instructions, 0, wx.ALL | wx.EXPAND, 12)
         root_sizer.Add(headers_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)

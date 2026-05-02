@@ -70,7 +70,8 @@ class PreferencesDialog(wx.Dialog):
         self.SetEscapeId(wx.ID_CANCEL)
 
         self._populate_controls(settings)
-        self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
+        # ESC handling is provided by SetEscapeId(wx.ID_CANCEL) above;
+        # an extra EVT_CHAR_HOOK would duplicate that behavior.
 
     def _build_general_tab(self):
         page, page_sizer = self._create_tab_page("Geral")
@@ -527,16 +528,6 @@ class PreferencesDialog(wx.Dialog):
             settings.last_open_dir = ""
 
         return settings
-
-    def on_key_down(self, event):
-        if event.GetKeyCode() == wx.WXK_ESCAPE:
-            if self.IsModal():
-                self.EndModal(wx.ID_CANCEL)
-            else:
-                self.Close()
-            return
-
-        event.Skip()
 
     def _on_register_associations(self, _event):
         from ..file_associations import register_file_associations
