@@ -14,6 +14,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - Nova preferência **Aplicar crossfade ao trocar de faixa manualmente** (desligada por padrão) para reativar a sobreposição também nos comandos de avançar/voltar.
 - Fade-out curto ao pausar e parar a reprodução para suavizar o corte do áudio.
 - Atalhos `Ctrl+C` para copiar o caminho ou link do item selecionado e `Ctrl+Shift+V` para colar e abrir um arquivo, pasta, playlist ou link da área de transferência (ativos apenas nas abas de playlist e pasta, sem interferir em campos de texto da central do YouTube Music).
+- Integração com os **System Media Transport Controls** do Windows: o player agora aparece no painel "Reproduzindo agora" do sistema com título e fonte da mídia, e aceita comandos de play/pause, próxima, anterior e parar vindos de fones/caixas Bluetooth (AVRCP), teclas multimídia, smartwatches, da Alexa quando o PC está pareado e da skill "Computer".
 
 ## [0.4.1] - 2026-04-12
 

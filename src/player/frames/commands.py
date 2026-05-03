@@ -399,6 +399,9 @@ class FrameCommandMixin:
             self._announce("Parado.")
             if hasattr(self, "_set_status_message"):
                 self._set_status_message("Parado.", auto_clear_ms=0)
+            refresh_smtc = getattr(self, "_refresh_smtc_state", None)
+            if callable(refresh_smtc):
+                refresh_smtc()
 
         if active_player_key is not None:
             self._perform_short_fade_out(active_player_key, finish_stop)
@@ -868,5 +871,6 @@ class FrameCommandMixin:
         self._save_session()
         self._shutdown_library_loader()
         self._shutdown_player_backend()
+        self._shutdown_smtc_service()
         self.announcer.close()
         self.Destroy()

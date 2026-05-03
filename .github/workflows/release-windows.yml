@@ -30,7 +30,7 @@ jobs:
 
       - name: Build application (PyInstaller)
         run: |
-          pyinstaller --noconfirm --windowed --name MediaPlayer --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi src/main.py
+          pyinstaller --noconfirm --windowed --name MediaPlayer --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
 
       - name: Build updater (PyInstaller)
         run: |

@@ -9,6 +9,7 @@ from .library import FrameLibraryMixin
 from .playback import FramePlaybackMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
+from .smtc import FrameSmtcMixin
 from .ui import FrameUIMixin
 from .update import FrameUpdateMixin
 from .youtube_music import FrameYouTubeMusicMixin
@@ -22,6 +23,7 @@ class MediaPlayerFrame(
     FrameEqualizerMixin,
     FrameLibraryMixin,
     FramePlaybackMixin,
+    FrameSmtcMixin,
     FrameUpdateMixin,
     FrameUIMixin,
     wx.Frame,
@@ -45,6 +47,7 @@ class MediaPlayerFrame(
 
         self._create_player_backend()
         self._create_library_loader()
+        self._initialize_smtc_service()
 
         self._build_menu_bar()
         self._build_ui()

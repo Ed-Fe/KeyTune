@@ -520,6 +520,9 @@ class FrameLibraryTabsMixin:
 
         media_name = self._media_label(state.current_media_path)
         self.SetTitle(f"{APP_TITLE} — {state.title} — {media_name}")
+        refresh_smtc = getattr(self, "_refresh_smtc_state", None)
+        if callable(refresh_smtc):
+            refresh_smtc()
 
     def _play_adjacent_item(self, direction):
         if self._block_sensitive_action_during_youtube_music("track-navigation"):

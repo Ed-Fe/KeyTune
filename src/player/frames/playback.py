@@ -293,6 +293,7 @@ class FramePlaybackMixin:
 
     def _on_media_player_playing(self, _event, player_key):
         wx.CallAfter(self._handle_player_started, player_key)
+        wx.CallAfter(self._smtc_refresh_if_active, player_key)
 
     def _on_media_player_error(self, _event, player_key):
         wx.CallAfter(self._handle_player_error, player_key)
@@ -331,6 +332,13 @@ class FramePlaybackMixin:
 
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
         self._announce("Não foi possível iniciar a próxima faixa para o crossfade.")
+
+    def _smtc_refresh_if_active(self, player_key):
+        if player_key != getattr(self, "_active_player_key", None):
+            return
+        refresh_smtc = getattr(self, "_refresh_smtc_state", None)
+        if callable(refresh_smtc):
+            refresh_smtc()
 
     def _apply_volume_to_player(self, player_key, volume):
         player = self._managed_player(player_key)
@@ -1366,6 +1374,9 @@ class FramePlaybackMixin:
                         f"Pausado: {self._media_label(state.current_media_path)}",
                         auto_clear_ms=0,
                     )
+                refresh_smtc = getattr(self, "_refresh_smtc_state", None)
+                if callable(refresh_smtc):
+                    refresh_smtc()
 
             self._perform_short_fade_out(active_player_key, finish_pause)
         else:
@@ -1380,6 +1391,9 @@ class FramePlaybackMixin:
                     f"Tocando: {self._media_label(state.current_media_path)}",
                     auto_clear_ms=0,
                 )
+            refresh_smtc = getattr(self, "_refresh_smtc_state", None)
+            if callable(refresh_smtc):
+                refresh_smtc()
 
     def _announce_playback_time(self):
         if not self.player.get_media():
