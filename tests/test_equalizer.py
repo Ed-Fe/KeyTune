@@ -36,7 +36,7 @@ class EqualizerPresetTests(unittest.TestCase):
             band_frequencies_hz=[60.0, 170.0, 1000.0],
         )
 
-        self.assertIn("volume=volume=-3.0dB", filter_chain)
+        self.assertIn("volume=volume=-1.5dB", filter_chain)
         self.assertIn("g=3.0", filter_chain)
 
 

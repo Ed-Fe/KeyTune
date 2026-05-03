@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 
 
 EQUALIZER_SCREEN_ID = "equalizer"
-EQUALIZER_GAIN_MIN_DB = -20.0
-EQUALIZER_GAIN_MAX_DB = 20.0
+EQUALIZER_GAIN_MIN_DB = -12.0
+EQUALIZER_GAIN_MAX_DB = 12.0
 DEFAULT_EQUALIZER_PRESET_KEY = "flat"
 DEFAULT_EQUALIZER_PRESET_ID = f"builtin:{DEFAULT_EQUALIZER_PRESET_KEY}"
 DEFAULT_EQUALIZER_PREAMP_DB = 0.0
@@ -63,72 +63,72 @@ BUILTIN_PRESET_TABLE = {
         "band_gains_db": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     },
     "classical": {
-        "preamp_db": -2.0,
+        "preamp_db": -1.0,
         "band_gains_db": [-1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 1.5, 1.0, 0.5],
     },
     "club": {
-        "preamp_db": -2.5,
-        "band_gains_db": [2.5, 2.0, 1.0, 0.0, -0.5, 0.5, 1.5, 2.0, 1.5, 1.0],
+        "preamp_db": -1.5,
+        "band_gains_db": [3.0, 2.5, 1.0, 0.0, -0.5, 0.5, 2.0, 2.5, 2.0, 1.0],
     },
     "dance": {
-        "preamp_db": -3.0,
-        "band_gains_db": [3.0, 2.5, 1.0, -0.5, -1.0, 0.0, 1.5, 2.5, 2.0, 1.5],
+        "preamp_db": -2.0,
+        "band_gains_db": [3.5, 3.0, 1.0, -0.5, -1.0, 0.0, 2.0, 3.0, 2.5, 1.5],
     },
     "fullbass": {
-        "preamp_db": -4.0,
+        "preamp_db": -2.0,
         "band_gains_db": [4.0, 3.0, 1.5, 0.0, -1.0, -1.5, -2.0, -2.5, -2.0, -1.5],
     },
     "fullbasstreble": {
-        "preamp_db": -3.0,
+        "preamp_db": -1.5,
         "band_gains_db": [3.0, 2.0, 0.5, -1.0, -1.5, -0.5, 1.5, 3.0, 2.5, 2.0],
     },
     "fulltreble": {
-        "preamp_db": -4.0,
+        "preamp_db": -2.0,
         "band_gains_db": [-2.5, -2.0, -1.5, -0.5, 0.5, 1.5, 3.0, 4.0, 3.5, 3.0],
     },
     "headphones": {
-        "preamp_db": -2.5,
+        "preamp_db": -1.5,
         "band_gains_db": [1.5, 1.0, 0.0, -0.5, 0.0, 1.0, 2.0, 2.5, 2.0, 1.5],
     },
     "largehall": {
-        "preamp_db": -2.0,
+        "preamp_db": -1.0,
         "band_gains_db": [2.0, 1.5, 0.5, -0.5, -1.0, 0.5, 1.5, 2.0, 1.5, 1.0],
     },
     "live": {
-        "preamp_db": -1.5,
+        "preamp_db": -1.0,
         "band_gains_db": [1.0, 0.5, 0.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, 0.0],
     },
     "party": {
-        "preamp_db": -2.5,
-        "band_gains_db": [2.5, 2.0, 0.5, -0.5, -1.0, 0.0, 1.0, 2.5, 2.0, 1.5],
+        "preamp_db": -2.0,
+        "band_gains_db": [3.0, 2.5, 0.5, -0.5, -1.0, 0.0, 1.0, 3.0, 2.5, 1.5],
     },
     "pop": {
-        "preamp_db": -1.5,
+        "preamp_db": -1.0,
         "band_gains_db": [1.5, 1.0, 0.0, -0.5, 0.5, 1.5, 1.0, 1.0, 0.5, 0.0],
     },
     "reggae": {
-        "preamp_db": -3.0,
+        "preamp_db": -1.5,
         "band_gains_db": [3.0, 2.5, 1.0, -0.5, -1.0, 0.0, 0.5, 1.0, 0.5, 0.0],
     },
     "rock": {
-        "preamp_db": -2.5,
+        "preamp_db": -1.5,
         "band_gains_db": [2.0, 1.0, -0.5, -1.5, -0.5, 1.5, 2.5, 2.0, 1.5, 1.0],
     },
     "ska": {
-        "preamp_db": -2.0,
+        "preamp_db": -1.0,
         "band_gains_db": [1.5, 1.0, 0.0, 0.5, 1.0, 1.5, 2.0, 2.0, 1.5, 1.0],
     },
     "soft": {
-        "preamp_db": -1.0,
+        "preamp_db": -0.5,
         "band_gains_db": [1.0, 0.5, 0.0, -0.5, -0.5, 0.0, 0.5, 1.0, 0.5, 0.0],
     },
     "softrock": {
-        "preamp_db": -1.5,
+        "preamp_db": -1.0,
         "band_gains_db": [1.5, 1.0, 0.5, 0.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.5],
     },
     "techno": {
-        "preamp_db": -3.5,
-        "band_gains_db": [3.5, 2.5, 1.0, -1.0, -1.0, 0.5, 2.0, 3.0, 2.5, 1.5],
+        "preamp_db": -2.0,
+        "band_gains_db": [4.0, 3.0, 1.0, -1.0, -1.0, 0.5, 2.5, 3.5, 3.0, 1.5],
     },
 }
 

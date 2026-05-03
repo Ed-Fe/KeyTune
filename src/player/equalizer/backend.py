@@ -64,7 +64,13 @@ def _safe_preamp_db(preamp_db, band_gains_db):
     if highest_boost_db <= 0.0:
         return requested_preamp_db
 
-    return min(requested_preamp_db, clamp_gain_db(-highest_boost_db))
+    # Reserva apenas metade do maior boost como headroom: cada banda usa um
+    # filtro peaking com cerca de uma oitava de largura, então o conteúdo
+    # real do áudio raramente atinge o pico de todas as bandas
+    # simultaneamente. Subtrair o valor inteiro do boost (pior caso teórico)
+    # derruba o loudness percebido sem necessidade.
+    required_headroom_db = clamp_gain_db(-highest_boost_db / 2.0)
+    return min(requested_preamp_db, required_headroom_db)
 
 
 def build_mpv_equalizer_filter(preset, *, band_frequencies_hz):
@@ -84,4 +90,10 @@ def build_mpv_equalizer_filter(preset, *, band_frequencies_hz):
             f"g={clamp_gain_db(normalized_band_gains[band_index]):.1f}"
         )
 
+    # Limiter de segurança: se um preset personalizado ainda assim somar
+    # picos suficientes para estourar (acima de ~−0,3 dBFS), o alimiter
+    # corta o pico sem distorcer o restante da música.
+    filter_parts.append("alimiter=limit=0.97:attack=5:release=50:level=disabled")
+
     return f"lavfi=[{','.join(filter_parts)}]"
+
