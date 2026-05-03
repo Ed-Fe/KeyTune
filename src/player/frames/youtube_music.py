@@ -401,6 +401,20 @@ class FrameYouTubeMusicMixin:
         self._youtube_music_operation_in_progress = bool(in_progress)
         self._refresh_youtube_music_menu_state()
 
+    def _on_youtube_music_screen_closed(self):
+        # When the user closes the YouTube Music tab while a background task
+        # is still in flight (e.g. library refresh, search, save), detach it:
+        # the worker thread will run to completion but its result is ignored
+        # because the active task id no longer matches. This prevents the
+        # busy cursor and the global "operation in progress" lock (which
+        # blocks track navigation, shuffle/repeat and Stop) from staying
+        # active until the watchdog timeout fires.
+        if not getattr(self, "_youtube_music_operation_in_progress", False):
+            return
+        self._youtube_music_active_task_id = None
+        self._cancel_youtube_music_task_watchdog()
+        self._end_youtube_music_busy_state()
+
     def _cancel_youtube_music_task_watchdog(self):
         watchdog = getattr(self, "_youtube_music_task_watchdog", None)
         self._youtube_music_task_watchdog = None
@@ -591,6 +605,7 @@ class FrameYouTubeMusicMixin:
                 "no catálogo e abrir playlists, mixes, músicas ou vídeos."
             ),
             on_activate=self._refresh_youtube_music_screen_later,
+            on_close=self._on_youtube_music_screen_closed,
         )
 
         dependency_update_started = self._maybe_auto_update_youtube_music_dependencies()

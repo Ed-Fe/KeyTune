@@ -27,8 +27,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._all_playlists = []
 		self._visible_playlists = []
 		self._visible_playlist_ids = []
+		self._last_playlist_labels = []
 		self._all_search_results = []
 		self._visible_search_result_ids = []
+		self._last_search_result_labels = []
 		self._connected = False
 		self._operation_in_progress = False
 		self._has_more_playlists = False
@@ -354,7 +356,13 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._visible_playlist_ids = [playlist.playlist_id for playlist in self._visible_playlists]
 
 		labels = [playlist.choice_label for playlist in self._visible_playlists]
-		self.playlists_list.Set(labels)
+		# Avoid Set() when labels are unchanged: it resets the listbox selection
+		# and triggers redundant screen reader announcements when refreshes are
+		# scheduled by unrelated UI updates (menus, busy state, etc.).
+		labels_changed = labels != self._last_playlist_labels
+		if labels_changed:
+			self.playlists_list.Set(labels)
+			self._last_playlist_labels = list(labels)
 
 		selection_index = wx.NOT_FOUND
 		if selected_playlist_id and selected_playlist_id in self._visible_playlist_ids:
@@ -362,7 +370,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 		elif labels:
 			selection_index = 0
 
-		if selection_index != wx.NOT_FOUND:
+		if selection_index != wx.NOT_FOUND and (
+			labels_changed or self.playlists_list.GetSelection() != selection_index
+		):
 			self.playlists_list.SetSelection(selection_index)
 
 		self.results_label.SetLabel(
@@ -378,7 +388,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		self._visible_search_result_ids = [result.stable_id for result in self._all_search_results]
 		labels = [result.choice_label for result in self._all_search_results]
-		self.search_results_list.Set(labels)
+		labels_changed = labels != self._last_search_result_labels
+		if labels_changed:
+			self.search_results_list.Set(labels)
+			self._last_search_result_labels = list(labels)
 
 		selection_index = wx.NOT_FOUND
 		if selected_result_id and selected_result_id in self._visible_search_result_ids:
@@ -386,7 +399,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 		elif labels:
 			selection_index = 0
 
-		if selection_index != wx.NOT_FOUND:
+		if selection_index != wx.NOT_FOUND and (
+			labels_changed or self.search_results_list.GetSelection() != selection_index
+		):
 			self.search_results_list.SetSelection(selection_index)
 
 		self._update_search_actions()

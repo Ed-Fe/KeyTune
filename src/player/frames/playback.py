@@ -577,11 +577,16 @@ class FramePlaybackMixin:
         invalidate_requests=False,
     ):
         crossfade_state = getattr(self, "_crossfade_state", None)
+        if invalidate_requests:
+            # Bump the serial unconditionally so that any in-flight playback
+            # request (e.g. a YouTube Music stream still being resolved on
+            # the worker thread) is treated as stale by `_finish_media_start`
+            # and its player is stopped instead of silently starting playback
+            # after the user already stopped/closed/unloaded.
+            self._next_playback_request_serial()
+
         if not crossfade_state:
             return
-
-        if invalidate_requests:
-            self._next_playback_request_serial()
 
         incoming_key = crossfade_state.get("incoming_key")
         outgoing_key = crossfade_state.get("outgoing_key")
@@ -918,15 +923,21 @@ class FramePlaybackMixin:
         self._update_time_bar()
 
     def _finish_media_start(self, request, success, error_message):
+        player_key = request.get("player_key", self._active_player_key)
         if request.get("serial") != self._playback_request_serial:
+            # The request was invalidated (e.g. the tab was closed while we
+            # were still resolving the stream URL on the worker thread). The
+            # worker may have started the player after `_unload_player` ran,
+            # so make sure the player tied to this stale request is stopped.
+            if success:
+                self._stop_player(player_key, unload=True)
             return
 
-        player_key = request.get("player_key", self._active_player_key)
         tab_index = request.get("tab_index")
         media_path = request.get("media_path")
         state = self._get_playlist_state(tab_index)
         if not state or state.current_media_path != media_path:
-            if request.get("crossfade"):
+            if request.get("crossfade") or success:
                 self._stop_player(player_key, unload=True)
             return
 
