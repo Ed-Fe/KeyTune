@@ -285,11 +285,42 @@ def _can_import_dependency(import_name: str) -> bool:
 
 
 def _resolve_module_version(module) -> str:
-    for attribute_name in ("__version__", "VERSION", "version"):
+    # Only accept string-like attributes. yt_dlp exposes a ``version``
+    # *submodule* (yt_dlp/version.py) — taking it via getattr would yield a
+    # module repr instead of a version string.
+    for attribute_name in ("__version__", "VERSION"):
         value = getattr(module, attribute_name, "")
-        normalized_value = str(value or "").strip()
-        if normalized_value:
-            return normalized_value
+        if isinstance(value, str):
+            normalized_value = value.strip()
+            if normalized_value:
+                return normalized_value
+
+    # Fallback: read the version attribute from the dedicated submodule
+    # (yt_dlp.version.__version__) before giving up.
+    submodule = getattr(module, "version", None)
+    if submodule is not None and not isinstance(submodule, str):
+        for attribute_name in ("__version__", "VERSION"):
+            value = getattr(submodule, attribute_name, "")
+            if isinstance(value, str):
+                normalized_value = value.strip()
+                if normalized_value:
+                    return normalized_value
+
+    # Last resort: ask importlib.metadata using the distribution name.
+    distribution_name = getattr(module, "__name__", "")
+    if distribution_name:
+        try:
+            from importlib import metadata as importlib_metadata
+
+            distribution_version = importlib_metadata.version(
+                "yt-dlp" if distribution_name == "yt_dlp" else distribution_name
+            )
+            normalized_distribution_version = str(distribution_version or "").strip()
+            if normalized_distribution_version:
+                return normalized_distribution_version
+        except Exception:
+            pass
+
     return "desconhecida"
 
 

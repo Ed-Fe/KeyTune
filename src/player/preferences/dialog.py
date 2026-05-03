@@ -319,6 +319,10 @@ class PreferencesDialog(wx.Dialog):
             page,
             label="Atualizar automaticamente as dependências do YouTube Music",
         )
+        self.youtube_music_use_nightly_yt_dlp_checkbox = wx.CheckBox(
+            page,
+            label="Usar versão &nightly do yt-dlp (recomendado)",
+        )
 
         self._configure_checkbox(
             self.youtube_music_manage_dependencies_checkbox,
@@ -332,6 +336,14 @@ class PreferencesDialog(wx.Dialog):
             self.youtube_music_auto_update_dependencies_checkbox,
             "Atualizar automaticamente dependências do YouTube Music",
             "Verifica e aplica atualização automática das dependências no intervalo definido abaixo.",
+        )
+        self._configure_checkbox(
+            self.youtube_music_use_nightly_yt_dlp_checkbox,
+            "Usar versão nightly do yt-dlp",
+            (
+                "Instala builds nightly do yt-dlp (pip install --pre). Recomendado porque o YouTube quebra extractors com frequência "
+                "e o nightly costuma ter as correções antes do release estável."
+            ),
         )
 
         interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
@@ -347,6 +359,7 @@ class PreferencesDialog(wx.Dialog):
 
         resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
         resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        resources_box.Add(self.youtube_music_use_nightly_yt_dlp_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         resources_box.Add(interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         dependencies_note_label = wx.StaticText(
@@ -454,6 +467,7 @@ class PreferencesDialog(wx.Dialog):
         managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()
         auto_update_enabled = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
         self.youtube_music_auto_update_dependencies_checkbox.Enable(managed_dependencies_enabled)
+        self.youtube_music_use_nightly_yt_dlp_checkbox.Enable(managed_dependencies_enabled)
         self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
 
     def _audio_output_choice_labels(self):
@@ -494,6 +508,7 @@ class PreferencesDialog(wx.Dialog):
         self.shuffle_new_playlists_checkbox.SetValue(settings.shuffle_new_playlists)
         self.youtube_music_manage_dependencies_checkbox.SetValue(settings.youtube_music_manage_dependencies)
         self.youtube_music_auto_update_dependencies_checkbox.SetValue(settings.youtube_music_auto_update_dependencies)
+        self.youtube_music_use_nightly_yt_dlp_checkbox.SetValue(settings.youtube_music_use_nightly_yt_dlp)
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
@@ -528,6 +543,7 @@ class PreferencesDialog(wx.Dialog):
         settings.repeat_mode_new_playlists = REPEAT_MODES[self.repeat_mode_choice.GetSelection()]
         settings.youtube_music_manage_dependencies = self.youtube_music_manage_dependencies_checkbox.GetValue()
         settings.youtube_music_auto_update_dependencies = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
+        settings.youtube_music_use_nightly_yt_dlp = self.youtube_music_use_nightly_yt_dlp_checkbox.GetValue()
         settings.youtube_music_dependency_update_interval_hours = int(
             self.youtube_music_dependency_update_interval_ctrl.GetValue()
         )

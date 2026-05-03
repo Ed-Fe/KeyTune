@@ -58,7 +58,7 @@ class MediaPlayerFrame(
         self.Show()
         wx.CallAfter(self._initialize_player_state)
         wx.CallAfter(self._open_initial_paths)
-        wx.CallAfter(self._verify_youtube_music_connection)
+        wx.CallAfter(self._initialize_youtube_music_startup_state)
         wx.CallAfter(self._prime_equalizer_ui)
         wx.CallAfter(self._schedule_startup_update_check)
 

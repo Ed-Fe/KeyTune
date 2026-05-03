@@ -137,8 +137,13 @@ class FrameYouTubeMusicMixin:
         if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
             return False
 
-        def worker():
-            return install_or_update_youtube_dependencies(force=force_update)
+        # The dependency update runs pip in a subprocess; it is independent of
+        # any YTMusic API operation. We deliberately bypass the YouTube Music
+        # operation lock used by API calls so that opening the tab can load
+        # the library in parallel with a long-running pip install.
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            return False
+        self._youtube_music_dependency_update_in_progress = True
 
         def on_success(result):
             self.settings.youtube_music_dependency_last_auto_update_epoch = int(time.time())
@@ -155,6 +160,10 @@ class FrameYouTubeMusicMixin:
             if manual or getattr(result, "updated", False):
                 self._announce(status_message)
 
+            # Now that any new ytmusicapi files are in place, we can safely
+            # import the package and warm up the client.
+            self._prewarm_youtube_music_client()
+
             service = self._get_youtube_music_service()
             if service.has_saved_browser_auth() and not self._youtube_music_library_has_loaded():
                 self.on_refresh_youtube_music_library(None, announce=False)
@@ -163,6 +172,9 @@ class FrameYouTubeMusicMixin:
             status_message = "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
             self._youtube_music_library_status_message = status_message
             self._refresh_youtube_music_screen_later()
+            # Still pre-warm so opening the tab is fast: the previously
+            # installed ytmusicapi keeps working even if the upgrade failed.
+            self._prewarm_youtube_music_client()
             if manual:
                 wx.MessageBox(
                     f"{status_message}\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
@@ -171,7 +183,30 @@ class FrameYouTubeMusicMixin:
                     self,
                 )
 
-        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+        def runner():
+            try:
+                result = install_or_update_youtube_dependencies(
+                    force=force_update,
+                    include_prerelease=bool(
+                        getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)
+                    ),
+                )
+            except Exception as exc:
+                wx.CallAfter(self._finish_youtube_music_dependency_update, on_success, on_error, None, exc)
+                return
+            wx.CallAfter(self._finish_youtube_music_dependency_update, on_success, on_error, result, None)
+
+        threading.Thread(target=runner, daemon=True, name="ytmusic-dep-update").start()
+        return True
+
+    def _finish_youtube_music_dependency_update(self, on_success, on_error, result, error):
+        self._youtube_music_dependency_update_in_progress = False
+        if error is not None:
+            if callable(on_error):
+                on_error(error)
+            return
+        if callable(on_success):
+            on_success(result)
 
     def _maybe_auto_update_youtube_music_dependencies(self):
         self._configure_youtube_music_dependency_management()
@@ -203,6 +238,20 @@ class FrameYouTubeMusicMixin:
             return
 
         if has_managed_dependencies:
+            # If the user toggled the nightly/stable channel, force a fresh
+            # install so the channel actually changes (pip won't downgrade or
+            # switch channels otherwise).
+            had_nightly = bool(getattr(previous_settings, "youtube_music_use_nightly_yt_dlp", False))
+            has_nightly = bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False))
+            if had_nightly != has_nightly:
+                channel_label = "nightly" if has_nightly else "estável"
+                self._youtube_music_library_status_message = (
+                    f"Reinstalando yt-dlp na versão {channel_label}..."
+                )
+                self._refresh_youtube_music_screen_later()
+                self._start_youtube_music_dependency_update(force_update=True, manual=True)
+                return
+
             self._maybe_auto_update_youtube_music_dependencies()
 
     def _on_manual_check_for_additional_updates(self):
@@ -290,6 +339,7 @@ class FrameYouTubeMusicMixin:
             on_save_search_result=self._on_youtube_music_save_search_result_button,
             on_add_search_result_to_playlist=self._on_youtube_music_add_search_result_to_playlist_button,
             on_load_more_playlists=self._on_youtube_music_load_more_playlists_button,
+            on_announce=self._announce,
         )
 
     def _get_youtube_music_panel(self):
@@ -477,6 +527,7 @@ class FrameYouTubeMusicMixin:
         self._announce(
             "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
         )
+        self._drain_youtube_music_pending_callbacks()
 
     def _finish_youtube_music_background_task(self, task_id, on_success, on_error, result, error):
         if task_id != getattr(self, "_youtube_music_active_task_id", None):
@@ -485,13 +536,44 @@ class FrameYouTubeMusicMixin:
         self._youtube_music_active_task_id = None
         self._cancel_youtube_music_task_watchdog()
         self._end_youtube_music_busy_state()
-        if error is not None:
-            if callable(on_error):
-                on_error(error)
-            return
+        try:
+            if error is not None:
+                if callable(on_error):
+                    on_error(error)
+                return
 
-        if callable(on_success):
-            on_success(result)
+            if callable(on_success):
+                on_success(result)
+        finally:
+            self._drain_youtube_music_pending_callbacks()
+
+    def _queue_youtube_music_post_operation_callback(self, callback):
+        if not callable(callback):
+            return
+        pending = getattr(self, "_youtube_music_pending_post_operation_callbacks", None)
+        if pending is None:
+            pending = []
+            self._youtube_music_pending_post_operation_callbacks = pending
+        # Avoid stacking duplicates of the same bound method.
+        for existing in pending:
+            if existing == callback:
+                return
+        pending.append(callback)
+
+    def _drain_youtube_music_pending_callbacks(self):
+        pending = getattr(self, "_youtube_music_pending_post_operation_callbacks", None)
+        if not pending:
+            return
+        # Snapshot and clear before invoking so callbacks that re-enqueue
+        # themselves (e.g. because another task started in the meantime)
+        # don't get dropped.
+        callbacks = list(pending)
+        self._youtube_music_pending_post_operation_callbacks = []
+        for callback in callbacks:
+            try:
+                callback()
+            except Exception:
+                continue
 
     def _remember_restored_youtube_music_states(self, restored_states):
         pending_states = []
@@ -595,6 +677,23 @@ class FrameYouTubeMusicMixin:
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def on_open_youtube_music(self, _event):
+        # Building the panel for the first time can take a moment (widget
+        # construction). Announce as early as possible so screen-reader users
+        # know the shortcut was registered.
+        service = self._get_youtube_music_service()
+        if (
+            service.has_saved_browser_auth()
+            and not self._youtube_music_library_has_loaded()
+        ):
+            if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+                self._announce(
+                    "Atualizando recursos adicionais do YouTube Music. A biblioteca ser\u00e1 carregada em seguida."
+                )
+            else:
+                self._announce(
+                    "Carregando conta e biblioteca do YouTube Music. Por favor, aguarde."
+                )
+
         self._open_screen_tab(
             YOUTUBE_MUSIC_SCREEN_ID,
             "YouTube Music",
@@ -608,12 +707,39 @@ class FrameYouTubeMusicMixin:
             on_close=self._on_youtube_music_screen_closed,
         )
 
-        dependency_update_started = self._maybe_auto_update_youtube_music_dependencies()
-        if dependency_update_started:
+        # Library auto-load. Dependency auto-update no longer runs here: it
+        # was moved to startup so it can finish (or fail) before the user even
+        # opens the tab, instead of stalling tab opening for several seconds.
+        self._auto_load_youtube_music_library_if_needed()
+
+    def _auto_load_youtube_music_library_if_needed(self):
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth():
+            return
+        if self._youtube_music_library_has_loaded():
             return
 
-        if self._get_youtube_music_service().has_saved_browser_auth() and not self._youtube_music_library_has_loaded():
-            self.on_refresh_youtube_music_library(None, announce=False)
+        # If the dependency auto-update is still running, don't touch
+        # ytmusicapi: pip may be replacing its files. The dep update's
+        # on_success path will trigger this auto-load when it finishes.
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            self._youtube_music_library_status_message = (
+                "Atualizando recursos adicionais do YouTube Music. A biblioteca ser\u00e1 carregada em seguida."
+            )
+            self._refresh_youtube_music_screen_later()
+            return
+
+        # If another YouTube Music background task is already running (typically
+        # the startup _verify_youtube_music_connection account-name fetch),
+        # don't drop the auto-load: queue it so the library refresh fires as
+        # soon as the running task finishes.
+        if self._is_youtube_music_operation_in_progress():
+            self._queue_youtube_music_post_operation_callback(
+                self._auto_load_youtube_music_library_if_needed
+            )
+            return
+
+        self.on_refresh_youtube_music_library(None, announce=False)
 
     def _on_youtube_music_connect_button(self):
         self.on_connect_youtube_music(None)
@@ -864,44 +990,109 @@ class FrameYouTubeMusicMixin:
         if not self._ensure_youtube_music_authenticated():
             return False
 
+        # Don't issue API calls while pip may be replacing ytmusicapi files.
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            message = (
+                "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
+            )
+            self._youtube_music_library_status_message = message
+            self._refresh_youtube_music_screen_later()
+            if announce:
+                self._announce(message)
+            return False
+
         service = self._get_youtube_music_service()
         if announce:
             self._announce("Atualizando playlists e mixes do YouTube Music.")
 
         page_size = int(self._youtube_music_library_page_size())
         self._youtube_music_library_limit = page_size
+        home_limit = self._youtube_music_home_discovery_limit()
 
         def worker():
-            account_name = service.get_connected_account_name()
-            playlists, has_more = service.get_user_library_playlists(limit=page_size)
-            return account_name, playlists, has_more
+            # Run the three independent network calls in parallel: account
+            # name, library playlists, and personalized mixes (home rows).
+            # ytmusicapi reuses a single requests.Session under the hood and
+            # the cached visitor id, so concurrent calls share TLS/cookies.
+            results = {}
+
+            def run_account():
+                try:
+                    results["account_name"] = service.get_connected_account_name()
+                except Exception as exc:
+                    results["account_error"] = exc
+
+            def run_playlists():
+                try:
+                    playlists, has_more = service.get_user_library_playlists(limit=page_size)
+                    results["playlists"] = (playlists, has_more)
+                except Exception as exc:
+                    results["playlists_error"] = exc
+
+            def run_mixes():
+                try:
+                    results["mixes"] = service.get_personalized_mixes(limit=home_limit)
+                except Exception as exc:
+                    results["mixes_error"] = exc
+
+            threads = [
+                threading.Thread(target=run_account, daemon=True),
+                threading.Thread(target=run_playlists, daemon=True),
+                threading.Thread(target=run_mixes, daemon=True),
+            ]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+
+            # Library playlists are required; account name and mixes are
+            # best-effort enhancements.
+            if "playlists_error" in results:
+                raise results["playlists_error"]
+
+            account_name = results.get("account_name", "") or ""
+            playlists, has_more = results["playlists"]
+            mixes = results.get("mixes") or []
+            return account_name, playlists, has_more, mixes
 
         def on_success(result):
-            account_name, playlists, has_more = result
+            account_name, playlists, has_more, mixes = result
             self._set_youtube_music_account_name(account_name)
+
+            existing_ids = {playlist.playlist_id for playlist in playlists}
+            merged = list(playlists)
+            mix_added = 0
+            for mix in mixes or []:
+                if mix.playlist_id in existing_ids:
+                    continue
+                merged.append(mix)
+                existing_ids.add(mix.playlist_id)
+                mix_added += 1
+            merged.sort(key=lambda playlist: playlist.title.casefold())
+
             playlist_count = len(playlists)
             if has_more:
                 summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)"
+                    f" e {mix_added} mix(es) personalizada(s)."
                     " Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-                    " Carregando mixes personalizadas..."
                 )
             else:
                 summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
-                    " Carregando mixes personalizadas..."
+                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)"
+                    f" e {mix_added} mix(es) personalizada(s)."
                 )
             self._set_youtube_music_library_cache(
-                playlists,
+                merged,
                 status_message=summary_message,
                 has_more_playlists=has_more,
             )
             self._refresh_youtube_music_menu_state()
             if announce:
                 self._announce(
-                    f"Biblioteca do YouTube Music atualizada: {playlist_count} playlist(s)."
+                    f"Biblioteca do YouTube Music atualizada: {playlist_count} playlist(s)"
+                    f" e {mix_added} mix(es)."
                 )
-            self._refresh_youtube_music_personalized_mixes(announce=announce)
 
         def on_error(exc):
             self._refresh_youtube_music_menu_state()
@@ -1123,6 +1314,48 @@ class FrameYouTubeMusicMixin:
             wx.OK | wx.ICON_INFORMATION,
             self,
         )
+
+    def _initialize_youtube_music_startup_state(self):
+        # Avoid an eager network round trip on startup just to fetch the
+        # account name. The account is validated lazily when the user opens
+        # the YouTube Music tab (the library refresh already authenticates
+        # and updates the displayed account name). Restored YouTube Music
+        # playlist tabs that need their item labels refreshed are still
+        # handled here, since their refresh cannot wait for user action.
+        self._refresh_youtube_music_menu_state()
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth():
+            return
+
+        # If a dependency auto-update is due, kick it off now (in its own
+        # background thread, no operation lock). It must run BEFORE the
+        # pre-warm, otherwise pre-warm would import ytmusicapi and lock the
+        # extension .pyd files, making pip's later replace fail with
+        # PermissionError on Windows. When a dep update kicks off, the
+        # pre-warm is deferred and will run from the dep update's on_success.
+        dep_update_started = self._maybe_auto_update_youtube_music_dependencies()
+        if not dep_update_started:
+            self._prewarm_youtube_music_client()
+
+        if getattr(self, "_restored_youtube_music_states_pending_refresh", None):
+            self._refresh_pending_restored_youtube_music_tabs()
+
+    def _prewarm_youtube_music_client(self):
+        if getattr(self, "_youtube_music_client_prewarm_started", False):
+            return
+        self._youtube_music_client_prewarm_started = True
+        service = self._get_youtube_music_service()
+
+        def warm():
+            try:
+                client = service.get_client()
+                # Touching base_headers forces the visitor-id round trip
+                # that ytmusicapi otherwise defers until the first real call.
+                _ = getattr(client, "base_headers", None)
+            except Exception:
+                pass
+
+        threading.Thread(target=warm, daemon=True, name="ytmusic-prewarm").start()
 
     def _verify_youtube_music_connection(self):
         service = self._get_youtube_music_service()
