@@ -50,6 +50,8 @@ class FrameUIMixin:
             "Ctrl+Alt+O — Abrir mídia, playlist ou pasta\n"
             "Ctrl+O — Abrir arquivos de mídia ou uma playlist local\n"
             "Ctrl+Shift+O — Abrir pasta no navegador\n"
+            "Ctrl+C — Copiar caminho ou link do item selecionado\n"
+            "Ctrl+Shift+V — Colar e abrir arquivo, pasta, playlist ou link da área de transferência\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
             "Ctrl+T — Nova playlist\n"
             "Ctrl+W — Fechar mídia atual ou aba vazia\n"
@@ -191,6 +193,8 @@ class FrameUIMixin:
         self.menu_save_playlist_id = wx.NewIdRef()
         self.menu_close_media_id = wx.NewIdRef()
         self.menu_close_tab_id = wx.NewIdRef()
+        self.menu_copy_current_item_path_id = wx.NewIdRef()
+        self.menu_paste_open_from_clipboard_id = wx.NewIdRef()
         self.recent_menu = wx.Menu()
         self.recent_files_menu = wx.Menu()
         self.recent_folders_menu = wx.Menu()
@@ -200,6 +204,9 @@ class FrameUIMixin:
         file_menu.Append(self.menu_open_source_id, "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O")
         file_menu.Append(self.menu_open_file_id, "Abrir &Arquivos ou Playlist...\tCtrl+O")
         file_menu.Append(self.menu_open_folder_id, "Abrir &Pasta...\tCtrl+Shift+O")
+        file_menu.AppendSeparator()
+        file_menu.Append(self.menu_copy_current_item_path_id, "&Copiar caminho do item (Ctrl+C)")
+        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar e abrir... (Ctrl+Shift+V)")
         file_menu.AppendSeparator()
         self.youtube_music_menu.Append(self.menu_youtube_music_login_id, "Conectar &conta...")
         self.youtube_music_menu.Append(self.menu_youtube_music_disconnect_id, "&Desconectar conta")
@@ -430,6 +437,8 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open, id=self.menu_open_file_id)
         self.Bind(wx.EVT_MENU, self.on_open_folder, id=self.menu_open_folder_id)
         self.Bind(wx.EVT_MENU, self.on_open_source, id=self.menu_open_source_id)
+        self.Bind(wx.EVT_MENU, self.on_copy_current_item_path, id=self.menu_copy_current_item_path_id)
+        self.Bind(wx.EVT_MENU, self.on_paste_open_from_clipboard, id=self.menu_paste_open_from_clipboard_id)
         self.Bind(wx.EVT_MENU, self.on_connect_youtube_music, id=self.menu_youtube_music_login_id)
         self.Bind(wx.EVT_MENU, self.on_disconnect_youtube_music, id=self.menu_youtube_music_disconnect_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_youtube_music_library, id=self.menu_youtube_music_refresh_library_id)

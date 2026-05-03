@@ -13,6 +13,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ### Added
 - Nova preferência **Aplicar crossfade ao trocar de faixa manualmente** (desligada por padrão) para reativar a sobreposição também nos comandos de avançar/voltar.
 - Fade-out curto ao pausar e parar a reprodução para suavizar o corte do áudio.
+- Atalhos `Ctrl+C` para copiar o caminho ou link do item selecionado e `Ctrl+Shift+V` para colar e abrir um arquivo, pasta, playlist ou link da área de transferência (ativos apenas nas abas de playlist e pasta, sem interferir em campos de texto da central do YouTube Music).
 
 ## [0.4.1] - 2026-04-12
 

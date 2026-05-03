@@ -71,6 +71,89 @@ class FrameCommandMixin:
     def on_open_source(self, _event):
         self._show_open_source_dialog(initial_mode=OPEN_MODE_PLAYLIST)
 
+    def on_copy_current_item_path(self, _event):
+        if isinstance(self._get_tab_state(), ScreenTabState):
+            return
+
+        browser = self._get_browser_panel()
+        selected = browser.get_selected_item_path() if browser else None
+        if not selected:
+            self._announce("Nenhum item selecionado para copiar.")
+            return
+
+        if not self._copy_text_to_clipboard(selected):
+            self._announce("Não foi possível acessar a área de transferência.")
+            return
+
+        if is_remote_media_path(selected):
+            self._announce("Link copiado.")
+        else:
+            self._announce("Caminho copiado.")
+
+    def on_paste_open_from_clipboard(self, _event):
+        if isinstance(self._get_tab_state(), ScreenTabState):
+            return
+
+        text = self._read_text_from_clipboard()
+        if not text:
+            self._announce("A área de transferência está vazia.")
+            return
+
+        self._open_from_clipboard_text(text)
+
+    def _copy_text_to_clipboard(self, text):
+        if not text or not wx.TheClipboard.Open():
+            return False
+        try:
+            wx.TheClipboard.SetData(wx.TextDataObject(text))
+        finally:
+            wx.TheClipboard.Close()
+        return True
+
+    def _read_text_from_clipboard(self):
+        if not wx.TheClipboard.Open():
+            return ""
+        try:
+            data = wx.TextDataObject()
+            if not wx.TheClipboard.GetData(data):
+                return ""
+            return (data.GetText() or "").strip()
+        finally:
+            wx.TheClipboard.Close()
+
+    def _open_from_clipboard_text(self, text):
+        normalized_source = (text or "").strip().strip('"').strip("'")
+        if not normalized_source:
+            self._announce("A área de transferência está vazia.")
+            return
+
+        if is_remote_media_path(normalized_source):
+            self._show_open_source_dialog(
+                initial_source=normalized_source,
+                initial_mode=OPEN_MODE_PLAYLIST,
+            )
+            return
+
+        normalized_local = self._normalize_path(normalized_source)
+        if normalized_local:
+            if os.path.isdir(normalized_local):
+                if not self._open_folder_path(normalized_local):
+                    self._announce("Não foi possível abrir a pasta da área de transferência.")
+                return
+
+            if os.path.isfile(normalized_local):
+                if is_playlist_source(normalized_local):
+                    if not self._open_playlist_source(normalized_local):
+                        self._announce("Não foi possível abrir a playlist da área de transferência.")
+                    return
+
+                if is_supported_media(normalized_local):
+                    if not self._open_media_paths([normalized_local]):
+                        self._announce("Não foi possível abrir a mídia da área de transferência.")
+                    return
+
+        self._announce("Conteúdo da área de transferência não suportado.")
+
     def _show_open_source_dialog(self, initial_source="", initial_mode=OPEN_MODE_PLAYLIST):
         source_value = initial_source
         open_mode = initial_mode
@@ -614,6 +697,15 @@ class FrameCommandMixin:
             return
 
         if self._handle_screen_tab_key_down(event, current_tab):
+            return
+
+        if event.ControlDown() and not event.AltDown() and key_code in (ord("C"), ord("c")):
+            if not event.ShiftDown():
+                self.on_copy_current_item_path(None)
+                return
+
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
+            self.on_paste_open_from_clipboard(None)
             return
 
         if browser and browser.is_item_navigation_active() and not event.ControlDown() and not event.AltDown():

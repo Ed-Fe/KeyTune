@@ -246,6 +246,24 @@ class PlaylistBrowserPanel(wx.Panel):
         focused_window = self.FindFocus()
         return self.IsShown() and focused_window is not None and focused_window is self.items_list
 
+    def get_selected_item_path(self):
+        if self._has_placeholder:
+            return None
+
+        selection = self._get_selected_index()
+        if selection == wx.NOT_FOUND or selection >= len(self._items):
+            return None
+
+        item = self._items[selection]
+        if isinstance(item, str):
+            return item or None
+
+        if getattr(item, "is_parent", False):
+            return None
+
+        path = getattr(item, "path", None)
+        return path or None
+
     def _get_display_label(self, index):
         if self._has_placeholder:
             return self._placeholder_label if index == 0 else ""

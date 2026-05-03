@@ -107,6 +107,8 @@ For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 - `Ctrl+O`: open media files directly or a local `.m3u` / `.m3u8` playlist
 - `Ctrl+Shift+O`: open a folder directly in the folder browser
 - `Ctrl+Alt+O`: open media, playlist, or folder in the unified dialog
+- `Ctrl+C`: copy the path or link of the selected item to the clipboard
+- `Ctrl+Shift+V`: paste a path, playlist, or link from the clipboard and open it
 - `Ctrl+Shift+S`: save current playlist
 - `Ctrl+,`: open preferences
 - `F1`: open quick keyboard help
