@@ -71,6 +71,13 @@ class MPVPlayer:
             "osc": False,
             "keep_open": "yes",
             "ytdl": False,
+            # When the active audio output disappears (e.g. Bluetooth speaker
+            # disconnects), fall back to the null AO so playback keeps
+            # advancing instead of pausing or rewinding. We then re-attach a
+            # real AO via ``ao-reload`` once a device is available again.
+            # This mirrors the behavior of MPV's official
+            # TOOLS/lua/ao-null-reload.lua script.
+            "audio_fallback_to_null": "yes",
         }
         if not video_output_enabled:
             player_kwargs["video"] = False
@@ -261,17 +268,35 @@ class MPVPlayer:
         self._player.volume = max(0, min(100, int(volume)))
 
     def list_audio_output_devices(self) -> list[AudioOutputDevice]:
-        devices = []
         raw_devices = self._get_runtime_property("audio-device-list", default=[])
+        return self._parse_audio_output_device_list(raw_devices)
+
+    @staticmethod
+    def _parse_audio_output_device_list(raw_devices) -> list[AudioOutputDevice]:
+        devices: list[AudioOutputDevice] = []
         if not isinstance(raw_devices, list):
             return devices
-
         for raw_device in raw_devices:
             device = audio_output_device_from_mpv_entry(raw_device)
             if device is not None and device.device_id:
                 devices.append(device)
-
         return devices
+
+    def observe_audio_output_devices(self, callback: Callable[[list[AudioOutputDevice]], None]) -> None:
+        def _on_audio_device_list_change(_property_name, raw_value):
+            try:
+                devices = self._parse_audio_output_device_list(raw_value)
+            except Exception:
+                return
+            try:
+                callback(devices)
+            except Exception:
+                pass
+
+        try:
+            self._player.observe_property("audio-device-list", _on_audio_device_list_change)
+        except Exception:
+            pass
 
     def get_audio_output_device(self) -> str:
         current_device = str(self._get_option("audio-device", default="") or "").strip()
@@ -294,6 +319,111 @@ class MPVPlayer:
             "audio-device",
             normalized_device_id or self._default_audio_output_option_value(),
         )
+
+    def reload_audio_output(self) -> bool:
+        """Force MPV to reinitialize the audio output without reloading the
+        file.
+
+        MPV exposes the ``ao-reload`` command precisely for this scenario
+        (a device was added/removed/changed). Without it, simply writing a new
+        value to ``audio-device`` is not always enough, especially when the
+        previous AO has fallen back to ``null`` after a device disappeared:
+        MPV will keep using the null AO until a reload is requested.
+        """
+        for command_name in ("ao-reload", "audio-reload"):
+            try:
+                self._player.command(command_name)
+                return True
+            except Exception:
+                continue
+        return False
+
+    def get_current_audio_output(self) -> str:
+        """Return MPV's currently active audio output (e.g. ``wasapi`` or
+        ``null``).
+
+        Returns an empty string if the value cannot be read. ``"null"``
+        indicates that MPV is silently dropping audio because no real device
+        was available, which is what ``audio-fallback-to-null=yes`` produces
+        when the active device disappears.
+        """
+        try:
+            value = self._get_runtime_property("current-ao", default="")
+        except Exception:
+            return ""
+        return str(value or "").strip()
+
+    def snapshot_playback_state(self):
+        """Return ``(time_pos_seconds, paused)`` for the currently loaded media.
+
+        Returns ``None`` when no media is loaded or the state cannot be read.
+        Callers can later replay this snapshot via :meth:`restore_playback_state`
+        to recover from MPV's audio-chain reinitialization, which on some
+        backends can rewind the file or flip the pause state asynchronously.
+        """
+        if not self._loaded_media_path:
+            return None
+        try:
+            raw_time_pos = self._player.time_pos
+        except Exception:
+            raw_time_pos = None
+        if raw_time_pos is None:
+            time_pos_seconds = None
+        else:
+            try:
+                time_pos_seconds = max(0.0, float(raw_time_pos))
+            except (TypeError, ValueError):
+                time_pos_seconds = None
+        try:
+            paused = bool(self._player.pause)
+        except Exception:
+            paused = None
+        if time_pos_seconds is None and paused is None:
+            return None
+        return (time_pos_seconds, paused)
+
+    def restore_playback_state(self, snapshot) -> bool:
+        """Re-apply a snapshot from :meth:`snapshot_playback_state`.
+
+        Returns ``True`` when the live state already matched the snapshot or
+        was successfully nudged back toward it. Callers can poll this method a
+        few times after changing ``audio-device`` to defeat the asynchronous
+        rewind/pause that some MPV audio backends perform when the audio chain
+        is reinitialized (e.g. on Bluetooth disconnect/reconnect).
+        """
+        if not snapshot or not self._loaded_media_path:
+            return False
+        target_time_pos, target_paused = snapshot
+        adjusted = False
+        if target_time_pos is not None:
+            try:
+                current_time_pos = self._player.time_pos
+            except Exception:
+                current_time_pos = None
+            try:
+                current_time_pos = float(current_time_pos) if current_time_pos is not None else None
+            except (TypeError, ValueError):
+                current_time_pos = None
+            # Only seek back when MPV has clearly rewound (or jumped backward).
+            # A small tolerance avoids fighting the user's own seeking.
+            if current_time_pos is None or current_time_pos + 0.75 < target_time_pos:
+                try:
+                    self._player.time_pos = target_time_pos
+                    adjusted = True
+                except Exception:
+                    pass
+        if target_paused is not None:
+            try:
+                current_paused = bool(self._player.pause)
+            except Exception:
+                current_paused = None
+            if current_paused is not None and current_paused != target_paused:
+                try:
+                    self._player.pause = target_paused
+                    adjusted = True
+                except Exception:
+                    pass
+        return adjusted
 
     def get_time(self):
         time_pos = self._player.time_pos

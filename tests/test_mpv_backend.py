@@ -26,6 +26,7 @@ class _FakePlayerCore:
         ]
         self.wid = None
         self.core_idle = True
+        self.current_ao = "wasapi"
         self.loaded = []
         self.stopped = 0
         self.terminated = 0
@@ -40,6 +41,14 @@ class _FakePlayerCore:
             return callback
 
         return decorator
+
+    def observe_property(self, property_name, callback):
+        self.property_observers = getattr(self, "property_observers", {})
+        self.property_observers.setdefault(property_name, []).append(callback)
+
+    def command(self, name, *args):
+        self.commands = getattr(self, "commands", [])
+        self.commands.append((name, args))
 
     def loadfile(self, path, mode):
         self.loaded.append((path, mode))
@@ -206,6 +215,136 @@ class MPVPlayerTests(unittest.TestCase):
             ),
             core.option_sets,
         )
+
+    def test_audio_output_device_list_observer_filters_devices(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        core = self.fake_module.created_players[0]
+
+        received: list[list] = []
+        player.observe_audio_output_devices(lambda devices: received.append(devices))
+
+        observers = core.property_observers.get("audio-device-list", [])
+        self.assertEqual(len(observers), 1)
+
+        observers[0](
+            "audio-device-list",
+            [
+                {"name": "auto", "description": "Padrão"},
+                {"name": "wasapi/{device-2}", "description": "Fones Bluetooth"},
+                {"name": "openal", "description": "Default (openal)"},
+            ],
+        )
+
+        self.assertEqual(len(received), 1)
+        self.assertEqual([d.device_id for d in received[0]], ["wasapi/{device-2}"])
+        self.assertEqual(received[0][0].menu_label, "Fones Bluetooth")
+
+    def _patch_audio_device_reset(self, core, *, reset_time, reset_pause):
+        original_setitem = type(core).__setitem__
+
+        def _setitem(self_core, key, value):
+            original_setitem(self_core, key, value)
+            if key == "audio-device":
+                self_core.time_pos = reset_time
+                self_core.pause = reset_pause
+
+        # Dunder methods are looked up on the type, not the instance, so patch
+        # the class for the duration of the test.
+        type(core).__setitem__ = _setitem
+        self.addCleanup(setattr, type(core), "__setitem__", original_setitem)
+
+    def test_snapshot_restore_recovers_position_and_pause_state(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(path="song.mp3")
+        player.set_media(media)
+        player.play()
+
+        core = self.fake_module.created_players[0]
+        core.time_pos = 42.5
+        core.pause = False
+
+        snapshot = player.snapshot_playback_state()
+        self.assertEqual(snapshot, (42.5, False))
+
+        self._patch_audio_device_reset(core, reset_time=0, reset_pause=True)
+        player.set_audio_output_device("wasapi/{device-1}")
+
+        # MPV's async reset has flipped state away from the snapshot.
+        self.assertEqual(core.time_pos, 0)
+        self.assertTrue(core.pause)
+
+        self.assertTrue(player.restore_playback_state(snapshot))
+
+        self.assertAlmostEqual(core.time_pos, 42.5)
+        self.assertFalse(core.pause)
+
+    def test_snapshot_restore_preserves_paused_media(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(path="song.mp3")
+        player.set_media(media)
+        player.play()
+
+        core = self.fake_module.created_players[0]
+        core.time_pos = 10.0
+        core.pause = True
+
+        snapshot = player.snapshot_playback_state()
+        self._patch_audio_device_reset(core, reset_time=0, reset_pause=False)
+
+        player.set_audio_output_device("wasapi/{device-1}")
+        player.restore_playback_state(snapshot)
+
+        self.assertAlmostEqual(core.time_pos, 10.0)
+        self.assertTrue(core.pause)
+
+    def test_snapshot_restore_does_not_rewind_to_earlier_position(self):
+        # When MPV has actually advanced past the snapshot (e.g. the audio
+        # chain reinit was a no-op), restore must not yank the user back.
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(path="song.mp3")
+        player.set_media(media)
+        player.play()
+
+        core = self.fake_module.created_players[0]
+        core.time_pos = 30.0
+        core.pause = False
+
+        snapshot = player.snapshot_playback_state()
+
+        core.time_pos = 32.0  # Audio kept playing through the device switch.
+        player.restore_playback_state(snapshot)
+
+        self.assertEqual(core.time_pos, 32.0)
+        self.assertFalse(core.pause)
+
+    def test_snapshot_returns_none_when_no_media_loaded(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        self.assertIsNone(player.snapshot_playback_state())
+
+    def test_reload_audio_output_invokes_audio_reload_command(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        core = self.fake_module.created_players[0]
+
+        self.assertTrue(player.reload_audio_output())
+
+        commands = getattr(core, "commands", [])
+        self.assertTrue(
+            any(name in ("ao-reload", "audio-reload") for name, _ in commands),
+            commands,
+        )
+
+    def test_audio_fallback_to_null_is_enabled_for_hotplug_recovery(self):
+        mpv_backend.MPVPlayer(video_output_enabled=False)
+        core = self.fake_module.created_players[0]
+
+        self.assertEqual(core.created_with_kwargs.get("audio_fallback_to_null"), "yes")
+
+    def test_get_current_audio_output_returns_running_ao(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        core = self.fake_module.created_players[0]
+        core.current_ao = "null"
+
+        self.assertEqual(player.get_current_audio_output(), "null")
 
 
 if __name__ == "__main__":

@@ -74,6 +74,17 @@ class FrameSmtcMixin:
         player = getattr(self, "player", None)
         if player is None:
             return
+        # Bluetooth audio accessories (Alexa/Echo, headphones, speakers) tend
+        # to emit an AVRCP PAUSE right after they reconnect — for example when
+        # Alexa finishes saying "conectado" and the link returns to A2DP. The
+        # playback mixin marks a brief grace window after every device
+        # reappearance during which we ignore those spurious pauses.
+        if getattr(self, "_should_suppress_external_pause", None):
+            try:
+                if self._should_suppress_external_pause():
+                    return
+            except Exception:
+                pass
         try:
             if not player.is_playing():
                 return

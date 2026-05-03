@@ -574,6 +574,9 @@ class FrameCommandMixin:
 
     def on_progress_timer(self, _event):
         self._update_time_bar()
+        record_snapshot = getattr(self, "_record_playback_state_snapshot", None)
+        if callable(record_snapshot):
+            record_snapshot()
         maybe_report_youtube_music_history = getattr(self, "_maybe_report_youtube_music_history", None)
         if callable(maybe_report_youtube_music_history):
             maybe_report_youtube_music_history()
