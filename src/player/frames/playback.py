@@ -8,7 +8,7 @@ import time
 import wx
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
-from ..constants import PROGRESS_GAUGE_RANGE
+from ..constants import PROGRESS_GAUGE_RANGE, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ..library import folder_display_name, is_audio_playback_media
 from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playlists import PlaylistState
@@ -1020,6 +1020,44 @@ class FramePlaybackMixin:
         for player_key in getattr(self, "_player_keys", ()): 
             self._stop_player(player_key, unload=unload)
 
+    def _perform_short_fade_out(self, player_key, on_complete):
+        """Quick fade-out on `player_key` then run `on_complete()` on the UI thread.
+
+        Used by pause/stop to soften the audio cut. Falls back to running
+        `on_complete` immediately when the player is missing or already silent.
+        """
+
+        def finish():
+            if on_complete is not None:
+                on_complete()
+
+        player = self._managed_player(player_key)
+        if player is None:
+            finish()
+            return
+
+        try:
+            start_volume = max(0, min(100, int(self.current_volume)))
+        except (TypeError, ValueError):
+            start_volume = 0
+
+        if start_volume <= 0 or not player.is_playing():
+            finish()
+            return
+
+        steps = max(1, int(SHORT_FADE_STEPS))
+        step_delay_seconds = max(0.001, (SHORT_FADE_MS / 1000.0) / steps)
+
+        def worker():
+            for step in range(1, steps + 1):
+                fade_volume = int(round(start_volume * (1.0 - step / steps)))
+                self._apply_volume_to_player(player_key, fade_volume)
+                if step < steps:
+                    time.sleep(step_delay_seconds)
+            wx.CallAfter(finish)
+
+        threading.Thread(target=worker, daemon=True).start()
+
     def _unload_player(self):
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
         self._stop_all_players(unload=False)
@@ -1286,11 +1324,22 @@ class FramePlaybackMixin:
                 self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=True)
 
         if self.player.is_playing():
-            self.player.pause()
-            if state:
-                state.was_playing = False
-            self._update_time_bar()
-            self._announce("Pausado.")
+            active_player_key = self._active_player_key
+
+            def finish_pause():
+                player = self._managed_player(active_player_key)
+                if player is not None:
+                    try:
+                        player.pause()
+                    except Exception:
+                        pass
+                self._apply_volume_to_player(active_player_key, self.current_volume)
+                if state:
+                    state.was_playing = False
+                self._update_time_bar()
+                self._announce("Pausado.")
+
+            self._perform_short_fade_out(active_player_key, finish_pause)
         else:
             self._bind_player_to_window()
             self.player.play()

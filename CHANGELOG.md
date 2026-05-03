@@ -7,6 +7,13 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
 
+### Changed
+- O crossfade agora é aplicado apenas no fim natural de cada faixa por padrão; trocas manuais de faixa voltam a ter corte direto, evitando a sobreposição inesperada ao avançar ou voltar nos controles.
+
+### Added
+- Nova preferência **Aplicar crossfade ao trocar de faixa manualmente** (desligada por padrão) para reativar a sobreposição também nos comandos de avançar/voltar.
+- Fade-out curto ao pausar e parar a reprodução para suavizar o corte do áudio.
+
 ## [0.4.1] - 2026-04-12
 
 ### Fixed

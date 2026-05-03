@@ -4,6 +4,7 @@ from ..audio_output import is_selectable_audio_output_device_id, normalize_audio
 from ..constants import (
     DEFAULT_ANNOUNCEMENTS_ENABLED,
     DEFAULT_CONFIRM_ON_EXIT,
+    DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
     DEFAULT_CROSSFADE_SECONDS,
     DEFAULT_DISABLE_VIDEO_OUTPUT,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
@@ -40,6 +41,7 @@ class AppSettings:
     audio_output_device_id: str = ""
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
+    crossfade_on_manual_track_change: bool = DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE
     volume_step: int = VOLUME_STEP
     seek_step_seconds: int = SEEK_STEP_MS // 1000
     shuffle_new_playlists: bool = DEFAULT_NEW_PLAYLIST_SHUFFLE
@@ -73,6 +75,7 @@ class AppSettings:
             ),
             "default_volume": self.default_volume,
             "crossfade_seconds": self.crossfade_seconds,
+            "crossfade_on_manual_track_change": self.crossfade_on_manual_track_change,
             "volume_step": self.volume_step,
             "seek_step_seconds": self.seek_step_seconds,
             "shuffle_new_playlists": self.shuffle_new_playlists,
@@ -109,6 +112,9 @@ class AppSettings:
             minimum=0,
             maximum=MAX_CROSSFADE_SECONDS,
             fallback=settings.crossfade_seconds,
+        )
+        settings.crossfade_on_manual_track_change = bool(
+            data.get("crossfade_on_manual_track_change", settings.crossfade_on_manual_track_change)
         )
         settings.volume_step = _clamp_int(data.get("volume_step"), minimum=1, maximum=25, fallback=settings.volume_step)
         settings.seek_step_seconds = _clamp_int(

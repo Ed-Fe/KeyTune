@@ -209,10 +209,22 @@ class PreferencesDialog(wx.Dialog):
             label_text="Crossfade (segundos, 0 desativa)",
             help_text=(
                 "Define por quantos segundos duas faixas de áudio se sobrepõem na transição. "
-                "Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio."
+                "Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio e "
+                "acontece automaticamente no final de cada faixa."
             ),
             min_value=0,
             max_value=MAX_CROSSFADE_SECONDS,
+        )
+        self.crossfade_on_manual_change_checkbox = wx.CheckBox(
+            page, label="Aplicar crossfade ao trocar de faixa &manualmente"
+        )
+        self._configure_checkbox(
+            self.crossfade_on_manual_change_checkbox,
+            "Aplicar crossfade ao trocar de faixa manualmente",
+            (
+                "Quando ligado, o crossfade também é usado ao avançar ou voltar com os controles. "
+                "Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
+            ),
         )
         seek_step_group, self.seek_step_ctrl = self._build_spin_control_group(
             page,
@@ -248,6 +260,7 @@ class PreferencesDialog(wx.Dialog):
             playback_box.Add(group, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
 
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
@@ -475,6 +488,7 @@ class PreferencesDialog(wx.Dialog):
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
         self.default_volume_ctrl.SetValue(settings.default_volume)
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
+        self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
         self.volume_step_ctrl.SetValue(settings.volume_step)
         self.seek_step_ctrl.SetValue(settings.seek_step_seconds)
         self.shuffle_new_playlists_checkbox.SetValue(settings.shuffle_new_playlists)
@@ -507,6 +521,7 @@ class PreferencesDialog(wx.Dialog):
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
+        settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
         settings.volume_step = int(self.volume_step_ctrl.GetValue())
         settings.seek_step_seconds = int(self.seek_step_ctrl.GetValue())
         settings.shuffle_new_playlists = self.shuffle_new_playlists_checkbox.GetValue()

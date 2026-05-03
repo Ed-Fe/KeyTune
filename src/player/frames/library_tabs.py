@@ -545,7 +545,11 @@ class FrameLibraryTabsMixin:
             self._announce(boundary_message)
             return
 
-        self._play_media(index=self._get_active_playlist_index(), allow_crossfade=True)
+        allow_manual_crossfade = bool(getattr(self.settings, "crossfade_on_manual_track_change", False))
+        self._play_media(
+            index=self._get_active_playlist_index(),
+            allow_crossfade=allow_manual_crossfade,
+        )
 
     def _jump_to_playlist_boundary(self, to_last=False):
         if self._block_sensitive_action_during_youtube_music("track-selection"):

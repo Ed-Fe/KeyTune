@@ -298,15 +298,25 @@ class FrameCommandMixin:
     def on_stop(self, _event):
         state = self._get_playlist_state()
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
-        self._stop_all_players(unload=False)
-        clear_youtube_music_history_tracking = getattr(self, "_clear_youtube_music_history_tracking", None)
-        if callable(clear_youtube_music_history_tracking):
-            clear_youtube_music_history_tracking()
-        if state:
-            state.was_playing = False
-            state.last_position_ms = 0
-        self._update_time_bar()
-        self._announce("Parado.")
+        active_player_key = getattr(self, "_active_player_key", None)
+
+        def finish_stop():
+            self._stop_all_players(unload=False)
+            if active_player_key is not None:
+                self._apply_volume_to_player(active_player_key, self.current_volume)
+            clear_youtube_music_history_tracking = getattr(self, "_clear_youtube_music_history_tracking", None)
+            if callable(clear_youtube_music_history_tracking):
+                clear_youtube_music_history_tracking()
+            if state:
+                state.was_playing = False
+                state.last_position_ms = 0
+            self._update_time_bar()
+            self._announce("Parado.")
+
+        if active_player_key is not None:
+            self._perform_short_fade_out(active_player_key, finish_stop)
+        else:
+            finish_stop()
 
     def on_next_track(self, _event):
         self._play_adjacent_item(1)
