@@ -254,6 +254,8 @@ class FrameCommandMixin:
         self._refresh_playlist_browser()
         self._add_recent_path("recent_playlists", playlist_path)
         self._announce(f"Playlist salva: {state.title}.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(f"Playlist salva em {playlist_path}")
 
     def on_recent_menu_action(self, event):
         action = self._recent_menu_actions.get(event.GetId())
@@ -312,6 +314,8 @@ class FrameCommandMixin:
                 state.last_position_ms = 0
             self._update_time_bar()
             self._announce("Parado.")
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message("Parado.", auto_clear_ms=0)
 
         if active_player_key is not None:
             self._perform_short_fade_out(active_player_key, finish_stop)

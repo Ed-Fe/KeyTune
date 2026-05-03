@@ -3,28 +3,43 @@ import os
 import wx
 
 from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name, scan_folder_contents
-from ..playlists import build_playlist_title
+from ..playlists import PlaylistState, build_playlist_title
 
 
 class FrameLibraryNavigationMixin:
+    def _is_appendable_playlist_state(self, candidate):
+        if not isinstance(candidate, PlaylistState):
+            return False
+        if candidate.is_folder_tab or candidate.is_loading:
+            return False
+        return True
+
     def _playlist_state_for_external_media(self):
         current_state = self._get_tab_state(self._get_current_tab_index())
-        if getattr(current_state, "is_screen_tab", False):
-            current_state = None
+        if self._is_appendable_playlist_state(current_state) and not current_state.is_empty:
+            return current_state
 
-        candidates = [current_state, self._get_active_playlist_state()]
-        for candidate in candidates:
-            if not candidate:
-                continue
-            if candidate.is_folder_tab or candidate.is_loading:
-                continue
-            return candidate
+        active_state = self._get_active_playlist_state()
+        if self._is_appendable_playlist_state(active_state) and not active_state.is_empty:
+            return active_state
+
+        for candidate in self.playlists:
+            if self._is_appendable_playlist_state(candidate) and not candidate.is_empty:
+                return candidate
 
         return None
 
     def _append_media_paths_to_playlist(self, paths, state):
+        """Append *paths* to *state*, deduping against existing items.
+
+        Returns a tuple ``(added_count, first_play_path)`` where
+        ``first_play_path`` is the path that should be focused/played next
+        (the first new path, or the first requested path when all were
+        duplicates).  ``added_count`` is the number of brand-new items that
+        were appended (zero when every path was already in the playlist).
+        """
         if not state or state.is_folder_tab or state.is_loading:
-            return False
+            return 0, None
 
         normalized_paths = []
         for path in paths:
@@ -33,49 +48,90 @@ class FrameLibraryNavigationMixin:
                 normalized_paths.append(normalized_path)
 
         if not normalized_paths:
-            return False
+            return 0, None
 
-        current_index = state.current_index
-        current_media_path = state.current_media_path
+        existing = set(state.items)
+        new_paths = []
+        for path in normalized_paths:
+            if path in existing:
+                continue
+            existing.add(path)
+            new_paths.append(path)
+
+        first_requested = normalized_paths[0]
+
+        if not new_paths:
+            return 0, first_requested
 
         state.finish_library_load()
         state.clear_folder_location()
-        state.items.extend(normalized_paths)
-        state.browser_item_labels.extend(os.path.basename(path) or path for path in normalized_paths)
+        state.items.extend(new_paths)
+        state.browser_item_labels.extend(os.path.basename(path) or path for path in new_paths)
         state.refresh_browser_item_labels()
 
-        if 0 <= current_index < len(state.items):
-            state.current_index = current_index
-            state.current_media_path = state.items[current_index]
-        elif current_media_path and current_media_path in state.items:
-            restored_index = state.items.index(current_media_path)
-            state.current_index = restored_index
-            state.current_media_path = state.items[restored_index]
-        elif state.items:
-            state.select_index(0)
+        self._maybe_rename_playlist_after_append(state)
 
-        if state.current_index >= 0:
-            state.reset_playback_order(preferred_index=state.current_index)
+        self._remember_directory(new_paths[0])
+        self._add_recent_media_paths(new_paths)
+        return len(new_paths), new_paths[0]
 
-        self._remember_directory(normalized_paths[0])
-        self._refresh_playlist_browser()
-        self._update_title()
-        self._add_recent_media_paths(normalized_paths)
-        count = len(normalized_paths)
-        suffix = "s" if count != 1 else ""
-        self._announce(f"{count} arquivo{suffix} adicionado{suffix} à playlist {state.title}.")
-        return True
+    def _maybe_rename_playlist_after_append(self, state):
+        """Refresh the playlist title to reflect its current contents.
+
+        Skips playlists that came from a saved file (``source_path``) so we
+        don't override a name the user explicitly chose.
+        """
+        if not isinstance(state, PlaylistState):
+            return
+        if getattr(state, "source_path", None):
+            return
+        if not state.items:
+            return
+
+        new_title = build_playlist_title(state.items)
+        if not new_title or new_title == state.title:
+            return
+
+        state.title = new_title
+        target_index = self._resolve_playlist_state_index(state)
+        if target_index != wx.NOT_FOUND and hasattr(self, "notebook"):
+            self.notebook.SetPageText(target_index, new_title)
 
     def _open_external_media_paths(self, paths):
         target_state = self._playlist_state_for_external_media()
-        if target_state and not target_state.is_empty:
-            target_index = self._resolve_playlist_state_index(target_state)
-            appended = self._append_media_paths_to_playlist(paths, target_state)
-            if appended and target_index != wx.NOT_FOUND:
-                self.active_playlist_index = target_index
-            return appended
+        if target_state is None:
+            return self._open_media_paths(paths)
 
-        return self._open_media_paths(paths)
+        added_count, play_path = self._append_media_paths_to_playlist(paths, target_state)
+        if not play_path:
+            return False
+
+        target_index = self._resolve_playlist_state_index(target_state)
+        if target_index == wx.NOT_FOUND:
+            return added_count > 0
+
+        play_index = target_state.index_of_item(play_path)
+        if play_index is None:
+            return added_count > 0
+
+        target_state.select_index(play_index)
+        self.active_playlist_index = target_index
+        self._select_tab(target_index, announce=False)
+        self._refresh_playlist_browser()
+        self._play_media(index=target_index)
+
+        if hasattr(self, "_set_status_message"):
+            if added_count > 0:
+                suffix = "s" if added_count != 1 else ""
+                self._set_status_message(
+                    f"{added_count} item{suffix} adicionado{suffix} a {target_state.title}."
+                )
+            else:
+                self._set_status_message(
+                    f"Reproduzindo item já presente em {target_state.title}."
+                )
+
+        return True
 
     def _show_loading_library_tab(self, target_index, state, announcement=None):
         self.notebook.SetPageText(target_index, state.title)

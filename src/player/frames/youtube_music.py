@@ -745,6 +745,8 @@ class FrameYouTubeMusicMixin:
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(normalized_message)
 
         def on_error(exc):
             wx.MessageBox(
@@ -1064,6 +1066,8 @@ class FrameYouTubeMusicMixin:
         self._refresh_youtube_music_menu_state()
         self._refresh_pending_restored_youtube_music_tabs()
         self._announce(f"Conta do YouTube Music conectada: {account_name}.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(f"YouTube Music conectado como {account_name}.")
         self.on_refresh_youtube_music_library(None, announce=False)
         wx.MessageBox(
             f"Autenticação do navegador salva em:\n{saved_path}\n\nConta conectada: {account_name}",
@@ -1096,6 +1100,8 @@ class FrameYouTubeMusicMixin:
         )
         self._refresh_youtube_music_menu_state()
         self._announce("Conta do YouTube Music desconectada.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message("YouTube Music desconectado.")
         wx.MessageBox(
             "A autenticação salva do YouTube Music foi removida.",
             "YouTube Music",
@@ -1119,6 +1125,8 @@ class FrameYouTubeMusicMixin:
             self._refresh_youtube_music_menu_state()
             if account_name:
                 self._announce(f"YouTube Music reconectado: {account_name}.")
+                if hasattr(self, "_set_status_message"):
+                    self._set_status_message(f"YouTube Music conectado como {account_name}.")
             self._refresh_pending_restored_youtube_music_tabs()
 
         def on_error(_error):

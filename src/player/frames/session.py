@@ -84,6 +84,11 @@ class FrameSessionMixin:
         else:
             self._announce(f"Sessão restaurada com {len(self.playlists)} abas.")
 
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(
+                f"Sessão anterior restaurada com {len(self.playlists)} abas."
+            )
+
         return True
 
     def _save_session(self):

@@ -44,6 +44,8 @@ class FrameUpdateMixin:
             return
 
         self._update_check_in_progress = True
+        if hasattr(self, "_set_status_message") and manual:
+            self._set_status_message("Verificando atualizações...", auto_clear_ms=0)
         worker_thread = threading.Thread(target=self._update_check_worker, args=(manual,), daemon=True)
         worker_thread.start()
 
@@ -65,6 +67,8 @@ class FrameUpdateMixin:
         if error_message:
             if manual:
                 wx.MessageBox(error_message, "Atualizações", wx.OK | wx.ICON_ERROR, self)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message("")
             return
 
         if update_info is None:
@@ -75,7 +79,16 @@ class FrameUpdateMixin:
                     wx.OK | wx.ICON_INFORMATION,
                     self,
                 )
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message("Você está na versão mais recente.")
             return
+
+        new_version = getattr(update_info, "version", None) or getattr(update_info, "tag", None) or ""
+        if hasattr(self, "_set_status_message"):
+            if new_version:
+                self._set_status_message(f"Atualização disponível: versão {new_version}.")
+            else:
+                self._set_status_message("Atualização disponível.")
 
         self._prompt_for_update(update_info, manual=manual)
 
@@ -126,4 +139,6 @@ class FrameUpdateMixin:
 
         self._update_restart_pending = True
         self._announce("Atualização baixada. O player será reiniciado para concluir a instalação.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message("Atualização baixada. Reiniciando para instalar...", auto_clear_ms=0)
         self.Close()

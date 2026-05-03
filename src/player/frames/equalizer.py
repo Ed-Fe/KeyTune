@@ -152,8 +152,12 @@ class FrameEqualizerMixin:
 
         if state.equalizer_enabled:
             self._announce(self._equalizer_enabled_message(state, preset, include_description=bool(preset_id is not None)))
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(f"Equalizador: {preset.name}.")
         else:
             self._announce(f"Equalizador desativado na aba {state.title}.")
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message("Equalizador desativado.")
         return applied
 
     def _equalizer_enabled_message(self, state, preset, *, include_description=False):

@@ -880,6 +880,15 @@ class FramePlaybackMixin:
             "initial_volume": self.current_volume if initial_volume is None else initial_volume,
             "crossfade": bool(crossfade),
         }
+        if (
+            not crossfade
+            and is_youtube_music_media(media_path)
+            and hasattr(self, "_set_status_message")
+        ):
+            self._set_status_message(
+                f"Resolvendo {self._media_label(media_path)}...",
+                auto_clear_ms=0,
+            )
         self._playback_queue.put(request)
         return request
 
@@ -962,6 +971,9 @@ class FramePlaybackMixin:
         self._prefetch_upcoming_media_stream(state)
 
         announce_message = request.get("announce_message")
+        if hasattr(self, "_set_status_message"):
+            now_playing_label = self._media_label(media_path)
+            self._set_status_message(f"Tocando: {now_playing_label}", auto_clear_ms=0)
         if announce_message is not None:
             if announce_message:
                 self._announce(announce_message)
@@ -1338,6 +1350,11 @@ class FramePlaybackMixin:
                     state.was_playing = False
                 self._update_time_bar()
                 self._announce("Pausado.")
+                if hasattr(self, "_set_status_message") and state and state.current_media_path:
+                    self._set_status_message(
+                        f"Pausado: {self._media_label(state.current_media_path)}",
+                        auto_clear_ms=0,
+                    )
 
             self._perform_short_fade_out(active_player_key, finish_pause)
         else:
@@ -1347,6 +1364,11 @@ class FramePlaybackMixin:
                 state.was_playing = True
             self._update_time_bar()
             self._announce("Reprodução retomada.")
+            if hasattr(self, "_set_status_message") and state and state.current_media_path:
+                self._set_status_message(
+                    f"Tocando: {self._media_label(state.current_media_path)}",
+                    auto_clear_ms=0,
+                )
 
     def _announce_playback_time(self):
         if not self.player.get_media():

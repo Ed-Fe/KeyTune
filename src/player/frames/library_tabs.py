@@ -627,6 +627,8 @@ class FrameLibraryTabsMixin:
         state.reset_playback_order(preferred_index=preferred_index)
         status = "ativado" if state.shuffle_enabled else "desativado"
         self._announce(f"Modo aleatório {status}.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(f"Aleatório: {status}.")
         self._refresh_playlist_browser()
 
     def _cycle_repeat_mode(self):
@@ -641,6 +643,9 @@ class FrameLibraryTabsMixin:
         current_mode_index = REPEAT_MODES.index(state.repeat_mode)
         state.repeat_mode = REPEAT_MODES[(current_mode_index + 1) % len(REPEAT_MODES)]
         self._announce(self._repeat_mode_message(state.repeat_mode) + ".")
+        if hasattr(self, "_set_status_message"):
+            mode_label = REPEAT_MODE_LABELS.get(state.repeat_mode, state.repeat_mode)
+            self._set_status_message(f"Repetir: {mode_label}.")
         self._refresh_playlist_browser()
 
     def _remove_item_from_current_playlist(self, item_index, announce_prefix="Item removido"):

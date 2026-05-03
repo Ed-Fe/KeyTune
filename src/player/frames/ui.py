@@ -392,10 +392,29 @@ class FrameUIMixin:
         root_sizer.Add(self.progress_panel, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 4)
         panel.SetSizer(root_sizer)
 
+        self.status_bar = self.CreateStatusBar(1)
+        self.status_bar.SetStatusText("")
+        self._status_clear_timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self._on_status_clear_timer, self._status_clear_timer)
+
         self._create_empty_playlist_tab(select=True)
         self._apply_current_volume()
         self._update_time_bar()
         self._refresh_shortcuts_hint_layout()
+
+    def _on_status_clear_timer(self, _event):
+        if hasattr(self, "status_bar") and self.status_bar:
+            self.status_bar.SetStatusText("")
+
+    def _set_status_message(self, message, *, auto_clear_ms=6000):
+        if not hasattr(self, "status_bar") or not self.status_bar:
+            return
+        self.status_bar.SetStatusText(message or "")
+        timer = getattr(self, "_status_clear_timer", None)
+        if timer:
+            timer.Stop()
+            if message and auto_clear_ms and auto_clear_ms > 0:
+                timer.StartOnce(auto_clear_ms)
 
     def _bind_events(self):
         accelerators = wx.AcceleratorTable(
