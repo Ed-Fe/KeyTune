@@ -730,6 +730,17 @@ class FrameLibraryTabsMixin:
         total_tabs = self.notebook.GetPageCount()
 
         if total_tabs <= 1:
+            # Última aba: não dá para deixar a janela sem nenhuma aba, então
+            # paramos a reprodução e substituímos por uma playlist vazia nova.
+            if isinstance(current_state, PlaylistState):
+                active_index = self._get_active_playlist_index()
+                if active_index == current_index:
+                    self._unload_player()
+                self._reset_playlist_tabs()
+                self._refresh_playlist_browser()
+                self._announce(f"Aba fechada: {current_state.title}. Nova playlist vazia criada.")
+                return True
+
             self._announce("Não é possível fechar a última aba.")
             return False
 
@@ -742,6 +753,11 @@ class FrameLibraryTabsMixin:
             else (current_index if current_index < total_tabs - 1 else current_index - 1)
         )
         active_playlist_index = self._get_active_playlist_index()
+        closing_active_playback = (
+            isinstance(current_state, PlaylistState)
+            and active_playlist_index != wx.NOT_FOUND
+            and current_index == active_playlist_index
+        )
 
         self._suppress_tab_change_event = True
         try:
@@ -760,6 +776,9 @@ class FrameLibraryTabsMixin:
             self.notebook.ChangeSelection(next_index)
         finally:
             self._suppress_tab_change_event = False
+
+        if closing_active_playback:
+            self._unload_player()
 
         self._activate_tab(next_index, announce=False)
         self._refresh_playlist_browser()
