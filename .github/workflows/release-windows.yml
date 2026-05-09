@@ -117,11 +117,21 @@ jobs:
             KeyTune-windows.zip
             KeyTune-windows.zip.sha256
 
+  publish-release:
+    needs: build-release
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: KeyTune-windows
+          path: artifacts
+
       - name: Publish zip to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            KeyTune-windows.zip
-            KeyTune-windows.zip.sha256
+            artifacts/KeyTune-windows/KeyTune-windows.zip
+            artifacts/KeyTune-windows/KeyTune-windows.zip.sha256
           generate_release_notes: true
