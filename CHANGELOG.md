@@ -86,17 +86,17 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - Visualização das notas da release antes de confirmar o download da atualização.
 - Diálogo de download com barra de progresso para baixar novas releases antes de instalar.
 - Atualizador externo para aplicar o ZIP da release sem sobrescrever arquivos em uso.
-- Geração e publicação do arquivo `MediaPlayer-windows.zip.sha256` nas releases.
+ - Geração e publicação do arquivo `KeyTune-windows.zip.sha256` nas releases.
 - Script local para gerar a release Windows e roteiro documentado para testar o atualizador ponta a ponta.
 
 ### Changed
-- Workflow de release do Windows para incluir `MediaPlayerUpdater.exe` no pacote publicado.
+ - Workflow de release do Windows para incluir `KeyTuneUpdater.exe` no pacote publicado.
 
 ## [0.1.0] - 2026-04-11
 
 ### Added
 - Windows release workflow (`.github/workflows/release-windows.yml`) to build and publish a ZIP package.
-- Bundled MPV runtime in release artifacts (`dist/MediaPlayer/mpv`) so users can run without MPV preinstalled.
+- Bundled MPV runtime in release artifacts (`dist/KeyTune/mpv`) so users can run without MPV preinstalled.
 - Runtime bootstrap (`src/player/mpv_runtime.py`) to detect a local MPV folder and configure DLL loading on Windows.
 
 ### Changed

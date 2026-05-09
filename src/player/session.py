@@ -3,7 +3,7 @@ import os
 
 
 SESSION_FILE_NAME = "session.json"
-APP_STORAGE_DIR = "MediaPlayerWx"
+APP_STORAGE_DIR = "KeyTune"
 _LEGACY_APP_STORAGE_DIR = APP_STORAGE_DIR + "".join(("V", "L", "C"))
 
 

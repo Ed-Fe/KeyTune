@@ -102,7 +102,7 @@ def download_release_archive(
     progress_callback=None,
     cancel_event: Event | None = None,
 ) -> Path:
-    download_dir = Path(tempfile.mkdtemp(prefix="mediaplayer-update-"))
+    download_dir = Path(tempfile.mkdtemp(prefix="keytune-update-"))
     target_path = download_dir / update_info.archive_name
     partial_path = target_path.with_suffix(f"{target_path.suffix}.part")
 
@@ -151,7 +151,7 @@ def launch_external_updater(archive_path: str | os.PathLike[str], *, parent_pid:
 
     app_executable = Path(sys.executable).resolve()
     app_directory = app_executable.parent
-    temp_runner_directory = Path(tempfile.mkdtemp(prefix="mediaplayer-updater-runner-"))
+    temp_runner_directory = Path(tempfile.mkdtemp(prefix="keytune-updater-runner-"))
     temp_updater_path = temp_runner_directory / updater_path.name
     shutil.copy2(updater_path, temp_updater_path)
 

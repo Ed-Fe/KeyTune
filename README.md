@@ -31,6 +31,9 @@ This project is in active development. The current version already supports day-
 ## Installation
 
 ### 1. Clone the repository
+```bash
+git clone https://github.com/Ed-Fe/KeyTune.git
+```
 
 Optional if you already have the files locally.
 
@@ -81,14 +84,14 @@ When triggered (manually or by pushing a tag like `v1.2.3`), it will:
 2. Build the external updater with PyInstaller
 3. Copy the updater to the release folder
 4. Install MPV on the runner
-5. Copy the MPV runtime to `dist/MediaPlayer/mpv`
-6. Create `MediaPlayer-windows.zip`
-7. Generate `MediaPlayer-windows.zip.sha256`
+5. Copy the MPV runtime to `dist/KeyTune/mpv`
+6. Create `KeyTune-windows.zip`
+7. Generate `KeyTune-windows.zip.sha256`
 8. Upload the files as workflow artifacts
 9. Attach the files to the GitHub Release when running on a tag
 
 The app startup now looks for a local `mpv/` folder before creating the playback backend, so the release can run on machines without MPV pre-installed.
-The Windows package also includes `MediaPlayerUpdater.exe`, used by the app to apply downloaded updates after the user confirms the installation.
+The Windows package also includes `KeyTuneUpdater.exe`, used by the app to apply downloaded updates after the user confirms the installation.
 
 For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 

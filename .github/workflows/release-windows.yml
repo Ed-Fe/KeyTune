@@ -30,16 +30,16 @@ jobs:
 
       - name: Build application (PyInstaller)
         run: |
-          pyinstaller --noconfirm --windowed --name MediaPlayer --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
+          pyinstaller --noconfirm --windowed --name KeyTune --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
 
       - name: Build updater (PyInstaller)
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name MediaPlayerUpdater src/updater_main.py
+          pyinstaller --noconfirm --onefile --windowed --name KeyTuneUpdater src/updater_main.py
 
       - name: Bundle updater into dist
         shell: powershell
         run: |
-          Copy-Item -Path "dist\MediaPlayerUpdater.exe" -Destination "dist\MediaPlayer\MediaPlayerUpdater.exe" -Force
+          Copy-Item -Path "dist\KeyTuneUpdater.exe" -Destination "dist\KeyTune\KeyTuneUpdater.exe" -Force
 
       - name: Download libmpv runtime
         shell: powershell
@@ -71,11 +71,11 @@ jobs:
           }
 
           $mpvSource = $mpvDll.Directory.FullName
-          $targetRoot = "dist\MediaPlayer\mpv"
+          $targetRoot = "dist\KeyTune\mpv"
           New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null
           Copy-Item -Path "$mpvSource\*" -Destination $targetRoot -Recurse -Force
 
-          $licenseDir = "dist\MediaPlayer\THIRD_PARTY_LICENSES"
+          $licenseDir = "dist\KeyTune\THIRD_PARTY_LICENSES"
           New-Item -Path $licenseDir -ItemType Directory -Force | Out-Null
 
           $possibleLicenseFiles = @(
@@ -93,16 +93,16 @@ jobs:
       - name: Create release archive
         shell: powershell
         run: |
-          $archiveName = "MediaPlayer-windows.zip"
+          $archiveName = "KeyTune-windows.zip"
           if (Test-Path $archiveName) {
             Remove-Item $archiveName -Force
           }
-          Compress-Archive -Path "dist\MediaPlayer\*" -DestinationPath $archiveName
+          Compress-Archive -Path "dist\KeyTune\*" -DestinationPath $archiveName
 
       - name: Create release checksum
         shell: powershell
         run: |
-          $archiveName = "MediaPlayer-windows.zip"
+          $archiveName = "KeyTune-windows.zip"
           $checksumFile = "$archiveName.sha256"
           $hash = (Get-FileHash -Path $archiveName -Algorithm SHA256).Hash.ToLowerInvariant()
           Set-Content -Path $checksumFile -Value "$hash  $archiveName" -Encoding ascii
@@ -110,16 +110,16 @@ jobs:
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MediaPlayer-windows
+          name: KeyTune-windows
           path: |
-            MediaPlayer-windows.zip
-            MediaPlayer-windows.zip.sha256
+            KeyTune-windows.zip
+            KeyTune-windows.zip.sha256
 
       - name: Publish zip to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            MediaPlayer-windows.zip
-            MediaPlayer-windows.zip.sha256
+            KeyTune-windows.zip
+            KeyTune-windows.zip.sha256
           generate_release_notes: true

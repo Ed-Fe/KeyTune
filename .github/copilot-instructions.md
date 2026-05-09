@@ -66,7 +66,7 @@
 - Preserve behavior that avoids noisy focus on the native video output area.
 - Before adding a large behavior block to an existing player module, check whether it crosses UI, service, parsing, or playback boundaries; if it does, extract a focused module first.
 - When changing preferences or session behavior, keep storage paths and JSON formats backward-compatible whenever practical.
-- Keep the updater contract aligned across `src/player/constants.py`, `.github/workflows/release-windows.yml`, and release assets: the packaged updater expects `MediaPlayer-windows.zip`, the matching `.sha256`, and `MediaPlayerUpdater.exe`.
+- Keep the updater contract aligned across `src/player/constants.py`, `.github/workflows/release-windows.yml`, and release assets: the packaged updater expects `KeyTune-windows.zip`, the matching `.sha256`, and `KeyTuneUpdater.exe`.
 - The update dialog shows the GitHub release body as the user-facing changelog for a new version; when working on releases or docs, keep `CHANGELOG.md` and the published release notes consistent instead of assuming the app reads the changelog file directly.
 - Preserve the test override environment variables `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` and `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME` so updater testing can target a separate repository.
 - For large new features, after implementation and validation, ask the user whether they want you to create a Git commit before committing anything.

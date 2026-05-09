@@ -8,21 +8,21 @@ Validar que a aplicação empacotada:
 
 1. verifica uma release remota mais nova ao iniciar;
 2. mostra as notas da release antes do download;
-3. baixa o arquivo `MediaPlayer-windows.zip` com barra de progresso;
+3. baixa o arquivo `KeyTune-windows.zip` com barra de progresso;
 4. fecha a aplicação principal;
-5. aplica o pacote com `MediaPlayerUpdater.exe`;
+5. aplica o pacote com `KeyTuneUpdater.exe`;
 6. reinicia com a nova versão.
 
 ## Estratégia recomendada
 
-Use um repositório de teste no GitHub, por exemplo `Ed-Fe/Media-Player-update-test`, para publicar releases sem interferir na release estável do projeto principal.
+Use um repositório de teste no GitHub, por exemplo `Ed-Fe/KeyTune-update-test`, para publicar releases sem interferir na release estável do projeto principal.
 
 A build do app pode apontar para esse repositório por meio das variáveis de ambiente:
 
 - `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`
 - `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME`
 
-Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/Media-Player`.
+Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTune`.
 
 ## Preparando uma build local
 
@@ -36,8 +36,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1
 
 Ao final, você terá:
 
-- `MediaPlayer-windows.zip`
-- `MediaPlayer-windows.zip.sha256`
+- `KeyTune-windows.zip`
+- `KeyTune-windows.zip.sha256`
 
 ## Cenário recomendado de teste ponta a ponta
 
@@ -53,8 +53,8 @@ Ao final, você terá:
 2. Gere novamente a release local.
 3. Crie uma release publicada no repositório de teste com tag `v0.2.0`.
 4. Anexe os arquivos:
-   - `MediaPlayer-windows.zip`
-   - `MediaPlayer-windows.zip.sha256`
+  - `KeyTune-windows.zip`
+  - `KeyTune-windows.zip.sha256`
 5. Escreva no corpo da release as notas/changelog que devem aparecer no diálogo antes do download.
 
 ### Etapa C — apontar a build antiga para o repositório de teste
@@ -62,11 +62,11 @@ Ao final, você terá:
 Na máquina que vai executar a versão antiga, defina:
 
 ```powershell
-$env:MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER = "Ed-Fe"
-$env:MEDIA_PLAYER_UPDATE_REPOSITORY_NAME = "Media-Player-update-test"
+  $env:MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER = "Ed-Fe"
+  $env:MEDIA_PLAYER_UPDATE_REPOSITORY_NAME = "KeyTune-update-test"
 ```
 
-Depois inicie `MediaPlayer.exe` a partir da pasta extraída da versão antiga.
+Depois inicie `KeyTune.exe` a partir da pasta extraída da versão antiga.
 
 ## O que validar durante o teste
 
@@ -91,4 +91,4 @@ Depois inicie `MediaPlayer.exe` a partir da pasta extraída da versão antiga.
 - Testar com release sem notas para validar a mensagem padrão.
 - Testar checksum inválido para confirmar bloqueio da instalação.
 - Testar pasta sem permissão de escrita para validar rollback/log de erro.
-- Conferir o log do updater em `%TEMP%\MediaPlayerUpdater\updater.log` caso algo falhe.
+- Conferir o log do updater em `%TEMP%\KeyTuneUpdater\updater.log` caso algo falhe.

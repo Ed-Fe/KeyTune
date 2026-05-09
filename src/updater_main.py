@@ -344,12 +344,12 @@ def remove_path(path: Path):
 def _create_working_directory(app_dir: Path) -> Path:
     preferred_parent = app_dir.parent
     try:
-        return Path(tempfile.mkdtemp(prefix="mediaplayer-updater-job-", dir=str(preferred_parent)))
+        return Path(tempfile.mkdtemp(prefix="keytune-updater-job-", dir=str(preferred_parent)))
     except OSError as exc:
         log_message(
             f"Não foi possível criar a área temporária ao lado da instalação: {exc}. Usando a pasta temporária do sistema."
         )
-        return Path(tempfile.mkdtemp(prefix="mediaplayer-updater-job-"))
+        return Path(tempfile.mkdtemp(prefix="keytune-updater-job-"))
 
 
 def restart_application(executable_path: Path):
