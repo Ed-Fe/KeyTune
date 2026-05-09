@@ -128,7 +128,7 @@ Remove-Item -Path "$ArchiveName.sha256" -Force -ErrorAction SilentlyContinue
 $MpvSource = Resolve-MpvSource -PreferredPath $MpvSource -PreferredArchive $MpvRuntimeArchive
 
 Write-Step "Gerando executável principal"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --collect-submodules mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
