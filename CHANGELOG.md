@@ -5,16 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2026-05-08
 
-### Changed
-- O crossfade agora é aplicado apenas no fim natural de cada faixa por padrão; trocas manuais de faixa voltam a ter corte direto, evitando a sobreposição inesperada ao avançar ou voltar nos controles.
+Lançamento 1.0.0 — mudança de marca para KeyTune e preparação do fluxo de distribuição.
 
-### Added
-- Nova preferência **Aplicar crossfade ao trocar de faixa manualmente** (desligada por padrão) para reativar a sobreposição também nos comandos de avançar/voltar.
-- Fade-out curto ao pausar e parar a reprodução para suavizar o corte do áudio.
-- Atalhos `Ctrl+C` para copiar o caminho ou link do item selecionado e `Ctrl+Shift+V` para colar e abrir um arquivo, pasta, playlist ou link da área de transferência (ativos apenas nas abas de playlist e pasta, sem interferir em campos de texto da central do YouTube Music).
-- Integração com os **System Media Transport Controls** do Windows: o player agora aparece no painel "Reproduzindo agora" do sistema com título e fonte da mídia, e aceita comandos de play/pause, próxima, anterior e parar vindos de fones/caixas Bluetooth (AVRCP), teclas multimídia, smartwatches, da Alexa quando o PC está pareado e da skill "Computer".
+Resumo das novidades
+- Renomeado o projeto para **KeyTune** em interfaces, scripts e documentação.
+- Atualizado o sistema de atualização para usar artefatos `KeyTune-windows.zip` e o atualizador externo `KeyTuneUpdater.exe`.
+- Ajustes no empacotamento e workflow do GitHub Actions para criar e publicar os artefatos com os novos nomes.
+- Alterado o diretório de armazenamento da aplicação para `%APPDATA%\KeyTune` (antes `MediaPlayerWx`).
+- Prefixos temporários e logs do atualizador atualizados para `keytune-*` e `%TEMP%\KeyTuneUpdater`.
+- Documentação e scripts de build/testes atualizados (README, docs, scripts, CHANGELOG e instruções internas).
+
+Detalhes
+- UI e documentação: todas as referências visíveis ao usuário foram atualizadas para "KeyTune"; mensagens e README agora instruem a clonar `https://github.com/Ed-Fe/KeyTune.git`.
+- Atualizador: busca releases em `Ed-Fe/KeyTune` por padrão, valida checksum `.sha256` e usa o `KeyTuneUpdater.exe` empacotado para aplicar atualizações em instalações Windows.
+- Empacotamento local: os scripts agora geram o ZIP `KeyTune-windows.zip` e checksum correspondente; o workflow de CI também foi ajustado.
+- Compatibilidade: variáveis de ambiente de teste do atualizador continuam funcionando (`MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` / `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME`) para apontar repositórios de teste.
+
+Motivação
+- Consolidar a marca e evitar referências divergentes entre código, artefatos publicados e documentação; facilitar testes de atualização e distribuição.
 
 ## [0.4.1] - 2026-04-12
 
