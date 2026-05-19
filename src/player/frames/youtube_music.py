@@ -404,13 +404,34 @@ class FrameYouTubeMusicMixin:
 
         return None
 
+    def _handle_invalid_youtube_music_auth(self, service, *, announce=True):
+        message = "A autenticação salva do YouTube Music expirou ou não é mais válida. Conecte a conta novamente."
+        try:
+            service.disconnect()
+        except Exception:
+            service.clear_client_cache()
+
+        self._set_youtube_music_account_name("")
+        self._clear_youtube_music_library_cache(
+            loaded=False,
+            status_message=message,
+        )
+        self._refresh_youtube_music_menu_state()
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(message)
+        if announce:
+            self._announce(message)
+        return False
+
     def _ensure_youtube_music_authenticated(self):
         service = self._get_youtube_music_service()
         if service.has_saved_browser_auth():
-            return True
+            if service.is_authenticated():
+                return True
+            return self._handle_invalid_youtube_music_auth(service)
 
         self.on_connect_youtube_music(None)
-        return service.has_saved_browser_auth()
+        return service.is_authenticated()
 
     def _refresh_youtube_music_menu_state(self):
         if not hasattr(self, "youtube_music_menu"):
@@ -1426,9 +1447,7 @@ class FrameYouTubeMusicMixin:
             self._refresh_pending_restored_youtube_music_tabs()
 
         def on_error(_error):
-            service.clear_client_cache()
-            self._set_youtube_music_account_name("")
-            self._refresh_youtube_music_menu_state()
+            self._handle_invalid_youtube_music_auth(service, announce=False)
 
         self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
