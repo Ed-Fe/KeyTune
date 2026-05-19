@@ -51,10 +51,13 @@ def extract_personalized_mix_summaries(home_rows):
 
 
 def _looks_like_personalized_mix(title, item, row_title=""):
+    playlist_id = str(item.get("playlistId") or "").strip()
+    if not is_watch_playlist_id(playlist_id):
+        return False
+
     normalized_title = str(title or "").casefold()
     normalized_description = str(item.get("description") or "").casefold()
     normalized_row_title = str(row_title or "").casefold()
-    playlist_id = str(item.get("playlistId") or "").strip()
 
     title_keywords = (
         "mix",
@@ -71,9 +74,9 @@ def _looks_like_personalized_mix(title, item, row_title=""):
 
     if any(keyword in normalized_title for keyword in title_keywords):
         return True
-    if playlist_id.startswith("RD") and any(keyword in normalized_description for keyword in title_keywords):
+    if any(keyword in normalized_description for keyword in title_keywords):
         return True
-    if playlist_id.startswith("RD") and any(keyword in normalized_row_title for keyword in row_keywords):
+    if any(keyword in normalized_row_title for keyword in row_keywords):
         return True
 
     return False
