@@ -22,6 +22,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         resolved_playback = ResolvedStreamPlayback(
             stream_url="https://rr1---sn.example.googlevideo.com/videoplayback?expire=760&id=abc",
             http_headers={"User-Agent": "yt-test/1.0"},
+            display_title="Vídeo de teste",
+            display_artist="Canal de teste",
         )
 
         with patch("player.youtube_music.service.time.time", return_value=600), patch(
@@ -31,6 +33,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         cached_entry = service._stream_cache[media_path]
         self.assertEqual(cached_entry["expires_at"], 140)
+        self.assertEqual(cached_entry["display_title"], "Vídeo de teste")
+        self.assertEqual(cached_entry["display_artist"], "Canal de teste")
 
     def test_cache_skips_urls_that_are_already_too_close_to_expiring(self):
         service = YouTubeMusicService()
@@ -38,6 +42,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         resolved_playback = ResolvedStreamPlayback(
             stream_url="https://rr1---sn.example.googlevideo.com/videoplayback?expire=620&id=abc",
             http_headers={"User-Agent": "yt-test/1.0"},
+            display_title="Vídeo de teste",
+            display_artist="Canal de teste",
         )
 
         with patch("player.youtube_music.service.time.time", return_value=600), patch(
@@ -46,6 +52,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             returned_playback = service._cache_stream_playback(media_path, resolved_playback)
 
         self.assertEqual(returned_playback.stream_url, resolved_playback.stream_url)
+        self.assertEqual(returned_playback.display_title, "Vídeo de teste")
+        self.assertEqual(returned_playback.display_artist, "Canal de teste")
         self.assertNotIn(media_path, service._stream_cache)
 
 

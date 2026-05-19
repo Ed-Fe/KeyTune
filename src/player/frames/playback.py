@@ -4,6 +4,7 @@ import queue
 import sys
 import threading
 import time
+from urllib.parse import urlparse
 
 import wx
 
@@ -14,6 +15,61 @@ from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playlists import PlaylistState
 from ..remote_media_metadata import resolve_remote_media_metadata, resolve_remote_media_playback
 from ..youtube_music import is_music_youtube_url, is_youtube_music_media
+
+
+_STREAM_ARTIFACT_TITLE_SUFFIXES = (
+    ".m3u8",
+    ".mpd",
+    ".m4s",
+    ".ts",
+    ".mp4",
+    ".m4a",
+    ".webm",
+    ".aac",
+    ".mp3",
+)
+
+
+def _normalize_runtime_title_token(value):
+    normalized_value = str(value or "").strip()
+    if not normalized_value:
+        return ""
+    parsed_value = urlparse(normalized_value)
+    if parsed_value.scheme and parsed_value.netloc:
+        normalized_value = parsed_value.path or normalized_value
+    normalized_value = normalized_value.rstrip("\\/")
+    return os.path.basename(normalized_value) or normalized_value
+
+
+def _looks_like_stream_artifact_title(title):
+    normalized_title = _normalize_runtime_title_token(title).casefold()
+    if not normalized_title:
+        return False
+    return normalized_title.endswith(_STREAM_ARTIFACT_TITLE_SUFFIXES)
+
+
+def _default_remote_media_label(media_path):
+    normalized_path = str(media_path or "").strip().rstrip("\\/")
+    if not normalized_path:
+        return ""
+    media_name = os.path.basename(normalized_path)
+    return media_name or normalized_path
+
+
+def _should_apply_runtime_stream_title(media_path, current_label, runtime_title):
+    normalized_runtime_title = str(runtime_title or "").strip()
+    if not normalized_runtime_title:
+        return False
+
+    normalized_current_label = str(current_label or "").strip()
+    default_label = _default_remote_media_label(media_path)
+    if not normalized_current_label or normalized_current_label == default_label:
+        return True
+
+    if _looks_like_stream_artifact_title(normalized_runtime_title):
+        return False
+
+    return False
 
 
 class FramePlaybackMixin:
@@ -1103,7 +1159,12 @@ class FramePlaybackMixin:
             try:
                 if player_instance is None:
                     raise RuntimeError("Instância do backend de reprodução indisponível.")
-                playback_media_path, playback_http_headers, resolved_display_title = self._resolve_media_for_playback_details(
+                (
+                    playback_media_path,
+                    playback_http_headers,
+                    resolved_display_title,
+                    resolved_display_artist,
+                ) = self._resolve_media_for_playback_details(
                     request["media_path"]
                 )
                 media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
@@ -1141,6 +1202,7 @@ class FramePlaybackMixin:
                     except Exception:
                         pass
                 request["resolved_display_title"] = resolved_display_title
+                request["resolved_display_artist"] = resolved_display_artist
             except Exception as exc:
                 success = False
                 error_message = str(exc)
@@ -1292,7 +1354,8 @@ class FramePlaybackMixin:
         self._refresh_playlist_browser()
         self._prefetch_upcoming_media_stream(state)
         resolved_display_title = str(request.get("resolved_display_title", "") or "").strip()
-        self._apply_media_display_metadata(media_path, resolved_display_title)
+        resolved_display_artist = str(request.get("resolved_display_artist", "") or "").strip()
+        self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
         if not resolved_display_title:
             self._queue_remote_media_metadata_resolution(media_path)
 
@@ -1464,24 +1527,26 @@ class FramePlaybackMixin:
                 resolved_playback.stream_url or str(media_path or "").strip(),
                 dict(getattr(resolved_playback, "http_headers", {}) or {}),
                 str(getattr(resolved_playback, "title", "") or "").strip(),
+                str(getattr(resolved_playback, "artist", "") or "").strip(),
             )
 
         if not is_youtube_music_media(media_path):
-            return media_path, {}, ""
+            return media_path, {}, "", ""
 
         youtube_music_service = self._youtube_music_service_for_playback()
         if youtube_music_service is None:
-            return media_path, {}, ""
+            return media_path, {}, "", ""
 
         resolved_playback = youtube_music_service.resolve_stream_playback(media_path)
         return (
             resolved_playback.stream_url,
             dict(getattr(resolved_playback, "http_headers", {}) or {}),
             str(getattr(resolved_playback, "display_title", "") or "").strip(),
+            str(getattr(resolved_playback, "display_artist", "") or "").strip(),
         )
 
     def _resolve_media_for_playback(self, media_path):
-        playback_media_path, playback_http_headers, _display_title = self._resolve_media_for_playback_details(media_path)
+        playback_media_path, playback_http_headers, _display_title, _display_artist = self._resolve_media_for_playback_details(media_path)
         return playback_media_path, playback_http_headers
 
     def _media_label_from_playlist_state(self, state, media_path):
@@ -1618,6 +1683,10 @@ class FramePlaybackMixin:
             runtime_title = ""
 
         if not runtime_title or runtime_title == getattr(self, "_last_runtime_stream_title", ""):
+            return
+
+        current_label = self._media_label_from_playlist_state(state, media_path) if state else ""
+        if not _should_apply_runtime_stream_title(media_path, current_label, runtime_title):
             return
 
         self._last_runtime_stream_title = runtime_title

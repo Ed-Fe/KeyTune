@@ -49,6 +49,7 @@ class ResolvedStreamPlayback:
     stream_url: str
     http_headers: dict[str, str] | None = None
     display_title: str = ""
+    display_artist: str = ""
 
 
 class _YtDlpWarningCollector:
@@ -338,6 +339,7 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
             target_stream_url=selected_stream_url,
         ),
         display_title=_display_title_from_info(info),
+        display_artist=_display_artist_from_info(info),
     )
 
 
@@ -349,6 +351,18 @@ def _display_title_from_info(info):
         normalized_title = str(info.get(key) or "").strip()
         if normalized_title:
             return normalized_title
+
+    return ""
+
+
+def _display_artist_from_info(info):
+    if not isinstance(info, dict):
+        return ""
+
+    for key in ("artist", "uploader", "channel", "creator"):
+        normalized_artist = str(info.get(key) or "").strip()
+        if normalized_artist:
+            return normalized_artist
 
     return ""
 

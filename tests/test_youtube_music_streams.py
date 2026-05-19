@@ -74,6 +74,7 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         _FakeYoutubeDL.warning_messages_sequence = []
         _FakeYoutubeDL.next_info = {
             "title": "Vídeo de teste",
+            "uploader": "Canal de teste",
             "formats": [
                 {
                     "url": "https://rr1---sn.example.googlevideo.com/audio.webm",
@@ -112,6 +113,7 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
 
         self.assertEqual(resolved_playback.stream_url, "https://rr1---sn.example.googlevideo.com/audio.webm")
         self.assertEqual(resolved_playback.display_title, "Vídeo de teste")
+        self.assertEqual(resolved_playback.display_artist, "Canal de teste")
         self.assertEqual(
             resolved_playback.http_headers,
             {

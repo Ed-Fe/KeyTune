@@ -196,7 +196,18 @@ def _looks_like_direct_media_url(stream_url: str) -> bool:
     )
 
 
+def _looks_like_manifest_stream_url(stream_url: str) -> bool:
+    normalized_stream_url = _normalize_metadata_text(stream_url).casefold()
+    if not normalized_stream_url:
+        return False
+
+    return ".m3u8" in normalized_stream_url or ".mpd" in normalized_stream_url
+
+
 def _stream_format_score(raw_format):
+    stream_url = _normalize_metadata_text(
+        raw_format.get("url") or raw_format.get("manifest_url") or raw_format.get("hls_manifest_url")
+    )
     audio_codec = _normalize_metadata_text(raw_format.get("acodec")).casefold()
     video_codec = _normalize_metadata_text(raw_format.get("vcodec")).casefold()
     protocol = _normalize_metadata_text(raw_format.get("protocol")).casefold()
@@ -210,7 +221,8 @@ def _stream_format_score(raw_format):
     return (
         1 if audio_codec and audio_codec != "none" else 0,
         1 if video_codec == "none" else 0,
-        1 if protocol in {"https", "http", "m3u8", "m3u8_native"} else 0,
+        1 if protocol in {"https", "http"} else 0,
+        1 if not _looks_like_manifest_stream_url(stream_url) else 0,
         1 if extension in {"m4a", "mp3", "webm", "aac", "ogg", "wav", "flac", "mp4"} else 0,
         normalized_bitrate,
     )

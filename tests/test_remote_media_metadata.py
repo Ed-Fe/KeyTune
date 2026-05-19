@@ -77,3 +77,39 @@ class RemoteMediaMetadataTests(unittest.TestCase):
         )
         self.assertEqual(playback.title, "Video de teste")
         self.assertEqual(playback.artist, "Canal de teste")
+
+    def test_resolve_remote_media_playback_prefers_direct_file_over_manifest_for_seekable_playback(self):
+        fake_module = type("FakeYtDlpModule", (), {"YoutubeDL": FakeYoutubeDL})
+
+        class ManifestFirstYoutubeDL(FakeYoutubeDL):
+            def extract_info(self, _url, download=False):
+                assert download is False
+                return {
+                    "title": "Video de teste",
+                    "uploader": "Canal de teste",
+                    "formats": [
+                        {
+                            "url": "https://cdn.example.invalid/live/master.m3u8",
+                            "acodec": "aac",
+                            "vcodec": "none",
+                            "protocol": "m3u8_native",
+                            "ext": "mp4",
+                            "abr": 256,
+                        },
+                        {
+                            "url": "https://cdn.example.invalid/archive/audio.mp4",
+                            "acodec": "aac",
+                            "vcodec": "none",
+                            "protocol": "https",
+                            "ext": "mp4",
+                            "abr": 128,
+                        },
+                    ],
+                }
+
+        fake_module = type("FakeYtDlpModule", (), {"YoutubeDL": ManifestFirstYoutubeDL})
+
+        with patch("player.remote_media_metadata.import_yt_dlp_module", return_value=fake_module):
+            playback = resolve_remote_media_playback("https://example.com/watch?v=123")
+
+        self.assertEqual(playback.stream_url, "https://cdn.example.invalid/archive/audio.mp4")

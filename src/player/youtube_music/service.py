@@ -105,12 +105,16 @@ class YouTubeMusicService:
             return ResolvedStreamPlayback(
                 stream_url=cache_entry["resolved_url"],
                 http_headers=dict(cache_entry.get("http_headers") or {}),
+                display_title=str(cache_entry.get("display_title") or "").strip(),
+                display_artist=str(cache_entry.get("display_artist") or "").strip(),
             )
 
     def _cache_stream_playback(self, media_path, resolved_playback):
         cache_key = self._normalize_stream_cache_key(media_path)
         normalized_resolved_url = str(getattr(resolved_playback, "stream_url", "") or "").strip()
         normalized_http_headers = dict(getattr(resolved_playback, "http_headers", {}) or {})
+        normalized_display_title = str(getattr(resolved_playback, "display_title", "") or "").strip()
+        normalized_display_artist = str(getattr(resolved_playback, "display_artist", "") or "").strip()
         if not cache_key or not normalized_resolved_url or not is_youtube_music_media_fn(cache_key):
             return resolved_playback
 
@@ -119,18 +123,24 @@ class YouTubeMusicService:
             return ResolvedStreamPlayback(
                 stream_url=normalized_resolved_url,
                 http_headers=normalized_http_headers,
+                display_title=normalized_display_title,
+                display_artist=normalized_display_artist,
             )
 
         with self._stream_cache_lock:
             self._stream_cache[cache_key] = {
                 "resolved_url": normalized_resolved_url,
                 "http_headers": normalized_http_headers,
+                "display_title": normalized_display_title,
+                "display_artist": normalized_display_artist,
                 "expires_at": time.monotonic() + cache_ttl_seconds,
             }
 
         return ResolvedStreamPlayback(
             stream_url=normalized_resolved_url,
             http_headers=normalized_http_headers,
+            display_title=normalized_display_title,
+            display_artist=normalized_display_artist,
         )
 
     def _stream_cache_ttl_seconds(self, stream_url):
