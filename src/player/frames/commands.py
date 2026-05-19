@@ -11,7 +11,6 @@ from ..library import (
     build_supported_media_wildcard,
     is_playlist_source,
     is_remote_media_path,
-    is_supported_media,
     playlist_display_name,
     save_playlist,
 )
@@ -33,8 +32,7 @@ class FrameCommandMixin:
                 playlist_paths.append(normalized_path)
                 continue
 
-            if is_supported_media(normalized_path):
-                media_paths.append(normalized_path)
+            media_paths.append(normalized_path)
 
         return media_paths, playlist_paths
 
@@ -128,10 +126,13 @@ class FrameCommandMixin:
             return
 
         if is_remote_media_path(normalized_source):
-            self._show_open_source_dialog(
-                initial_source=normalized_source,
-                initial_mode=OPEN_MODE_PLAYLIST,
-            )
+            if is_playlist_source(normalized_source):
+                if not self._open_playlist_source(normalized_source):
+                    self._announce("Não foi possível abrir a playlist da área de transferência.")
+                return
+
+            if not self._open_media_paths([normalized_source]):
+                self._announce("Não foi possível abrir a mídia da área de transferência.")
             return
 
         normalized_local = self._normalize_path(normalized_source)
@@ -147,10 +148,9 @@ class FrameCommandMixin:
                         self._announce("Não foi possível abrir a playlist da área de transferência.")
                     return
 
-                if is_supported_media(normalized_local):
-                    if not self._open_media_paths([normalized_local]):
-                        self._announce("Não foi possível abrir a mídia da área de transferência.")
-                    return
+                if not self._open_media_paths([normalized_local]):
+                    self._announce("Não foi possível abrir a mídia da área de transferência.")
+                return
 
         self._announce("Conteúdo da área de transferência não suportado.")
 
@@ -235,7 +235,7 @@ class FrameCommandMixin:
         normalized_source = str(source_value or "").strip()
         if not normalized_source:
             wx.MessageBox(
-                "Informe um caminho local ou um link .m3u/.m3u8.",
+                "Informe um caminho local, uma pasta ou um link de mídia.",
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -282,12 +282,12 @@ class FrameCommandMixin:
             )
             return False
 
-        if normalized_local_source and os.path.isfile(normalized_local_source) and is_supported_media(normalized_local_source):
-            if self._open_media_paths([normalized_local_source]):
+        if (normalized_local_source and os.path.isfile(normalized_local_source)) or is_remote_media_path(normalized_source):
+            if self._open_media_paths([normalized_source if is_remote_media_path(normalized_source) else normalized_local_source]):
                 return True
 
             wx.MessageBox(
-                "Não foi possível abrir o arquivo de mídia selecionado.",
+                "Não foi possível abrir a mídia informada.",
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -295,9 +295,9 @@ class FrameCommandMixin:
             return False
 
         message = (
-            "Links remotos aceitos aqui precisam apontar para arquivos .m3u ou .m3u8."
+            "Não foi possível interpretar o link informado como mídia ou playlist."
             if is_remote_media_path(normalized_source)
-            else "Informe uma pasta local, um arquivo de mídia ou uma playlist .m3u/.m3u8 válida."
+            else "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
         )
         wx.MessageBox(message, OPEN_SOURCE_DIALOG_TITLE, wx.OK | wx.ICON_WARNING, self)
         return False
@@ -577,6 +577,9 @@ class FrameCommandMixin:
         record_snapshot = getattr(self, "_record_playback_state_snapshot", None)
         if callable(record_snapshot):
             record_snapshot()
+        refresh_runtime_stream_title = getattr(self, "_refresh_active_runtime_stream_title", None)
+        if callable(refresh_runtime_stream_title):
+            refresh_runtime_stream_title()
         maybe_report_youtube_music_history = getattr(self, "_maybe_report_youtube_music_history", None)
         if callable(maybe_report_youtube_music_history):
             maybe_report_youtube_music_history()
@@ -710,7 +713,7 @@ class FrameCommandMixin:
                 self.on_copy_current_item_path(None)
                 return
 
-        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
+        if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
             self.on_paste_open_from_clipboard(None)
             return
 

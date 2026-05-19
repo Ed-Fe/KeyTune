@@ -43,7 +43,13 @@ class FrameLibraryNavigationMixin:
 
         normalized_paths = []
         for path in paths:
-            normalized_path = self._normalize_path(path)
+            normalized_path = str(path or "").strip()
+            if not normalized_path:
+                continue
+            if is_remote_media_path(normalized_path):
+                normalized_paths.append(normalized_path)
+                continue
+            normalized_path = self._normalize_path(normalized_path)
             if normalized_path and os.path.isfile(normalized_path):
                 normalized_paths.append(normalized_path)
 
@@ -145,7 +151,13 @@ class FrameLibraryNavigationMixin:
     def _open_media_paths(self, paths):
         normalized_paths = []
         for path in paths:
-            normalized_path = self._normalize_path(path)
+            normalized_path = str(path or "").strip()
+            if not normalized_path:
+                continue
+            if is_remote_media_path(normalized_path):
+                normalized_paths.append(normalized_path)
+                continue
+            normalized_path = self._normalize_path(normalized_path)
             if normalized_path and os.path.isfile(normalized_path):
                 normalized_paths.append(normalized_path)
 

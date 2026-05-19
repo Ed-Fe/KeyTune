@@ -431,6 +431,18 @@ class MPVPlayer:
             return -1
         return int(round(float(time_pos) * 1000))
 
+    def get_current_media_title(self) -> str:
+        metadata_candidates = (
+            self._get_runtime_property("metadata/by-key/icy-title", default=""),
+            self._get_runtime_property("metadata/by-key/title", default=""),
+            self._get_runtime_property("media-title", default=""),
+        )
+        for candidate in metadata_candidates:
+            normalized_candidate = str(candidate or "").strip()
+            if normalized_candidate:
+                return normalized_candidate
+        return ""
+
     def get_length(self):
         duration = self._player.duration
         if duration is None:

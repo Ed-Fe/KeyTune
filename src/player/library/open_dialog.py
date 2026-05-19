@@ -3,7 +3,6 @@ import os
 import wx
 
 from ..constants import PLAYLIST_WILDCARD, SUPPORTED_MEDIA_EXTENSIONS
-from .media_scan import is_supported_media
 from .playlist_io import is_playlist_source, is_remote_media_path
 
 
@@ -46,7 +45,7 @@ class OpenSourceDialog(wx.Dialog):
         description = wx.StaticText(
             self,
             label=(
-                "Informe um arquivo de mídia, uma pasta local ou um link/arquivo .m3u/.m3u8. "
+                "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. "
                 "Pastas podem abrir como playlist ou no navegador."
             ),
         )
@@ -56,7 +55,7 @@ class OpenSourceDialog(wx.Dialog):
         self.source_text = wx.TextCtrl(self, value=str(initial_source or ""), style=wx.TE_PROCESS_ENTER)
         self.source_text.SetName("Caminho ou link")
         self.source_text.SetHelpText(
-            "Informe um arquivo de mídia, uma playlist .m3u/.m3u8, uma pasta local ou um link de playlist."
+            "Informe um arquivo existente, uma playlist .m3u/.m3u8, uma pasta local ou um link de mídia."
         )
 
         browse_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -139,7 +138,7 @@ class OpenSourceDialog(wx.Dialog):
     def _on_confirm(self, event):
         if not self.get_source():
             wx.MessageBox(
-                "Informe um caminho local ou um link .m3u/.m3u8.",
+                "Informe um caminho local, uma pasta ou um link de mídia.",
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -203,9 +202,7 @@ class OpenSourceDialog(wx.Dialog):
             return "playlist"
 
         if os.path.isfile(normalized_source):
-            if is_supported_media(normalized_source):
-                return "media"
-            return "file"
+            return "media"
 
         if is_remote_media_path(normalized_source):
             return "remote"
@@ -223,13 +220,13 @@ class OpenSourceDialog(wx.Dialog):
             self.mode_choice.Enable(False)
 
         status_message = {
-            "empty": "Pastas podem abrir como playlist ou no navegador. Arquivos e links .m3u/.m3u8 abrem como playlist.",
+            "empty": "Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução.",
             "folder": "Esta pasta pode abrir como playlist estática ou no navegador de pastas.",
             "playlist": "Arquivos e links .m3u/.m3u8 são abertos como playlist.",
             "media": "Arquivos de mídia são abertos como playlist com um item.",
-            "file": "Este arquivo não parece ser uma mídia suportada nem uma playlist .m3u/.m3u8.",
-            "remote": "Links remotos aceitos aqui precisam apontar para arquivos .m3u ou .m3u8.",
-            "unknown": "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Para links, use .m3u ou .m3u8.",
+            "file": "Arquivos existentes serão tentados como mídia.",
+            "remote": "Links remotos serão tentados como mídia, exceto quando forem playlists .m3u/.m3u8.",
+            "unknown": "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia.",
         }.get(source_kind, "")
         self.status_label.SetLabel(status_message)
         self.status_label.Wrap(max(320, self.GetClientSize().Width - 24))

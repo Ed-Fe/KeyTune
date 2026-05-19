@@ -48,6 +48,7 @@ _PRERELEASE_SELF_HEAL_ATTEMPTED = False
 class ResolvedStreamPlayback:
     stream_url: str
     http_headers: dict[str, str] | None = None
+    display_title: str = ""
 
 
 class _YtDlpWarningCollector:
@@ -336,7 +337,20 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
             playback_auth_headers,
             target_stream_url=selected_stream_url,
         ),
+        display_title=_display_title_from_info(info),
     )
+
+
+def _display_title_from_info(info):
+    if not isinstance(info, dict):
+        return ""
+
+    for key in ("track", "title", "fulltitle", "alt_title"):
+        normalized_title = str(info.get(key) or "").strip()
+        if normalized_title:
+            return normalized_title
+
+    return ""
 
 
 def _iter_stream_format_candidates(info):

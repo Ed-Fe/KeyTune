@@ -51,7 +51,7 @@ class FrameUIMixin:
             "Ctrl+O — Abrir arquivos de mídia ou uma playlist local\n"
             "Ctrl+Shift+O — Abrir pasta no navegador\n"
             "Ctrl+C — Copiar caminho ou link do item selecionado\n"
-            "Ctrl+Shift+V — Colar e abrir arquivo, pasta, playlist ou link da área de transferência\n"
+            "Ctrl+V — Colar e abrir arquivo, pasta, playlist ou link da área de transferência\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
             "Ctrl+T — Nova playlist\n"
             "Ctrl+W — Fechar mídia atual ou aba vazia\n"
@@ -206,7 +206,7 @@ class FrameUIMixin:
         file_menu.Append(self.menu_open_folder_id, "Abrir &Pasta...\tCtrl+Shift+O")
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_copy_current_item_path_id, "&Copiar caminho do item (Ctrl+C)")
-        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar e abrir... (Ctrl+Shift+V)")
+        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar e abrir... (Ctrl+V)")
         file_menu.AppendSeparator()
         self.youtube_music_menu.Append(self.menu_youtube_music_login_id, "Conectar &conta...")
         self.youtube_music_menu.Append(self.menu_youtube_music_disconnect_id, "&Desconectar conta")
