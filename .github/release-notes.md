@@ -1,4 +1,4 @@
-# KeyTune 0.9.9
+# KeyTune 0.9.10
 
 Release de validação do KeyTune para testar o fluxo de build, publicação e atualização no Windows antes da 1.0.0 final.
 
