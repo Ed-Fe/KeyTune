@@ -1313,7 +1313,7 @@ class FrameYouTubeMusicMixin:
 
         if not headers_raw and not browser_json_path:
             wx.MessageBox(
-                "Cole os cabeçalhos autenticados do navegador ou selecione um browser.json, JSON de cookies ou cookies.txt válido.",
+                "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.",
                 "YouTube Music",
                 wx.OK | wx.ICON_INFORMATION,
                 self,

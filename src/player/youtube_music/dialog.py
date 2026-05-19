@@ -25,9 +25,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             picker_text_ctrl = None
 
         if isinstance(picker_text_ctrl, wx.TextCtrl):
-            picker_text_ctrl.SetName("Caminho do arquivo de autenticação")
+            picker_text_ctrl.SetName("Caminho do arquivo de conexão")
             picker_text_ctrl.SetHelpText(
-                "Mostra o caminho do arquivo browser.json, JSON de cookies ou cookies.txt selecionado."
+                "Mostra o caminho do arquivo selecionado para conectar sua conta do YouTube Music."
             )
 
         picker_button = None
@@ -38,9 +38,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         if isinstance(picker_button, wx.Control):
             picker_button.SetLabel("&Procurar...")
-            picker_button.SetName("Procurar arquivo de autenticação")
+            picker_button.SetName("Procurar arquivo de conexão")
             picker_button.SetHelpText(
-                "Abre a janela para procurar um browser.json, JSON de cookies ou cookies.txt."
+                "Abre a janela para escolher um arquivo de conexão exportado do navegador."
             )
             picker_button.SetToolTip(picker_button.GetHelpText())
 
@@ -50,26 +50,26 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         instructions = wx.StaticText(
             self,
             label=(
-                "1. Abra music.youtube.com no navegador do sistema e faça login.\n"
-                "2. Abra as ferramentas de desenvolvedor e vá até a aba Network.\n"
-                "3. Copie os request headers de uma requisição POST autenticada para /browse ou /next.\n"
-                "4. Cole os headers abaixo, ou selecione um browser.json, JSON de cookies ou cookies.txt."
+                "Conecte sua conta do YouTube Music usando uma destas opções:\n\n"
+                "1. Caminho mais simples: faça login em music.youtube.com no navegador e exporte os cookies da sessão para um arquivo.\n"
+                "2. Se você já tiver um browser.json, um JSON de cookies ou um cookies.txt, selecione esse arquivo abaixo.\n"
+                "3. O campo de texto é opcional e serve apenas para quem prefere colar manualmente os dados do navegador."
             ),
         )
         instructions.Wrap(720)
 
-        headers_label = wx.StaticText(self, label="Cabeçalhos do navegador")
+        headers_label = wx.StaticText(self, label="Dados copiados do navegador (opcional)")
         self.headers_value = wx.TextCtrl(
             self,
             style=wx.TE_MULTILINE,
         )
-        self.headers_value.SetName("Cabeçalhos do YouTube Music")
+        self.headers_value.SetName("Dados de conexão do YouTube Music")
         self.headers_value.SetHelpText(
-            "Cole os request headers de uma requisição POST autenticada para /browse no music.youtube.com."
+            "Cole aqui os dados copiados do navegador apenas se você não for usar um arquivo."
         )
 
         file_row = wx.BoxSizer(wx.HORIZONTAL)
-        file_label = wx.StaticText(self, label="Arquivo de autenticação")
+        file_label = wx.StaticText(self, label="Arquivo de conexão")
         self.browser_file_picker = wx.FilePickerCtrl(
             self,
             wildcard=(
@@ -81,7 +81,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             style=wx.FLP_OPEN | wx.FLP_FILE_MUST_EXIST,
         )
         self.browser_file_picker.SetHelpText(
-            "Escolha um browser.json, um export JSON de cookies ou um cookies.txt do YouTube Music."
+            "Escolha o arquivo exportado do navegador para conectar sua conta do YouTube Music."
         )
         self._configure_file_picker_accessibility()
         file_row.Add(file_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
@@ -90,8 +90,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         note = wx.StaticText(
             self,
             label=(
-                "Dica: no Chrome ou Edge, você pode colar os request headers do DevTools ou selecionar um "
-                "export JSON/cookies.txt da extensão Get cookies.txt."
+                "Dica: se quiser o caminho mais fácil, use uma extensão de exportar cookies no navegador para gerar "
+                "um arquivo JSON ou cookies.txt da sessão já conectada no YouTube Music."
             ),
         )
         note.Wrap(720)
@@ -105,7 +105,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             ok_button.SetLabel("&Conectar")
             ok_button.SetName("Conectar ao YouTube Music")
             ok_button.SetHelpText(
-                "Valida os cabeçalhos ou o arquivo informado e conecta a conta do YouTube Music."
+                "Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music."
             )
             ok_button.SetToolTip(ok_button.GetHelpText())
         cancel_button = self.FindWindow(wx.ID_CANCEL)

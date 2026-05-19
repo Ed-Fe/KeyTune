@@ -346,10 +346,20 @@ def _extract_browser_auth_headers(payload):
     if "cookie" not in lowered_keys:
         return None
 
+    origin = (
+        _get_header_value(normalized_headers, "x-origin")
+        or _get_header_value(normalized_headers, "origin")
+        or "https://music.youtube.com"
+    )
+    if "authorization" not in lowered_keys:
+        authorization = _authorization_from_cookie(_get_header_value(normalized_headers, "cookie"), origin)
+        if authorization:
+            normalized_headers["Authorization"] = authorization
+
     if "x-goog-authuser" not in lowered_keys:
         normalized_headers["X-Goog-AuthUser"] = "0"
     if "x-origin" not in lowered_keys:
-        normalized_headers["x-origin"] = "https://music.youtube.com"
+        normalized_headers["x-origin"] = origin
 
     return normalized_headers
 

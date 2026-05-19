@@ -201,7 +201,7 @@ class YouTubeMusicService:
         if source_file_path:
             normalized_source_file_path = os.path.abspath(os.path.normpath(str(source_file_path or "").strip()))
             if not normalized_source_file_path or not os.path.isfile(normalized_source_file_path):
-                raise RuntimeError("Selecione um arquivo browser.json, JSON de cookies ou cookies.txt válido.")
+                raise RuntimeError("Selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.")
             raw_auth_input = read_auth_file_text(normalized_source_file_path)
             source_name = os.path.basename(normalized_source_file_path)
             normalized_headers_raw = prepare_browser_auth_input(
@@ -214,7 +214,7 @@ class YouTubeMusicService:
 
         if not normalized_headers_raw:
             raise RuntimeError(
-                "Cole os cabeçalhos do navegador ou selecione um browser.json, JSON de cookies ou cookies.txt válido."
+                "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
             )
 
         ytmusicapi = import_ytmusicapi_module()
