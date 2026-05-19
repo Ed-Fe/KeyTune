@@ -17,6 +17,7 @@ from player.youtube_music import (
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
     get_search_scope_option,
+    youtube_dependencies_available,
 )
 from player.youtube_music.auth import sanitize_sensitive_text
 
@@ -132,18 +133,30 @@ class FrameYouTubeMusicMixin:
             return normalized_error_detail
         return "Falha desconhecida."
 
-    def _start_youtube_music_dependency_update(self, *, force_update, manual):
+    def _start_youtube_music_dependency_update(self, *, force_update, manual, announce_start=False):
         self._configure_youtube_music_dependency_management()
         if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
             return False
 
         # The dependency update runs pip in a subprocess; it is independent of
         # any YTMusic API operation. We deliberately bypass the YouTube Music
-        # operation lock used by API calls so that opening the tab can load
-        # the library in parallel with a long-running pip install.
+        # operation lock used by API calls so startup follow-up work can
+        # resume as soon as the install finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             return False
         self._youtube_music_dependency_update_in_progress = True
+        self._refresh_youtube_music_menu_state()
+
+        if announce_start:
+            status_message = (
+                "Atualizando os recursos adicionais do YouTube Music. "
+                "A central ficará disponível quando a atualização terminar."
+            )
+            self._youtube_music_library_status_message = status_message
+            self._refresh_youtube_music_screen_later()
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(status_message, auto_clear_ms=0)
+            self._announce(status_message)
 
         def on_success(result):
             self.settings.youtube_music_dependency_last_auto_update_epoch = int(time.time())
@@ -157,24 +170,21 @@ class FrameYouTubeMusicMixin:
 
             self._youtube_music_library_status_message = status_message
             self._refresh_youtube_music_screen_later()
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(status_message)
             if manual or getattr(result, "updated", False):
                 self._announce(status_message)
 
-            # Now that any new ytmusicapi files are in place, we can safely
-            # import the package and warm up the client.
-            self._prewarm_youtube_music_client()
-
-            service = self._get_youtube_music_service()
-            if service.has_saved_browser_auth() and not self._youtube_music_library_has_loaded():
-                self.on_refresh_youtube_music_library(None, announce=False)
+            self._continue_youtube_music_startup_after_dependency_setup()
 
         def on_error(exc):
             status_message = "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
             self._youtube_music_library_status_message = status_message
             self._refresh_youtube_music_screen_later()
-            # Still pre-warm so opening the tab is fast: the previously
-            # installed ytmusicapi keeps working even if the upgrade failed.
-            self._prewarm_youtube_music_client()
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(status_message)
+            if youtube_dependencies_available():
+                self._continue_youtube_music_startup_after_dependency_setup()
             if manual:
                 wx.MessageBox(
                     f"{status_message}\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
@@ -201,6 +211,8 @@ class FrameYouTubeMusicMixin:
 
     def _finish_youtube_music_dependency_update(self, on_success, on_error, result, error):
         self._youtube_music_dependency_update_in_progress = False
+        self._refresh_youtube_music_menu_state()
+        self._refresh_youtube_music_screen_later()
         if error is not None:
             if callable(on_error):
                 on_error(error)
@@ -224,7 +236,11 @@ class FrameYouTubeMusicMixin:
         ):
             return False
 
-        return self._start_youtube_music_dependency_update(force_update=True, manual=False)
+        return self._start_youtube_music_dependency_update(
+            force_update=True,
+            manual=False,
+            announce_start=True,
+        )
 
     def _handle_youtube_music_preferences_change(self, previous_settings):
         self._configure_youtube_music_dependency_management()
@@ -367,7 +383,10 @@ class FrameYouTubeMusicMixin:
             connected=service.has_saved_browser_auth(),
             account_name=self._youtube_music_account_name(),
             playlists=self._youtube_music_library_cache(),
-            operation_in_progress=self._is_youtube_music_operation_in_progress(),
+            operation_in_progress=(
+                self._is_youtube_music_operation_in_progress()
+                or bool(getattr(self, "_youtube_music_dependency_update_in_progress", False))
+            ),
             status_message=self._youtube_music_status_message(),
             search_results=self._youtube_music_search_results(),
             search_summary=self._youtube_music_search_summary(),
@@ -399,7 +418,10 @@ class FrameYouTubeMusicMixin:
 
         service = self._get_youtube_music_service()
         has_saved_auth = service.has_saved_browser_auth()
-        operation_in_progress = self._is_youtube_music_operation_in_progress()
+        operation_in_progress = (
+            self._is_youtube_music_operation_in_progress()
+            or bool(getattr(self, "_youtube_music_dependency_update_in_progress", False))
+        )
 
         login_item = self.youtube_music_menu.FindItemById(self.menu_youtube_music_login_id)
         disconnect_item = self.youtube_music_menu.FindItemById(self.menu_youtube_music_disconnect_id)
@@ -670,13 +692,27 @@ class FrameYouTubeMusicMixin:
             if refreshed_visible_state:
                 self._update_title()
                 self._refresh_playlist_browser()
+            self._auto_load_youtube_music_library_if_needed()
 
         def on_error(_error):
             self._restored_youtube_music_states_pending_refresh = []
+            self._auto_load_youtube_music_library_if_needed()
 
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def on_open_youtube_music(self, _event):
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            message = (
+                "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. "
+                "Aguarde a conclusão para abrir a central."
+            )
+            self._youtube_music_library_status_message = message
+            self._refresh_youtube_music_screen_later()
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+            self._announce(message)
+            return False
+
         # Building the panel for the first time can take a moment (widget
         # construction). Announce as early as possible so screen-reader users
         # know the shortcut was registered.
@@ -740,6 +776,19 @@ class FrameYouTubeMusicMixin:
             return
 
         self.on_refresh_youtube_music_library(None, announce=False)
+
+    def _continue_youtube_music_startup_after_dependency_setup(self):
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth():
+            return False
+
+        self._prewarm_youtube_music_client()
+        if getattr(self, "_restored_youtube_music_states_pending_refresh", None):
+            if self._refresh_pending_restored_youtube_music_tabs():
+                return True
+
+        self._auto_load_youtube_music_library_if_needed()
+        return True
 
     def _on_youtube_music_connect_button(self):
         self.on_connect_youtube_music(None)
@@ -1334,11 +1383,10 @@ class FrameYouTubeMusicMixin:
         # PermissionError on Windows. When a dep update kicks off, the
         # pre-warm is deferred and will run from the dep update's on_success.
         dep_update_started = self._maybe_auto_update_youtube_music_dependencies()
-        if not dep_update_started:
-            self._prewarm_youtube_music_client()
+        if dep_update_started:
+            return
 
-        if getattr(self, "_restored_youtube_music_states_pending_refresh", None):
-            self._refresh_pending_restored_youtube_music_tabs()
+        self._continue_youtube_music_startup_after_dependency_setup()
 
     def _prewarm_youtube_music_client(self):
         if getattr(self, "_youtube_music_client_prewarm_started", False):
