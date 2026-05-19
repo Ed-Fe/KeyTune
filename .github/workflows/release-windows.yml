@@ -136,4 +136,4 @@ jobs:
             artifacts/KeyTune-windows/KeyTune-windows.zip
             artifacts/KeyTune-windows/KeyTune-windows.zip.sha256
             artifacts/KeyTune-windows/KeyTuneUpdater.exe
-          generate_release_notes: true
+          body_path: .github/release-notes.md
