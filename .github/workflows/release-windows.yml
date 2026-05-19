@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -110,12 +110,13 @@ jobs:
           Set-Content -Path $checksumFile -Value "$hash  $archiveName" -Encoding ascii
 
       - name: Upload workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: KeyTune-windows
           path: |
             KeyTune-windows.zip
             KeyTune-windows.zip.sha256
+            dist/KeyTuneUpdater.exe
 
   publish-release:
     needs: build-release
@@ -123,15 +124,16 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: KeyTune-windows
           path: artifacts
 
       - name: Publish zip to GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             artifacts/KeyTune-windows/KeyTune-windows.zip
             artifacts/KeyTune-windows/KeyTune-windows.zip.sha256
+            artifacts/KeyTune-windows/KeyTuneUpdater.exe
           generate_release_notes: true

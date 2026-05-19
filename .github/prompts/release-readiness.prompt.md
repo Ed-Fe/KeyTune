@@ -6,7 +6,7 @@ agent: "agent"
 ---
 Review the requested Media Player release candidate and decide whether it is ready to publish.
 
-Use the workspace guidance in [copilot-instructions](../copilot-instructions.md) and the release-specific rules in [update-release.instructions](../instructions/update-release.instructions.md).
+Use the workspace guidance in [AGENTS](../../AGENTS.md) and the release-specific rules in [update-release.instructions](../instructions/update-release.instructions.md).
 
 When needed, reference:
 - [update-testing guide](../../docs/update-testing.md)

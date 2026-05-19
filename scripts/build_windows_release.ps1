@@ -23,6 +23,20 @@ function Require-Command {
     }
 }
 
+function Resolve-7ZipCommand {
+    $command = Get-Command "7z" -ErrorAction SilentlyContinue
+    if ($command) {
+        return $command.Source
+    }
+
+    $defaultPath = "C:\Program Files\7-Zip\7z.exe"
+    if (Test-Path $defaultPath) {
+        return $defaultPath
+    }
+
+    throw "7-Zip (7z) nao encontrado. Certifique-se que esta instalado e disponivel no PATH, ou em '$defaultPath'."
+}
+
 function Require-Path {
     param(
         [string]$Path,
@@ -48,7 +62,7 @@ function Resolve-MpvSource {
         $extractRoot = Join-Path $repoRoot "build\mpv-runtime"
         Remove-Item -Path $extractRoot -Recurse -Force -ErrorAction SilentlyContinue
         New-Item -Path $extractRoot -ItemType Directory -Force | Out-Null
-        & 7z x $PreferredArchive "-o$extractRoot" -y | Out-Null
+        & $script:SevenZipExe x $PreferredArchive "-o$extractRoot" -y | Out-Null
         $mpvDll = Get-ChildItem -Path $extractRoot -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
             Select-Object -First 1
         if ($mpvDll) {
@@ -71,7 +85,7 @@ function Resolve-MpvSource {
             New-Item -Path $extractRoot -ItemType Directory -Force | Out-Null
             $outFile = Join-Path $extractRoot "libmpv.7z"
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $outFile
-            & 7z x $outFile "-o$extractRoot\extracted" -y | Out-Null
+            & $script:SevenZipExe x $outFile "-o$extractRoot\extracted" -y | Out-Null
             $mpvDll = Get-ChildItem -Path "$extractRoot\extracted" -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
                 Select-Object -First 1
             if ($mpvDll) {
@@ -95,7 +109,7 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
 # Verifica se 7z está disponível (utilizado para extrair runtimes .7z)
-Require-Command -Cmd "7z" -Description "7-Zip (7z)"
+$script:SevenZipExe = Resolve-7ZipCommand
 
 Write-Step "Validando pré-requisitos"
 Require-Path -Path $PythonExe -Description "Python do ambiente virtual"

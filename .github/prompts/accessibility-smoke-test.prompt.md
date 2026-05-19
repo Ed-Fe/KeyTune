@@ -6,7 +6,7 @@ agent: "agent"
 ---
 Review the requested Media Player UI or accessibility change and perform a focused smoke test.
 
-Use the workspace instructions in [copilot-instructions](../copilot-instructions.md) and the UI-specific rules in [player-ui-a11y.instructions](../instructions/player-ui-a11y.instructions.md).
+Use the workspace instructions in [AGENTS](../../AGENTS.md) and the UI-specific rules in [player-ui-a11y.instructions](../instructions/player-ui-a11y.instructions.md).
 
 Scope the review to the user-provided target, such as a dialog, menu flow, playlist view, shortcut change, or accessibility helper.
 
