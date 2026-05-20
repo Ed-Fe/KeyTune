@@ -17,7 +17,7 @@ Scope the review to the user-provided target (for example: a tag like `v0.2.0`, 
 
 Check these risks when relevant:
 - Version coherence across `src/player/constants.py` (`APP_VERSION`), `CHANGELOG.md`, and the intended GitHub release tag/body.
- - Release asset contract expected by `src/player/update/service.py`: `KeyTune-windows.zip`, `KeyTune-windows.zip.sha256`, and `KeyTuneUpdater.exe`.
+- Release asset contract expected by `src/player/update/service.py`: `KeyTune-windows.zip` and `KeyTune-windows.zip.sha256`, with `KeyTuneUpdater.exe` bundled inside the Windows package.
 - Release-body and changelog consistency (the app shows the GitHub release body in the update dialog).
 - Preservation of `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` and `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME` for updater testing overrides.
 - Whether `README.md` and/or `docs/update-testing.md` need matching updates for packaging or updater behavior changes.

@@ -116,7 +116,6 @@ jobs:
           path: |
             KeyTune-windows.zip
             KeyTune-windows.zip.sha256
-            dist/KeyTuneUpdater.exe
 
   publish-release:
     needs: build-release
@@ -138,5 +137,4 @@ jobs:
           files: |
             artifacts/KeyTune-windows.zip
             artifacts/KeyTune-windows.zip.sha256
-            artifacts/KeyTuneUpdater.exe
           body_path: .github/release-notes.md
