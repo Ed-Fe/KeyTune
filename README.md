@@ -1,12 +1,12 @@
 # KeyTune
 
-An accessible media player prototype called **KeyTune**, built with **Python**, **wxPython**, and **MPV**.
+An accessible media player called **KeyTune**, built with **Python**, **wxPython**, and **MPV**.
 
 The project is keyboard-first and screen-reader-friendly, with support for playlists, folder browsing, session restore, and persistent user preferences.
 
 ## Status
 
-This project is in active development. The current version already supports day-to-day playback flows, but the codebase is still evolving.
+KeyTune is ready for the `1.0.0` Windows release candidate, with the main playback, library, accessibility, update, and YouTube Music flows already integrated.
 
 ## Highlights
 
@@ -93,7 +93,7 @@ When triggered (manually or by pushing a tag like `v1.2.3`), it will:
 The app startup now looks for a local `mpv/` folder before creating the playback backend, so the release can run on machines without MPV pre-installed.
 The Windows package also includes `KeyTuneUpdater.exe`, used by the app to apply downloaded updates after the user confirms the installation.
 
-For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
+For a repeatable end-to-end updater test flow before publishing a release, see `docs/update-testing.md`.
 
 ## Main keyboard shortcuts
 
