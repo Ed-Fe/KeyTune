@@ -1461,9 +1461,10 @@ class FrameYouTubeMusicMixin:
         self._load_youtube_music_playlist_by_id(
             selected_playlist.playlist_id,
             fallback_title=selected_playlist.title,
+            require_auth=True,
         )
 
-    def _load_youtube_music_playlist_by_id(self, playlist_id, *, fallback_title=""):
+    def _load_youtube_music_playlist_by_id(self, playlist_id, *, fallback_title="", require_auth=False):
         service = self._get_youtube_music_service()
         normalized_playlist_id = str(playlist_id or "").strip()
         if not normalized_playlist_id:
@@ -1476,6 +1477,7 @@ class FrameYouTubeMusicMixin:
             return service.get_playlist_content(
                 normalized_playlist_id,
                 fallback_title=display_title,
+                require_auth=require_auth,
             )
 
         def on_success(playlist_content):

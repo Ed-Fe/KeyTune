@@ -3,7 +3,8 @@ from __future__ import annotations
 import pathlib
 import sys
 import unittest
-from unittest.mock import patch
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -56,6 +57,57 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         self.assertEqual(returned_playback.display_artist, "Canal de teste")
         self.assertNotIn(media_path, service._stream_cache)
 
+
+    def test_search_uses_public_client_for_youtube_music_catalog(self):
+        public_client = Mock()
+        public_client.search.return_value = [{"resultType": "song", "videoId": "abc123DEF45", "title": "Faixa"}]
+        fake_ytmusic_cls = Mock(return_value=public_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module):
+            results = service.search("teste", search_scope="music_songs")
+
+        self.assertEqual(len(results), 1)
+        public_client.search.assert_called_once_with("teste", filter="songs", limit=15)
+        fake_ytmusic_cls.assert_called_once_with()
+
+    def test_get_playlist_content_uses_public_client_when_auth_is_not_required(self):
+        public_client = Mock()
+        public_client.get_playlist.return_value = {
+            "title": "Playlist pÃºblica",
+            "tracks": [{"videoId": "abc123DEF45", "title": "Faixa"}],
+        }
+        fake_ytmusic_cls = Mock(return_value=public_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module):
+            playlist = service.get_playlist_content("PL1234567890")
+
+        self.assertEqual(playlist.playlist_id, "PL1234567890")
+        self.assertEqual(playlist.title, "Playlist pÃºblica")
+        public_client.get_playlist.assert_called_once_with("PL1234567890", limit=None)
+        fake_ytmusic_cls.assert_called_once_with()
+
+    def test_get_playlist_content_uses_authenticated_client_when_requested(self):
+        authenticated_client = Mock()
+        authenticated_client.get_playlist.return_value = {
+            "title": "Playlist autenticada",
+            "tracks": [{"videoId": "abc123DEF45", "title": "Faixa"}],
+        }
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            playlist = service.get_playlist_content("PL1234567890", require_auth=True)
+
+        self.assertEqual(playlist.title, "Playlist autenticada")
+        authenticated_client.get_playlist.assert_called_once_with("PL1234567890", limit=None)
+        fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
 
 if __name__ == "__main__":
     unittest.main()

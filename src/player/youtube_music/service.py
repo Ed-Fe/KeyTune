@@ -35,7 +35,8 @@ class YouTubeMusicService:
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
 
     def __init__(self):
-        self._client = None
+        self._authenticated_client = None
+        self._public_client = None
         self._account_info = None
         self._stream_cache = {}
         self._stream_cache_lock = threading.Lock()
@@ -72,7 +73,8 @@ class YouTubeMusicService:
         return True
 
     def clear_client_cache(self):
-        self._client = None
+        self._authenticated_client = None
+        self._public_client = None
         self._account_info = None
         with self._stream_cache_lock:
             self._stream_cache = {}
@@ -268,7 +270,16 @@ class YouTubeMusicService:
 
         scope_option = get_search_scope_option(search_scope)
         if scope_option.requires_auth:
-            client = self.get_client()
+            client = self.get_client(require_auth=True)
+            raw_results = client.search(
+                normalized_query,
+                filter=scope_option.music_filter or None,
+                limit=scope_option.limit,
+            )
+            return normalize_music_search_results(raw_results)
+
+        if scope_option.source == "youtube_music":
+            client = self.get_client(require_auth=False)
             raw_results = client.search(
                 normalized_query,
                 filter=scope_option.music_filter or None,
@@ -354,8 +365,8 @@ class YouTubeMusicService:
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists
 
-    def get_playlist_content(self, playlist_id, fallback_title=""):
-        client = self.get_client()
+    def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
+        client = self.get_client(require_auth=require_auth)
         normalized_playlist_id = str(playlist_id or "").strip()
 
         if is_watch_playlist_id(normalized_playlist_id):
@@ -385,18 +396,24 @@ class YouTubeMusicService:
             item_labels=item_labels,
         )
 
-    def get_client(self):
-        if self._client is not None:
-            return self._client
+    def get_client(self, *, require_auth=True):
+        if require_auth and self._authenticated_client is not None:
+            return self._authenticated_client
+        if not require_auth and self._public_client is not None:
+            return self._public_client
 
         ytmusicapi = import_ytmusicapi_module()
         YTMusic = ytmusicapi.YTMusic
 
-        if not self.has_saved_browser_auth():
+        if require_auth and not self.has_saved_browser_auth():
             raise RuntimeError("Faça a autenticação do navegador antes de buscar playlists.")
 
-        self._client = YTMusic(self.browser_auth_file_path)
-        return self._client
+        if require_auth:
+            self._authenticated_client = YTMusic(self.browser_auth_file_path)
+            return self._authenticated_client
+
+        self._public_client = YTMusic()
+        return self._public_client
 
     def save_search_result(self, search_result):
         client = self.get_client()

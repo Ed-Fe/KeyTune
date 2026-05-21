@@ -11,7 +11,10 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.youtube_music.models import (
+    YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS,
     YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
+    YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS,
+    YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS,
     YouTubeMediaSearchResult,
     get_search_scope_option,
 )
@@ -92,6 +95,12 @@ class YouTubeMusicSearchHelperTests(unittest.TestCase):
             get_search_scope_option("scope-inexistente").scope_id,
             YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
         )
+
+    def test_public_search_scopes_do_not_require_authentication(self):
+        self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS).requires_auth)
+        self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS).requires_auth)
+        self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS).requires_auth)
+        self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS).requires_auth)
 
     def test_search_result_choice_label_mentions_source_and_kind(self):
         result = YouTubeMediaSearchResult(
