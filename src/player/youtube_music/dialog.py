@@ -128,3 +128,125 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     def get_browser_json_path(self):
         path = self.browser_file_picker.GetPath().strip()
         return path if path and os.path.isfile(path) else ""
+
+
+class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
+    ACTION_INSTALL_DENO = "install-deno"
+    ACTION_INSTALL_NODE = "install-node"
+    ACTION_INSTALL_BUN = "install-bun"
+    ACTION_OPEN_DENO = "open-deno"
+    ACTION_OPEN_NODE = "open-node"
+    ACTION_OPEN_BUN = "open-bun"
+    ACTION_OPEN_GUIDE = "open-guide"
+
+    def __init__(self, parent, *, winget_available):
+        super().__init__(
+            parent,
+            title="Runtime JavaScript do YouTube Music",
+            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
+        )
+        self._winget_available = bool(winget_available)
+        self._selected_action = ""
+        self.SetMinSize((620, 420))
+        self._build_ui()
+        self.SetSize((760, 500))
+        self.Layout()
+        self.SetEscapeId(wx.ID_CANCEL)
+
+    def _set_action(self, action):
+        self._selected_action = str(action or "").strip()
+        self.EndModal(wx.ID_OK)
+
+    def _bind_action_button(self, button, action, *, help_text):
+        button.SetName(button.GetLabelText())
+        button.SetHelpText(help_text)
+        button.SetToolTip(help_text)
+        button.Bind(wx.EVT_BUTTON, lambda _event: self._set_action(action))
+
+    def _build_action_button(self, parent, *, label, action, help_text):
+        button = wx.Button(parent, label=label)
+        self._bind_action_button(button, action, help_text=help_text)
+        return button
+
+    def _build_ui(self):
+        root_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        install_hint = (
+            "Os botões de instalação abrem o Windows Package Manager em uma janela separada. "
+            "Dependendo da configuração do sistema, o Windows pode pedir confirmação."
+            if self._winget_available
+            else "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
+        )
+        primary_button_labels = {
+            True: (
+                ("Instalar &Deno", self.ACTION_INSTALL_DENO),
+                ("Instalar &Node.js", self.ACTION_INSTALL_NODE),
+                ("Instalar &Bun", self.ACTION_INSTALL_BUN),
+            ),
+            False: (
+                ("Abrir site do &Deno", self.ACTION_OPEN_DENO),
+                ("Abrir site do &Node.js", self.ACTION_OPEN_NODE),
+                ("Abrir site do &Bun", self.ACTION_OPEN_BUN),
+            ),
+        }
+
+        instructions = wx.StaticText(
+            self,
+            label=(
+                "O yt-dlp agora depende de um runtime JavaScript para o suporte atual ao YouTube e ao YouTube Music.\n\n"
+                "Sem isso, o YouTube pode bloquear a resolução das assinaturas e o player não recebe um formato reproduzível.\n\n"
+                "Opções compatíveis:\n"
+                "1. Deno 2+ (recomendado pelo projeto yt-dlp)\n"
+                "2. Node.js 20+ (opção mais conhecida)\n"
+                "3. Bun 1.0.31+ (alternativa)\n\n"
+                f"{install_hint}\n\n"
+                "Depois da instalação, feche e abra o player novamente para que o novo runtime seja encontrado no PATH do sistema."
+            ),
+        )
+        instructions.Wrap(720)
+        instructions.SetName("Instruções sobre runtime JavaScript do YouTube Music")
+        instructions.SetHelpText(
+            "Explica por que o yt-dlp precisa de um runtime JavaScript e oferece caminhos para instalar ou abrir a documentação."
+        )
+
+        note = wx.StaticText(
+            self,
+            label=(
+                "Se preferir entender o cenário técnico antes de instalar, abra a guia oficial do yt-dlp sobre EJS e desafios JavaScript."
+            ),
+        )
+        note.Wrap(720)
+
+        primary_button_row = wx.BoxSizer(wx.HORIZONTAL)
+        for label, action in primary_button_labels[self._winget_available]:
+            button = self._build_action_button(
+                self,
+                label=label,
+                action=action,
+                help_text=f"Executa a ação: {label}.",
+            )
+            primary_button_row.Add(button, 0, wx.RIGHT, 8)
+
+        secondary_button_row = wx.BoxSizer(wx.HORIZONTAL)
+        guide_button = self._build_action_button(
+            self,
+            label="Abrir guia do &yt-dlp",
+            action=self.ACTION_OPEN_GUIDE,
+            help_text="Abre a documentação oficial do yt-dlp sobre o uso de runtimes JavaScript no YouTube.",
+        )
+        close_button = wx.Button(self, wx.ID_CANCEL, "&Fechar")
+        close_button.SetName("Fechar")
+        close_button.SetHelpText("Fecha esta janela sem abrir instaladores nem sites.")
+        close_button.SetToolTip(close_button.GetHelpText())
+        secondary_button_row.Add(guide_button, 0, wx.RIGHT, 8)
+        secondary_button_row.Add(close_button, 0)
+
+        root_sizer.Add(instructions, 1, wx.ALL | wx.EXPAND, 12)
+        root_sizer.Add(note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        root_sizer.Add(primary_button_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 12)
+        root_sizer.Add(secondary_button_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
+
+        self.SetSizer(root_sizer)
+
+    def get_selected_action(self):
+        return self._selected_action

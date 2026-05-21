@@ -8,7 +8,7 @@ from .dependencies import (
     is_youtube_dependency_auto_update_due,
     youtube_dependencies_available,
 )
-from .dialog import YouTubeMusicBrowserAuthDialog
+from .dialog import YouTubeMusicBrowserAuthDialog, YouTubeMusicJavascriptRuntimeDialog
 from .models import (
     YOUTUBE_MUSIC_SCREEN_ID,
     YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS,
@@ -39,7 +39,7 @@ from .playlists import (
 )
 from .search import normalize_music_search_results, search_youtube_videos
 from .service import YouTubeMusicService
-from .streams import resolve_stream_url
+from .streams import is_missing_javascript_runtime_error_message, resolve_stream_url
 from .yt_dlp_runtime import find_all_available_javascript_runtimes, find_available_javascript_runtime
 
 __all__ = [
@@ -53,6 +53,7 @@ __all__ = [
     "YTMUSIC_SOURCE_PREFIX",
     "YouTubeMediaSearchResult",
     "YouTubeMusicBrowserAuthDialog",
+    "YouTubeMusicJavascriptRuntimeDialog",
     "YouTubeMusicPlaylistContent",
     "YouTubeMusicPlaylistSummary",
     "YouTubeMusicTabPanel",
@@ -80,6 +81,7 @@ __all__ = [
     "ensure_yt_dlp_executable_available",
     "get_installed_youtube_dependency_versions",
     "import_ytmusicapi_module",
+    "is_missing_javascript_runtime_error_message",
     "install_or_update_youtube_dependencies",
     "is_youtube_dependency_auto_update_due",
     "youtube_dependencies_available",

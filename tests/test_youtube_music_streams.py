@@ -15,7 +15,7 @@ if str(SRC_ROOT) not in sys.path:
 from player.youtube_music.auth import YouTubeMusicPlaybackAuth
 from player.youtube_music.dependencies import configure_youtube_dependency_management
 import player.youtube_music.streams as youtube_music_streams
-from player.youtube_music.streams import resolve_stream_playback
+from player.youtube_music.streams import is_missing_javascript_runtime_error_message, resolve_stream_playback
 
 
 def _response(data, stderr_text=""):
@@ -38,6 +38,21 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self._ensure_patch = patch("player.youtube_music.streams.ensure_yt_dlp_executable_available")
         self._ensure_patch.start()
         self.addCleanup(self._ensure_patch.stop)
+
+    def test_missing_javascript_runtime_error_message_matches_expected_text(self):
+        self.assertTrue(
+            is_missing_javascript_runtime_error_message(
+                "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
+                "(Deno 2+ recomendado, Node.js 20+ ou Bun)."
+            )
+        )
+
+    def test_missing_javascript_runtime_error_message_ignores_unrelated_errors(self):
+        self.assertFalse(
+            is_missing_javascript_runtime_error_message(
+                "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
+            )
+        )
 
     def test_resolve_stream_playback_configures_ytdlp_and_uses_temporary_cookie_file(self):
         playback_auth = YouTubeMusicPlaybackAuth(

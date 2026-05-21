@@ -1,4 +1,6 @@
 import os
+import shutil
+import subprocess
 import sys
 import threading
 import time
@@ -8,11 +10,13 @@ import wx
 from player.youtube_music import (
     YOUTUBE_MUSIC_SCREEN_ID,
     YouTubeMusicBrowserAuthDialog,
+    YouTubeMusicJavascriptRuntimeDialog,
     YouTubeMusicService,
     YouTubeMusicTabPanel,
     configure_youtube_dependency_management,
     install_or_update_youtube_dependencies,
     is_youtube_dependency_auto_update_due,
+    is_missing_javascript_runtime_error_message,
     is_youtube_music_media,
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
@@ -32,6 +36,13 @@ class FrameYouTubeMusicMixin:
     _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MAX = 200
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MIN = 5
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MAX = 200
+    _YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL = "https://deno.com/"
+    _YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL = "https://nodejs.org/"
+    _YOUTUBE_MUSIC_JS_RUNTIME_BUN_URL = "https://bun.sh/"
+    _YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL = "https://github.com/yt-dlp/yt-dlp/wiki/EJS"
+    _YOUTUBE_MUSIC_JS_RUNTIME_DENO_WINGET_ID = "DenoLand.Deno"
+    _YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID = "OpenJS.NodeJS.LTS"
+    _YOUTUBE_MUSIC_JS_RUNTIME_BUN_WINGET_ID = "Oven-sh.Bun"
 
     def _youtube_music_library_page_size(self):
         try:
@@ -54,6 +65,113 @@ class FrameYouTubeMusicMixin:
             self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MIN,
             min(self._YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MAX, value),
         )
+
+    def _open_external_url(self, url, *, failure_message):
+        normalized_url = str(url or "").strip()
+        if not normalized_url:
+            return False
+
+        try:
+            launched = wx.LaunchDefaultBrowser(normalized_url)
+        except Exception:
+            launched = False
+
+        if launched:
+            return True
+
+        wx.MessageBox(
+            failure_message,
+            "YouTube Music",
+            wx.OK | wx.ICON_ERROR,
+            self,
+        )
+        return False
+
+    def _launch_youtube_music_javascript_runtime_install(self, package_id, runtime_label):
+        normalized_package_id = str(package_id or "").strip()
+        normalized_runtime_label = str(runtime_label or "").strip() or "runtime JavaScript"
+        if not normalized_package_id:
+            return False
+
+        powershell_command = (
+            f'winget install --id "{normalized_package_id}" -e --accept-source-agreements'
+        )
+        try:
+            subprocess.Popen(
+                [
+                    "powershell.exe",
+                    "-NoExit",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-Command",
+                    powershell_command,
+                ]
+            )
+        except OSError:
+            wx.MessageBox(
+                f"Não foi possível abrir a instalação automática de {normalized_runtime_label}.",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+            return False
+
+        self._announce(
+            f"A instalação de {normalized_runtime_label} foi aberta em uma nova janela."
+        )
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(
+                f"Instalação de {normalized_runtime_label} aberta no Windows Package Manager.",
+            )
+        return True
+
+    def _handle_youtube_javascript_runtime_error(self, error_message):
+        if not is_missing_javascript_runtime_error_message(error_message):
+            return False
+
+        winget_available = bool(shutil.which("winget"))
+        dialog = YouTubeMusicJavascriptRuntimeDialog(self, winget_available=winget_available)
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return True
+            selected_action = dialog.get_selected_action()
+        finally:
+            dialog.Destroy()
+
+        install_actions = {
+            "install-deno": (
+                self._YOUTUBE_MUSIC_JS_RUNTIME_DENO_WINGET_ID,
+                "Deno",
+            ),
+            "install-node": (
+                self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID,
+                "Node.js",
+            ),
+            "install-bun": (
+                self._YOUTUBE_MUSIC_JS_RUNTIME_BUN_WINGET_ID,
+                "Bun",
+            ),
+        }
+        url_actions = {
+            "open-deno": self._YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL,
+            "open-node": self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL,
+            "open-bun": self._YOUTUBE_MUSIC_JS_RUNTIME_BUN_URL,
+            "open-guide": self._YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL,
+        }
+
+        if selected_action in install_actions:
+            package_id, runtime_label = install_actions[selected_action]
+            self._launch_youtube_music_javascript_runtime_install(package_id, runtime_label)
+            return True
+
+        if selected_action in url_actions:
+            self._open_external_url(
+                url_actions[selected_action],
+                failure_message="Não foi possível abrir o navegador para mostrar a página solicitada.",
+            )
+            return True
+
+        return True
 
     def _is_youtube_music_operation_in_progress(self):
         return bool(getattr(self, "_youtube_music_operation_in_progress", False))

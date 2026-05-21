@@ -43,6 +43,13 @@ _STREAM_DIAGNOSTIC_SIGNAL_LABELS = {
 }
 
 _PRERELEASE_SELF_HEAL_ATTEMPTED = False
+_JAVASCRIPT_RUNTIME_REQUIRED_MARKERS = (
+    "runtime javascript",
+    "node.js 20+",
+    "deno 2+",
+    "bun",
+    "yt-dlp",
+)
 
 
 @dataclass(slots=True)
@@ -51,6 +58,13 @@ class ResolvedStreamPlayback:
     http_headers: dict[str, str] | None = None
     display_title: str = ""
     display_artist: str = ""
+
+
+def is_missing_javascript_runtime_error_message(error_message):
+    normalized_error_message = " ".join(str(error_message or "").split()).casefold()
+    if not normalized_error_message:
+        return False
+    return all(marker in normalized_error_message for marker in _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS)
 
 
 def resolve_stream_url(media_path):
@@ -69,10 +83,10 @@ def resolve_stream_playback(media_path):
     available_js_runtimes = find_all_available_javascript_runtimes()
     if not available_js_runtimes:
         raise RuntimeError(
-            "Para reproduzir do YouTube Music é necessário um runtime JavaScript instalado no sistema "
-            "(Node.js 20+, Deno 2+ ou Bun). Sem ele, o yt-dlp não consegue resolver as assinaturas "
+            "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
+            "(Deno 2+ recomendado, Node.js 20+ ou Bun). Sem ele, o yt-dlp não consegue resolver as assinaturas "
             "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
-            "Instale o Node.js a partir de https://nodejs.org/ (versão LTS) e tente novamente."
+            "Instale um desses runtimes e tente novamente."
         )
 
     playback_auth = load_saved_playback_auth()

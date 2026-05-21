@@ -4,7 +4,7 @@ import pathlib
 import sys
 import types
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -13,6 +13,10 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.frames.youtube_music import FrameYouTubeMusicMixin
+import player.frames.youtube_music as youtube_music_frame_module
+
+
+_ACTION_INSTALL_DENO = youtube_music_frame_module.YouTubeMusicJavascriptRuntimeDialog.ACTION_INSTALL_DENO
 
 
 class _DummyFrame(FrameYouTubeMusicMixin):
@@ -111,6 +115,48 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         service.get_connected_account_name.assert_not_called()
         service.get_user_library_playlists.assert_not_called()
         service.get_personalized_mixes.assert_not_called()
+
+    def test_handle_javascript_runtime_error_opens_winget_install(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+        frame._launch_youtube_music_javascript_runtime_install = Mock(return_value=True)
+
+        class _FakeDialog:
+            def __init__(self, _parent, *, winget_available):
+                self.winget_available = winget_available
+
+            def ShowModal(self):
+                return youtube_music_frame_module.wx.ID_OK
+
+            def get_selected_action(self):
+                return _ACTION_INSTALL_DENO
+
+            def Destroy(self):
+                return None
+
+        with patch(
+            "player.frames.youtube_music.is_missing_javascript_runtime_error_message",
+            return_value=True,
+        ), patch("player.frames.youtube_music.shutil.which", return_value="C:/Windows/System32/winget.exe"), patch(
+            "player.frames.youtube_music.YouTubeMusicJavascriptRuntimeDialog",
+            _FakeDialog,
+        ):
+            handled = frame._handle_youtube_javascript_runtime_error("erro")
+
+        self.assertTrue(handled)
+        frame._launch_youtube_music_javascript_runtime_install.assert_called_once_with("DenoLand.Deno", "Deno")
+
+    def test_handle_javascript_runtime_error_ignores_other_messages(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+
+        with patch(
+            "player.frames.youtube_music.is_missing_javascript_runtime_error_message",
+            return_value=False,
+        ):
+            handled = frame._handle_youtube_javascript_runtime_error("outro erro")
+
+        self.assertFalse(handled)
 
 
 if __name__ == "__main__":

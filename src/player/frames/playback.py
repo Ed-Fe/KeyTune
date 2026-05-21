@@ -1319,7 +1319,14 @@ class FramePlaybackMixin:
                     return
                 self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
             if error_message:
-                self._announce(f"Não foi possível iniciar a mídia: {error_message}.")
+                handled = False
+                if is_youtube_music_media(media_path) and hasattr(self, "_handle_youtube_javascript_runtime_error"):
+                    try:
+                        handled = bool(self._handle_youtube_javascript_runtime_error(error_message))
+                    except Exception:
+                        handled = False
+                if not handled:
+                    self._announce(f"Não foi possível iniciar a mídia: {error_message}.")
             return
 
         if request.get("crossfade"):
