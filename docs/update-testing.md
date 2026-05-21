@@ -34,6 +34,12 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1
 ```
 
+Por padrão, o script também baixa o `yt-dlp.exe` oficial do canal estável e o embute ao lado do `KeyTune.exe`. Para testar uma release local já com o canal nightly do yt-dlp, use:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -YtDlpChannel nightly
+```
+
 Ao final, você terá:
 
 - `KeyTune-windows.zip`

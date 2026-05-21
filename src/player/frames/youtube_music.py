@@ -106,6 +106,7 @@ class FrameYouTubeMusicMixin:
         configure_youtube_dependency_management(
             managed_install_enabled=bool(getattr(self.settings, "youtube_music_manage_dependencies", False)),
             auto_update_enabled=bool(getattr(self.settings, "youtube_music_auto_update_dependencies", True)),
+            prefer_nightly_yt_dlp=bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)),
         )
 
     def _youtube_music_dependency_update_interval_hours(self):
@@ -138,10 +139,10 @@ class FrameYouTubeMusicMixin:
         if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
             return False
 
-        # The dependency update runs pip in a subprocess; it is independent of
-        # any YTMusic API operation. We deliberately bypass the YouTube Music
-        # operation lock used by API calls so startup follow-up work can
-        # resume as soon as the install finishes.
+        # The dependency update runs outside the UI thread and can touch both
+        # the Python-side ytmusicapi package and the managed yt-dlp executable.
+        # We deliberately bypass the YouTube Music operation lock used by API
+        # calls so startup follow-up work can resume as soon as the update finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             return False
         self._youtube_music_dependency_update_in_progress = True
@@ -255,8 +256,7 @@ class FrameYouTubeMusicMixin:
 
         if has_managed_dependencies:
             # If the user toggled the nightly/stable channel, force a fresh
-            # install so the channel actually changes (pip won't downgrade or
-            # switch channels otherwise).
+            # managed yt-dlp download so the executable actually switches channel.
             had_nightly = bool(getattr(previous_settings, "youtube_music_use_nightly_yt_dlp", False))
             has_nightly = bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False))
             if had_nightly != has_nightly:
@@ -776,9 +776,9 @@ class FrameYouTubeMusicMixin:
         if self._youtube_music_library_has_loaded():
             return
 
-        # If the dependency auto-update is still running, don't touch
-        # ytmusicapi: pip may be replacing its files. The dep update's
-        # on_success path will trigger this auto-load when it finishes.
+        # If the dependency auto-update is still running, don't touch the
+        # YouTube Music runtime yet. The dep update's on_success path will
+        # trigger this auto-load when it finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             self._youtube_music_library_status_message = (
                 "Atualizando recursos adicionais do YouTube Music. A biblioteca ser\u00e1 carregada em seguida."
@@ -1060,7 +1060,8 @@ class FrameYouTubeMusicMixin:
         if not self._ensure_youtube_music_authenticated():
             return False
 
-        # Don't issue API calls while pip may be replacing ytmusicapi files.
+        # Don't issue API calls while the dependency update may be refreshing
+        # ytmusicapi files or replacing the managed yt-dlp executable.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             message = (
                 "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
@@ -1399,10 +1400,10 @@ class FrameYouTubeMusicMixin:
 
         # If a dependency auto-update is due, kick it off now (in its own
         # background thread, no operation lock). It must run BEFORE the
-        # pre-warm, otherwise pre-warm would import ytmusicapi and lock the
-        # extension .pyd files, making pip's later replace fail with
-        # PermissionError on Windows. When a dep update kicks off, the
-        # pre-warm is deferred and will run from the dep update's on_success.
+        # pre-warm, otherwise pre-warm would import ytmusicapi and keep the
+        # package loaded while an update is trying to refresh its files on
+        # Windows. When a dep update kicks off, the pre-warm is deferred and
+        # will run from the dep update's on_success.
         dep_update_started = self._maybe_auto_update_youtube_music_dependencies()
         if dep_update_started:
             return

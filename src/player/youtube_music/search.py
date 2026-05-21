@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import re
 
-from .dependencies import import_yt_dlp_module
+from .dependencies import ensure_yt_dlp_executable_available
 from .models import (
     YOUTUBE_SEARCH_SOURCE_MUSIC,
     YOUTUBE_SEARCH_SOURCE_YOUTUBE,
     YouTubeMediaSearchResult,
 )
 from .playlists import build_watch_url, build_youtube_watch_url
+from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 
 
 YOUTUBE_SEARCH_SOCKET_TIMEOUT_SECONDS = 10
@@ -39,22 +40,20 @@ def search_youtube_videos(query, *, limit=15):
     if not normalized_query:
         return []
 
-    yt_dlp = import_yt_dlp_module()
+    ensure_yt_dlp_executable_available()
 
     normalized_limit = max(1, int(limit or 15))
     search_query = f"ytsearch{normalized_limit}:{normalized_query}"
-    options = {
-        "quiet": True,
-        "no_warnings": True,
-        "skip_download": True,
-        "extract_flat": "in_playlist",
-        "playlistend": normalized_limit,
-        "socket_timeout": YOUTUBE_SEARCH_SOCKET_TIMEOUT_SECONDS,
-    }
-
     try:
-        with yt_dlp.YoutubeDL(options) as ydl:
-            info = ydl.extract_info(search_query, download=False)
+        response = extract_yt_dlp_info(
+            search_query,
+            extract_flat="in_playlist",
+            playlist_end=normalized_limit,
+            socket_timeout_seconds=YOUTUBE_SEARCH_SOCKET_TIMEOUT_SECONDS,
+            quiet=True,
+            no_warnings=True,
+        )
+        info = response.data
     except Exception as exc:
         raise RuntimeError(
             _clean_external_tool_error(exc) or "O yt-dlp não conseguiu pesquisar vídeos no YouTube."

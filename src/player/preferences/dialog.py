@@ -328,8 +328,8 @@ class PreferencesDialog(wx.Dialog):
             self.youtube_music_manage_dependencies_checkbox,
             "Ativar recursos adicionais do YouTube Music",
             (
-                "Baixa e mantém yt-dlp e ytmusicapi em uma pasta local de recursos adicionais "
-                "para reduzir dependência do pacote distribuído."
+                "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do "
+                "YouTube Music em uma pasta local de recursos adicionais."
             ),
         )
         self._configure_checkbox(
@@ -341,8 +341,8 @@ class PreferencesDialog(wx.Dialog):
             self.youtube_music_use_nightly_yt_dlp_checkbox,
             "Usar versão nightly do yt-dlp",
             (
-                "Instala builds nightly do yt-dlp (pip install --pre). Recomendado porque o YouTube quebra extractors com frequência "
-                "e o nightly costuma ter as correções antes do release estável."
+                "Baixa builds nightly oficiais do yt-dlp. Recomendado porque o YouTube quebra "
+                "extractors com frequência e o nightly costuma receber correções antes do canal estável."
             ),
         )
 
@@ -350,7 +350,7 @@ class PreferencesDialog(wx.Dialog):
             page,
             label_text="Intervalo de atualização (horas)",
             help_text=(
-                "Define de quanto em quanto tempo o player tenta atualizar yt-dlp e ytmusicapi "
+                "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python "
                 "quando a aba YouTube Music é aberta."
             ),
             min_value=1,

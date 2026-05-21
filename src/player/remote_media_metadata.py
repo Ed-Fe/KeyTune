@@ -3,8 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .library import is_remote_media_path
-from .youtube_music.dependencies import import_yt_dlp_module
+from .youtube_music.dependencies import ensure_yt_dlp_executable_available
 from .youtube_music.playlists import is_youtube_music_media
+from .youtube_music.yt_dlp_runtime import extract_info as extract_yt_dlp_info
 
 
 YTDLP_METADATA_SOCKET_TIMEOUT_SECONDS = 10
@@ -90,21 +91,15 @@ def _normalize_metadata_text(value) -> str:
 
 def _extract_remote_media_info(media_path: str):
     try:
-        yt_dlp = import_yt_dlp_module()
-    except Exception:
-        return None
-
-    options = {
-        "quiet": True,
-        "no_warnings": True,
-        "skip_download": True,
-        "noplaylist": True,
-        "extract_flat": False,
-        "socket_timeout": YTDLP_METADATA_SOCKET_TIMEOUT_SECONDS,
-    }
-    try:
-        with yt_dlp.YoutubeDL(options) as downloader:
-            return downloader.extract_info(media_path, download=False)
+        ensure_yt_dlp_executable_available()
+        response = extract_yt_dlp_info(
+            media_path,
+            noplaylist=True,
+            socket_timeout_seconds=YTDLP_METADATA_SOCKET_TIMEOUT_SECONDS,
+            quiet=True,
+            no_warnings=True,
+        )
+        return response.data
     except Exception:
         return None
 

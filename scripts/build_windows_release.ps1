@@ -2,7 +2,9 @@ param(
     [string]$PythonExe = "d:/git/Media-Player/.venv/Scripts/python.exe",
     [string]$MpvSource = "",
     [string]$MpvRuntimeArchive = "",
-    [string]$ArchiveName = "KeyTune-windows.zip"
+    [string]$ArchiveName = "KeyTune-windows.zip",
+    [ValidateSet("stable", "nightly")]
+    [string]$YtDlpChannel = "stable"
 )
 
 $ErrorActionPreference = "Stop"
@@ -155,6 +157,12 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Step "Copiando atualizador para a pasta da release"
 Copy-Item -Path "dist\KeyTuneUpdater.exe" -Destination "dist\KeyTune\KeyTuneUpdater.exe" -Force
+
+Write-Step "Baixando yt-dlp oficial ($YtDlpChannel)"
+& $PythonExe scripts\download_yt_dlp_release.py --channel $YtDlpChannel --output-dir "dist\KeyTune"
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao baixar o yt-dlp oficial."
+}
 
 Write-Step "Copiando runtime do MPV"
 $targetRoot = "dist\KeyTune\mpv"

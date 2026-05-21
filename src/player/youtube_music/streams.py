@@ -8,12 +8,13 @@ from .auth import (
     sanitize_sensitive_text,
 )
 from .dependencies import (
-    find_all_available_javascript_runtimes,
-    import_yt_dlp_module,
+    ensure_yt_dlp_executable_available,
     install_or_update_youtube_dependencies,
     youtube_dependency_management_enabled,
 )
 from .playlists import is_youtube_music_media
+from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
+from .yt_dlp_runtime import find_all_available_javascript_runtimes
 
 
 YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS = 10
@@ -52,50 +53,6 @@ class ResolvedStreamPlayback:
     display_artist: str = ""
 
 
-class _YtDlpWarningCollector:
-    def __init__(self):
-        self.messages: list[str] = []
-
-    def debug(self, message):
-        self._capture_if_relevant(message, only_warning_like=True)
-
-    def info(self, _message):
-        return
-
-    def warning(self, message):
-        self._capture_if_relevant(message)
-
-    def error(self, message):
-        self._capture_if_relevant(message)
-
-    def _capture_if_relevant(self, message, *, only_warning_like=False):
-        normalized_message = str(message or "").strip()
-        if not normalized_message:
-            return
-
-        lowered_message = normalized_message.casefold()
-        if only_warning_like and not any(
-            marker in lowered_message
-            for marker in (
-                "warning:",
-                "error:",
-                "n challenge",
-                "js challenge",
-                "only images",
-                "sabr",
-                "po token",
-                "missing_pot",
-                "not a bot",
-                "captcha",
-            )
-        ):
-            return
-
-        cleaned_message = _clean_external_tool_error(normalized_message)
-        if cleaned_message:
-            self.messages.append(cleaned_message)
-
-
 def resolve_stream_url(media_path):
     return resolve_stream_playback(media_path).stream_url
 
@@ -107,6 +64,8 @@ def resolve_stream_playback(media_path):
     if not is_youtube_music_media(normalized_media_path):
         return ResolvedStreamPlayback(stream_url=normalized_media_path, http_headers={})
 
+    ensure_yt_dlp_executable_available()
+
     available_js_runtimes = find_all_available_javascript_runtimes()
     if not available_js_runtimes:
         raise RuntimeError(
@@ -115,9 +74,6 @@ def resolve_stream_playback(media_path):
             "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
             "Instale o Node.js a partir de https://nodejs.org/ (versão LTS) e tente novamente."
         )
-
-    yt_dlp = import_yt_dlp_module()
-    warning_collector = _YtDlpWarningCollector()
 
     playback_auth = load_saved_playback_auth()
 
@@ -129,14 +85,11 @@ def resolve_stream_playback(media_path):
         "extract_flat": False,
         "ignore_no_formats_error": True,
         "socket_timeout": YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS,
-        "logger": warning_collector,
         # yt-dlp only enables JS challenge providers (NodeJCP, DenoJCP, BunJCP) when
-        # the corresponding runtime appears in the ``js_runtimes`` parameter. Without
-        # this, even with Node.js installed and on PATH, yt-dlp logs
-        # "JS Challenge Providers: ... node (unavailable)" and falls back to image-only
-        # storyboard formats. Pass the runtimes we discovered with empty configs so
-        # yt-dlp resolves their paths via PATH.
-        "js_runtimes": {name: {} for name in available_js_runtimes},
+        # the corresponding runtime is explicitly enabled. Official executables
+        # enable Deno by default, but Node and Bun must still be passed via
+        # ``--js-runtimes`` when present.
+        "js_runtimes": dict(available_js_runtimes),
     }
     temporary_cookie_file_path = ""
     if playback_auth.cookie_header:
@@ -171,15 +124,29 @@ def resolve_stream_playback(media_path):
 
     format_selectors = ["bestaudio/best"]
 
-    def _attempt_resolution(active_yt_dlp_module):
+    warning_messages: list[str] = []
+
+    def _attempt_resolution():
         local_last_error = ""
         local_attempted_profiles = 0
         for format_selector in format_selectors:
             for profile in extractor_profiles:
                 local_attempted_profiles += 1
                 try:
-                    with active_yt_dlp_module.YoutubeDL({**base_options, "format": format_selector, **profile}) as ydl:
-                        info = ydl.extract_info(normalized_media_path, download=False)
+                    response = extract_yt_dlp_info(
+                        normalized_media_path,
+                        format_selector=format_selector,
+                        cookie_file_path=base_options.get("cookiefile", ""),
+                        http_headers=base_options.get("http_headers"),
+                        extractor_args=profile.get("extractor_args"),
+                        js_runtimes=base_options.get("js_runtimes"),
+                        socket_timeout_seconds=base_options.get("socket_timeout", 0),
+                        noplaylist=bool(base_options.get("noplaylist")),
+                        extract_flat=base_options.get("extract_flat"),
+                        ignore_no_formats_error=bool(base_options.get("ignore_no_formats_error")),
+                    )
+                    info = response.data
+                    warning_messages.extend(_warning_messages_from_stderr(response.stderr_text))
                 except Exception as exc:
                     local_last_error = _clean_external_tool_error(exc)
                     continue
@@ -208,12 +175,12 @@ def resolve_stream_playback(media_path):
     attempted_profiles = 0
     prerelease_retry_attempted = False
     try:
-        resolved_playback, last_error, attempted_profiles = _attempt_resolution(yt_dlp)
+        resolved_playback, last_error, attempted_profiles = _attempt_resolution()
         if resolved_playback is not None:
             return resolved_playback
 
         diagnostic_signals = _collect_stream_resolution_diagnostic_signals(
-            warning_collector.messages,
+            warning_messages,
             last_error,
         )
         if (
@@ -227,8 +194,7 @@ def resolve_stream_playback(media_path):
             prerelease_retry_attempted = True
             try:
                 install_or_update_youtube_dependencies(force=True, include_prerelease=True)
-                refreshed_yt_dlp = import_yt_dlp_module(reload=True)
-                resolved_playback, retry_last_error, retry_attempted_profiles = _attempt_resolution(refreshed_yt_dlp)
+                resolved_playback, retry_last_error, retry_attempted_profiles = _attempt_resolution()
                 attempted_profiles += retry_attempted_profiles
                 if retry_last_error:
                     last_error = retry_last_error
@@ -245,7 +211,7 @@ def resolve_stream_playback(media_path):
         _remove_temporary_cookie_file(temporary_cookie_file_path)
 
     diagnostic_signals = _collect_stream_resolution_diagnostic_signals(
-        warning_collector.messages,
+        warning_messages,
         last_error,
     )
 
@@ -588,6 +554,33 @@ def _clean_external_tool_error(error):
     if "ERROR:" in message:
         message = message.split("ERROR:", 1)[1].strip()
     return sanitize_sensitive_text(message)
+
+
+def _warning_messages_from_stderr(stderr_text):
+    messages = []
+    for line in str(stderr_text or "").splitlines():
+        cleaned_message = _clean_external_tool_error(line)
+        if not cleaned_message:
+            continue
+        lowered_message = cleaned_message.casefold()
+        if not any(
+            marker in lowered_message
+            for marker in (
+                "warning:",
+                "error:",
+                "n challenge",
+                "js challenge",
+                "only images",
+                "sabr",
+                "po token",
+                "missing_pot",
+                "not a bot",
+                "captcha",
+            )
+        ):
+            continue
+        messages.append(cleaned_message)
+    return messages
 
 
 def _remove_temporary_cookie_file(temp_cookie_file_path):

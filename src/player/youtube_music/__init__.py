@@ -1,8 +1,8 @@
 from .auth import YTMUSIC_BROWSER_AUTH_FILE_NAME, get_browser_auth_file_path, prepare_browser_auth_input, read_auth_file_text
 from .dependencies import (
     configure_youtube_dependency_management,
+    ensure_yt_dlp_executable_available,
     get_installed_youtube_dependency_versions,
-    import_yt_dlp_module,
     import_ytmusicapi_module,
     install_or_update_youtube_dependencies,
     is_youtube_dependency_auto_update_due,
@@ -40,6 +40,7 @@ from .playlists import (
 from .search import normalize_music_search_results, search_youtube_videos
 from .service import YouTubeMusicService
 from .streams import resolve_stream_url
+from .yt_dlp_runtime import find_all_available_javascript_runtimes, find_available_javascript_runtime
 
 __all__ = [
     "YTMUSIC_BROWSER_AUTH_FILE_NAME",
@@ -76,10 +77,12 @@ __all__ = [
     "search_youtube_videos",
     "track_display_label",
     "configure_youtube_dependency_management",
+    "ensure_yt_dlp_executable_available",
     "get_installed_youtube_dependency_versions",
-    "import_yt_dlp_module",
     "import_ytmusicapi_module",
     "install_or_update_youtube_dependencies",
     "is_youtube_dependency_auto_update_due",
     "youtube_dependencies_available",
+    "find_all_available_javascript_runtimes",
+    "find_available_javascript_runtime",
 ]

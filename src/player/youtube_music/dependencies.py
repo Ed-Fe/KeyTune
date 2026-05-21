@@ -4,21 +4,22 @@ from dataclasses import dataclass
 import importlib
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import threading
 import time
 
 from ..session import get_app_storage_dir
+from .yt_dlp_runtime import (
+    get_managed_yt_dlp_executable_path,
+    get_yt_dlp_version,
+    install_or_update_yt_dlp_executable,
+    yt_dlp_executable_available,
+)
 
 
-YTDLP_IMPORT_NAME = "yt_dlp"
 YTMUSICAPI_IMPORT_NAME = "ytmusicapi"
-# yt-dlp[default] does NOT install yt-dlp-ejs (it pulls curl_cffi/websockets).
-# yt-dlp-ejs is needed for solving JS/N challenges via Node.js or Deno when the
-# bundled solver fails. List it explicitly so the package is always present.
-YOUTUBE_DEPENDENCY_PACKAGES = ("yt-dlp[default]", "yt-dlp-ejs", "ytmusicapi")
+YOUTUBE_DEPENDENCY_PACKAGES = ("ytmusicapi",)
 YOUTUBE_DEPENDENCY_INSTALL_TIMEOUT_SECONDS = 240
 
 
@@ -33,16 +34,23 @@ class YouTubeDependencyUpdateResult:
 class _RuntimeDependencyConfig:
     managed_install_enabled: bool = False
     auto_update_enabled: bool = True
+    prefer_nightly_yt_dlp: bool = False
 
 
 _RUNTIME_CONFIG = _RuntimeDependencyConfig()
 _RUNTIME_CONFIG_LOCK = threading.Lock()
 
 
-def configure_youtube_dependency_management(*, managed_install_enabled: bool, auto_update_enabled: bool) -> None:
+def configure_youtube_dependency_management(
+    *,
+    managed_install_enabled: bool,
+    auto_update_enabled: bool,
+    prefer_nightly_yt_dlp: bool = False,
+) -> None:
     with _RUNTIME_CONFIG_LOCK:
         _RUNTIME_CONFIG.managed_install_enabled = bool(managed_install_enabled)
         _RUNTIME_CONFIG.auto_update_enabled = bool(auto_update_enabled)
+        _RUNTIME_CONFIG.prefer_nightly_yt_dlp = bool(prefer_nightly_yt_dlp)
 
 
 def youtube_dependency_management_enabled() -> bool:
@@ -55,30 +63,9 @@ def youtube_dependency_auto_update_enabled() -> bool:
         return bool(_RUNTIME_CONFIG.auto_update_enabled)
 
 
-# JS runtimes that yt-dlp-ejs (the EJS solver bundled with yt-dlp[default]) can use
-# to solve YouTube's signature/n-challenge JavaScript. Without one of these in PATH
-# the YouTube extractor returns only storyboards (mhtml) for every player_client
-# (web, tv, ios, android, etc.), making playback impossible.
-SUPPORTED_JS_RUNTIME_EXECUTABLES = ("node", "deno", "bun")
-
-
-def find_available_javascript_runtime() -> str:
-    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
-        if shutil.which(executable_name):
-            return executable_name
-    return ""
-
-
-def find_all_available_javascript_runtimes() -> dict[str, str]:
-    """Return a mapping of runtime name -> executable path for every supported
-    JS runtime found on PATH. Used to populate yt-dlp's ``js_runtimes`` option
-    so the EJS solver can actually use them."""
-    discovered: dict[str, str] = {}
-    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
-        path = shutil.which(executable_name)
-        if path:
-            discovered[executable_name] = path
-    return discovered
+def youtube_dependency_nightly_yt_dlp_enabled() -> bool:
+    with _RUNTIME_CONFIG_LOCK:
+        return bool(_RUNTIME_CONFIG.prefer_nightly_yt_dlp)
 
 
 def get_youtube_dependency_target_dir() -> Path:
@@ -96,22 +83,41 @@ def activate_youtube_dependency_target_dir() -> Path:
 
 def youtube_dependencies_available() -> bool:
     activate_youtube_dependency_target_dir()
-    return _can_import_dependency(YTDLP_IMPORT_NAME) and _can_import_dependency(YTMUSICAPI_IMPORT_NAME)
+    return _can_import_dependency(YTMUSICAPI_IMPORT_NAME) and yt_dlp_executable_available()
+
+
+def ensure_yt_dlp_executable_available() -> None:
+    if yt_dlp_executable_available():
+        return
+
+    if not youtube_dependency_management_enabled():
+        raise RuntimeError(
+            "O executável yt-dlp não está disponível. "
+            "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+        )
+
+    install_or_update_youtube_dependencies(
+        force=False,
+        include_prerelease=youtube_dependency_nightly_yt_dlp_enabled(),
+    )
+    if not yt_dlp_executable_available():
+        raise RuntimeError("O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução.")
 
 
 def get_installed_youtube_dependency_versions() -> dict[str, str]:
     activate_youtube_dependency_target_dir()
     versions: dict[str, str] = {}
-    for import_name, package_name in (
-        ("yt_dlp", "yt-dlp"),
-        ("ytmusicapi", "ytmusicapi"),
-    ):
-        try:
-            module = importlib.import_module(import_name)
-        except Exception:
-            continue
 
-        versions[package_name] = _resolve_module_version(module)
+    try:
+        ytmusicapi_module = importlib.import_module(YTMUSICAPI_IMPORT_NAME)
+    except Exception:
+        ytmusicapi_module = None
+    if ytmusicapi_module is not None:
+        versions["ytmusicapi"] = _resolve_module_version(ytmusicapi_module)
+
+    yt_dlp_version = get_yt_dlp_version()
+    if yt_dlp_version:
+        versions["yt-dlp"] = yt_dlp_version
 
     return versions
 
@@ -142,14 +148,80 @@ def install_or_update_youtube_dependencies(
     timeout_seconds: int = YOUTUBE_DEPENDENCY_INSTALL_TIMEOUT_SECONDS,
     include_prerelease: bool = False,
 ) -> YouTubeDependencyUpdateResult:
+    output_parts: list[str] = []
+    updated = False
+
     target_dir = activate_youtube_dependency_target_dir()
-    if not force and youtube_dependencies_available():
-        return YouTubeDependencyUpdateResult(
-            updated=False,
-            versions=get_installed_youtube_dependency_versions(),
-            command_output="Dependências já disponíveis.",
+    ytmusicapi_was_available = _can_import_dependency(YTMUSICAPI_IMPORT_NAME)
+    yt_dlp_managed_exists = get_managed_yt_dlp_executable_path().is_file()
+
+    if force or not ytmusicapi_was_available:
+        completed_process = _install_or_update_ytmusicapi(target_dir=target_dir, timeout_seconds=timeout_seconds)
+        output_parts.append(_trim_process_output(completed_process))
+        updated = True
+
+    if force or not yt_dlp_managed_exists:
+        yt_dlp_version = install_or_update_yt_dlp_executable(
+            force=force,
+            include_prerelease=include_prerelease,
+            timeout_seconds=timeout_seconds,
+        )
+        if yt_dlp_version:
+            output_parts.append(f"yt-dlp {yt_dlp_version}")
+        updated = True
+
+    if not youtube_dependencies_available():
+        raise RuntimeError(
+            "Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. "
+            "Reinicie o aplicativo e tente novamente."
         )
 
+    return YouTubeDependencyUpdateResult(
+        updated=updated,
+        versions=get_installed_youtube_dependency_versions(),
+        command_output="\n".join(part for part in output_parts if part).strip(),
+    )
+
+
+def import_ytmusicapi_module(*, reload: bool = False):
+    activate_youtube_dependency_target_dir()
+    if reload:
+        _clear_dependency_modules((YTMUSICAPI_IMPORT_NAME,))
+        importlib.invalidate_caches()
+
+    try:
+        return importlib.import_module(YTMUSICAPI_IMPORT_NAME)
+    except Exception as initial_error:
+        if not youtube_dependency_management_enabled():
+            raise RuntimeError(
+                "A dependência ytmusicapi não está instalada. "
+                "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+            ) from initial_error
+
+        try:
+            install_or_update_youtube_dependencies(
+                force=False,
+                include_prerelease=youtube_dependency_nightly_yt_dlp_enabled(),
+            )
+        except Exception as exc:
+            raise RuntimeError(
+                f"Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {exc}"
+            ) from exc
+
+        try:
+            return importlib.import_module(YTMUSICAPI_IMPORT_NAME)
+        except Exception as final_error:
+            raise RuntimeError(
+                "A dependência ytmusicapi foi baixada, mas não pôde ser carregada. "
+                "Reinicie o aplicativo e tente novamente."
+            ) from final_error
+
+
+def _install_or_update_ytmusicapi(
+    *,
+    target_dir: Path,
+    timeout_seconds: int,
+) -> subprocess.CompletedProcess:
     command = [
         sys.executable,
         "-m",
@@ -160,13 +232,10 @@ def install_or_update_youtube_dependencies(
         "--upgrade",
         "--target",
         str(target_dir),
+        *YOUTUBE_DEPENDENCY_PACKAGES,
     ]
-    if include_prerelease:
-        command.append("--pre")
-    command.extend(YOUTUBE_DEPENDENCY_PACKAGES)
 
     completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
-
     if completed_process.returncode != 0 and _pip_missing_in_output(completed_process):
         _try_bootstrap_pip(timeout_seconds=timeout_seconds)
         completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
@@ -175,64 +244,7 @@ def install_or_update_youtube_dependencies(
         raise RuntimeError(_format_install_failure(completed_process))
 
     importlib.invalidate_caches()
-    if not youtube_dependencies_available():
-        raise RuntimeError(
-            "As dependências foram baixadas, mas não puderam ser carregadas nesta execução. "
-            "Reinicie o aplicativo e tente novamente."
-        )
-
-    return YouTubeDependencyUpdateResult(
-        updated=True,
-        versions=get_installed_youtube_dependency_versions(),
-        command_output=_trim_process_output(completed_process),
-    )
-
-
-def import_yt_dlp_module(*, reload: bool = False):
-    return _import_dependency_module(
-        import_name=YTDLP_IMPORT_NAME,
-        display_name="yt-dlp",
-        reload=reload,
-    )
-
-
-def import_ytmusicapi_module(*, reload: bool = False):
-    return _import_dependency_module(
-        import_name=YTMUSICAPI_IMPORT_NAME,
-        display_name="ytmusicapi",
-        reload=reload,
-    )
-
-
-def _import_dependency_module(*, import_name: str, display_name: str, reload: bool = False):
-    activate_youtube_dependency_target_dir()
-    if reload:
-        _clear_dependency_modules((import_name,))
-        importlib.invalidate_caches()
-
-    try:
-        return importlib.import_module(import_name)
-    except Exception as initial_error:
-        if not youtube_dependency_management_enabled():
-            raise RuntimeError(
-                f"A dependência {display_name} não está instalada. "
-                "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
-            ) from initial_error
-
-        try:
-            install_or_update_youtube_dependencies(force=False)
-        except Exception as exc:
-            raise RuntimeError(
-                f"Não foi possível preparar a dependência {display_name} automaticamente. Detalhes: {exc}"
-            ) from exc
-
-        try:
-            return importlib.import_module(import_name)
-        except Exception as final_error:
-            raise RuntimeError(
-                f"A dependência {display_name} foi baixada, mas não pôde ser carregada. "
-                "Reinicie o aplicativo e tente novamente."
-            ) from final_error
+    return completed_process
 
 
 def _clear_dependency_modules(module_names: tuple[str, ...]) -> None:
@@ -285,9 +297,6 @@ def _can_import_dependency(import_name: str) -> bool:
 
 
 def _resolve_module_version(module) -> str:
-    # Only accept string-like attributes. yt_dlp exposes a ``version``
-    # *submodule* (yt_dlp/version.py) — taking it via getattr would yield a
-    # module repr instead of a version string.
     for attribute_name in ("__version__", "VERSION"):
         value = getattr(module, attribute_name, "")
         if isinstance(value, str):
@@ -295,26 +304,12 @@ def _resolve_module_version(module) -> str:
             if normalized_value:
                 return normalized_value
 
-    # Fallback: read the version attribute from the dedicated submodule
-    # (yt_dlp.version.__version__) before giving up.
-    submodule = getattr(module, "version", None)
-    if submodule is not None and not isinstance(submodule, str):
-        for attribute_name in ("__version__", "VERSION"):
-            value = getattr(submodule, attribute_name, "")
-            if isinstance(value, str):
-                normalized_value = value.strip()
-                if normalized_value:
-                    return normalized_value
-
-    # Last resort: ask importlib.metadata using the distribution name.
     distribution_name = getattr(module, "__name__", "")
     if distribution_name:
         try:
             from importlib import metadata as importlib_metadata
 
-            distribution_version = importlib_metadata.version(
-                "yt-dlp" if distribution_name == "yt_dlp" else distribution_name
-            )
+            distribution_version = importlib_metadata.version(distribution_name)
             normalized_distribution_version = str(distribution_version or "").strip()
             if normalized_distribution_version:
                 return normalized_distribution_version

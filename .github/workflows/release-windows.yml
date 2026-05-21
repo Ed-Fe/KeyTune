@@ -43,6 +43,10 @@ jobs:
         run: |
           Copy-Item -Path "dist\KeyTuneUpdater.exe" -Destination "dist\KeyTune\KeyTuneUpdater.exe" -Force
 
+      - name: Download official yt-dlp executable
+        run: |
+          python scripts/download_yt_dlp_release.py --channel stable --output-dir dist\KeyTune
+
       - name: Download libmpv runtime
         shell: powershell
         run: |
