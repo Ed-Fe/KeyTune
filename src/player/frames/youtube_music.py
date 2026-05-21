@@ -565,20 +565,24 @@ class FrameYouTubeMusicMixin:
         return service.is_authenticated()
 
     def _refresh_youtube_music_menu_state(self):
-        if not hasattr(self, "youtube_music_menu"):
-            return
-
         service = self._get_youtube_music_service()
+        integration_enabled = self._youtube_music_integration_enabled()
         has_saved_auth = service.has_saved_browser_auth()
         operation_in_progress = (
             self._is_youtube_music_operation_in_progress()
             or bool(getattr(self, "_youtube_music_dependency_update_in_progress", False))
         )
 
-        login_item = self.youtube_music_menu.FindItemById(self.menu_youtube_music_login_id)
-        disconnect_item = self.youtube_music_menu.FindItemById(self.menu_youtube_music_disconnect_id)
-        open_playlist_item = self.youtube_music_menu.FindItemById(getattr(self, "menu_open_youtube_music_id", wx.ID_ANY))
-        refresh_item = self.youtube_music_menu.FindItemById(getattr(self, "menu_youtube_music_refresh_library_id", wx.ID_ANY))
+        youtube_music_menu = getattr(self, "youtube_music_menu", None)
+        login_item = None
+        disconnect_item = None
+        open_playlist_item = None
+        refresh_item = None
+        if youtube_music_menu is not None:
+            login_item = youtube_music_menu.FindItemById(self.menu_youtube_music_login_id)
+            disconnect_item = youtube_music_menu.FindItemById(self.menu_youtube_music_disconnect_id)
+            open_playlist_item = youtube_music_menu.FindItemById(getattr(self, "menu_open_youtube_music_id", wx.ID_ANY))
+            refresh_item = youtube_music_menu.FindItemById(getattr(self, "menu_youtube_music_refresh_library_id", wx.ID_ANY))
         open_tab_item = None
         if hasattr(self, "view_menu"):
             open_tab_item = self.view_menu.FindItemById(getattr(self, "menu_open_youtube_music_id", wx.ID_ANY))
@@ -586,20 +590,34 @@ class FrameYouTubeMusicMixin:
         file_menu = getattr(self, "file_menu", None)
 
         if login_item is not None:
-            login_item.SetItemLabel("Atualizar autenticação..." if has_saved_auth else "Conectar &conta...")
-            login_item.Enable(not operation_in_progress)
+            login_item.SetItemLabel(
+                ("Atualizar autenticação..." if has_saved_auth else "Conectar &conta...")
+                if integration_enabled
+                else "Ativar integração nas &Preferências..."
+            )
+            login_item.Enable(integration_enabled and not operation_in_progress)
 
         if disconnect_item is not None:
-            disconnect_item.Enable(has_saved_auth and not operation_in_progress)
+            disconnect_item.Enable(integration_enabled and has_saved_auth and not operation_in_progress)
 
         if open_playlist_item is not None:
-            open_playlist_item.Enable(not operation_in_progress)
+            open_playlist_item.SetItemLabel(
+                "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+                if integration_enabled
+                else "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y"
+            )
+            open_playlist_item.Enable(integration_enabled and not operation_in_progress)
 
         if refresh_item is not None:
-            refresh_item.Enable(has_saved_auth and not operation_in_progress)
+            refresh_item.Enable(integration_enabled and has_saved_auth and not operation_in_progress)
 
         if open_tab_item is not None:
-            open_tab_item.Enable(not operation_in_progress)
+            open_tab_item.SetItemLabel(
+                "YouTube &Music por aba\tCtrl+Shift+Y"
+                if integration_enabled
+                else "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
+            )
+            open_tab_item.Enable(integration_enabled and not operation_in_progress)
 
         if playback_menu is not None:
             for item_id in (
@@ -620,6 +638,21 @@ class FrameYouTubeMusicMixin:
                 close_media_item.Enable(not operation_in_progress)
 
         self._refresh_youtube_music_screen_later()
+
+    def _youtube_music_integration_enabled(self):
+        return bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
+
+    def _announce_youtube_music_integration_disabled(self):
+        message = (
+            "A integração com YouTube Music e YouTube está desativada. "
+            "Ative essa opção em Preferências, na aba Recursos adicionais."
+        )
+        self._youtube_music_library_status_message = message
+        self._refresh_youtube_music_screen_later()
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(message)
+        self._announce(message)
+        return False
 
     def _set_youtube_music_operation_state(self, in_progress):
         self._youtube_music_operation_in_progress = bool(in_progress)
@@ -853,6 +886,9 @@ class FrameYouTubeMusicMixin:
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def on_open_youtube_music(self, _event):
+        if not self._youtube_music_integration_enabled():
+            return self._announce_youtube_music_integration_disabled()
+
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             message = (
                 "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. "

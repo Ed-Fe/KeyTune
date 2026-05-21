@@ -9,7 +9,7 @@ class FrameUIMixin:
     def _primary_shortcuts_hint_text(self):
         return (
             "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
-            "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y YouTube Music · F1 ajuda"
+            "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
         )
 
     def _player_overlay_hint_text(self):
@@ -20,7 +20,7 @@ class FrameUIMixin:
             "Ctrl+Shift+O abre uma pasta no navegador\n"
             "Espaço reproduz ou pausa\n"
             "Tab alterna entre itens e player\n"
-            "Ctrl+Shift+Y abre a central do YouTube Music\n"
+            "Ctrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\n"
             "F1 mostra a ajuda rápida de atalhos"
         )
 
@@ -73,7 +73,7 @@ class FrameUIMixin:
             "Navegação\n"
             "Tab — Alternar entre a lista de itens e o player\n"
             "Ctrl+B — Alternar foco entre a lista de itens e o player\n"
-            "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba\n"
+            "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\n"
             "Enter — Tocar ou abrir o item selecionado no navegador\n"
             "Delete — Remover item da playlist\n"
             "Backspace — Voltar de pasta no navegador\n"
@@ -199,21 +199,12 @@ class FrameUIMixin:
         self.recent_files_menu = wx.Menu()
         self.recent_folders_menu = wx.Menu()
         self.recent_playlists_menu = wx.Menu()
-        self.youtube_music_menu = wx.Menu()
-
         file_menu.Append(self.menu_open_source_id, "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O")
         file_menu.Append(self.menu_open_file_id, "Abrir &Arquivos ou Playlist...\tCtrl+O")
         file_menu.Append(self.menu_open_folder_id, "Abrir &Pasta...\tCtrl+Shift+O")
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_copy_current_item_path_id, "&Copiar caminho do item (Ctrl+C)")
         file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar e abrir... (Ctrl+V)")
-        file_menu.AppendSeparator()
-        self.youtube_music_menu.Append(self.menu_youtube_music_login_id, "Conectar &conta...")
-        self.youtube_music_menu.Append(self.menu_youtube_music_disconnect_id, "&Desconectar conta")
-        self.youtube_music_menu.Append(self.menu_youtube_music_refresh_library_id, "&Atualizar biblioteca")
-        self.youtube_music_menu.AppendSeparator()
-        self.youtube_music_menu.Append(self.menu_open_youtube_music_id, "Abrir &central do YouTube Music...\tCtrl+Shift+Y")
-        file_menu.AppendSubMenu(self.youtube_music_menu, "YouTube &Music")
         file_menu.AppendSeparator()
         self.recent_menu.AppendSubMenu(self.recent_files_menu, "Arquivos recentes")
         self.recent_menu.AppendSubMenu(self.recent_folders_menu, "Pastas recentes")

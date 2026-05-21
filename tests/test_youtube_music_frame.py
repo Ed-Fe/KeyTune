@@ -23,6 +23,7 @@ class _DummyFrame(FrameYouTubeMusicMixin):
     def __init__(self, service):
         self._youtube_music_service = service
         self.settings = types.SimpleNamespace(
+            youtube_music_manage_dependencies=False,
             youtube_music_library_page_size=25,
             youtube_music_home_discovery_limit=30,
         )
@@ -195,6 +196,30 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         frame._prompt_for_missing_youtube_javascript_runtime.assert_called_once_with()
         self.assertEqual(frame.youtube_dependency_update_calls, [(False, True)])
         self.assertEqual(frame.youtube_screen_refresh_calls, 1)
+
+    def test_open_youtube_music_announces_when_integration_is_disabled(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+
+        opened = frame.on_open_youtube_music(None)
+
+        self.assertFalse(opened)
+        self.assertEqual(
+            frame.announcements,
+            [
+                "A integração com YouTube Music e YouTube está desativada. "
+                "Ative essa opção em Preferências, na aba Recursos adicionais."
+            ],
+        )
+        self.assertEqual(
+            frame.status_updates,
+            [
+                "A integração com YouTube Music e YouTube está desativada. "
+                "Ative essa opção em Preferências, na aba Recursos adicionais."
+            ],
+        )
+        self.assertEqual(frame.youtube_screen_refresh_calls, 1)
+        service.has_saved_browser_auth.assert_not_called()
 
 
 if __name__ == "__main__":

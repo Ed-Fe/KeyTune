@@ -300,20 +300,24 @@ class PreferencesDialog(wx.Dialog):
 
     def _build_additional_resources_tab(self):
         page, page_sizer = self._create_tab_page("Recursos adicionais")
+        self._additional_resources_page = page
 
         info_label = wx.StaticText(
             page,
             label=(
-                "Configure os recursos adicionais do YouTube Music. "
-                "Você pode controlar como as dependências são gerenciadas e como a biblioteca é carregada."
+                "Configure integrações e componentes opcionais do player. "
+                "Novos recursos adicionais poderão aparecer aqui no futuro, sem misturar essas opções com as preferências gerais."
             ),
         )
         info_label.Wrap(520)
 
-        resources_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Dependências do YouTube Music"), wx.VERTICAL)
+        self.youtube_music_resources_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label="Integração com YouTube Music e YouTube"),
+            wx.VERTICAL,
+        )
         self.youtube_music_manage_dependencies_checkbox = wx.CheckBox(
             page,
-            label="Ativar &recursos adicionais do YouTube Music (yt-dlp e ytmusicapi)",
+            label="Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)",
         )
         self.youtube_music_auto_update_dependencies_checkbox = wx.CheckBox(
             page,
@@ -326,7 +330,7 @@ class PreferencesDialog(wx.Dialog):
 
         self._configure_checkbox(
             self.youtube_music_manage_dependencies_checkbox,
-            "Ativar recursos adicionais do YouTube Music",
+            "Ativar integração com YouTube Music e YouTube",
             (
                 "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do "
                 "YouTube Music em uma pasta local de recursos adicionais."
@@ -341,12 +345,12 @@ class PreferencesDialog(wx.Dialog):
             self.youtube_music_use_nightly_yt_dlp_checkbox,
             "Usar versão nightly do yt-dlp",
             (
-                "Baixa builds nightly oficiais do yt-dlp. Recomendado porque o YouTube quebra "
+                "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram "
                 "extractors com frequência e o nightly costuma receber correções antes do canal estável."
             ),
         )
 
-        interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
+        self.youtube_music_dependency_interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
             page,
             label_text="Intervalo de atualização (horas)",
             help_text=(
@@ -357,23 +361,24 @@ class PreferencesDialog(wx.Dialog):
             max_value=720,
         )
 
-        resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        resources_box.Add(self.youtube_music_use_nightly_yt_dlp_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        resources_box.Add(interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        self.youtube_music_resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_resources_box.Add(self.youtube_music_use_nightly_yt_dlp_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_resources_box.Add(self.youtube_music_dependency_interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
-        dependencies_note_label = wx.StaticText(
+        self.youtube_music_dependencies_note_label = wx.StaticText(
             page,
             label=(
                 "Na primeira execução, o download pode levar alguns minutos e exige internet. "
-                "Se desativado, o player volta a depender apenas das bibliotecas já disponíveis no ambiente."
+                "Ao desativar esta opção, o player apenas para de gerenciar esses recursos automaticamente; "
+                "os arquivos já baixados não são removidos."
             ),
         )
-        dependencies_note_label.Wrap(520)
-        resources_box.Add(dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_dependencies_note_label.Wrap(520)
+        self.youtube_music_resources_box.Add(self.youtube_music_dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
-        library_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label="Carregamento da biblioteca do YouTube Music"),
+        self.youtube_music_library_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label="Biblioteca do YouTube Music"),
             wx.VERTICAL,
         )
 
@@ -399,8 +404,8 @@ class PreferencesDialog(wx.Dialog):
             max_value=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
         )
 
-        library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
-        library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
+        self.youtube_music_library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
             wx.EVT_CHECKBOX,
@@ -412,8 +417,8 @@ class PreferencesDialog(wx.Dialog):
         )
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.youtube_music_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.youtube_music_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, "Recursos adicionais")
 
@@ -469,6 +474,40 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_auto_update_dependencies_checkbox.Enable(managed_dependencies_enabled)
         self.youtube_music_use_nightly_yt_dlp_checkbox.Enable(managed_dependencies_enabled)
         self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
+        self._set_additional_resources_item_visibility(
+            self.youtube_music_resources_box,
+            self.youtube_music_auto_update_dependencies_checkbox,
+            managed_dependencies_enabled,
+        )
+        self._set_additional_resources_item_visibility(
+            self.youtube_music_resources_box,
+            self.youtube_music_use_nightly_yt_dlp_checkbox,
+            managed_dependencies_enabled,
+        )
+        self._set_additional_resources_item_visibility(
+            self.youtube_music_resources_box,
+            self.youtube_music_dependency_interval_group,
+            managed_dependencies_enabled,
+        )
+        self._set_additional_resources_item_visibility(
+            self.youtube_music_resources_box,
+            self.youtube_music_dependencies_note_label,
+            managed_dependencies_enabled,
+        )
+        self._set_additional_resources_item_visibility(
+            self._additional_resources_page.GetSizer(),
+            self.youtube_music_library_box,
+            managed_dependencies_enabled,
+        )
+        self._additional_resources_page.Layout()
+        self.notebook.Layout()
+        self.Layout()
+
+    def _set_additional_resources_item_visibility(self, sizer, item, visible):
+        try:
+            sizer.Show(item, visible, True)
+        except TypeError:
+            sizer.Show(item, visible)
 
     def _audio_output_choice_labels(self):
         self._audio_output_choice_ids = [""]
