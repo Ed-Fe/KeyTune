@@ -35,11 +35,14 @@ class _DummyFrame(FrameYouTubeMusicMixin):
         self.status_updates: list[str] = []
         self.menu_refresh_calls = 0
         self.connect_calls = 0
+        self.youtube_dependency_update_calls: list[tuple[bool, bool]] = []
+        self.youtube_screen_refresh_calls = 0
 
     def _get_youtube_music_service(self):
         return self._youtube_music_service
 
     def _refresh_youtube_music_screen_later(self):
+        self.youtube_screen_refresh_calls += 1
         return None
 
     def _refresh_youtube_music_menu_state(self):
@@ -53,6 +56,10 @@ class _DummyFrame(FrameYouTubeMusicMixin):
 
     def on_connect_youtube_music(self, _event):
         self.connect_calls += 1
+
+    def _start_youtube_music_dependency_update(self, force_update=False, manual=False, announce_start=False):
+        self.youtube_dependency_update_calls.append((bool(force_update), bool(manual)))
+        return True
 
 
 class YouTubeMusicFrameTests(unittest.TestCase):
@@ -157,6 +164,37 @@ class YouTubeMusicFrameTests(unittest.TestCase):
             handled = frame._handle_youtube_javascript_runtime_error("outro erro")
 
         self.assertFalse(handled)
+
+    def test_prompt_for_missing_javascript_runtime_skips_dialog_when_runtime_exists(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+        frame._show_youtube_javascript_runtime_dialog = Mock(return_value=True)
+
+        with patch(
+            "player.frames.youtube_music.find_all_available_javascript_runtimes",
+            return_value={"node": "C:/Program Files/nodejs/node.exe"},
+        ):
+            prompted = frame._prompt_for_missing_youtube_javascript_runtime()
+
+        self.assertFalse(prompted)
+        frame._show_youtube_javascript_runtime_dialog.assert_not_called()
+
+    def test_preferences_change_prompts_for_runtime_when_enabling_managed_dependencies(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+        previous_settings = types.SimpleNamespace(
+            youtube_music_manage_dependencies=False,
+            youtube_music_use_nightly_yt_dlp=False,
+        )
+        frame.settings.youtube_music_manage_dependencies = True
+        frame.settings.youtube_music_use_nightly_yt_dlp = False
+        frame._prompt_for_missing_youtube_javascript_runtime = Mock(return_value=True)
+
+        frame._handle_youtube_music_preferences_change(previous_settings)
+
+        frame._prompt_for_missing_youtube_javascript_runtime.assert_called_once_with()
+        self.assertEqual(frame.youtube_dependency_update_calls, [(False, True)])
+        self.assertEqual(frame.youtube_screen_refresh_calls, 1)
 
 
 if __name__ == "__main__":

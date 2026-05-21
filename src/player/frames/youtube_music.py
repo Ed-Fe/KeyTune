@@ -14,6 +14,7 @@ from player.youtube_music import (
     YouTubeMusicService,
     YouTubeMusicTabPanel,
     configure_youtube_dependency_management,
+    find_all_available_javascript_runtimes,
     install_or_update_youtube_dependencies,
     is_youtube_dependency_auto_update_due,
     is_missing_javascript_runtime_error_message,
@@ -125,9 +126,7 @@ class FrameYouTubeMusicMixin:
             )
         return True
 
-    def _handle_youtube_javascript_runtime_error(self, error_message):
-        if not is_missing_javascript_runtime_error_message(error_message):
-            return False
+    def _show_youtube_javascript_runtime_dialog(self):
 
         winget_available = bool(shutil.which("winget"))
         dialog = YouTubeMusicJavascriptRuntimeDialog(self, winget_available=winget_available)
@@ -172,6 +171,19 @@ class FrameYouTubeMusicMixin:
             return True
 
         return True
+
+    def _youtube_javascript_runtime_available(self):
+        return bool(find_all_available_javascript_runtimes())
+
+    def _prompt_for_missing_youtube_javascript_runtime(self):
+        if self._youtube_javascript_runtime_available():
+            return False
+        return bool(self._show_youtube_javascript_runtime_dialog())
+
+    def _handle_youtube_javascript_runtime_error(self, error_message):
+        if not is_missing_javascript_runtime_error_message(error_message):
+            return False
+        return bool(self._show_youtube_javascript_runtime_dialog())
 
     def _is_youtube_music_operation_in_progress(self):
         return bool(getattr(self, "_youtube_music_operation_in_progress", False))
@@ -367,6 +379,7 @@ class FrameYouTubeMusicMixin:
         had_managed_dependencies = bool(getattr(previous_settings, "youtube_music_manage_dependencies", False))
         has_managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
         if has_managed_dependencies and not had_managed_dependencies:
+            self._prompt_for_missing_youtube_javascript_runtime()
             self._youtube_music_library_status_message = "Recursos adicionais do YouTube Music ativados. Preparando dependências..."
             self._refresh_youtube_music_screen_later()
             self._start_youtube_music_dependency_update(force_update=False, manual=True)
