@@ -19,7 +19,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		on_search,
 		on_open_search_result,
 		on_save_search_result,
-		on_add_search_result_to_playlist,
+		on_add_search_results_to_current_playlist,
+		on_show_search_actions_menu,
 		on_load_more_playlists,
 		on_announce=None,
 	):
@@ -43,7 +44,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._on_search = on_search
 		self._on_open_search_result = on_open_search_result
 		self._on_save_search_result = on_save_search_result
-		self._on_add_search_result_to_playlist = on_add_search_result_to_playlist
+		self._on_add_search_results_to_current_playlist = on_add_search_results_to_current_playlist
+		self._on_show_search_actions_menu = on_show_search_actions_menu
 		self._on_load_more_playlists = on_load_more_playlists
 		self._on_announce = on_announce
 
@@ -186,7 +188,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 			value_provider=lambda: self.search_results_label.GetLabel(),
 		)
 
-		self.search_results_list = wx.ListBox(search_pane_window)
+		self.search_results_list = wx.ListBox(search_pane_window, style=wx.LB_EXTENDED)
 		self.search_results_list.SetName("Resultados da busca do YouTube")
 		self.search_results_list.SetHelpText(
 			"Mostra os resultados da última busca. Use setas para navegar e Enter para abrir ou tocar o resultado selecionado."
@@ -196,7 +198,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		search_actions = wx.BoxSizer(wx.HORIZONTAL)
 		self.open_search_result_button = wx.Button(search_pane_window, label="Abr&ir / tocar resultado")
 		self.save_search_result_button = wx.Button(search_pane_window, label=self.DEFAULT_SAVE_SEARCH_RESULT_LABEL)
-		self.add_to_playlist_button = wx.Button(search_pane_window, label="Adicionar à playlist &selecionada")
+		self.search_actions_button = wx.Button(search_pane_window, label="Ações...")
 
 		for button, name, description in (
 			(
@@ -210,9 +212,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 				"Salva playlists ou faixas na biblioteca do YouTube Music, ou marca o resultado como curtido quando isso for mais apropriado.",
 			),
 			(
-				self.add_to_playlist_button,
-				"Adicionar resultado à playlist selecionada do YouTube Music",
-				"Adiciona a faixa ou vídeo destacado da busca à playlist atualmente selecionada na lista da biblioteca do YouTube Music.",
+				self.search_actions_button,
+				"Ações da seleção de resultados do YouTube",
+				"Abre um menu de contexto com ações para o resultado atual ou para toda a seleção da busca.",
 			),
 		):
 			button.SetName(name)
@@ -224,7 +226,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 			search_pane_window,
 			label=(
 				"Enter no campo de busca executa a pesquisa. Enter na lista abre o resultado atual. "
-				"Para adicionar um resultado a uma playlist, selecione antes a playlist desejada na lista da biblioteca."
+				"Use Shift+F10 ou o botão Ações para abrir o menu contextual da seleção."
 			),
 		)
 		search_help_label.Wrap(620)
@@ -334,7 +336,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.search_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_search())
 		self.open_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_search_result())
 		self.save_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_save_search_result())
-		self.add_to_playlist_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_add_search_result_to_playlist())
+		self.search_actions_button.Bind(wx.EVT_BUTTON, self._on_search_actions_button)
 		self.load_more_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_load_more_playlists())
 
 		self.manual_source_ctrl.Bind(wx.EVT_TEXT_ENTER, self._on_manual_source_enter)
@@ -414,8 +416,11 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 	def _refresh_search_results_list(self, selected_result_id=None):
 		if selected_result_id is None:
-			selected_result = self.get_selected_search_result()
-			selected_result_id = selected_result.stable_id if selected_result is not None else None
+			selected_result_ids = self.get_selected_search_result_ids()
+		elif isinstance(selected_result_id, (list, tuple, set)):
+			selected_result_ids = [str(value or "").strip() for value in selected_result_id if str(value or "").strip()]
+		else:
+			selected_result_ids = [str(selected_result_id or "").strip()] if str(selected_result_id or "").strip() else []
 
 		self._visible_search_result_ids = [result.stable_id for result in self._all_search_results]
 		labels = [result.choice_label for result in self._all_search_results]
@@ -424,16 +429,21 @@ class YouTubeMusicTabPanel(wx.Panel):
 			self.search_results_list.Set(labels)
 			self._last_search_result_labels = list(labels)
 
-		selection_index = wx.NOT_FOUND
-		if selected_result_id and selected_result_id in self._visible_search_result_ids:
-			selection_index = self._visible_search_result_ids.index(selected_result_id)
-		elif labels:
-			selection_index = 0
+		selected_indices = [
+			self._visible_search_result_ids.index(result_id)
+			for result_id in selected_result_ids
+			if result_id in self._visible_search_result_ids
+		]
+		if not selected_indices and labels:
+			selected_indices = [0]
 
-		if selection_index != wx.NOT_FOUND and (
-			labels_changed or self.search_results_list.GetSelection() != selection_index
-		):
-			self.search_results_list.SetSelection(selection_index)
+		if labels_changed:
+			self._clear_search_results_selection()
+		current_selections = list(self.search_results_list.GetSelections())
+		if selected_indices != current_selections:
+			self._clear_search_results_selection()
+			for selection_index in selected_indices:
+				self.search_results_list.SetSelection(selection_index)
 
 		self._update_search_actions()
 
@@ -466,7 +476,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 	def _update_search_actions(self):
 		search_query = self.get_search_query()
-		selected_result = self.get_selected_search_result()
+		selected_results = self.get_selected_search_results()
+		selected_result = selected_results[0] if selected_results else None
+		selected_result_count = len(selected_results)
 		selected_playlist_id = self.get_selected_playlist_id()
 
 		self.search_button.Enable(bool(search_query) and not self._operation_in_progress)
@@ -474,23 +486,24 @@ class YouTubeMusicTabPanel(wx.Panel):
 			bool(selected_result and selected_result.can_open and not self._operation_in_progress)
 		)
 
-		save_button_label = self._mnemonic_save_action_label(selected_result)
+		save_button_label = (
+			"&Salvar / curtir seleção"
+			if selected_result_count > 1
+			else self._mnemonic_save_action_label(selected_result)
+		)
 		self.save_search_result_button.SetLabel(save_button_label)
 		self.save_search_result_button.Enable(
 			bool(
-				selected_result
-				and selected_result.can_save
+				selected_results
+				and any(result.can_save for result in selected_results)
 				and self._connected
 				and not self._operation_in_progress
 			)
 		)
 
-		self.add_to_playlist_button.Enable(
+		self.search_actions_button.Enable(
 			bool(
-				selected_result
-				and selected_result.can_add_to_playlist
-				and selected_playlist_id is not None
-				and self._connected
+				selected_results
 				and not self._operation_in_progress
 			)
 		)
@@ -527,8 +540,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.Freeze()
 		try:
 			selected_playlist_id = self.get_selected_playlist_id()
-			selected_search_result = self.get_selected_search_result()
-			selected_search_result_id = selected_search_result.stable_id if selected_search_result is not None else None
+			selected_search_result_ids = self.get_selected_search_result_ids()
 
 			self._all_playlists = list(playlists or [])
 			self._all_search_results = list(search_results or [])
@@ -558,7 +570,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 				str(search_summary or "Resultados da busca: nenhum ainda.").strip()
 			)
 			self._refresh_playlist_list(selected_playlist_id=selected_playlist_id)
-			self._refresh_search_results_list(selected_result_id=selected_search_result_id)
+			self._refresh_search_results_list(selected_result_id=selected_search_result_ids)
 			self._update_action_state(connected=connected, operation_in_progress=operation_in_progress)
 			self.Layout()
 		finally:
@@ -571,10 +583,26 @@ class YouTubeMusicTabPanel(wx.Panel):
 		return self._visible_playlist_ids[selection]
 
 	def get_selected_search_result(self):
-		selection = self.search_results_list.GetSelection()
-		if selection == wx.NOT_FOUND or not 0 <= selection < len(self._all_search_results):
-			return None
-		return self._all_search_results[selection]
+		selected_results = self.get_selected_search_results()
+		return selected_results[0] if selected_results else None
+
+	def get_selected_search_result_ids(self):
+		selected_ids = []
+		for selection in self.search_results_list.GetSelections():
+			if 0 <= selection < len(self._visible_search_result_ids):
+				selected_ids.append(self._visible_search_result_ids[selection])
+		return selected_ids
+
+	def get_selected_search_results(self):
+		results = []
+		for selection in self.search_results_list.GetSelections():
+			if 0 <= selection < len(self._all_search_results):
+				results.append(self._all_search_results[selection])
+		return results
+
+	def _clear_search_results_selection(self):
+		for selection in list(self.search_results_list.GetSelections()):
+			self.search_results_list.Deselect(selection)
 
 	def get_manual_source(self):
 		return str(self.manual_source_ctrl.GetValue() or "").strip()
@@ -622,6 +650,11 @@ class YouTubeMusicTabPanel(wx.Panel):
 	def _on_open_search_result_event(self, _event):
 		if self.get_selected_search_result() is not None:
 			self._on_open_search_result()
+
+	def _on_search_actions_button(self, event):
+		if not callable(self._on_show_search_actions_menu):
+			return
+		self._on_show_search_actions_menu(self, event.GetEventObject())
 
 	def _on_manual_source_enter(self, _event):
 		self._on_open_manual_source()
@@ -682,9 +715,13 @@ class YouTubeMusicTabPanel(wx.Panel):
 			event.Skip()
 			return
 
+		if key_code == wx.WXK_F10 and event.ShiftDown():
+			self._on_search_actions_button(event)
+			return
+
 		if key_code in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
 			if self.get_selected_search_result() is not None:
-				self._on_open_search_result()
+				self._on_add_search_results_to_current_playlist()
 				return
 
 		event.Skip()

@@ -51,7 +51,8 @@ class FrameUIMixin:
             "Ctrl+O — Abrir arquivos de mídia ou uma playlist local\n"
             "Ctrl+Shift+O — Abrir pasta no navegador\n"
             "Ctrl+C — Copiar caminho ou link do item selecionado\n"
-            "Ctrl+V — Colar e abrir arquivo, pasta, playlist ou link da área de transferência\n"
+            "Ctrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\n"
+            "Ctrl+Shift+V — Colar e abrir em uma nova playlist\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
             "Ctrl+T — Nova playlist\n"
             "Ctrl+W — Fechar mídia atual ou aba vazia\n"
@@ -195,6 +196,7 @@ class FrameUIMixin:
         self.menu_close_tab_id = wx.NewIdRef()
         self.menu_copy_current_item_path_id = wx.NewIdRef()
         self.menu_paste_open_from_clipboard_id = wx.NewIdRef()
+        self.menu_paste_open_from_clipboard_new_playlist_id = wx.NewIdRef()
         self.recent_menu = wx.Menu()
         self.recent_files_menu = wx.Menu()
         self.recent_folders_menu = wx.Menu()
@@ -204,7 +206,11 @@ class FrameUIMixin:
         file_menu.Append(self.menu_open_folder_id, "Abrir &Pasta...\tCtrl+Shift+O")
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_copy_current_item_path_id, "&Copiar caminho do item (Ctrl+C)")
-        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar e abrir... (Ctrl+V)")
+        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar na playlist atual / abrir... (Ctrl+V)")
+        file_menu.Append(
+            self.menu_paste_open_from_clipboard_new_playlist_id,
+            "Colar e abrir em &nova playlist... (Ctrl+Shift+V)",
+        )
         file_menu.AppendSeparator()
         self.recent_menu.AppendSubMenu(self.recent_files_menu, "Arquivos recentes")
         self.recent_menu.AppendSubMenu(self.recent_folders_menu, "Pastas recentes")
@@ -430,6 +436,11 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_source, id=self.menu_open_source_id)
         self.Bind(wx.EVT_MENU, self.on_copy_current_item_path, id=self.menu_copy_current_item_path_id)
         self.Bind(wx.EVT_MENU, self.on_paste_open_from_clipboard, id=self.menu_paste_open_from_clipboard_id)
+        self.Bind(
+            wx.EVT_MENU,
+            self.on_paste_open_from_clipboard_new_playlist,
+            id=self.menu_paste_open_from_clipboard_new_playlist_id,
+        )
         self.Bind(wx.EVT_MENU, self.on_connect_youtube_music, id=self.menu_youtube_music_login_id)
         self.Bind(wx.EVT_MENU, self.on_disconnect_youtube_music, id=self.menu_youtube_music_disconnect_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_youtube_music_library, id=self.menu_youtube_music_refresh_library_id)
@@ -476,6 +487,7 @@ class FrameUIMixin:
             on_preview_item=self.on_playlist_browser_preview_item,
             on_go_back=self.on_playlist_browser_go_back,
             on_toggle_navigation_mode=self.on_toggle_playlist_browser,
+            on_show_context_menu=self.on_playlist_browser_show_context_menu,
         )
 
         video_panel = wx.Panel(page, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN)

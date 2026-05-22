@@ -12,7 +12,7 @@ class VirtualItemsListCtrl(wx.ListCtrl):
     def __init__(self, parent, text_provider):
         super().__init__(
             parent,
-            style=wx.LC_REPORT | wx.LC_NO_HEADER | wx.LC_SINGLE_SEL | wx.LC_VIRTUAL,
+            style=wx.LC_REPORT | wx.LC_NO_HEADER | wx.LC_VIRTUAL,
         )
         self._text_provider = text_provider
         self.InsertColumn(0, "Itens")
@@ -43,6 +43,7 @@ class PlaylistBrowserPanel(wx.Panel):
         on_preview_item=None,
         on_go_back=None,
         on_toggle_navigation_mode=None,
+        on_show_context_menu=None,
     ):
         super().__init__(parent)
 
@@ -51,6 +52,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self._on_preview_item = on_preview_item
         self._on_go_back = on_go_back
         self._on_toggle_navigation_mode = on_toggle_navigation_mode
+        self._on_show_context_menu = on_show_context_menu
         self._items = []
         self._mode = "playlist"
         self._suppress_selection_event = False
@@ -76,7 +78,7 @@ class PlaylistBrowserPanel(wx.Panel):
         )
         self.hint_label = wx.StaticText(
             self,
-            label="Enter toca o item selecionado. Delete remove. Digite letras para localizar. Tab volta ao player.",
+            label="Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player.",
         )
         self.hint_label.Wrap(260)
 
@@ -90,6 +92,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self.items_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_selection_changed)
         self.items_list.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.on_activate)
         self.items_list.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
+        self.items_list.Bind(wx.EVT_CONTEXT_MENU, self.on_context_menu)
 
     def update_playlist(self, playlist_state):
         self._mode = "playlist"
@@ -148,7 +151,7 @@ class PlaylistBrowserPanel(wx.Panel):
             f"{playlist_state.title} — {len(playlist_state.items)} item(ns)"
         )
         self.hint_label.SetLabel(
-            "Enter toca o item selecionado. Delete remove. Digite letras para localizar. Tab volta ao player."
+            "Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."
         )
         self.hint_label.Wrap(260)
         self._render_mode = "playlist"
@@ -243,8 +246,17 @@ class PlaylistBrowserPanel(wx.Panel):
             self.items_list.EnsureVisible(selection)
 
     def is_item_navigation_active(self):
-        focused_window = self.FindFocus()
-        return self.IsShown() and focused_window is not None and focused_window is self.items_list
+        if not self.IsShown():
+            return False
+
+        focused_window = wx.Window.FindFocus()
+        current_window = focused_window
+        while isinstance(current_window, wx.Window):
+            if current_window is self.items_list:
+                return True
+            current_window = current_window.GetParent()
+
+        return False
 
     def get_selected_item_path(self):
         if self._has_placeholder:
@@ -263,6 +275,33 @@ class PlaylistBrowserPanel(wx.Panel):
 
         path = getattr(item, "path", None)
         return path or None
+
+    def get_selected_indexes(self):
+        selections = []
+        selection = self.items_list.GetFirstSelected()
+        while selection != -1:
+            selections.append(selection)
+            selection = self.items_list.GetNextSelected(selection)
+        return selections
+
+    def get_selected_item_paths(self):
+        if self._has_placeholder:
+            return []
+        selected_paths = []
+        for selection in self.get_selected_indexes():
+            if not 0 <= selection < len(self._items):
+                continue
+            item = self._items[selection]
+            if isinstance(item, str):
+                if item:
+                    selected_paths.append(item)
+                continue
+            if getattr(item, "is_parent", False):
+                continue
+            item_path = getattr(item, "path", None)
+            if item_path:
+                selected_paths.append(item_path)
+        return selected_paths
 
     def _get_display_label(self, index):
         if self._has_placeholder:
@@ -463,10 +502,15 @@ class PlaylistBrowserPanel(wx.Panel):
         self._on_activate_item(selection)
 
     def _remove_selected(self):
-        selection = self._get_selected_index()
-        if selection == wx.NOT_FOUND or selection >= len(self._items):
+        selections = [selection for selection in self.get_selected_indexes() if 0 <= selection < len(self._items)]
+        if not selections:
             return
-        self._on_remove_item(selection)
+        self._on_remove_item(selections)
+
+    def _show_context_menu(self, anchor_window=None):
+        if not callable(self._on_show_context_menu):
+            return
+        self._on_show_context_menu(self, anchor_window or self.items_list)
 
     def on_activate(self, _event):
         self._activate_selected()
@@ -489,6 +533,10 @@ class PlaylistBrowserPanel(wx.Panel):
         key_code = event.GetKeyCode()
         character = self._character_from_event(event)
 
+        if event.ControlDown() or event.AltDown():
+            event.Skip()
+            return
+
         if key_code == wx.WXK_TAB:
             if self._on_toggle_navigation_mode:
                 self._on_toggle_navigation_mode()
@@ -496,6 +544,10 @@ class PlaylistBrowserPanel(wx.Panel):
 
         if key_code in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
             self._activate_selected()
+            return
+
+        if key_code == wx.WXK_F10 and event.ShiftDown():
+            self._show_context_menu()
             return
 
         if self._mode == "folder" and key_code == wx.WXK_BACK:
@@ -517,3 +569,6 @@ class PlaylistBrowserPanel(wx.Panel):
             return
 
         event.DoAllowNextEvent()
+
+    def on_context_menu(self, event):
+        self._show_context_menu(event.GetEventObject() if hasattr(event, "GetEventObject") else None)

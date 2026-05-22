@@ -16,7 +16,7 @@ class FrameLibraryNavigationMixin:
 
     def _playlist_state_for_external_media(self):
         current_state = self._get_tab_state(self._get_current_tab_index())
-        if self._is_appendable_playlist_state(current_state) and not current_state.is_empty:
+        if self._is_appendable_playlist_state(current_state):
             return current_state
 
         active_state = self._get_active_playlist_state()
@@ -38,48 +38,71 @@ class FrameLibraryNavigationMixin:
         duplicates).  ``added_count`` is the number of brand-new items that
         were appended (zero when every path was already in the playlist).
         """
-        if not state or state.is_folder_tab or state.is_loading:
-            return 0, None
-
         normalized_paths = []
+        normalized_labels = []
         for path in paths:
             normalized_path = str(path or "").strip()
             if not normalized_path:
                 continue
             if is_remote_media_path(normalized_path):
                 normalized_paths.append(normalized_path)
+                normalized_labels.append(os.path.basename(normalized_path) or normalized_path)
                 continue
             normalized_path = self._normalize_path(normalized_path)
             if normalized_path and os.path.isfile(normalized_path):
                 normalized_paths.append(normalized_path)
+                normalized_labels.append(os.path.basename(normalized_path) or normalized_path)
 
-        if not normalized_paths:
+        added_count, first_item = self._append_prepared_items_to_playlist(
+            normalized_paths,
+            state,
+            browser_item_labels=normalized_labels,
+        )
+        if added_count > 0:
+            self._remember_directory(normalized_paths[0])
+            self._add_recent_media_paths(normalized_paths)
+        return added_count, first_item
+
+    def _append_prepared_items_to_playlist(self, items, state, *, browser_item_labels=None):
+        """Append prepared playlist items to *state* while preserving custom labels."""
+        if not state or state.is_folder_tab or state.is_loading:
+            return 0, None
+
+        normalized_items = []
+        normalized_labels = []
+        raw_labels = list(browser_item_labels or [])
+        for index, item in enumerate(items or []):
+            normalized_item = str(item or "").strip()
+            if not normalized_item:
+                continue
+            normalized_items.append(normalized_item)
+            fallback_label = os.path.basename(normalized_item) or normalized_item
+            normalized_labels.append(str(raw_labels[index] or "").strip() or fallback_label)
+
+        if not normalized_items:
             return 0, None
 
         existing = set(state.items)
-        new_paths = []
-        for path in normalized_paths:
-            if path in existing:
+        new_items = []
+        new_labels = []
+        for item, label in zip(normalized_items, normalized_labels):
+            if item in existing:
                 continue
-            existing.add(path)
-            new_paths.append(path)
+            existing.add(item)
+            new_items.append(item)
+            new_labels.append(label)
 
-        first_requested = normalized_paths[0]
-
-        if not new_paths:
+        first_requested = normalized_items[0]
+        if not new_items:
             return 0, first_requested
 
         state.finish_library_load()
         state.clear_folder_location()
-        state.items.extend(new_paths)
-        state.browser_item_labels.extend(os.path.basename(path) or path for path in new_paths)
+        state.items.extend(new_items)
+        state.browser_item_labels.extend(new_labels)
         state.refresh_browser_item_labels()
-
         self._maybe_rename_playlist_after_append(state)
-
-        self._remember_directory(new_paths[0])
-        self._add_recent_media_paths(new_paths)
-        return len(new_paths), new_paths[0]
+        return len(new_items), new_items[0]
 
     def _maybe_rename_playlist_after_append(self, state):
         """Refresh the playlist title to reflect its current contents.

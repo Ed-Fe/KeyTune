@@ -74,19 +74,21 @@ class FrameCommandMixin:
             return
 
         browser = self._get_browser_panel()
-        selected = browser.get_selected_item_path() if browser else None
-        if not selected:
+        selected_items = browser.get_selected_item_paths() if browser else []
+        if not selected_items:
             self._announce("Nenhum item selecionado para copiar.")
             return
 
-        if not self._copy_text_to_clipboard(selected):
+        if not self._copy_text_to_clipboard("\n".join(selected_items)):
             self._announce("Não foi possível acessar a área de transferência.")
             return
 
-        if is_remote_media_path(selected):
+        if len(selected_items) == 1 and is_remote_media_path(selected_items[0]):
             self._announce("Link copiado.")
-        else:
+        elif len(selected_items) == 1:
             self._announce("Caminho copiado.")
+        else:
+            self._announce(f"{len(selected_items)} itens copiados.")
 
     def on_paste_open_from_clipboard(self, _event):
         if isinstance(self._get_tab_state(), ScreenTabState):
@@ -97,7 +99,18 @@ class FrameCommandMixin:
             self._announce("A área de transferência está vazia.")
             return
 
-        self._open_from_clipboard_text(text)
+        self._open_from_clipboard_text(text, force_new_playlist=False)
+
+    def on_paste_open_from_clipboard_new_playlist(self, _event):
+        if isinstance(self._get_tab_state(), ScreenTabState):
+            return
+
+        text = self._read_text_from_clipboard()
+        if not text:
+            self._announce("A área de transferência está vazia.")
+            return
+
+        self._open_from_clipboard_text(text, force_new_playlist=True)
 
     def _copy_text_to_clipboard(self, text):
         if not text or not wx.TheClipboard.Open():
@@ -119,11 +132,43 @@ class FrameCommandMixin:
         finally:
             wx.TheClipboard.Close()
 
-    def _open_from_clipboard_text(self, text):
-        normalized_source = (text or "").strip().strip('"').strip("'")
-        if not normalized_source:
+    def _open_from_clipboard_text(self, text, *, force_new_playlist=False):
+        normalized_lines = [
+            str(line or "").strip().strip('"').strip("'")
+            for line in str(text or "").replace("\r", "\n").split("\n")
+        ]
+        normalized_sources = [line for line in normalized_lines if line]
+        if not normalized_sources:
             self._announce("A área de transferência está vazia.")
             return
+
+        if len(normalized_sources) > 1:
+            media_sources = []
+            for source in normalized_sources:
+                if is_remote_media_path(source):
+                    if is_playlist_source(source):
+                        self._announce("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links.")
+                        return
+                    media_sources.append(source)
+                    continue
+
+                normalized_local = self._normalize_path(source)
+                if normalized_local and os.path.isfile(normalized_local):
+                    if is_playlist_source(normalized_local):
+                        self._announce("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links.")
+                        return
+                    media_sources.append(normalized_local)
+                    continue
+
+                self._announce("A área de transferência contém itens não suportados para colagem em lote.")
+                return
+
+            open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
+            if not open_media(media_sources):
+                self._announce("Não foi possível abrir a mídia da área de transferência.")
+            return
+
+        normalized_source = normalized_sources[0]
 
         if is_remote_media_path(normalized_source):
             if is_playlist_source(normalized_source):
@@ -131,7 +176,8 @@ class FrameCommandMixin:
                     self._announce("Não foi possível abrir a playlist da área de transferência.")
                 return
 
-            if not self._open_media_paths([normalized_source]):
+            open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
+            if not open_media([normalized_source]):
                 self._announce("Não foi possível abrir a mídia da área de transferência.")
             return
 
@@ -148,7 +194,8 @@ class FrameCommandMixin:
                         self._announce("Não foi possível abrir a playlist da área de transferência.")
                     return
 
-                if not self._open_media_paths([normalized_local]):
+                open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
+                if not open_media([normalized_local]):
                     self._announce("Não foi possível abrir a mídia da área de transferência.")
                 return
 
@@ -466,8 +513,66 @@ class FrameCommandMixin:
         state.select_index(item_index)
         self._play_media(index=self._get_active_playlist_index(), allow_crossfade=False)
 
-    def on_playlist_browser_remove_item(self, item_index):
-        self._remove_item_from_current_playlist(item_index)
+    def on_playlist_browser_remove_item(self, item_indexes):
+        self._remove_items_from_current_playlist(item_indexes)
+
+    def on_playlist_browser_show_context_menu(self, browser_panel, anchor_window=None):
+        if browser_panel is None:
+            return False
+
+        selected_paths = list(browser_panel.get_selected_item_paths())
+        selected_count = len(selected_paths)
+        menu = wx.Menu()
+
+        copy_item = menu.Append(wx.ID_ANY, "Copiar seleção")
+        paste_item = menu.Append(wx.ID_ANY, "Colar na playlist atual")
+        paste_new_item = menu.Append(wx.ID_ANY, "Colar em nova playlist")
+        menu.AppendSeparator()
+        remove_item = menu.Append(wx.ID_ANY, "Remover seleção")
+        menu.AppendSeparator()
+        like_item = menu.Append(wx.ID_ANY, "Curtir no YouTube Music")
+        dislike_item = menu.Append(wx.ID_ANY, "Não gostei no YouTube Music")
+
+        current_state = self._get_playlist_state()
+        can_edit_playlist = bool(current_state and not current_state.is_folder_tab and not current_state.is_loading)
+        has_youtube_items = any(is_remote_media_path(path) and "youtube" in path.lower() for path in selected_paths)
+
+        copy_item.Enable(selected_count > 0)
+        remove_item.Enable(selected_count > 0 and can_edit_playlist)
+        like_item.Enable(has_youtube_items)
+        dislike_item.Enable(has_youtube_items)
+
+        menu.Bind(wx.EVT_MENU, lambda _event: self.on_copy_current_item_path(None), id=copy_item.GetId())
+        menu.Bind(wx.EVT_MENU, lambda _event: self.on_paste_open_from_clipboard(None), id=paste_item.GetId())
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self.on_paste_open_from_clipboard_new_playlist(None),
+            id=paste_new_item.GetId(),
+        )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._remove_items_from_current_playlist(browser_panel.get_selected_indexes()),
+            id=remove_item.GetId(),
+        )
+        rate_selected = getattr(self, "_rate_selected_playlist_items", None)
+        if callable(rate_selected):
+            menu.Bind(
+                wx.EVT_MENU,
+                lambda _event: rate_selected(browser_panel.get_selected_item_paths(), "LIKE"),
+                id=like_item.GetId(),
+            )
+            menu.Bind(
+                wx.EVT_MENU,
+                lambda _event: rate_selected(browser_panel.get_selected_item_paths(), "DISLIKE"),
+                id=dislike_item.GetId(),
+            )
+
+        popup_parent = anchor_window or browser_panel
+        try:
+            popup_parent.PopupMenu(menu)
+        finally:
+            menu.Destroy()
+        return True
 
     def on_playlist_browser_preview_item(self, item_index):
         state = self._get_playlist_state()
@@ -715,6 +820,10 @@ class FrameCommandMixin:
 
         if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
             self.on_paste_open_from_clipboard(None)
+            return
+
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
+            self.on_paste_open_from_clipboard_new_playlist(None)
             return
 
         if browser and browser.is_item_navigation_active() and not event.ControlDown() and not event.AltDown():

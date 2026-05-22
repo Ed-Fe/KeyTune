@@ -484,7 +484,8 @@ class FrameYouTubeMusicMixin:
             on_search=self._on_youtube_music_search_button,
             on_open_search_result=self._on_youtube_music_open_search_result_button,
             on_save_search_result=self._on_youtube_music_save_search_result_button,
-            on_add_search_result_to_playlist=self._on_youtube_music_add_search_result_to_playlist_button,
+            on_add_search_results_to_current_playlist=self._add_youtube_music_search_results_to_current_playlist,
+            on_show_search_actions_menu=self._on_youtube_music_show_search_actions_menu,
             on_load_more_playlists=self._on_youtube_music_load_more_playlists_button,
             on_announce=self._announce,
         )
@@ -1034,20 +1035,88 @@ class FrameYouTubeMusicMixin:
     def _on_youtube_music_save_search_result_button(self):
         self._save_youtube_music_search_result()
 
-    def _on_youtube_music_add_search_result_to_playlist_button(self):
-        self._add_youtube_music_search_result_to_playlist()
+    def _on_youtube_music_show_search_actions_menu(self, panel, anchor_window=None):
+        selected_results = self._selected_youtube_music_search_results()
+        if not selected_results:
+            self._announce("Selecione ao menos um resultado da busca para abrir o menu de ações.")
+            return False
+
+        menu = wx.Menu()
+        open_item = menu.Append(
+            wx.ID_ANY,
+            "Abrir / tocar seleção" if len(selected_results) == 1 else "Abrir / tocar o primeiro selecionado",
+        )
+        add_current_item = menu.Append(wx.ID_ANY, "Adicionar seleção à playlist atual")
+
+        selected_playlist_id = panel.get_selected_playlist_id() if panel is not None else None
+        add_music_playlist_item = menu.Append(wx.ID_ANY, "Adicionar seleção à playlist selecionada do YouTube Music")
+
+        open_item.Enable(bool(selected_results[0].can_open))
+        add_current_item.Enable(bool(self._search_results_can_add_to_current_playlist(selected_results)))
+        add_music_playlist_item.Enable(
+            bool(
+                selected_playlist_id
+                and any(getattr(result, "video_id", "") for result in selected_results)
+            )
+        )
+
+        menu.Bind(wx.EVT_MENU, lambda _event: self._open_youtube_music_search_result(), id=open_item.GetId())
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._add_youtube_music_search_results_to_current_playlist(),
+            id=add_current_item.GetId(),
+        )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._add_youtube_music_search_result_to_playlist(),
+            id=add_music_playlist_item.GetId(),
+        )
+
+        popup_parent = anchor_window or getattr(panel, "search_results_list", None) or self
+        try:
+            popup_parent.PopupMenu(menu)
+        finally:
+            menu.Destroy()
+        return True
 
     def _selected_youtube_music_search_result(self):
+        selected_results = self._selected_youtube_music_search_results()
+        if not selected_results:
+            return None
+        return selected_results[0]
+
+    def _selected_youtube_music_search_results(self):
         panel = self._get_youtube_music_panel()
         if panel is None:
-            return None
-        return panel.get_selected_search_result()
+            return []
+        return list(panel.get_selected_search_results())
+
+    def _search_results_can_add_to_current_playlist(self, search_results):
+        for search_result in search_results or []:
+            if getattr(search_result, "playlist_id", "") or getattr(search_result, "playback_url", ""):
+                return True
+        return False
+
+    def _resolve_youtube_music_player_playlist_target(self):
+        candidates = [
+            self._get_playlist_state(self._get_current_tab_index()),
+            self._get_active_playlist_state(),
+        ]
+        for candidate in candidates:
+            if isinstance(candidate, PlaylistState) and not candidate.is_folder_tab and not candidate.is_loading:
+                return candidate
+
+        tab_index = self._create_empty_playlist_tab(select=False)
+        return self._get_playlist_state(tab_index)
 
     def _open_youtube_music_search_result(self):
         search_result = self._selected_youtube_music_search_result()
         if search_result is None:
             self._announce("Selecione um resultado da busca para abrir ou tocar.")
             return False
+
+        if len(self._selected_youtube_music_search_results()) > 1:
+            self._announce("Abrindo o primeiro item da seleção atual.")
 
         if getattr(search_result, "playlist_id", None):
             return self._load_youtube_music_playlist_by_id(
@@ -1069,9 +1138,9 @@ class FrameYouTubeMusicMixin:
         return True
 
     def _save_youtube_music_search_result(self):
-        search_result = self._selected_youtube_music_search_result()
-        if search_result is None:
-            self._announce("Selecione um resultado da busca para salvar ou curtir.")
+        search_results = self._selected_youtube_music_search_results()
+        if not search_results:
+            self._announce("Selecione ao menos um resultado da busca para salvar ou curtir.")
             return False
 
         service = self._get_youtube_music_service()
@@ -1079,19 +1148,153 @@ class FrameYouTubeMusicMixin:
             return False
 
         def worker():
-            return service.save_search_result(search_result)
+            success_count = 0
+            playlist_saved = False
+            for search_result in search_results:
+                if not getattr(search_result, "can_save", False):
+                    continue
+                service.save_search_result(search_result)
+                success_count += 1
+                if getattr(search_result, "result_type", "") == "playlist":
+                    playlist_saved = True
+            if success_count == 0:
+                raise RuntimeError("A seleção atual não tem resultados compatíveis para salvar ou curtir.")
+            return success_count, playlist_saved
 
-        def on_success(message):
-            normalized_message = str(message or "Resultado salvo no YouTube Music.").strip()
+        def on_success(result):
+            success_count, playlist_saved = result
+            normalized_message = (
+                "Resultado salvo no YouTube Music."
+                if success_count == 1
+                else f"{success_count} resultado(s) salvo(s) ou curtido(s) no YouTube Music."
+            )
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
-            if getattr(search_result, "result_type", "") == "playlist":
+            if playlist_saved:
                 self.on_refresh_youtube_music_library(None, announce=False)
 
         def on_error(exc):
             wx.MessageBox(
                 "Não foi possível salvar o resultado no YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _add_youtube_music_search_results_to_current_playlist(self):
+        search_results = self._selected_youtube_music_search_results()
+        if not search_results:
+            self._announce("Selecione ao menos um resultado da busca para adicionar à playlist atual.")
+            return False
+
+        target_state = self._resolve_youtube_music_player_playlist_target()
+        if not isinstance(target_state, PlaylistState):
+            self._announce("Não foi possível localizar uma playlist de destino no player.")
+            return False
+
+        target_playlist_id = extract_playlist_id_from_source(getattr(target_state, "source_path", None))
+        if target_playlist_id:
+            service = self._get_youtube_music_service()
+            if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
+                return False
+
+            def worker():
+                added_count = 0
+                skipped_count = 0
+                for search_result in search_results:
+                    if not getattr(search_result, "video_id", ""):
+                        skipped_count += 1
+                        continue
+                    service.add_search_result_to_playlist(search_result, target_playlist_id)
+                    added_count += 1
+                if added_count == 0:
+                    raise RuntimeError("A seleção atual não tem vídeos ou faixas compatíveis para adicionar a essa playlist.")
+                return added_count, skipped_count
+
+            def on_success(result):
+                added_count, skipped_count = result
+                normalized_message = (
+                    f"{added_count} item(ns) adicionado(s) à playlist atual do YouTube Music: {target_state.title}."
+                )
+                if skipped_count:
+                    normalized_message = f"{normalized_message} {skipped_count} item(ns) da seleção foram ignorados."
+                self._youtube_music_library_status_message = normalized_message
+                self._refresh_youtube_music_screen_later()
+                self._announce(normalized_message)
+
+            def on_error(exc):
+                wx.MessageBox(
+                    "Não foi possível adicionar a seleção à playlist atual.\n\n"
+                    f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                    "YouTube Music",
+                    wx.OK | wx.ICON_ERROR,
+                    self,
+                )
+
+            return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+        service = self._get_youtube_music_service()
+
+        def worker():
+            prepared_items = []
+            prepared_labels = []
+            playlist_result_count = 0
+            skipped_count = 0
+            for search_result in search_results:
+                playlist_id = str(getattr(search_result, "playlist_id", "") or "").strip()
+                if playlist_id:
+                    playlist_content = service.get_playlist_content(playlist_id, fallback_title=search_result.title)
+                    if not playlist_content.item_urls:
+                        skipped_count += 1
+                        continue
+                    prepared_items.extend(playlist_content.item_urls)
+                    prepared_labels.extend(playlist_content.item_labels)
+                    playlist_result_count += 1
+                    continue
+
+                playback_url = str(getattr(search_result, "playback_url", "") or "").strip()
+                if not playback_url:
+                    skipped_count += 1
+                    continue
+                prepared_items.append(playback_url)
+                prepared_labels.append(search_result.choice_label)
+
+            if not prepared_items:
+                raise RuntimeError("A seleção atual não tem resultados reproduzíveis para adicionar à playlist atual.")
+            return prepared_items, prepared_labels, playlist_result_count, skipped_count
+
+        def on_success(result):
+            prepared_items, prepared_labels, playlist_result_count, skipped_count = result
+            added_count, _play_item = self._append_prepared_items_to_playlist(
+                prepared_items,
+                target_state,
+                browser_item_labels=prepared_labels,
+            )
+
+            if added_count == 0:
+                self._announce("Os itens selecionados já estavam presentes na playlist atual.")
+                return
+
+            self._add_recent_media_paths(prepared_items)
+            self._refresh_playlist_browser()
+            self._update_title()
+
+            normalized_message = f"{added_count} item(ns) adicionado(s) à playlist atual: {target_state.title}."
+            if playlist_result_count:
+                normalized_message = f"{normalized_message} {playlist_result_count} playlist(s) da busca foram expandidas."
+            if skipped_count:
+                normalized_message = f"{normalized_message} {skipped_count} item(ns) da seleção foram ignorados."
+            self._announce(normalized_message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(normalized_message)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível adicionar a seleção à playlist atual.\n\n"
                 f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
@@ -1137,10 +1340,62 @@ class FrameYouTubeMusicMixin:
 
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
+    def _rate_selected_playlist_items(self, media_paths, rating):
+        normalized_media_paths = [
+            str(media_path or "").strip()
+            for media_path in (media_paths or [])
+            if str(media_path or "").strip()
+        ]
+        youtube_media_paths = [media_path for media_path in normalized_media_paths if is_youtube_music_media(media_path)]
+        if not youtube_media_paths:
+            self._announce("A seleção atual não contém itens do YouTube Music ou do YouTube.")
+            return False
+
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
+            return False
+
+        def worker():
+            rated_count = 0
+            for media_path in youtube_media_paths:
+                service.rate_media_feedback(media_path, rating)
+                rated_count += 1
+            return rated_count
+
+        def on_success(rated_count):
+            if str(rating or "").strip().upper() == "DISLIKE":
+                normalized_message = (
+                    "Item marcado como não gostei no YouTube Music."
+                    if rated_count == 1
+                    else f"{rated_count} item(ns) marcados como não gostei no YouTube Music."
+                )
+            else:
+                normalized_message = (
+                    "Item curtido no YouTube Music."
+                    if rated_count == 1
+                    else f"{rated_count} item(ns) curtidos no YouTube Music."
+                )
+            self._youtube_music_library_status_message = normalized_message
+            self._refresh_youtube_music_screen_later()
+            self._announce(normalized_message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(normalized_message)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível avaliar a seleção atual no YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
     def _add_youtube_music_search_result_to_playlist(self):
-        search_result = self._selected_youtube_music_search_result()
-        if search_result is None:
-            self._announce("Selecione um resultado da busca para adicionar a uma playlist.")
+        search_results = self._selected_youtube_music_search_results()
+        if not search_results:
+            self._announce("Selecione ao menos um resultado da busca para adicionar a uma playlist.")
             return False
 
         panel = self._get_youtube_music_panel()
@@ -1157,10 +1412,27 @@ class FrameYouTubeMusicMixin:
         target_playlist_title = playlist_summary.title if playlist_summary is not None else target_playlist_id
 
         def worker():
-            return service.add_search_result_to_playlist(search_result, target_playlist_id)
+            added_count = 0
+            skipped_count = 0
+            for search_result in search_results:
+                if not getattr(search_result, "video_id", ""):
+                    skipped_count += 1
+                    continue
+                service.add_search_result_to_playlist(search_result, target_playlist_id)
+                added_count += 1
+            if added_count == 0:
+                raise RuntimeError("A seleção atual não tem vídeos ou faixas compatíveis para adicionar à playlist selecionada.")
+            return added_count, skipped_count
 
-        def on_success(message):
-            normalized_message = str(message or "Resultado adicionado à playlist do YouTube Music.").strip()
+        def on_success(result):
+            added_count, skipped_count = result
+            normalized_message = (
+                "Resultado adicionado à playlist do YouTube Music."
+                if added_count == 1
+                else f"{added_count} resultado(s) adicionado(s) à playlist do YouTube Music."
+            )
+            if skipped_count:
+                normalized_message = f"{normalized_message} {skipped_count} item(ns) da seleção foram ignorados."
             combined_message = f"{normalized_message} Destino: {target_playlist_title}."
             self._youtube_music_library_status_message = combined_message
             self._refresh_youtube_music_screen_later()
