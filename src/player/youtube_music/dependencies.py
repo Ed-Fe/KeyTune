@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import importlib
+import importlib.util
 import os
 from pathlib import Path
 import subprocess
@@ -152,7 +153,7 @@ def install_or_update_youtube_dependencies(
     updated = False
 
     target_dir = activate_youtube_dependency_target_dir()
-    ytmusicapi_was_available = _can_import_dependency(YTMUSICAPI_IMPORT_NAME)
+    ytmusicapi_was_available = _dependency_spec_available(YTMUSICAPI_IMPORT_NAME)
     yt_dlp_managed_exists = get_managed_yt_dlp_executable_path().is_file()
 
     if force or not ytmusicapi_was_available:
@@ -292,6 +293,17 @@ def _can_import_dependency(import_name: str) -> bool:
     try:
         importlib.import_module(import_name)
         return True
+    except Exception:
+        return False
+
+
+def _dependency_spec_available(import_name: str) -> bool:
+    normalized_import_name = str(import_name or "").strip()
+    if not normalized_import_name:
+        return False
+
+    try:
+        return importlib.util.find_spec(normalized_import_name) is not None
     except Exception:
         return False
 

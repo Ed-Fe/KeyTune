@@ -90,18 +90,19 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
 
     def test_install_update_skips_work_when_all_dependencies_are_ready(self):
         with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir"):
-            with patch("player.youtube_music.dependencies._can_import_dependency", return_value=True):
-                with patch("player.youtube_music.dependencies.yt_dlp_executable_available", return_value=True):
-                    with patch(
-                        "player.youtube_music.dependencies.get_managed_yt_dlp_executable_path",
-                        return_value=pathlib.Path("C:/tmp/ytmusic-bin/yt-dlp.exe"),
-                    ):
-                        with patch("pathlib.Path.is_file", return_value=True):
-                            with patch(
-                                "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
-                                return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.11.5"},
-                            ):
-                                result = install_or_update_youtube_dependencies(force=False)
+            with patch("player.youtube_music.dependencies._dependency_spec_available", return_value=True):
+                with patch("player.youtube_music.dependencies._can_import_dependency", return_value=True):
+                    with patch("player.youtube_music.dependencies.yt_dlp_executable_available", return_value=True):
+                        with patch(
+                            "player.youtube_music.dependencies.get_managed_yt_dlp_executable_path",
+                            return_value=pathlib.Path("C:/tmp/ytmusic-bin/yt-dlp.exe"),
+                        ):
+                            with patch("pathlib.Path.is_file", return_value=True):
+                                with patch(
+                                    "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
+                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.11.5"},
+                                ):
+                                    result = install_or_update_youtube_dependencies(force=False)
 
         self.assertFalse(result.updated)
         self.assertEqual(result.versions["yt-dlp"], "2026.1.31")

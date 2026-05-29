@@ -259,7 +259,7 @@ class FrameYouTubeMusicMixin:
         return ", ".join(ordered_labels)
 
     def _format_youtube_music_error_detail(self, error):
-        normalized_error_detail = sanitize_sensitive_text(error)
+        normalized_error_detail = sanitize_sensitive_text(error, max_length=2000)
         if normalized_error_detail:
             return normalized_error_detail
         return "Falha desconhecida."
