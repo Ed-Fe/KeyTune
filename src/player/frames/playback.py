@@ -14,7 +14,18 @@ from ..library import folder_display_name, is_audio_playback_media, is_remote_me
 from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playlists import PlaylistState
 from ..remote_media_metadata import resolve_remote_media_metadata, resolve_remote_media_playback
-from ..youtube_music import is_music_youtube_url, is_youtube_music_media
+
+
+def is_music_youtube_url(media_path):
+    from ..youtube_music.playlists import is_music_youtube_url as classifier
+
+    return classifier(media_path)
+
+
+def is_youtube_music_media(media_path):
+    from ..youtube_music.playlists import is_youtube_music_media as classifier
+
+    return classifier(media_path)
 
 
 _STREAM_ARTIFACT_TITLE_SUFFIXES = (

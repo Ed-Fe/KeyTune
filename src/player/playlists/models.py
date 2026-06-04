@@ -4,7 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..constants import REPEAT_MODES, REPEAT_OFF
-from ..equalizer import DEFAULT_EQUALIZER_PRESET_ID
+from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID
 from .titles import build_playlist_title
 
 

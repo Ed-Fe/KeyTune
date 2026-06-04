@@ -11,6 +11,42 @@ _RUNTIME_DLL_NAMES = (
     "libmpv-2.dll",
     "mpv-1.dll",
 )
+_RUNTIME_CACHE_FILE_NAME = "mpv-runtime-dir.txt"
+
+
+def _runtime_cache_path() -> Path | None:
+    try:
+        from .session import get_app_storage_dir
+
+        return Path(get_app_storage_dir()) / _RUNTIME_CACHE_FILE_NAME
+    except Exception:
+        return None
+
+
+def _iter_cached_runtime_dirs() -> list[Path]:
+    cache_path = _runtime_cache_path()
+    if cache_path is None or not cache_path.is_file():
+        return []
+
+    try:
+        cached_path = cache_path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return []
+
+    if not cached_path:
+        return []
+    return [Path(cached_path)]
+
+
+def _cache_runtime_dir(runtime_dir: Path) -> None:
+    cache_path = _runtime_cache_path()
+    if cache_path is None:
+        return
+
+    try:
+        cache_path.write_text(str(runtime_dir.resolve()), encoding="utf-8")
+    except OSError:
+        return
 
 
 def _iter_chocolatey_runtime_dirs() -> list[Path]:
@@ -26,11 +62,14 @@ def _iter_chocolatey_runtime_dirs() -> list[Path]:
         lib_dir / "mpv" / "tools",
     ]
 
-    for dll_name in _RUNTIME_DLL_NAMES:
-        try:
-            candidates.extend(match.parent for match in lib_dir.rglob(dll_name))
-        except OSError:
-            continue
+    try:
+        for child in lib_dir.iterdir():
+            if not child.is_dir() or "mpv" not in child.name.casefold():
+                continue
+            candidates.append(child / "tools")
+            candidates.append(child)
+    except OSError:
+        pass
 
     return candidates
 
@@ -49,6 +88,7 @@ def _candidate_runtime_dirs() -> list[Path]:
     repo_root = Path(__file__).resolve().parents[2]
     candidates.append(repo_root / "mpv")
     candidates.append(Path.cwd() / "mpv")
+    candidates.extend(_iter_cached_runtime_dirs())
     candidates.extend(_iter_chocolatey_runtime_dirs())
 
     unique_candidates: list[Path] = []
@@ -86,6 +126,7 @@ def bootstrap_mpv_runtime() -> bool:
         add_dll_directory = getattr(os, "add_dll_directory", None)
         if add_dll_directory is not None:
             add_dll_directory(str(runtime_dir))
+        _cache_runtime_dir(runtime_dir)
         return True
 
     return False

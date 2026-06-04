@@ -28,7 +28,7 @@ from ..constants import (
     SEEK_STEP_MS,
     VOLUME_STEP,
 )
-from ..equalizer import EqualizerPreset
+from ..equalizer.models import EqualizerPreset
 
 
 @dataclass

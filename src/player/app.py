@@ -1,10 +1,11 @@
 import wx
 
-from .frames import MediaPlayerFrame
 from .single_instance import SingleInstanceServer
 
 
 def main(initial_paths=None):
+    from .frames import MediaPlayerFrame
+
     app = wx.App(False)
     frame = MediaPlayerFrame(initial_paths=initial_paths or [])
 

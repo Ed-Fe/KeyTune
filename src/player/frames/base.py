@@ -32,7 +32,7 @@ class MediaPlayerFrame(
         super().__init__(None, title=APP_TITLE, size=DEFAULT_WINDOW_SIZE)
 
         self.settings = load_settings()
-        self._initial_paths = initial_paths or []
+        self._initial_paths = list(initial_paths or [])
         self._initialize_equalizer_support()
         self.current_volume = self.settings.default_volume
         self.playlists = []
@@ -44,10 +44,8 @@ class MediaPlayerFrame(
         self._startup_update_check_scheduled = False
         self._update_check_in_progress = False
         self._update_restart_pending = False
-
-        self._create_player_backend()
-        self._create_library_loader()
-        self._initialize_smtc_service()
+        self._startup_initialization_started = False
+        self._startup_ready = False
 
         self._build_menu_bar()
         self._build_ui()
@@ -56,11 +54,22 @@ class MediaPlayerFrame(
 
         self.Centre()
         self.Show()
-        wx.CallAfter(self._initialize_player_state)
-        wx.CallAfter(self._open_initial_paths)
-        wx.CallAfter(self._initialize_youtube_music_startup_state)
-        wx.CallAfter(self._prime_equalizer_ui)
-        wx.CallAfter(self._schedule_startup_update_check)
+        wx.CallAfter(self._finish_startup_initialization)
+
+    def _finish_startup_initialization(self):
+        if self._startup_initialization_started:
+            return
+
+        self._startup_initialization_started = True
+        self._create_player_backend()
+        self._create_library_loader()
+        self._initialize_smtc_service()
+        self._startup_ready = True
+
+        self._initialize_player_state()
+        self._open_initial_paths()
+        self._initialize_youtube_music_startup_state()
+        self._schedule_startup_update_check()
 
     def _announce(self, message):
         if not self.settings.announcements_enabled:
@@ -84,7 +93,10 @@ class MediaPlayerFrame(
     def receive_external_files(self, paths):
         """Open files sent by another instance via IPC without forcing focus."""
         if paths:
-            self._open_external_files(paths)
+            if getattr(self, "_startup_ready", False):
+                self._open_external_files(paths)
+            else:
+                self._initial_paths.extend(paths)
 
         if self.IsIconized():
             self.Iconize(False)

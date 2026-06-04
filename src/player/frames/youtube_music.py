@@ -7,26 +7,89 @@ import time
 
 import wx
 
-from player.youtube_music import (
-    YOUTUBE_MUSIC_SCREEN_ID,
+from player.youtube_music.auth import get_browser_auth_file_path, sanitize_sensitive_text
+from player.youtube_music.dialog import (
     YouTubeMusicBrowserAuthDialog,
     YouTubeMusicJavascriptRuntimeDialog,
-    YouTubeMusicService,
-    YouTubeMusicTabPanel,
-    configure_youtube_dependency_management,
-    find_all_available_javascript_runtimes,
-    install_or_update_youtube_dependencies,
-    is_youtube_dependency_auto_update_due,
-    is_missing_javascript_runtime_error_message,
-    is_youtube_music_media,
+)
+from player.youtube_music.models import (
+    YOUTUBE_MUSIC_SCREEN_ID,
+    get_search_scope_option,
+)
+from player.youtube_music.playlists import (
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
-    get_search_scope_option,
-    youtube_dependencies_available,
+    is_youtube_music_media,
 )
-from player.youtube_music.auth import sanitize_sensitive_text
 
 from ..playlists import PlaylistState, ScreenTabState
+
+
+def _configure_youtube_dependency_management(*, managed_install_enabled, auto_update_enabled, prefer_nightly_yt_dlp):
+    from player.youtube_music.dependencies import configure_youtube_dependency_management
+
+    return configure_youtube_dependency_management(
+        managed_install_enabled=managed_install_enabled,
+        auto_update_enabled=auto_update_enabled,
+        prefer_nightly_yt_dlp=prefer_nightly_yt_dlp,
+    )
+
+
+def _find_all_available_javascript_runtimes():
+    from player.youtube_music.yt_dlp_runtime import find_all_available_javascript_runtimes
+
+    return find_all_available_javascript_runtimes()
+
+
+def _install_or_update_youtube_dependencies(*, force, include_prerelease):
+    from player.youtube_music.dependencies import install_or_update_youtube_dependencies
+
+    return install_or_update_youtube_dependencies(
+        force=force,
+        include_prerelease=include_prerelease,
+    )
+
+
+def _is_youtube_dependency_auto_update_due(last_update_epoch, *, interval_hours):
+    from player.youtube_music.dependencies import is_youtube_dependency_auto_update_due
+
+    return is_youtube_dependency_auto_update_due(last_update_epoch, interval_hours=interval_hours)
+
+
+def _is_missing_javascript_runtime_error_message(error_message):
+    from player.youtube_music.streams import is_missing_javascript_runtime_error_message
+
+    return is_missing_javascript_runtime_error_message(error_message)
+
+
+def _youtube_dependencies_available():
+    from player.youtube_music.dependencies import youtube_dependencies_available
+
+    return youtube_dependencies_available()
+
+
+def _create_youtube_music_service():
+    from player.youtube_music.service import YouTubeMusicService
+
+    return YouTubeMusicService()
+
+
+def _youtube_music_tab_panel_class():
+    from player.youtube_music.panel import YouTubeMusicTabPanel
+
+    return YouTubeMusicTabPanel
+
+
+def _youtube_music_has_saved_auth():
+    return os.path.isfile(get_browser_auth_file_path())
+
+
+def find_all_available_javascript_runtimes():
+    return _find_all_available_javascript_runtimes()
+
+
+def is_missing_javascript_runtime_error_message(error_message):
+    return _is_missing_javascript_runtime_error_message(error_message)
 
 
 class FrameYouTubeMusicMixin:
@@ -233,7 +296,7 @@ class FrameYouTubeMusicMixin:
         return True
 
     def _configure_youtube_music_dependency_management(self):
-        configure_youtube_dependency_management(
+        _configure_youtube_dependency_management(
             managed_install_enabled=bool(getattr(self.settings, "youtube_music_manage_dependencies", False)),
             auto_update_enabled=bool(getattr(self.settings, "youtube_music_auto_update_dependencies", True)),
             prefer_nightly_yt_dlp=bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)),
@@ -314,7 +377,7 @@ class FrameYouTubeMusicMixin:
             self._refresh_youtube_music_screen_later()
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(status_message)
-            if youtube_dependencies_available():
+            if _youtube_dependencies_available():
                 self._continue_youtube_music_startup_after_dependency_setup()
             if manual:
                 wx.MessageBox(
@@ -326,7 +389,7 @@ class FrameYouTubeMusicMixin:
 
         def runner():
             try:
-                result = install_or_update_youtube_dependencies(
+                result = _install_or_update_youtube_dependencies(
                     force=force_update,
                     include_prerelease=bool(
                         getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)
@@ -361,7 +424,7 @@ class FrameYouTubeMusicMixin:
 
         interval_hours = self._youtube_music_dependency_update_interval_hours()
         last_update_epoch = getattr(self.settings, "youtube_music_dependency_last_auto_update_epoch", 0)
-        if not is_youtube_dependency_auto_update_due(
+        if not _is_youtube_dependency_auto_update_due(
             last_update_epoch,
             interval_hours=interval_hours,
         ):
@@ -410,7 +473,7 @@ class FrameYouTubeMusicMixin:
         self._configure_youtube_music_dependency_management()
         service = getattr(self, "_youtube_music_service", None)
         if service is None:
-            service = YouTubeMusicService()
+            service = _create_youtube_music_service()
             self._youtube_music_service = service
         return service
 
@@ -474,7 +537,8 @@ class FrameYouTubeMusicMixin:
         return str(getattr(self, "_youtube_music_library_status_message", "") or "").strip()
 
     def _create_youtube_music_page(self, parent):
-        return YouTubeMusicTabPanel(
+        panel_class = _youtube_music_tab_panel_class()
+        return panel_class(
             parent,
             on_connect=self._on_youtube_music_connect_button,
             on_disconnect=self._on_youtube_music_disconnect_button,
@@ -494,10 +558,12 @@ class FrameYouTubeMusicMixin:
         if not hasattr(self, "playlists") or not hasattr(self, "notebook"):
             return None
 
+        panel_class = _youtube_music_tab_panel_class()
+
         for index, state in enumerate(self.playlists):
             if isinstance(state, ScreenTabState) and state.screen_id == YOUTUBE_MUSIC_SCREEN_ID:
                 page = self.notebook.GetPage(index)
-                if isinstance(page, YouTubeMusicTabPanel):
+                if isinstance(page, panel_class):
                     return page
 
         return None
@@ -510,9 +576,10 @@ class FrameYouTubeMusicMixin:
         if panel is None:
             return
 
-        service = self._get_youtube_music_service()
+        service = getattr(self, "_youtube_music_service", None)
+        connected = service.has_saved_browser_auth() if service is not None else _youtube_music_has_saved_auth()
         panel.update_view(
-            connected=service.has_saved_browser_auth(),
+            connected=connected,
             account_name=self._youtube_music_account_name(),
             playlists=self._youtube_music_library_cache(),
             operation_in_progress=(
@@ -588,9 +655,8 @@ class FrameYouTubeMusicMixin:
             return self._handle_youtube_music_auth_validation_failure(service, exc)
 
     def _refresh_youtube_music_menu_state(self):
-        service = self._get_youtube_music_service()
         integration_enabled = self._youtube_music_integration_enabled()
-        has_saved_auth = service.has_saved_browser_auth()
+        has_saved_auth = _youtube_music_has_saved_auth()
         operation_in_progress = (
             self._is_youtube_music_operation_in_progress()
             or bool(getattr(self, "_youtube_music_dependency_update_in_progress", False))
@@ -1855,9 +1921,9 @@ class FrameYouTubeMusicMixin:
         # playlist tabs that need their item labels refreshed are still
         # handled here, since their refresh cannot wait for user action.
         self._refresh_youtube_music_menu_state()
-        service = self._get_youtube_music_service()
-        if not service.has_saved_browser_auth():
+        if not _youtube_music_has_saved_auth():
             return
+        service = self._get_youtube_music_service()
 
         # If a dependency auto-update is due, kick it off now (in its own
         # background thread, no operation lock). It must run BEFORE the

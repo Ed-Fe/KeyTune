@@ -3,9 +3,24 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .library import is_remote_media_path
-from .youtube_music.dependencies import ensure_yt_dlp_executable_available
-from .youtube_music.playlists import is_youtube_music_media
-from .youtube_music.yt_dlp_runtime import extract_info as extract_yt_dlp_info
+
+
+def ensure_yt_dlp_executable_available():
+    from .youtube_music.dependencies import ensure_yt_dlp_executable_available as ensure_runtime
+
+    return ensure_runtime()
+
+
+def is_youtube_music_media(media_path):
+    from .youtube_music.playlists import is_youtube_music_media as classifier
+
+    return classifier(media_path)
+
+
+def extract_yt_dlp_info(*args, **kwargs):
+    from .youtube_music.yt_dlp_runtime import extract_info
+
+    return extract_info(*args, **kwargs)
 
 
 YTDLP_METADATA_SOCKET_TIMEOUT_SECONDS = 10

@@ -1,21 +1,33 @@
 import wx
 
-from ..equalizer import (
+from ..equalizer.backend import (
+    build_mpv_equalizer_filter,
+    load_equalizer_catalog,
+)
+from ..equalizer.models import (
     DEFAULT_EQUALIZER_PRESET_ID,
     DEFAULT_EQUALIZER_PRESET_KEY,
     EqualizerPreset,
     EQUALIZER_SCREEN_ID,
-    EqualizerPresetDialog,
-    EqualizerTabPanel,
     build_builtin_preset_id,
-    build_mpv_equalizer_filter,
     create_custom_preset,
-    load_equalizer_catalog,
     normalize_equalizer_preset_id,
     normalize_band_gains,
     normalize_custom_presets,
 )
 from ..playlists import PlaylistState, ScreenTabState
+
+
+def _equalizer_preset_dialog_class():
+    from ..equalizer.dialog import EqualizerPresetDialog
+
+    return EqualizerPresetDialog
+
+
+def _equalizer_tab_panel_class():
+    from ..equalizer.panel import EqualizerTabPanel
+
+    return EqualizerTabPanel
 
 
 class FrameEqualizerMixin:
@@ -175,12 +187,13 @@ class FrameEqualizerMixin:
         return f"{message} Preset personalizado."
 
     def _create_equalizer_page(self, parent):
+        panel_class = _equalizer_tab_panel_class()
         cached_page = getattr(self, "_equalizer_tab_page_cache", None)
-        if isinstance(cached_page, EqualizerTabPanel) and cached_page.GetParent() == parent:
+        if isinstance(cached_page, panel_class) and cached_page.GetParent() == parent:
             self._equalizer_tab_page_cache = None
             return cached_page
 
-        return EqualizerTabPanel(
+        return panel_class(
             parent,
             on_toggle_enabled=self.on_toggle_equalizer_enabled,
             on_select_preset=self.on_select_equalizer_preset,
@@ -196,29 +209,25 @@ class FrameEqualizerMixin:
             return
 
         self._equalizer_ui_primed = True
-        if not self._equalizer_supported() or not hasattr(self, "notebook"):
+        if not self._equalizer_supported():
             return
 
-        if self._get_equalizer_panel() is None and not isinstance(
-            getattr(self, "_equalizer_tab_page_cache", None),
-            EqualizerTabPanel,
-        ):
-            self._equalizer_tab_page_cache = self._create_equalizer_page(self.notebook)
-
-        self._ensure_equalizer_preset_dialog()
+        self._refresh_equalizer_screen_later()
 
     def _dispose_equalizer_ui_cache(self):
+        dialog_class = _equalizer_preset_dialog_class()
         dialog = getattr(self, "_equalizer_preset_dialog", None)
         self._equalizer_preset_dialog = None
-        if isinstance(dialog, EqualizerPresetDialog):
+        if isinstance(dialog, dialog_class):
             try:
                 dialog.Destroy()
             except Exception:
                 pass
 
+        panel_class = _equalizer_tab_panel_class()
         cached_page = getattr(self, "_equalizer_tab_page_cache", None)
         self._equalizer_tab_page_cache = None
-        if isinstance(cached_page, EqualizerTabPanel):
+        if isinstance(cached_page, panel_class):
             try:
                 cached_page.Destroy()
             except Exception:
@@ -231,10 +240,12 @@ class FrameEqualizerMixin:
         if not hasattr(self, "playlists") or not hasattr(self, "notebook"):
             return None
 
+        panel_class = _equalizer_tab_panel_class()
+
         for index, state in enumerate(self.playlists):
             if isinstance(state, ScreenTabState) and state.screen_id == EQUALIZER_SCREEN_ID:
                 page = self.notebook.GetPage(index)
-                if isinstance(page, EqualizerTabPanel):
+                if isinstance(page, panel_class):
                     return page
 
         return None
@@ -342,8 +353,9 @@ class FrameEqualizerMixin:
         return candidate
 
     def _ensure_equalizer_preset_dialog(self):
+        dialog_class = _equalizer_preset_dialog_class()
         dialog = getattr(self, "_equalizer_preset_dialog", None)
-        if isinstance(dialog, EqualizerPresetDialog):
+        if isinstance(dialog, dialog_class):
             return dialog
 
         seed_preset = self._default_equalizer_preset()
@@ -351,7 +363,7 @@ class FrameEqualizerMixin:
             return None
 
         band_frequencies_hz = self._equalizer_band_frequencies()
-        dialog = EqualizerPresetDialog(
+        dialog = dialog_class(
             self,
             title="Novo preset do equalizador",
             intro_text=(

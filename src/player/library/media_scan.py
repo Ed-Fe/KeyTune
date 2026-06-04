@@ -1,8 +1,13 @@
 import os
 
 from ..constants import AUDIO_ONLY_EXTENSIONS, SUPPORTED_MEDIA_EXTENSIONS
-from ..youtube_music import is_youtube_music_media
 from .models import FOLDER_ENTRY_DIRECTORY, FOLDER_ENTRY_FILE, FOLDER_ENTRY_PARENT, FolderBrowserEntry
+
+
+def is_youtube_music_media(filename):
+    from ..youtube_music.playlists import is_youtube_music_media as classifier
+
+    return classifier(filename)
 
 
 def is_supported_media(filename):
