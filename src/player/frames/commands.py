@@ -828,8 +828,8 @@ class FrameCommandMixin:
             self.on_paste_open_from_clipboard_new_playlist(None)
             return
 
-        if browser and browser.is_item_navigation_active() and not event.ControlDown() and not event.AltDown():
-            if key_code == wx.WXK_TAB:
+        if browser and browser.is_item_navigation_active():
+            if key_code == wx.WXK_TAB and not event.ControlDown() and not event.AltDown():
                 self._toggle_navigation_mode()
                 return
             event.Skip()
