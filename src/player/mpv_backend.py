@@ -152,7 +152,8 @@ class MPVPlayer:
         @self._player.event_callback("file-loaded", "playback-restart")
         def _on_playback_event(event):
             self._needs_load = False
-            self._loaded_media_path = self._media.path if self._media else self._loaded_media_path
+            current_media = self._media
+            self._loaded_media_path = current_media.path if current_media is not None else self._loaded_media_path
             self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_PLAYING, event)
 
     def event_manager(self):
@@ -198,12 +199,13 @@ class MPVPlayer:
         return self._media
 
     def play(self, *, start_seconds: float | None = None, pause_on_start: bool = False):
-        if self._media is None:
+        media = self._media
+        if media is None:
             return
         if self._bound_handle and self._bound_video_output:
             self._set_window_handle(self._bound_handle)
-        if self._needs_load or self._loaded_media_path != self._media.path:
-            self._apply_media_http_headers()
+        if self._needs_load or self._loaded_media_path != media.path:
+            self._apply_media_http_headers(media)
             loadfile_options: dict[str, str] = {}
             if start_seconds is not None:
                 try:
@@ -223,14 +225,15 @@ class MPVPlayer:
                 self._player.pause = True
             else:
                 self._player.pause = False
-            self._player.loadfile(self._media.path, "replace", **loadfile_options)
-            self._loaded_media_path = self._media.path
+            self._player.loadfile(media.path, "replace", **loadfile_options)
+            self._loaded_media_path = media.path
             self._needs_load = False
             return
         self._player.pause = False
 
-    def _apply_media_http_headers(self):
-        raw_http_headers = getattr(self._media, "http_headers", None) if self._media is not None else None
+    def _apply_media_http_headers(self, media: MPVMedia | None = None):
+        current_media = self._media if media is None else media
+        raw_http_headers = getattr(current_media, "http_headers", None) if current_media is not None else None
         normalized_http_header_fields = []
         if isinstance(raw_http_headers, dict):
             for key, value in raw_http_headers.items():

@@ -371,6 +371,26 @@ class PlaylistBrowserPanel(wx.Panel):
         selection = self.items_list.GetFirstSelected()
         return selection if selection != -1 else wx.NOT_FOUND
 
+    def _get_focused_index(self):
+        get_focused_item = getattr(self.items_list, "GetFocusedItem", None)
+        if callable(get_focused_item):
+            focused = get_focused_item()
+        else:
+            focused = self.items_list.GetNextItem(-1, wx.LIST_NEXT_ALL, wx.LIST_STATE_FOCUSED)
+        return focused if focused != -1 else wx.NOT_FOUND
+
+    def _get_activation_index(self):
+        selection = self._get_selected_index()
+        if selection != wx.NOT_FOUND:
+            return selection
+
+        focused = self._get_focused_index()
+        if focused == wx.NOT_FOUND or focused >= len(self._items):
+            return wx.NOT_FOUND
+
+        self._set_list_selection(focused)
+        return focused
+
     def _clear_selection(self):
         selection = self._get_selected_index()
         while selection != wx.NOT_FOUND:
@@ -496,7 +516,7 @@ class PlaylistBrowserPanel(wx.Panel):
         return character
 
     def _activate_selected(self):
-        selection = self._get_selected_index()
+        selection = self._get_activation_index()
         if selection == wx.NOT_FOUND or selection >= len(self._items):
             return
         self._on_activate_item(selection)

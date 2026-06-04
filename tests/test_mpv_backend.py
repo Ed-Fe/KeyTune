@@ -216,6 +216,27 @@ class MPVPlayerTests(unittest.TestCase):
             core.option_sets,
         )
 
+    def test_play_uses_stable_media_reference_when_media_is_cleared_mid_start(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(
+            path="https://example.invalid/audio",
+            http_headers={"User-Agent": "Teste/1.0"},
+        )
+        player.set_media(media)
+
+        original_apply_media_http_headers = player._apply_media_http_headers
+
+        def _apply_and_clear(current_media=None):
+            original_apply_media_http_headers(current_media)
+            player.set_media(None)
+
+        player._apply_media_http_headers = _apply_and_clear
+
+        player.play()
+
+        core = self.fake_module.created_players[0]
+        self.assertEqual(core.loaded, [("https://example.invalid/audio", "replace")])
+
     def test_audio_output_device_list_observer_filters_devices(self):
         player = mpv_backend.MPVPlayer(video_output_enabled=False)
         core = self.fake_module.created_players[0]
