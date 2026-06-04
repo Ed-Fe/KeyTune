@@ -13,5 +13,7 @@ MPV/
 build/
 dist/
 *.zip
+*.sha256
+*.spec
 .copilot_*
 test_final.py
