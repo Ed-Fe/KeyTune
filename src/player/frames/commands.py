@@ -11,6 +11,7 @@ from ..library import (
     build_supported_media_wildcard,
     is_playlist_source,
     is_remote_media_path,
+    is_supported_media,
     playlist_display_name,
     save_playlist,
 )
@@ -32,7 +33,8 @@ class FrameCommandMixin:
                 playlist_paths.append(normalized_path)
                 continue
 
-            media_paths.append(normalized_path)
+            if is_supported_media(normalized_path):
+                media_paths.append(normalized_path)
 
         return media_paths, playlist_paths
 

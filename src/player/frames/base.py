@@ -79,7 +79,7 @@ class MediaPlayerFrame(
             return
         paths = self._initial_paths
         self._initial_paths = []
-        self._open_selected_files(paths)
+        self._open_external_files(paths)
 
     def receive_external_files(self, paths):
         """Open files sent by another instance via IPC without forcing focus."""
