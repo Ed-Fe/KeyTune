@@ -29,6 +29,54 @@ from .search import normalize_music_search_results, search_youtube_videos
 from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_music_stream_playback
 
 
+class YouTubeMusicAuthValidationError(RuntimeError):
+    def __init__(self, message, *, should_disconnect):
+        super().__init__(message)
+        self.should_disconnect = bool(should_disconnect)
+
+
+class InvalidYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
+    def __init__(self, message="A autenticação salva do YouTube Music não é mais válida."):
+        super().__init__(message, should_disconnect=True)
+
+
+class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
+    def __init__(self, message="Não foi possível validar a autenticação do YouTube Music agora."):
+        super().__init__(message, should_disconnect=False)
+
+
+_INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS = (
+    "authentication",
+    "authorization",
+    "cookie",
+    "credential",
+    "credentials",
+    "logged in",
+    "login",
+    "sign in",
+    "unauthorized",
+    "forbidden",
+    "401",
+    "403",
+    "sapisidhash",
+    "x-goog-authuser",
+    "__secure-3papisid",
+)
+
+
+def _is_probably_invalid_saved_auth_error(error):
+    messages = []
+    current_error = error
+    visited_error_ids = set()
+    while current_error is not None and id(current_error) not in visited_error_ids:
+        visited_error_ids.add(id(current_error))
+        messages.append(f"{type(current_error).__name__}: {current_error}")
+        current_error = getattr(current_error, "__cause__", None) or getattr(current_error, "__context__", None)
+
+    normalized_message = " ".join(messages).casefold()
+    return any(marker in normalized_message for marker in _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS)
+
+
 class YouTubeMusicService:
     _STREAM_CACHE_TTL_SECONDS = 300
     _STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS = 30
@@ -65,11 +113,18 @@ class YouTubeMusicService:
             return False
 
         try:
-            self.get_account_info()
+            self.validate_saved_authentication()
         except Exception:
             self.clear_client_cache()
             return False
 
+        return True
+
+    def validate_saved_authentication(self):
+        if not self.has_saved_browser_auth():
+            return False
+
+        self.get_account_info()
         return True
 
     def clear_client_cache(self):
@@ -251,10 +306,14 @@ class YouTubeMusicService:
             account_info = client.get_account_info()
         except Exception as exc:
             self.clear_client_cache()
-            raise RuntimeError("Não foi possível verificar se a conta do YouTube Music está conectada.") from exc
+            if _is_probably_invalid_saved_auth_error(exc):
+                raise InvalidYouTubeMusicAuthError() from exc
+            raise TemporaryYouTubeMusicAuthError() from exc
 
         if not isinstance(account_info, dict):
-            raise RuntimeError("A resposta da conta do YouTube Music veio em formato inválido.")
+            raise TemporaryYouTubeMusicAuthError(
+                "A resposta da conta do YouTube Music veio em formato inválido."
+            )
 
         self._account_info = account_info
         return account_info

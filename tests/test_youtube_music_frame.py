@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.frames.youtube_music import FrameYouTubeMusicMixin
 import player.frames.youtube_music as youtube_music_frame_module
+from player.youtube_music.service import InvalidYouTubeMusicAuthError, TemporaryYouTubeMusicAuthError
 
 
 _ACTION_INSTALL_DENO = youtube_music_frame_module.YouTubeMusicJavascriptRuntimeDialog.ACTION_INSTALL_DENO
@@ -67,7 +68,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
     def test_invalid_saved_auth_disconnects_and_clears_library_state(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
-        service.is_authenticated.return_value = False
+        service.validate_saved_authentication.side_effect = InvalidYouTubeMusicAuthError()
 
         frame = _DummyFrame(service)
 
@@ -81,22 +82,22 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertFalse(frame._youtube_music_library_has_more_playlists())
         self.assertEqual(
             frame._youtube_music_status_message(),
-            "A autenticação salva do YouTube Music expirou ou não é mais válida. Conecte a conta novamente.",
+            "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente.",
         )
         self.assertEqual(
             frame.announcements,
-            ["A autenticação salva do YouTube Music expirou ou não é mais válida. Conecte a conta novamente."],
+            ["Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."],
         )
         self.assertEqual(
             frame.status_updates,
-            ["A autenticação salva do YouTube Music expirou ou não é mais válida. Conecte a conta novamente."],
+            ["Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."],
         )
         self.assertGreaterEqual(frame.menu_refresh_calls, 1)
 
     def test_valid_saved_auth_keeps_existing_connection(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
-        service.is_authenticated.return_value = True
+        service.validate_saved_authentication.return_value = True
 
         frame = _DummyFrame(service)
 
@@ -112,7 +113,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
     def test_refresh_library_stops_immediately_after_invalid_auth_disconnect(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
-        service.is_authenticated.return_value = False
+        service.validate_saved_authentication.side_effect = InvalidYouTubeMusicAuthError()
 
         frame = _DummyFrame(service)
 
@@ -123,6 +124,35 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         service.get_connected_account_name.assert_not_called()
         service.get_user_library_playlists.assert_not_called()
         service.get_personalized_mixes.assert_not_called()
+
+    def test_transient_auth_validation_keeps_saved_connection_and_cache(self):
+        service = Mock()
+        service.has_saved_browser_auth.return_value = True
+        service.validate_saved_authentication.side_effect = TemporaryYouTubeMusicAuthError()
+
+        frame = _DummyFrame(service)
+
+        authenticated = frame._ensure_youtube_music_authenticated()
+
+        self.assertFalse(authenticated)
+        service.disconnect.assert_not_called()
+        service.clear_client_cache.assert_called_once_with()
+        self.assertEqual(frame._youtube_music_account_name(), "Conta antiga")
+        self.assertEqual(frame._youtube_music_library_cache(), ["playlist antiga"])
+        self.assertTrue(frame._youtube_music_library_has_loaded())
+        self.assertTrue(frame._youtube_music_library_has_more_playlists())
+        self.assertEqual(
+            frame._youtube_music_status_message(),
+            "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes.",
+        )
+        self.assertEqual(
+            frame.announcements,
+            ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
+        )
+        self.assertEqual(
+            frame.status_updates,
+            ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
+        )
 
     def test_handle_javascript_runtime_error_opens_winget_install(self):
         service = Mock()

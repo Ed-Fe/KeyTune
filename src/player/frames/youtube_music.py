@@ -537,7 +537,7 @@ class FrameYouTubeMusicMixin:
         return None
 
     def _handle_invalid_youtube_music_auth(self, service, *, announce=True):
-        message = "A autenticação salva do YouTube Music expirou ou não é mais válida. Conecte a conta novamente."
+        message = "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."
         try:
             service.disconnect()
         except Exception:
@@ -555,15 +555,37 @@ class FrameYouTubeMusicMixin:
             self._announce(message)
         return False
 
+    def _handle_youtube_music_auth_validation_failure(self, service, error, *, announce=True):
+        if bool(getattr(error, "should_disconnect", True)):
+            return self._handle_invalid_youtube_music_auth(service, announce=announce)
+
+        message = "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
+        service.clear_client_cache()
+        self._youtube_music_library_status_message = message
+        self._refresh_youtube_music_screen_later()
+        self._refresh_youtube_music_menu_state()
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(message)
+        if announce:
+            self._announce(message)
+        return False
+
     def _ensure_youtube_music_authenticated(self):
         service = self._get_youtube_music_service()
         if service.has_saved_browser_auth():
-            if service.is_authenticated():
-                return True
-            return self._handle_invalid_youtube_music_auth(service)
+            try:
+                return service.validate_saved_authentication()
+            except Exception as exc:
+                return self._handle_youtube_music_auth_validation_failure(service, exc)
 
         self.on_connect_youtube_music(None)
-        return service.is_authenticated()
+        if not service.has_saved_browser_auth():
+            return False
+
+        try:
+            return service.validate_saved_authentication()
+        except Exception as exc:
+            return self._handle_youtube_music_auth_validation_failure(service, exc)
 
     def _refresh_youtube_music_menu_state(self):
         service = self._get_youtube_music_service()
@@ -1887,7 +1909,7 @@ class FrameYouTubeMusicMixin:
             self._refresh_pending_restored_youtube_music_tabs()
 
         def on_error(_error):
-            self._handle_invalid_youtube_music_auth(service, announce=False)
+            self._handle_youtube_music_auth_validation_failure(service, _error, announce=False)
 
         self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 

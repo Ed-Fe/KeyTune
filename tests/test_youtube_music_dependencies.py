@@ -75,7 +75,7 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
             auto_update_enabled=True,
         )
 
-        fake_module = types.SimpleNamespace(__version__="1.11.5")
+        fake_module = types.SimpleNamespace(__version__="1.12.0")
         with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir"):
             with patch.object(youtube_dependencies, "install_or_update_youtube_dependencies") as install_mock:
                 with patch.object(
@@ -100,7 +100,7 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                             with patch("pathlib.Path.is_file", return_value=True):
                                 with patch(
                                     "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
-                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.11.5"},
+                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.12.0"},
                                 ):
                                     result = install_or_update_youtube_dependencies(force=False)
 
@@ -133,7 +133,7 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                             ):
                                 with patch(
                                     "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
-                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.11.5"},
+                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.12.0"},
                                 ):
                                     result = install_or_update_youtube_dependencies(
                                         force=True,
