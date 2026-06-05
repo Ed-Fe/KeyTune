@@ -9,6 +9,7 @@ KeyTune is a media player. Contributions should preserve the existing structure:
 - Fork the repository
 - Create a feature branch
 - Read the README to understand the current scope and project layout
+- Use the issue templates for bugs and feature requests, and open Discussions for ideas, questions, and broader feedback
 
 ## Local Setup
 

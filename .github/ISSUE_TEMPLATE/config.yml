@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project discussions
+    url: https://github.com/Ed-Fe/KeyTune/discussions
+    about: Use this for ideas, questions, and broader project discussions.

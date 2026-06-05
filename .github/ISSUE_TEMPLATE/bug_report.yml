@@ -1,0 +1,49 @@
+name: Bug report
+description: Describe a problem so we can reproduce and fix it.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report the problem. The clearer the context, the faster we can reproduce and fix it.
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior.
+      placeholder: "When I opened the file, the app crashed and closed."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      description: Explain the expected behavior.
+      placeholder: "I expected the file to play normally."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the shortest possible steps to reproduce the bug.
+      placeholder: |
+        1. Open the app
+        2. Click...
+        3. The error happens
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include your Windows version, app version, file format, and any useful details.
+      placeholder: "Windows 11, KeyTune 1.0.0, local MP3 file."
+    validations:
+      required: true
+  - type: textarea
+    id: extras
+    attributes:
+      label: Logs, screenshots, or extra notes
+      description: Paste any error messages, logs, or useful links here.
+      placeholder: "Displayed message, screenshot, log, etc."

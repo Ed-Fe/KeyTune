@@ -1,0 +1,27 @@
+name: Question or support
+description: Ask questions, clear up doubts, or request guidance on using the project.
+title: "[Question]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening an issue, use this discussion for general doubts, usage guidance, and open questions.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Explain your question directly.
+      placeholder: "How do I..."
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What have you tried, which version are you using, and any other relevant detail.
+      placeholder: "I already tried..., I'm on Windows..., version..."
+  - type: textarea
+    id: extra
+    attributes:
+      label: More details
+      description: Include links, screenshots, or error messages if available.

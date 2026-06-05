@@ -80,6 +80,7 @@ Useful project links:
 - [Roadmap](ROADMAP.md)
 - [Releases](https://github.com/Ed-Fe/KeyTune/releases)
 - [Issues](https://github.com/Ed-Fe/KeyTune/issues)
+- [Discussions](https://github.com/Ed-Fe/KeyTune/discussions)
 - [Pull requests](https://github.com/Ed-Fe/KeyTune/pulls)
 
 ## Windows Release

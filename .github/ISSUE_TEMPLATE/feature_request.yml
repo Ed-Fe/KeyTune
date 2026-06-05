@@ -1,0 +1,36 @@
+name: Feature request
+description: Propose an improvement or a new feature.
+title: "[Recurso]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Explain the idea with as much context as possible. If there is more than one way to solve it, describe the one you prefer.
+  - type: textarea
+    id: need
+    attributes:
+      label: What need does this solve?
+      description: Tell us what problem, friction, or opportunity motivated the idea.
+      placeholder: "Right now I need..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: How do you imagine the solution?
+      description: Describe the proposal with enough detail for us to understand the expected behavior.
+      placeholder: "I imagine the app would..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: If there are other approaches, list them here.
+      placeholder: "It could also be solved with..."
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, references, examples, or any other useful details.
+      placeholder: "Example app, screenshot, link, etc."

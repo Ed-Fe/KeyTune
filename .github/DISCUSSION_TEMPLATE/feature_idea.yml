@@ -1,0 +1,27 @@
+name: Feature idea
+description: Share an idea, improvement, or broader suggestion.
+title: "[Idea]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this discussion to suggest ideas and talk through possible improvements before turning it into a formal issue.
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: Describe the proposal in a few lines.
+      placeholder: "It would be useful if the app..."
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would this be useful?
+      description: Explain the value or use case.
+      placeholder: "This would help because..."
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Links, examples, or extra context.
