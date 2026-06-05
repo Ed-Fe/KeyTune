@@ -13,45 +13,89 @@ import threading
 from typing import Callable, Optional
 
 
+_SMTC_LOAD_LOCK = threading.Lock()
+_SMTC_LOADED = False
 _SMTC_DEPS_AVAILABLE = False
 _SMTC_IMPORT_ERROR: Optional[Exception] = None
 
-if sys.platform == "win32":
-    try:  # pragma: no cover - prefer the maintained pywinrt distribution
-        from winrt.windows.media import (
-            MediaPlaybackStatus,
-            MediaPlaybackType,
-            SystemMediaTransportControlsButton,
-        )
-        from winrt.windows.media.playback import MediaPlayer
+_MediaPlaybackStatus = None
+_MediaPlaybackType = None
+_SystemMediaTransportControlsButton = None
+_MediaPlayer = None
+_PLAYBACK_STATUS_MAP: dict = {}
 
-        _SMTC_DEPS_AVAILABLE = True
-    except Exception as _exc_winrt:
-        try:  # pragma: no cover - fallback to the legacy winsdk package
-            from winsdk.windows.media import (  # type: ignore[import-not-found]
+
+def _load_smtc_dependencies() -> bool:
+    """Import the optional winrt/winsdk SMTC bindings on first use.
+
+    The winrt packages are comparatively slow to import, so this is deferred
+    out of the startup import path and only triggered when the SMTC layer is
+    actually queried or started.
+    """
+
+    global _SMTC_LOADED, _SMTC_DEPS_AVAILABLE, _SMTC_IMPORT_ERROR
+    global _MediaPlaybackStatus, _MediaPlaybackType
+    global _SystemMediaTransportControlsButton, _MediaPlayer
+    global _PLAYBACK_STATUS_MAP
+
+    if _SMTC_LOADED:
+        return _SMTC_DEPS_AVAILABLE
+
+    with _SMTC_LOAD_LOCK:
+        if _SMTC_LOADED:
+            return _SMTC_DEPS_AVAILABLE
+
+        if sys.platform != "win32":  # pragma: no cover - non-Windows platforms skip SMTC
+            _SMTC_IMPORT_ERROR = RuntimeError("SMTC só está disponível no Windows.")
+            _SMTC_LOADED = True
+            return False
+
+        try:  # pragma: no cover - prefer the maintained pywinrt distribution
+            from winrt.windows.media import (
                 MediaPlaybackStatus,
                 MediaPlaybackType,
                 SystemMediaTransportControlsButton,
             )
-            from winsdk.windows.media.playback import MediaPlayer  # type: ignore[import-not-found]
+            from winrt.windows.media.playback import MediaPlayer
+        except Exception as exc_winrt:
+            try:  # pragma: no cover - fallback to the legacy winsdk package
+                from winsdk.windows.media import (  # type: ignore[import-not-found]
+                    MediaPlaybackStatus,
+                    MediaPlaybackType,
+                    SystemMediaTransportControlsButton,
+                )
+                from winsdk.windows.media.playback import MediaPlayer  # type: ignore[import-not-found]
+            except Exception as exc_winsdk:
+                _SMTC_IMPORT_ERROR = exc_winrt or exc_winsdk
+                _SMTC_LOADED = True
+                return False
 
-            _SMTC_DEPS_AVAILABLE = True
-        except Exception as _exc_winsdk:
-            _SMTC_IMPORT_ERROR = _exc_winrt or _exc_winsdk
-else:  # pragma: no cover - non-Windows platforms simply skip SMTC
-    _SMTC_IMPORT_ERROR = RuntimeError("SMTC só está disponível no Windows.")
+        _MediaPlaybackStatus = MediaPlaybackStatus
+        _MediaPlaybackType = MediaPlaybackType
+        _SystemMediaTransportControlsButton = SystemMediaTransportControlsButton
+        _MediaPlayer = MediaPlayer
+        _PLAYBACK_STATUS_MAP = {
+            "playing": MediaPlaybackStatus.PLAYING,
+            "paused": MediaPlaybackStatus.PAUSED,
+            "stopped": MediaPlaybackStatus.STOPPED,
+            "closed": MediaPlaybackStatus.CLOSED,
+            "changing": MediaPlaybackStatus.CHANGING,
+        }
+        _SMTC_DEPS_AVAILABLE = True
+        _SMTC_LOADED = True
+        return True
 
 
 def is_smtc_supported() -> bool:
     """Return True when the System Media Transport Controls are usable."""
 
-    return bool(_SMTC_DEPS_AVAILABLE)
+    return bool(_load_smtc_dependencies())
 
 
 def smtc_dependency_error_message() -> str:
     """Return a localized message describing why SMTC is unavailable."""
 
-    if _SMTC_DEPS_AVAILABLE:
+    if _load_smtc_dependencies():
         return ""
     if _SMTC_IMPORT_ERROR is not None:
         return (
@@ -60,21 +104,6 @@ def smtc_dependency_error_message() -> str:
             f"Detalhes: {_SMTC_IMPORT_ERROR}"
         )
     return "Controles de mídia do sistema indisponíveis."
-
-
-def _build_status_map():
-    if not _SMTC_DEPS_AVAILABLE:
-        return {}
-    return {
-        "playing": MediaPlaybackStatus.PLAYING,
-        "paused": MediaPlaybackStatus.PAUSED,
-        "stopped": MediaPlaybackStatus.STOPPED,
-        "closed": MediaPlaybackStatus.CLOSED,
-        "changing": MediaPlaybackStatus.CHANGING,
-    }
-
-
-_PLAYBACK_STATUS_MAP = _build_status_map()
 
 
 class SmtcService:
@@ -108,13 +137,13 @@ class SmtcService:
         self._available = False
 
     def start(self) -> bool:
-        if not _SMTC_DEPS_AVAILABLE:
+        if not _load_smtc_dependencies():
             return False
         with self._lock:
             if self._available:
                 return True
             try:
-                player = MediaPlayer()
+                player = _MediaPlayer()
                 # Disable automatic command handling so SMTC button events are
                 # delivered to our handler instead of being consumed by the
                 # MediaPlayer's default behavior.
@@ -130,7 +159,7 @@ class SmtcService:
                 smtc.is_stop_enabled = True
                 smtc.is_next_enabled = True
                 smtc.is_previous_enabled = True
-                smtc.playback_status = MediaPlaybackStatus.CLOSED
+                smtc.playback_status = _MediaPlaybackStatus.CLOSED
 
                 self._button_token = smtc.add_button_pressed(self._on_button_pressed)
                 self._media_player = player
@@ -181,15 +210,15 @@ class SmtcService:
             return
 
         try:
-            if button == SystemMediaTransportControlsButton.PLAY:
+            if button == _SystemMediaTransportControlsButton.PLAY:
                 callback = self._on_play
-            elif button == SystemMediaTransportControlsButton.PAUSE:
+            elif button == _SystemMediaTransportControlsButton.PAUSE:
                 callback = self._on_pause
-            elif button == SystemMediaTransportControlsButton.STOP:
+            elif button == _SystemMediaTransportControlsButton.STOP:
                 callback = self._on_stop
-            elif button == SystemMediaTransportControlsButton.NEXT:
+            elif button == _SystemMediaTransportControlsButton.NEXT:
                 callback = self._on_next
-            elif button == SystemMediaTransportControlsButton.PREVIOUS:
+            elif button == _SystemMediaTransportControlsButton.PREVIOUS:
                 callback = self._on_previous
             else:
                 callback = None
@@ -211,7 +240,7 @@ class SmtcService:
                 return
             mapped = _PLAYBACK_STATUS_MAP.get(status)
             if mapped is None:
-                mapped = MediaPlaybackStatus.CLOSED
+                mapped = _MediaPlaybackStatus.CLOSED
             try:
                 smtc.playback_status = mapped
             except Exception:
@@ -231,7 +260,7 @@ class SmtcService:
             if updater is None:
                 return
             try:
-                updater.type = MediaPlaybackType.MUSIC
+                updater.type = _MediaPlaybackType.MUSIC
                 music = updater.music_properties
                 music.title = title or ""
                 music.artist = artist or ""

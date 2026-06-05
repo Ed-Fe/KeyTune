@@ -22,6 +22,10 @@ class FrameLibraryLoaderMixin:
         self._library_worker.start()
 
     def _shutdown_library_loader(self):
+        self._begin_library_loader_shutdown()
+        self._finish_library_loader_shutdown()
+
+    def _begin_library_loader_shutdown(self):
         stop_event = getattr(self, "_library_stop_event", None)
         if stop_event is not None:
             stop_event.set()
@@ -29,8 +33,10 @@ class FrameLibraryLoaderMixin:
         if hasattr(self, "_library_queue"):
             self._library_queue.put({"kind": "shutdown"})
 
-        if hasattr(self, "_library_worker") and self._library_worker.is_alive():
-            self._library_worker.join(timeout=1.0)
+    def _finish_library_loader_shutdown(self):
+        worker = getattr(self, "_library_worker", None)
+        if worker is not None and worker.is_alive():
+            worker.join(timeout=1.0)
 
     def _next_library_request_serial(self):
         self._library_request_serial += 1

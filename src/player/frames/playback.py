@@ -1392,9 +1392,15 @@ class FramePlaybackMixin:
         self._tick_crossfade()
 
     def _shutdown_player_backend(self):
+        self._begin_player_backend_shutdown()
+        self._finish_player_backend_shutdown()
+
+    def _begin_player_backend_shutdown(self):
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
         if hasattr(self, "_playback_queue"):
             self._playback_queue.put({"kind": "shutdown"})
+
+    def _finish_player_backend_shutdown(self):
         if hasattr(self, "_playback_worker") and self._playback_worker.is_alive():
             self._playback_worker.join(timeout=1.0)
         for player_key in getattr(self, "_player_keys", ()): 

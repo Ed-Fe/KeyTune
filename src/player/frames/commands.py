@@ -985,9 +985,18 @@ class FrameCommandMixin:
         if hasattr(self, "crossfade_timer") and self.crossfade_timer.IsRunning():
             self.crossfade_timer.Stop()
         self._dispose_equalizer_ui_cache()
+
+        # Signal every background worker to stop up front so their shutdown
+        # waits overlap instead of stacking. The session save (disk I/O) then
+        # runs while those workers wind down, and the joins happen afterwards.
+        self._begin_library_loader_shutdown()
+        self._begin_player_backend_shutdown()
+        self.announcer.request_close()
+
         self._save_session()
-        self._shutdown_library_loader()
-        self._shutdown_player_backend()
+
+        self._finish_library_loader_shutdown()
+        self._finish_player_backend_shutdown()
         self._shutdown_smtc_service()
         self.announcer.close()
         self.Destroy()
