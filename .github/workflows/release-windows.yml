@@ -47,6 +47,10 @@ jobs:
         run: |
           python scripts/download_yt_dlp_release.py --channel stable --output-dir dist\KeyTune
 
+      - name: Render manual as HTML
+        run: |
+          python scripts/render_manual.py docs/manual.md dist\KeyTune\docs\manual.html
+
       - name: Download libmpv runtime
         shell: powershell
         run: |

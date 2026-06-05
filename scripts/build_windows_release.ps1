@@ -164,6 +164,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Falha ao baixar o yt-dlp oficial."
 }
 
+Write-Step "Renderizando manual em HTML"
+& $PythonExe scripts\render_manual.py docs\manual.md dist\KeyTune\docs\manual.html
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao renderizar o manual em HTML."
+}
+
 Write-Step "Copiando runtime do MPV"
 $targetRoot = "dist\KeyTune\mpv"
 New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null

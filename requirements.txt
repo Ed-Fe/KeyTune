@@ -1,6 +1,7 @@
 wxPython>=4.2.1
 python-mpv>=1.0.8
 accessible-output2>=0.17
+Markdown>=3.8
 ytmusicapi>=1.12.0
 winrt-Windows.Media>=3.2.1; sys_platform == "win32"
 winrt-Windows.Media.Playback>=3.2.1; sys_platform == "win32"

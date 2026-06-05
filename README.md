@@ -28,6 +28,16 @@ KeyTune is ready for the `1.0.0` Windows release candidate, with the main playba
 - `python-mpv` installed in the active Python environment
 - A libmpv runtime available in a local `mpv/` folder or via `MPV_HOME`/`PATH` (development mode)
 
+## Manual do usuário
+
+O manual inicial do projeto fica em `docs/manual.md`.
+
+Você pode lê-lo de três maneiras:
+
+1. direto no repositório, como arquivo Markdown;
+2. no VS Code, usando a pré-visualização de Markdown;
+3. na release do Windows, abrindo `docs/manual.html` dentro do ZIP gerado no momento do empacotamento.
+
 ## Installation
 
 ### 1. Clone the repository
