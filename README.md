@@ -27,50 +27,50 @@ It focuses on playlist management, folder browsing, session restore, and persist
 
 ## Installation
 
-### 1. Clone the repository
+1. Clone the repository.
 
-```bash
-git clone https://github.com/Ed-Fe/KeyTune.git
-cd KeyTune
-```
+   ```bash
+   git clone https://github.com/Ed-Fe/KeyTune.git
+   cd KeyTune
+   ```
 
-### 2. Create and activate a virtual environment
+2. Create and activate a virtual environment.
 
-On Windows:
+   On Windows:
 
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
 
-On Linux or macOS:
+   On Linux or macOS:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
 
-### 3. Install dependencies
+3. Install dependencies.
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 4. Download the MPV runtime for local development
+4. Download the MPV runtime for local development.
 
-```powershell
-python scripts/download_mpv_runtime.py
-```
+   ```powershell
+   python scripts/download_mpv_runtime.py
+   ```
 
-This helper downloads the latest `mpv-winbuild` release, extracts the folder containing `libmpv-2.dll`, and writes it to `./mpv/` by default. It depends on `7z` or 7-Zip to unpack the `.7z` archive.
+   This helper downloads the latest `mpv-winbuild` release, extracts the folder containing `libmpv-2.dll`, and writes it to `./mpv/` by default. It depends on `7z` or 7-Zip to unpack the `.7z` archive.
 
-If you already have a compatible runtime in another location, you can skip this step and point `MPV_HOME`, `MPV_DLL_DIR`, or a Chocolatey installation to it.
+   If you already have a compatible runtime in another location, you can skip this step and point `MPV_HOME`, `MPV_DLL_DIR`, or a Chocolatey installation to it.
 
-### 5. Run the application
+5. Run the application.
 
-```powershell
-.venv\Scripts\python.exe src/main.py
-```
+   ```powershell
+   .venv\Scripts\python.exe src/main.py
+   ```
 
 ## Usage
 
