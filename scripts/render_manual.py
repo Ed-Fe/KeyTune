@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime
 import re
 import unicodedata
 from pathlib import Path
@@ -188,6 +189,7 @@ def render_markdown(source_text: str, title: str) -> str:
     )
     body = inject_heading_ids(body, headings)
     toc_html = build_toc_html(headings)
+    generated_date = datetime.date.today().strftime("%d/%m/%Y")
 
     return f"""<!doctype html>
 <html lang="pt-BR">
@@ -204,7 +206,7 @@ def render_markdown(source_text: str, title: str) -> str:
       {toc_html}
       {body}
       <footer>
-        Gerado automaticamente a partir de Markdown no momento de criar a release.
+        Gerado em {generated_date} &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver fonte no GitHub</a>
       </footer>
     </section>
   </main>
