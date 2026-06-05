@@ -124,6 +124,14 @@ A aba **Geral** reúne as opções que controlam como o KeyTune volta a funciona
 
 Nessa mesma aba fica a seção **Associação de arquivos** (Windows). O botão **Registrar como player padrão** adiciona o KeyTune ao menu *Abrir com* para formatos de áudio, vídeo e playlists. Depois de registrar, defina o app como padrão nas configurações do Windows se quiser que esses arquivos abram diretamente no KeyTune. O botão **Desregistrar associações** desfaz esse registro.
 
+A aba **Geral** também inclui a seção **Registro de logs**:
+
+- **Registrar logs de diagnóstico**: quando ligado, o player grava um arquivo de log rotativo em disco. Útil para depurar problemas e anexar ao relato de bugs. Os logs são gravados em inglês.
+- **Nível de detalhe**: controla quanta informação é registrada. *Apenas erros* é o mais silencioso; *Depuração* é o mais detalhado e pode gerar arquivos grandes. Só fica disponível quando o registro está ativado.
+- **Abrir pasta de logs**: abre no explorador de arquivos a pasta onde os arquivos de log são salvos.
+
+Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. Os arquivos de sessões anteriores ficam em `keytune.log.1`, `.2` e `.3` na mesma pasta.
+
 ### Reprodução
 
 A aba **Reprodução** controla o comportamento de áudio e o estado inicial de novas playlists:
@@ -312,6 +320,8 @@ Se a restauração de sessão falhar, abra o app uma vez sem depender da sessão
 Se a aba do YouTube Music não carregar ou exibir erros de dependência, abra `Ctrl+,` > **Recursos adicionais** e confirme que a opção **Ativar recursos adicionais para YouTube Music e YouTube** está marcada. O download inicial pode levar alguns minutos e exige internet. Se as dependências já estiverem instaladas mas a busca ou o carregamento falharem, use a versão nightly do `yt-dlp` nas mesmas preferências — ela costuma receber correções antes do canal estável.
 
 Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção **Sessão do YouTube Music** e reconecte a conta.
+
+Para investigar outros problemas, ative o registro de logs em `Ctrl+,` > **Geral** > **Registro de logs**. Com **Registrar logs de diagnóstico** ligado e o nível ajustado para *Depuração*, o player grava informações detalhadas em `keytune.log` na pasta de dados. Use **Abrir pasta de logs** para localizar o arquivo e, se precisar reportar um problema, anexe-o à issue.
 
 ## Para desenvolvedores
 
