@@ -2,6 +2,7 @@ import wx
 
 from ..accessibility import ScreenReaderAnnouncer
 from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
+from ..log import setup_logging
 from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
 from .equalizer import FrameEqualizerMixin
@@ -32,6 +33,7 @@ class MediaPlayerFrame(
         super().__init__(None, title=APP_TITLE, size=DEFAULT_WINDOW_SIZE)
 
         self.settings = load_settings()
+        setup_logging(self.settings.logging_enabled, self.settings.logging_level)
         self._initial_paths = list(initial_paths or [])
         self._initialize_equalizer_support()
         self.current_volume = self.settings.default_volume

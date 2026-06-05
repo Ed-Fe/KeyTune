@@ -12,7 +12,9 @@ from .audio_output import (
     is_selectable_audio_output_device_id,
     normalize_audio_output_device_id,
 )
+from .log import get_logger
 
+_logger = get_logger(__name__)
 
 _mpv_module = None
 
@@ -81,9 +83,15 @@ class MPVPlayer:
         }
         if not video_output_enabled:
             player_kwargs["video"] = False
+        _logger.debug(
+            "Creating MPV player instance (video_output=%s, audio_device=%r)",
+            video_output_enabled,
+            audio_output_device_id or "(system default)",
+        )
         try:
             self._player = self._mpv.MPV(**player_kwargs)
         except Exception as exc:
+            _logger.error("Failed to create MPV player instance: %s", exc)
             raise RuntimeError(
                 "Não foi possível iniciar uma instância do MPV. "
                 f"Detalhes: {exc}"
@@ -93,6 +101,7 @@ class MPVPlayer:
         except Exception:
             pass
         self._register_callbacks()
+        _logger.info("MPV player instance created successfully")
 
     def _default_audio_output_option_value(self) -> str:
         if sys.platform.startswith("win"):
@@ -140,7 +149,9 @@ class MPVPlayer:
             end_event = getattr(event, "data", None)
             reason = getattr(end_event, "reason", None)
             self._last_end_reason = reason
+            _logger.debug("Playback end-file event (reason=%s)", reason)
             if error_reason is not None and reason == error_reason:
+                _logger.warning("MPV reported a playback error (reason=%s)", reason)
                 self._loaded_media_path = None
                 self._needs_load = True
                 self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_ERROR, event)
@@ -318,6 +329,10 @@ class MPVPlayer:
         normalized_device_id = normalize_audio_output_device_id(device_id)
         if normalized_device_id and not is_selectable_audio_output_device_id(normalized_device_id):
             normalized_device_id = ""
+        _logger.debug(
+            "Setting audio output device to %r",
+            normalized_device_id or "(system default)",
+        )
         self._set_option(
             "audio-device",
             normalized_device_id or self._default_audio_output_option_value(),

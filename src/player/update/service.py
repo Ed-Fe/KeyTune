@@ -23,6 +23,10 @@ from ..constants import (
     WINDOWS_RELEASE_CHECKSUM_NAME,
     WINDOWS_UPDATER_EXECUTABLE_NAME,
 )
+from ..log import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 UPDATE_REPOSITORY_OWNER_ENV = "MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER"
@@ -53,20 +57,26 @@ class UpdateInfo:
 
 def check_for_update() -> UpdateInfo | None:
     current_version = normalize_version(APP_VERSION)
+    _logger.info("Checking for updates (current version: %s)", current_version)
     latest_release = fetch_latest_release()
     if not is_newer_version(latest_release.latest_version, current_version):
+        _logger.info("No update available; already on latest version %s", latest_release.latest_version)
         return None
+    _logger.info("Update available: %s -> %s", current_version, latest_release.latest_version)
     return latest_release
 
 
 def fetch_latest_release() -> UpdateInfo:
     repository_owner, repository_name = _configured_update_repository()
     api_url = f"https://api.github.com/repos/{repository_owner}/{repository_name}/releases/latest"
+    _logger.debug("Fetching latest release info from: %s", api_url)
     payload = _fetch_json(api_url)
 
     tag_name = normalize_version(payload.get("tag_name") or payload.get("name") or "")
     if not tag_name:
         raise UpdateError("Não foi possível ler a versão mais recente.")
+
+    _logger.debug("Latest release tag: %s", tag_name)
 
     assets = payload.get("assets")
     if not isinstance(assets, list):
@@ -115,6 +125,11 @@ def download_release_archive(
             cancel_event=cancel_event,
         )
         os.replace(partial_path, target_path)
+        _logger.info(
+            "Release archive downloaded: %s (%s)",
+            update_info.archive_name,
+            format_byte_count(update_info.archive_size_bytes),
+        )
 
         if update_info.checksum_url:
             if progress_callback is not None:
@@ -124,6 +139,7 @@ def download_release_archive(
             if actual_checksum.lower() != expected_checksum.lower():
                 raise UpdateError("O arquivo baixado não pôde ser validado.")
 
+        _logger.info("Release archive integrity verified: %s", target_path)
         return target_path
     except Exception:
         shutil.rmtree(download_dir, ignore_errors=True)
@@ -174,7 +190,9 @@ def launch_external_updater(archive_path: str | os.PathLike[str], *, parent_pid:
             close_fds=True,
             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
+        _logger.info("External updater launched: %s", temp_updater_path)
     except OSError as exc:
+        _logger.error("Failed to launch external updater: %s", exc)
         raise UpdateError("Não foi possível abrir o atualizador.") from exc
 
 
@@ -243,8 +261,10 @@ def _fetch_json(url: str) -> dict:
         response_text = _download_text(url, accept_header="application/vnd.github+json")
         payload = json.loads(response_text)
     except error.URLError as exc:
+        _logger.warning("Network error while fetching release info: %s", exc)
         raise UpdateError("Não foi possível verificar as atualizações.") from exc
     except json.JSONDecodeError as exc:
+        _logger.warning("Failed to parse release info response: %s", exc)
         raise UpdateError("Não foi possível verificar as atualizações.") from exc
 
     if not isinstance(payload, dict):

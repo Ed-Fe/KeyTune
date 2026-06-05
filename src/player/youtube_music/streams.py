@@ -15,6 +15,10 @@ from .dependencies import (
 from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
+from ..log import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS = 10
@@ -78,6 +82,7 @@ def resolve_stream_playback(media_path):
     if not is_youtube_music_media(normalized_media_path):
         return ResolvedStreamPlayback(stream_url=normalized_media_path, http_headers={})
 
+    _logger.info("Resolving stream for: %s", sanitize_sensitive_text(normalized_media_path))
     ensure_yt_dlp_executable_available()
 
     available_js_runtimes = find_all_available_javascript_runtimes()
@@ -206,6 +211,7 @@ def resolve_stream_playback(media_path):
         ):
             _PRERELEASE_SELF_HEAL_ATTEMPTED = True
             prerelease_retry_attempted = True
+            _logger.info("Attempting stream resolution self-heal via prerelease yt-dlp update")
             try:
                 install_or_update_youtube_dependencies(force=True, include_prerelease=True)
                 resolved_playback, retry_last_error, retry_attempted_profiles = _attempt_resolution()
@@ -216,6 +222,7 @@ def resolve_stream_playback(media_path):
                     return resolved_playback
             except Exception as exc:
                 retry_error = _clean_external_tool_error(exc) or str(exc)
+                _logger.warning("Prerelease self-heal update failed: %s", retry_error)
                 if retry_error:
                     if last_error:
                         last_error = f"{last_error} Atualização avançada: {retry_error}"
@@ -229,6 +236,13 @@ def resolve_stream_playback(media_path):
         last_error,
     )
 
+    _logger.error(
+        "Stream resolution failed for %s after %d profile(s). Signals: %s. Last error: %s",
+        sanitize_sensitive_text(normalized_media_path),
+        attempted_profiles,
+        diagnostic_signals or "none",
+        last_error or "unknown",
+    )
     raise RuntimeError(
         _build_stream_resolution_error_message(
             last_error,

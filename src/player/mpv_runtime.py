@@ -127,6 +127,13 @@ def bootstrap_mpv_runtime() -> bool:
         if add_dll_directory is not None:
             add_dll_directory(str(runtime_dir))
         _cache_runtime_dir(runtime_dir)
+        _get_logger().info("MPV runtime found: %s", runtime_dir)
         return True
 
+    _get_logger().warning("MPV runtime not found on Windows; playback may not be available")
     return False
+
+
+def _get_logger():
+    from .log import get_logger
+    return get_logger(__name__)

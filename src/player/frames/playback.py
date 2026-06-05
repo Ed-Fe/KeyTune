@@ -11,9 +11,13 @@ import wx
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 from ..constants import PROGRESS_GAUGE_RANGE, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ..library import folder_display_name, is_audio_playback_media, is_remote_media_path
+from ..log import get_logger
 from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playlists import PlaylistState
 from ..remote_media_metadata import resolve_remote_media_metadata, resolve_remote_media_playback
+
+
+_logger = get_logger(__name__)
 
 
 def is_music_youtube_url(media_path):
@@ -146,6 +150,7 @@ class FramePlaybackMixin:
         self._playback_worker.start()
         self._install_audio_output_device_observer()
         self._validate_initial_audio_output_device()
+        _logger.info("Playback backend initialized")
 
     def _build_player_instance(self):
         return create_player_instance(
@@ -239,6 +244,7 @@ class FramePlaybackMixin:
         )
         self._known_audio_output_device_ids = set(available_ids)
         if newly_appeared_ids:
+            _logger.info("Audio output device(s) reappeared: %s", newly_appeared_ids)
             # Block AVRCP-style PAUSE for a short window after any device
             # reappears; covers Alexa's voice-prompt -> A2DP-resume PAUSE and
             # headphone reconnect noises.
@@ -257,6 +263,10 @@ class FramePlaybackMixin:
             # null AO without rewinding or pausing; we just rewrite the
             # ``audio-device`` selection so a future ``ao-reload`` picks up
             # the system default. The user's saved preference is preserved.
+            _logger.info(
+                "Preferred audio output device unavailable: %r; falling back to system default",
+                preferred_device_id,
+            )
             if current_device_id != "":
                 try:
                     self._apply_audio_output_device_to_players("")
@@ -268,6 +278,7 @@ class FramePlaybackMixin:
                 f"Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
             )
         elif preferred_device_id and preferred_device_id in available_ids and current_device_id != preferred_device_id:
+            _logger.info("Preferred audio output device restored: %r", preferred_device_id)
             try:
                 self._apply_audio_output_device_to_players(preferred_device_id)
                 device_swap_requested = True
@@ -486,9 +497,14 @@ class FramePlaybackMixin:
         if previous_normalized_device_id and not is_selectable_audio_output_device_id(previous_normalized_device_id):
             previous_normalized_device_id = ""
 
+        _logger.info(
+            "Changing audio output device to %r",
+            normalized_device_id or "(system default)",
+        )
         try:
             self._apply_audio_output_device_to_players(normalized_device_id)
         except Exception as exc:
+            _logger.warning("Failed to set audio output device to %r: %s", normalized_device_id, exc)
             self.settings.audio_output_device_id = previous_normalized_device_id
             try:
                 self._apply_audio_output_device_to_players(previous_normalized_device_id)
@@ -688,6 +704,7 @@ class FramePlaybackMixin:
         self._begin_pending_crossfade()
 
     def _handle_player_error(self, player_key):
+        _logger.warning("MPV playback error on player slot '%s'", player_key)
         crossfade_state = getattr(self, "_crossfade_state", None)
         if not crossfade_state or crossfade_state.get("incoming_key") != player_key:
             return

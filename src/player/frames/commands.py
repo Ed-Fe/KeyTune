@@ -3,6 +3,7 @@ import os
 import wx
 
 from ..constants import LARGE_SEEK_STEP_MS, PLAYLIST_WILDCARD
+from ..log import setup_logging
 from ..library import (
     OPEN_MODE_FOLDER_BROWSER,
     OPEN_MODE_PLAYLIST,
@@ -615,6 +616,8 @@ class FrameCommandMixin:
             self.settings = dialog.get_settings()
         finally:
             dialog.Destroy()
+
+        setup_logging(self.settings.logging_enabled, self.settings.logging_level)
 
         if not self.settings.remember_last_folder:
             self.settings.last_open_dir = ""

@@ -1,10 +1,14 @@
 from dataclasses import replace
-import sys
-
 import wx
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
+import os
+import subprocess
+import sys
+
 from ..constants import (
+    LOGGING_LEVEL_LABELS,
+    LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
@@ -13,6 +17,7 @@ from ..constants import (
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
 )
+from ..log import get_log_dir
 
 
 class PreferencesDialog(wx.Dialog):
@@ -49,6 +54,7 @@ class PreferencesDialog(wx.Dialog):
         self._build_playback_tab()
         self._build_accessibility_tab()
         self._build_additional_resources_tab()
+        self._build_diagnostics_tab()
 
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
@@ -429,6 +435,84 @@ class PreferencesDialog(wx.Dialog):
         page.SetSizer(page_sizer)
         return page, page_sizer
 
+    def _build_diagnostics_tab(self):
+        page, page_sizer = self._create_tab_page("Diagnóstico")
+
+        info_label = wx.StaticText(
+            page,
+            label=(
+                "Configure o registro de diagnóstico do player. "
+                "Os logs são gravados em inglês para facilitar o relato de problemas em issues."
+            ),
+        )
+        info_label.Wrap(520)
+
+        log_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Registro de logs"), wx.VERTICAL)
+
+        self.logging_enabled_checkbox = wx.CheckBox(page, label="Registrar &logs de diagnóstico")
+        self._configure_checkbox(
+            self.logging_enabled_checkbox,
+            "Registrar logs de diagnóstico",
+            (
+                "Quando ligado, o player grava um arquivo de log rotativo em disco. "
+                "Útil para depurar problemas e anexar ao relato de bugs."
+            ),
+        )
+        self.logging_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_logging_enabled)
+
+        log_level_group, self.logging_level_choice = self._build_choice_control_group(
+            page,
+            label_text="Nível de detalhe",
+            help_text=(
+                "Controla quanta informação é registrada. "
+                "\"Apenas erros\" é o mais silencioso; \"Depuração\" é o mais detalhado e pode gerar arquivos grandes."
+            ),
+            choices=[LOGGING_LEVEL_LABELS[lvl] for lvl in LOGGING_LEVELS],
+        )
+
+        open_log_folder_button = wx.Button(page, label="Abrir pasta de &logs")
+        open_log_folder_button.SetName("Abrir pasta de logs")
+        open_log_folder_button.SetHelpText(
+            "Abre no explorador de arquivos a pasta onde os arquivos de log são salvos."
+        )
+        open_log_folder_button.Bind(wx.EVT_BUTTON, self._on_open_log_folder)
+
+        rotation_note = wx.StaticText(
+            page,
+            label=(
+                "Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. "
+                "Os logs de sessões anteriores ficam em keytune.log.1, .2 e .3 na mesma pasta."
+            ),
+        )
+        rotation_note.Wrap(520)
+
+        log_box.Add(self.logging_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        log_box.Add(log_level_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        log_box.Add(open_log_folder_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 6)
+        log_box.Add(rotation_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+
+        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(log_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+
+        self.notebook.AddPage(page, "Diagnóstico")
+
+    def _on_toggle_logging_enabled(self, _event):
+        self._refresh_diagnostics_controls()
+
+    def _refresh_diagnostics_controls(self):
+        enabled = self.logging_enabled_checkbox.GetValue()
+        self.logging_level_choice.Enable(enabled)
+
+    def _on_open_log_folder(self, _event):
+        import os
+
+        log_dir = get_log_dir()
+        os.makedirs(log_dir, exist_ok=True)
+        if sys.platform == "win32":
+            os.startfile(log_dir)
+        else:
+            subprocess.Popen(["xdg-open", log_dir])
+
     def _configure_checkbox(self, checkbox, name, help_text):
         checkbox.SetName(name)
         checkbox.SetToolTip(help_text)
@@ -551,6 +635,13 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
+        self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
+        try:
+            logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
+        except ValueError:
+            logging_level_index = list(LOGGING_LEVELS).index("WARNING")
+        self.logging_level_choice.SetSelection(logging_level_index)
+        self._refresh_diagnostics_controls()
 
         repeat_mode_index = REPEAT_MODES.index(settings.repeat_mode_new_playlists)
         self.repeat_mode_choice.SetSelection(repeat_mode_index)
@@ -596,6 +687,11 @@ class PreferencesDialog(wx.Dialog):
 
         if not settings.remember_last_folder:
             settings.last_open_dir = ""
+
+        settings.logging_enabled = self.logging_enabled_checkbox.GetValue()
+        selected_level_index = self.logging_level_choice.GetSelection()
+        if 0 <= selected_level_index < len(LOGGING_LEVELS):
+            settings.logging_level = LOGGING_LEVELS[selected_level_index]
 
         return settings
 

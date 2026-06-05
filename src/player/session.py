@@ -1,7 +1,9 @@
 import json
+import logging
 import os
 
 
+_logger = logging.getLogger("keytune.session")
 SESSION_FILE_NAME = "session.json"
 APP_STORAGE_DIR = "KeyTune"
 _LEGACY_APP_STORAGE_DIR = APP_STORAGE_DIR + "".join(("V", "L", "C"))
@@ -34,11 +36,15 @@ def load_session():
     try:
         with open(session_path, "r", encoding="utf-8") as session_file:
             return json.load(session_file)
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError) as exc:
+        _logger.warning("Failed to load session from %s: %s", session_path, exc)
         return None
 
 
 def save_session(payload):
     session_path = os.path.join(get_app_storage_dir(), SESSION_FILE_NAME)
-    with open(session_path, "w", encoding="utf-8") as session_file:
-        json.dump(payload, session_file, ensure_ascii=False, indent=2)
+    try:
+        with open(session_path, "w", encoding="utf-8") as session_file:
+            json.dump(payload, session_file, ensure_ascii=False, indent=2)
+    except OSError as exc:
+        _logger.error("Failed to save session to %s: %s", session_path, exc)

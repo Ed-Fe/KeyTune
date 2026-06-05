@@ -27,6 +27,10 @@ from .playlists import (
 )
 from .search import normalize_music_search_results, search_youtube_videos
 from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_music_stream_playback
+from ..log import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class YouTubeMusicAuthValidationError(RuntimeError):
@@ -256,6 +260,7 @@ class YouTubeMusicService:
             removed = True
         except FileNotFoundError:
             pass
+        _logger.info("YouTube Music disconnected (auth files removed=%s)", removed)
         return removed
 
     def save_browser_auth(self, headers_raw=None, source_file_path=None):
@@ -295,6 +300,7 @@ class YouTubeMusicService:
         )
         harden_sensitive_file_permissions(target_cookie_file_path)
         self.clear_client_cache()
+        _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
 
     def get_account_info(self):
@@ -305,6 +311,7 @@ class YouTubeMusicService:
         try:
             account_info = client.get_account_info()
         except Exception as exc:
+            _logger.warning("Failed to retrieve YouTube Music account info: %s", exc)
             self.clear_client_cache()
             if _is_probably_invalid_saved_auth_error(exc):
                 raise InvalidYouTubeMusicAuthError() from exc
@@ -316,6 +323,10 @@ class YouTubeMusicService:
             )
 
         self._account_info = account_info
+        _logger.debug(
+            "YouTube Music account info retrieved: %s",
+            str(account_info.get("accountName") or account_info.get("channelHandle") or "(unknown)"),
+        )
         return account_info
 
     def get_connected_account_name(self):
@@ -546,8 +557,10 @@ class YouTubeMusicService:
         normalized_media_path = self._normalize_stream_cache_key(media_path)
         cached_stream_playback = self.get_cached_stream_playback(normalized_media_path)
         if cached_stream_playback is not None:
+            _logger.debug("Stream cache hit for: %s", normalized_media_path)
             return cached_stream_playback
 
+        _logger.debug("Stream cache miss; delegating resolution for: %s", normalized_media_path)
         resolved_stream_playback = resolve_music_stream_playback(normalized_media_path)
         return self._cache_stream_playback(normalized_media_path, resolved_stream_playback)
 

@@ -7,6 +7,8 @@ from ..constants import (
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
     DEFAULT_CROSSFADE_SECONDS,
     DEFAULT_DISABLE_VIDEO_OUTPUT,
+    DEFAULT_LOGGING_ENABLED,
+    DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
@@ -18,6 +20,7 @@ from ..constants import (
     DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES,
     DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP,
+    LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
@@ -59,6 +62,8 @@ class AppSettings:
     recent_folders: list[str] = field(default_factory=list)
     recent_playlists: list[str] = field(default_factory=list)
     equalizer_custom_presets: list[EqualizerPreset] = field(default_factory=list)
+    logging_enabled: bool = DEFAULT_LOGGING_ENABLED
+    logging_level: str = DEFAULT_LOGGING_LEVEL
 
     @property
     def seek_step_ms(self):
@@ -94,6 +99,8 @@ class AppSettings:
             "recent_folders": list(self.recent_folders),
             "recent_playlists": list(self.recent_playlists),
             "equalizer_custom_presets": [preset.to_dict() for preset in self.equalizer_custom_presets],
+            "logging_enabled": self.logging_enabled,
+            "logging_level": self.logging_level,
         }
 
     @classmethod
@@ -176,6 +183,9 @@ class AppSettings:
         settings.recent_folders = _string_list(data.get("recent_folders"))
         settings.recent_playlists = _string_list(data.get("recent_playlists"))
         settings.equalizer_custom_presets = _equalizer_preset_list(data.get("equalizer_custom_presets"))
+        settings.logging_enabled = bool(data.get("logging_enabled", settings.logging_enabled))
+        raw_logging_level = str(data.get("logging_level") or "").upper()
+        settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL
         return settings
 
 

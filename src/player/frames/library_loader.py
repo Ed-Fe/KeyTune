@@ -10,7 +10,11 @@ from ..library import (
     load_playlist,
     scan_folder_contents,
 )
+from ..log import get_logger
 from ..playlists import PlaylistState, build_folder_tab_title
+
+
+_logger = get_logger(__name__)
 
 
 class FrameLibraryLoaderMixin:
@@ -103,6 +107,7 @@ class FrameLibraryLoaderMixin:
                 media_browser_labels = []
                 folder_entry_index_map = {}
                 error_message = str(exc)
+                _logger.warning("OS error loading folder %r: %s", request["folder_path"], exc)
             except Exception as exc:
                 folder_entries = []
                 media_files = []
@@ -110,6 +115,7 @@ class FrameLibraryLoaderMixin:
                 media_browser_labels = []
                 folder_entry_index_map = {}
                 error_message = f"Falha inesperada ao carregar a pasta: {exc}."
+                _logger.error("Unexpected error loading folder %r: %s", request["folder_path"], exc, exc_info=True)
 
             if self._library_stop_event.is_set():
                 return
@@ -137,11 +143,13 @@ class FrameLibraryLoaderMixin:
                 item_index_map = {}
                 browser_item_labels = []
                 error_message = str(exc)
+                _logger.warning("OS error loading folder playlist %r: %s", request["folder_path"], exc)
             except Exception as exc:
                 media_files = []
                 item_index_map = {}
                 browser_item_labels = []
                 error_message = f"Falha inesperada ao carregar a pasta: {exc}."
+                _logger.error("Unexpected error loading folder playlist %r: %s", request["folder_path"], exc, exc_info=True)
 
             if self._library_stop_event.is_set():
                 return

@@ -6,13 +6,13 @@ running instance and exits.  If no pipe exists, a background listener is
 started so future launches can forward their paths here.
 """
 
-import logging
 import threading
 from multiprocessing.connection import Client, Listener
 
 from .constants import APP_TITLE
+from .log import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 _PIPE_ADDRESS = rf"\\.\pipe\{APP_TITLE}_SingleInstance"
 _PIPE_AUTH_KEY = b"keytune-single-instance"
