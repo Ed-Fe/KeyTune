@@ -38,6 +38,10 @@ jobs:
         run: |
           pyinstaller --noconfirm --onefile --windowed --name KeyTuneUpdater src/updater_main.py
 
+      - name: Download MPV runtime
+        run: |
+          python scripts/download_mpv_runtime.py --output-dir build\mpv-runtime
+
       - name: Bundle updater into dist
         shell: powershell
         run: |
@@ -51,47 +55,20 @@ jobs:
         run: |
           python scripts/render_manual.py docs/manual.md dist\KeyTune\docs\manual.html
 
-      - name: Download libmpv runtime
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
-          $release = Invoke-RestMethod -Headers @{ "User-Agent" = "GitHub-Actions" } -Uri "https://api.github.com/repos/zhongfly/mpv-winbuild/releases/latest"
-          $preferredAssetPattern = '^mpv-dev-x86_64-\d{8}-git-[0-9a-f]+\.7z$'
-          $asset = $release.assets |
-            Where-Object { $_.name -match $preferredAssetPattern } |
-            Sort-Object -Property name -Descending |
-            Select-Object -First 1
-
-          if (-not $asset) {
-            $availableAssets = ($release.assets | Select-Object -ExpandProperty name) -join ', '
-            throw "Não foi possível localizar um asset compatível com o padrão '$preferredAssetPattern' na release mais recente do mpv-winbuild. Assets disponíveis: $availableAssets"
-          }
-
-          New-Item -Path "build\mpv-runtime" -ItemType Directory -Force | Out-Null
-          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "build\mpv-runtime\libmpv.7z"
-          & 7z x "build\mpv-runtime\libmpv.7z" "-obuild\mpv-runtime\extracted" -y | Out-Null
-
       - name: Bundle MPV runtime into dist
         shell: powershell
         run: |
-          $mpvDll = Get-ChildItem -Path "build\mpv-runtime\extracted" -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
-            Select-Object -First 1
-          if (-not $mpvDll) {
-            throw "Runtime libmpv não encontrado nos arquivos baixados do mpv-winbuild"
-          }
-
-          $mpvSource = $mpvDll.Directory.FullName
           $targetRoot = "dist\KeyTune\mpv"
           New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null
-          Copy-Item -Path "$mpvSource\*" -Destination $targetRoot -Recurse -Force
+          Copy-Item -Path "build\mpv-runtime\*" -Destination $targetRoot -Recurse -Force
 
           $licenseDir = "dist\KeyTune\THIRD_PARTY_LICENSES"
           New-Item -Path $licenseDir -ItemType Directory -Force | Out-Null
 
           $possibleLicenseFiles = @(
-            "$mpvSource\LICENSE.txt",
-            "$mpvSource\COPYING.txt",
-            "$mpvSource\COPYING"
+            "build\mpv-runtime\LICENSE.txt",
+            "build\mpv-runtime\COPYING.txt",
+            "build\mpv-runtime\COPYING"
           )
 
           foreach ($file in $possibleLicenseFiles) {

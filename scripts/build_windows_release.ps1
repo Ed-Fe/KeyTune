@@ -14,31 +14,6 @@ function Write-Step {
     Write-Host "==> $Message" -ForegroundColor Cyan
 }
 
-function Require-Command {
-    param(
-        [string]$Cmd,
-        [string]$Description
-    )
-
-    if (-not (Get-Command $Cmd -ErrorAction SilentlyContinue)) {
-        throw "$Description não encontrado: $Cmd. Certifique-se que está instalado e disponível no PATH."
-    }
-}
-
-function Resolve-7ZipCommand {
-    $command = Get-Command "7z" -ErrorAction SilentlyContinue
-    if ($command) {
-        return $command.Source
-    }
-
-    $defaultPath = "C:\Program Files\7-Zip\7z.exe"
-    if (Test-Path $defaultPath) {
-        return $defaultPath
-    }
-
-    throw "7-Zip (7z) nao encontrado. Certifique-se que esta instalado e disponivel no PATH, ou em '$defaultPath'."
-}
-
 function Require-Path {
     param(
         [string]$Path,
@@ -50,68 +25,8 @@ function Require-Path {
     }
 }
 
-function Resolve-MpvSource {
-    param(
-        [string]$PreferredPath,
-        [string]$PreferredArchive
-    )
-
-    if ($PreferredPath -and (Test-Path $PreferredPath)) {
-        return (Resolve-Path $PreferredPath).Path
-    }
-
-    if ($PreferredArchive -and (Test-Path $PreferredArchive)) {
-        $extractRoot = Join-Path $repoRoot "build\mpv-runtime"
-        Remove-Item -Path $extractRoot -Recurse -Force -ErrorAction SilentlyContinue
-        New-Item -Path $extractRoot -ItemType Directory -Force | Out-Null
-        & $script:SevenZipExe x $PreferredArchive "-o$extractRoot" -y | Out-Null
-        $mpvDll = Get-ChildItem -Path $extractRoot -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
-            Select-Object -First 1
-        if ($mpvDll) {
-            return $mpvDll.Directory.FullName
-        }
-    }
-
-    # Se não foi fornecido source/archive, tentar baixar o runtime mais recente do mpv-winbuild
-    try {
-        Write-Step "Tentando baixar runtime do mpv-winbuild (se disponível)"
-        $release = Invoke-RestMethod -Headers @{ "User-Agent" = "GitHub-Actions" } -Uri "https://api.github.com/repos/zhongfly/mpv-winbuild/releases/latest"
-        $preferredAssetPattern = '^mpv-dev-x86_64-\d{8}-git-[0-9a-f]+\.7z$'
-        $asset = $release.assets |
-            Where-Object { $_.name -match $preferredAssetPattern } |
-            Sort-Object -Property name -Descending |
-            Select-Object -First 1
-
-        if ($asset) {
-            $extractRoot = Join-Path $repoRoot "build\mpv-runtime"
-            New-Item -Path $extractRoot -ItemType Directory -Force | Out-Null
-            $outFile = Join-Path $extractRoot "libmpv.7z"
-            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $outFile
-            & $script:SevenZipExe x $outFile "-o$extractRoot\extracted" -y | Out-Null
-            $mpvDll = Get-ChildItem -Path "$extractRoot\extracted" -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
-                Select-Object -First 1
-            if ($mpvDll) {
-                return $mpvDll.Directory.FullName
-            }
-        }
-    } catch {
-        Write-Host "Aviso: falha ao tentar baixar runtime do mpv-winbuild: $_" -ForegroundColor Yellow
-    }
-
-    $mpvDll = Get-ChildItem -Path "C:\ProgramData\chocolatey\lib" -Filter "libmpv-2.dll" -Recurse -ErrorAction SilentlyContinue |
-        Select-Object -First 1
-    if ($mpvDll) {
-        return $mpvDll.Directory.FullName
-    }
-
-    throw "Runtime do MPV não encontrado. Informe -MpvSource apontando para uma pasta com libmpv-2.dll ou -MpvRuntimeArchive com um arquivo mpv-dev-*.7z."
-}
-
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
-
-# Verifica se 7z está disponível (utilizado para extrair runtimes .7z)
-$script:SevenZipExe = Resolve-7ZipCommand
 
 Write-Step "Validando pré-requisitos"
 Require-Path -Path $PythonExe -Description "Python do ambiente virtual"
@@ -141,7 +56,18 @@ Remove-Item -Path "dist" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $ArchiveName -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "$ArchiveName.sha256" -Force -ErrorAction SilentlyContinue
 
-$MpvSource = Resolve-MpvSource -PreferredPath $MpvSource -PreferredArchive $MpvRuntimeArchive
+Write-Step "Baixando runtime do MPV"
+$mpvScriptArgs = @("scripts\download_mpv_runtime.py", "--output-dir", "build\mpv-runtime")
+if ($MpvSource) {
+    $mpvScriptArgs += @("--source-path", $MpvSource)
+}
+if ($MpvRuntimeArchive) {
+    $mpvScriptArgs += @("--source-archive", $MpvRuntimeArchive)
+}
+& $PythonExe @mpvScriptArgs
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao baixar ou extrair o runtime do MPV."
+}
 
 Write-Step "Gerando executável principal"
 & $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
@@ -171,16 +97,17 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Step "Copiando runtime do MPV"
+$MpvRuntimeDir = "build\mpv-runtime"
 $targetRoot = "dist\KeyTune\mpv"
 New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null
-Copy-Item -Path "$MpvSource\*" -Destination $targetRoot -Recurse -Force
+Copy-Item -Path "$MpvRuntimeDir\*" -Destination $targetRoot -Recurse -Force
 
 $licenseDir = "dist\KeyTune\THIRD_PARTY_LICENSES"
 New-Item -Path $licenseDir -ItemType Directory -Force | Out-Null
 $possibleLicenseFiles = @(
-    "$MpvSource\LICENSE.txt",
-    "$MpvSource\COPYING.txt",
-    "$MpvSource\COPYING"
+    "$MpvRuntimeDir\LICENSE.txt",
+    "$MpvRuntimeDir\COPYING.txt",
+    "$MpvRuntimeDir\COPYING"
 )
 
 foreach ($file in $possibleLicenseFiles) {

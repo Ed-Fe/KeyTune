@@ -26,7 +26,7 @@ KeyTune is ready for the `1.0.0` Windows release candidate, with the main playba
 
 - Python 3.10 or newer
 - `python-mpv` installed in the active Python environment
-- A libmpv runtime available in a local `mpv/` folder or via `MPV_HOME`/`PATH` (development mode)
+- A libmpv runtime available in a local `mpv/` folder, via `MPV_HOME` or `MPV_DLL_DIR`, or in a common Chocolatey install path
 
 ## Manual do usuário
 
@@ -69,16 +69,17 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-On Windows development setups, you can also install the runtime with Chocolatey:
+### 4. Download the MPV runtime for development
 
 ```powershell
-choco install mpvio.install --yes
+python scripts/download_mpv_runtime.py
 ```
 
-> **Importante:** esse pacote normalmente instala `mpv.exe`, mas pode não incluir `libmpv-2.dll`, que é o que o `python-mpv` usa.
-> Para desenvolvimento local, prefira baixar um pacote `mpv-dev-*.7z` (por exemplo do projeto `zhongfly/mpv-winbuild`) e extrair a pasta com `libmpv-2.dll` para `./mpv/`, ou definir `MPV_HOME` apontando para essa pasta.
+Esse helper baixa a release mais recente do `mpv-winbuild`, extrai a pasta que contém `libmpv-2.dll` e a grava em `./mpv/` por padrão. Ele depende do `7z`/7-Zip para desempacotar o arquivo `.7z`.
 
-### 4. Run the application
+Se você já tiver um runtime compatível em outro caminho, pode pular essa etapa e deixar o `MPV_HOME`, `MPV_DLL_DIR` ou o cache do Chocolatey apontarem para ele.
+
+### 5. Run the application
 
 ```bash
 .venv\Scripts\python.exe src/main.py
@@ -92,15 +93,15 @@ When triggered (manually or by pushing a tag like `v1.2.3`), it will:
 
 1. Build the app with PyInstaller
 2. Build the external updater with PyInstaller
-3. Copy the updater to the release folder
-4. Install MPV on the runner
+3. Download the MPV runtime with `scripts/download_mpv_runtime.py`
+4. Copy the updater to the release folder
 5. Copy the MPV runtime to `dist/KeyTune/mpv`
 6. Create `KeyTune-windows.zip`
 7. Generate `KeyTune-windows.zip.sha256`
 8. Upload the files as workflow artifacts
 9. Attach the files to the GitHub Release when running on a tag
 
-The app startup now looks for a local `mpv/` folder before creating the playback backend, so the release can run on machines without MPV pre-installed.
+The app startup now looks for a local `mpv/` folder before creating the playback backend, and both the Windows build script and the GitHub workflow use the shared MPV download helper to populate that folder.
 The Windows package also includes `KeyTuneUpdater.exe`, used by the app to apply downloaded updates after the user confirms the installation.
 
 For a repeatable end-to-end updater test flow before publishing a release, see `docs/update-testing.md`.
@@ -184,6 +185,7 @@ If you want to help:
 - Keep user-facing text in Portuguese unless the project direction changes
 - Preserve keyboard-first behavior and accessibility flows
 - Try not to introduce mouse-only interactions
+- Use `scripts/download_mpv_runtime.py` to populate `mpv/` during local development instead of manual MPV extraction
 
 ### Quick validation
 

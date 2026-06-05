@@ -26,7 +26,7 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 
 ## Preparando uma build local
 
-1. Confirme que o runtime `libmpv` está disponível localmente, apontando `-MpvSource` para uma pasta com `libmpv-2.dll` ou `-MpvRuntimeArchive` para um arquivo `mpv-dev-*.7z`.
+1. Confirme que `7-Zip` está disponível na máquina, porque o helper compartilhado do MPV descompacta o runtime.
 2. Confirme que o ambiente virtual tem `PyInstaller` disponível.
 3. Gere a release local com o script:
 
@@ -34,7 +34,9 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1
 ```
 
-Por padrão, o script também baixa o `yt-dlp.exe` oficial do canal estável e o embute ao lado do `KeyTune.exe`. Para testar uma release local já com o canal nightly do yt-dlp, use:
+Por padrão, o build script agora baixa e descompacta automaticamente o runtime do MPV por meio de `scripts/download_mpv_runtime.py`, e depois baixa o `yt-dlp.exe` oficial do canal estável e o embute ao lado do `KeyTune.exe`.
+
+Se quiser fixar o runtime do MPV a uma pasta local ou a um arquivo `.7z`, passe `-MpvSource` ou `-MpvRuntimeArchive` para o build script. Para testar uma release local já com o canal nightly do yt-dlp, use:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -YtDlpChannel nightly
