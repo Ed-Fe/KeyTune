@@ -236,10 +236,10 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
 
 - **Campo de busca**: digite o que deseja procurar e pressione `Enter` ou clique em **Pesquisar**.
 - **Escopo**: escolhe onde a busca será feita. As opções disponíveis são:
-  - *YouTube Music — músicas*: faixas do catálogo do YouTube Music.
-  - *YouTube Music — vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
-  - *YouTube Music — playlists*: playlists do catálogo do YouTube Music.
-  - *YouTube — vídeos*: vídeos do YouTube em geral, sem exigir conta.
+    - *YouTube Music — músicas*: faixas do catálogo do YouTube Music.
+    - *YouTube Music — vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
+    - *YouTube Music — playlists*: playlists do catálogo do YouTube Music.
+    - *YouTube — vídeos*: vídeos do YouTube em geral, sem exigir conta.
 - **Lista de resultados**: mostra os itens encontrados. `Enter` adiciona a seleção à playlist atual; duplo clique abre em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual com opções adicionais.
 - **Salvar no Music**: salva a seleção na biblioteca do YouTube Music quando o resultado for compatível (playlists ou faixas).
 
