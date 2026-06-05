@@ -114,6 +114,7 @@ class FrameUIMixin:
             "Reprodução\n"
             "Espaço — Play/Pause\n"
             "Seta esquerda / direita — Voltar ou avançar no arquivo\n"
+            "Shift+Seta esquerda / direita — Voltar ou avançar 1 minuto\n"
             "Home / End — Ir para o início ou para o fim\n"
             "Seta cima / baixo — Aumentar ou diminuir o volume\n"
             "Menu Reprodução > Dispositivo de áudio — Trocar a saída de som\n"

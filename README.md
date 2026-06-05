@@ -110,6 +110,7 @@ For a repeatable end-to-end updater test flow before publishing a release, see `
 
 - `Space`: play / pause
 - `Left` / `Right`: seek backward / forward
+- `Shift+Left` / `Shift+Right`: seek backward / forward 1 minute
 - `Up` / `Down`: volume down / up
 - `Home` / `End`: jump to start / end of the current media
 - `Ctrl+T`: new playlist tab

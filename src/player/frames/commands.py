@@ -2,7 +2,7 @@ import os
 
 import wx
 
-from ..constants import PLAYLIST_WILDCARD
+from ..constants import LARGE_SEEK_STEP_MS, PLAYLIST_WILDCARD
 from ..library import (
     OPEN_MODE_FOLDER_BROWSER,
     OPEN_MODE_PLAYLIST,
@@ -945,6 +945,14 @@ class FrameCommandMixin:
 
         if key_code == wx.WXK_END:
             self._seek_to_end()
+            return
+
+        if not event.ControlDown() and event.ShiftDown() and key_code == wx.WXK_LEFT:
+            self._seek_relative(-LARGE_SEEK_STEP_MS)
+            return
+
+        if not event.ControlDown() and event.ShiftDown() and key_code == wx.WXK_RIGHT:
+            self._seek_relative(LARGE_SEEK_STEP_MS)
             return
 
         if key_code == wx.WXK_LEFT:

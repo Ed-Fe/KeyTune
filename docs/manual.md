@@ -66,6 +66,7 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 
 - `Espaço`: reproduzir ou pausar
 - `Seta esquerda` / `Seta direita`: voltar ou avançar na mídia atual
+- `Shift+Seta esquerda` / `Shift+Seta direita`: voltar ou avançar 1 minuto na mídia atual
 - `Home` / `End`: ir para o início ou para o fim da mídia
 - `Seta cima` / `Seta baixo`: aumentar ou diminuir o volume
 - `Ctrl+.`: parar a reprodução
