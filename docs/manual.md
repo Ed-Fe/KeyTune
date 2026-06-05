@@ -2,6 +2,8 @@
 
 O KeyTune é um player de mídia feito para uso por teclado e com foco em acessibilidade. Ele foi pensado para funcionar bem com playlists, navegação por pastas e para manter o que você estava fazendo entre uma abertura e outra.
 
+Este projeto foi desenvolvido com assistência de IA, incluindo GitHub Copilot e Codex da OpenAI.
+
 Este manual apresenta os recursos principais do aplicativo e as ações mais comuns para começar a usar o player com rapidez.
 
 ## O que o KeyTune oferece
@@ -219,6 +221,8 @@ O KeyTune inclui 18 presets prontos para uso:
 O KeyTune inclui uma aba dedicada ao YouTube Music. Use `Ctrl+Shift+Y` para abri-la. Ela funciona como uma aba separada, então você pode deixar a biblioteca local em uma aba e o YouTube Music em outra.
 
 Para que a aba funcione, é necessário ativar a integração em `Ctrl+,` > **Recursos adicionais** e conectar uma conta.
+
+A integração do YouTube Music depende da forma como o site muda e de como o `yt-dlp` interpreta essas páginas. Por isso, pode haver erros, falhas temporárias e até paradas sem explicação aparente; quando isso acontecer, normalmente é preciso atualizar as dependências ou tentar novamente mais tarde.
 
 ### Conta e biblioteca
 

@@ -191,6 +191,13 @@ def render_markdown(source_text: str, title: str) -> str:
     toc_html = build_toc_html(headings)
     generated_date = datetime.date.today().strftime("%d/%m/%Y")
 
+    if toc_html:
+        first_section_match = re.search(r"<h2\b", body)
+        if first_section_match:
+            body = f"{body[:first_section_match.start()]}{toc_html}{body[first_section_match.start():]}"
+        else:
+            body = f"{body}{toc_html}"
+
     return f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -203,7 +210,6 @@ def render_markdown(source_text: str, title: str) -> str:
   <main>
     <section class="card">
       <h1>{escape(title)}</h1>
-      {toc_html}
       {body}
       <footer>
         Gerado em {generated_date} &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver fonte no GitHub</a>
