@@ -152,12 +152,16 @@ class YouTubeMediaSearchResult:
     def can_save(self):
         if self.source != YOUTUBE_SEARCH_SOURCE_MUSIC:
             return False
-        return bool(self.playlist_id or self.video_id or self.feedback_add_token)
+        if self.result_type == "playlist":
+            return bool(self.playlist_id)
+        if self.result_type == "song":
+            return bool(self.feedback_add_token or self.feedback_remove_token)
+        return False
 
     @property
     def save_action_label(self):
         if self.result_type == "playlist":
             return "Salvar playlist na biblioteca"
-        if self.result_type == "song" and self.feedback_add_token:
+        if self.result_type == "song":
             return "Salvar faixa na biblioteca"
-        return "Curtir no YouTube Music"
+        return ""

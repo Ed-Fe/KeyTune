@@ -5,7 +5,7 @@ from .models import YOUTUBE_SEARCH_SCOPE_OPTIONS
 
 
 class YouTubeMusicTabPanel(wx.Panel):
-	DEFAULT_SAVE_SEARCH_RESULT_LABEL = "&Salvar / curtir no Music"
+	DEFAULT_SAVE_SEARCH_RESULT_LABEL = "&Salvar no Music"
 
 	def __init__(
 		self,
@@ -144,7 +144,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 			search_pane_window,
 			label=(
 				"Pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube. "
-				"Você pode abrir resultados, salvar playlists ou faixas no Music e adicionar resultados à playlist selecionada."
+				"Você pode salvar playlists ou faixas no Music e adicionar resultados a uma playlist do player."
 			),
 		)
 		search_intro.Wrap(620)
@@ -191,25 +191,19 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.search_results_list = wx.ListBox(search_pane_window, style=wx.LB_EXTENDED)
 		self.search_results_list.SetName("Resultados da busca do YouTube")
 		self.search_results_list.SetHelpText(
-			"Mostra os resultados da última busca. Use setas para navegar e Enter para abrir ou tocar o resultado selecionado."
+			"Mostra os resultados da última busca. Use setas para navegar, Enter para adicionar a seleção à playlist atual e Shift+F10 para abrir o menu de ações."
 		)
 		self.search_results_list.SetMinSize((-1, 180))
 
 		search_actions = wx.BoxSizer(wx.HORIZONTAL)
-		self.open_search_result_button = wx.Button(search_pane_window, label="Abr&ir / tocar resultado")
 		self.save_search_result_button = wx.Button(search_pane_window, label=self.DEFAULT_SAVE_SEARCH_RESULT_LABEL)
 		self.search_actions_button = wx.Button(search_pane_window, label="Ações...")
 
 		for button, name, description in (
 			(
-				self.open_search_result_button,
-				"Abrir ou tocar resultado da busca",
-				"Abre a playlist selecionada ou toca imediatamente a música ou o vídeo destacado nos resultados da busca.",
-			),
-			(
 				self.save_search_result_button,
-				"Salvar ou curtir resultado no YouTube Music",
-				"Salva playlists ou faixas na biblioteca do YouTube Music, ou marca o resultado como curtido quando isso for mais apropriado.",
+				"Salvar resultado no YouTube Music",
+				"Salva playlists ou faixas na biblioteca do YouTube Music quando o resultado for compatível.",
 			),
 			(
 				self.search_actions_button,
@@ -225,8 +219,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		search_help_label = wx.StaticText(
 			search_pane_window,
 			label=(
-				"Enter no campo de busca executa a pesquisa. Enter na lista abre o resultado atual. "
-				"Use Shift+F10 ou o botão Ações para abrir o menu contextual da seleção."
+				"Enter no campo de busca executa a pesquisa. Enter na lista adiciona a seleção à playlist atual. "
+				"Use Shift+F10 ou o botão Ações para abrir o menu contextual da seleção. Duplo clique abre a seleção em nova playlist."
 			),
 		)
 		search_help_label.Wrap(620)
@@ -334,7 +328,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.open_selected_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_selected())
 		self.manual_open_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_manual_source())
 		self.search_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_search())
-		self.open_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_search_result())
 		self.save_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_save_search_result())
 		self.search_actions_button.Bind(wx.EVT_BUTTON, self._on_search_actions_button)
 		self.load_more_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_load_more_playlists())
@@ -470,8 +463,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			return "&Salvar playlist na biblioteca"
 		if label == "Salvar faixa na biblioteca":
 			return "Salvar &faixa na biblioteca"
-		if label == "Curtir no YouTube Music":
-			return "&Curtir no YouTube Music"
 		return label or self.DEFAULT_SAVE_SEARCH_RESULT_LABEL
 
 	def _update_search_actions(self):
@@ -479,15 +470,11 @@ class YouTubeMusicTabPanel(wx.Panel):
 		selected_results = self.get_selected_search_results()
 		selected_result = selected_results[0] if selected_results else None
 		selected_result_count = len(selected_results)
-		selected_playlist_id = self.get_selected_playlist_id()
 
 		self.search_button.Enable(bool(search_query) and not self._operation_in_progress)
-		self.open_search_result_button.Enable(
-			bool(selected_result and selected_result.can_open and not self._operation_in_progress)
-		)
 
 		save_button_label = (
-			"&Salvar / curtir seleção"
+			"&Salvar seleção no Music"
 			if selected_result_count > 1
 			else self._mnemonic_save_action_label(selected_result)
 		)

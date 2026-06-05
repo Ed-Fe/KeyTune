@@ -90,6 +90,18 @@ class YouTubeMusicSearchHelperTests(unittest.TestCase):
         self.assertFalse(playlist_result.can_add_to_playlist)
         self.assertEqual(playlist_result.save_action_label, "Salvar playlist na biblioteca")
 
+    def test_video_search_result_cannot_be_saved_from_search(self):
+        result = YouTubeMediaSearchResult(
+            source="youtube_music",
+            result_type="video",
+            title="Vídeo de teste",
+            video_id="abc123DEF45",
+            playback_url=build_watch_url("abc123DEF45"),
+        )
+
+        self.assertFalse(result.can_save)
+        self.assertEqual(result.save_action_label, "")
+
     def test_get_search_scope_option_falls_back_to_music_songs(self):
         self.assertEqual(
             get_search_scope_option("scope-inexistente").scope_id,

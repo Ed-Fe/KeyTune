@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.frames.youtube_music import FrameYouTubeMusicMixin
 import player.frames.youtube_music as youtube_music_frame_module
+from player.playlists import PlaylistState, ScreenTabState
 from player.youtube_music.service import InvalidYouTubeMusicAuthError, TemporaryYouTubeMusicAuthError
 
 
@@ -39,6 +40,9 @@ class _DummyFrame(FrameYouTubeMusicMixin):
         self.connect_calls = 0
         self.youtube_dependency_update_calls: list[tuple[bool, bool]] = []
         self.youtube_screen_refresh_calls = 0
+        self.playlists = []
+        self.active_playlist_index = 0
+        self._current_tab_index = 0
 
     def _get_youtube_music_service(self):
         return self._youtube_music_service
@@ -62,6 +66,20 @@ class _DummyFrame(FrameYouTubeMusicMixin):
     def _start_youtube_music_dependency_update(self, force_update=False, manual=False, announce_start=False):
         self.youtube_dependency_update_calls.append((bool(force_update), bool(manual)))
         return True
+
+    def _get_current_tab_index(self):
+        return self._current_tab_index
+
+    def _get_active_playlist_index(self):
+        return self.active_playlist_index
+
+    def _get_playlist_state(self, index=None):
+        if index is None or index == -1:
+            index = self._current_tab_index
+        if not 0 <= index < len(self.playlists):
+            return None
+        state = self.playlists[index]
+        return state if isinstance(state, PlaylistState) else None
 
 
 class YouTubeMusicFrameTests(unittest.TestCase):
@@ -250,6 +268,29 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         )
         self.assertEqual(frame.youtube_screen_refresh_calls, 1)
         service.has_saved_browser_auth.assert_not_called()
+
+    def test_search_playlist_tab_targets_only_include_playlist_tabs(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+        frame.playlists = [
+            ScreenTabState(title="YouTube Music", screen_id="youtube_music"),
+            PlaylistState(title="Minha playlist"),
+            PlaylistState(title="Pasta", tab_type="folder"),
+            PlaylistState(title="Carregando", is_loading=True),
+            PlaylistState(title="Lista ativa"),
+        ]
+        frame._current_tab_index = 0
+        frame.active_playlist_index = 4
+
+        targets = frame._youtube_music_search_playlist_tab_targets()
+
+        self.assertEqual(
+            [(target["index"], target["label"]) for target in targets],
+            [
+                (1, "Minha playlist"),
+                (4, "Lista ativa (playlist ativa)"),
+            ],
+        )
 
 
 if __name__ == "__main__":

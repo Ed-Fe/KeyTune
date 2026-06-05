@@ -479,7 +479,6 @@ class YouTubeMusicService:
 
         result_type = str(getattr(search_result, "result_type", "") or "").strip().lower()
         playlist_id = str(getattr(search_result, "playlist_id", "") or "").strip()
-        video_id = str(getattr(search_result, "video_id", "") or "").strip()
         feedback_add_token = str(getattr(search_result, "feedback_add_token", "") or "").strip()
         feedback_remove_token = str(getattr(search_result, "feedback_remove_token", "") or "").strip()
 
@@ -496,10 +495,6 @@ class YouTubeMusicService:
             if feedback_add_token:
                 client.edit_song_library_status([feedback_add_token])
                 return "Faixa salva na biblioteca do YouTube Music."
-
-        if video_id:
-            client.rate_song(video_id, LikeStatus.LIKE)
-            return "Resultado curtido no YouTube Music."
 
         raise RuntimeError("O resultado selecionado não pode ser salvo no YouTube Music.")
 
@@ -529,20 +524,6 @@ class YouTubeMusicService:
         if like_status == LikeStatus.DISLIKE:
             return "Mídia atual marcada como não gostei no YouTube Music."
         return "Avaliação da mídia atual removida no YouTube Music."
-
-    def add_search_result_to_playlist(self, search_result, target_playlist_id):
-        client = self.get_client()
-
-        normalized_target_playlist_id = str(target_playlist_id or "").strip()
-        if not normalized_target_playlist_id:
-            raise RuntimeError("Selecione uma playlist de destino do YouTube Music.")
-
-        video_id = str(getattr(search_result, "video_id", "") or "").strip()
-        if not video_id:
-            raise RuntimeError("O resultado selecionado não tem um vídeo reproduzível para adicionar.")
-
-        client.add_playlist_items(normalized_target_playlist_id, [video_id])
-        return "Resultado adicionado à playlist selecionada do YouTube Music."
 
     def report_playback_to_history(self, media_path):
         normalized_media_path = self._normalize_stream_cache_key(media_path)
