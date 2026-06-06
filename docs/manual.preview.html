@@ -189,7 +189,7 @@ footer {
 <li><code>Ctrl+Shift+E</code>: abrir o equalizador da aba ativa</li>
 <li><code>Ctrl+O</code>: abrir arquivos de mídia ou uma playlist local</li>
 <li><code>Ctrl+Shift+O</code>: abrir uma pasta diretamente no navegador de pastas</li>
-<li><code>Ctrl+Alt+O</code>: abrir mídia, playlist ou pasta no diálogo unificado</li>
+<li><code>Ctrl+Alt+O</code>: abrir mídia, playlist, pasta ou link remoto no diálogo unificado</li>
 <li><code>Ctrl+C</code>: copiar o caminho ou link do item selecionado</li>
 <li><code>Ctrl+V</code>: colar um caminho ou link e, quando possível, adicioná-lo à playlist atual</li>
 <li><code>Ctrl+Shift+V</code>: colar um caminho, playlist ou link e abrir em uma nova playlist</li>
@@ -200,6 +200,7 @@ footer {
 <ul>
 <li><code>Espaço</code>: reproduzir ou pausar</li>
 <li><code>Seta esquerda</code> / <code>Seta direita</code>: voltar ou avançar na mídia atual</li>
+<li><code>Shift+Seta esquerda</code> / <code>Shift+Seta direita</code>: voltar ou avançar 1 minuto na mídia atual</li>
 <li><code>Home</code> / <code>End</code>: ir para o início ou para o fim da mídia</li>
 <li><code>Seta cima</code> / <code>Seta baixo</code>: aumentar ou diminuir o volume</li>
 <li><code>Ctrl+.</code>: parar a reprodução</li>
@@ -245,17 +246,24 @@ footer {
 <li><strong>Confirmar ao sair</strong>: pede confirmação antes de fechar o player.</li>
 </ul>
 <p>Nessa mesma aba fica a seção <strong>Associação de arquivos</strong> (Windows). O botão <strong>Registrar como player padrão</strong> adiciona o KeyTune ao menu <em>Abrir com</em> para formatos de áudio, vídeo e playlists. Depois de registrar, defina o app como padrão nas configurações do Windows se quiser que esses arquivos abram diretamente no KeyTune. O botão <strong>Desregistrar associações</strong> desfaz esse registro.</p>
+<p>A aba <strong>Geral</strong> também inclui a seção <strong>Registro de logs</strong>:</p>
+<ul>
+<li><strong>Registrar logs de diagnóstico</strong>: quando ligado, o player grava um arquivo de log rotativo em disco. Útil para depurar problemas e anexar ao relato de bugs. Os logs são gravados em inglês.</li>
+<li><strong>Nível de detalhe</strong>: controla quanta informação é registrada. <em>Apenas erros</em> é o mais silencioso; <em>Depuração</em> é o mais detalhado e pode gerar arquivos grandes. Só fica disponível quando o registro está ativado.</li>
+<li><strong>Abrir pasta de logs</strong>: abre no explorador de arquivos a pasta onde os arquivos de log são salvos.</li>
+</ul>
+<p>Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. Os arquivos de sessões anteriores ficam em <code>keytune.log.1</code>, <code>.2</code> e <code>.3</code> na mesma pasta.</p>
 <h3 id="reproducao">Reprodução</h3>
 <p>A aba <strong>Reprodução</strong> controla o comportamento de áudio e o estado inicial de novas playlists:</p>
 <ul>
 <li><strong>Volume padrão</strong>: volume ao iniciar o player (0–100).</li>
 <li><strong>Passo de volume</strong>: quanto cada pressão de <code>Seta cima</code>/<code>Seta baixo</code> aumenta ou diminui o volume (1–25).</li>
-<li><strong>Passo de busca (segundos)</strong>: quanto cada pressão de <code>Seta esquerda</code>/<code>Seta direita</code> avança ou retrocede na mídia (1–120 s).</li>
 <li><strong>Crossfade (segundos)</strong>: sobreposição de áudio entre faixas na transição automática (0–12 s). Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio.</li>
-<li><strong>Aplicar crossfade ao trocar de faixa manualmente</strong>: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa.</li>
+<li><strong>Passo de busca (segundos)</strong>: quanto cada pressão de <code>Seta esquerda</code>/<code>Seta direita</code> avança ou retrocede na mídia (1–120 s).</li>
 <li><strong>Repetição padrão</strong>: modo de repetição aplicado automaticamente a playlists novas. As opções são <em>Repetição desligada</em>, <em>Repetir faixa atual</em> e <em>Repetir playlist</em>.</li>
 <li><strong>Dispositivo de áudio</strong>: saída de som usada na reprodução. <em>Padrão do sistema</em> segue o dispositivo principal do Windows.</li>
 <li><strong>Ativar embaralhamento em novas playlists</strong>: ativa o modo aleatório automaticamente em playlists criadas depois de salvar.</li>
+<li><strong>Aplicar crossfade ao trocar de faixa manualmente</strong>: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa.</li>
 <li><strong>Desativar saída de vídeo (tocar só o áudio)</strong>: mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar janelas externas de vídeo.</li>
 </ul>
 <h3 id="acessibilidade">Acessibilidade</h3>
@@ -457,6 +465,7 @@ footer {
 <p>Se a restauração de sessão falhar, abra o app uma vez sem depender da sessão anterior e verifique se a configuração de janela e pasta estão sendo salvas normalmente.</p>
 <p>Se a aba do YouTube Music não carregar ou exibir erros de dependência, abra <code>Ctrl+,</code> &gt; <strong>Recursos adicionais</strong> e confirme que a opção <strong>Ativar recursos adicionais para YouTube Music e YouTube</strong> está marcada. O download inicial pode levar alguns minutos e exige internet. Se as dependências já estiverem instaladas mas a busca ou o carregamento falharem, use a versão nightly do <code>yt-dlp</code> nas mesmas preferências — ela costuma receber correções antes do canal estável.</p>
 <p>Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção <strong>Sessão do YouTube Music</strong> e reconecte a conta.</p>
+<p>Para investigar outros problemas, ative o registro de logs em <code>Ctrl+,</code> &gt; <strong>Geral</strong> &gt; <strong>Registro de logs</strong>. Com <strong>Registrar logs de diagnóstico</strong> ligado e o nível ajustado para <em>Depuração</em>, o player grava informações detalhadas em <code>keytune.log</code> na pasta de dados. Use <strong>Abrir pasta de logs</strong> para localizar o arquivo e, se precisar reportar um problema, anexe-o à issue.</p>
 <h2 id="para-desenvolvedores">Para desenvolvedores</h2>
 <p>O KeyTune é um projeto de código aberto. O repositório, issues, pull requests e releases estão em <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. O fonte deste manual está em <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>

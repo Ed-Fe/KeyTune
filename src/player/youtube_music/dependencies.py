@@ -150,16 +150,16 @@ def install_or_update_youtube_dependencies(
     include_prerelease: bool = False,
 ) -> YouTubeDependencyUpdateResult:
     output_parts: list[str] = []
-    updated = False
 
     target_dir = activate_youtube_dependency_target_dir()
     ytmusicapi_was_available = _dependency_spec_available(YTMUSICAPI_IMPORT_NAME)
     yt_dlp_managed_exists = get_managed_yt_dlp_executable_path().is_file()
 
+    versions_before = get_installed_youtube_dependency_versions()
+
     if force or not ytmusicapi_was_available:
         completed_process = _install_or_update_ytmusicapi(target_dir=target_dir, timeout_seconds=timeout_seconds)
         output_parts.append(_trim_process_output(completed_process))
-        updated = True
 
     if force or not yt_dlp_managed_exists:
         yt_dlp_version = install_or_update_yt_dlp_executable(
@@ -169,7 +169,6 @@ def install_or_update_youtube_dependencies(
         )
         if yt_dlp_version:
             output_parts.append(f"yt-dlp {yt_dlp_version}")
-        updated = True
 
     if not youtube_dependencies_available():
         raise RuntimeError(
@@ -177,9 +176,12 @@ def install_or_update_youtube_dependencies(
             "Reinicie o aplicativo e tente novamente."
         )
 
+    versions_after = get_installed_youtube_dependency_versions()
+    updated = versions_after != versions_before
+
     return YouTubeDependencyUpdateResult(
         updated=updated,
-        versions=get_installed_youtube_dependency_versions(),
+        versions=versions_after,
         command_output="\n".join(part for part in output_parts if part).strip(),
     )
 
@@ -241,10 +243,20 @@ def _install_or_update_ytmusicapi(
         _try_bootstrap_pip(timeout_seconds=timeout_seconds)
         completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
 
-    if completed_process.returncode != 0:
+    if completed_process.returncode != 0 and not _is_pyd_lock_error(completed_process):
         raise RuntimeError(_format_install_failure(completed_process))
 
+    # Clear the cached module so the next import picks up the newly installed
+    # version from disk rather than the stale entry left in sys.modules from
+    # before pip ran. In the pyd-lock case the old .pyd stays as an orphaned
+    # file (it cannot be deleted while loaded), but the new version's .pyd has
+    # a different hash-based name and loads correctly without a restart.
+    _clear_dependency_modules((YTMUSICAPI_IMPORT_NAME,))
     importlib.invalidate_caches()
+    # Remove any stale dist-info directories left behind when pip could not
+    # complete cleanup (e.g. pyd-lock on Windows). With two dist-infos present
+    # importlib.metadata.version() may resolve to the older one.
+    _cleanup_stale_dist_infos(target_dir, YTMUSICAPI_IMPORT_NAME)
     return completed_process
 
 
@@ -354,6 +366,128 @@ def _format_install_failure(completed_process: subprocess.CompletedProcess) -> s
         )
 
     return "Não foi possível atualizar as dependências do YouTube Music automaticamente."
+
+
+def _cleanup_stale_dist_infos(target_dir: Path, package_name: str) -> None:
+    """Remove dist-info directories for older versions of a package.
+
+    When pip fails mid-cleanup (e.g. due to a locked .pyd on Windows), both the
+    old and new dist-info directories can coexist. importlib.metadata then
+    resolves the version non-deterministically. This function keeps only the
+    dist-info with the highest version number.
+    """
+    import shutil
+
+    normalized_name = package_name.replace("-", "_").lower()
+    candidates: list[tuple[tuple[int, ...], Path]] = []
+    try:
+        for entry in target_dir.iterdir():
+            if not entry.is_dir():
+                continue
+            name_lower = entry.name.lower()
+            if not name_lower.endswith(".dist-info"):
+                continue
+            stem = name_lower[: -len(".dist-info")]
+            # dist-info dirs are named  <package>-<version>.dist-info
+            dash_pos = stem.rfind("-")
+            if dash_pos < 0:
+                continue
+            dist_name = stem[:dash_pos].replace("-", "_")
+            if dist_name != normalized_name:
+                continue
+            version_str = stem[dash_pos + 1 :]
+            try:
+                version_tuple = tuple(int(x) for x in version_str.split("."))
+            except ValueError:
+                continue
+            candidates.append((version_tuple, entry))
+    except OSError:
+        return
+
+    if len(candidates) <= 1:
+        return
+
+    candidates.sort(key=lambda c: c[0])
+    # Keep the last (highest version); remove all earlier ones.
+    for _, stale_path in candidates[:-1]:
+        try:
+            shutil.rmtree(stale_path)
+        except OSError:
+            pass
+
+
+def _cleanup_stale_dist_infos(target_dir: Path, package_name: str) -> None:
+    """Remove dist-info directories for older versions of a package.
+
+    When pip fails mid-cleanup (e.g. due to a locked .pyd on Windows), both the
+    old and new dist-info directories can coexist. importlib.metadata then
+    resolves the version non-deterministically. This function keeps only the
+    dist-info with the highest version number.
+    """
+    import shutil
+
+    normalized_name = package_name.replace("-", "_").lower()
+    candidates: list[tuple[tuple[int, ...], Path]] = []
+    try:
+        for entry in target_dir.iterdir():
+            if not entry.is_dir():
+                continue
+            name_lower = entry.name.lower()
+            if not name_lower.endswith(".dist-info"):
+                continue
+            stem = name_lower[: -len(".dist-info")]
+            # dist-info dirs are named  <package>-<version>.dist-info
+            dash_pos = stem.rfind("-")
+            if dash_pos < 0:
+                continue
+            dist_name = stem[:dash_pos].replace("-", "_")
+            if dist_name != normalized_name:
+                continue
+            version_str = stem[dash_pos + 1 :]
+            try:
+                version_tuple = tuple(int(x) for x in version_str.split("."))
+            except ValueError:
+                continue
+            candidates.append((version_tuple, entry))
+    except OSError:
+        return
+
+    if len(candidates) <= 1:
+        return
+
+    candidates.sort(key=lambda c: c[0])
+    # Keep the last (highest version); remove all earlier ones.
+    for _, stale_path in candidates[:-1]:
+        try:
+            shutil.rmtree(stale_path)
+        except OSError:
+            pass
+
+
+def _is_pyd_lock_error(completed_process: subprocess.CompletedProcess) -> bool:
+    """Return True when pip failed only because it could not remove a locked .pyd file
+    on Windows but the packages were actually installed successfully.
+
+    On Windows, compiled extension modules (.pyd files) that are already loaded in the
+    current process cannot be deleted. Pip reports a PermissionError when it tries to
+    clean up the old file after installing the new version, causing a non-zero exit code
+    even though all package files were written correctly.
+    """
+    combined_output = "\n".join(
+        part
+        for part in (
+            str(completed_process.stdout or ""),
+            str(completed_process.stderr or ""),
+        )
+        if part
+    )
+    has_pyd_permission_error = (
+        "PermissionError" in combined_output
+        and ".pyd" in combined_output
+        and "WinError 5" in combined_output
+    )
+    packages_were_installed = "Successfully installed" in combined_output
+    return has_pyd_permission_error and packages_were_installed
 
 
 def _pip_missing_in_output(completed_process: subprocess.CompletedProcess) -> bool:

@@ -133,7 +133,10 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                             ):
                                 with patch(
                                     "player.youtube_music.dependencies.get_installed_youtube_dependency_versions",
-                                    return_value={"yt-dlp": "2026.1.31", "ytmusicapi": "1.12.0"},
+                                    side_effect=[
+                                        {"yt-dlp": "2026.1.30", "ytmusicapi": "1.12.0"},
+                                        {"yt-dlp": "2026.1.31", "ytmusicapi": "1.12.1"},
+                                    ],
                                 ):
                                     result = install_or_update_youtube_dependencies(
                                         force=True,

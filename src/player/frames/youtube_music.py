@@ -467,7 +467,7 @@ class FrameYouTubeMusicMixin:
     def _on_manual_check_for_additional_updates(self):
         if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
             return False
-        return self._start_youtube_music_dependency_update(force_update=True, manual=True)
+        return self._start_youtube_music_dependency_update(force_update=True, manual=True, announce_start=True)
 
     def _get_youtube_music_service(self):
         self._configure_youtube_music_dependency_management()
