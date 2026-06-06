@@ -55,7 +55,7 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
 - `Ctrl+O`: abrir arquivos de mídia ou uma playlist local
 - `Ctrl+Shift+O`: abrir uma pasta diretamente no navegador de pastas
-- `Ctrl+Alt+O`: abrir mídia, playlist ou pasta no diálogo unificado
+- `Ctrl+Alt+O`: abrir mídia, playlist, pasta ou link remoto no diálogo unificado
 - `Ctrl+C`: copiar o caminho ou link do item selecionado
 - `Ctrl+V`: colar um caminho ou link e, quando possível, adicioná-lo à playlist atual
 - `Ctrl+Shift+V`: colar um caminho, playlist ou link e abrir em uma nova playlist
@@ -138,12 +138,12 @@ A aba **Reprodução** controla o comportamento de áudio e o estado inicial de 
 
 - **Volume padrão**: volume ao iniciar o player (0–100).
 - **Passo de volume**: quanto cada pressão de `Seta cima`/`Seta baixo` aumenta ou diminui o volume (1–25).
-- **Passo de busca (segundos)**: quanto cada pressão de `Seta esquerda`/`Seta direita` avança ou retrocede na mídia (1–120 s).
 - **Crossfade (segundos)**: sobreposição de áudio entre faixas na transição automática (0–12 s). Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio.
-- **Aplicar crossfade ao trocar de faixa manualmente**: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa.
+- **Passo de busca (segundos)**: quanto cada pressão de `Seta esquerda`/`Seta direita` avança ou retrocede na mídia (1–120 s).
 - **Repetição padrão**: modo de repetição aplicado automaticamente a playlists novas. As opções são *Repetição desligada*, *Repetir faixa atual* e *Repetir playlist*.
 - **Dispositivo de áudio**: saída de som usada na reprodução. *Padrão do sistema* segue o dispositivo principal do Windows.
 - **Ativar embaralhamento em novas playlists**: ativa o modo aleatório automaticamente em playlists criadas depois de salvar.
+- **Aplicar crossfade ao trocar de faixa manualmente**: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa.
 - **Desativar saída de vídeo (tocar só o áudio)**: mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar janelas externas de vídeo.
 
 ### Acessibilidade
