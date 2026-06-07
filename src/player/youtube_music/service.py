@@ -1,7 +1,4 @@
 import os
-import threading
-import time
-from urllib.parse import parse_qs, urlparse
 
 from .auth import (
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
@@ -12,20 +9,16 @@ from .auth import (
     read_auth_file_text,
     write_browser_auth_cookie_file,
 )
+from .client_provider import YouTubeMusicClientProvider
 from .dependencies import import_ytmusicapi_module
-from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
+from .feedback_manager import YouTubeMusicFeedbackManager
+from .library_manager import YouTubeMusicLibraryManager
 from .playlists import (
     build_playlist_source as build_playlist_source_fn,
     build_watch_url as build_watch_url_fn,
-    extract_video_id_from_text,
-    extract_personalized_mix_summaries,
-    is_music_youtube_url,
-    is_watch_playlist_id,
     is_youtube_music_media as is_youtube_music_media_fn,
-    playlist_track_count_text,
-    track_display_label,
 )
-from .search import normalize_music_search_results, search_youtube_videos
+from .stream_cache import YouTubeMusicStreamCache, normalize_media_path
 from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_music_stream_playback
 from ..log import get_logger
 
@@ -82,17 +75,55 @@ def _is_probably_invalid_saved_auth_error(error):
 
 
 class YouTubeMusicService:
+    """Facade that orchestrates YouTube Music operations.
+
+    Delegates to focused helper classes for client management, stream
+    caching, library browsing, and feedback/history actions while
+    exposing the same public interface consumed by the frame mixins
+    and tests.
+    """
+
     _STREAM_CACHE_TTL_SECONDS = 300
     _STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS = 30
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
 
     def __init__(self):
-        self._authenticated_client = None
-        self._public_client = None
+        self._client_provider = YouTubeMusicClientProvider()
+        self._stream_cache_manager = YouTubeMusicStreamCache()
         self._account_info = None
-        self._stream_cache = {}
-        self._stream_cache_lock = threading.Lock()
-        self._stream_prefetch_in_progress = set()
+
+        # Library and feedback managers use late-binding lambdas so that
+        # unittest.mock.patch on *this* module's names (e.g. get_client,
+        # import_ytmusicapi_module) is picked up at call time.
+        self._library = YouTubeMusicLibraryManager(
+            get_client_fn=lambda **kw: self.get_client(**kw),
+            build_watch_url_fn=lambda video_id, playlist_id=None: self.build_watch_url(video_id, playlist_id=playlist_id),
+        )
+        self._feedback = YouTubeMusicFeedbackManager(
+            get_client_fn=lambda **kw: self.get_client(**kw),
+            import_module_fn=lambda **kw: import_ytmusicapi_module(**kw),
+        )
+
+    # -- Compatibility property ------------------------------------------------
+    # Tests inspect ``service._stream_cache`` (the raw dict) directly.
+
+    @property
+    def _stream_cache(self):
+        return self._stream_cache_manager._cache
+
+    @_stream_cache.setter
+    def _stream_cache(self, value):
+        self._stream_cache_manager._cache = value
+
+    @property
+    def _stream_cache_lock(self):
+        return self._stream_cache_manager._lock
+
+    @property
+    def _stream_prefetch_in_progress(self):
+        return self._stream_cache_manager._prefetch_in_progress
+
+    # -- Auth file paths -------------------------------------------------------
 
     @property
     def browser_auth_file_path(self):
@@ -105,6 +136,8 @@ class YouTubeMusicService:
     @property
     def browser_auth_cookie_file_path(self):
         return get_browser_auth_cookie_file_path()
+
+    # -- Auth state ------------------------------------------------------------
 
     def has_saved_browser_auth(self):
         return os.path.isfile(self.browser_auth_file_path)
@@ -132,120 +165,43 @@ class YouTubeMusicService:
         return True
 
     def clear_client_cache(self):
-        self._authenticated_client = None
-        self._public_client = None
+        self._client_provider.clear_cache()
         self._account_info = None
-        with self._stream_cache_lock:
-            self._stream_cache = {}
-            self._stream_prefetch_in_progress = set()
+        self._stream_cache_manager.clear()
+
+    # -- Stream cache (delegated) ----------------------------------------------
 
     def _normalize_stream_cache_key(self, media_path):
-        return str(media_path or "").strip()
+        return normalize_media_path(media_path)
 
     def get_cached_stream_url(self, media_path):
-        cached_playback = self.get_cached_stream_playback(media_path)
-        if cached_playback is None:
-            return None
-        return cached_playback.stream_url
+        return self._stream_cache_manager.get_cached_stream_url(media_path)
 
     def get_cached_stream_playback(self, media_path):
-        cache_key = self._normalize_stream_cache_key(media_path)
-        if not is_youtube_music_media_fn(cache_key):
-            return None
-
-        now = time.monotonic()
-        with self._stream_cache_lock:
-            cache_entry = self._stream_cache.get(cache_key)
-            if not cache_entry:
-                return None
-
-            if cache_entry["expires_at"] <= now:
-                self._stream_cache.pop(cache_key, None)
-                return None
-
-            return ResolvedStreamPlayback(
-                stream_url=cache_entry["resolved_url"],
-                http_headers=dict(cache_entry.get("http_headers") or {}),
-                display_title=str(cache_entry.get("display_title") or "").strip(),
-                display_artist=str(cache_entry.get("display_artist") or "").strip(),
-            )
+        return self._stream_cache_manager.get_cached_stream_playback(media_path)
 
     def _cache_stream_playback(self, media_path, resolved_playback):
-        cache_key = self._normalize_stream_cache_key(media_path)
-        normalized_resolved_url = str(getattr(resolved_playback, "stream_url", "") or "").strip()
-        normalized_http_headers = dict(getattr(resolved_playback, "http_headers", {}) or {})
-        normalized_display_title = str(getattr(resolved_playback, "display_title", "") or "").strip()
-        normalized_display_artist = str(getattr(resolved_playback, "display_artist", "") or "").strip()
-        if not cache_key or not normalized_resolved_url or not is_youtube_music_media_fn(cache_key):
-            return resolved_playback
-
-        cache_ttl_seconds = self._stream_cache_ttl_seconds(normalized_resolved_url)
-        if cache_ttl_seconds <= 0:
-            return ResolvedStreamPlayback(
-                stream_url=normalized_resolved_url,
-                http_headers=normalized_http_headers,
-                display_title=normalized_display_title,
-                display_artist=normalized_display_artist,
-            )
-
-        with self._stream_cache_lock:
-            self._stream_cache[cache_key] = {
-                "resolved_url": normalized_resolved_url,
-                "http_headers": normalized_http_headers,
-                "display_title": normalized_display_title,
-                "display_artist": normalized_display_artist,
-                "expires_at": time.monotonic() + cache_ttl_seconds,
-            }
-
-        return ResolvedStreamPlayback(
-            stream_url=normalized_resolved_url,
-            http_headers=normalized_http_headers,
-            display_title=normalized_display_title,
-            display_artist=normalized_display_artist,
-        )
+        return self._stream_cache_manager.cache_stream_playback(media_path, resolved_playback)
 
     def _stream_cache_ttl_seconds(self, stream_url):
-        default_ttl_seconds = int(self._STREAM_CACHE_TTL_SECONDS)
-        normalized_stream_url = str(stream_url or "").strip()
-        if not normalized_stream_url:
-            return default_ttl_seconds
-
-        try:
-            expire_value = parse_qs(urlparse(normalized_stream_url).query).get("expire", [""])[0]
-            expiration_timestamp = int(float(expire_value))
-        except (TypeError, ValueError):
-            return default_ttl_seconds
-
-        remaining_seconds = expiration_timestamp - int(time.time()) - self._STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS
-        if remaining_seconds <= 0:
-            return 0
-
-        return min(default_ttl_seconds, remaining_seconds)
+        return self._stream_cache_manager._cache_ttl_seconds(stream_url)
 
     def prefetch_stream_url(self, media_path):
-        cache_key = self._normalize_stream_cache_key(media_path)
-        if not is_youtube_music_media_fn(cache_key):
-            return False
+        return self._stream_cache_manager.prefetch_stream_url(
+            media_path,
+            resolve_fn=resolve_music_stream_playback,
+        )
 
-        if self.get_cached_stream_url(cache_key):
-            return True
+    def resolve_stream_url(self, media_path):
+        return self.resolve_stream_playback(media_path).stream_url
 
-        with self._stream_cache_lock:
-            if cache_key in self._stream_prefetch_in_progress:
-                return False
-            self._stream_prefetch_in_progress.add(cache_key)
+    def resolve_stream_playback(self, media_path):
+        return self._stream_cache_manager.resolve_stream_playback(
+            media_path,
+            resolve_fn=resolve_music_stream_playback,
+        )
 
-        def worker():
-            try:
-                self.resolve_stream_url(cache_key)
-            except Exception:
-                pass
-            finally:
-                with self._stream_cache_lock:
-                    self._stream_prefetch_in_progress.discard(cache_key)
-
-        threading.Thread(target=worker, daemon=True).start()
-        return True
+    # -- Disconnect / connect --------------------------------------------------
 
     def disconnect(self):
         self.clear_client_cache()
@@ -303,6 +259,8 @@ class YouTubeMusicService:
         _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
 
+    # -- Account info ----------------------------------------------------------
+
     def get_account_info(self):
         if self._account_info is not None:
             return self._account_info
@@ -333,264 +291,49 @@ class YouTubeMusicService:
         account_info = self.get_account_info()
         return str(account_info.get("accountName") or account_info.get("channelHandle") or "Conta do YouTube Music").strip()
 
-    def search(self, query, *, search_scope):
-        normalized_query = str(query or "").strip()
-        if not normalized_query:
-            return []
-
-        scope_option = get_search_scope_option(search_scope)
-        if scope_option.requires_auth:
-            client = self.get_client(require_auth=True)
-            raw_results = client.search(
-                normalized_query,
-                filter=scope_option.music_filter or None,
-                limit=scope_option.limit,
-            )
-            return normalize_music_search_results(raw_results)
-
-        if scope_option.source == "youtube_music":
-            client = self.get_client(require_auth=False)
-            raw_results = client.search(
-                normalized_query,
-                filter=scope_option.music_filter or None,
-                limit=scope_option.limit,
-            )
-            return normalize_music_search_results(raw_results)
-
-        return search_youtube_videos(normalized_query, limit=scope_option.limit)
-
-    def get_user_library_playlists(self, *, limit=None):
-        client = self.get_client()
-        normalized_limit = None
-        if limit is not None:
-            try:
-                normalized_limit = max(1, int(limit))
-            except (TypeError, ValueError):
-                normalized_limit = None
-
-        try:
-            raw_playlists = client.get_library_playlists(limit=normalized_limit)
-        except TypeError:
-            raw_playlists = client.get_library_playlists()
-
-        raw_playlist_count = len(raw_playlists or [])
-
-        playlists = []
-        seen_playlist_ids = set()
-        for item in raw_playlists or []:
-            playlist_id = str(item.get("playlistId") or item.get("browseId") or "").strip()
-            title = str(item.get("title") or "").strip()
-            if not playlist_id or not title:
-                continue
-            if playlist_id in seen_playlist_ids:
-                continue
-
-            track_count_text = playlist_track_count_text(item)
-            playlists.append(
-                YouTubeMusicPlaylistSummary(
-                    playlist_id=playlist_id,
-                    title=title,
-                    track_count_text=track_count_text,
-                )
-            )
-            seen_playlist_ids.add(playlist_id)
-
-        has_more = bool(normalized_limit) and raw_playlist_count >= normalized_limit
-        playlists.sort(key=lambda playlist: playlist.title.casefold())
-        return playlists, has_more
-
-    def get_personalized_mixes(self, *, limit=None):
-        client = self.get_client()
-        try:
-            home_limit = int(limit) if limit is not None else self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
-        except (TypeError, ValueError):
-            home_limit = self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
-        home_limit = max(1, home_limit)
-        try:
-            home_rows = client.get_home(limit=home_limit)
-        except Exception:
-            home_rows = []
-
-        mixes = []
-        seen_playlist_ids = set()
-        for item in extract_personalized_mix_summaries(home_rows):
-            if item.playlist_id in seen_playlist_ids:
-                continue
-            mixes.append(item)
-            seen_playlist_ids.add(item.playlist_id)
-
-        mixes.sort(key=lambda playlist: playlist.title.casefold())
-        return mixes
-
-    def get_library_playlists(self):
-        playlists, _ = self.get_user_library_playlists(limit=None)
-        seen_playlist_ids = {playlist.playlist_id for playlist in playlists}
-
-        for mix in self.get_personalized_mixes():
-            if mix.playlist_id in seen_playlist_ids:
-                continue
-            playlists.append(mix)
-            seen_playlist_ids.add(mix.playlist_id)
-
-        playlists.sort(key=lambda playlist: playlist.title.casefold())
-        return playlists
-
-    def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
-        client = self.get_client(require_auth=require_auth)
-        normalized_playlist_id = str(playlist_id or "").strip()
-
-        if is_watch_playlist_id(normalized_playlist_id):
-            playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=200)
-            playlist_title = str(fallback_title or "Mix do YouTube Music").strip()
-            tracks = playlist.get("tracks") or []
-        else:
-            playlist = client.get_playlist(normalized_playlist_id, limit=None)
-            playlist_title = str(playlist.get("title") or fallback_title or "Playlist do YouTube Music").strip()
-            tracks = playlist.get("tracks") or []
-
-        item_urls = []
-        item_labels = []
-
-        for track in tracks:
-            video_id = str(track.get("videoId") or "").strip()
-            if not video_id:
-                continue
-
-            item_urls.append(self.build_watch_url(video_id, playlist_id=normalized_playlist_id))
-            item_labels.append(track_display_label(track))
-
-        return YouTubeMusicPlaylistContent(
-            playlist_id=normalized_playlist_id,
-            title=playlist_title,
-            item_urls=item_urls,
-            item_labels=item_labels,
-        )
+    # -- Client factory (delegated) --------------------------------------------
 
     def get_client(self, *, require_auth=True):
-        if require_auth and self._authenticated_client is not None:
-            return self._authenticated_client
-        if not require_auth and self._public_client is not None:
-            return self._public_client
-
         ytmusicapi = import_ytmusicapi_module()
-        YTMusic = ytmusicapi.YTMusic
+        return self._client_provider.get_client(
+            ytmusicapi_module=ytmusicapi,
+            require_auth=require_auth,
+            auth_file_path=self.browser_auth_file_path,
+            has_saved_auth=self.has_saved_browser_auth(),
+        )
 
-        if require_auth and not self.has_saved_browser_auth():
-            raise RuntimeError("Faça a autenticação do navegador antes de buscar playlists.")
+    # -- Library (delegated) ---------------------------------------------------
 
-        if require_auth:
-            self._authenticated_client = YTMusic(self.browser_auth_file_path)
-            return self._authenticated_client
+    def search(self, query, *, search_scope):
+        return self._library.search(query, search_scope=search_scope)
 
-        self._public_client = YTMusic()
-        return self._public_client
+    def get_user_library_playlists(self, *, limit=None):
+        return self._library.get_user_library_playlists(limit=limit)
+
+    def get_personalized_mixes(self, *, limit=None):
+        return self._library.get_personalized_mixes(limit=limit)
+
+    def get_library_playlists(self):
+        return self._library.get_library_playlists()
+
+    def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
+        return self._library.get_playlist_content(playlist_id, fallback_title, require_auth=require_auth)
+
+    # -- Feedback / history (delegated) ----------------------------------------
 
     def save_search_result(self, search_result):
-        client = self.get_client()
-
-        result_type = str(getattr(search_result, "result_type", "") or "").strip().lower()
-        playlist_id = str(getattr(search_result, "playlist_id", "") or "").strip()
-        feedback_add_token = str(getattr(search_result, "feedback_add_token", "") or "").strip()
-        feedback_remove_token = str(getattr(search_result, "feedback_remove_token", "") or "").strip()
-
-        ytmusicapi = import_ytmusicapi_module()
-        LikeStatus = ytmusicapi.LikeStatus
-
-        if result_type == "playlist" and playlist_id:
-            client.rate_playlist(playlist_id, LikeStatus.LIKE)
-            return "Playlist salva na biblioteca do YouTube Music."
-
-        if result_type == "song":
-            if feedback_remove_token and not feedback_add_token:
-                return "A faixa já estava salva na biblioteca do YouTube Music."
-            if feedback_add_token:
-                client.edit_song_library_status([feedback_add_token])
-                return "Faixa salva na biblioteca do YouTube Music."
-
-        raise RuntimeError("O resultado selecionado não pode ser salvo no YouTube Music.")
+        return self._feedback.save_search_result(search_result)
 
     def get_media_feedback_status(self, media_path):
-        normalized_media_path = self._normalize_stream_cache_key(media_path)
-        video_id = extract_video_id_from_text(normalized_media_path)
-        if not video_id:
-            return None
-
-        client = self.get_client()
-        song = client.get_song(video_id)
-        if not isinstance(song, dict):
-            return None
-
-        like_status = str(song.get("likeStatus") or "").strip().upper()
-        if like_status in {"LIKE", "DISLIKE", "INDIFFERENT"}:
-            return like_status
-        return None
+        return self._feedback.get_media_feedback_status(media_path)
 
     def rate_media_feedback(self, media_path, rating):
-        normalized_media_path = self._normalize_stream_cache_key(media_path)
-        video_id = extract_video_id_from_text(normalized_media_path)
-        if not video_id:
-            raise RuntimeError("A mídia atual não tem um vídeo compatível para curtir ou marcar como não gostei.")
-
-        ytmusicapi = import_ytmusicapi_module()
-        LikeStatus = ytmusicapi.LikeStatus
-
-        normalized_rating = str(rating or "").strip().upper()
-        rating_map = {
-            "LIKE": LikeStatus.LIKE,
-            "DISLIKE": LikeStatus.DISLIKE,
-            "INDIFFERENT": LikeStatus.INDIFFERENT,
-        }
-        like_status = rating_map.get(normalized_rating)
-        if like_status is None:
-            raise RuntimeError("A avaliação solicitada para a mídia atual é inválida.")
-
-        client = self.get_client()
-        client.rate_song(video_id, like_status)
-
-        confirmed_song = client.get_song(video_id)
-        confirmed_status = ""
-        if isinstance(confirmed_song, dict):
-            confirmed_status = str(confirmed_song.get("likeStatus") or "").strip().upper()
-
-        if confirmed_status != normalized_rating:
-            confirmed_label = confirmed_status or "indisponível"
-            return (
-                f"A avaliação foi enviada, mas o servidor ainda retornou likeStatus={confirmed_label}."
-            )
-
-        if like_status == LikeStatus.LIKE:
-            return "Mídia atual curtida no YouTube Music."
-        if like_status == LikeStatus.DISLIKE:
-            return "Mídia atual marcada como não gostei no YouTube Music."
-        return "Avaliação da mídia atual removida no YouTube Music."
+        return self._feedback.rate_media_feedback(media_path, rating)
 
     def report_playback_to_history(self, media_path):
-        normalized_media_path = self._normalize_stream_cache_key(media_path)
-        if not is_music_youtube_url(normalized_media_path):
-            return False
+        return self._feedback.report_playback_to_history(media_path)
 
-        video_id = extract_video_id_from_text(normalized_media_path)
-        if not video_id:
-            return False
-
-        client = self.get_client()
-        song = client.get_song(video_id)
-        response = client.add_history_item(song)
-        return getattr(response, "status_code", None) == 204
-
-    def resolve_stream_url(self, media_path):
-        return self.resolve_stream_playback(media_path).stream_url
-
-    def resolve_stream_playback(self, media_path):
-        normalized_media_path = self._normalize_stream_cache_key(media_path)
-        cached_stream_playback = self.get_cached_stream_playback(normalized_media_path)
-        if cached_stream_playback is not None:
-            _logger.debug("Stream cache hit for: %s", normalized_media_path)
-            return cached_stream_playback
-
-        _logger.debug("Stream cache miss; delegating resolution for: %s", normalized_media_path)
-        resolved_stream_playback = resolve_music_stream_playback(normalized_media_path)
-        return self._cache_stream_playback(normalized_media_path, resolved_stream_playback)
+    # -- Static helpers --------------------------------------------------------
 
     def build_watch_url(self, video_id, playlist_id=None):
         return build_watch_url_fn(video_id, playlist_id=playlist_id)

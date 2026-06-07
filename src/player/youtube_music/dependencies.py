@@ -416,54 +416,6 @@ def _cleanup_stale_dist_infos(target_dir: Path, package_name: str) -> None:
             pass
 
 
-def _cleanup_stale_dist_infos(target_dir: Path, package_name: str) -> None:
-    """Remove dist-info directories for older versions of a package.
-
-    When pip fails mid-cleanup (e.g. due to a locked .pyd on Windows), both the
-    old and new dist-info directories can coexist. importlib.metadata then
-    resolves the version non-deterministically. This function keeps only the
-    dist-info with the highest version number.
-    """
-    import shutil
-
-    normalized_name = package_name.replace("-", "_").lower()
-    candidates: list[tuple[tuple[int, ...], Path]] = []
-    try:
-        for entry in target_dir.iterdir():
-            if not entry.is_dir():
-                continue
-            name_lower = entry.name.lower()
-            if not name_lower.endswith(".dist-info"):
-                continue
-            stem = name_lower[: -len(".dist-info")]
-            # dist-info dirs are named  <package>-<version>.dist-info
-            dash_pos = stem.rfind("-")
-            if dash_pos < 0:
-                continue
-            dist_name = stem[:dash_pos].replace("-", "_")
-            if dist_name != normalized_name:
-                continue
-            version_str = stem[dash_pos + 1 :]
-            try:
-                version_tuple = tuple(int(x) for x in version_str.split("."))
-            except ValueError:
-                continue
-            candidates.append((version_tuple, entry))
-    except OSError:
-        return
-
-    if len(candidates) <= 1:
-        return
-
-    candidates.sort(key=lambda c: c[0])
-    # Keep the last (highest version); remove all earlier ones.
-    for _, stale_path in candidates[:-1]:
-        try:
-            shutil.rmtree(stale_path)
-        except OSError:
-            pass
-
-
 def _is_pyd_lock_error(completed_process: subprocess.CompletedProcess) -> bool:
     """Return True when pip failed only because it could not remove a locked .pyd file
     on Windows but the packages were actually installed successfully.

@@ -46,7 +46,11 @@
   - `preferences/storage.py` for reading and writing `settings.json`
   - `session.py` for restorable session state in `session.json`
   - `accessibility.py` for screen reader announcements and custom `wx.Accessible` helpers
-  - `youtube_music/service.py` for the YouTube Music service facade used by frame mixins
+  - `youtube_music/service.py` for the YouTube Music service facade that orchestrates client, cache, library, and feedback modules
+  - `youtube_music/client_provider.py` for creating and caching authenticated and public YTMusic client instances
+  - `youtube_music/stream_cache.py` for thread-safe stream URL caching with TTL, expiration, and prefetch coordination
+  - `youtube_music/library_manager.py` for library playlist queries, personalized mixes, playlist content, and search
+  - `youtube_music/feedback_manager.py` for like/dislike ratings, playback history reporting, and search-result saving
   - `youtube_music/auth.py` for browser-auth parsing, normalization, and storage helpers
   - `youtube_music/dialog.py` for the browser-auth and cookie import dialog
   - `youtube_music/panel.py` for the dedicated YouTube Music tab UI and accessibility metadata

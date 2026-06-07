@@ -27,8 +27,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             display_artist="Canal de teste",
         )
 
-        with patch("player.youtube_music.service.time.time", return_value=600), patch(
-            "player.youtube_music.service.time.monotonic", return_value=10
+        with patch("player.youtube_music.stream_cache.time.time", return_value=600), patch(
+            "player.youtube_music.stream_cache.time.monotonic", return_value=10
         ):
             service._cache_stream_playback(media_path, resolved_playback)
 
@@ -47,8 +47,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             display_artist="Canal de teste",
         )
 
-        with patch("player.youtube_music.service.time.time", return_value=600), patch(
-            "player.youtube_music.service.time.monotonic", return_value=10
+        with patch("player.youtube_music.stream_cache.time.time", return_value=600), patch(
+            "player.youtube_music.stream_cache.time.monotonic", return_value=10
         ):
             returned_playback = service._cache_stream_playback(media_path, resolved_playback)
 
