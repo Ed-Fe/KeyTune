@@ -5,26 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-05-08
+## [1.0.0] - 2026-06-07
 
-Lançamento 1.0.0 — mudança de marca para KeyTune e preparação do fluxo de distribuição.
+Primeira versão oficial estável (Release) do **KeyTune**. Consolida todos os recursos principais de reprodução de mídia acessível, playlists em abas, equalização, sistema de diagnóstico avançado e integração completa com YouTube Music.
 
-Resumo das novidades
-- Renomeado o projeto para **KeyTune** em interfaces, scripts e documentação.
-- Atualizado o sistema de atualização para usar artefatos `KeyTune-windows.zip` e o atualizador externo `KeyTuneUpdater.exe`.
-- Ajustes no empacotamento e workflow do GitHub Actions para criar e publicar os artefatos com os novos nomes.
-- Alterado o diretório de armazenamento da aplicação para `%APPDATA%\KeyTune` (antes `MediaPlayerWx`).
-- Prefixos temporários e logs do atualizador atualizados para `keytune-*` e `%TEMP%\KeyTuneUpdater`.
-- Documentação e scripts de build/testes atualizados (README, docs, scripts, CHANGELOG e instruções internas).
+### Resumo dos Recursos
 
-Detalhes
-- UI e documentação: todas as referências visíveis ao usuário foram atualizadas para "KeyTune"; mensagens e README agora instruem a clonar `https://github.com/Ed-Fe/KeyTune.git`.
-- Atualizador: busca releases em `Ed-Fe/KeyTune` por padrão, valida checksum `.sha256` e usa o `KeyTuneUpdater.exe` empacotado para aplicar atualizações em instalações Windows.
-- Empacotamento local: os scripts agora geram o ZIP `KeyTune-windows.zip` e checksum correspondente; o workflow de CI também foi ajustado.
-- Compatibilidade: variáveis de ambiente de teste do atualizador continuam funcionando (`MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` / `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME`) para apontar repositórios de teste.
+- **Interface Acessível e Foco em Teclado**: Totalmente otimizado para leitores de tela com atalhos de teclado robustos, mnemônicos e anúncios sonoros sob demanda para tempo, volume e status da mídia.
+- **Playlists em Abas**: Gerenciamento de múltiplos contextos de playlist em abas individuais com reordenação de faixas, salvamento e carregamento assíncrono de playlists `.m3u` e `.m3u8`.
+- **Navegador de Pastas Integrado**: Navegação rápida estilo Explorer por arquivos e subpastas de mídia, com pré-visualização instantânea e automática na seleção de arquivos.
+- **Restauração de Sessão Inteligente**: Retoma automaticamente o estado anterior ao reiniciar o player (abas abertas, mídia ativa, posição exata da faixa, volume e configurações).
+- **Equalizador Independente por Aba**: Ajuste fino de áudio individual por aba de playlist com 18 presets embutidos (Club, Rock, Bass, etc.), editor de presets personalizados e opção de replicar a equalização para todas as abas.
+- **Integração com YouTube Music & YouTube**: Busca integrada no catálogo, suporte completo a mixes personalizadas e playlists da conta do usuário via importação de cookies do navegador, com resolução de áudio sob demanda via `yt-dlp`.
+- **Associação de Arquivos no Windows**: Registro e desregistro simplificados de extensões de mídia para abrir arquivos diretamente com o KeyTune através do Explorador.
+- **Sistema de Logs de Diagnóstico**: Diagnóstico detalhado com rotação automática de arquivos de logs e configuração ao vivo do nível de detalhes nas preferências.
+- **Atualização Automática no Windows**: Detecção de novas versões, visualização de notas de release, download assíncrono com progresso visual e aplicação limpa via atualizador autônomo (`KeyTuneUpdater.exe`).
 
-Motivação
-- Consolidar a marca e evitar referências divergentes entre código, artefatos publicados e documentação; facilitar testes de atualização e distribuição.
+### Ajustes e Melhorias Recentes
+- **Atalhos Aprimorados**: Inversão estratégica dos atalhos de fechamento (agora `Ctrl+W` fecha a aba ativa e `Ctrl+Shift+W` fecha ou descarrega a mídia atual) para maior fluidez e consistência com navegadores modernos.
+- **Seleção Avançada na Busca**: Substituição do componente de resultados da busca do YouTube Music por uma lista virtualizada (`VirtualItemsListCtrl`), suportando seleção múltipla via teclado (`Ctrl+Arrow` e `Ctrl+Space`).
+- **Arquitetura Modular**: Modularização completa do serviço de YouTube Music em subsistemas dedicados (cache, autenticação, gerenciador de biblioteca e feedbacks) para maior estabilidade.
+- **Correções de Navegação e Foco**: Correção de travamento de foco com Tab/Shift+Tab nas abas de YouTube Music e Equalizador, além de validação aprimorada de curtidas/feedbacks.
+- **Atualizações de Dependências**: Tratamento robusto para arquivos `.pyd` bloqueados no Windows durante a atualização em segundo plano do `yt-dlp` e pacotes auxiliares.
+
 
 ## [0.4.1] - 2026-04-12
 

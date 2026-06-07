@@ -1,16 +1,20 @@
-# KeyTune 0.9.10
+# KeyTune 1.0.0
 
-Release de validação do KeyTune para testar o fluxo de build, publicação e atualização no Windows antes da 1.0.0 final.
+Primeira versão oficial estável (Release) do **KeyTune**. Este lançamento consolida os recursos principais desenvolvidos, trazendo um player de mídia acessível, moderno e focado em controle total via teclado.
 
-## Destaques
+## Recursos Principais
 
-- Player acessível com foco em teclado, playlists em abas, navegador de pastas e restauração de sessão.
-- Integração com YouTube Music para autenticação, biblioteca, playlists, mixes e resolução de streams.
-- Equalizador por aba com presets embutidos, presets personalizados e aplicação em todas as abas abertas.
-- Atualização automática no Windows com `KeyTune-windows.zip`, checksum `.sha256` e `KeyTuneUpdater.exe`.
-- Runtime do MPV empacotado na release para funcionar sem instalação prévia do MPV na máquina do usuário.
+- **Acessibilidade Completa**: Otimizado para uso por teclado e leitores de tela (NVDA, JAWS, Narrador). Foco inteligente, mnemônicos e anúncios sonoros automáticos ou sob demanda (tempo de reprodução com `T`, volume com `V` e status com `S`).
+- **Navegador Lateral e Visualização de Pastas**: Navegação rápida estilo Explorer por arquivos e subpastas de mídia. Inclui pré-visualização instantânea (toca o arquivo automaticamente ao focar com teclado).
+- **Playlists em Abas**: Abra e organize múltiplas abas de playlist de forma assíncrona. Suporte completo para carregar, ordenar e salvar playlists locais nos formatos `.m3u` e `.m3u8`.
+- **Restauração de Sessão**: Retome o player do ponto exato onde parou: abas abertas, faixa ativa, tempo de reprodução atual, volume e tamanho da janela.
+- **Equalizador por Aba**: Ajuste de graves, médios e agudos independente para cada aba de playlist. Possui 18 presets integrados (Club, Rock, graves profundos, etc.), editor de presets customizados e sincronização rápida em todas as abas.
+- **Integração com YouTube Music**: Aba dedicada (`Ctrl+Shift+Y`) com busca no catálogo, mixes e playlists da biblioteca integrados (via importação de cookies). Reprodução fluida por streaming e cache inteligente de URLs de áudio usando `yt-dlp`.
+- **Associação de Arquivos no Windows**: Associe e desassocie o KeyTune nas preferências para abrir arquivos diretamente pelo menu do sistema Windows.
+- **Logs de Diagnóstico**: Sistema para registro de logs com rotação automática para depuração, com controle de nível de detalhe nas preferências.
+- **Atualização Automática no Windows**: Diálogos com notas de release, barra de progresso visual de download e aplicação de pacotes ZIP com atualizador autônomo.
 
-## Notas
-
-- A interface, os menus e os anúncios de acessibilidade permanecem em português.
-- Esta release existe para validar o fluxo de atualização antes da publicação da `1.0.0`.
+## Ajustes Recentes e Estabilidade
+- **Novos Atalhos**: Atalho `Ctrl+W` redefinido para fechar a aba ativa e `Ctrl+Shift+W` para descarregar a mídia ativa, alinhando com a convenção de navegadores.
+- **Busca Melhorada**: Lista de resultados do YouTube Music agora virtualizada para permitir rolagem e seleção múltipla por teclado (`Ctrl+Arrow` e `Ctrl+Space`).
+- **Mais Estabilidade**: Refatoração estrutural modular no serviço do YouTube Music e correções importantes para atualização automática de dependências em segundo plano.
