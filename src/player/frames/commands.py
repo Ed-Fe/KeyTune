@@ -539,11 +539,13 @@ class FrameCommandMixin:
         current_state = self._get_playlist_state()
         can_edit_playlist = bool(current_state and not current_state.is_folder_tab and not current_state.is_loading)
         has_youtube_items = any(is_remote_media_path(path) and "youtube" in path.lower() for path in selected_paths)
+        like_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "LIKE")
+        dislike_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "DISLIKE")
 
         copy_item.Enable(selected_count > 0)
         remove_item.Enable(selected_count > 0 and can_edit_playlist)
-        like_item.Enable(has_youtube_items)
-        dislike_item.Enable(has_youtube_items)
+        like_item.Enable(has_youtube_items and bool(like_rateable_paths))
+        dislike_item.Enable(has_youtube_items and bool(dislike_rateable_paths))
 
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_copy_current_item_path(None), id=copy_item.GetId())
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_paste_open_from_clipboard(None), id=paste_item.GetId())
@@ -561,12 +563,12 @@ class FrameCommandMixin:
         if callable(rate_selected):
             menu.Bind(
                 wx.EVT_MENU,
-                lambda _event: rate_selected(browser_panel.get_selected_item_paths(), "LIKE"),
+                lambda _event, media_paths=tuple(selected_paths): rate_selected(media_paths, "LIKE"),
                 id=like_item.GetId(),
             )
             menu.Bind(
                 wx.EVT_MENU,
-                lambda _event: rate_selected(browser_panel.get_selected_item_paths(), "DISLIKE"),
+                lambda _event, media_paths=tuple(selected_paths): rate_selected(media_paths, "DISLIKE"),
                 id=dislike_item.GetId(),
             )
 
@@ -731,7 +733,8 @@ class FrameCommandMixin:
 
             accepts_focus = False
             try:
-                accepts_focus = bool(window.CanAcceptFocusFromKeyboard() or window.CanAcceptFocus())
+                if not isinstance(window, (wx.Panel, wx.StaticBox, wx.CollapsiblePane)):
+                    accepts_focus = bool(window.CanAcceptFocusFromKeyboard() or window.CanAcceptFocus())
             except Exception:
                 accepts_focus = False
 
@@ -758,22 +761,41 @@ class FrameCommandMixin:
         if not isinstance(current_page, wx.Window):
             return False
 
+        focusable = self._screen_tab_focusable_windows(current_page)
+        if not focusable:
+            return False
+
         focused_window = wx.Window.FindFocus()
-        navigation_target = (
-            focused_window
-            if isinstance(focused_window, wx.Window) and self._window_is_descendant_of(focused_window, current_page)
-            else current_page
-        )
+        focused_idx = -1
+        for i, w in enumerate(focusable):
+            if w == focused_window or self._window_is_descendant_of(focused_window, w):
+                focused_idx = i
+                break
 
-        navigation_flags = wx.NavigationKeyEvent.FromTab
-        navigation_flags |= wx.NavigationKeyEvent.IsBackward if backward else wx.NavigationKeyEvent.IsForward
-        try:
-            if navigation_target.Navigate(navigation_flags):
+        if focused_idx != -1:
+            if backward:
+                if focused_idx == 0:
+                    try:
+                        self.notebook.SetFocus()
+                        return True
+                    except Exception:
+                        return False
+                target = focusable[focused_idx - 1]
+            else:
+                if focused_idx == len(focusable) - 1:
+                    try:
+                        self.notebook.SetFocus()
+                        return True
+                    except Exception:
+                        return False
+                target = focusable[focused_idx + 1]
+            try:
+                target.SetFocus()
                 return True
-        except Exception:
-            pass
-
-        return self._focus_screen_tab_edge_control(current_page, backward=backward)
+            except Exception:
+                return False
+        else:
+            return self._focus_screen_tab_edge_control(current_page, backward=backward)
 
     def _handle_screen_tab_key_down(self, event, current_tab):
         if not isinstance(current_tab, ScreenTabState):

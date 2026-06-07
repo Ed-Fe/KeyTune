@@ -109,5 +109,98 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         authenticated_client.get_playlist.assert_called_once_with("PL1234567890", limit=None)
         fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
 
+    def test_get_media_feedback_status_reads_like_status_from_song(self):
+        authenticated_client = Mock()
+        authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(status, "LIKE")
+        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
+
+    def test_rate_media_feedback_calls_rate_song_for_like(self):
+        authenticated_client = Mock()
+        authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(
+            YTMusic=fake_ytmusic_cls,
+            LikeStatus=SimpleNamespace(LIKE="LIKE", DISLIKE="DISLIKE", INDIFFERENT="INDIFFERENT"),
+        )
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "get_client", return_value=authenticated_client
+        ):
+            message = service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "LIKE")
+
+        self.assertEqual(message, "Mídia atual curtida no YouTube Music.")
+        authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
+        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+
+    def test_rate_media_feedback_calls_rate_song_for_dislike(self):
+        authenticated_client = Mock()
+        authenticated_client.get_song.return_value = {"likeStatus": "DISLIKE"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(
+            YTMusic=fake_ytmusic_cls,
+            LikeStatus=SimpleNamespace(LIKE="LIKE", DISLIKE="DISLIKE", INDIFFERENT="INDIFFERENT"),
+        )
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "get_client", return_value=authenticated_client
+        ):
+            message = service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "DISLIKE")
+
+        self.assertEqual(message, "Mídia atual marcada como não gostei no YouTube Music.")
+        authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "DISLIKE")
+        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+
+    def test_rate_media_feedback_rejects_invalid_rating_without_calling_api(self):
+        authenticated_client = Mock()
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(
+            YTMusic=fake_ytmusic_cls,
+            LikeStatus=SimpleNamespace(LIKE="LIKE", DISLIKE="DISLIKE", INDIFFERENT="INDIFFERENT"),
+        )
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "get_client", return_value=authenticated_client
+        ):
+            with self.assertRaises(RuntimeError):
+                service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "FAVORITE")
+
+        authenticated_client.rate_song.assert_not_called()
+
+    def test_rate_media_feedback_reports_server_mismatch_after_write(self):
+        authenticated_client = Mock()
+        authenticated_client.get_song.return_value = {"likeStatus": "INDIFFERENT"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(
+            YTMusic=fake_ytmusic_cls,
+            LikeStatus=SimpleNamespace(LIKE="LIKE", DISLIKE="DISLIKE", INDIFFERENT="INDIFFERENT"),
+        )
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "get_client", return_value=authenticated_client
+        ):
+            message = service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "LIKE")
+
+        self.assertEqual(
+            message,
+            "A avaliação foi enviada, mas o servidor ainda retornou likeStatus=INDIFFERENT.",
+        )
+        authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
+        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+
 if __name__ == "__main__":
     unittest.main()

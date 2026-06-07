@@ -477,6 +477,39 @@ class FrameYouTubeMusicMixin:
             self._youtube_music_service = service
         return service
 
+    def _get_youtube_music_media_feedback_status(self, media_path):
+        normalized_media_path = str(media_path or "").strip()
+        if not normalized_media_path or not is_youtube_music_media(normalized_media_path):
+            return None
+
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth():
+            return None
+
+        try:
+            return service.get_media_feedback_status(normalized_media_path)
+        except Exception:
+            return None
+
+    def _selected_youtube_music_media_paths_to_rate(self, media_paths, rating):
+        normalized_rating = str(rating or "").strip().upper()
+        if normalized_rating not in {"LIKE", "DISLIKE"}:
+            return []
+
+        rateable_paths = []
+        for media_path in media_paths or []:
+            normalized_media_path = str(media_path or "").strip()
+            if not normalized_media_path or not is_youtube_music_media(normalized_media_path):
+                continue
+
+            current_status = self._get_youtube_music_media_feedback_status(normalized_media_path)
+            if current_status == normalized_rating:
+                continue
+
+            rateable_paths.append(normalized_media_path)
+
+        return rateable_paths
+
     def _youtube_music_account_name(self):
         return str(getattr(self, "_youtube_music_connected_account_name", "") or "").strip()
 
@@ -1479,6 +1512,20 @@ class FrameYouTubeMusicMixin:
         if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
             return False
 
+        current_status = self._get_youtube_music_media_feedback_status(media_path)
+        normalized_rating = str(rating or "").strip().upper()
+        if current_status == normalized_rating:
+            if normalized_rating == "DISLIKE":
+                normalized_message = "A mídia atual já está marcada como não gostei no YouTube Music."
+            else:
+                normalized_message = "A mídia atual já está curtida no YouTube Music."
+            self._youtube_music_library_status_message = normalized_message
+            self._refresh_youtube_music_screen_later()
+            self._announce(normalized_message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(normalized_message)
+            return False
+
         def worker():
             return service.rate_media_feedback(media_path, rating)
 
@@ -1516,9 +1563,22 @@ class FrameYouTubeMusicMixin:
         if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
             return False
 
+        rateable_media_paths = self._selected_youtube_music_media_paths_to_rate(youtube_media_paths, rating)
+        if not rateable_media_paths:
+            if str(rating or "").strip().upper() == "DISLIKE":
+                normalized_message = "Os itens selecionados já estão marcados como não gostei no YouTube Music."
+            else:
+                normalized_message = "Os itens selecionados já estão curtidos no YouTube Music."
+            self._youtube_music_library_status_message = normalized_message
+            self._refresh_youtube_music_screen_later()
+            self._announce(normalized_message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(normalized_message)
+            return False
+
         def worker():
             rated_count = 0
-            for media_path in youtube_media_paths:
+            for media_path in rateable_media_paths:
                 service.rate_media_feedback(media_path, rating)
                 rated_count += 1
             return rated_count

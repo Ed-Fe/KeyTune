@@ -509,6 +509,22 @@ class YouTubeMusicService:
 
         raise RuntimeError("O resultado selecionado não pode ser salvo no YouTube Music.")
 
+    def get_media_feedback_status(self, media_path):
+        normalized_media_path = self._normalize_stream_cache_key(media_path)
+        video_id = extract_video_id_from_text(normalized_media_path)
+        if not video_id:
+            return None
+
+        client = self.get_client()
+        song = client.get_song(video_id)
+        if not isinstance(song, dict):
+            return None
+
+        like_status = str(song.get("likeStatus") or "").strip().upper()
+        if like_status in {"LIKE", "DISLIKE", "INDIFFERENT"}:
+            return like_status
+        return None
+
     def rate_media_feedback(self, media_path, rating):
         normalized_media_path = self._normalize_stream_cache_key(media_path)
         video_id = extract_video_id_from_text(normalized_media_path)
@@ -530,6 +546,18 @@ class YouTubeMusicService:
 
         client = self.get_client()
         client.rate_song(video_id, like_status)
+
+        confirmed_song = client.get_song(video_id)
+        confirmed_status = ""
+        if isinstance(confirmed_song, dict):
+            confirmed_status = str(confirmed_song.get("likeStatus") or "").strip().upper()
+
+        if confirmed_status != normalized_rating:
+            confirmed_label = confirmed_status or "indisponível"
+            return (
+                f"A avaliação foi enviada, mas o servidor ainda retornou likeStatus={confirmed_label}."
+            )
+
         if like_status == LikeStatus.LIKE:
             return "Mídia atual curtida no YouTube Music."
         if like_status == LikeStatus.DISLIKE:
