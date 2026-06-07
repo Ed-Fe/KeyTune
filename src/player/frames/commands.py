@@ -937,11 +937,11 @@ class FrameCommandMixin:
             return
 
         if event.ControlDown() and event.ShiftDown() and key_code in (ord("W"), ord("w")):
-            self.on_close_current_tab(None)
+            self._close_current_media()
             return
 
         if event.ControlDown() and key_code in (ord("W"), ord("w")):
-            self._close_current_media()
+            self.on_close_current_tab(None)
             return
 
         if not event.ControlDown() and not event.AltDown() and key_code in (ord("T"), ord("t")):

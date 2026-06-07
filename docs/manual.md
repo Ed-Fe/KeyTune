@@ -49,8 +49,8 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 ### Atalhos de arquivos e abas
 
 - `Ctrl+T`: abrir uma nova aba de playlist
-- `Ctrl+W`: fechar a mídia atual ou uma aba vazia
-- `Ctrl+Shift+W`: fechar a aba ou playlist atual
+- `Ctrl+W`: fechar a aba ou playlist atual
+- `Ctrl+Shift+W`: fechar a mídia atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar para a próxima ou aba anterior
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
 - `Ctrl+O`: abrir arquivos de mídia ou uma playlist local
@@ -71,6 +71,9 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 - `Seta cima` / `Seta baixo`: aumentar ou diminuir o volume
 - `Ctrl+.`: parar a reprodução
 - `Ctrl+PageUp` / `Ctrl+PageDown`: faixa anterior ou próxima na playlist
+- `Alt+Seta esquerda` / `Alt+Seta direita`: faixa anterior ou próxima na playlist (alternativa a `Ctrl+PageUp`/`Ctrl+PageDown`)
+- `Alt+Seta cima` / `Alt+Seta baixo`: mover o item atual para cima ou para baixo na playlist
+- `Alt+Home` / `Alt+End`: ir para o primeiro ou para o último item da playlist
 - `E`: alternar modo aleatório
 - `R`: alternar modo de repetição
 - `T`: anunciar o tempo atual da mídia
@@ -79,7 +82,7 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 - `Ctrl+L`: curtir a mídia atual no YouTube Music
 - `Ctrl+Shift+L`: marcar a mídia atual como não gostei no YouTube Music
 
-Quando uma aba está vazia, `Ctrl+W` fecha essa aba; quando há mídia carregada, o mesmo atalho remove só o item atual ou encerra a reprodução da aba ativa.
+O atalho `Ctrl+W` fecha a aba ativa diretamente; o atalho `Ctrl+Shift+W` fecha ou descarrega a mídia atual na aba ativa.
 
 ### Navegador de itens
 

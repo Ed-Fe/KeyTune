@@ -657,7 +657,7 @@ class FrameLibraryTabsMixin:
 
         state = self._get_playlist_state()
         if state and state.is_folder_tab:
-            self._announce("Use Ctrl+W para fechar a prévia atual ou Backspace para voltar de pasta.")
+            self._announce("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta.")
             return
 
         if not state or not 0 <= item_index < len(state.items):
@@ -719,7 +719,7 @@ class FrameLibraryTabsMixin:
 
         state = self._get_playlist_state()
         if state and state.is_folder_tab:
-            self._announce("Use Ctrl+W para fechar a prévia atual ou Backspace para voltar de pasta.")
+            self._announce("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta.")
             return
         if not state:
             self._announce("Nenhuma playlist ativa.")
@@ -774,7 +774,7 @@ class FrameLibraryTabsMixin:
 
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
-            self._close_current_tab()
+            self._announce("Nenhuma mídia carregada.")
             return
 
         state = self._get_playlist_state()
@@ -790,7 +790,7 @@ class FrameLibraryTabsMixin:
             return
 
         if not state or not state.current_media_path:
-            self._close_current_tab()
+            self._announce("Nenhuma mídia carregada.")
             return
 
         self._remove_item_from_current_playlist(state.current_index, announce_prefix="Mídia fechada")

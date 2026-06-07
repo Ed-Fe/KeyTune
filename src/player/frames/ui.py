@@ -109,8 +109,8 @@ class FrameUIMixin:
             "Ctrl+Shift+V — Colar e abrir em uma nova playlist\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
             "Ctrl+T — Nova playlist\n"
-            "Ctrl+W — Fechar mídia atual ou aba vazia\n"
-            "Ctrl+Shift+W — Fechar aba ou playlist atual\n\n"
+            "Ctrl+W — Fechar aba ou playlist atual\n"
+            "Ctrl+Shift+W — Fechar mídia atual\n\n"
             "Reprodução\n"
             "Espaço — Play/Pause\n"
             "Seta esquerda / direita — Voltar ou avançar no arquivo\n"
@@ -119,6 +119,9 @@ class FrameUIMixin:
             "Seta cima / baixo — Aumentar ou diminuir o volume\n"
             "Menu Reprodução > Dispositivo de áudio — Trocar a saída de som\n"
             "Ctrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\n"
+            "Alt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\n"
+            "Alt+Seta cima / baixo — Mover o item atual na playlist\n"
+            "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
             "Ctrl+L — Curtir mídia atual no YouTube Music\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "E — Alternar modo aleatório\n"
@@ -276,7 +279,7 @@ class FrameUIMixin:
         file_menu.AppendSubMenu(self.recent_menu, "&Recentes")
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_save_playlist_id, "Salvar Playli&st\tCtrl+Shift+S")
-        file_menu.Append(self.menu_close_media_id, "Fechar Mí&dia / Aba vazia\tCtrl+W")
+        file_menu.Append(self.menu_close_media_id, "Fechar Mí&dia\tCtrl+Shift+W")
         file_menu.AppendSeparator()
         file_menu.Append(wx.ID_EXIT, "&Sair\tAlt+F4")
 
@@ -325,7 +328,7 @@ class FrameUIMixin:
         tabs_menu.Append(self.menu_next_tab_id, "Próxima A&ba\tCtrl+Tab")
         tabs_menu.Append(self.menu_previous_tab_id, "Aba A&nterior\tCtrl+Shift+Tab")
         tabs_menu.AppendSeparator()
-        tabs_menu.Append(self.menu_close_tab_id, "Fechar A&ba / Playlist\tCtrl+Shift+W")
+        tabs_menu.Append(self.menu_close_tab_id, "Fechar A&ba / Playlist\tCtrl+W")
 
         settings_menu = wx.Menu()
         self.menu_check_updates_id = wx.NewIdRef()
