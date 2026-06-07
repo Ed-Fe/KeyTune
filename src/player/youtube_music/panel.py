@@ -1,6 +1,7 @@
 import wx
 
 from ..accessibility import attach_named_accessible
+from ..library.browser import VirtualItemsListCtrl
 from .models import YOUTUBE_SEARCH_SCOPE_OPTIONS
 
 
@@ -188,7 +189,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 			value_provider=lambda: self.search_results_label.GetLabel(),
 		)
 
-		self.search_results_list = wx.ListBox(search_pane_window, style=wx.LB_EXTENDED)
+		self.search_results_list = VirtualItemsListCtrl(search_pane_window, self._get_search_result_label)
 		self.search_results_list.SetName("Resultados da busca do YouTube")
 		self.search_results_list.SetHelpText(
 			"Mostra os resultados da última busca. Use setas para navegar, Enter para adicionar a seleção à playlist atual e Shift+F10 para abrir o menu de ações."
@@ -341,8 +342,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.playlists_list.Bind(wx.EVT_LISTBOX, self._on_selection_changed)
 		self.playlists_list.Bind(wx.EVT_LISTBOX_DCLICK, self._on_open_selected_event)
 		self.playlists_list.Bind(wx.EVT_CHAR_HOOK, self._on_list_key_down)
-		self.search_results_list.Bind(wx.EVT_LISTBOX, self._on_search_selection_changed)
-		self.search_results_list.Bind(wx.EVT_LISTBOX_DCLICK, self._on_open_search_result_event)
+		self.search_results_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self._on_search_selection_changed)
+		self.search_results_list.Bind(wx.EVT_LIST_ITEM_DESELECTED, self._on_search_selection_changed)
+		self.search_results_list.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_open_search_result_event)
 		self.search_results_list.Bind(wx.EVT_CHAR_HOOK, self._on_search_list_key_down)
 
 		self._refresh_playlist_list()
@@ -416,27 +418,31 @@ class YouTubeMusicTabPanel(wx.Panel):
 			selected_result_ids = [str(selected_result_id or "").strip()] if str(selected_result_id or "").strip() else []
 
 		self._visible_search_result_ids = [result.stable_id for result in self._all_search_results]
-		labels = [result.choice_label for result in self._all_search_results]
-		labels_changed = labels != self._last_search_result_labels
-		if labels_changed:
-			self.search_results_list.Set(labels)
-			self._last_search_result_labels = list(labels)
+		
+		old_count = self.search_results_list.GetItemCount()
+		new_count = len(self._all_search_results)
+		
+		self.search_results_list.SetItemCount(new_count)
+		self.search_results_list.Refresh()
 
 		selected_indices = [
 			self._visible_search_result_ids.index(result_id)
 			for result_id in selected_result_ids
 			if result_id in self._visible_search_result_ids
 		]
-		if not selected_indices and labels:
+		if not selected_indices and new_count > 0:
 			selected_indices = [0]
 
-		if labels_changed:
+		if old_count != new_count:
 			self._clear_search_results_selection()
-		current_selections = list(self.search_results_list.GetSelections())
+			
+		current_selections = self._get_search_list_selections()
 		if selected_indices != current_selections:
 			self._clear_search_results_selection()
 			for selection_index in selected_indices:
-				self.search_results_list.SetSelection(selection_index)
+				self.search_results_list.Select(selection_index, on=True)
+			if selected_indices:
+				self.search_results_list.Focus(selected_indices[0])
 
 		self._update_search_actions()
 
@@ -575,21 +581,34 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 	def get_selected_search_result_ids(self):
 		selected_ids = []
-		for selection in self.search_results_list.GetSelections():
+		for selection in self._get_search_list_selections():
 			if 0 <= selection < len(self._visible_search_result_ids):
 				selected_ids.append(self._visible_search_result_ids[selection])
 		return selected_ids
 
 	def get_selected_search_results(self):
 		results = []
-		for selection in self.search_results_list.GetSelections():
+		for selection in self._get_search_list_selections():
 			if 0 <= selection < len(self._all_search_results):
 				results.append(self._all_search_results[selection])
 		return results
 
 	def _clear_search_results_selection(self):
-		for selection in list(self.search_results_list.GetSelections()):
-			self.search_results_list.Deselect(selection)
+		for selection in self._get_search_list_selections():
+			self.search_results_list.Select(selection, on=False)
+
+	def _get_search_result_label(self, index):
+		if not 0 <= index < len(self._all_search_results):
+			return ""
+		return self._all_search_results[index].choice_label
+
+	def _get_search_list_selections(self):
+		selections = []
+		selection = self.search_results_list.GetFirstSelected()
+		while selection != -1:
+			selections.append(selection)
+			selection = self.search_results_list.GetNextSelected(selection)
+		return selections
 
 	def get_manual_source(self):
 		return str(self.manual_source_ctrl.GetValue() or "").strip()
