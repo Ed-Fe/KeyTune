@@ -129,7 +129,10 @@ class FrameLibraryNavigationMixin:
     def _open_external_media_paths(self, paths):
         target_state = self._playlist_state_for_external_media()
         if target_state is None:
-            return self._open_media_paths(paths)
+            opened = self._open_media_paths(paths)
+            if opened:
+                self._suppress_next_auto_advance = True
+            return opened
 
         added_count, play_path = self._append_media_paths_to_playlist(paths, target_state)
         if not play_path:
@@ -148,6 +151,7 @@ class FrameLibraryNavigationMixin:
         self._select_tab(target_index, announce=False)
         self._refresh_playlist_browser()
         self._play_media(index=target_index)
+        self._suppress_next_auto_advance = True
 
         if hasattr(self, "_set_status_message"):
             if added_count > 0:

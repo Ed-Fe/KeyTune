@@ -48,6 +48,7 @@ class MediaPlayerFrame(
         self._update_restart_pending = False
         self._startup_initialization_started = False
         self._startup_ready = False
+        self._suppress_next_auto_advance = False
 
         self._build_menu_bar()
         self._build_ui()

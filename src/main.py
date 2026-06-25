@@ -24,7 +24,8 @@ def _collect_initial_paths(argv=None, *, launch_targets=None):
 
     initial_paths = []
     for path in raw_paths:
-        if _normalize_launch_path(path) in normalized_launch_targets:
+        normalized_path = _normalize_launch_path(path)
+        if not normalized_path or normalized_path in normalized_launch_targets:
             continue
         initial_paths.append(path)
 

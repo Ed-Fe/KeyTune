@@ -398,6 +398,7 @@ class FrameLibraryTabsMixin:
         return f"Item atual: {media_name}. Item {state.current_index + 1} de {state.item_count}."
 
     def _play_media(self, media_path=None, index=None, announce_message=None, allow_crossfade=False):
+        self._suppress_next_auto_advance = False
         state = self._get_playlist_state(index)
         if not state:
             return
@@ -891,6 +892,12 @@ class FrameLibraryTabsMixin:
                 index=self._get_active_playlist_index(),
                 announce_message=f"Repetindo faixa atual. {self._describe_playlist_position(state)}",
             )
+            return
+
+        if getattr(self, "_suppress_next_auto_advance", False):
+            self._suppress_next_auto_advance = False
+            self._update_time_bar()
+            self._refresh_playlist_browser()
             return
 
         should_wrap = state.repeat_mode == REPEAT_ALL
