@@ -1,3 +1,10 @@
+from .browse import (
+    extract_browse_playlists_from_response,
+    normalize_mood_categories,
+    normalize_mood_playlists,
+    normalize_track_items,
+)
+from .charts import normalize_chart_results
 from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
 from .playlists import (
     extract_personalized_mix_summaries,
@@ -52,6 +59,80 @@ class YouTubeMusicLibraryManager:
             return normalize_music_search_results(raw_results)
 
         return search_youtube_videos(normalized_query, limit=scope_option.limit)
+
+    def get_charts(self, country_code):
+        """Return the "em alta" (charts) playlists for a country as results.
+
+        Uses the public client so trending can be browsed without connecting an
+        account; ``country_code`` is an ISO 3166-1 alpha-2 code (``ZZ`` =
+        Global).
+        """
+        normalized_country_code = str(country_code or "").strip().upper() or "ZZ"
+        client = self._get_client(require_auth=False)
+        raw_charts = client.get_charts(normalized_country_code)
+        return normalize_chart_results(raw_charts)
+
+    def get_mood_categories(self):
+        """Return the "Moods & Genres" categories grouped by section.
+
+        Uses the public client so the catalog can be browsed without an
+        account.  Returns a list of ``(section_title, [YouTubeMoodCategory,
+        ...])`` pairs.
+        """
+        client = self._get_client(require_auth=False)
+        raw_categories = client.get_mood_categories()
+        return normalize_mood_categories(raw_categories)
+
+    def get_mood_playlists(self, params, *, badge="Mood ou gênero"):
+        """Return the playlists for a "Moods & Genres" category as results.
+
+        ``params`` is the opaque token obtained from :meth:`get_mood_categories`.
+        Uses the public client; the resulting playlist results can be opened or
+        saved like any other.
+        """
+        normalized_params = str(params or "").strip()
+        if not normalized_params:
+            return []
+        client = self._get_client(require_auth=False)
+        try:
+            raw_playlists = client.get_mood_playlists(normalized_params)
+        except Exception:
+            # ytmusicapi 1.12.0 crashes parsing the "Genres" category pages
+            # (they lead with a songs carousel). Fall back to a resilient parse
+            # of the raw browse response so genres still work.
+            raw_playlists = self._fetch_mood_playlists_fallback(client, normalized_params)
+        return normalize_mood_playlists(raw_playlists, badge=badge)
+
+    @staticmethod
+    def _fetch_mood_playlists_fallback(client, params):
+        send_request = getattr(client, "_send_request", None)
+        if not callable(send_request):
+            return []
+        try:
+            response = send_request(
+                "browse",
+                {"browseId": "FEmusic_moods_and_genres_category", "params": params},
+            )
+        except Exception:
+            return []
+        return extract_browse_playlists_from_response(response)
+
+    def get_liked_songs(self, *, limit=100):
+        """Return the account's "Curtidas" (Liked Music) tracks as results."""
+        client = self._get_client(require_auth=True)
+        try:
+            normalized_limit = max(1, int(limit))
+        except (TypeError, ValueError):
+            normalized_limit = 100
+        raw_liked = client.get_liked_songs(limit=normalized_limit)
+        raw_tracks = raw_liked.get("tracks") if isinstance(raw_liked, dict) else raw_liked
+        return normalize_track_items(raw_tracks, badge="Curtida")
+
+    def get_history(self):
+        """Return the account's play history as song results (most recent first)."""
+        client = self._get_client(require_auth=True)
+        raw_history = client.get_history()
+        return normalize_track_items(raw_history, badge="Histórico")
 
     def get_user_library_playlists(self, *, limit=None):
         """Return the user's library playlists sorted by title.

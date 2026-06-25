@@ -63,6 +63,192 @@ def get_search_scope_option(scope_id):
     )
 
 
+# Charts / "em alta" by country.  Codes are ISO 3166-1 alpha-2 as accepted by
+# ``YTMusic.get_charts`` (``ZZ`` = Global).  Labels are in Portuguese and the
+# tuple order is the order shown in the country picker (Global and Brasil first,
+# then alphabetical by label).
+YOUTUBE_CHART_DEFAULT_COUNTRY_CODE = "ZZ"
+
+YOUTUBE_CHART_COUNTRIES = (
+    ("ZZ", "Global"),
+    ("BR", "Brasil"),
+    ("ZA", "África do Sul"),
+    ("DE", "Alemanha"),
+    ("SA", "Arábia Saudita"),
+    ("AR", "Argentina"),
+    ("AU", "Austrália"),
+    ("AT", "Áustria"),
+    ("BE", "Bélgica"),
+    ("BO", "Bolívia"),
+    ("CA", "Canadá"),
+    ("CL", "Chile"),
+    ("CO", "Colômbia"),
+    ("KR", "Coreia do Sul"),
+    ("CR", "Costa Rica"),
+    ("DK", "Dinamarca"),
+    ("EG", "Egito"),
+    ("SV", "El Salvador"),
+    ("AE", "Emirados Árabes Unidos"),
+    ("EC", "Equador"),
+    ("ES", "Espanha"),
+    ("US", "Estados Unidos"),
+    ("EE", "Estônia"),
+    ("FI", "Finlândia"),
+    ("FR", "França"),
+    ("GT", "Guatemala"),
+    ("NL", "Holanda"),
+    ("HN", "Honduras"),
+    ("HU", "Hungria"),
+    ("IN", "Índia"),
+    ("ID", "Indonésia"),
+    ("IE", "Irlanda"),
+    ("IS", "Islândia"),
+    ("IL", "Israel"),
+    ("IT", "Itália"),
+    ("JP", "Japão"),
+    ("LU", "Luxemburgo"),
+    ("MX", "México"),
+    ("NI", "Nicarágua"),
+    ("NG", "Nigéria"),
+    ("NO", "Noruega"),
+    ("NZ", "Nova Zelândia"),
+    ("PA", "Panamá"),
+    ("PY", "Paraguai"),
+    ("PE", "Peru"),
+    ("PL", "Polônia"),
+    ("PT", "Portugal"),
+    ("KE", "Quênia"),
+    ("GB", "Reino Unido"),
+    ("CZ", "República Tcheca"),
+    ("DO", "República Dominicana"),
+    ("RO", "Romênia"),
+    ("RU", "Rússia"),
+    ("SE", "Suécia"),
+    ("CH", "Suíça"),
+    ("TR", "Turquia"),
+    ("UA", "Ucrânia"),
+    ("UY", "Uruguai"),
+)
+
+YOUTUBE_CHART_COUNTRY_LABELS_BY_CODE = {code: label for code, label in YOUTUBE_CHART_COUNTRIES}
+
+
+def get_chart_country_label(country_code):
+    normalized_code = str(country_code or "").strip().upper()
+    return YOUTUBE_CHART_COUNTRY_LABELS_BY_CODE.get(normalized_code, normalized_code or "Global")
+
+
+# Continent grouping for the "em alta" menu.  The country list itself stays the
+# single source of truth for labels; this only maps each code to a continent so
+# the menu can show submenus (mirroring the moods & genres menu).  ``Global``
+# (``ZZ``) is intentionally not mapped here so it can be surfaced as a top-level
+# shortcut by :func:`get_chart_country_groups`.
+_CHART_CONTINENT_ORDER = (
+    "América do Sul",
+    "América do Norte e Central",
+    "Europa",
+    "Ásia",
+    "África",
+    "Oceania",
+)
+
+_CHART_CONTINENT_BY_CODE = {
+    # América do Sul
+    "BR": "América do Sul",
+    "AR": "América do Sul",
+    "BO": "América do Sul",
+    "CL": "América do Sul",
+    "CO": "América do Sul",
+    "EC": "América do Sul",
+    "PY": "América do Sul",
+    "PE": "América do Sul",
+    "UY": "América do Sul",
+    # América do Norte e Central
+    "CA": "América do Norte e Central",
+    "US": "América do Norte e Central",
+    "MX": "América do Norte e Central",
+    "CR": "América do Norte e Central",
+    "SV": "América do Norte e Central",
+    "GT": "América do Norte e Central",
+    "HN": "América do Norte e Central",
+    "NI": "América do Norte e Central",
+    "PA": "América do Norte e Central",
+    "DO": "América do Norte e Central",
+    # Europa
+    "DE": "Europa",
+    "AT": "Europa",
+    "BE": "Europa",
+    "DK": "Europa",
+    "ES": "Europa",
+    "EE": "Europa",
+    "FI": "Europa",
+    "FR": "Europa",
+    "NL": "Europa",
+    "HU": "Europa",
+    "IE": "Europa",
+    "IS": "Europa",
+    "IT": "Europa",
+    "LU": "Europa",
+    "NO": "Europa",
+    "PL": "Europa",
+    "PT": "Europa",
+    "GB": "Europa",
+    "CZ": "Europa",
+    "RO": "Europa",
+    "RU": "Europa",
+    "SE": "Europa",
+    "CH": "Europa",
+    "UA": "Europa",
+    # Ásia
+    "SA": "Ásia",
+    "KR": "Ásia",
+    "AE": "Ásia",
+    "IN": "Ásia",
+    "ID": "Ásia",
+    "IL": "Ásia",
+    "JP": "Ásia",
+    "TR": "Ásia",
+    # África
+    "ZA": "África",
+    "EG": "África",
+    "NG": "África",
+    "KE": "África",
+    # Oceania
+    "AU": "Oceania",
+    "NZ": "Oceania",
+}
+
+
+def get_chart_country_groups():
+    """Return the chart countries grouped for the "em alta" menu.
+
+    The result is a list of ``(section_title, [(code, label), ...])`` pairs,
+    mirroring the shape consumed by the moods & genres menu.  ``Global`` is
+    returned first as a section with an empty title so callers can surface it as
+    a top-level shortcut; the remaining sections are continents in
+    :data:`_CHART_CONTINENT_ORDER`, each preserving the order of
+    :data:`YOUTUBE_CHART_COUNTRIES`.
+    """
+    grouped = {continent: [] for continent in _CHART_CONTINENT_ORDER}
+    global_entry = None
+    for code, label in YOUTUBE_CHART_COUNTRIES:
+        if code == YOUTUBE_CHART_DEFAULT_COUNTRY_CODE:
+            global_entry = (code, label)
+            continue
+        continent = _CHART_CONTINENT_BY_CODE.get(code)
+        if continent is None:
+            continue
+        grouped[continent].append((code, label))
+
+    sections = []
+    if global_entry is not None:
+        sections.append(("", [global_entry]))
+    for continent in _CHART_CONTINENT_ORDER:
+        if grouped[continent]:
+            sections.append((continent, grouped[continent]))
+    return sections
+
+
 @dataclass(frozen=True)
 class YouTubeMusicPlaylistSummary:
     playlist_id: str

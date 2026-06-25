@@ -256,7 +256,12 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
     - *YouTube Music — vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
     - *YouTube Music — playlists*: playlists do catálogo do YouTube Music.
     - *YouTube — vídeos*: vídeos do YouTube em geral, sem exigir conta.
-- **Lista de resultados**: mostra os itens encontrados. `Enter` adiciona a seleção à playlist atual; duplo clique abre em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual com opções adicionais.
+- **Explorar**: quatro botões trazem mais conteúdo para a mesma lista de resultados:
+    - **Em alta...**: abre um menu com *Global* no topo e os demais países agrupados em submenus por continente. Ao escolher um país, as paradas e os destaques em alta do YouTube Music aparecem na lista, como playlists que você pode abrir ou salvar na biblioteca. Não exige conta conectada.
+    - **Moods e gêneros...**: abre um menu com as categorias de climas e gêneros do YouTube Music (por exemplo *Foco*, *Treino*, *Pop*, *Rock*). Ao escolher uma categoria, as playlists dela aparecem na lista. Não exige conta conectada.
+    - **Curtidas**: carrega as faixas curtidas (a playlist *Curtidas/Liked Music* da sua conta). Exige conta conectada.
+    - **Histórico**: carrega seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.
+- **Lista de resultados**: mostra os itens encontrados (da busca, das paradas em alta, de moods e gêneros, das curtidas ou do histórico). A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo. `Enter` adiciona a seleção à playlist atual; duplo clique abre a seleção em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual, que traz o submenu **Adicionar seleção...** com a opção *Abrir seleção em nova playlist* e um item para cada aba de playlist aberta (a aba atual e a playlist ativa aparecem identificadas), permitindo adicionar a seleção diretamente àquela aba.
 - **Salvar no Music**: salva a seleção na biblioteca do YouTube Music quando o resultado for compatível (playlists ou faixas).
 
 ### Abrir playlist específica
@@ -274,12 +279,17 @@ Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretament
 
 O arquivo exportado contém informações de acesso da sua conta. Use apenas no seu computador e só com a conta que você quer conectar ao aplicativo.
 
+**Por que a conexão expira rápido (e como evitar):** por segurança, o Google troca os cookies da sessão sempre que você continua navegando no YouTube logado no navegador. Quando isso acontece, os cookies que você já exportou deixam de valer — por isso a conta costuma aparecer como desconectada no dia seguinte, mesmo que você sempre use o mesmo arquivo. Para uma conexão estável e duradoura, exporte os cookies a partir de uma janela **anônima/privada**: abra a janela anônima, faça login em `music.youtube.com`, exporte os cookies (passos acima) e feche a janela anônima **sem abrir o YouTube de novo nela**. Como aquela sessão não continua sendo usada, os cookies exportados não são mais trocados e a autenticação dura muito mais.
+
 ### Atalhos
 
 - `Ctrl+Shift+Y`: abrir a aba do YouTube Music
 - `Enter` no campo de busca: executar a pesquisa
 - `Enter` na lista de resultados: adicionar o item à playlist atual
 - duplo clique na lista de resultados: abrir o item em nova playlist
+- `Ctrl+Espaço` na lista de resultados: marcar ou desmarcar o item em foco (seleção múltipla)
+- `Ctrl+Setas` na lista de resultados: mover o foco sem alterar a seleção
+- `Shift+Setas` na lista de resultados: selecionar um intervalo de itens
 - `Shift+F10` na lista de resultados: abrir o menu de ações
 - `Enter` na lista de playlists da biblioteca: abrir a seleção
 - `Page Down` no fim da lista de playlists: carregar mais playlists

@@ -23,6 +23,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		on_add_search_results_to_current_playlist,
 		on_show_search_actions_menu,
 		on_load_more_playlists,
+		on_show_charts,
+		on_show_moods,
+		on_show_liked,
+		on_show_history,
 		on_announce=None,
 	):
 		super().__init__(parent, style=wx.TAB_TRAVERSAL)
@@ -48,6 +52,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._on_add_search_results_to_current_playlist = on_add_search_results_to_current_playlist
 		self._on_show_search_actions_menu = on_show_search_actions_menu
 		self._on_load_more_playlists = on_load_more_playlists
+		self._on_show_charts = on_show_charts
+		self._on_show_moods = on_show_moods
+		self._on_show_liked = on_show_liked
+		self._on_show_history = on_show_history
 		self._on_announce = on_announce
 
 		root_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -179,6 +187,43 @@ class YouTubeMusicTabPanel(wx.Panel):
 		search_scope_row.Add(self.search_scope_choice, 1, wx.RIGHT, 8)
 		search_scope_row.Add(self.search_button, 0)
 
+		browse_row = wx.BoxSizer(wx.HORIZONTAL)
+		browse_label = wx.StaticText(search_pane_window, label="Explorar:")
+		self.charts_button = wx.Button(search_pane_window, label="Em &alta...")
+		self.moods_button = wx.Button(search_pane_window, label="Moods e &gêneros...")
+		self.liked_button = wx.Button(search_pane_window, label="C&urtidas")
+		self.history_button = wx.Button(search_pane_window, label="&Histórico")
+		for button, name, description in (
+			(
+				self.charts_button,
+				"Ver o que está em alta no YouTube Music",
+				"Abre um menu para escolher o país e carrega as paradas e os destaques em alta nos resultados abaixo.",
+			),
+			(
+				self.moods_button,
+				"Explorar moods e gêneros do YouTube Music",
+				"Lista as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida nos resultados abaixo.",
+			),
+			(
+				self.liked_button,
+				"Carregar suas músicas curtidas do YouTube Music",
+				"Traz para os resultados abaixo as faixas curtidas (Curtidas) da conta conectada.",
+			),
+			(
+				self.history_button,
+				"Carregar seu histórico do YouTube Music",
+				"Traz para os resultados abaixo o histórico de reprodução da conta conectada, da mais recente para a mais antiga.",
+			),
+		):
+			button.SetName(name)
+			button.SetHelpText(description)
+			button.SetToolTip(description)
+		browse_row.Add(browse_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
+		browse_row.Add(self.charts_button, 0, wx.RIGHT, 8)
+		browse_row.Add(self.moods_button, 0, wx.RIGHT, 8)
+		browse_row.Add(self.liked_button, 0, wx.RIGHT, 8)
+		browse_row.Add(self.history_button, 0)
+
 		self.search_results_label = wx.StaticText(search_pane_window, label="Resultados da busca: nenhum ainda.")
 		self.search_results_label.SetName("Resumo da busca do YouTube")
 		self.search_results_label.SetHelpText("Mostra quantos resultados a busca atual retornou.")
@@ -229,6 +274,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		search_box.Add(search_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
 		search_box.Add(self.search_query_ctrl, 0, wx.ALL | wx.EXPAND, 6)
 		search_box.Add(search_scope_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+		search_box.Add(browse_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		search_box.Add(self.search_results_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		search_box.Add(self.search_results_list, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		search_box.Add(search_actions, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
@@ -329,6 +375,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.open_selected_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_selected())
 		self.manual_open_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_manual_source())
 		self.search_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_search())
+		self.charts_button.Bind(wx.EVT_BUTTON, self._on_charts_button)
+		self.moods_button.Bind(wx.EVT_BUTTON, self._on_moods_button)
+		self.liked_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_show_liked())
+		self.history_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_show_history())
 		self.save_search_result_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_save_search_result())
 		self.search_actions_button.Bind(wx.EVT_BUTTON, self._on_search_actions_button)
 		self.load_more_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_load_more_playlists())
@@ -512,6 +562,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.manual_source_ctrl.Enable(not operation_in_progress)
 		self.search_query_ctrl.Enable(not operation_in_progress)
 		self.search_scope_choice.Enable(not operation_in_progress)
+		self.charts_button.Enable(not operation_in_progress)
+		self.moods_button.Enable(not operation_in_progress)
+		self.liked_button.Enable(not operation_in_progress)
+		self.history_button.Enable(not operation_in_progress)
 		self.filter_ctrl.Enable(True)
 		self.playlists_list.Enable(True)
 		self.search_results_list.Enable(True)
@@ -661,6 +715,16 @@ class YouTubeMusicTabPanel(wx.Panel):
 		if not callable(self._on_show_search_actions_menu):
 			return
 		self._on_show_search_actions_menu(self, event.GetEventObject())
+
+	def _on_charts_button(self, event):
+		if not callable(self._on_show_charts):
+			return
+		self._on_show_charts(self, event.GetEventObject())
+
+	def _on_moods_button(self, event):
+		if not callable(self._on_show_moods):
+			return
+		self._on_show_moods(self, event.GetEventObject())
 
 	def _on_manual_source_enter(self, _event):
 		self._on_open_manual_source()

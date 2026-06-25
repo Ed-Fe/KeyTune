@@ -96,6 +96,22 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         )
         note.Wrap(720)
 
+        rotation_warning = wx.StaticText(
+            self,
+            label=(
+                "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você "
+                "continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como "
+                "desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela "
+                "anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir "
+                "o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
+            ),
+        )
+        rotation_warning.Wrap(720)
+        rotation_warning.SetName("Aviso sobre validade dos cookies do YouTube Music")
+        rotation_warning.SetHelpText(
+            "Explica por que a conexão expira rápido e como exportar os cookies em uma janela anônima para que durem."
+        )
+
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         # Use FindWindow (descendant-scoped) instead of FindWindowById, which is
         # static and searches all top-level windows globally and could rename
@@ -117,6 +133,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         root_sizer.Add(self.headers_value, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
         root_sizer.Add(file_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
         root_sizer.Add(note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        root_sizer.Add(rotation_warning, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
         if button_sizer is not None:
             root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
 

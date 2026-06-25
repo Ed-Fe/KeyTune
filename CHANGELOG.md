@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Não lançado]
+
+### Adicionado
+- **Em alta por país (YouTube Music)**: botão **Em alta...** na seção *Explorar* da aba do YouTube Music abre um menu com *Global* no topo e mais de 50 países agrupados em submenus por continente. Ao escolher um país, as paradas e os destaques em alta entram na lista de busca já existente, prontos para abrir como playlist ou salvar na biblioteca. Funciona sem conectar a conta (cliente público do `ytmusicapi`).
+- **Moods e gêneros (YouTube Music)**: botão **Moods e gêneros...** abre um menu com as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida na lista de resultados. Funciona sem conta conectada. Inclui um analisador resiliente próprio para as páginas de *Gêneros*, que o `ytmusicapi` 1.12.0 não consegue interpretar sozinho.
+- **Curtidas e Histórico (YouTube Music)**: botões **Curtidas** e **Histórico** trazem, respectivamente, as faixas curtidas da conta e o histórico de reprodução (da mais recente para a mais antiga) para a lista de resultados, prontos para abrir, tocar ou adicionar a uma playlist.
+
+### Corrigido
+- **Conexão do YouTube Music que expirava de um dia para o outro**: o diálogo de conexão e o manual agora explicam que o Google troca os cookies da sessão por segurança quando você continua navegando logado no YouTube, invalidando os cookies já exportados. A orientação recomenda exportar os cookies em uma janela anônima/privada e fechá-la sem reabrir o YouTube, para que a autenticação dure muito mais.
+
 ## [1.0.0] - 2026-06-07
 
 Primeira versão oficial estável (Release) do **KeyTune**. Consolida todos os recursos principais de reprodução de mídia acessível, playlists em abas, equalização, sistema de diagnóstico avançado e integração completa com YouTube Music.

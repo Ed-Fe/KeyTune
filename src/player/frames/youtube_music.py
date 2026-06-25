@@ -14,6 +14,8 @@ from player.youtube_music.dialog import (
 )
 from player.youtube_music.models import (
     YOUTUBE_MUSIC_SCREEN_ID,
+    get_chart_country_groups,
+    get_chart_country_label,
     get_search_scope_option,
 )
 from player.youtube_music.playlists import (
@@ -96,6 +98,7 @@ class FrameYouTubeMusicMixin:
     _YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS = 45000
     _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
+    _YOUTUBE_MUSIC_LIKED_SONGS_LIMIT = 200
     _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MIN = 5
     _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE_MAX = 200
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MIN = 5
@@ -584,6 +587,10 @@ class FrameYouTubeMusicMixin:
             on_add_search_results_to_current_playlist=self._add_youtube_music_search_results_to_current_playlist,
             on_show_search_actions_menu=self._on_youtube_music_show_search_actions_menu,
             on_load_more_playlists=self._on_youtube_music_load_more_playlists_button,
+            on_show_charts=self._on_youtube_music_charts_button,
+            on_show_moods=self._on_youtube_music_moods_button,
+            on_show_liked=self._on_youtube_music_liked_button,
+            on_show_history=self._on_youtube_music_history_button,
             on_announce=self._announce,
         )
 
@@ -1150,6 +1157,18 @@ class FrameYouTubeMusicMixin:
     def _on_youtube_music_search_button(self):
         self.on_search_youtube_music(None)
 
+    def _on_youtube_music_charts_button(self, panel, anchor_window=None):
+        self.on_show_youtube_music_charts(panel, anchor_window)
+
+    def _on_youtube_music_moods_button(self, panel, anchor_window=None):
+        self.on_show_youtube_music_moods(panel, anchor_window)
+
+    def _on_youtube_music_liked_button(self):
+        self.on_show_youtube_music_liked()
+
+    def _on_youtube_music_history_button(self):
+        self.on_show_youtube_music_history()
+
     def _on_youtube_music_open_search_result_button(self):
         self._open_youtube_music_search_results_in_new_playlist()
 
@@ -1652,6 +1671,242 @@ class FrameYouTubeMusicMixin:
         def on_error(exc):
             wx.MessageBox(
                 f"Não foi possível concluir a busca agora.\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def on_show_youtube_music_charts(self, panel=None, anchor_window=None):
+        panel = panel or self._get_youtube_music_panel()
+        if panel is None:
+            return False
+
+        self._announce("Escolha um país no menu para carregar o que está em alta.")
+        self._show_youtube_music_charts_menu(panel, anchor_window, get_chart_country_groups())
+        return True
+
+    def _show_youtube_music_charts_menu(self, panel, anchor_window, sections):
+        menu = wx.Menu()
+        for section_title, countries in sections:
+            if not section_title:
+                # Global (and any other top-level shortcut) goes straight onto
+                # the root menu, followed by a separator before the continents.
+                for code, label in countries:
+                    menu_item = menu.Append(wx.ID_ANY, label)
+                    menu.Bind(
+                        wx.EVT_MENU,
+                        lambda _event, chosen_code=code, chosen_label=label: self._load_youtube_music_charts(
+                            chosen_code, chosen_label
+                        ),
+                        id=menu_item.GetId(),
+                    )
+                menu.AppendSeparator()
+                continue
+            submenu = wx.Menu()
+            for code, label in countries:
+                menu_item = submenu.Append(wx.ID_ANY, label)
+                submenu.Bind(
+                    wx.EVT_MENU,
+                    lambda _event, chosen_code=code, chosen_label=label: self._load_youtube_music_charts(
+                        chosen_code, chosen_label
+                    ),
+                    id=menu_item.GetId(),
+                )
+            menu.AppendSubMenu(submenu, section_title)
+
+        anchor = anchor_window or getattr(panel, "charts_button", None) or self
+        try:
+            anchor.PopupMenu(menu)
+        finally:
+            menu.Destroy()
+
+    def _load_youtube_music_charts(self, country_code, country_label=""):
+        country_label = str(country_label or "").strip() or get_chart_country_label(country_code)
+        service = self._get_youtube_music_service()
+        self._announce(f"Carregando o que está em alta em {country_label}.")
+
+        def worker():
+            return service.get_charts(country_code)
+
+        def on_success(chart_results):
+            result_count = len(chart_results)
+            if result_count == 0:
+                search_summary = f"Em alta em {country_label}: nenhum destaque disponível."
+            else:
+                search_summary = (
+                    f"Em alta em {country_label}: {result_count} lista(s) de destaque."
+                )
+            self._set_youtube_music_search_results(
+                chart_results,
+                search_summary=search_summary,
+                status_message=search_summary,
+            )
+            self._announce(search_summary)
+
+        def on_error(exc):
+            wx.MessageBox(
+                f"Não foi possível carregar as paradas agora.\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def on_show_youtube_music_moods(self, panel=None, anchor_window=None):
+        panel = panel or self._get_youtube_music_panel()
+        if panel is None:
+            return False
+
+        service = self._get_youtube_music_service()
+        self._announce("Carregando as categorias de moods e gêneros do YouTube Music.")
+
+        def worker():
+            return service.get_mood_categories()
+
+        def on_success(sections):
+            if not sections:
+                message = "Nenhuma categoria de moods e gêneros está disponível agora."
+                self._youtube_music_library_status_message = message
+                self._refresh_youtube_music_screen_later()
+                self._announce(message)
+                return
+            self._announce(
+                "Escolha uma categoria de moods e gêneros no menu para carregar as playlists."
+            )
+            self._show_youtube_music_mood_menu(panel, anchor_window, sections)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível carregar as categorias de moods e gêneros agora.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _show_youtube_music_mood_menu(self, panel, anchor_window, sections):
+        menu = wx.Menu()
+        for section_title, categories in sections:
+            submenu = wx.Menu()
+            for category in categories:
+                menu_item = submenu.Append(wx.ID_ANY, category.title)
+                submenu.Bind(
+                    wx.EVT_MENU,
+                    lambda _event, chosen=category: self._load_youtube_music_mood_playlists(chosen),
+                    id=menu_item.GetId(),
+                )
+            menu.AppendSubMenu(submenu, section_title or "Categorias")
+
+        anchor = anchor_window or getattr(panel, "moods_button", None) or self
+        try:
+            anchor.PopupMenu(menu)
+        finally:
+            menu.Destroy()
+
+    def _load_youtube_music_mood_playlists(self, category):
+        category_title = str(getattr(category, "title", "") or "").strip() or "Categoria"
+        service = self._get_youtube_music_service()
+        self._announce(f"Carregando playlists de {category_title}.")
+
+        def worker():
+            return service.get_mood_playlists(category.params, badge=category_title)
+
+        def on_success(results):
+            result_count = len(results)
+            if result_count == 0:
+                search_summary = f"Moods e gêneros — {category_title}: nenhuma playlist disponível."
+            else:
+                search_summary = (
+                    f"Moods e gêneros — {category_title}: {result_count} playlist(s)."
+                )
+            self._set_youtube_music_search_results(
+                results,
+                search_summary=search_summary,
+                status_message=search_summary,
+            )
+            self._announce(search_summary)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível carregar as playlists desta categoria agora.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def on_show_youtube_music_liked(self):
+        if self._get_youtube_music_panel() is None:
+            return False
+        if not self._ensure_youtube_music_authenticated():
+            return False
+
+        service = self._get_youtube_music_service()
+        self._announce("Carregando suas músicas curtidas do YouTube Music.")
+
+        def worker():
+            return service.get_liked_songs(limit=self._YOUTUBE_MUSIC_LIKED_SONGS_LIMIT)
+
+        def on_success(results):
+            result_count = len(results)
+            if result_count == 0:
+                search_summary = "Curtidas: nenhuma faixa curtida encontrada."
+            else:
+                search_summary = f"Curtidas: {result_count} faixa(s)."
+            self._set_youtube_music_search_results(
+                results,
+                search_summary=search_summary,
+                status_message=search_summary,
+            )
+            self._announce(search_summary)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível carregar suas músicas curtidas agora.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def on_show_youtube_music_history(self):
+        if self._get_youtube_music_panel() is None:
+            return False
+        if not self._ensure_youtube_music_authenticated():
+            return False
+
+        service = self._get_youtube_music_service()
+        self._announce("Carregando seu histórico do YouTube Music.")
+
+        def worker():
+            return service.get_history()
+
+        def on_success(results):
+            result_count = len(results)
+            if result_count == 0:
+                search_summary = "Histórico: nenhuma faixa recente encontrada."
+            else:
+                search_summary = f"Histórico: {result_count} faixa(s) recentes."
+            self._set_youtube_music_search_results(
+                results,
+                search_summary=search_summary,
+                status_message=search_summary,
+            )
+            self._announce(search_summary)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível carregar seu histórico agora.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,

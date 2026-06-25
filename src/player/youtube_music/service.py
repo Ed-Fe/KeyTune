@@ -307,6 +307,21 @@ class YouTubeMusicService:
     def search(self, query, *, search_scope):
         return self._library.search(query, search_scope=search_scope)
 
+    def get_charts(self, country_code):
+        return self._library.get_charts(country_code)
+
+    def get_mood_categories(self):
+        return self._library.get_mood_categories()
+
+    def get_mood_playlists(self, params, *, badge="Mood ou gênero"):
+        return self._library.get_mood_playlists(params, badge=badge)
+
+    def get_liked_songs(self, *, limit=100):
+        return self._library.get_liked_songs(limit=limit)
+
+    def get_history(self):
+        return self._library.get_history()
+
     def get_user_library_playlists(self, *, limit=None):
         return self._library.get_user_library_playlists(limit=limit)
 
