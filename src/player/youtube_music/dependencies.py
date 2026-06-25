@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 import importlib
 import importlib.util
-import os
+import json
 from pathlib import Path
-import subprocess
+import shutil
 import sys
+import tempfile
 import threading
 import time
+import zipfile
+from urllib import error, request
 
+from ..constants import APP_TITLE, APP_VERSION, UPDATE_DOWNLOAD_CHUNK_SIZE, UPDATE_HTTP_TIMEOUT_SECONDS
 from ..session import get_app_storage_dir
 from .yt_dlp_runtime import (
     get_managed_yt_dlp_executable_path,
@@ -20,7 +25,8 @@ from .yt_dlp_runtime import (
 
 
 YTMUSICAPI_IMPORT_NAME = "ytmusicapi"
-YOUTUBE_DEPENDENCY_PACKAGES = ("ytmusicapi",)
+YTMUSICAPI_PACKAGE_NAME = "ytmusicapi"
+YTMUSICAPI_PYPI_JSON_URL = f"https://pypi.org/pypi/{YTMUSICAPI_PACKAGE_NAME}/json"
 YOUTUBE_DEPENDENCY_INSTALL_TIMEOUT_SECONDS = 240
 
 
@@ -29,6 +35,14 @@ class YouTubeDependencyUpdateResult:
     updated: bool
     versions: dict[str, str]
     command_output: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class _PyPIWheelInfo:
+    version: str
+    filename: str
+    download_url: str
+    sha256: str
 
 
 @dataclass(slots=True)
@@ -158,8 +172,12 @@ def install_or_update_youtube_dependencies(
     versions_before = get_installed_youtube_dependency_versions()
 
     if force or not ytmusicapi_was_available:
-        completed_process = _install_or_update_ytmusicapi(target_dir=target_dir, timeout_seconds=timeout_seconds)
-        output_parts.append(_trim_process_output(completed_process))
+        installed_version = _install_or_update_ytmusicapi(
+            target_dir=target_dir,
+            timeout_seconds=timeout_seconds,
+        )
+        if installed_version:
+            output_parts.append(f"ytmusicapi {installed_version}")
 
     if force or not yt_dlp_managed_exists:
         yt_dlp_version = install_or_update_yt_dlp_executable(
@@ -224,40 +242,163 @@ def _install_or_update_ytmusicapi(
     *,
     target_dir: Path,
     timeout_seconds: int,
-) -> subprocess.CompletedProcess:
-    command = [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "--disable-pip-version-check",
-        "--no-input",
-        "--upgrade",
-        "--target",
-        str(target_dir),
-        *YOUTUBE_DEPENDENCY_PACKAGES,
-    ]
+) -> str:
+    wheel_info = _fetch_latest_ytmusicapi_wheel_info(timeout_seconds=timeout_seconds)
 
-    completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
-    if completed_process.returncode != 0 and _pip_missing_in_output(completed_process):
-        _try_bootstrap_pip(timeout_seconds=timeout_seconds)
-        completed_process = _run_pip_install(command, timeout_seconds=timeout_seconds)
+    download_dir = Path(tempfile.mkdtemp(prefix="keytune-ytmusicapi-"))
+    wheel_path = download_dir / wheel_info.filename
+    try:
+        _download_binary_file(
+            wheel_info.download_url,
+            wheel_path,
+            timeout_seconds=timeout_seconds,
+        )
 
-    if completed_process.returncode != 0 and not _is_pyd_lock_error(completed_process):
-        raise RuntimeError(_format_install_failure(completed_process))
+        actual_sha256 = _calculate_sha256(wheel_path)
+        if actual_sha256.casefold() != wheel_info.sha256.casefold():
+            raise RuntimeError("O wheel da ytmusicapi baixado não passou na validação de integridade.")
 
-    # Clear the cached module so the next import picks up the newly installed
-    # version from disk rather than the stale entry left in sys.modules from
-    # before pip ran. In the pyd-lock case the old .pyd stays as an orphaned
-    # file (it cannot be deleted while loaded), but the new version's .pyd has
-    # a different hash-based name and loads correctly without a restart.
+        _remove_previous_ytmusicapi_install(target_dir)
+        _extract_wheel(wheel_path, target_dir)
+    finally:
+        shutil.rmtree(download_dir, ignore_errors=True)
+
+    # Drop cached module entries so the next import picks up the new files.
     _clear_dependency_modules((YTMUSICAPI_IMPORT_NAME,))
     importlib.invalidate_caches()
-    # Remove any stale dist-info directories left behind when pip could not
-    # complete cleanup (e.g. pyd-lock on Windows). With two dist-infos present
-    # importlib.metadata.version() may resolve to the older one.
-    _cleanup_stale_dist_infos(target_dir, YTMUSICAPI_IMPORT_NAME)
-    return completed_process
+    return wheel_info.version
+
+
+def _fetch_latest_ytmusicapi_wheel_info(*, timeout_seconds: int) -> _PyPIWheelInfo:
+    payload = _download_json(YTMUSICAPI_PYPI_JSON_URL, timeout_seconds=timeout_seconds)
+
+    info_section = payload.get("info") if isinstance(payload, dict) else None
+    if not isinstance(info_section, dict):
+        raise RuntimeError("A resposta da PyPI para ytmusicapi veio em formato inválido.")
+    version_text = str(info_section.get("version") or "").strip()
+    if not version_text:
+        raise RuntimeError("A PyPI não informou a versão mais recente da ytmusicapi.")
+
+    releases_section = payload.get("releases") if isinstance(payload, dict) else None
+    if not isinstance(releases_section, dict):
+        raise RuntimeError("A PyPI não publicou a lista de releases da ytmusicapi.")
+    assets = releases_section.get(version_text)
+    if not isinstance(assets, list) or not assets:
+        raise RuntimeError("A PyPI não publicou arquivos para a versão mais recente da ytmusicapi.")
+
+    for asset in assets:
+        if not isinstance(asset, dict):
+            continue
+        if str(asset.get("packagetype") or "").strip() != "bdist_wheel":
+            continue
+        filename = str(asset.get("filename") or "").strip()
+        download_url = str(asset.get("url") or "").strip()
+        digests = asset.get("digests") if isinstance(asset.get("digests"), dict) else {}
+        sha256_digest = str(digests.get("sha256") or "").strip()
+        if not filename or not download_url or len(sha256_digest) != 64:
+            continue
+        return _PyPIWheelInfo(
+            version=version_text,
+            filename=filename,
+            download_url=download_url,
+            sha256=sha256_digest,
+        )
+
+    raise RuntimeError("A release mais recente da ytmusicapi não publicou um wheel utilizável.")
+
+
+def _download_json(url: str, *, timeout_seconds: int) -> dict:
+    json_request = request.Request(
+        url,
+        headers={
+            "Accept": "application/json",
+            "User-Agent": f"{APP_TITLE}/{APP_VERSION}",
+        },
+    )
+    try:
+        with request.urlopen(
+            json_request,
+            timeout=max(5, int(timeout_seconds or 0) or UPDATE_HTTP_TIMEOUT_SECONDS),
+        ) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (error.HTTPError, error.URLError, json.JSONDecodeError) as exc:
+        raise RuntimeError("Não foi possível consultar a release mais recente da ytmusicapi.") from exc
+
+    if not isinstance(payload, dict):
+        raise RuntimeError("A resposta da PyPI veio em formato inválido.")
+    return payload
+
+
+def _download_binary_file(url: str, destination_path: Path, *, timeout_seconds: int) -> None:
+    download_request = request.Request(
+        url,
+        headers={
+            "Accept": "application/octet-stream",
+            "User-Agent": f"{APP_TITLE}/{APP_VERSION}",
+        },
+    )
+    try:
+        with request.urlopen(
+            download_request,
+            timeout=max(10, int(timeout_seconds or 0)),
+        ) as response:
+            with open(destination_path, "wb") as target_file:
+                shutil.copyfileobj(response, target_file, length=UPDATE_DOWNLOAD_CHUNK_SIZE)
+    except (error.HTTPError, error.URLError, OSError) as exc:
+        raise RuntimeError("Não foi possível baixar o wheel oficial da ytmusicapi.") from exc
+
+
+def _calculate_sha256(file_path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(file_path, "rb") as source_file:
+        while True:
+            chunk = source_file.read(UPDATE_DOWNLOAD_CHUNK_SIZE)
+            if not chunk:
+                break
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _remove_previous_ytmusicapi_install(target_dir: Path) -> None:
+    package_dir = target_dir / YTMUSICAPI_IMPORT_NAME
+    if package_dir.is_dir():
+        shutil.rmtree(package_dir, ignore_errors=True)
+
+    normalized_name = YTMUSICAPI_PACKAGE_NAME.replace("-", "_").lower()
+    try:
+        for entry in target_dir.iterdir():
+            if not entry.is_dir():
+                continue
+            name_lower = entry.name.lower()
+            if not name_lower.endswith(".dist-info"):
+                continue
+            stem = name_lower[: -len(".dist-info")]
+            dash_pos = stem.rfind("-")
+            if dash_pos < 0:
+                continue
+            dist_name = stem[:dash_pos].replace("-", "_")
+            if dist_name == normalized_name:
+                shutil.rmtree(entry, ignore_errors=True)
+    except OSError:
+        pass
+
+
+def _extract_wheel(wheel_path: Path, target_dir: Path) -> None:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        with zipfile.ZipFile(wheel_path) as wheel_archive:
+            for member_name in wheel_archive.namelist():
+                # zipfile.extract already rejects absolute paths and parent
+                # traversal, but be explicit so a malicious wheel cannot escape
+                # the target directory.
+                normalized_member = member_name.replace("\\", "/")
+                if normalized_member.startswith("/") or ".." in normalized_member.split("/"):
+                    raise RuntimeError("O wheel da ytmusicapi contém caminhos inválidos.")
+            wheel_archive.extractall(target_dir)
+    except zipfile.BadZipFile as exc:
+        raise RuntimeError("O wheel da ytmusicapi baixado está corrompido.") from exc
+    except OSError as exc:
+        raise RuntimeError("Não foi possível extrair o wheel da ytmusicapi.") from exc
 
 
 def _clear_dependency_modules(module_names: tuple[str, ...]) -> None:
@@ -272,33 +413,6 @@ def _clear_dependency_modules(module_names: tuple[str, ...]) -> None:
             for module_name in normalized_module_names
         ):
             sys.modules.pop(loaded_module_name, None)
-
-
-def _run_pip_install(command: list[str], *, timeout_seconds: int) -> subprocess.CompletedProcess:
-    env = dict(os.environ)
-    env.setdefault("PYTHONUTF8", "1")
-    try:
-        return subprocess.run(
-            command,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=max(15, int(timeout_seconds or 0)),
-            env=env,
-        )
-    except FileNotFoundError as exc:
-        raise RuntimeError("Não foi possível iniciar o instalador das dependências do Python.") from exc
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError("A atualização das dependências demorou demais e foi interrompida.") from exc
-
-
-def _try_bootstrap_pip(*, timeout_seconds: int) -> None:
-    ensurepip_command = [sys.executable, "-m", "ensurepip", "--upgrade"]
-    completed_process = _run_pip_install(ensurepip_command, timeout_seconds=timeout_seconds)
-    if completed_process.returncode != 0:
-        raise RuntimeError(
-            "Não foi possível preparar o pip automaticamente para baixar as dependências do YouTube Music."
-        )
 
 
 def _can_import_dependency(import_name: str) -> bool:
@@ -341,118 +455,6 @@ def _resolve_module_version(module) -> str:
             pass
 
     return "desconhecida"
-
-
-def _trim_process_output(completed_process: subprocess.CompletedProcess, *, limit: int = 2000) -> str:
-    output_parts = []
-    if completed_process.stdout:
-        output_parts.append(str(completed_process.stdout).strip())
-    if completed_process.stderr:
-        output_parts.append(str(completed_process.stderr).strip())
-
-    combined_output = "\n".join(part for part in output_parts if part).strip()
-    if len(combined_output) <= limit:
-        return combined_output
-
-    return combined_output[-limit:]
-
-
-def _format_install_failure(completed_process: subprocess.CompletedProcess) -> str:
-    details = _trim_process_output(completed_process, limit=1600)
-    if details:
-        return (
-            "Não foi possível atualizar as dependências do YouTube Music automaticamente. "
-            f"Detalhes: {details}"
-        )
-
-    return "Não foi possível atualizar as dependências do YouTube Music automaticamente."
-
-
-def _cleanup_stale_dist_infos(target_dir: Path, package_name: str) -> None:
-    """Remove dist-info directories for older versions of a package.
-
-    When pip fails mid-cleanup (e.g. due to a locked .pyd on Windows), both the
-    old and new dist-info directories can coexist. importlib.metadata then
-    resolves the version non-deterministically. This function keeps only the
-    dist-info with the highest version number.
-    """
-    import shutil
-
-    normalized_name = package_name.replace("-", "_").lower()
-    candidates: list[tuple[tuple[int, ...], Path]] = []
-    try:
-        for entry in target_dir.iterdir():
-            if not entry.is_dir():
-                continue
-            name_lower = entry.name.lower()
-            if not name_lower.endswith(".dist-info"):
-                continue
-            stem = name_lower[: -len(".dist-info")]
-            # dist-info dirs are named  <package>-<version>.dist-info
-            dash_pos = stem.rfind("-")
-            if dash_pos < 0:
-                continue
-            dist_name = stem[:dash_pos].replace("-", "_")
-            if dist_name != normalized_name:
-                continue
-            version_str = stem[dash_pos + 1 :]
-            try:
-                version_tuple = tuple(int(x) for x in version_str.split("."))
-            except ValueError:
-                continue
-            candidates.append((version_tuple, entry))
-    except OSError:
-        return
-
-    if len(candidates) <= 1:
-        return
-
-    candidates.sort(key=lambda c: c[0])
-    # Keep the last (highest version); remove all earlier ones.
-    for _, stale_path in candidates[:-1]:
-        try:
-            shutil.rmtree(stale_path)
-        except OSError:
-            pass
-
-
-def _is_pyd_lock_error(completed_process: subprocess.CompletedProcess) -> bool:
-    """Return True when pip failed only because it could not remove a locked .pyd file
-    on Windows but the packages were actually installed successfully.
-
-    On Windows, compiled extension modules (.pyd files) that are already loaded in the
-    current process cannot be deleted. Pip reports a PermissionError when it tries to
-    clean up the old file after installing the new version, causing a non-zero exit code
-    even though all package files were written correctly.
-    """
-    combined_output = "\n".join(
-        part
-        for part in (
-            str(completed_process.stdout or ""),
-            str(completed_process.stderr or ""),
-        )
-        if part
-    )
-    has_pyd_permission_error = (
-        "PermissionError" in combined_output
-        and ".pyd" in combined_output
-        and "WinError 5" in combined_output
-    )
-    packages_were_installed = "Successfully installed" in combined_output
-    return has_pyd_permission_error and packages_were_installed
-
-
-def _pip_missing_in_output(completed_process: subprocess.CompletedProcess) -> bool:
-    output = "\n".join(
-        part
-        for part in (
-            str(completed_process.stdout or ""),
-            str(completed_process.stderr or ""),
-        )
-        if part
-    )
-    normalized_output = output.casefold()
-    return "no module named pip" in normalized_output or "no module named 'pip'" in normalized_output
 
 
 def _normalize_interval_hours(value: int) -> int:

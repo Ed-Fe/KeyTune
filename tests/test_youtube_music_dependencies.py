@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pathlib
-import subprocess
 import sys
 import types
 import unittest
@@ -107,17 +106,14 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
         self.assertFalse(result.updated)
         self.assertEqual(result.versions["yt-dlp"], "2026.1.31")
 
-    def test_install_update_runs_pip_and_ytdlp_installer_when_forced(self):
+    def test_install_update_downloads_wheel_and_ytdlp_installer_when_forced(self):
         target_dir = pathlib.Path("C:/tmp/ytmusic-site-packages")
-        completed_process = subprocess.CompletedProcess(
-            args=["pip"],
-            returncode=0,
-            stdout="ok",
-            stderr="",
-        )
 
         with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir", return_value=target_dir):
-            with patch("player.youtube_music.dependencies._run_pip_install", return_value=completed_process) as run_mock:
+            with patch(
+                "player.youtube_music.dependencies._install_or_update_ytmusicapi",
+                return_value="1.12.1",
+            ) as ytmusicapi_install_mock:
                 with patch("player.youtube_music.dependencies._can_import_dependency", return_value=True):
                     with patch(
                         "player.youtube_music.dependencies.get_managed_yt_dlp_executable_path",
@@ -145,17 +141,16 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                                     )
 
         self.assertTrue(result.updated)
-        run_args, run_kwargs = run_mock.call_args
-        command = run_args[0]
-        self.assertIn("--target", command)
-        self.assertIn(str(target_dir), command)
-        self.assertIn("ytmusicapi", command)
-        self.assertEqual(run_kwargs["timeout_seconds"], 33)
+        ytmusicapi_install_mock.assert_called_once_with(
+            target_dir=target_dir,
+            timeout_seconds=33,
+        )
         ytdlp_install_mock.assert_called_once_with(
             force=True,
             include_prerelease=True,
             timeout_seconds=33,
         )
+        self.assertIn("ytmusicapi 1.12.1", result.command_output)
 
 
 if __name__ == "__main__":
