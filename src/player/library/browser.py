@@ -137,12 +137,15 @@ class PlaylistBrowserPanel(wx.Panel):
             )
             if needs_full_rebuild:
                 self._show_items(len(self._base_labels))
+                self._set_list_selection(selection, ensure_visible=False)
             else:
                 self._update_playlist_current_marker(
                     previous_current_index,
                     playlist_state.current_index,
                 )
-            self._set_list_selection(selection, ensure_visible=False)
+                existing_selection = self._get_selected_index()
+                if existing_selection == wx.NOT_FOUND or existing_selection >= len(self._base_labels):
+                    self._set_list_selection(selection, ensure_visible=False)
         else:
             self._show_placeholder("Nenhum item nesta playlist.")
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
