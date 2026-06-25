@@ -1,99 +1,62 @@
 # Project Guidelines
 
-## Code Style
+## Commands
 
-- Use Python code consistent with the existing `src/player/*.py` modules: small helpers, explicit names, and dataclasses for persisted state.
-- When a feature starts mixing UI flow, persistence, parsing, and external-service logic, split it into focused modules or mixins instead of extending a catch-all file.
-- Keep user-facing labels, menu text, status messages, and screen reader announcements in Portuguese.
-- Prefer small, targeted edits over broad refactors in the `src/player/frames/*.py` modules; `frames/base.py` coordinates the window and composes focused mixins.
+- Install: `pip install -r requirements.txt` (virtualenv recommended).
+- Run: `python src/main.py`.
+- Quick validation after Python changes: `python -m compileall src`.
+- Tests (backend/services/parsing changes): `python -m unittest discover -s tests`.
+- UI changes: no automated coverage — manually walk the affected keyboard flows, dialogs, playlist behavior, and screen-reader announcements.
+- Windows release build: `scripts/build_windows_release.ps1`; validate with `docs/update-testing.md`.
+- MPV runtime must be available (system or bundled) for playback. Windows-only integrations (MPV discovery, file associations, SMTC) must degrade gracefully when unavailable.
+
+## Boundaries
+
+**Always**
+- Keep user-facing text (labels, menus, status messages, screen-reader announcements) in Portuguese.
+- Preserve existing keyboard shortcuts — this app is keyboard-first and accessibility-first; no mouse-only flows.
+- Use the helpers in `src/player/accessibility.py` for screen-reader work; keep `accessible-output2` integration defensive.
+- Keep Windows-only modules (`single_instance.py`, `file_associations.py`, `smtc/service.py`) isolated from cross-platform core logic.
+- Keep `preferences/` (durable settings) and `session.py` (restorable session state) separated — do not mix them.
+
+**Ask first**
+- Before creating a Git commit for a large feature (use Conventional Commits style, e.g. `feat: ...`, and push after committing once confirmed).
+- Before changing the MPV bootstrap order on Windows (env override → bundled/runtime-local `mpv/` → Chocolatey-style installs), unless the task is specifically about packaging.
+- Before a broad refactor of `frames/*.py` — prefer small, targeted edits there.
+- Before forcing a focus change in dialogs, tab switches, or auxiliary windows.
+
+**Never**
+- Cause noisy/unexpected focus on the native video output area.
+- Mix UI flow, persistence, parsing, and external-service logic in one catch-all module — split into focused modules first.
 
 ## Architecture
 
-- Entry flow is `src/main.py` -> `src/player/app.py` -> `src/player/frames/base.py`.
-- `src/main.py` also bootstraps the MPV runtime and forwards command-line paths to the already-running instance before the wx app starts.
-- Keep responsibilities separated:
-  - `mpv_runtime.py` for locating and bootstrapping the Windows MPV/libmpv runtime
-  - `single_instance.py` for named-pipe single-instance forwarding of external file launches
-  - `audio_output.py` for audio-device normalization and menu-facing labels
-  - `file_associations.py` for Windows file-association registration helpers
-  - `frames/base.py` for the main window shell and mixin composition
-  - `frames/smtc.py` for bridging Windows System Media Transport Controls into the frame
-  - `frames/youtube_music.py` for YouTube Music auth/menu flows and background-task orchestration
-  - `frames/ui.py` for menus, layout, control setup, and UI bindings
-  - `frames/commands.py` for file dialogs, open/save actions, and command handlers
-  - `frames/playback.py` for MPV backend setup, playback control, and progress updates
-  - `frames/library.py` for composing library-related mixins and shared library-facing behavior
-  - `frames/library_tabs.py` for playlist tabs, screen tabs, close/select logic, and playlist ordering behavior
-  - `frames/library_loader.py` for background loading of folders and playlists
-  - `frames/library_navigation.py` for folder navigation, browser refresh, and open flows
-  - `frames/update.py` for startup/manual update checks and update-install flow orchestration
-  - `frames/session.py` for session capture and restore
-  - `frames/recents.py` for recent items and default path helpers
-  - `frames/equalizer.py` for equalizer screen state, preset management, and tab integration
-  - `library/open_dialog.py` for the open-source dialog and source-mode helpers
-  - `library/browser.py` for playlist/folder browser UI and keyboard navigation
-  - `library/models.py` for folder-browser entry models and related shared library data
-  - `equalizer/models.py` for equalizer constants, dataclasses, and normalization helpers
-  - `equalizer/backend.py` for equalizer preset catalog helpers and MPV filter generation
-  - `equalizer/dialog.py` for the equalizer preset editing dialog
-  - `equalizer/panel.py` for the equalizer tab UI
-  - `playlists/models.py` for playlist/tab state and playback-order behavior
-  - `playlists/titles.py` for playlist and folder tab naming helpers
-  - `library/media_scan.py` for supported-media checks and folder scanning helpers
-  - `library/playlist_io.py` for `.m3u` / `.m3u8` loading and saving
-  - `preferences/dialog.py` for the preferences UI
-  - `preferences/models.py` for durable user preference models
-  - `preferences/storage.py` for reading and writing `settings.json`
-  - `session.py` for restorable session state in `session.json`
-  - `accessibility.py` for screen reader announcements and custom `wx.Accessible` helpers
-  - `youtube_music/service.py` for the YouTube Music service facade that orchestrates client, cache, library, and feedback modules
-  - `youtube_music/client_provider.py` for creating and caching authenticated and public YTMusic client instances
-  - `youtube_music/stream_cache.py` for thread-safe stream URL caching with TTL, expiration, and prefetch coordination
-  - `youtube_music/library_manager.py` for library playlist queries, personalized mixes, playlist content, and search
-  - `youtube_music/feedback_manager.py` for like/dislike ratings, playback history reporting, and search-result saving
-  - `youtube_music/auth.py` for browser-auth parsing, normalization, and storage helpers
-  - `youtube_music/dialog.py` for the browser-auth and cookie import dialog
-  - `youtube_music/panel.py` for the dedicated YouTube Music tab UI and accessibility metadata
-  - `youtube_music/playlists.py` for YouTube Music playlist and mix normalization plus source helpers
-  - `youtube_music/search.py` for YouTube Music and YouTube search normalization helpers
-  - `youtube_music/streams.py` for `yt-dlp` stream resolution
-  - `youtube_music/models.py` for small shared YouTube Music data containers
-  - `smtc/service.py` for the Windows System Media Transport Controls integration layer
-  - `update/service.py` for GitHub release discovery, download, checksum validation, and updater launch
-  - `update/dialog.py` for the update/changelog dialogs and download progress UI
-- Do not mix durable preferences with session restoration logic; preserve the separation between `preferences/` and `session.py`.
+Entry flow: `src/main.py` → `src/player/app.py` → `src/player/frames/base.py`. `main.py` also bootstraps the MPV runtime and forwards CLI-opened file paths to an already-running instance.
 
-## Build and Test
+Module map (`src/player/`):
+- `frames/` — `base.py` window shell + mixin composition; `ui.py` menus/layout/bindings; `commands.py` file dialogs & actions; `playback.py` MPV control; `library.py`/`library_tabs.py`/`library_loader.py`/`library_navigation.py` playlist tabs & folder browsing; `session.py` capture/restore; `recents.py`; `equalizer.py`; `update.py`; `smtc.py` SMTC bridge; `youtube_music.py` YT Music auth/menu flows & background tasks.
+- `youtube_music/` — `service.py` facade over `client_provider.py` (client caching), `stream_cache.py` (TTL stream URLs), `library_manager.py` (playlists/search), `feedback_manager.py` (likes/history); `auth.py`, `dialog.py`, `panel.py`, `playlists.py`, `search.py`, `streams.py` (yt-dlp), `charts.py`, `browse.py` (moods/genres), `models.py`.
+- `library/` — `open_dialog.py`, `browser.py` (browser UI/keyboard nav), `models.py`, `media_scan.py`, `playlist_io.py` (`.m3u`/`.m3u8`).
+- `equalizer/` — `models.py`, `backend.py` (MPV filter generation), `dialog.py`, `panel.py`.
+- `playlists/` — `models.py` (tab state/order), `titles.py`.
+- `preferences/` — `dialog.py`, `models.py`, `storage.py` (`settings.json`).
+- `update/` — `service.py` (GitHub release discovery, checksum, updater launch), `dialog.py`.
+- Root: `mpv_runtime.py`, `single_instance.py`, `audio_output.py`, `file_associations.py`, `accessibility.py`, `session.py` (`session.json`).
 
-- Install dependencies from `requirements.txt` in a virtual environment.
-- Run the app with `python src/main.py`.
-- Use `python -m compileall src` as the quick validation step after Python changes.
-- Run `python -m unittest discover -s tests` for automated regression checks when touching backend/services or parsing logic.
-- For UI changes, do a focused manual check of the affected keyboard flows, dialogs, playlist behavior, and announcements.
-- The app depends on an MPV runtime being available on the system or bundled locally.
-- On Windows, integrations such as MPV runtime discovery, file associations, and SMTC should degrade gracefully when the host environment or optional dependencies are unavailable.
-- For packaged Windows updater work, use `scripts/build_windows_release.ps1` for a local build and `docs/update-testing.md` for the end-to-end validation checklist.
+When a feature crosses these boundaries (UI + service + parsing + playback), extract a focused module before extending an existing one. Follow existing patterns for style — dataclasses for persisted state, small explicit helpers — rather than introducing a new convention.
 
 ## Conventions
 
-- This project is keyboard-first and accessibility-first. Preserve existing shortcuts and avoid introducing mouse-only flows.
-- Do not force focus changes in dialogs, tab switches, or auxiliary windows unless explicitly requested.
-- When touching accessibility, prefer the existing helpers in `src/player/accessibility.py` and keep optional `accessible-output2` integration defensive.
-- Preserve behavior that avoids noisy focus on the native video output area.
-- Preserve the runtime bootstrap path order for MPV on Windows unless the task explicitly changes packaging behavior: environment overrides first, then bundled/runtime-local `mpv/`, then Chocolatey-style installs.
-- Before adding a large behavior block to an existing player module, check whether it crosses UI, service, parsing, or playback boundaries; if it does, extract a focused module first.
-- Windows-specific helpers such as `single_instance.py`, `file_associations.py`, and `smtc/service.py` should stay isolated from cross-platform core logic and fail safely when unavailable.
-- Keep the updater contract aligned across `src/player/constants.py`, `.github/workflows/release-windows.yml`, and release assets: the packaged updater expects `KeyTune-windows.zip`, the matching `.sha256`, and `KeyTuneUpdater.exe`.
-- The update dialog shows the GitHub release body as the user-facing changelog for a new version; when working on releases or docs, keep `CHANGELOG.md` and the published release notes consistent instead of assuming the app reads the changelog file directly.
-- Preserve the test override environment variables `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` and `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME` so updater testing can target a separate repository.
-- For large new features, after implementation and validation, ask the user whether they want you to create a Git commit before committing anything.
-- When the user wants a commit for a large new feature, use a semantic commit message in Conventional Commits style (for example `feat: ...`) and perform the push after the commit.
-- For the full feature list and shortcut inventory, see `README.md` and docs/manual.md when needed.
+- The updater contract spans `constants.py`, `.github/workflows/release-windows.yml`, and release assets: `KeyTune-windows.zip` + `.sha256` + `KeyTuneUpdater.exe`. Keep them in sync.
+- The update dialog shows the GitHub release body as the changelog; keep `CHANGELOG.md` and the published release notes consistent — the app doesn't read the file directly.
+- Preserve `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
+- Full feature list and shortcut inventory: `README.md` and `docs/manual.md`.
+
 ## Related Customizations
 
-- Use `.github/instructions/player-architecture.instructions.md` when editing `src/player/*.py`, splitting large modules, or adding new integrations so responsibilities stay separated.
-- Use `.github/instructions/player-ui-a11y.instructions.md` when editing wxPython UI, dialogs, menus, keyboard shortcuts, focus handling, playlist browser, or screen reader accessibility.
-- Use `.github/instructions/update-release.instructions.md` when editing the updater, Windows release packaging, GitHub release notes, or `CHANGELOG.md`.
-- Use `.github/instructions/git-workflow.instructions.md` when finalizing a large feature, preparing a commit, or pushing repository changes.
-- Use `.github/prompts/accessibility-smoke-test.prompt.md` for a focused post-change accessibility verification pass after UI or accessibility work.
-- Use `.github/prompts/release-readiness.prompt.md` for a focused pre-release readiness review of version sync, release assets, updater compatibility, and docs alignment.
+- `.github/instructions/player-architecture.instructions.md` — splitting modules, new integrations.
+- `.github/instructions/player-ui-a11y.instructions.md` — wxPython UI, dialogs, menus, shortcuts, focus, screen reader.
+- `.github/instructions/update-release.instructions.md` — updater, Windows packaging, release notes, CHANGELOG.
+- `.github/instructions/git-workflow.instructions.md` — finalizing features, commits, pushes.
+- `.github/prompts/accessibility-smoke-test.prompt.md` — post-change accessibility verification.
+- `.github/prompts/release-readiness.prompt.md` — pre-release readiness review.
