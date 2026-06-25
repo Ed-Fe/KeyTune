@@ -21,6 +21,7 @@ from player.youtube_music.models import (
 from player.youtube_music.playlists import (
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
+    extract_video_id_from_text,
     is_youtube_music_media,
 )
 
@@ -1137,22 +1138,37 @@ class FrameYouTubeMusicMixin:
         panel = self._get_youtube_music_panel()
         manual_source = panel.get_manual_source() if panel is not None else ""
         if not manual_source:
-            self._announce("Cole um link ou informe o ID da playlist ou mix que deseja abrir.")
+            self._announce("Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir.")
             return
 
         playlist_id = extract_playlist_id_from_text(manual_source)
-        if not playlist_id:
-            wx.MessageBox(
-                "Informe um link válido do YouTube Music/YouTube ou apenas o ID da playlist ou mix.",
-                "YouTube Music",
-                wx.OK | wx.ICON_INFORMATION,
-                self,
-            )
+        if playlist_id:
+            playlist = self._playlist_summary_by_id(playlist_id)
+            fallback_title = playlist.title if playlist is not None else f"Playlist {playlist_id}"
+            self._load_youtube_music_playlist_by_id(playlist_id, fallback_title=fallback_title)
             return
 
-        playlist = self._playlist_summary_by_id(playlist_id)
-        fallback_title = playlist.title if playlist is not None else f"Playlist {playlist_id}"
-        self._load_youtube_music_playlist_by_id(playlist_id, fallback_title=fallback_title)
+        video_id = extract_video_id_from_text(manual_source)
+        if video_id:
+            self._open_youtube_music_manual_video(manual_source, video_id)
+            return
+
+        wx.MessageBox(
+            "Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube.",
+            "YouTube Music",
+            wx.OK | wx.ICON_INFORMATION,
+            self,
+        )
+
+    def _open_youtube_music_manual_video(self, video_url, video_id):
+        title = f"Vídeo do YouTube ({video_id})"
+        self._open_prepared_media_playlist(
+            [video_url],
+            title,
+            browser_item_labels=[title],
+            source_path=video_url,
+            announce_message=f"Vídeo do YouTube aberto: {title}.",
+        )
 
     def _on_youtube_music_search_button(self):
         self.on_search_youtube_music(None)

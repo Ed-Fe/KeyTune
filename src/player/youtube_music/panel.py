@@ -266,7 +266,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 			search_pane_window,
 			label=(
 				"Enter no campo de busca executa a pesquisa. Enter na lista adiciona a seleção à playlist atual. "
-				"Use Shift+F10 ou o botão Ações para abrir o menu contextual da seleção. Duplo clique abre a seleção em nova playlist."
+				"Ctrl+Enter abre a seleção em nova playlist. Use Shift+F10 ou o botão Ações para mais opções."
 			),
 		)
 		search_help_label.Wrap(620)
@@ -283,12 +283,12 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		self.manual_pane = wx.CollapsiblePane(
 			self,
-			label="Abrir playlist específica",
+			label="Abrir playlist ou vídeo",
 			style=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE,
 		)
-		self.manual_pane.SetName("Seção para abrir playlist por link ou ID")
+		self.manual_pane.SetName("Seção para abrir playlist ou vídeo por link")
 		self.manual_pane.SetHelpText(
-			"Expanda para colar um link do YouTube Music/YouTube ou informar um ID de playlist ou mix."
+			"Expanda para colar um link de playlist, mix ou vídeo do YouTube Music/YouTube."
 		)
 		self.manual_pane.Collapse(True)
 		self.manual_pane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self._on_collapsible_pane_changed)
@@ -296,18 +296,18 @@ class YouTubeMusicTabPanel(wx.Panel):
 		manual_box = wx.BoxSizer(wx.VERTICAL)
 		manual_intro = wx.StaticText(
 			manual_pane_window,
-			label="Cole um link do YouTube Music/YouTube ou informe apenas o ID da playlist ou mix.",
+			label="Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube.",
 		)
 		manual_intro.Wrap(620)
 		self.manual_source_ctrl = wx.TextCtrl(manual_pane_window, style=wx.TE_PROCESS_ENTER)
-		self.manual_source_ctrl.SetName("Link ou ID da playlist do YouTube Music")
+		self.manual_source_ctrl.SetName("Link da playlist, mix ou vídeo do YouTube Music")
 		self.manual_source_ctrl.SetHelpText(
-			"Cole um link de playlist ou mix do YouTube Music, ou informe diretamente o ID que deseja abrir."
+			"Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube que deseja abrir."
 		)
-		self.manual_open_button = wx.Button(manual_pane_window, label="Abrir pelo &link ou ID")
-		self.manual_open_button.SetName("Abrir playlist específica do YouTube Music")
+		self.manual_open_button = wx.Button(manual_pane_window, label="&Abrir link")
+		self.manual_open_button.SetName("Abrir playlist ou vídeo do YouTube Music")
 		self.manual_open_button.SetHelpText(
-			"Abre a playlist ou mix informada no campo acima, usando um link do YouTube Music ou um ID direto."
+			"Abre a playlist, mix ou vídeo informado no campo acima."
 		)
 		self.manual_open_button.SetToolTip(self.manual_open_button.GetHelpText())
 
@@ -736,7 +736,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		if pane is self.search_pane:
 			label = "Busca no catálogo e no YouTube"
 		elif pane is self.manual_pane:
-			label = "Abrir playlist específica"
+			label = "Abrir playlist ou vídeo"
 		if label and callable(self._on_announce):
 			state = "expandida" if (pane is not None and pane.IsExpanded()) else "recolhida"
 			try:
@@ -790,8 +790,13 @@ class YouTubeMusicTabPanel(wx.Panel):
 			return
 
 		if key_code in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
-			if self.get_selected_search_result() is not None:
-				self._on_add_search_results_to_current_playlist()
-				return
+			if event.ControlDown():
+				if self.get_selected_search_result() is not None:
+					self._on_open_search_result()
+					return
+			else:
+				if self.get_selected_search_result() is not None:
+					self._on_add_search_results_to_current_playlist()
+					return
 
 		event.Skip()

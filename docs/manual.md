@@ -261,32 +261,34 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
     - **Moods e gêneros...**: abre um menu com as categorias de climas e gêneros do YouTube Music (por exemplo *Foco*, *Treino*, *Pop*, *Rock*). Ao escolher uma categoria, as playlists dela aparecem na lista. Não exige conta conectada.
     - **Curtidas**: carrega as faixas curtidas (a playlist *Curtidas/Liked Music* da sua conta). Exige conta conectada.
     - **Histórico**: carrega seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.
-- **Lista de resultados**: mostra os itens encontrados (da busca, das paradas em alta, de moods e gêneros, das curtidas ou do histórico). A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo. `Enter` adiciona a seleção à playlist atual; duplo clique abre a seleção em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual, que traz o submenu **Adicionar seleção...** com a opção *Abrir seleção em nova playlist* e um item para cada aba de playlist aberta (a aba atual e a playlist ativa aparecem identificadas), permitindo adicionar a seleção diretamente àquela aba.
+- **Lista de resultados**: mostra os itens encontrados (da busca, das paradas em alta, de moods e gêneros, das curtidas ou do histórico). A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo. `Enter` adiciona a seleção à playlist atual; `Ctrl+Enter` abre a seleção em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual com opções adicionais.
 - **Salvar no Music**: salva a seleção na biblioteca do YouTube Music quando o resultado for compatível (playlists ou faixas).
 
-### Abrir playlist específica
+### Abrir playlist ou vídeo
 
-A seção **Abrir playlist específica** também fica recolhida por padrão. Expanda-a para colar um link completo do YouTube Music ou do YouTube, ou informar diretamente o ID de uma playlist ou mix. Clique em **Abrir pelo link ou ID** ou pressione `Enter` no campo para abrir.
+A seção **Abrir playlist ou vídeo** também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em **Abrir link** ou pressione `Enter` no campo para abrir.
 
 ### Sessão do YouTube Music
 
-Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretamente com o YouTube Music, especialmente na primeira vez ou quando a autenticação expirar. Se isso acontecer, exporte os cookies da conta que já está logada no navegador.
+Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretamente com o YouTube Music, especialmente na primeira vez ou quando a autenticação expirar. Se isso acontecer, exporte os cookies a partir de uma janela **anônima/privada**:
 
-1. Instale a extensão [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc).
-2. Abra o [YouTube Music](https://music.youtube.com/) no mesmo navegador e faça login na sua conta.
-3. Clique na extensão e exporte os cookies no formato `cookies.txt`.
-4. No KeyTune, use a opção de importar ou carregar a sessão do YouTube Music quando ela for exibida.
+1. Abra uma janela anônima/privada do seu navegador.
+2. Faça login em [music.youtube.com](https://music.youtube.com/) com sua conta.
+3. Instale a extensão [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) (ou use outra que exporte cookies).
+4. Clique na extensão e exporte os cookies no formato `cookies.txt`.
+5. Feche a janela anônima **sem abrir o YouTube de novo nela**.
+6. No KeyTune, use a opção de importar ou carregar a sessão do YouTube Music quando ela for exibida.
 
 O arquivo exportado contém informações de acesso da sua conta. Use apenas no seu computador e só com a conta que você quer conectar ao aplicativo.
 
-**Por que a conexão expira rápido (e como evitar):** por segurança, o Google troca os cookies da sessão sempre que você continua navegando no YouTube logado no navegador. Quando isso acontece, os cookies que você já exportou deixam de valer — por isso a conta costuma aparecer como desconectada no dia seguinte, mesmo que você sempre use o mesmo arquivo. Para uma conexão estável e duradoura, exporte os cookies a partir de uma janela **anônima/privada**: abra a janela anônima, faça login em `music.youtube.com`, exporte os cookies (passos acima) e feche a janela anônima **sem abrir o YouTube de novo nela**. Como aquela sessão não continua sendo usada, os cookies exportados não são mais trocados e a autenticação dura muito mais.
+Usar uma janela anônima evita que o Google troque constantemente os cookies — como aquela sessão não continua sendo usada, os cookies exportados não são renovados e a autenticação dura muito mais.
 
 ### Atalhos
 
 - `Ctrl+Shift+Y`: abrir a aba do YouTube Music
 - `Enter` no campo de busca: executar a pesquisa
 - `Enter` na lista de resultados: adicionar o item à playlist atual
-- duplo clique na lista de resultados: abrir o item em nova playlist
+- `Ctrl+Enter` na lista de resultados: abrir o item em nova playlist
 - `Ctrl+Espaço` na lista de resultados: marcar ou desmarcar o item em foco (seleção múltipla)
 - `Ctrl+Setas` na lista de resultados: mover o foco sem alterar a seleção
 - `Shift+Setas` na lista de resultados: selecionar um intervalo de itens
