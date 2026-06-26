@@ -2,7 +2,7 @@
 
 O KeyTune é um player de mídia feito para uso por teclado e com foco em acessibilidade. Ele foi pensado para funcionar bem com playlists, navegação por pastas e para manter o que você estava fazendo entre uma abertura e outra.
 
-Este projeto foi desenvolvido com assistência de IA, incluindo GitHub Copilot e Codex da OpenAI.
+Este projeto foi desenvolvido com assistência de IA, incluindo GitHub Copilot, Codex da OpenAI e Claude Code da Anthropic.
 
 Este manual apresenta os recursos principais do aplicativo e as ações mais comuns para começar a usar o player com rapidez.
 
@@ -20,11 +20,25 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 
 ## Primeiros passos
 
-1. Extraia os arquivos do aplicativo para uma pasta local.
-2. Execute o arquivo `KeyTune.exe`.
-3. Se houver uma atualização disponível, o aplicativo mostra um diálogo com as novidades e pede confirmação antes de instalar.
+1. Baixe o instalador `KeyTune-Setup.exe` mais recente na página de [releases](https://github.com/ed-fe/KeyTune/releases).
+2. Execute o instalador e siga as etapas. Na página de tarefas adicionais você pode marcar a criação de um atalho na área de trabalho e escolher quais formatos de áudio, vídeo e playlist deseja associar ao KeyTune — tudo opcional e desmarcado por padrão. Associar um formato registra o KeyTune como opção no menu *Abrir com*; para que ele abra automaticamente esses arquivos, ainda é preciso confirmar como padrão nas configurações do Windows.
+3. Ao final, o instalador oferece iniciar o KeyTune e abrir este manual.
+4. Em execuções futuras, quando houver uma atualização disponível, o próprio aplicativo mostra um diálogo com as novidades e pede confirmação antes de baixar e instalar (veja [Atualizações](#atualizacoes)).
 
-O KeyTune depende do runtime do MPV para reproduzir mídia. O runtime precisa estar em uma pasta `mpv/` ao lado do executável, ou em um dos caminhos reconhecidos automaticamente (veja a seção **Solução de problemas**). Se o player abrir mas não reproduzir nada, esse é o primeiro ponto a verificar.
+O KeyTune depende do runtime do MPV para reproduzir mídia. O instalador já inclui esse runtime; se o player abrir mas não reproduzir nada, veja a seção [Solução de problemas](#solucao-de-problemas).
+
+## Interface
+
+Ao abrir o KeyTune pela primeira vez, a janela principal mostra uma única aba de playlist vazia, sem nada para reproduzir ainda. A janela é dividida em quatro áreas:
+
+- **Barra de menus**, no topo: **Arquivo** (abrir mídia/pasta/playlist, recentes, salvar), **Reprodução** (play/pause, faixa anterior/próxima, embaralhar, repetição, dispositivo de áudio, anúncios), **Exibir** (alternar foco, equalizador, YouTube Music), **Abas** (nova aba, navegação entre abas, fechar), **Configurações** (preferências) e **Ajuda** (manual, atalhos, verificar atualizações).
+- **Área de abas**, ocupando a maior parte da janela: cada aba representa uma playlist ou uma pasta aberta (veja [Playlist, pastas e abas](#playlist-pastas-e-abas)). Dentro de cada aba, o espaço é dividido em duas partes lado a lado:
+    - à **esquerda**, o navegador de itens — a lista da playlist ou o conteúdo da pasta atual;
+    - à **direita**, a área do player. Quando a mídia atual é um vídeo, essa área mostra o quadro de vídeo; para áudio, ou quando nada está carregado,  ela mostra um texto de apoio com os atalhos mais usados para começar.
+- **Painel de tempo**, abaixo da área de abas: mostra o tempo decorrido e a duração da mídia atual, uma barra de progresso visual e um resumo dos atalhos principais.
+- **Barra de status**, na borda inferior da janela: exibe mensagens curtas e temporárias sobre a última ação realizada (por exemplo, ao abrir um arquivo ou salvar uma playlist).
+
+Use `Tab` ou `Ctrl+B` para mover o foco entre o navegador de itens e o player dentro da aba ativa, e `F1` em qualquer momento para abrir a ajuda rápida de atalhos.
 
 ## Como abrir mídia
 
@@ -36,7 +50,10 @@ Você pode abrir arquivos de mídia, uma playlist local, uma pasta ou um caminho
 - `Ctrl+V` — cola um caminho ou link da área de transferência na playlist atual.
 - `Ctrl+Shift+V` — cola e abre em uma nova playlist.
 
-Formatos de mídia suportados diretamente: `.mp3`, `.wav`, `.flac`, `.aac`, `.ogg` (áudio) e `.mp4`, `.mkv`, `.avi`, `.mov` (vídeo).
+Formatos de mídia suportados diretamente:
+
+- Áudio: `.mp3`, `.wav`, `.flac`, `.aac`, `.ogg`, `.oga`, `.m4a`, `.opus`, `.wma`, `.aiff`, `.aif`, `.ac3`, `.mka`, `.wv`, `.ape`.
+- Vídeo: `.mp4`, `.m4v`, `.mkv`, `.avi`, `.mov`, `.webm`, `.flv`, `.wmv`, `.mpg`, `.mpeg`, `.3gp`, `.ts`, `.m2ts`, `.mts`, `.ogv`.
 
 O menu **Arquivo > Recentes** guarda separadamente os últimos **Arquivos recentes**, **Pastas recentes** e **Playlists recentes**, facilitando reabrir o que você usou antes sem precisar navegar de novo.
 
@@ -46,19 +63,16 @@ Cada playlist fica em uma aba separada. Isso ajuda a separar contextos, como uma
 
 A aba ativa define o que está sendo reproduzido e o que aparece no navegador lateral. Você pode manter uma aba para uma playlist salva, outra para uma pasta inteira e outras para listas temporárias, sem misturar tudo no mesmo contexto. As abas podem ser abertas, alternadas e fechadas sem afetar as outras.
 
-### Atalhos de arquivos e abas
+### Atalhos de abas e itens
+
+Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como abrir mídia](#como-abrir-midia), acima. Os atalhos abaixo são específicos de abas e da playlist atual:
 
 - `Ctrl+T`: abrir uma nova aba de playlist
 - `Ctrl+W`: fechar a aba ou playlist atual
 - `Ctrl+Shift+W`: fechar a mídia atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar para a próxima ou aba anterior
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
-- `Ctrl+O`: abrir arquivos de mídia ou uma playlist local
-- `Ctrl+Shift+O`: abrir uma pasta diretamente no navegador de pastas
-- `Ctrl+Alt+O`: abrir mídia, playlist, pasta ou link remoto no diálogo unificado
 - `Ctrl+C`: copiar o caminho ou link do item selecionado
-- `Ctrl+V`: colar um caminho ou link e, quando possível, adicioná-lo à playlist atual
-- `Ctrl+Shift+V`: colar um caminho, playlist ou link e abrir em uma nova playlist
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 
@@ -152,7 +166,7 @@ A aba **Reprodução** controla o comportamento de áudio e o estado inicial de 
 
 ### Acessibilidade
 
-A aba **Acessibilidade** tem uma única opção: **Ativar anúncios de acessibilidade**. Quando ligada, o player anuncia mudanças de tempo, volume, troca de abas e status ao leitor de tela. Quando desligada, esses anúncios são suprimidos. Os atalhos de anúncio sob demanda (`T`, `V`, `S`) continuam funcionando independentemente dessa configuração — veja a seção **Acessibilidade** para detalhes.
+A aba **Acessibilidade** tem uma única opção: **Ativar anúncios de acessibilidade**. Quando ligada, o player anuncia mudanças de tempo, volume, troca de abas e status ao leitor de tela. Quando desligada, esses anúncios são suprimidos. Os atalhos de anúncio sob demanda (`T`, `V`, `S`) continuam funcionando independentemente dessa configuração — veja [Recursos de acessibilidade](#recursos-de-acessibilidade) para detalhes.
 
 ### Recursos adicionais
 
@@ -299,7 +313,7 @@ Usar uma janela anônima evita que o Google troque constantemente os cookies —
 - `Page Down` no fim da lista de playlists: carregar mais playlists
 - `Esc`: fechar a aba quando ela estiver em foco
 
-## Acessibilidade
+## Recursos de acessibilidade
 
 O aplicativo foi projetado para leitores de tela e uso por teclado. Em geral:
 
@@ -307,12 +321,7 @@ O aplicativo foi projetado para leitores de tela e uso por teclado. Em geral:
 - anúncios de estado e de navegação são feitos quando o suporte de acessibilidade está disponível;
 - campos, botões e listas têm nomes e descrições legíveis por leitores de tela.
 
-Se você usa leitor de tela, use os atalhos de anúncio sob demanda para se localizar sem depender dos eventos automáticos:
-
-- `T`: anuncia o tempo atual da mídia em reprodução.
-- `V`: anuncia o volume atual.
-- `S`: anuncia o status geral do player (reproduzindo, pausado, parado).
-- `F1`: abre a ajuda rápida de atalhos.
+Se você usa leitor de tela, os atalhos de anúncio sob demanda `T`, `V` e `S` (descritos em [Atalhos de reprodução](#atalhos-de-reproducao)) e a ajuda rápida `F1` ajudam a se localizar sem depender dos eventos automáticos.
 
 Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em `Ctrl+,` > **Acessibilidade**.
 
@@ -324,19 +333,19 @@ Quando houver uma versão nova, o aplicativo mostra um diálogo com as notas da 
 
 ## Solução de problemas
 
-Se o aplicativo não abrir corretamente, confira primeiro se os arquivos foram extraídos para uma pasta local e se o sistema tem permissão para acessar os arquivos ou pastas que você tentou abrir.
+Se o aplicativo não abrir corretamente, confira primeiro se a instalação foi concluída sem erros (reinstalar com o instalador mais recente resolve a maioria dos casos) e se o sistema tem permissão para acessar os arquivos ou pastas que você tentou abrir.
 
 Se o player não encontrar o runtime do MPV, verifique se ele está em um destes caminhos: uma pasta `mpv/` ao lado do executável, `MPV_HOME`, `MPV_DLL_DIR`, o cache salvo da execução anterior ou uma instalação do Chocolatey compatível.
 
 Se uma mídia não abrir, teste outro arquivo local para separar problema de caminho inválido, permissão ou tipo de arquivo incompatível.
 
-Se a associação de arquivos não funcionar como esperado, registre a opção nas preferências do Windows e confirme também o app como padrão para os formatos compatíveis.
+Se a associação de arquivos não funcionar como esperado, há dois passos separados a confirmar: primeiro, que o KeyTune foi registrado como opção (durante a instalação ou depois em **Configurações > Geral > Registrar como player padrão**); segundo, que ele foi escolhido como aplicativo padrão para esses formatos nas configurações de apps padrão do Windows — o registro por si só não torna o KeyTune o padrão automaticamente.
 
 Se a restauração de sessão falhar, abra o app uma vez sem depender da sessão anterior e verifique se a configuração de janela e pasta estão sendo salvas normalmente.
 
 Se a aba do YouTube Music não carregar ou exibir erros de dependência, abra `Ctrl+,` > **Recursos adicionais** e confirme que a opção **Ativar recursos adicionais para YouTube Music e YouTube** está marcada. O download inicial pode levar alguns minutos e exige internet. Se as dependências já estiverem instaladas mas a busca ou o carregamento falharem, use a versão nightly do `yt-dlp` nas mesmas preferências — ela costuma receber correções antes do canal estável.
 
-Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção **Sessão do YouTube Music** e reconecte a conta.
+Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção [Sessão do YouTube Music](#sessao-do-youtube-music) e reconecte a conta.
 
 Para investigar outros problemas, ative o registro de logs em `Ctrl+,` > **Geral** > **Registro de logs**. Com **Registrar logs de diagnóstico** ligado e o nível ajustado para *Depuração*, o player grava informações detalhadas em `keytune.log` na pasta de dados. Use **Abrir pasta de logs** para localizar o arquivo e, se precisar reportar um problema, anexe-o à issue.
 
