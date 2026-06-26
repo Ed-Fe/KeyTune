@@ -37,11 +37,13 @@ def main():
 
     initial_paths = _collect_initial_paths()
 
-    if initial_paths:
-        from player.single_instance import try_send_to_existing_instance
+    from player.single_instance import try_send_to_existing_instance
 
-        if try_send_to_existing_instance(initial_paths):
-            return
+    # Single instance: forward this launch to a running KeyTune (files to play,
+    # or a focus request for a bare launch) and exit. Only start a new instance
+    # when none is already running.
+    if try_send_to_existing_instance(initial_paths):
+        return
 
     from player.app import main as app_main
 

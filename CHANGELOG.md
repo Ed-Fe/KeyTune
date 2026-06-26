@@ -8,9 +8,14 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Não lançado]
 
 ### Adicionado
+- **Instalador para Windows (Inno Setup)**: o KeyTune passa a ser distribuído como `KeyTune-Setup.exe`, com instalação per-user (sem UAC) ou para todos os usuários, atalhos no Menu Iniciar e desinstalador. A instalação registra o KeyTune em *Aplicativos padrão* do Windows e oferece uma lista opcional de extensões para associar (nada marcado por padrão). Ao final, há a opção de ler o manual.
+- **Atualização pelo instalador**: a atualização automática agora baixa e executa o instalador em modo silencioso, substituindo a versão antiga e mantendo a versão correta em *Aplicativos e recursos*. O atualizador autônomo anterior foi aposentado.
 - **Em alta por país (YouTube Music)**: botão **Em alta...** na seção *Explorar* da aba do YouTube Music abre um menu com *Global* no topo e mais de 50 países agrupados em submenus por continente. Ao escolher um país, as paradas e os destaques em alta entram na lista de busca já existente, prontos para abrir como playlist ou salvar na biblioteca. Funciona sem conectar a conta (cliente público do `ytmusicapi`).
 - **Moods e gêneros (YouTube Music)**: botão **Moods e gêneros...** abre um menu com as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida na lista de resultados. Funciona sem conta conectada. Inclui um analisador resiliente próprio para as páginas de *Gêneros*, que o `ytmusicapi` 1.12.0 não consegue interpretar sozinho.
 - **Curtidas e Histórico (YouTube Music)**: botões **Curtidas** e **Histórico** trazem, respectivamente, as faixas curtidas da conta e o histórico de reprodução (da mais recente para a mais antiga) para a lista de resultados, prontos para abrir, tocar ou adicionar a uma playlist.
+
+### Alterado
+- **Instância única**: abrir o KeyTune novamente (Menu Iniciar ou atalho) agora traz a janela já aberta para frente em vez de criar uma segunda instância. Abrir um arquivo pelo Explorador continua tocando na instância existente, mas **sem** roubar o foco da janela.
 
 ### Corrigido
 - **Conexão do YouTube Music que expirava de um dia para o outro**: o diálogo de conexão e o manual agora explicam que o Google troca os cookies da sessão por segurança quando você continua navegando logado no YouTube, invalidando os cookies já exportados. A orientação recomenda exportar os cookies em uma janela anônima/privada e fechá-la sem reabrir o YouTube, para que a autenticação dure muito mais.

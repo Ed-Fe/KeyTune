@@ -12,7 +12,7 @@ from ..update import (
     can_self_update,
     check_for_update,
     format_byte_count,
-    launch_external_updater,
+    launch_installer_update,
     unsupported_install_message,
 )
 
@@ -132,7 +132,7 @@ class FrameUpdateMixin:
         try:
             self._save_settings()
             self._save_session()
-            launch_external_updater(downloaded_file_path)
+            launch_installer_update(downloaded_file_path)
         except UpdateError as exc:
             wx.MessageBox(str(exc), "Atualizações", wx.OK | wx.ICON_ERROR, self)
             return

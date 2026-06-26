@@ -34,18 +34,9 @@ jobs:
         run: |
           pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
 
-      - name: Build updater (PyInstaller)
-        run: |
-          pyinstaller --noconfirm --onefile --windowed --name KeyTuneUpdater src/updater_main.py
-
       - name: Download MPV runtime
         run: |
           python scripts/download_mpv_runtime.py --output-dir build\mpv-runtime
-
-      - name: Bundle updater into dist
-        shell: powershell
-        run: |
-          Copy-Item -Path "dist\KeyTuneUpdater.exe" -Destination "dist\KeyTune\KeyTuneUpdater.exe" -Force
 
       - name: Download official yt-dlp executable
         run: |
@@ -77,30 +68,39 @@ jobs:
             }
           }
 
-      - name: Create release archive
+      - name: Derive installer version
+        id: version
         shell: powershell
         run: |
-          $archiveName = "KeyTune-windows.zip"
-          if (Test-Path $archiveName) {
-            Remove-Item $archiveName -Force
-          }
-          Compress-Archive -Path "dist\KeyTune\*" -DestinationPath $archiveName
+          $ref = "${{ github.ref_name }}"
+          $version = $ref -replace '^v', ''
+          if (-not ($version -match '^\d+(\.\d+)*$')) { $version = "0.0.0" }
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      - name: Create release checksum
+      - name: Build installer (Inno Setup)
         shell: powershell
         run: |
-          $archiveName = "KeyTune-windows.zip"
-          $checksumFile = "$archiveName.sha256"
-          $hash = (Get-FileHash -Path $archiveName -Algorithm SHA256).Hash.ToLowerInvariant()
-          Set-Content -Path $checksumFile -Value "$hash  $archiveName" -Encoding ascii
+          choco install innosetup --no-progress -y
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { $iscc = "$env:ProgramFiles\Inno Setup 6\ISCC.exe" }
+          & $iscc "/DAppVersion=${{ steps.version.outputs.version }}" installer\keytune.iss
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao compilar o instalador." }
+
+      - name: Create installer checksum
+        shell: powershell
+        run: |
+          $setup = "dist\KeyTune-Setup.exe"
+          $checksumFile = "$setup.sha256"
+          $hash = (Get-FileHash -Path $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -Path $checksumFile -Value "$hash  KeyTune-Setup.exe" -Encoding ascii
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v7
         with:
           name: KeyTune-windows
           path: |
-            KeyTune-windows.zip
-            KeyTune-windows.zip.sha256
+            dist\KeyTune-Setup.exe
+            dist\KeyTune-Setup.exe.sha256
 
   publish-release:
     needs: build-release
@@ -116,10 +116,10 @@ jobs:
           name: KeyTune-windows
           path: artifacts
 
-      - name: Publish zip to GitHub Release
+      - name: Publish installer to GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           files: |
-            artifacts/KeyTune-windows.zip
-            artifacts/KeyTune-windows.zip.sha256
+            artifacts/KeyTune-Setup.exe
+            artifacts/KeyTune-Setup.exe.sha256
           body_path: .github/release-notes.md

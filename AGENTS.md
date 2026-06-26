@@ -47,7 +47,7 @@ When a feature crosses these boundaries (UI + service + parsing + playback), ext
 
 ## Conventions
 
-- The updater contract spans `constants.py`, `.github/workflows/release-windows.yml`, and release assets: `KeyTune-windows.zip` + `.sha256` + `KeyTuneUpdater.exe`. Keep them in sync.
+- The updater contract spans `constants.py`, `installer/keytune.iss`, `.github/workflows/release-windows.yml`, and the published release asset `KeyTune-Setup.exe` + `.sha256`. Updates are installer-driven: the app downloads the setup and runs it silently (`/VERYSILENT`); the Inno `[Run]` step relaunches. The installer also registers default-app `Capabilities`/`RegisteredApplications` (HKA). Keep them in sync.
 - The update dialog shows the GitHub release body as the changelog; keep `CHANGELOG.md` and the published release notes consistent — the app doesn't read the file directly.
 - Preserve `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Full feature list and shortcut inventory: `README.md` and `docs/manual.md`.

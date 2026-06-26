@@ -8,10 +8,10 @@ Validar que a aplicação empacotada:
 
 1. verifica uma release remota mais nova ao iniciar;
 2. mostra as notas da release antes do download;
-3. baixa o arquivo `KeyTune-windows.zip` com barra de progresso;
-4. fecha a aplicação principal;
-5. aplica o pacote com `KeyTuneUpdater.exe`;
-6. reinicia com a nova versão.
+3. baixa o arquivo `KeyTune-Setup.exe` com barra de progresso;
+4. executa o instalador em modo silencioso (`/VERYSILENT`), que fecha a aplicação, troca os arquivos e reinicia com a nova versão.
+
+> Instalações per-machine (Arquivos de Programas) exigem elevação: o app dispara o instalador via UAC nesse caso. Instalações per-user atualizam sem prompt.
 
 ## Estratégia recomendada
 
@@ -42,10 +42,17 @@ Se quiser fixar o runtime do MPV a uma pasta local ou a um arquivo `.7z`, passe 
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -YtDlpChannel nightly
 ```
 
-Ao final, você terá:
+Ao final, você terá (o instalador exige `ISCC.exe` do Inno Setup 6 no PATH padrão; instale com `choco install innosetup`):
 
-- `KeyTune-windows.zip`
-- `KeyTune-windows.zip.sha256`
+- `dist\KeyTune-Setup.exe`
+- `dist\KeyTune-Setup.exe.sha256`
+- `KeyTune-windows.zip` + `.sha256` (build em pasta, usado para gerar o instalador)
+
+Para fixar a versão exibida no instalador e em "Aplicativos e recursos", passe `-AppVersion`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -AppVersion 0.2.0
+```
 
 ## Cenário recomendado de teste ponta a ponta
 
@@ -61,8 +68,8 @@ Ao final, você terá:
 2. Gere novamente a release local.
 3. Crie uma release publicada no repositório de teste com tag `v0.2.0`.
 4. Anexe os arquivos:
-  - `KeyTune-windows.zip`
-  - `KeyTune-windows.zip.sha256`
+  - `KeyTune-Setup.exe`
+  - `KeyTune-Setup.exe.sha256`
 5. Escreva no corpo da release as notas/changelog que devem aparecer no diálogo antes do download.
 
 ### Etapa C — apontar a build antiga para o repositório de teste
@@ -89,14 +96,14 @@ Depois inicie `KeyTune.exe` a partir da pasta extraída da versão antiga.
   - a barra avança durante o download;
   - cancelar interrompe o processo sem corromper a instalação.
 - Ao concluir:
-  - o player fecha;
-  - o updater aplica o ZIP;
-  - o app reinicia;
-  - a nova versão passa a ser a instalada.
+  - o instalador silencioso fecha o player, troca os arquivos e reinicia;
+  - a nova versão passa a ser a instalada;
+  - a versão em "Aplicativos e recursos" reflete a nova release.
 
 ## Verificações extras úteis
 
 - Testar com release sem notas para validar a mensagem padrão.
 - Testar checksum inválido para confirmar bloqueio da instalação.
-- Testar pasta sem permissão de escrita para validar rollback/log de erro.
-- Conferir o log do updater em `%TEMP%\KeyTuneUpdater\updater.log` caso algo falhe.
+- Testar uma instalação per-machine para confirmar o prompt de UAC durante a atualização.
+- Validar o registro de "Apps padrão": após instalar, abrir Configurações > Aplicativos > Aplicativos padrão e confirmar que o KeyTune aparece e pode ser associado às extensões.
+- Conferir o log do Inno Setup (caminho mostrado quando `SetupLogging=yes`, normalmente em `%TEMP%`) caso a atualização falhe.

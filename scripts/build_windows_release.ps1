@@ -1,10 +1,10 @@
-param(
+﻿param(
     [string]$PythonExe = "d:/git/Media-Player/.venv/Scripts/python.exe",
     [string]$MpvSource = "",
     [string]$MpvRuntimeArchive = "",
-    [string]$ArchiveName = "KeyTune-windows.zip",
     [ValidateSet("stable", "nightly")]
-    [string]$YtDlpChannel = "stable"
+    [string]$YtDlpChannel = "stable",
+    [string]$AppVersion = "1.0.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -53,8 +53,6 @@ if ($LASTEXITCODE -ne 0) {
 Write-Step "Limpando artefatos anteriores"
 Remove-Item -Path "build" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "dist" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path $ArchiveName -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "$ArchiveName.sha256" -Force -ErrorAction SilentlyContinue
 
 Write-Step "Baixando runtime do MPV"
 $mpvScriptArgs = @("scripts\download_mpv_runtime.py", "--output-dir", "build\mpv-runtime")
@@ -74,15 +72,6 @@ Write-Step "Gerando executável principal"
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
-
-Write-Step "Gerando atualizador externo"
-& $PythonExe -m PyInstaller --noconfirm --onefile --windowed --name KeyTuneUpdater src/updater_main.py
-if ($LASTEXITCODE -ne 0) {
-    throw "Falha ao gerar o atualizador externo."
-}
-
-Write-Step "Copiando atualizador para a pasta da release"
-Copy-Item -Path "dist\KeyTuneUpdater.exe" -Destination "dist\KeyTune\KeyTuneUpdater.exe" -Force
 
 Write-Step "Baixando yt-dlp oficial ($YtDlpChannel)"
 & $PythonExe scripts\download_yt_dlp_release.py --channel $YtDlpChannel --output-dir "dist\KeyTune"
@@ -116,13 +105,24 @@ foreach ($file in $possibleLicenseFiles) {
     }
 }
 
-Write-Step "Empacotando release"
-Compress-Archive -Path "dist\KeyTune\*" -DestinationPath $ArchiveName
-
-Write-Step "Gerando checksum"
-$hash = (Get-FileHash -Path $ArchiveName -Algorithm SHA256).Hash.ToLowerInvariant()
-Set-Content -Path "$ArchiveName.sha256" -Value "$hash  $ArchiveName" -Encoding ascii
-
-Write-Step "Release local gerada com sucesso"
-Write-Host "Arquivo: $ArchiveName"
-Write-Host "Checksum: $ArchiveName.sha256"
+Write-Step "Compilando instalador (Inno Setup)"
+$isccCandidates = @(
+    "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+    "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+)
+$iscc = $isccCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if (-not $iscc) {
+    Write-Host "ISCC.exe não encontrado — instalador não foi gerado. Instale com: choco install innosetup" -ForegroundColor Yellow
+    Write-Step "Release local gerada (sem instalador)"
+} else {
+    & $iscc "/DAppVersion=$AppVersion" "installer\keytune.iss"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Falha ao compilar o instalador."
+    }
+    $setupPath = "dist\KeyTune-Setup.exe"
+    $setupHash = (Get-FileHash -Path $setupPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    Set-Content -Path "$setupPath.sha256" -Value "$setupHash  KeyTune-Setup.exe" -Encoding ascii
+    Write-Step "Release local gerada com sucesso"
+    Write-Host "Instalador: $setupPath"
+    Write-Host "Checksum: $setupPath.sha256"
+}

@@ -9,7 +9,7 @@ from .service import (
     fetch_latest_release,
     format_byte_count,
     is_newer_version,
-    launch_external_updater,
+    launch_installer_update,
     normalize_version,
     unsupported_install_message,
 )
@@ -26,7 +26,7 @@ __all__ = [
     "fetch_latest_release",
     "format_byte_count",
     "is_newer_version",
-    "launch_external_updater",
+    "launch_installer_update",
     "normalize_version",
     "unsupported_install_message",
 ]

@@ -39,9 +39,9 @@ RECENT_ITEMS_LIMIT = 10
 
 GITHUB_REPOSITORY_OWNER = "ed-fe"
 GITHUB_REPOSITORY_NAME = "KeyTune"
-WINDOWS_RELEASE_ARCHIVE_NAME = "KeyTune-windows.zip"
-WINDOWS_RELEASE_CHECKSUM_NAME = f"{WINDOWS_RELEASE_ARCHIVE_NAME}.sha256"
-WINDOWS_UPDATER_EXECUTABLE_NAME = "KeyTuneUpdater.exe"
+# Installer-driven updates: the app downloads and silently runs the setup .exe.
+WINDOWS_SETUP_EXECUTABLE_NAME = "KeyTune-Setup.exe"
+WINDOWS_SETUP_CHECKSUM_NAME = f"{WINDOWS_SETUP_EXECUTABLE_NAME}.sha256"
 
 DEFAULT_LOGGING_ENABLED = True
 DEFAULT_LOGGING_LEVEL = "WARNING"
@@ -70,16 +70,25 @@ PLAYLIST_WILDCARD = (
     "Todos os arquivos|*.*"
 )
 
-SUPPORTED_MEDIA_EXTENSIONS = {
+# Standard container/codec extensions playable by the bundled MPV (FFmpeg)
+# runtime, mirroring what mainstream players (VLC, MPC-HC) offer for
+# association. Keep these in sync with installer/keytune.iss.
+VIDEO_EXTENSIONS = {
     ".mp4",
+    ".m4v",
     ".mkv",
     ".avi",
     ".mov",
-    ".mp3",
-    ".wav",
-    ".flac",
-    ".aac",
-    ".ogg",
+    ".webm",
+    ".flv",
+    ".wmv",
+    ".mpg",
+    ".mpeg",
+    ".3gp",
+    ".ts",
+    ".m2ts",
+    ".mts",
+    ".ogv",
 }
 
 AUDIO_ONLY_EXTENSIONS = {
@@ -88,4 +97,16 @@ AUDIO_ONLY_EXTENSIONS = {
     ".flac",
     ".aac",
     ".ogg",
+    ".oga",
+    ".m4a",
+    ".opus",
+    ".wma",
+    ".aiff",
+    ".aif",
+    ".ac3",
+    ".mka",
+    ".wv",
+    ".ape",
 }
+
+SUPPORTED_MEDIA_EXTENSIONS = VIDEO_EXTENSIONS | AUDIO_ONLY_EXTENSIONS

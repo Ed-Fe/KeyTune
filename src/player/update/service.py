@@ -19,10 +19,10 @@ from ..constants import (
     GITHUB_REPOSITORY_OWNER,
     UPDATE_DOWNLOAD_CHUNK_SIZE,
     UPDATE_HTTP_TIMEOUT_SECONDS,
-    WINDOWS_RELEASE_ARCHIVE_NAME,
-    WINDOWS_RELEASE_CHECKSUM_NAME,
-    WINDOWS_UPDATER_EXECUTABLE_NAME,
+    WINDOWS_SETUP_CHECKSUM_NAME,
+    WINDOWS_SETUP_EXECUTABLE_NAME,
 )
+from ..install_info import read_install_info
 from ..log import get_logger
 
 
@@ -87,7 +87,7 @@ def fetch_latest_release() -> UpdateInfo:
         raise UpdateError("Não foi encontrado o arquivo da atualização.")
 
     checksum_asset = _select_checksum_asset(assets)
-    archive_name = str(archive_asset.get("name") or WINDOWS_RELEASE_ARCHIVE_NAME)
+    archive_name = str(archive_asset.get("name") or WINDOWS_SETUP_EXECUTABLE_NAME)
     archive_url = str(archive_asset.get("browser_download_url") or "").strip()
     if not archive_url:
         raise UpdateError("Não foi possível abrir o arquivo da atualização.")
@@ -147,7 +147,7 @@ def download_release_archive(
 
 
 def can_self_update() -> bool:
-    return _find_packaged_updater() is not None
+    return sys.platform.startswith("win") and getattr(sys, "frozen", False)
 
 
 def unsupported_install_message() -> str:
@@ -156,44 +156,64 @@ def unsupported_install_message() -> str:
     )
 
 
-def launch_external_updater(archive_path: str | os.PathLike[str], *, parent_pid: int | None = None) -> None:
-    updater_path = _find_packaged_updater()
-    if updater_path is None:
+# Silent install flags for the Inno Setup installer. The installer's [Run]
+# section relaunches KeyTune automatically when invoked silently.
+_SILENT_INSTALL_FLAGS = (
+    "/VERYSILENT",
+    "/SP-",
+    "/SUPPRESSMSGBOXES",
+    "/NORESTART",
+    "/NOCANCEL",
+)
+
+
+def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pid: int | None = None) -> None:
+    """Run the downloaded setup .exe silently to upgrade in place.
+
+    The installer closes the running KeyTune (``CloseApplications=yes``),
+    replaces the files, and relaunches the app. Per-machine installs require
+    elevation, so we re-launch the installer via ``runas`` in that case.
+    """
+    if not can_self_update():
         raise UpdateError(unsupported_install_message())
 
-    archive_file = Path(archive_path).resolve()
-    if not archive_file.exists():
+    installer_file = Path(installer_path).resolve()
+    if not installer_file.exists():
         raise UpdateError("Não foi possível encontrar o arquivo baixado.")
 
-    app_executable = Path(sys.executable).resolve()
-    app_directory = app_executable.parent
-    temp_runner_directory = Path(tempfile.mkdtemp(prefix="keytune-updater-runner-"))
-    temp_updater_path = temp_runner_directory / updater_path.name
-    shutil.copy2(updater_path, temp_updater_path)
+    # Copy out of the temp download dir so it isn't cleaned while the installer runs.
+    runner_directory = Path(tempfile.mkdtemp(prefix="keytune-setup-runner-"))
+    runner_installer = runner_directory / installer_file.name
+    shutil.copy2(installer_file, runner_installer)
 
-    command = [
-        str(temp_updater_path),
-        "--parent-pid",
-        str(parent_pid or os.getpid()),
-        "--app-dir",
-        str(app_directory),
-        "--package",
-        str(archive_file),
-        "--restart-executable",
-        app_executable.name,
-    ]
+    install_info = read_install_info()
+    needs_elevation = install_info is not None and install_info.mode == "machine"
 
     try:
-        subprocess.Popen(
-            command,
-            cwd=str(temp_runner_directory),
-            close_fds=True,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-        _logger.info("External updater launched: %s", temp_updater_path)
+        if needs_elevation:
+            _launch_elevated(runner_installer)
+        else:
+            subprocess.Popen(
+                [str(runner_installer), *_SILENT_INSTALL_FLAGS],
+                cwd=str(runner_directory),
+                close_fds=True,
+            )
+        _logger.info("Installer update launched (elevated=%s): %s", needs_elevation, runner_installer)
     except OSError as exc:
-        _logger.error("Failed to launch external updater: %s", exc)
-        raise UpdateError("Não foi possível abrir o atualizador.") from exc
+        _logger.error("Failed to launch installer update: %s", exc)
+        raise UpdateError("Não foi possível abrir o instalador da atualização.") from exc
+
+
+def _launch_elevated(installer: Path) -> None:
+    import ctypes
+
+    parameters = " ".join(_SILENT_INSTALL_FLAGS)
+    # SW_SHOWNORMAL = 1. ShellExecuteW returns > 32 on success.
+    result = ctypes.windll.shell32.ShellExecuteW(
+        None, "runas", str(installer), parameters, str(installer.parent), 1
+    )
+    if int(result) <= 32:
+        raise OSError(f"ShellExecuteW failed with code {result}")
 
 
 def normalize_version(value: str) -> str:
@@ -227,7 +247,7 @@ def _version_key(version: str) -> tuple[int, ...]:
 
 
 def _select_archive_asset(assets: list[dict]) -> dict | None:
-    preferred_name = WINDOWS_RELEASE_ARCHIVE_NAME.casefold()
+    preferred_name = WINDOWS_SETUP_EXECUTABLE_NAME.casefold()
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
         if name == preferred_name:
@@ -235,14 +255,14 @@ def _select_archive_asset(assets: list[dict]) -> dict | None:
 
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
-        if name.endswith(".zip"):
+        if name.endswith("setup.exe"):
             return asset
 
     return None
 
 
 def _select_checksum_asset(assets: list[dict]) -> dict | None:
-    preferred_name = WINDOWS_RELEASE_CHECKSUM_NAME.casefold()
+    preferred_name = WINDOWS_SETUP_CHECKSUM_NAME.casefold()
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
         if name == preferred_name:
@@ -342,16 +362,6 @@ def _calculate_sha256(file_path: Path) -> str:
                 break
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def _find_packaged_updater() -> Path | None:
-    if not sys.platform.startswith("win") or not getattr(sys, "frozen", False):
-        return None
-
-    updater_path = Path(sys.executable).resolve().parent / WINDOWS_UPDATER_EXECUTABLE_NAME
-    if updater_path.exists():
-        return updater_path
-    return None
 
 
 def _request_headers(accept_header: str) -> dict[str, str]:

@@ -94,15 +94,29 @@ class MediaPlayerFrame(
         self._open_external_files(paths)
 
     def receive_external_files(self, paths):
-        """Open files sent by another instance via IPC without forcing focus."""
-        if paths:
-            if getattr(self, "_startup_ready", False):
-                self._open_external_files(paths)
-            else:
-                self._initial_paths.extend(paths)
+        """Play files sent by another instance via IPC.
 
-        if self.IsIconized():
-            self.Iconize(False)
+        Files opened from Explorer should not steal focus or pull the window to
+        the front, so we only request gentle taskbar attention here.
+        """
+        if not paths:
+            return
+
+        if getattr(self, "_startup_ready", False):
+            self._open_external_files(paths)
+        else:
+            self._initial_paths.extend(paths)
 
         if hasattr(self, "RequestUserAttention"):
             self.RequestUserAttention()
+
+    def focus_from_relaunch(self):
+        """Bring the existing window to front when the app is launched again.
+
+        Used when KeyTune is started without a file (Start Menu, shortcut),
+        where the user intent is to return to the running instance.
+        """
+        if self.IsIconized():
+            self.Iconize(False)
+        self.Raise()
+        self.SetFocus()

@@ -85,9 +85,9 @@ Useful project links:
 
 ## Windows Release
 
-The Windows release workflow is defined in `.github/workflows/release-windows.yml`. It builds the app and updater, bundles the MPV runtime, and publishes `KeyTune-windows.zip` plus the matching SHA256 file.
+The Windows release workflow is defined in `.github/workflows/release-windows.yml`. It builds the app, bundles the MPV runtime, compiles the Inno Setup installer (`installer/keytune.iss`), and publishes `KeyTune-Setup.exe` plus the matching SHA256 file.
 
-The packaged app includes `KeyTuneUpdater.exe`, which applies downloaded updates after the user confirms the installation.
+The installer supports both per-user (no admin) and per-machine installs, registers KeyTune for Windows "Default apps", and drives updates: the app downloads `KeyTune-Setup.exe` and runs it silently to upgrade in place, then relaunches.
 
 For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 

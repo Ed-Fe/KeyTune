@@ -681,19 +681,35 @@ class PreferencesDialog(wx.Dialog):
         from ..file_associations import register_file_associations
 
         if register_file_associations():
-            wx.MessageBox(
+            response = wx.MessageBox(
                 "Associações registradas com sucesso.\n\n"
-                "Para definir o player como padrão, vá nas configurações do Windows:\n"
-                "Configurações > Aplicativos > Aplicativos padrão.",
+                "Para definir o KeyTune como player padrão, abra as configurações de "
+                "Aplicativos padrão do Windows. Deseja abri-las agora?",
                 "Associação de arquivos",
-                wx.OK | wx.ICON_INFORMATION,
+                wx.YES_NO | wx.ICON_INFORMATION,
                 self,
             )
+            if response == wx.YES:
+                self._open_default_apps_settings()
         else:
             wx.MessageBox(
                 "Não foi possível registrar as associações de arquivo.",
                 "Associação de arquivos",
                 wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+    def _open_default_apps_settings(self):
+        try:
+            import os
+
+            os.startfile("ms-settings:defaultapps")
+        except OSError:
+            wx.MessageBox(
+                "Não foi possível abrir as configurações do Windows.\n\n"
+                "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão.",
+                "Aplicativos padrão",
+                wx.OK | wx.ICON_INFORMATION,
                 self,
             )
 

@@ -1,9 +1,10 @@
 """Single instance enforcement via named pipe IPC on Windows.
 
-When the app starts, it checks whether another instance is already listening
-on a named pipe.  If so, the new process sends its command-line paths to the
-running instance and exits.  If no pipe exists, a background listener is
-started so future launches can forward their paths here.
+When the app starts, it forwards its launch to an already-running instance and
+exits.  A launch carrying file paths (e.g. from Explorer) is delivered as an
+``open`` message; a bare launch (Start Menu, shortcut) is delivered as a
+``focus`` message so the running window comes to front.  If no pipe exists, a
+background listener is started so future launches can forward here.
 """
 
 import threading
@@ -17,17 +18,28 @@ logger = get_logger(__name__)
 _PIPE_ADDRESS = rf"\\.\pipe\{APP_TITLE}_SingleInstance"
 _PIPE_AUTH_KEY = b"keytune-single-instance"
 
+ACTION_OPEN = "open"
+ACTION_FOCUS = "focus"
+
 
 def try_send_to_existing_instance(paths: list[str]) -> bool:
-    """Try to send *paths* to an already-running instance.
+    """Forward this launch to an already-running instance.
 
-    Returns ``True`` if the paths were delivered successfully, meaning the
-    caller should exit.  Returns ``False`` when no other instance is
-    listening and the caller should continue with normal startup.
+    A non-empty *paths* sends an ``open`` request (the running instance plays
+    the files **without** stealing focus); an empty *paths* sends a ``focus``
+    request (the running window comes to front).
+
+    Returns ``True`` if the message was delivered, meaning the caller should
+    exit.  Returns ``False`` when no other instance is listening and the
+    caller should continue with normal startup.
     """
+    if paths:
+        message = {"action": ACTION_OPEN, "paths": list(paths)}
+    else:
+        message = {"action": ACTION_FOCUS}
     try:
         conn = Client(_PIPE_ADDRESS, authkey=_PIPE_AUTH_KEY)
-        conn.send(paths)
+        conn.send(message)
         conn.close()
         return True
     except (ConnectionRefusedError, FileNotFoundError, OSError):
@@ -35,15 +47,16 @@ def try_send_to_existing_instance(paths: list[str]) -> bool:
 
 
 class SingleInstanceServer:
-    """Background named-pipe listener that receives paths from new instances.
+    """Background named-pipe listener that receives launches from new instances.
 
-    *on_paths_received* is called **from a background thread** with a list of
-    file-path strings.  Callers that need to touch the UI must bridge to the
-    main thread (e.g. ``wx.CallAfter``).
+    *on_message_received* is called **from a background thread** with a message
+    dict (``{"action": "open", "paths": [...]}`` or ``{"action": "focus"}``).
+    Callers that need to touch the UI must bridge to the main thread (e.g.
+    ``wx.CallAfter``).
     """
 
-    def __init__(self, on_paths_received):
-        self._callback = on_paths_received
+    def __init__(self, on_message_received):
+        self._callback = on_message_received
         self._running = True
         try:
             self._listener = Listener(_PIPE_ADDRESS, authkey=_PIPE_AUTH_KEY)
@@ -59,11 +72,11 @@ class SingleInstanceServer:
             try:
                 conn = self._listener.accept()
                 try:
-                    paths = conn.recv()
+                    message = conn.recv()
                 finally:
                     conn.close()
-                if paths and self._callback:
-                    self._callback(paths)
+                if message and self._callback:
+                    self._callback(message)
             except OSError:
                 if not self._running:
                     break
