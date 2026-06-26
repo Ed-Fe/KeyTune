@@ -50,7 +50,7 @@ class _FakePlayerCore:
         self.commands = getattr(self, "commands", [])
         self.commands.append((name, args))
 
-    def loadfile(self, path, mode):
+    def loadfile(self, path, mode, **options):
         self.loaded.append((path, mode))
         self.core_idle = False
 
@@ -71,8 +71,13 @@ class _FakePlayerCore:
 
 class _FakeMPVModule:
     class MpvEventEndFile:
-        ERROR = "error"
-        EOF = "eof"
+        # Mirror python-mpv's actual enum names: reason 2 is ``ABORTED``.
+        EOF = 0
+        RESTARTED = 1
+        ABORTED = 2
+        QUIT = 3
+        ERROR = 4
+        REDIRECT = 5
 
     def __init__(self):
         self.created_players = []
@@ -92,6 +97,118 @@ class MPVPlayerTests(unittest.TestCase):
 
     def tearDown(self):
         mpv_backend._mpv_module = self._previous_module
+
+    def _make_player_with_loaded_media(self, path="song.mp3"):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        media = mpv_backend.MPVMedia(path=path)
+        player.set_media(media)
+        player.play()
+        core = self.fake_module.created_players[0]
+        # Simulate MPV confirming the file is loaded and playing.
+        core.callbacks["file-loaded"](object())
+        return player, core
+
+    def _emit_end_file(self, core, reason):
+        end_event = type("_EndEvent", (), {"reason": reason})()
+        event = type("_Event", (), {"data": end_event})()
+        core.callbacks["end-file"](event)
+
+    def _set_eof_reached(self, core, value):
+        for callback in core.property_observers.get("eof-reached", []):
+            callback("eof-reached", value)
+
+    def _count_end_reached(self, player):
+        events = []
+        player.event_manager().event_attach(
+            mpv_backend.PlayerEventType.MEDIA_PLAYER_END_REACHED,
+            lambda event: events.append(event),
+        )
+        return events
+
+    def _count_errors(self, player):
+        events = []
+        player.event_manager().event_attach(
+            mpv_backend.PlayerEventType.MEDIA_PLAYER_ERROR,
+            lambda event: events.append(event),
+        )
+        return events
+
+    def test_eof_reached_property_emits_end_of_track(self):
+        # With keep-open=yes MPV signals a natural end via the eof-reached
+        # property, not the end-file event.
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._set_eof_reached(core, True)
+
+        self.assertEqual(len(end_reached), 1)
+
+    def test_eof_reached_emits_only_on_rising_edge(self):
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._set_eof_reached(core, True)
+        self._set_eof_reached(core, True)  # No False in between: still one end.
+
+        self.assertEqual(len(end_reached), 1)
+
+    def test_eof_reached_emits_again_after_new_load(self):
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._set_eof_reached(core, True)
+        # Advancing to the next track reloads and clears the end state.
+        player.set_media(mpv_backend.MPVMedia(path="next.mp3"))
+        player.play()
+        self._set_eof_reached(core, True)
+
+        self.assertEqual(len(end_reached), 2)
+
+    def test_eof_reached_false_does_not_emit(self):
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._set_eof_reached(core, False)
+
+        self.assertEqual(len(end_reached), 0)
+
+    def test_natural_eof_end_file_emits_end_of_track(self):
+        # Fallback path when keep-open is off: MPV still delivers EOF via the
+        # end-file event.
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._emit_end_file(core, self.fake_module.MpvEventEndFile.EOF)
+
+        self.assertEqual(len(end_reached), 1)
+
+    def test_aborted_end_file_does_not_emit_end_of_track(self):
+        # A STOP/ABORTED end-file (manual skip, stop, replace) is not an end of
+        # track — natural ends come through eof-reached instead.
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._emit_end_file(core, self.fake_module.MpvEventEndFile.ABORTED)
+
+        self.assertEqual(len(end_reached), 0)
+
+    def test_quit_end_file_does_not_emit_end_of_track(self):
+        player, core = self._make_player_with_loaded_media()
+        end_reached = self._count_end_reached(player)
+
+        self._emit_end_file(core, self.fake_module.MpvEventEndFile.QUIT)
+
+        self.assertEqual(len(end_reached), 0)
+
+    def test_error_end_file_emits_error(self):
+        player, core = self._make_player_with_loaded_media()
+        errors = self._count_errors(player)
+        end_reached = self._count_end_reached(player)
+
+        self._emit_end_file(core, self.fake_module.MpvEventEndFile.ERROR)
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(len(end_reached), 0)
 
     def test_resume_after_pause_does_not_reload_media(self):
         player = mpv_backend.MPVPlayer(video_output_enabled=False)

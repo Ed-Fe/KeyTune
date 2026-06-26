@@ -453,8 +453,25 @@ class PreferencesDialog(wx.Dialog):
             max_value=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
         )
 
+        self.youtube_music_autoplay_related_checkbox = wx.CheckBox(
+            page,
+            label="Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)",
+        )
+        self._configure_checkbox(
+            self.youtube_music_autoplay_related_checkbox,
+            "Reproduzir conteúdo relacionado ao fim da playlist",
+            (
+                "Quando a playlist termina e a última faixa é do YouTube Music, o player busca faixas "
+                "relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. "
+                "Também pode ser ligado ou desligado com a tecla A durante a reprodução."
+            ),
+        )
+
         self.youtube_music_library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_library_box.Add(
+            self.youtube_music_autoplay_related_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
             wx.EVT_CHECKBOX,
@@ -617,6 +634,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
+        self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
         try:
             logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
@@ -661,6 +679,7 @@ class PreferencesDialog(wx.Dialog):
         )
         settings.youtube_music_library_page_size = int(self.youtube_music_library_page_size_ctrl.GetValue())
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
+        settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]

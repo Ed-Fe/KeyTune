@@ -14,6 +14,7 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Recent files, folders, and playlists
 - Built-in equalizer presets plus custom presets
 - YouTube Music integration for search, link-based open flows, and library refresh
+- Optional YouTube Music related-content autoplay (radio) when a playlist ends
 
 ## Requirements
 

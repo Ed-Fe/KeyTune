@@ -679,12 +679,18 @@ class FramePlaybackMixin:
     def _handle_player_end_reached(self, player_key):
         crossfade_state = getattr(self, "_crossfade_state", None)
         if crossfade_state and player_key == crossfade_state.get("outgoing_key"):
+            _logger.debug("End reached on outgoing crossfade slot %r; marking ended.", player_key)
             crossfade_state["outgoing_ended"] = True
             return
 
-        if player_key != getattr(self, "_active_player_key", None):
+        active_player_key = getattr(self, "_active_player_key", None)
+        if player_key != active_player_key:
+            _logger.debug(
+                "End reached on non-active slot %r (active=%r); ignoring.", player_key, active_player_key
+            )
             return
 
+        _logger.debug("End reached on active slot %r; handling media end.", player_key)
         self._handle_media_end()
 
     def _handle_player_started(self, player_key):

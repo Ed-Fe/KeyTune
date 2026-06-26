@@ -126,6 +126,7 @@ class FrameUIMixin:
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
+            "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
             "T — Anunciar tempo\n"
             "V — Anunciar volume\n"
             "S — Anunciar status\n\n"
@@ -292,6 +293,7 @@ class FrameUIMixin:
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
+        self.menu_toggle_related_autoplay_id = wx.NewIdRef()
         self.menu_announce_time_id = wx.NewIdRef()
         self.menu_announce_volume_id = wx.NewIdRef()
         self.menu_announce_status_id = wx.NewIdRef()
@@ -307,6 +309,7 @@ class FrameUIMixin:
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, "Em&baralhar (E)")
         playback_menu.Append(self.menu_cycle_repeat_id, "Modo de &Repetição (R)")
+        playback_menu.Append(self.menu_toggle_related_autoplay_id, "&Conteúdo Relacionado do YouTube Music (A)")
         playback_menu.AppendSubMenu(self.audio_output_menu, "Dispositivo de áu&dio")
         announce_menu.Append(self.menu_announce_time_id, "Anunciar &Tempo (T)")
         announce_menu.Append(self.menu_announce_volume_id, "Anunciar &Volume (V)")
@@ -517,6 +520,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
+        self.Bind(wx.EVT_MENU, self.on_toggle_related_autoplay, id=self.menu_toggle_related_autoplay_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_audio_output_devices, id=self.menu_refresh_audio_output_devices_id)
         self.Bind(wx.EVT_MENU, self.on_announce_time, id=self.menu_announce_time_id)
         self.Bind(wx.EVT_MENU, self.on_announce_volume, id=self.menu_announce_volume_id)

@@ -76,6 +76,7 @@ A aba ativa define o que está sendo reproduzido e o que aparece no navegador la
 - `Alt+Home` / `Alt+End`: ir para o primeiro ou para o último item da playlist
 - `E`: alternar modo aleatório
 - `R`: alternar modo de repetição
+- `A`: alternar a reprodução de conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)
 - `T`: anunciar o tempo atual da mídia
 - `V`: anunciar o volume atual
 - `S`: anunciar o status do player
@@ -170,6 +171,7 @@ Essa seção só aparece quando a integração está ativada.
 
 - **Playlists carregadas por vez**: quantas playlists da biblioteca são trazidas em cada carregamento (5–200). Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais.
 - **Mixes personalizadas para descobrir**: limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas (5–200). Valores menores deixam a sincronização mais rápida.
+- **Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução.
 
 ## Equalizador
 

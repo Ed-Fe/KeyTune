@@ -467,6 +467,9 @@ class FrameCommandMixin:
     def on_cycle_repeat_mode(self, _event):
         self._cycle_repeat_mode()
 
+    def on_toggle_related_autoplay(self, _event):
+        self._toggle_related_autoplay()
+
     def on_announce_time(self, _event):
         self._announce_playback_time()
 
@@ -695,6 +698,9 @@ class FrameCommandMixin:
         maybe_report_youtube_music_history = getattr(self, "_maybe_report_youtube_music_history", None)
         if callable(maybe_report_youtube_music_history):
             maybe_report_youtube_music_history()
+        maybe_prefetch_related = getattr(self, "_maybe_prefetch_related_youtube_music", None)
+        if callable(maybe_prefetch_related):
+            maybe_prefetch_related()
 
     def on_crossfade_timer(self, _event):
         self._handle_playback_timer_tick()
@@ -866,6 +872,10 @@ class FrameCommandMixin:
 
         if not event.ControlDown() and not event.AltDown() and key_code in (ord("R"), ord("r")):
             self._cycle_repeat_mode()
+            return
+
+        if not event.ControlDown() and not event.AltDown() and key_code in (ord("A"), ord("a")):
+            self._toggle_related_autoplay()
             return
 
         if event.AltDown() and not event.ControlDown() and key_code == wx.WXK_UP:

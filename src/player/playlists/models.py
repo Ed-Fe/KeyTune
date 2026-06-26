@@ -169,6 +169,23 @@ class PlaylistState:
             self.was_playing = False
             self.reset_playback_order(preferred_index=0)
 
+    def append_items(self, new_items, new_labels=None):
+        normalized_new_items = [str(item) for item in new_items if item]
+        if not normalized_new_items:
+            return
+
+        combined_items = self.items + normalized_new_items
+        combined_labels = list(self.browser_item_labels) + [
+            str(label or "").strip() or self._fallback_browser_item_label(item)
+            for item, label in zip(normalized_new_items, list(new_labels or []) + [None] * len(normalized_new_items))
+        ]
+        self._apply_prepared_items(
+            combined_items,
+            {item: index for index, item in enumerate(combined_items)},
+            combined_labels,
+        )
+        self.sync_playback_order()
+
     def set_items_prepared(self, items, item_index_map, browser_item_labels, start_index=0, auto_select=True):
         self._apply_prepared_items(items, item_index_map, browser_item_labels)
         if not self.items:

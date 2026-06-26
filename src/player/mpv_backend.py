@@ -67,6 +67,12 @@ class MPVPlayer:
         self._bound_handle: str | None = None
         self._bound_video_output = video_output_enabled
         self._last_end_reason: int | None = None
+        # With ``keep-open=yes`` MPV does NOT send an end-file event at the
+        # natural end of a track (the file stays loaded, paused on the last
+        # frame). The documented way to detect a natural end is to observe the
+        # ``eof-reached`` property; this tracks its last value so we only react
+        # to the transition into the "reached end" state.
+        self._eof_reached_state = False
         player_kwargs = {
             "input_default_bindings": False,
             "input_vo_keyboard": False,
@@ -80,6 +86,14 @@ class MPVPlayer:
             # This mirrors the behavior of MPV's official
             # TOOLS/lua/ao-null-reload.lua script.
             "audio_fallback_to_null": "yes",
+            # Network robustness for HTTP streams (e.g. YouTube Music via
+            # googlevideo). Without reconnection, a transient connection drop
+            # mid-track ends the stream as ABORTED, which would now be mistaken
+            # for a natural end of track. ``network-timeout`` bounds stalls and
+            # the libavformat ``reconnect*`` options make ffmpeg resume the
+            # download instead of giving up. These are ignored for local files.
+            "network_timeout": 60,
+            "stream_lavf_o": "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5",
         }
         if not video_output_enabled:
             player_kwargs["video"] = False
@@ -146,18 +160,37 @@ class MPVPlayer:
 
         @self._player.event_callback("end-file")
         def _on_end_file(event):
+            # NOTE: With ``keep-open=yes`` MPV does not send this event at the
+            # natural end of a track — that case is handled by the
+            # ``eof-reached`` property observer below. Here we only react to a
+            # genuine playback error; the file ended because decoding failed.
             end_event = getattr(event, "data", None)
             reason = getattr(end_event, "reason", None)
             self._last_end_reason = reason
-            _logger.debug("Playback end-file event (reason=%s)", reason)
-            if error_reason is not None and reason == error_reason:
+
+            is_error = error_reason is not None and reason == error_reason
+            is_eof = eof_reason is not None and reason == eof_reason
+            _logger.debug(
+                "Playback end-file event (reason=%s, eof_reason=%s, error_reason=%s)",
+                reason,
+                eof_reason,
+                error_reason,
+            )
+
+            if is_error:
                 _logger.warning("MPV reported a playback error (reason=%s)", reason)
                 self._loaded_media_path = None
                 self._needs_load = True
+                self._eof_reached_state = False
                 self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_ERROR, event)
                 return
-            if eof_reason is not None and reason == eof_reason:
+            # ``keep-open=no`` setups still deliver EOF here; honor it so end of
+            # track keeps working if ``keep-open`` is ever turned off. Guard
+            # against the eof-reached observer having already reported this same
+            # end so we never advance twice.
+            if is_eof and not self._eof_reached_state:
                 self._needs_load = True
+                self._eof_reached_state = True
                 self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, event)
 
         @self._player.event_callback("file-loaded", "playback-restart")
@@ -166,6 +199,25 @@ class MPVPlayer:
             current_media = self._media
             self._loaded_media_path = current_media.path if current_media is not None else self._loaded_media_path
             self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_PLAYING, event)
+
+        # Detect the natural end of a track. ``keep-open=yes`` makes MPV pause on
+        # the last frame and set ``eof-reached=yes`` instead of unloading the
+        # file, so this property — not the end-file event — is the reliable
+        # end-of-track signal. We emit only on the False/None -> True edge.
+        def _on_eof_reached(_property_name, value):
+            reached = bool(value)
+            if reached and not self._eof_reached_state:
+                self._eof_reached_state = True
+                self._needs_load = True
+                _logger.debug("eof-reached became True; emitting end-of-track.")
+                self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, None)
+            elif not reached:
+                self._eof_reached_state = False
+
+        try:
+            self._player.observe_property("eof-reached", _on_eof_reached)
+        except Exception:
+            _logger.warning("Could not observe 'eof-reached'; natural end of track may not be detected.")
 
     def event_manager(self):
         return self._event_manager
@@ -236,6 +288,9 @@ class MPVPlayer:
                 self._player.pause = True
             else:
                 self._player.pause = False
+            # A fresh load clears any previous end-of-track state so the next
+            # eof-reached transition is detected.
+            self._eof_reached_state = False
             self._player.loadfile(media.path, "replace", **loadfile_options)
             self._loaded_media_path = media.path
             self._needs_load = False
@@ -260,6 +315,7 @@ class MPVPlayer:
         self._player.pause = True
 
     def stop(self):
+        self._eof_reached_state = False
         try:
             self._player.stop()
         finally:

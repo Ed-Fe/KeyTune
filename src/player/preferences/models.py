@@ -15,6 +15,7 @@ from ..constants import (
     DEFAULT_RESTORE_SESSION_ON_STARTUP,
     DEFAULT_VOLUME,
     DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES,
+    DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED,
     DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS,
     DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
@@ -53,6 +54,7 @@ class AppSettings:
     youtube_music_manage_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES
     youtube_music_auto_update_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES
     youtube_music_use_nightly_yt_dlp: bool = DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP
+    youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
     youtube_music_dependency_last_auto_update_epoch: int = 0
     youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
@@ -90,6 +92,7 @@ class AppSettings:
             "youtube_music_manage_dependencies": self.youtube_music_manage_dependencies,
             "youtube_music_auto_update_dependencies": self.youtube_music_auto_update_dependencies,
             "youtube_music_use_nightly_yt_dlp": self.youtube_music_use_nightly_yt_dlp,
+            "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "youtube_music_library_page_size": self.youtube_music_library_page_size,
@@ -145,6 +148,9 @@ class AppSettings:
         )
         settings.youtube_music_use_nightly_yt_dlp = bool(
             data.get("youtube_music_use_nightly_yt_dlp", settings.youtube_music_use_nightly_yt_dlp)
+        )
+        settings.youtube_music_autoplay_related = bool(
+            data.get("youtube_music_autoplay_related", settings.youtube_music_autoplay_related)
         )
         settings.youtube_music_dependency_update_interval_hours = _clamp_int(
             data.get(

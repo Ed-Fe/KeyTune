@@ -216,6 +216,57 @@ class YouTubeMusicLibraryManager:
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists
 
+    def get_radio_content(self, video_id, fallback_title="Conteúdo relacionado", *, limit=50):
+        """Fetch tracks related to *video_id* (YouTube Music's radio/"Watch Next").
+
+        Uses the public client so related tracks can be fetched even when the
+        seed track was played without an authenticated session.
+        """
+        normalized_video_id = str(video_id or "").strip()
+        if not normalized_video_id:
+            return YouTubeMusicPlaylistContent(
+                playlist_id="", title=str(fallback_title or "").strip(), item_urls=[], item_labels=[]
+            )
+
+        try:
+            normalized_limit = max(1, int(limit))
+        except (TypeError, ValueError):
+            normalized_limit = 50
+
+        client = self._get_client(require_auth=False)
+        try:
+            radio = client.get_watch_playlist(videoId=normalized_video_id, radio=True, limit=normalized_limit)
+        except TypeError:
+            # Older ytmusicapi builds may not accept the ``radio`` keyword; the
+            # plain watch playlist (autoplay queue) is radio-like already.
+            radio = client.get_watch_playlist(videoId=normalized_video_id, limit=normalized_limit)
+
+        radio_playlist_id = str(radio.get("playlistId") or "").strip() if isinstance(radio, dict) else ""
+        tracks = radio.get("tracks") or [] if isinstance(radio, dict) else []
+        _logger.info(
+            "Radio for videoId=%s returned %d raw track(s) (playlistId=%s).",
+            normalized_video_id,
+            len(tracks),
+            radio_playlist_id or "(none)",
+        )
+
+        item_urls = []
+        item_labels = []
+        for track in tracks:
+            track_video_id = str(track.get("videoId") or "").strip()
+            if not track_video_id or track_video_id == normalized_video_id:
+                continue
+
+            item_urls.append(self._build_watch_url(track_video_id, playlist_id=radio_playlist_id or None))
+            item_labels.append(track_display_label(track))
+
+        return YouTubeMusicPlaylistContent(
+            playlist_id=radio_playlist_id,
+            title=str(fallback_title or "Conteúdo relacionado").strip(),
+            item_urls=item_urls,
+            item_labels=item_labels,
+        )
+
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
         """Fetch the full track listing of a playlist."""
         client = self._get_client(require_auth=require_auth)
