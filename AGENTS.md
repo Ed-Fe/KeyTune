@@ -28,13 +28,14 @@
 **Never**
 - Cause noisy/unexpected focus on the native video output area.
 - Mix UI flow, persistence, parsing, and external-service logic in one catch-all module — split into focused modules first.
+- Let a module grow into a grab-bag of unrelated responsibilities. When you touch a file, prefer leaving it more focused than you found it (see *Modularity* below).
 
 ## Architecture
 
 Entry flow: `src/main.py` → `src/player/app.py` → `src/player/frames/base.py`. `main.py` also bootstraps the MPV runtime and forwards CLI-opened file paths to an already-running instance.
 
 Module map (`src/player/`):
-- `frames/` — `base.py` window shell + mixin composition; `ui.py` menus/layout/bindings; `commands.py` file dialogs & actions; `playback.py` MPV control; `library.py`/`library_tabs.py`/`library_loader.py`/`library_navigation.py` playlist tabs & folder browsing; `session.py` capture/restore; `recents.py`; `equalizer.py`; `update.py`; `smtc.py` SMTC bridge; `youtube_music.py` YT Music auth/menu flows & background tasks.
+- `frames/` — `base.py` window shell + mixin composition; `ui.py` menus/layout/bindings; `commands/` file dialogs & actions (sub-mixins: open/transport/browser/app/key-navigation); `playback/` MPV control; `library_tabs/` playlist-tab lifecycle, transport, item removal & related-autoplay; `library.py`/`library_loader.py`/`library_navigation.py` playlist tabs & folder browsing; `session.py` capture/restore; `recents.py`; `equalizer.py`; `update.py`; `smtc.py` SMTC bridge; `youtube_music/` YT Music auth/menu flows & background tasks. Several of these are subpackages recomposed in `__init__.py` — see *Modularity*.
 - `youtube_music/` — `service.py` facade over `client_provider.py` (client caching), `stream_cache.py` (TTL stream URLs), `library_manager.py` (playlists/search), `feedback_manager.py` (likes/history); `auth.py`, `dialog.py`, `panel.py`, `playlists.py`, `search.py`, `streams.py` (yt-dlp), `charts.py`, `browse.py` (moods/genres), `models.py`.
 - `library/` — `open_dialog.py`, `browser.py` (browser UI/keyboard nav), `models.py`, `media_scan.py`, `playlist_io.py` (`.m3u`/`.m3u8`).
 - `equalizer/` — `models.py`, `backend.py` (MPV filter generation), `dialog.py`, `panel.py`.
@@ -44,6 +45,17 @@ Module map (`src/player/`):
 - Root: `mpv_runtime.py`, `single_instance.py`, `audio_output.py`, `file_associations.py`, `accessibility.py`, `session.py` (`session.json`).
 
 When a feature crosses these boundaries (UI + service + parsing + playback), extract a focused module before extending an existing one. Follow existing patterns for style — dataclasses for persisted state, small explicit helpers — rather than introducing a new convention.
+
+## Modularity
+
+Think modular by default: one module = one responsibility. Before adding code, ask "does this belong with what's already here, or is it a new concern?" — if it's new, give it its own module rather than appending to a convenient existing one.
+
+When a `frames/*.py` mixin (or any module) accumulates several distinct concerns, split it into a **subpackage of focused sub-mixins recomposed in `__init__.py`**, which is the established pattern here (`frames/commands/`, `frames/library_tabs/`, `frames/playback/`, `frames/youtube_music/`):
+- One sub-mixin per concern, each in its own file with only the imports it actually uses.
+- Recompose them into the original aggregate class in `__init__.py` (e.g. `class FrameCommandMixin(OpenCommandsMixin, TransportCommandsMixin, ...)`), so the public import surface and `base.py` composition stay unchanged.
+- This is a behavior-preserving move: verify method-set parity against the pre-split class, then run `compileall`, the test suite, and an import smoke test of `frames/base.py`.
+
+A split this large counts as a broad `frames/*.py` refactor — ask first (see *Boundaries*). For everyday edits, the rule is lighter: keep adding focused helpers/modules instead of widening a catch-all, and leave each file you touch at least as focused as you found it.
 
 ## Conventions
 
