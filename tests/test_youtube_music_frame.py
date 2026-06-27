@@ -191,10 +191,10 @@ class YouTubeMusicFrameTests(unittest.TestCase):
                 return None
 
         with patch(
-            "player.frames.youtube_music.is_missing_javascript_runtime_error_message",
+            "player.frames.youtube_music.dependencies.is_missing_javascript_runtime_error_message",
             return_value=True,
-        ), patch("player.frames.youtube_music.shutil.which", return_value="C:/Windows/System32/winget.exe"), patch(
-            "player.frames.youtube_music.YouTubeMusicJavascriptRuntimeDialog",
+        ), patch("player.frames.youtube_music.dependencies.shutil.which", return_value="C:/Windows/System32/winget.exe"), patch(
+            "player.frames.youtube_music.dependencies.YouTubeMusicJavascriptRuntimeDialog",
             _FakeDialog,
         ):
             handled = frame._handle_youtube_javascript_runtime_error("erro")
@@ -207,7 +207,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         frame = _DummyFrame(service)
 
         with patch(
-            "player.frames.youtube_music.is_missing_javascript_runtime_error_message",
+            "player.frames.youtube_music.dependencies.is_missing_javascript_runtime_error_message",
             return_value=False,
         ):
             handled = frame._handle_youtube_javascript_runtime_error("outro erro")
@@ -220,7 +220,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         frame._show_youtube_javascript_runtime_dialog = Mock(return_value=True)
 
         with patch(
-            "player.frames.youtube_music.find_all_available_javascript_runtimes",
+            "player.frames.youtube_music.dependencies.find_all_available_javascript_runtimes",
             return_value={"node": "C:/Program Files/nodejs/node.exe"},
         ):
             prompted = frame._prompt_for_missing_youtube_javascript_runtime()
