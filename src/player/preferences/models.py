@@ -66,6 +66,7 @@ class AppSettings:
     equalizer_custom_presets: list[EqualizerPreset] = field(default_factory=list)
     logging_enabled: bool = DEFAULT_LOGGING_ENABLED
     logging_level: str = DEFAULT_LOGGING_LEVEL
+    welcome_screen_completed: bool = False
 
     @property
     def seek_step_ms(self):
@@ -104,6 +105,7 @@ class AppSettings:
             "equalizer_custom_presets": [preset.to_dict() for preset in self.equalizer_custom_presets],
             "logging_enabled": self.logging_enabled,
             "logging_level": self.logging_level,
+            "welcome_screen_completed": self.welcome_screen_completed,
         }
 
     @classmethod
@@ -192,6 +194,7 @@ class AppSettings:
         settings.logging_enabled = bool(data.get("logging_enabled", settings.logging_enabled))
         raw_logging_level = str(data.get("logging_level") or "").upper()
         settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL
+        settings.welcome_screen_completed = bool(data.get("welcome_screen_completed", settings.welcome_screen_completed))
         return settings
 
 

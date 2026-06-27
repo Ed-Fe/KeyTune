@@ -6,6 +6,7 @@ import wx
 from ..accessibility import attach_named_accessible
 from ..constants import CROSSFADE_TIMER_INTERVAL_MS, PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
+from ..welcome import WelcomeDialog
 
 
 class FrameUIMixin:
@@ -212,6 +213,7 @@ class FrameUIMixin:
         dialog.SetMinSize((520, 420))
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
+        instructions_label = wx.StaticText(dialog, label="Ajuda rápida de atalhos:")
         instructions = wx.TextCtrl(
             dialog,
             value=self._keyboard_help_text(),
@@ -227,6 +229,7 @@ class FrameUIMixin:
             if ok_button is not None:
                 ok_button.SetLabel("F&echar")
 
+        root_sizer.Add(instructions_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 12)
         root_sizer.Add(instructions, 1, wx.ALL | wx.EXPAND, 12)
         if button_sizer is not None:
             root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
@@ -240,6 +243,27 @@ class FrameUIMixin:
 
     def on_open_manual(self, _event):
         self._open_manual_document()
+
+    def _show_welcome_screen_if_first_run(self):
+        if self.settings.welcome_screen_completed:
+            return
+        self._show_welcome_dialog()
+
+    def on_show_welcome_screen(self, _event):
+        self._show_welcome_dialog()
+
+    def _show_welcome_dialog(self):
+        dialog = WelcomeDialog(
+            self,
+            on_open_manual=self._open_manual_document,
+            on_show_shortcuts=self._show_keyboard_help_dialog,
+        )
+        try:
+            dialog.ShowModal()
+        finally:
+            dialog.Destroy()
+        self.settings.welcome_screen_completed = True
+        self._save_settings()
 
     def _build_menu_bar(self):
         menu_bar = wx.MenuBar()
@@ -345,6 +369,8 @@ class FrameUIMixin:
         help_menu = wx.Menu()
         self.menu_open_manual_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
+        self.menu_show_welcome_screen_id = wx.NewIdRef()
+        help_menu.Append(self.menu_show_welcome_screen_id, "Mostrar tela de &boas-vindas")
         help_menu.Append(self.menu_open_manual_id, "Abrir &manual do usuário")
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_keyboard_help_id, "Ajuda rápida de &atalhos\tF1")
@@ -539,6 +565,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_preferences, id=self.menu_preferences_id)
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
+        self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)
 
         self.notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_tab_changed)

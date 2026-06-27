@@ -73,6 +73,7 @@ class MediaPlayerFrame(
         self._open_initial_paths()
         self._initialize_youtube_music_startup_state()
         self._schedule_startup_update_check()
+        wx.CallAfter(self._show_welcome_screen_if_first_run)
 
     def _announce(self, message):
         if not self.settings.announcements_enabled:
