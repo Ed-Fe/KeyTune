@@ -10,7 +10,7 @@ applyTo:
 - Prefer dedicated `frames/*.py` modules for feature-specific window behavior instead of growing a catch-all module inside the player package.
 - Keep dialogs in `*dialog.py`, durable settings in `preferences/models.py` plus `preferences/storage.py`, session restore in `session.py`, and service or integration helpers in focused non-UI modules.
 - For YouTube Music changes, keep responsibilities separated:
-  - `frames/youtube_music.py` for command handlers, background-task coordination, and menu state
+  - `frames/youtube_music/` for command handlers, background-task coordination, and menu state
   - `youtube_music/service.py` for the service facade used by the frame
   - `youtube_music/auth.py` for browser-auth parsing and normalization
   - `youtube_music/playlists.py` for playlist and mix normalization plus source helpers
