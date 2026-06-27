@@ -109,6 +109,226 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         authenticated_client.get_playlist.assert_called_once_with("PL1234567890", limit=None)
         fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
 
+    def test_add_tracks_to_playlist_returns_added_count_on_success(self):
+        authenticated_client = Mock()
+        authenticated_client.add_playlist_items.return_value = {
+            "status": "STATUS_SUCCEEDED",
+            "playlistEditResults": [{"videoId": "abc123DEF45"}, {"videoId": "xyz987WVU54"}],
+        }
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            added = service.add_tracks_to_playlist("PL1234567890", ["abc123DEF45", "abc123DEF45", "xyz987WVU54"])
+
+        self.assertEqual(added, 2)
+        # Duplicates in the request are collapsed before hitting the API.
+        authenticated_client.add_playlist_items.assert_called_once_with(
+            "PL1234567890", ["abc123DEF45", "xyz987WVU54"]
+        )
+
+    def test_add_tracks_to_playlist_raises_when_server_rejects(self):
+        authenticated_client = Mock()
+        authenticated_client.add_playlist_items.return_value = "STATUS_FAILED"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.add_tracks_to_playlist("PL1234567890", ["abc123DEF45"])
+
+    def test_remove_tracks_from_playlist_maps_set_video_ids(self):
+        authenticated_client = Mock()
+        authenticated_client.get_playlist.return_value = {
+            "owned": True,
+            "tracks": [
+                {"videoId": "abc123DEF45", "setVideoId": "SET_ABC"},
+                {"videoId": "xyz987WVU54", "setVideoId": "SET_XYZ"},
+            ],
+        }
+        authenticated_client.remove_playlist_items.return_value = "STATUS_SUCCEEDED"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            removed = service.remove_tracks_from_playlist("PL1234567890", ["abc123DEF45"])
+
+        self.assertEqual(removed, 1)
+        authenticated_client.remove_playlist_items.assert_called_once_with(
+            "PL1234567890", [{"videoId": "abc123DEF45", "setVideoId": "SET_ABC"}]
+        )
+
+    def test_remove_tracks_from_playlist_raises_when_track_absent(self):
+        authenticated_client = Mock()
+        authenticated_client.get_playlist.return_value = {
+            "owned": True,
+            "tracks": [{"videoId": "other00ID000", "setVideoId": "SET_OTHER"}],
+        }
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.remove_tracks_from_playlist("PL1234567890", ["abc123DEF45"])
+        authenticated_client.remove_playlist_items.assert_not_called()
+
+    def test_remove_tracks_from_playlist_rejects_non_owned_playlist(self):
+        authenticated_client = Mock()
+        # A saved/public playlist the account does not own: no ``owned`` flag
+        # and no ``collaborators`` entry.
+        authenticated_client.get_playlist.return_value = {
+            "tracks": [{"videoId": "abc123DEF45", "setVideoId": "SET_ABC"}]
+        }
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.remove_tracks_from_playlist("PL1234567890", ["abc123DEF45"])
+        authenticated_client.remove_playlist_items.assert_not_called()
+
+    def test_create_playlist_returns_new_id_for_empty_playlist(self):
+        authenticated_client = Mock()
+        authenticated_client.create_playlist.return_value = "PLNEW1234567"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            new_id = service.create_playlist("Minha playlist")
+
+        self.assertEqual(new_id, "PLNEW1234567")
+        authenticated_client.create_playlist.assert_called_once_with(
+            "Minha playlist", "", privacy_status="PRIVATE", video_ids=None
+        )
+
+    def test_create_playlist_seeds_and_dedupes_video_ids(self):
+        authenticated_client = Mock()
+        authenticated_client.create_playlist.return_value = "PLNEW1234567"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            new_id = service.create_playlist(
+                "Seleção",
+                video_ids=["abc123DEF45", "abc123DEF45", "xyz987WVU54"],
+            )
+
+        self.assertEqual(new_id, "PLNEW1234567")
+        authenticated_client.create_playlist.assert_called_once_with(
+            "Seleção", "", privacy_status="PRIVATE", video_ids=["abc123DEF45", "xyz987WVU54"]
+        )
+
+    def test_create_playlist_forwards_chosen_privacy_status(self):
+        authenticated_client = Mock()
+        authenticated_client.create_playlist.return_value = "PLNEW1234567"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            service.create_playlist("Pública", privacy_status="PUBLIC")
+
+        authenticated_client.create_playlist.assert_called_once_with(
+            "Pública", "", privacy_status="PUBLIC", video_ids=None
+        )
+
+    def test_create_playlist_falls_back_to_private_for_invalid_privacy(self):
+        authenticated_client = Mock()
+        authenticated_client.create_playlist.return_value = "PLNEW1234567"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            service.create_playlist("Qualquer", privacy_status="BOGUS")
+
+        authenticated_client.create_playlist.assert_called_once_with(
+            "Qualquer", "", privacy_status="PRIVATE", video_ids=None
+        )
+
+    def test_create_playlist_raises_when_no_id_returned(self):
+        authenticated_client = Mock()
+        authenticated_client.create_playlist.return_value = {"error": "boom"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.create_playlist("Sem id")
+
+    def test_delete_playlist_deletes_owned_playlist(self):
+        authenticated_client = Mock()
+        authenticated_client.get_playlist.return_value = {"owned": True, "tracks": []}
+        authenticated_client.delete_playlist.return_value = "STATUS_SUCCEEDED"
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            deleted_id = service.delete_playlist("PL1234567890")
+
+        self.assertEqual(deleted_id, "PL1234567890")
+        authenticated_client.delete_playlist.assert_called_once_with("PL1234567890")
+
+    def test_delete_playlist_rejects_non_owned_playlist(self):
+        authenticated_client = Mock()
+        # Saved/collaborator playlist: editable but not owned, so not deletable.
+        authenticated_client.get_playlist.return_value = {"collaborators": [], "tracks": []}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.delete_playlist("PL1234567890")
+        authenticated_client.delete_playlist.assert_not_called()
+
+    def test_delete_playlist_rejects_watch_mix_without_api_calls(self):
+        authenticated_client = Mock()
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            with self.assertRaises(RuntimeError):
+                service.delete_playlist("RDAMVM1234567")
+        authenticated_client.get_playlist.assert_not_called()
+        authenticated_client.delete_playlist.assert_not_called()
+
     def test_get_media_feedback_status_reads_like_status_from_song(self):
         authenticated_client = Mock()
         authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}

@@ -147,6 +147,123 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         return path if path and os.path.isfile(path) else ""
 
 
+class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
+    """Collect a name and privacy level for a new YouTube Music playlist."""
+
+    # (label, ytmusicapi privacy_status) in the order shown.  Private is first
+    # so it is the default selection, matching YouTube Music's own default.
+    _PRIVACY_CHOICES = (
+        ("Privada", "PRIVATE"),
+        ("Não listada", "UNLISTED"),
+        ("Pública", "PUBLIC"),
+    )
+
+    def __init__(self, parent, *, default_name="", track_count=0):
+        super().__init__(parent, title="Criar playlist do YouTube Music")
+        self._track_count = max(0, int(track_count or 0))
+        self._playlist_name = ""
+        self._privacy_status = "PRIVATE"
+        self._build_ui(default_name=str(default_name or ""))
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+        self.Layout()
+        self.SetEscapeId(wx.ID_CANCEL)
+
+    def _build_ui(self, *, default_name):
+        root_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        if self._track_count > 0:
+            track_label = "faixa" if self._track_count == 1 else "faixas"
+            intro_text = (
+                f"A nova playlist será criada com {self._track_count} {track_label} da seleção atual."
+            )
+        else:
+            intro_text = "Informe o nome e a privacidade da nova playlist."
+        intro = wx.StaticText(self, label=intro_text)
+        intro.Wrap(440)
+
+        name_label = wx.StaticText(self, label="&Nome da playlist:")
+        self.name_value = wx.TextCtrl(self, value=default_name, style=wx.TE_PROCESS_ENTER)
+        self.name_value.SetName("Nome da nova playlist do YouTube Music")
+        self.name_value.SetHelpText(
+            "Digite o nome que a nova playlist terá na sua conta do YouTube Music."
+        )
+        self.name_value.Bind(wx.EVT_TEXT_ENTER, self._on_confirm)
+
+        self.privacy_box = wx.RadioBox(
+            self,
+            label="Privacidade",
+            choices=[label for label, _status in self._PRIVACY_CHOICES],
+            majorDimension=1,
+            style=wx.RA_SPECIFY_COLS,
+        )
+        self.privacy_box.SetSelection(0)
+        self.privacy_box.SetName("Privacidade da nova playlist do YouTube Music")
+        self.privacy_box.SetHelpText(
+            "Escolha quem pode ver a playlist: Privada (só você), Não listada (quem tiver o link) "
+            "ou Pública (qualquer pessoa)."
+        )
+
+        privacy_hint = wx.StaticText(
+            self,
+            label=(
+                "Privada: só você vê. Não listada: visível para quem tiver o link. "
+                "Pública: aparece no seu perfil e pode surgir em buscas."
+            ),
+        )
+        privacy_hint.Wrap(440)
+
+        button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
+        # Descendant-scoped FindWindow so we don't rename wx.ID_OK buttons that
+        # may exist in other open dialogs.
+        ok_button = self.FindWindow(wx.ID_OK)
+        if ok_button is not None:
+            ok_button.SetLabel("&Criar")
+            ok_button.SetName("Criar playlist do YouTube Music")
+            ok_button.SetHelpText("Cria a playlist com o nome e a privacidade informados.")
+            ok_button.SetToolTip(ok_button.GetHelpText())
+            ok_button.Bind(wx.EVT_BUTTON, self._on_confirm)
+        cancel_button = self.FindWindow(wx.ID_CANCEL)
+        if cancel_button is not None:
+            cancel_button.SetLabel("&Cancelar")
+
+        root_sizer.Add(intro, 0, wx.ALL | wx.EXPAND, 12)
+        root_sizer.Add(name_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
+        root_sizer.Add(self.name_value, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        root_sizer.Add(self.privacy_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        root_sizer.Add(privacy_hint, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        if button_sizer is not None:
+            root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
+
+        self.SetSizer(root_sizer)
+        self.name_value.SetFocus()
+
+    def _on_confirm(self, _event):
+        name = str(self.name_value.GetValue() or "").strip()
+        if not name:
+            wx.MessageBox(
+                "Informe um nome para a nova playlist.",
+                "Criar playlist do YouTube Music",
+                wx.OK | wx.ICON_INFORMATION,
+                self,
+            )
+            self.name_value.SetFocus()
+            return
+
+        selection = self.privacy_box.GetSelection()
+        if not 0 <= selection < len(self._PRIVACY_CHOICES):
+            selection = 0
+        self._playlist_name = name
+        self._privacy_status = self._PRIVACY_CHOICES[selection][1]
+        self.EndModal(wx.ID_OK)
+
+    def get_playlist_name(self):
+        return self._playlist_name
+
+    def get_privacy_status(self):
+        return self._privacy_status
+
+
 class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
     ACTION_INSTALL_DENO = "install-deno"
     ACTION_INSTALL_NODE = "install-node"

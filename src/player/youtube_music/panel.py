@@ -17,6 +17,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		on_refresh_library,
 		on_open_selected,
 		on_open_manual_source,
+		on_create_playlist=None,
+		on_delete_playlist=None,
 		on_search,
 		on_open_search_result,
 		on_save_search_result,
@@ -45,6 +47,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._on_disconnect = on_disconnect
 		self._on_refresh_library = on_refresh_library
 		self._on_open_selected = on_open_selected
+		self._on_create_playlist = on_create_playlist
+		self._on_delete_playlist = on_delete_playlist
 		self._on_open_manual_source = on_open_manual_source
 		self._on_search = on_search
 		self._on_open_search_result = on_open_search_result
@@ -338,6 +342,18 @@ class YouTubeMusicTabPanel(wx.Panel):
 			"Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music."
 		)
 		self.open_selected_button.SetToolTip(self.open_selected_button.GetHelpText())
+		self.new_playlist_button = wx.Button(self, label="&Nova playlist...")
+		self.new_playlist_button.SetName("Criar nova playlist no YouTube Music")
+		self.new_playlist_button.SetHelpText(
+			"Cria uma nova playlist (privada) na conta conectada do YouTube Music."
+		)
+		self.new_playlist_button.SetToolTip(self.new_playlist_button.GetHelpText())
+		self.delete_playlist_button = wx.Button(self, label="E&xcluir playlist...")
+		self.delete_playlist_button.SetName("Excluir playlist do YouTube Music")
+		self.delete_playlist_button.SetHelpText(
+			"Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
+		)
+		self.delete_playlist_button.SetToolTip(self.delete_playlist_button.GetHelpText())
 		self.load_more_button = wx.Button(self, label="Carregar &mais playlists")
 		self.load_more_button.SetName("Carregar mais playlists do YouTube Music")
 		self.load_more_button.SetHelpText(
@@ -360,6 +376,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		library_box.Add(self.playlists_list, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		library_actions_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		library_actions_sizer.Add(self.open_selected_button, 0, wx.RIGHT, 8)
+		library_actions_sizer.Add(self.new_playlist_button, 0, wx.RIGHT, 8)
+		library_actions_sizer.Add(self.delete_playlist_button, 0, wx.RIGHT, 8)
 		library_actions_sizer.Add(self.load_more_button, 0, 0, 0)
 		library_box.Add(library_actions_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_LEFT, 6)
 		library_box.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
@@ -373,6 +391,8 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.disconnect_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_disconnect())
 		self.refresh_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_refresh_library())
 		self.open_selected_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_selected())
+		self.new_playlist_button.Bind(wx.EVT_BUTTON, self._on_new_playlist_button)
+		self.delete_playlist_button.Bind(wx.EVT_BUTTON, self._on_delete_playlist_button)
 		self.manual_open_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_open_manual_source())
 		self.search_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_search())
 		self.charts_button.Bind(wx.EVT_BUTTON, self._on_charts_button)
@@ -497,12 +517,17 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self._update_search_actions()
 
 	def _update_library_actions(self):
+		has_selection = self.get_selected_playlist_id() is not None
 		can_open_selected = (
 			self._connected
 			and not self._operation_in_progress
-			and self.get_selected_playlist_id() is not None
+			and has_selection
 		)
 		self.open_selected_button.Enable(can_open_selected)
+		self.new_playlist_button.Enable(self._connected and not self._operation_in_progress)
+		self.delete_playlist_button.Enable(
+			self._connected and not self._operation_in_progress and has_selection
+		)
 		can_load_more = (
 			self._connected
 			and not self._operation_in_progress
@@ -710,6 +735,14 @@ class YouTubeMusicTabPanel(wx.Panel):
 	def _on_open_search_result_event(self, _event):
 		if self.get_selected_search_result() is not None:
 			self._on_open_search_result()
+
+	def _on_new_playlist_button(self, _event):
+		if callable(self._on_create_playlist):
+			self._on_create_playlist()
+
+	def _on_delete_playlist_button(self, _event):
+		if callable(self._on_delete_playlist):
+			self._on_delete_playlist()
 
 	def _on_search_actions_button(self, event):
 		if not callable(self._on_show_search_actions_menu):

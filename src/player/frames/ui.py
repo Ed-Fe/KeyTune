@@ -124,6 +124,7 @@ class FrameUIMixin:
             "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
             "Ctrl+L — Curtir mídia atual no YouTube Music\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
+            "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
             "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
@@ -290,6 +291,7 @@ class FrameUIMixin:
         self.menu_play_pause_id = wx.NewIdRef()
         self.menu_stop_id = wx.NewIdRef()
         self.menu_next_track_id = wx.NewIdRef()
+        self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
@@ -306,6 +308,8 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_play_pause_id, "Reproduzir / Pa&usar\tEspaço")
         playback_menu.Append(self.menu_stop_id, "P&arar\tCtrl+.")
         playback_menu.Append(self.menu_next_track_id, "Próxima Fai&xa\tCtrl+PageDown")
+        playback_menu.AppendSeparator()
+        playback_menu.Append(self.menu_add_to_youtube_playlist_id, "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A")
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, "Em&baralhar (E)")
         playback_menu.Append(self.menu_cycle_repeat_id, "Modo de &Repetição (R)")
@@ -517,6 +521,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_play_pause, id=self.menu_play_pause_id)
         self.Bind(wx.EVT_MENU, self.on_stop, id=self.menu_stop_id)
         self.Bind(wx.EVT_MENU, self.on_next_track, id=self.menu_next_track_id)
+        self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
@@ -596,3 +601,6 @@ class FrameUIMixin:
         page.video_hint_wrap_width = None
         self._layout_video_page(page)
         return page
+
+    def on_add_to_youtube_playlist(self, _event):
+        self._add_current_media_to_youtube_playlist()

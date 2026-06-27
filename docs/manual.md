@@ -109,7 +109,7 @@ Quando a aba contém uma playlist, o navegador mostra todos os itens da sequênc
 
 - `Enter`: toca o item selecionado imediatamente.
 - `Delete`: remove o item selecionado da playlist.
-- `Shift+F10`: abre o menu contextual com ações adicionais sobre o item.
+- `Shift+F10`: abre o menu contextual com ações adicionais sobre o item ou sobre toda a seleção (a lista aceita seleção múltipla). Além de copiar, colar e remover, o menu traz as ações do YouTube Music quando a seleção contém faixas dessa origem: **Curtir**/**Não gostei**, **Adicionar à playlist do YouTube Music...** e, quando a aba atual é uma playlist sua do YouTube Music, **Remover da playlist do YouTube Music**. Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
 - `Tab` / `Esc`: volta o foco para o player.
 
 #### Modo pasta
@@ -260,7 +260,12 @@ A seção **Conta e biblioteca** mostra o status da conta conectada, o resumo da
 - **Desconectar conta**: remove a autenticação salva desta instalação.
 - **Atualizar biblioteca**: busca novamente as playlists e mixes disponíveis na conta conectada.
 
-Abaixo da seção de conta fica a lista **Playlists e mixes** com todas as playlists e mixes da biblioteca. Use o campo **Filtro** para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Quando há mais playlists para carregar, o botão **Carregar mais playlists** fica disponível; você também pode pressionar `Page Down` estando no fim da lista para carregar o próximo lote.
+Abaixo da seção de conta fica a lista **Playlists e mixes** com todas as playlists e mixes da biblioteca. Use o campo **Filtro** para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Abaixo da lista ficam as ações:
+
+- **Abrir seleção**: abre a playlist ou mix selecionada em uma nova aba (`Enter` na lista faz o mesmo).
+- **Nova playlist...**: cria uma playlist nova na sua conta. O player pede o nome e a privacidade (Privada, Não listada ou Pública). Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
+- **Excluir playlist...**: exclui a playlist selecionada da sua conta, com confirmação. Só funciona em playlists que você criou — mixes, paradas e playlists de terceiros não podem ser excluídos.
+- **Carregar mais playlists**: traz o próximo lote quando há mais playlists para carregar. Você também pode pressionar `Page Down` estando no fim da lista.
 
 ### Busca no catálogo e no YouTube
 
@@ -284,6 +289,18 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
 
 A seção **Abrir playlist ou vídeo** também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em **Abrir link** ou pressione `Enter` no campo para abrir.
 
+### Gerenciar playlists do YouTube Music
+
+Além de abrir e salvar playlists, o KeyTune permite editar suas playlists diretamente na conta conectada. Todas essas ações exigem conta conectada e alteram a playlist **na sua conta do YouTube Music** — o que envolve excluir é confirmado antes e não pode ser desfeito pelo player.
+
+**Adicionar faixas a uma playlist.** Selecione uma ou mais faixas do YouTube Music (na playlist atual ou na lista de resultados da busca) e use **Adicionar à playlist do YouTube Music...** no menu de contexto (`Shift+F10`), ou pressione `Ctrl+Shift+A` para adicionar a faixa que está tocando. Aparece uma lista das suas playlists editáveis; mixes e rádios personalizadas não entram nessa lista porque não aceitam edição. No topo da lista há a opção **Criar nova playlist...**, que cria uma playlist nova já com a seleção atual (mesmo comportamento do app do YouTube Music).
+
+**Remover faixas de uma playlist.** Com uma playlist sua do YouTube Music aberta na aba atual, selecione as faixas e use **Remover da playlist do YouTube Music** no menu de contexto. O player pede confirmação e, ao concluir, remove as faixas também da aba aberta para que a lista continue espelhando a conta. A remoção só é oferecida em playlists que você criou ou onde é colaborador.
+
+**Criar uma playlist.** Use **Nova playlist...** na seção *Playlists e mixes* para criar uma playlist vazia, ou **Criar nova playlist...** no diálogo de adicionar faixas para criar já com a seleção. Nos dois casos o player abre um diálogo onde você informa o **nome** e escolhe a **privacidade**: *Privada* (só você vê), *Não listada* (visível para quem tiver o link) ou *Pública* (aparece no seu perfil e pode surgir em buscas). O padrão é Privada. Depois de criar, a biblioteca é atualizada para a nova playlist aparecer na lista.
+
+**Excluir uma playlist.** Selecione a playlist na lista *Playlists e mixes* e use **Excluir playlist...**. Só dá para excluir playlists que você criou; o player confirma antes e atualiza a biblioteca em seguida.
+
 ### Sessão do YouTube Music
 
 Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretamente com o YouTube Music, especialmente na primeira vez ou quando a autenticação expirar. Se isso acontecer, exporte os cookies a partir de uma janela **anônima/privada**:
@@ -302,6 +319,7 @@ Usar uma janela anônima evita que o Google troque constantemente os cookies —
 ### Atalhos
 
 - `Ctrl+Shift+Y`: abrir a aba do YouTube Music
+- `Ctrl+Shift+A`: adicionar a mídia atual a uma playlist do YouTube Music
 - `Enter` no campo de busca: executar a pesquisa
 - `Enter` na lista de resultados: adicionar o item à playlist atual
 - `Ctrl+Enter` na lista de resultados: abrir o item em nova playlist

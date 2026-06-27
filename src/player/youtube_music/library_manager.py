@@ -267,6 +267,232 @@ class YouTubeMusicLibraryManager:
             item_labels=item_labels,
         )
 
+    def add_tracks_to_playlist(self, playlist_id, video_ids):
+        """Add one or more tracks to an editable user playlist.
+
+        ``video_ids`` may contain duplicates or empty values; they are
+        de-duplicated (preserving order) and validated.  Returns the number of
+        tracks the server reported as added.  Raises if the playlist refused
+        the edit (e.g. the tracks are already present or the playlist is not
+        editable), so the caller's error path can surface the failure instead
+        of silently reporting a false success.
+        """
+        normalized_playlist_id = str(playlist_id or "").strip()
+        if not normalized_playlist_id:
+            raise RuntimeError("A playlist selecionada é inválida.")
+
+        normalized_video_ids = self._dedupe_video_ids(video_ids)
+        if not normalized_video_ids:
+            raise RuntimeError("Nenhuma faixa válida do YouTube Music foi selecionada.")
+
+        client = self._get_client(require_auth=True)
+        response = client.add_playlist_items(normalized_playlist_id, normalized_video_ids)
+
+        status_text = self._playlist_edit_status_text(response)
+        if "SUCCEEDED" not in status_text.upper():
+            raise RuntimeError(
+                "O YouTube Music não adicionou as faixas. Elas já podem estar na"
+                " playlist ou a playlist não permite edição."
+            )
+
+        added_count = self._playlist_edit_result_count(response)
+        return added_count if added_count is not None else len(normalized_video_ids)
+
+    def create_playlist(self, title, *, description="", privacy_status="PRIVATE", video_ids=None):
+        """Create a new playlist and return its server-assigned id.
+
+        ``video_ids`` is optional: when present (e.g. the user is creating a
+        playlist seeded with the current selection) the ids are de-duplicated
+        and passed so the playlist is created already populated in a single
+        request.  Raises if the title is empty or the server did not return an
+        id, so the caller can surface the failure.
+        """
+        normalized_title = str(title or "").strip()
+        if not normalized_title:
+            raise RuntimeError("Informe um nome para a nova playlist.")
+
+        normalized_description = str(description or "").strip()
+        normalized_privacy_status = self._normalize_privacy_status(privacy_status)
+        normalized_video_ids = self._dedupe_video_ids(video_ids) if video_ids else []
+
+        client = self._get_client(require_auth=True)
+        response = client.create_playlist(
+            normalized_title,
+            normalized_description,
+            privacy_status=normalized_privacy_status,
+            video_ids=normalized_video_ids or None,
+        )
+
+        new_playlist_id = self._extract_created_playlist_id(response)
+        if not new_playlist_id:
+            raise RuntimeError(
+                "O YouTube Music não confirmou a criação da playlist. Tente novamente."
+            )
+        return new_playlist_id
+
+    def delete_playlist(self, playlist_id):
+        """Delete an entire playlist the account owns.
+
+        Only playlists you created can be deleted (collaborators and
+        saved/public playlists cannot), and personalized mixes/radios are not
+        deletable at all.  We fetch the playlist once to confirm ownership and
+        raise a clear error otherwise instead of letting the server fail with
+        an opaque message.  Returns the deleted playlist id.
+        """
+        normalized_playlist_id = str(playlist_id or "").strip()
+        if not normalized_playlist_id:
+            raise RuntimeError("A playlist selecionada é inválida.")
+        if is_watch_playlist_id(normalized_playlist_id):
+            raise RuntimeError("Mixes e rádios do YouTube Music não podem ser excluídos.")
+
+        client = self._get_client(require_auth=True)
+        # A small fetch is enough to read the ``owned`` flag; we don't need the
+        # full track listing just to confirm deletion is allowed.
+        playlist = client.get_playlist(normalized_playlist_id, limit=1)
+        if not self._playlist_is_owned(playlist):
+            raise RuntimeError("Você só pode excluir playlists que você criou.")
+
+        response = client.delete_playlist(normalized_playlist_id)
+        status_text = self._playlist_edit_status_text(response)
+        if status_text and "SUCCEEDED" not in status_text.upper():
+            raise RuntimeError(
+                f"O YouTube Music não excluiu a playlist (status: {status_text})."
+            )
+        return normalized_playlist_id
+
+    def remove_tracks_from_playlist(self, playlist_id, video_ids):
+        """Remove one or more tracks from an editable user playlist.
+
+        ``remove_playlist_items`` requires each track's playlist-specific
+        ``setVideoId``, which is not part of the playable URL.  We fetch the
+        playlist once to map ``videoId -> setVideoId`` and only remove the
+        tracks that are actually present.  Returns the number of tracks removed.
+        """
+        normalized_playlist_id = str(playlist_id or "").strip()
+        if not normalized_playlist_id:
+            raise RuntimeError("A playlist selecionada é inválida.")
+
+        normalized_video_ids = self._dedupe_video_ids(video_ids)
+        if not normalized_video_ids:
+            raise RuntimeError("Nenhuma faixa válida do YouTube Music foi selecionada.")
+
+        client = self._get_client(require_auth=True)
+        # The playlist detail also tells us whether the account can edit it
+        # (``owned`` for playlists you created, ``collaborators`` for shared
+        # ones). We already need this fetch to map setVideoIds, so the
+        # editability check is free — saved/public playlists you don't own
+        # reach here only if the UI guard was bypassed.
+        playlist = client.get_playlist(normalized_playlist_id, limit=None)
+        if not self._playlist_is_editable(playlist):
+            raise RuntimeError(
+                "Você só pode remover faixas de playlists que criou ou onde é colaborador."
+            )
+
+        set_video_id_by_video_id = self._map_set_video_ids(playlist)
+
+        videos_to_remove = []
+        for video_id in normalized_video_ids:
+            set_video_id = set_video_id_by_video_id.get(video_id)
+            if set_video_id:
+                videos_to_remove.append({"videoId": video_id, "setVideoId": set_video_id})
+
+        if not videos_to_remove:
+            raise RuntimeError("As faixas selecionadas não foram encontradas nesta playlist.")
+
+        response = client.remove_playlist_items(normalized_playlist_id, videos_to_remove)
+        status_text = self._playlist_edit_status_text(response)
+        if status_text and "SUCCEEDED" not in status_text.upper():
+            raise RuntimeError(
+                f"O YouTube Music não removeu as faixas (status: {status_text})."
+            )
+
+        return len(videos_to_remove)
+
+    @staticmethod
+    def _dedupe_video_ids(video_ids):
+        normalized_video_ids = []
+        seen_video_ids = set()
+        for video_id in video_ids or []:
+            normalized_video_id = str(video_id or "").strip()
+            if not normalized_video_id or normalized_video_id in seen_video_ids:
+                continue
+            normalized_video_ids.append(normalized_video_id)
+            seen_video_ids.add(normalized_video_id)
+        return normalized_video_ids
+
+    @staticmethod
+    def _playlist_is_editable(playlist):
+        """Whether the authenticated account can add/remove tracks.
+
+        ytmusicapi's ``get_playlist`` sets ``owned`` for playlists created by
+        the account and exposes ``collaborators`` for shared playlists the
+        account can also edit.  Saved/subscribed public playlists have neither.
+        """
+        if not isinstance(playlist, dict):
+            return False
+        return bool(playlist.get("owned")) or "collaborators" in playlist
+
+    @staticmethod
+    def _playlist_is_owned(playlist):
+        """Whether the account created the playlist (deletion requires this).
+
+        Unlike :meth:`_playlist_is_editable`, being a collaborator is not
+        enough: only the owner can delete a playlist.
+        """
+        return isinstance(playlist, dict) and bool(playlist.get("owned"))
+
+    @staticmethod
+    def _normalize_privacy_status(privacy_status):
+        normalized_privacy_status = str(privacy_status or "").strip().upper()
+        if normalized_privacy_status in {"PUBLIC", "PRIVATE", "UNLISTED"}:
+            return normalized_privacy_status
+        return "PRIVATE"
+
+    @staticmethod
+    def _extract_created_playlist_id(response):
+        """Normalize ``create_playlist``'s return value to a playlist id.
+
+        ytmusicapi returns the new playlist id as a string on success, or the
+        full response dict (which may still carry ``playlistId``) on error.
+        """
+        if isinstance(response, str):
+            return response.strip()
+        if isinstance(response, dict):
+            return str(response.get("playlistId") or "").strip()
+        return ""
+
+    @staticmethod
+    def _map_set_video_ids(playlist):
+        tracks = playlist.get("tracks") if isinstance(playlist, dict) else None
+        set_video_id_by_video_id = {}
+        for track in tracks or []:
+            video_id = str(track.get("videoId") or "").strip()
+            set_video_id = str(track.get("setVideoId") or "").strip()
+            if video_id and set_video_id:
+                set_video_id_by_video_id.setdefault(video_id, set_video_id)
+        return set_video_id_by_video_id
+
+    @staticmethod
+    def _playlist_edit_status_text(response):
+        """Normalize the status from ``add``/``remove`` playlist responses.
+
+        ytmusicapi returns either a status string (e.g. ``"STATUS_FAILED"``)
+        or a dict like ``{"status": "STATUS_SUCCEEDED", "playlistEditResults":
+        [...]}`` depending on the outcome.
+        """
+        if isinstance(response, dict):
+            return str(response.get("status") or "").strip()
+        return str(response or "").strip()
+
+    @staticmethod
+    def _playlist_edit_result_count(response):
+        if not isinstance(response, dict):
+            return None
+        edit_results = response.get("playlistEditResults")
+        if isinstance(edit_results, list):
+            return len(edit_results)
+        return None
+
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
         """Fetch the full track listing of a playlist."""
         client = self._get_client(require_auth=require_auth)
