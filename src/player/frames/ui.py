@@ -599,12 +599,4 @@ class FrameUIMixin:
         return page
 
     def on_add_to_youtube_playlist(self, _event):
-        if hasattr(self, "_add_current_media_to_youtube_playlist"):
-            self._add_current_media_to_youtube_playlist()
-        else:
-            wx.MessageBox(
-                "A integração com o YouTube Music não está pronta ou ativa no momento.",
-                "YouTube Music",
-                wx.OK | wx.ICON_WARNING,
-                self,
-            )
+        self._add_current_media_to_youtube_playlist()

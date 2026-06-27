@@ -348,13 +348,22 @@ class YouTubeMusicService:
     def report_playback_to_history(self, media_path):
         return self._feedback.report_playback_to_history(media_path)
 
-    def add_to_playlist(self, playlist_id, video_id):
-        client = self.get_client(require_auth=True)
-        return client.add_playlist_items(playlist_id, [video_id])
+    def add_tracks_to_playlist(self, playlist_id, video_ids):
+        return self._library.add_tracks_to_playlist(playlist_id, video_ids)
 
-    def remove_from_playlist(self, playlist_id, set_video_id):
-        client = self.get_client(require_auth=True)
-        return client.remove_playlist_items(playlist_id, [{"setVideoId": set_video_id}])
+    def remove_tracks_from_playlist(self, playlist_id, video_ids):
+        return self._library.remove_tracks_from_playlist(playlist_id, video_ids)
+
+    def create_playlist(self, title, *, description="", privacy_status="PRIVATE", video_ids=None):
+        return self._library.create_playlist(
+            title,
+            description=description,
+            privacy_status=privacy_status,
+            video_ids=video_ids,
+        )
+
+    def delete_playlist(self, playlist_id):
+        return self._library.delete_playlist(playlist_id)
 
     # -- Static helpers --------------------------------------------------------
 

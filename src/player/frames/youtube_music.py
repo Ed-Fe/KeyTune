@@ -4,13 +4,13 @@ import subprocess
 import sys
 import threading
 import time
-from urllib.parse import urlparse, parse_qs
 
 import wx
 
 from player.youtube_music.auth import get_browser_auth_file_path, sanitize_sensitive_text
 from player.youtube_music.dialog import (
     YouTubeMusicBrowserAuthDialog,
+    YouTubeMusicCreatePlaylistDialog,
     YouTubeMusicJavascriptRuntimeDialog,
 )
 from player.youtube_music.models import (
@@ -22,6 +22,8 @@ from player.youtube_music.models import (
 from player.youtube_music.playlists import (
     extract_playlist_id_from_source,
     extract_playlist_id_from_text,
+    extract_video_id_from_text,
+    is_watch_playlist_id,
     is_youtube_music_media,
 )
 
@@ -96,6 +98,9 @@ def is_missing_javascript_runtime_error_message(error_message):
 
 
 class FrameYouTubeMusicMixin:
+    # Sentinel returned by the playlist picker when the user chooses to create
+    # a brand-new playlist instead of selecting an existing one.
+    _CREATE_NEW_PLAYLIST_CHOICE = object()
     _YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS = 45000
     _YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
@@ -336,6 +341,10 @@ class FrameYouTubeMusicMixin:
         if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
             return False
 
+        # The dependency update runs outside the UI thread and can touch both
+        # the Python-side ytmusicapi package and the managed yt-dlp executable.
+        # We deliberately bypass the YouTube Music operation lock used by API
+        # calls so startup follow-up work can resume as soon as the update finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             return False
         self._youtube_music_dependency_update_in_progress = True
@@ -449,6 +458,8 @@ class FrameYouTubeMusicMixin:
             return
 
         if has_managed_dependencies:
+            # If the user toggled the nightly/stable channel, force a fresh
+            # managed yt-dlp download so the executable actually switches channel.
             had_nightly = bool(getattr(previous_settings, "youtube_music_use_nightly_yt_dlp", False))
             has_nightly = bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False))
             if had_nightly != has_nightly:
@@ -575,6 +586,8 @@ class FrameYouTubeMusicMixin:
             on_disconnect=self._on_youtube_music_disconnect_button,
             on_refresh_library=self._on_youtube_music_refresh_button,
             on_open_selected=self._on_youtube_music_open_selected_button,
+            on_create_playlist=self._on_youtube_music_create_playlist_button,
+            on_delete_playlist=self._on_youtube_music_delete_playlist_button,
             on_open_manual_source=self._on_youtube_music_open_manual_source_button,
             on_search=self._on_youtube_music_search_button,
             on_open_search_result=self._on_youtube_music_open_search_result_button,
@@ -784,6 +797,13 @@ class FrameYouTubeMusicMixin:
         self._refresh_youtube_music_menu_state()
 
     def _on_youtube_music_screen_closed(self):
+        # When the user closes the YouTube Music tab while a background task
+        # is still in flight (e.g. library refresh, search, save), detach it:
+        # the worker thread will run to completion but its result is ignored
+        # because the active task id no longer matches. This prevents the
+        # busy cursor and the global "operation in progress" lock (which
+        # blocks track navigation, shuffle/repeat and Stop) from staying
+        # active until the watchdog timeout fires.
         if not getattr(self, "_youtube_music_operation_in_progress", False):
             return
         self._youtube_music_active_task_id = None
@@ -879,6 +899,7 @@ class FrameYouTubeMusicMixin:
         if pending is None:
             pending = []
             self._youtube_music_pending_post_operation_callbacks = pending
+        # Avoid stacking duplicates of the same bound method.
         for existing in pending:
             if existing == callback:
                 return
@@ -888,6 +909,9 @@ class FrameYouTubeMusicMixin:
         pending = getattr(self, "_youtube_music_pending_post_operation_callbacks", None)
         if not pending:
             return
+        # Snapshot and clear before invoking so callbacks that re-enqueue
+        # themselves (e.g. because another task started in the meantime)
+        # don't get dropped.
         callbacks = list(pending)
         self._youtube_music_pending_post_operation_callbacks = []
         for callback in callbacks:
@@ -1015,6 +1039,9 @@ class FrameYouTubeMusicMixin:
             self._announce(message)
             return False
 
+        # Building the panel for the first time can take a moment (widget
+        # construction). Announce as early as possible so screen-reader users
+        # know the shortcut was registered.
         service = self._get_youtube_music_service()
         if (
             service.has_saved_browser_auth()
@@ -1042,6 +1069,9 @@ class FrameYouTubeMusicMixin:
             on_close=self._on_youtube_music_screen_closed,
         )
 
+        # Library auto-load. Dependency auto-update no longer runs here: it
+        # was moved to startup so it can finish (or fail) before the user even
+        # opens the tab, instead of stalling tab opening for several seconds.
         self._auto_load_youtube_music_library_if_needed()
 
     def _auto_load_youtube_music_library_if_needed(self):
@@ -1051,6 +1081,9 @@ class FrameYouTubeMusicMixin:
         if self._youtube_music_library_has_loaded():
             return
 
+        # If the dependency auto-update is still running, don't touch the
+        # YouTube Music runtime yet. The dep update's on_success path will
+        # trigger this auto-load when it finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             self._youtube_music_library_status_message = (
                 "Atualizando recursos adicionais do YouTube Music. A biblioteca ser\u00e1 carregada em seguida."
@@ -1058,6 +1091,10 @@ class FrameYouTubeMusicMixin:
             self._refresh_youtube_music_screen_later()
             return
 
+        # If another YouTube Music background task is already running (typically
+        # the startup _verify_youtube_music_connection account-name fetch),
+        # don't drop the auto-load: queue it so the library refresh fires as
+        # soon as the running task finishes.
         if self._is_youtube_music_operation_in_progress():
             self._queue_youtube_music_post_operation_callback(
                 self._auto_load_youtube_music_library_if_needed
@@ -1539,68 +1576,376 @@ class FrameYouTubeMusicMixin:
 
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
+    def _youtube_music_video_ids_from_paths(self, media_paths):
+        """Extract the YouTube Music video ids from a list of media paths.
+
+        Non-YouTube items are skipped and duplicates are collapsed while
+        preserving order, mirroring how the rating flow filters its selection.
+        """
+        video_ids = []
+        seen_video_ids = set()
+        for media_path in media_paths or []:
+            normalized_media_path = str(media_path or "").strip()
+            if not normalized_media_path or not is_youtube_music_media(normalized_media_path):
+                continue
+            video_id = extract_video_id_from_text(normalized_media_path)
+            if video_id and video_id not in seen_video_ids:
+                video_ids.append(video_id)
+                seen_video_ids.add(video_id)
+        return video_ids
+
+    def _current_tab_youtube_music_playlist_id(self):
+        """Return the editable remote playlist id backing the current tab.
+
+        Returns ``None`` unless the active tab is a YouTube Music *user*
+        playlist (watch playlists / mixes are not editable).
+        """
+        state = self._get_playlist_state()
+        if state is None or state.is_folder_tab:
+            return None
+        playlist_id = extract_playlist_id_from_source(getattr(state, "source_path", None))
+        if not playlist_id or is_watch_playlist_id(playlist_id):
+            return None
+        return playlist_id
+
+    def _editable_youtube_music_playlists(self):
+        """Return only the playlists the user can edit.
+
+        Personalized mixes / radios (watch playlist ids starting with ``RD``)
+        share the library cache but cannot receive ``add_playlist_items``
+        edits, so they are excluded from the picker.
+        """
+        return [
+            playlist
+            for playlist in self._youtube_music_library_cache()
+            if not is_watch_playlist_id(getattr(playlist, "playlist_id", ""))
+        ]
+
+    def _prompt_for_youtube_music_playlist(self, playlists, prompt, *, allow_create=False):
+        """Pick a target playlist, optionally offering to create a new one.
+
+        When ``allow_create`` is set, the first entry is a "create new
+        playlist" choice (mirroring the YouTube Music app's own add dialog).
+        Returns the chosen playlist, the :data:`_CREATE_NEW_PLAYLIST_CHOICE`
+        sentinel, or ``None`` when cancelled.
+        """
+        choice_labels = []
+        if allow_create:
+            choice_labels.append("Criar nova playlist...")
+        choice_labels.extend(playlist.choice_label for playlist in playlists)
+
+        dialog = wx.SingleChoiceDialog(self, prompt, "Playlists do YouTube Music", choice_labels)
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return None
+            selected_index = dialog.GetSelection()
+        finally:
+            dialog.Destroy()
+
+        if not 0 <= selected_index < len(choice_labels):
+            return None
+        if allow_create:
+            if selected_index == 0:
+                return self._CREATE_NEW_PLAYLIST_CHOICE
+            selected_index -= 1
+        if not 0 <= selected_index < len(playlists):
+            return None
+        return playlists[selected_index]
+
     def _add_current_media_to_youtube_playlist(self):
         state = self._get_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
-
-        if not media_path or not is_youtube_music_media(media_path):
-            self._announce("Nenhuma música do YouTube Music está tocando para ser adicionada.")
+        if not media_path:
+            self._announce("Nenhuma mídia está tocando para ser adicionada.")
             return False
+        return self._add_media_paths_to_youtube_playlist([media_path])
 
-        parsed_url = urlparse(media_path)
-        video_id_list = parse_qs(parsed_url.query).get("v")
-        if not video_id_list:
-            self._announce("Não foi possível identificar o ID da música atual.")
+    def _add_selected_media_to_youtube_playlist(self, media_paths):
+        return self._add_media_paths_to_youtube_playlist(media_paths)
+
+    def _add_media_paths_to_youtube_playlist(self, media_paths):
+        video_ids = self._youtube_music_video_ids_from_paths(media_paths)
+        if not video_ids:
+            self._announce("A seleção não contém faixas do YouTube Music para adicionar.")
             return False
-        video_id = video_id_list[0]
 
         service = self._get_youtube_music_service()
         if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
             return False
 
-        playlists = self._youtube_music_library_cache()
+        track_count = len(video_ids)
+        track_label = "faixa" if track_count == 1 else "faixas"
+
+        playlists = self._editable_youtube_music_playlists()
         if not playlists:
-            self._announce("Nenhuma playlist encontrada. Tente atualizar a biblioteca primeiro.")
-            return False
+            # With no editable playlists yet, the only sensible action is to
+            # create one seeded with the current selection.
+            return self._create_youtube_music_playlist_with_video_ids(video_ids)
 
-        nomes_playlists = [p.title for p in playlists]
-
-        dialogo = wx.SingleChoiceDialog(
-            self,
-            "Selecione a playlist para salvar a música:",
-            "Adicionar à Playlist",
-            nomes_playlists
+        selected_playlist = self._prompt_for_youtube_music_playlist(
+            playlists,
+            f"Selecione a playlist para adicionar {track_count} {track_label}:",
+            allow_create=True,
         )
-
-        if dialogo.ShowModal() != wx.ID_OK:
-            dialogo.Destroy()
+        if selected_playlist is None:
             return False
-
-        indice_escolhido = dialogo.GetSelection()
-        playlist_escolhida = playlists[indice_escolhido]
-        dialogo.Destroy()
+        if selected_playlist is self._CREATE_NEW_PLAYLIST_CHOICE:
+            return self._create_youtube_music_playlist_with_video_ids(video_ids)
 
         def worker():
-            return service.add_to_playlist(playlist_escolhida.playlist_id, video_id)
+            return service.add_tracks_to_playlist(selected_playlist.playlist_id, video_ids)
 
-        def on_success(resultado):
-            mensagem = f"Música adicionada à playlist: {playlist_escolhida.title}."
-            self._youtube_music_library_status_message = mensagem
+        def on_success(added_count):
+            try:
+                normalized_added = int(added_count)
+            except (TypeError, ValueError):
+                normalized_added = track_count
+            added_verb = "adicionada" if normalized_added == 1 else "adicionadas"
+            added_noun = "faixa" if normalized_added == 1 else "faixas"
+            message = (
+                f"{normalized_added} {added_noun} {added_verb} à playlist {selected_playlist.title}"
+                " no YouTube Music."
+            )
+            self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
-            self._announce(mensagem)
+            self._announce(message)
             if hasattr(self, "_set_status_message"):
-                self._set_status_message(mensagem)
+                self._set_status_message(message)
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível adicionar a música na playlist.\n\n"
+                "Não foi possível adicionar à playlist do YouTube Music.\n\n"
                 f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
-                "Erro do YouTube Music",
+                "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
 
-        self._announce(f"Adicionando música na playlist {playlist_escolhida.title}...")
+        self._announce(f"Adicionando {track_count} {track_label} à playlist {selected_playlist.title}...")
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _remove_selected_media_from_youtube_playlist(self, media_paths, item_indexes):
+        state = self._get_playlist_state()
+        if state is None or state.is_folder_tab:
+            self._announce("Abra uma playlist do YouTube Music para remover faixas dela.")
+            return False
+
+        playlist_id = extract_playlist_id_from_source(getattr(state, "source_path", None))
+        if not playlist_id or is_watch_playlist_id(playlist_id):
+            self._announce("A aba atual não é uma playlist editável do YouTube Music.")
+            return False
+
+        video_ids = self._youtube_music_video_ids_from_paths(media_paths)
+        if not video_ids:
+            self._announce("A seleção não contém faixas do YouTube Music para remover.")
+            return False
+
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
+            return False
+
+        playlist_summary = self._playlist_summary_by_id(playlist_id)
+        playlist_title = (
+            playlist_summary.title
+            if playlist_summary is not None
+            else str(getattr(state, "title", "") or "playlist")
+        )
+
+        track_count = len(video_ids)
+        track_label = "faixa" if track_count == 1 else "faixas"
+
+        # Editing a remote playlist changes the user's account and is not
+        # undoable from the player, so confirm before touching the server.
+        confirmation = wx.MessageBox(
+            f"Remover {track_count} {track_label} da playlist \"{playlist_title}\" no YouTube Music?\n\n"
+            "Isso altera a playlist diretamente na sua conta e não pode ser desfeito pelo player.",
+            "Remover da playlist do YouTube Music",
+            wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
+            self,
+        )
+        if confirmation != wx.YES:
+            return False
+
+        local_indexes = list(item_indexes or [])
+
+        def worker():
+            return service.remove_tracks_from_playlist(playlist_id, video_ids)
+
+        def on_success(removed_count):
+            try:
+                normalized_removed = int(removed_count)
+            except (TypeError, ValueError):
+                normalized_removed = track_count
+            # Mirror the removal in the open tab so the list matches the server.
+            # This announces its own result, so we only update the status line.
+            if local_indexes:
+                self._remove_items_from_current_playlist(
+                    local_indexes,
+                    announce_prefix="Removido da playlist do YouTube Music",
+                )
+            removed_noun = "faixa removida" if normalized_removed == 1 else "faixas removidas"
+            message = f"{normalized_removed} {removed_noun} da playlist {playlist_title} no YouTube Music."
+            self._youtube_music_library_status_message = message
+            self._refresh_youtube_music_screen_later()
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+            if not local_indexes:
+                self._announce(message)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível remover da playlist do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        self._announce(f"Removendo {track_count} {track_label} da playlist {playlist_title}...")
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    _PLAYLIST_PRIVACY_LABELS = {
+        "PRIVATE": "privada",
+        "UNLISTED": "não listada",
+        "PUBLIC": "pública",
+    }
+
+    def _prompt_for_new_youtube_music_playlist(self, *, track_count=0, default_name=""):
+        """Ask for the new playlist's name and privacy level.
+
+        Returns a ``(name, privacy_status)`` tuple, or ``None`` when cancelled.
+        """
+        dialog = YouTubeMusicCreatePlaylistDialog(
+            self,
+            default_name=default_name,
+            track_count=track_count,
+        )
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return None
+            return dialog.get_playlist_name(), dialog.get_privacy_status()
+        finally:
+            dialog.Destroy()
+
+    def _on_youtube_music_create_playlist_button(self):
+        return self._create_empty_youtube_music_playlist()
+
+    def _create_empty_youtube_music_playlist(self):
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
+            return False
+        return self._create_youtube_music_playlist_with_video_ids([])
+
+    def _create_youtube_music_playlist_with_video_ids(self, video_ids):
+        """Create a new remote playlist, optionally seeded with ``video_ids``.
+
+        Authentication is assumed to be ensured by the caller (the add flow and
+        the central panel both do so before reaching here). The user picks the
+        name and privacy level (Private/Unlisted/Public) in the dialog.
+        """
+        service = self._get_youtube_music_service()
+        normalized_video_ids = list(video_ids or [])
+        track_count = len(normalized_video_ids)
+
+        prompt_result = self._prompt_for_new_youtube_music_playlist(track_count=track_count)
+        if not prompt_result:
+            return False
+        playlist_name, privacy_status = prompt_result
+        privacy_label = self._PLAYLIST_PRIVACY_LABELS.get(privacy_status, "privada")
+
+        def worker():
+            return service.create_playlist(
+                playlist_name,
+                privacy_status=privacy_status,
+                video_ids=normalized_video_ids or None,
+            )
+
+        def on_success(_new_playlist_id):
+            if track_count:
+                track_label = "faixa" if track_count == 1 else "faixas"
+                message = (
+                    f"Playlist \"{playlist_name}\" ({privacy_label}) criada no YouTube Music"
+                    f" com {track_count} {track_label}."
+                )
+            else:
+                message = f"Playlist \"{playlist_name}\" ({privacy_label}) criada no YouTube Music."
+            self._youtube_music_library_status_message = message
+            self._refresh_youtube_music_screen_later()
+            self._announce(message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+            # Surface the new playlist in the library list right away.
+            self.on_refresh_youtube_music_library(None, announce=False)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível criar a playlist no YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        self._announce(f"Criando a playlist \"{playlist_name}\" no YouTube Music...")
+        return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
+
+    def _on_youtube_music_delete_playlist_button(self):
+        return self._delete_selected_youtube_music_library_playlist()
+
+    def _delete_selected_youtube_music_library_playlist(self):
+        panel = self._get_youtube_music_panel()
+        if panel is None:
+            return False
+
+        playlist_id = panel.get_selected_playlist_id()
+        if not playlist_id:
+            self._announce("Selecione uma playlist do YouTube Music para excluir.")
+            return False
+        if is_watch_playlist_id(playlist_id):
+            self._announce("Mixes e rádios do YouTube Music não podem ser excluídos.")
+            return False
+
+        service = self._get_youtube_music_service()
+        if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
+            return False
+
+        playlist_summary = self._playlist_summary_by_id(playlist_id)
+        playlist_title = playlist_summary.title if playlist_summary is not None else "playlist"
+
+        # Deleting a remote playlist removes it from the account entirely and
+        # is not undoable from the player, so confirm before touching the server.
+        confirmation = wx.MessageBox(
+            f"Excluir a playlist \"{playlist_title}\" do YouTube Music?\n\n"
+            "Isso remove a playlist inteira da sua conta e não pode ser desfeito pelo player.",
+            "Excluir playlist do YouTube Music",
+            wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
+            self,
+        )
+        if confirmation != wx.YES:
+            return False
+
+        def worker():
+            return service.delete_playlist(playlist_id)
+
+        def on_success(_deleted_playlist_id):
+            message = f"Playlist \"{playlist_title}\" excluída do YouTube Music."
+            self._youtube_music_library_status_message = message
+            self._refresh_youtube_music_screen_later()
+            self._announce(message)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+            self.on_refresh_youtube_music_library(None, announce=False)
+
+        def on_error(exc):
+            wx.MessageBox(
+                "Não foi possível excluir a playlist do YouTube Music.\n\n"
+                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                "YouTube Music",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+
+        self._announce(f"Excluindo a playlist \"{playlist_title}\" do YouTube Music...")
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _rate_selected_playlist_items(self, media_paths, rating):
@@ -1727,6 +2072,8 @@ class FrameYouTubeMusicMixin:
         menu = wx.Menu()
         for section_title, countries in sections:
             if not section_title:
+                # Global (and any other top-level shortcut) goes straight onto
+                # the root menu, followed by a separator before the continents.
                 for code, label in countries:
                     menu_item = menu.Append(wx.ID_ANY, label)
                     menu.Bind(
@@ -1952,6 +2299,8 @@ class FrameYouTubeMusicMixin:
         if not self._ensure_youtube_music_authenticated():
             return False
 
+        # Don't issue API calls while the dependency update may be refreshing
+        # ytmusicapi files or replacing the managed yt-dlp executable.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             message = (
                 "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
@@ -1971,6 +2320,10 @@ class FrameYouTubeMusicMixin:
         home_limit = self._youtube_music_home_discovery_limit()
 
         def worker():
+            # Run the three independent network calls in parallel: account
+            # name, library playlists, and personalized mixes (home rows).
+            # ytmusicapi reuses a single requests.Session under the hood and
+            # the cached visitor id, so concurrent calls share TLS/cookies.
             results = {}
 
             def run_account():
@@ -2002,6 +2355,8 @@ class FrameYouTubeMusicMixin:
             for thread in threads:
                 thread.join()
 
+            # Library playlists are required; account name and mixes are
+            # best-effort enhancements.
             if "playlists_error" in results:
                 raise results["playlists_error"]
 
@@ -2271,11 +2626,23 @@ class FrameYouTubeMusicMixin:
         )
 
     def _initialize_youtube_music_startup_state(self):
+        # Avoid an eager network round trip on startup just to fetch the
+        # account name. The account is validated lazily when the user opens
+        # the YouTube Music tab (the library refresh already authenticates
+        # and updates the displayed account name). Restored YouTube Music
+        # playlist tabs that need their item labels refreshed are still
+        # handled here, since their refresh cannot wait for user action.
         self._refresh_youtube_music_menu_state()
         if not _youtube_music_has_saved_auth():
             return
         service = self._get_youtube_music_service()
 
+        # If a dependency auto-update is due, kick it off now (in its own
+        # background thread, no operation lock). It must run BEFORE the
+        # pre-warm, otherwise pre-warm would import ytmusicapi and keep the
+        # package loaded while an update is trying to refresh its files on
+        # Windows. When a dep update kicks off, the pre-warm is deferred and
+        # will run from the dep update's on_success.
         dep_update_started = self._maybe_auto_update_youtube_music_dependencies()
         if dep_update_started:
             return
@@ -2291,6 +2658,8 @@ class FrameYouTubeMusicMixin:
         def warm():
             try:
                 client = service.get_client()
+                # Touching base_headers forces the visitor-id round trip
+                # that ytmusicapi otherwise defers until the first real call.
                 _ = getattr(client, "base_headers", None)
             except Exception:
                 pass
