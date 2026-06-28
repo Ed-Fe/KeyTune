@@ -1,3 +1,4 @@
+import contextlib
 import queue
 import sys
 import threading
@@ -17,6 +18,7 @@ class PlayerBackendMixin:
 
     def _create_player_backend(self):
         self._playback_request_serial = 0
+        self._playback_backend_lock = threading.Lock()
         self._playback_queue = queue.Queue()
         self._playback_worker = threading.Thread(target=self._playback_worker_loop, daemon=True)
         self._player_keys = ("primary", "secondary")
@@ -141,34 +143,36 @@ class PlayerBackendMixin:
         self._player_loaded_media_paths[player_key] = str(media_path or "").strip() or None
 
     def _recreate_player_slot(self, player_key, *, index=None):
-        existing_player = self._managed_player(player_key)
-        if existing_player is not None:
-            try:
-                existing_player.stop()
-            except Exception:
-                pass
-            try:
-                existing_player.release()
-            except Exception:
-                pass
+        lock = getattr(self, "_playback_backend_lock", None)
+        with lock if lock is not None else contextlib.nullcontext():
+            existing_player = self._managed_player(player_key)
+            if existing_player is not None:
+                try:
+                    existing_player.stop()
+                except Exception:
+                    pass
+                try:
+                    existing_player.release()
+                except Exception:
+                    pass
 
-        existing_instance = getattr(self, "_player_instances", {}).get(player_key)
-        if existing_instance is not None:
-            try:
-                existing_instance.release()
-            except Exception:
-                pass
+            existing_instance = getattr(self, "_player_instances", {}).get(player_key)
+            if existing_instance is not None:
+                try:
+                    existing_instance.release()
+                except Exception:
+                    pass
 
-        instance = self._build_player_instance()
-        self._player_instances[player_key] = instance
-        player, event_manager = self._create_managed_player(player_key, instance)
-        self._players[player_key] = player
-        self._player_event_managers[player_key] = event_manager
-        self._set_player_loaded_media_path(player_key, None)
+            instance = self._build_player_instance()
+            self._player_instances[player_key] = instance
+            player, event_manager = self._create_managed_player(player_key, instance)
+            self._players[player_key] = player
+            self._player_event_managers[player_key] = event_manager
+            self._set_player_loaded_media_path(player_key, None)
 
-        if player_key == getattr(self, "_active_player_key", None):
-            self.instance = instance
-            self.player = player
+            if player_key == getattr(self, "_active_player_key", None):
+                self.instance = instance
+                self.player = player
 
         self._bind_player_to_window(index=index)
         return player
@@ -349,32 +353,34 @@ class PlayerBackendMixin:
 
     def _reset_player(self):
         active_player_key = getattr(self, "_active_player_key", self._player_keys[0])
-        for player_key in getattr(self, "_player_keys", ()):
-            player = self._managed_player(player_key)
-            if player is None:
-                continue
-            try:
-                player.release()
-            except Exception:
-                pass
+        lock = getattr(self, "_playback_backend_lock", None)
+        with lock if lock is not None else contextlib.nullcontext():
+            for player_key in getattr(self, "_player_keys", ()):
+                player = self._managed_player(player_key)
+                if player is None:
+                    continue
+                try:
+                    player.release()
+                except Exception:
+                    pass
 
-        for instance in getattr(self, "_player_instances", {}).values():
-            try:
-                instance.release()
-            except Exception:
-                pass
+            for instance in getattr(self, "_player_instances", {}).values():
+                try:
+                    instance.release()
+                except Exception:
+                    pass
 
-        self._player_instances = {}
-        self._players = {}
-        self._player_event_managers = {}
-        self._player_loaded_media_paths = {}
-        for player_key in self._player_keys:
-            instance = self._build_player_instance()
-            self._player_instances[player_key] = instance
-            player, event_manager = self._create_managed_player(player_key, instance)
-            self._players[player_key] = player
-            self._player_event_managers[player_key] = event_manager
-            self._player_loaded_media_paths[player_key] = None
+            self._player_instances = {}
+            self._players = {}
+            self._player_event_managers = {}
+            self._player_loaded_media_paths = {}
+            for player_key in self._player_keys:
+                instance = self._build_player_instance()
+                self._player_instances[player_key] = instance
+                player, event_manager = self._create_managed_player(player_key, instance)
+                self._players[player_key] = player
+                self._player_event_managers[player_key] = event_manager
+                self._player_loaded_media_paths[player_key] = None
 
         self._crossfade_state = None
         self._set_active_player(active_player_key if active_player_key in self._players else self._player_keys[0])

@@ -1,3 +1,4 @@
+import contextlib
 import queue
 import sys
 
@@ -46,11 +47,7 @@ class PlaybackEngineMixin:
             success = True
             error_message = ""
             player_key = request.get("player_key", self._active_player_key)
-            player = self._managed_player(player_key)
-            player_instance = self._instance_for_player(player_key)
             try:
-                if player_instance is None:
-                    raise RuntimeError("Instância do backend de reprodução indisponível.")
                 (
                     playback_media_path,
                     playback_http_headers,
@@ -59,40 +56,50 @@ class PlaybackEngineMixin:
                 ) = self._resolve_media_for_playback_details(
                     request["media_path"]
                 )
-                media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
-                if player is None:
-                    raise RuntimeError("Player de reprodução indisponível.")
-                player.stop()
-                player.set_media(media)
-                video_output_handle = request.get("video_output_handle")
-                if sys.platform.startswith("win") and video_output_handle:
+                lock = getattr(self, "_playback_backend_lock", None)
+                with lock if lock is not None else contextlib.nullcontext():
+                    # Re-fetch the player/instance now that we hold the lock: a
+                    # concurrent `_reset_player()` on the UI thread may have torn
+                    # down and rebuilt the backend while we were resolving the
+                    # (possibly network-bound) media path above.
+                    player = self._managed_player(player_key)
+                    player_instance = self._instance_for_player(player_key)
+                    if player_instance is None:
+                        raise RuntimeError("Instância do backend de reprodução indisponível.")
+                    if player is None:
+                        raise RuntimeError("Player de reprodução indisponível.")
+                    media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
+                    player.stop()
+                    player.set_media(media)
+                    video_output_handle = request.get("video_output_handle")
+                    if sys.platform.startswith("win") and video_output_handle:
+                        try:
+                            player.set_hwnd(video_output_handle)
+                        except Exception:
+                            pass
+                    self._set_player_loaded_media_path(player_key, request["media_path"])
+                    initial_volume = request.get("initial_volume", self.current_volume)
                     try:
-                        player.set_hwnd(video_output_handle)
+                        player.audio_set_volume(max(0, min(100, int(initial_volume))))
                     except Exception:
                         pass
-                self._set_player_loaded_media_path(player_key, request["media_path"])
-                initial_volume = request.get("initial_volume", self.current_volume)
-                try:
-                    player.audio_set_volume(max(0, min(100, int(initial_volume))))
-                except Exception:
-                    pass
-                play_kwargs = {}
-                if not request.get("crossfade"):
-                    raw_restore_position_ms = request.get("restore_position_ms", 0) or 0
-                    try:
-                        normalized_restore_position_ms = int(raw_restore_position_ms)
-                    except (TypeError, ValueError):
-                        normalized_restore_position_ms = 0
-                    if normalized_restore_position_ms > 0:
-                        play_kwargs["start_seconds"] = normalized_restore_position_ms / 1000.0
-                    if request.get("pause_after_start"):
-                        play_kwargs["pause_on_start"] = True
-                player.play(**play_kwargs)
-                if request.get("crossfade"):
-                    try:
-                        player.audio_set_volume(0)
-                    except Exception:
-                        pass
+                    play_kwargs = {}
+                    if not request.get("crossfade"):
+                        raw_restore_position_ms = request.get("restore_position_ms", 0) or 0
+                        try:
+                            normalized_restore_position_ms = int(raw_restore_position_ms)
+                        except (TypeError, ValueError):
+                            normalized_restore_position_ms = 0
+                        if normalized_restore_position_ms > 0:
+                            play_kwargs["start_seconds"] = normalized_restore_position_ms / 1000.0
+                        if request.get("pause_after_start"):
+                            play_kwargs["pause_on_start"] = True
+                    player.play(**play_kwargs)
+                    if request.get("crossfade"):
+                        try:
+                            player.audio_set_volume(0)
+                        except Exception:
+                            pass
                 request["resolved_display_title"] = resolved_display_title
                 request["resolved_display_artist"] = resolved_display_artist
             except Exception as exc:
