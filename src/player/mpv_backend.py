@@ -54,6 +54,9 @@ class MPVEventManager:
             try:
                 callback(event, *args)
             except Exception:
+                # A failing listener must not stop the others from running, but
+                # silently dropping it hides real bugs in the playback handlers.
+                _logger.exception("Error in %s event listener", event_type.value)
                 continue
 
 
@@ -335,7 +338,10 @@ class MPVPlayer:
             return False
 
     def audio_set_volume(self, volume):
-        self._player.volume = max(0, min(100, int(volume)))
+        try:
+            self._player.volume = max(0, min(100, int(volume)))
+        except Exception:
+            pass
 
     def list_audio_output_devices(self) -> list[AudioOutputDevice]:
         raw_devices = self._get_runtime_property("audio-device-list", default=[])
@@ -500,10 +506,16 @@ class MPVPlayer:
         return adjusted
 
     def get_time(self):
-        time_pos = self._player.time_pos
+        try:
+            time_pos = self._player.time_pos
+        except Exception:
+            return -1
         if time_pos is None:
             return -1
-        return int(round(float(time_pos) * 1000))
+        try:
+            return int(round(float(time_pos) * 1000))
+        except (TypeError, ValueError):
+            return -1
 
     def get_current_media_title(self) -> str:
         metadata_candidates = (
@@ -518,20 +530,35 @@ class MPVPlayer:
         return ""
 
     def get_length(self):
-        duration = self._player.duration
+        try:
+            duration = self._player.duration
+        except Exception:
+            return -1
         if duration is None:
             return -1
-        return int(round(float(duration) * 1000))
+        try:
+            return int(round(float(duration) * 1000))
+        except (TypeError, ValueError):
+            return -1
 
     def set_time(self, milliseconds):
-        self._player.time_pos = max(0.0, float(milliseconds) / 1000.0)
+        try:
+            self._player.time_pos = max(0.0, float(milliseconds) / 1000.0)
+        except Exception:
+            pass
 
     def set_position(self, position):
-        percentage = max(0.0, min(1.0, float(position))) * 100.0
-        self._player.percent_pos = percentage
+        try:
+            percentage = max(0.0, min(1.0, float(position))) * 100.0
+            self._player.percent_pos = percentage
+        except Exception:
+            pass
 
     def set_audio_filters(self, filter_chain: str):
-        self._player["af"] = filter_chain or ""
+        try:
+            self._player["af"] = filter_chain or ""
+        except Exception:
+            pass
 
 
 class MPVInstance:

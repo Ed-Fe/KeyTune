@@ -4,7 +4,7 @@ import sys
 import wx
 
 from ..accessibility import attach_named_accessible
-from ..constants import CROSSFADE_TIMER_INTERVAL_MS, PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
+from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..welcome import WelcomeDialog
 
@@ -188,7 +188,13 @@ class FrameUIMixin:
 
         if video_surface is not None:
             panel_size = video_panel.GetClientSize()
-            video_surface.SetSize(0, 0, panel_size.Width, panel_size.Height)
+            surface_size = (panel_size.Width, panel_size.Height)
+            # The progress timer lays out every video page twice per second.
+            # Only touch the native surface when the size actually changed to
+            # avoid pointless resize/repaint churn (and flicker) while idle.
+            if getattr(page, "_video_surface_size", None) != surface_size:
+                video_surface.SetSize(0, 0, panel_size.Width, panel_size.Height)
+                page._video_surface_size = surface_size
 
         if video_hint_overlay is None or not video_hint_overlay.IsShown():
             return
@@ -575,7 +581,9 @@ class FrameUIMixin:
         self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.progress_timer.Start(PROGRESS_TIMER_INTERVAL_MS)
-        self.crossfade_timer.Start(CROSSFADE_TIMER_INTERVAL_MS)
+        # The crossfade timer is started on demand (only while a crossfade is
+        # active) by CrossfadeMixin._ensure_crossfade_timer_running(); leaving
+        # it stopped while idle avoids ~64 needless CPU wakeups per second.
 
     def _create_playlist_page(self):
         page = wx.Panel(self.notebook)

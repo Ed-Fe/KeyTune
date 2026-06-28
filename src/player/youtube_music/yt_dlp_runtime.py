@@ -23,7 +23,12 @@ YTDLP_STABLE_REPOSITORY = ("yt-dlp", "yt-dlp")
 YTDLP_NIGHTLY_REPOSITORY = ("yt-dlp", "yt-dlp-nightly-builds")
 YTDLP_COMMAND_TIMEOUT_SECONDS = 30
 YTDLP_UPDATE_TIMEOUT_SECONDS = 180
-SUPPORTED_JS_RUNTIME_EXECUTABLES = ("node", "deno", "bun")
+# Ordered by yt-dlp's own recommendation (see the yt-dlp EJS wiki): Deno is the
+# recommended runtime and the only one enabled by default; Node is the next best
+# alternative. Bun support is deprecated upstream (versions after 1.3.14 are
+# unsupported and it may be dropped entirely), so it is tried last and only as a
+# best-effort fallback when nothing better is installed.
+SUPPORTED_JS_RUNTIME_EXECUTABLES = ("deno", "node", "bun")
 
 _YTDLP_UPDATE_LOCK = threading.Lock()
 

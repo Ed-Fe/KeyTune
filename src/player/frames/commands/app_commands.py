@@ -101,6 +101,14 @@ class AppCommandsMixin:
         maybe_keepalive_smtc = getattr(self, "_maybe_keepalive_smtc", None)
         if callable(maybe_keepalive_smtc):
             maybe_keepalive_smtc()
+        # Poll for the automatic crossfade start window here, on the slower
+        # progress timer, instead of on the high-frequency crossfade timer.
+        # The crossfade window already includes startup headroom, so 500 ms
+        # granularity is plenty to decide when to begin the transition — and
+        # the 15 ms timer can stay idle until a crossfade is actually running.
+        maybe_start_crossfade = getattr(self, "_maybe_start_automatic_crossfade", None)
+        if callable(maybe_start_crossfade) and getattr(self, "_crossfade_state", None) is None:
+            maybe_start_crossfade()
 
     def on_crossfade_timer(self, _event):
         self._handle_playback_timer_tick()

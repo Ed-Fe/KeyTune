@@ -4,12 +4,31 @@ import time
 
 import wx
 
-from ...constants import SHORT_FADE_MS, SHORT_FADE_STEPS
+from ...constants import CROSSFADE_TIMER_INTERVAL_MS, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ...library import is_audio_playback_media
 from .helpers import is_youtube_music_media
 
 
 class CrossfadeMixin:
+    def _ensure_crossfade_timer_running(self):
+        """Start the high-frequency crossfade timer only while a crossfade is
+        active.
+
+        The 15 ms timer drives the pending->running transition and the smooth
+        volume ramp. Keeping it stopped while idle avoids ~64 needless CPU
+        wakeups per second (Windows timer resolution), which let the machine
+        idle properly and saves battery. End-of-track detection does NOT rely
+        on this timer — it is event-driven via MPV's ``eof-reached`` observer.
+        """
+        timer = getattr(self, "crossfade_timer", None)
+        if timer is not None and not timer.IsRunning():
+            timer.Start(CROSSFADE_TIMER_INTERVAL_MS)
+
+    def _stop_crossfade_timer(self):
+        timer = getattr(self, "crossfade_timer", None)
+        if timer is not None and timer.IsRunning():
+            timer.Stop()
+
     def _crossfade_duration_ms(self):
         crossfade_seconds = int(getattr(self.settings, "crossfade_seconds", 0) or 0)
         return max(0, crossfade_seconds * 1000)
@@ -84,6 +103,7 @@ class CrossfadeMixin:
             "outgoing_ended": False,
             "pending_timeout_seconds": self._crossfade_pending_timeout_seconds(media_path),
         }
+        self._ensure_crossfade_timer_running()
         return True
 
     def _cancel_crossfade_transition(
@@ -118,6 +138,7 @@ class CrossfadeMixin:
             self._stop_player(outgoing_key, unload=True)
 
         self._crossfade_state = None
+        self._stop_crossfade_timer()
         self._apply_current_volume()
 
     def _apply_crossfade_volumes(self):
@@ -157,12 +178,17 @@ class CrossfadeMixin:
             self._stop_player(outgoing_key, unload=True)
 
         self._crossfade_state = None
+        self._stop_crossfade_timer()
         self._apply_current_volume()
 
     def _tick_crossfade(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
         if not crossfade_state:
-            self._maybe_start_automatic_crossfade()
+            # Nothing to drive at high frequency. Idle the timer until the next
+            # crossfade is started (the automatic-start check now runs on the
+            # slower progress timer). This is also the safety net for any path
+            # that clears ``_crossfade_state`` without stopping the timer.
+            self._stop_crossfade_timer()
             return
 
         if crossfade_state.get("phase") == "pending":

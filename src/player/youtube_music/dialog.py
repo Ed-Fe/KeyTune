@@ -327,35 +327,17 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
         instructions = wx.StaticText(
             self,
             label=(
-                "O yt-dlp agora depende de um runtime JavaScript para o suporte atual ao YouTube e ao YouTube Music.\n\n"
-                "Sem isso, o YouTube pode bloquear a resolução das assinaturas e o player não recebe um formato reproduzível.\n\n"
-                "Opções compatíveis:\n"
+                "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um "
+                "complemento do sistema chamado runtime JavaScript.\n\n"
+                "Sem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\n"
+                "Você pode instalar qualquer uma destas opções:\n"
                 "1. Deno 2+ (recomendado pelo projeto yt-dlp)\n"
                 "2. Node.js 20+ (opção mais conhecida)\n"
-                "3. Bun 1.0.31+ (alternativa)\n\n"
+                "3. Bun 1.0.31+ (descontinuado no yt-dlp; use só se não puder instalar Deno ou Node.js)\n\n"
                 f"{install_hint}\n\n"
-                "Depois da instalação, feche e abra o player novamente para que o novo runtime seja encontrado no PATH do sistema."
+                "Depois da instalação, feche e abra o player novamente para que o novo runtime seja "
+                "encontrado no PATH do sistema."
             ),
-        )
-        instructions.SetLabel(
-            "Para abrir mÃºsicas e vÃ­deos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\n"
-            "Sem ele, o YouTube pode bloquear a preparaÃ§Ã£o do Ã¡udio ou do vÃ­deo e a reproduÃ§Ã£o nÃ£o comeÃ§a.\n\n"
-            "VocÃª pode instalar qualquer uma destas opÃ§Ãµes:\n"
-            "1. Deno 2+ (recomendado)\n"
-            "2. Node.js 20+\n"
-            "3. Bun 1.0.31+\n\n"
-            f"{install_hint}\n\n"
-            "Depois da instalaÃ§Ã£o, feche e abra o player novamente."
-        )
-        instructions.SetLabel(
-            "Para abrir musicas e videos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\n"
-            "Sem ele, o YouTube pode bloquear a preparacao do audio ou do video e a reproducao nao comeca.\n\n"
-            "Voce pode instalar qualquer uma destas opcoes:\n"
-            "1. Deno 2+ (recomendado)\n"
-            "2. Node.js 20+\n"
-            "3. Bun 1.0.31+\n\n"
-            f"{install_hint}\n\n"
-            "Depois da instalacao, feche e abra o player novamente."
         )
         instructions.Wrap(720)
         instructions.SetName("Instruções sobre runtime JavaScript do YouTube Music")

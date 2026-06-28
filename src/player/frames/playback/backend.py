@@ -383,6 +383,9 @@ class PlayerBackendMixin:
                 self._player_loaded_media_paths[player_key] = None
 
         self._crossfade_state = None
+        stop_crossfade_timer = getattr(self, "_stop_crossfade_timer", None)
+        if callable(stop_crossfade_timer):
+            stop_crossfade_timer()
         self._set_active_player(active_player_key if active_player_key in self._players else self._player_keys[0])
         self._bind_player_to_window()
         self._apply_equalizer_state()

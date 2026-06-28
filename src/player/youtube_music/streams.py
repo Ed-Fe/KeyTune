@@ -1,3 +1,4 @@
+import os
 import re
 from urllib.parse import urlparse
 from dataclasses import dataclass
@@ -22,7 +23,6 @@ _logger = get_logger(__name__)
 
 
 YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS = 10
-YTDLP_STREAM_OPERATION_TIMEOUT_SECONDS = 15
 _ALLOWED_PLAYBACK_HEADER_NAMES = {
     "accept",
     "accept-language",
@@ -89,7 +89,7 @@ def resolve_stream_playback(media_path):
     if not available_js_runtimes:
         raise RuntimeError(
             "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-            "(Deno 2+ recomendado, Node.js 20+ ou Bun). Sem ele, o yt-dlp não consegue resolver as assinaturas "
+            "(Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas "
             "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
             "Instale um desses runtimes e tente novamente."
         )
@@ -617,8 +617,6 @@ def _remove_temporary_cookie_file(temp_cookie_file_path):
         return
 
     try:
-        import os
-
         os.remove(normalized_cookie_file_path)
     except OSError:
         return
@@ -704,7 +702,7 @@ def _build_stream_resolution_error_message(
 
     if "js_challenge" in normalized_diagnostic_signals:
         guidance_parts.append(
-            "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Node.js 20+ ou Deno 2+ instalado e tente novamente após atualizar os recursos adicionais."
+            "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
         )
 
     if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:

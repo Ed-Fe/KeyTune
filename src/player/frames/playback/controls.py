@@ -18,14 +18,30 @@ class PlaybackControlsMixin:
     def _time_bar_accessible_value(self):
         return self.progress_label.GetLabel()
 
+    def _set_progress_label(self, text):
+        # The progress timer refreshes this label twice per second; skip the
+        # SetLabel call (and the re-layout/repaint it triggers) when the text
+        # has not changed since the last tick.
+        if getattr(self, "_last_progress_label_text", None) == text:
+            return
+        self._last_progress_label_text = text
+        self.progress_label.SetLabel(text)
+
+    def _set_progress_gauge_value(self, value):
+        bounded_value = max(0, min(PROGRESS_GAUGE_RANGE, int(value)))
+        if getattr(self, "_last_progress_gauge_value", None) == bounded_value:
+            return
+        self._last_progress_gauge_value = bounded_value
+        self.progress_gauge.SetValue(bounded_value)
+
     def _update_time_bar(self):
         if not hasattr(self, "progress_label") or not hasattr(self, "progress_gauge"):
             return
 
         media = self.player.get_media() if hasattr(self, "player") else None
         if media is None:
-            self.progress_label.SetLabel("Tempo: nenhuma mídia carregada.")
-            self.progress_gauge.SetValue(0)
+            self._set_progress_label("Tempo: nenhuma mídia carregada.")
+            self._set_progress_gauge_value(0)
             self._refresh_player_visual_hints()
             return
 
@@ -37,11 +53,14 @@ class PlaybackControlsMixin:
         current_label = self._format_time_ms(current_time)
 
         if total_time is None or total_time <= 0:
-            self.progress_label.SetLabel(f"Tempo: {current_label} / duração desconhecida")
+            self._set_progress_label(f"Tempo: {current_label} / duração desconhecida")
             if self.player.is_playing():
+                # Pulse() drives an indeterminate animation, so it must run every
+                # tick; invalidate the cached value so a later real SetValue applies.
+                self._last_progress_gauge_value = None
                 self.progress_gauge.Pulse()
             else:
-                self.progress_gauge.SetValue(0)
+                self._set_progress_gauge_value(0)
             self._refresh_player_visual_hints()
             return
 
@@ -50,8 +69,8 @@ class PlaybackControlsMixin:
         gauge_value = int(round((bounded_current_time / total_time) * PROGRESS_GAUGE_RANGE)) if total_time > 0 else 0
         total_label = self._format_time_ms(total_time)
 
-        self.progress_label.SetLabel(f"Tempo: {current_label} / {total_label} ({percentage}%)")
-        self.progress_gauge.SetValue(max(0, min(PROGRESS_GAUGE_RANGE, gauge_value)))
+        self._set_progress_label(f"Tempo: {current_label} / {total_label} ({percentage}%)")
+        self._set_progress_gauge_value(gauge_value)
         self._refresh_player_visual_hints()
 
     def _seek_relative(self, delta_ms):
