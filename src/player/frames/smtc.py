@@ -8,6 +8,7 @@ Windows "now playing" overlay metadata and status in sync with the player.
 from __future__ import annotations
 
 import os
+import time
 
 import wx
 
@@ -17,8 +18,15 @@ from ..smtc import SmtcService, is_smtc_supported
 class FrameSmtcMixin:
     """Bridge SMTC button events into the frame's playback commands."""
 
+    # Windows recommends keeping the SMTC in sync roughly every 5 seconds
+    # during playback. We piggy-back on the progress timer and also use this
+    # tick to re-assert ownership of a session the system may have dropped
+    # (e.g. after a Bluetooth endpoint change).
+    _SMTC_KEEPALIVE_INTERVAL_SECONDS = 5.0
+
     def _initialize_smtc_service(self) -> None:
         self._smtc_service = None
+        self._smtc_last_keepalive = 0.0
         if not is_smtc_supported():
             return
 
@@ -41,6 +49,57 @@ class FrameSmtcMixin:
             service.stop()
         finally:
             self._smtc_service = None
+
+    def _reassert_smtc_after_reconnect(self) -> None:
+        """Reclaim the SMTC session after an audio device reappears.
+
+        Bluetooth accessories that disconnect and reconnect frequently leave
+        our SMTC session stale, so transport commands stop arriving. Called
+        from the audio-device-list observer (on the UI thread) to re-publish
+        the registration and resync the displayed state.
+        """
+        service = getattr(self, "_smtc_service", None)
+        if service is None:
+            return
+        try:
+            service.reassert()
+        except Exception:
+            pass
+        # Force the next keep-alive tick to refresh metadata/status promptly.
+        self._smtc_last_keepalive = 0.0
+        self._refresh_smtc_state()
+
+    def _maybe_keepalive_smtc(self) -> None:
+        """Periodically re-assert and resync the SMTC during playback.
+
+        Invoked from the progress timer. Re-asserting on a cadence recovers a
+        session the system may have dropped without us noticing, and keeps the
+        Windows "now playing" surface in sync as Microsoft recommends.
+        """
+        service = getattr(self, "_smtc_service", None)
+        if service is None or not service.is_available():
+            return
+
+        player = getattr(self, "player", None)
+        if player is None:
+            return
+        try:
+            if player.get_media() is None:
+                return
+        except Exception:
+            return
+
+        now = time.monotonic()
+        last = float(getattr(self, "_smtc_last_keepalive", 0.0) or 0.0)
+        if now - last < self._SMTC_KEEPALIVE_INTERVAL_SECONDS:
+            return
+        self._smtc_last_keepalive = now
+
+        try:
+            service.reassert()
+        except Exception:
+            pass
+        self._refresh_smtc_state()
 
     # --- Button dispatchers (called from a background thread) ---
     def _smtc_dispatch_play(self) -> None:

@@ -109,6 +109,14 @@ class AudioOutputMixin:
             self._suppress_smtc_pause_until = (
                 time.monotonic() + self._AUDIO_RECONNECT_PAUSE_SUPPRESSION_SECONDS
             )
+            # A reconnecting endpoint often leaves the SMTC session stale, so
+            # transport commands from the device stop arriving. Reclaim it.
+            reassert_smtc = getattr(self, "_reassert_smtc_after_reconnect", None)
+            if callable(reassert_smtc):
+                try:
+                    reassert_smtc()
+                except Exception:
+                    pass
 
         preferred_device_id = self._selected_audio_output_device_id()
         current_device_id = self._current_audio_output_device_id()

@@ -12,6 +12,10 @@ import sys
 import threading
 from typing import Callable, Optional
 
+from ..log import get_logger
+
+
+_logger = get_logger(__name__)
 
 _SMTC_LOAD_LOCK = threading.Lock()
 _SMTC_LOADED = False
@@ -140,36 +144,70 @@ class SmtcService:
         if not _load_smtc_dependencies():
             return False
         with self._lock:
-            if self._available:
-                return True
-            try:
-                player = _MediaPlayer()
-                # Disable automatic command handling so SMTC button events are
-                # delivered to our handler instead of being consumed by the
-                # MediaPlayer's default behavior.
-                try:
-                    player.command_manager.is_enabled = False
-                except Exception:
-                    pass
+            return self._start_locked()
 
-                smtc = player.system_media_transport_controls
+    def _start_locked(self) -> bool:
+        if self._available:
+            return True
+        try:
+            player = _MediaPlayer()
+            # Disable automatic command handling so SMTC button events are
+            # delivered to our handler instead of being consumed by the
+            # MediaPlayer's default behavior.
+            try:
+                player.command_manager.is_enabled = False
+            except Exception:
+                pass
+
+            smtc = player.system_media_transport_controls
+            smtc.is_enabled = True
+            smtc.is_play_enabled = True
+            smtc.is_pause_enabled = True
+            smtc.is_stop_enabled = True
+            smtc.is_next_enabled = True
+            smtc.is_previous_enabled = True
+            smtc.playback_status = _MediaPlaybackStatus.CLOSED
+
+            self._button_token = smtc.add_button_pressed(self._on_button_pressed)
+            self._media_player = player
+            self._smtc = smtc
+            self._updater = smtc.display_updater
+            self._available = True
+            return True
+        except Exception as exc:
+            _logger.warning("Failed to start SMTC service: %s", exc)
+            self._cleanup_locked()
+            return False
+
+    def reassert(self) -> bool:
+        """Reclaim ownership of the system media transport controls.
+
+        Windows can silently drop a stale SMTC session when the audio
+        endpoint changes — most notably when a Bluetooth accessory (Alexa,
+        headphones, speakers) disconnects and reconnects. After that, AVRCP
+        transport commands from the device stop reaching our ``ButtonPressed``
+        handler and the controls appear "dead". Re-enabling the controls
+        reclaims the session; if the underlying object has become unusable we
+        rebuild it from scratch so a fresh registration is published.
+        """
+        if not _load_smtc_dependencies():
+            return False
+        with self._lock:
+            if not self._available or self._smtc is None:
+                return self._start_locked()
+            try:
+                smtc = self._smtc
                 smtc.is_enabled = True
                 smtc.is_play_enabled = True
                 smtc.is_pause_enabled = True
                 smtc.is_stop_enabled = True
                 smtc.is_next_enabled = True
                 smtc.is_previous_enabled = True
-                smtc.playback_status = _MediaPlaybackStatus.CLOSED
-
-                self._button_token = smtc.add_button_pressed(self._on_button_pressed)
-                self._media_player = player
-                self._smtc = smtc
-                self._updater = smtc.display_updater
-                self._available = True
                 return True
-            except Exception:
+            except Exception as exc:
+                _logger.warning("SMTC reassert failed; rebuilding session: %s", exc)
                 self._cleanup_locked()
-                return False
+                return self._start_locked()
 
     def stop(self) -> None:
         with self._lock:
@@ -228,8 +266,8 @@ class SmtcService:
         if callable(callback):
             try:
                 callback()
-            except Exception:
-                pass
+            except Exception as exc:
+                _logger.warning("SMTC button handler raised: %s", exc)
 
     def set_playback_status(self, status: str) -> None:
         if not _SMTC_DEPS_AVAILABLE:

@@ -98,6 +98,9 @@ class AppCommandsMixin:
         maybe_prefetch_related = getattr(self, "_maybe_prefetch_related_youtube_music", None)
         if callable(maybe_prefetch_related):
             maybe_prefetch_related()
+        maybe_keepalive_smtc = getattr(self, "_maybe_keepalive_smtc", None)
+        if callable(maybe_keepalive_smtc):
+            maybe_keepalive_smtc()
 
     def on_crossfade_timer(self, _event):
         self._handle_playback_timer_tick()
