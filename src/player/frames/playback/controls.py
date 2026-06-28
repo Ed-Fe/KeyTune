@@ -18,6 +18,25 @@ class PlaybackControlsMixin:
     def _time_bar_accessible_value(self):
         return self.progress_label.GetLabel()
 
+    def _maybe_refresh_player_visual_hints(self):
+        # The video overlay hints only depend on the active tab's current media
+        # and the video-output setting. Gate the (per-tab, string-building)
+        # refresh on a cheap signature so the 500 ms progress timer does not
+        # rebuild every page's overlay twice per second while nothing relevant
+        # changed. A tab switch refreshes the now-visible page unconditionally
+        # (see TabManagementMixin._activate_tab).
+        active_state = (
+            self._get_active_playlist_state() if hasattr(self, "_get_active_playlist_state") else None
+        )
+        signature = (
+            getattr(active_state, "current_media_path", None),
+            bool(getattr(self.settings, "disable_video_output", False)),
+        )
+        if getattr(self, "_last_visual_hints_signature", "__unset__") == signature:
+            return
+        self._last_visual_hints_signature = signature
+        self._refresh_player_visual_hints()
+
     def _set_progress_label(self, text):
         # The progress timer refreshes this label twice per second; skip the
         # SetLabel call (and the re-layout/repaint it triggers) when the text
@@ -42,7 +61,7 @@ class PlaybackControlsMixin:
         if media is None:
             self._set_progress_label("Tempo: nenhuma mídia carregada.")
             self._set_progress_gauge_value(0)
-            self._refresh_player_visual_hints()
+            self._maybe_refresh_player_visual_hints()
             return
 
         current_time = self.player.get_time()
@@ -61,7 +80,7 @@ class PlaybackControlsMixin:
                 self.progress_gauge.Pulse()
             else:
                 self._set_progress_gauge_value(0)
-            self._refresh_player_visual_hints()
+            self._maybe_refresh_player_visual_hints()
             return
 
         bounded_current_time = max(0, min(current_time, total_time))
@@ -71,7 +90,7 @@ class PlaybackControlsMixin:
 
         self._set_progress_label(f"Tempo: {current_label} / {total_label} ({percentage}%)")
         self._set_progress_gauge_value(gauge_value)
-        self._refresh_player_visual_hints()
+        self._maybe_refresh_player_visual_hints()
 
     def _seek_relative(self, delta_ms):
         if self._crossfade_state:

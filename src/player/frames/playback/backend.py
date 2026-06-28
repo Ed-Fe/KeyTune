@@ -38,6 +38,13 @@ class PlayerBackendMixin:
         self.instance = self._player_instances[self._active_player_key]
         self.player = self._players[self._active_player_key]
         self._crossfade_state = None
+        # Cache of the last window binding applied by `_bind_player_to_window`.
+        # Keyed by (handle, players_generation) so we skip redundant native
+        # re-parenting during EVT_SIZE storms (the handle never changes while
+        # dragging the border) and on repeated binds, while still rebinding
+        # whenever the active tab's handle changes or the players are rebuilt.
+        self._players_generation = 0
+        self._bound_video_binding = None
         self._known_audio_output_device_labels = {}
         self._audio_device_observer_installed = False
         self._last_healthy_playback_snapshot = None
@@ -169,6 +176,7 @@ class PlayerBackendMixin:
             self._players[player_key] = player
             self._player_event_managers[player_key] = event_manager
             self._set_player_loaded_media_path(player_key, None)
+            self._players_generation += 1
 
             if player_key == getattr(self, "_active_player_key", None):
                 self.instance = instance
@@ -336,6 +344,13 @@ class PlayerBackendMixin:
         if not handle:
             return
 
+        binding_key = (handle, getattr(self, "_players_generation", 0))
+        if getattr(self, "_bound_video_binding", None) == binding_key:
+            # Same handle and same player generation: the native surface is
+            # already bound, so skip the redundant set_hwnd/set_xwindow calls
+            # (this is the common case during resize storms and replays).
+            return
+
         for player_key in getattr(self, "_player_keys", ()):
             player = self._managed_player(player_key)
             if player is None:
@@ -349,7 +364,11 @@ class PlayerBackendMixin:
                 elif sys.platform == "darwin":
                     player.set_nsobject(int(handle))
             except Exception:
+                # Leave the cache unset so the next call retries the binding.
+                self._bound_video_binding = None
                 continue
+
+        self._bound_video_binding = binding_key
 
     def _reset_player(self):
         active_player_key = getattr(self, "_active_player_key", self._player_keys[0])
@@ -382,6 +401,7 @@ class PlayerBackendMixin:
                 self._player_event_managers[player_key] = event_manager
                 self._player_loaded_media_paths[player_key] = None
 
+        self._players_generation += 1
         self._crossfade_state = None
         stop_crossfade_timer = getattr(self, "_stop_crossfade_timer", None)
         if callable(stop_crossfade_timer):

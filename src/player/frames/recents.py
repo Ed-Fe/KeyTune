@@ -111,6 +111,11 @@ class FrameRecentsMixin:
         self._recent_menu_actions[clear_item_id] = ("clear", attribute_name, None)
 
     def _refresh_recent_menus(self):
+        # Drop the EVT_MENU handlers bound to the previous (now-deleted) item
+        # ids before rebuilding. Without this, every rebuild leaks a frame-level
+        # binding to a dead IdRef, accumulating handlers over a long session.
+        for previous_id_ref in getattr(self, "_recent_menu_ids", []):
+            self.Unbind(wx.EVT_MENU, id=int(previous_id_ref))
         self._recent_menu_actions = {}
         self._recent_menu_ids = []
         recent_paths_changed = self._prune_recent_items()

@@ -328,6 +328,13 @@ class TabManagementMixin:
         if not state:
             return
 
+        # Switching tabs changes which video page is visible. Refresh its
+        # overlay right away instead of waiting for the gated progress-timer
+        # pass (see PlaybackControlsMixin._maybe_refresh_player_visual_hints).
+        refresh_visual_hints = getattr(self, "_refresh_player_visual_hints", None)
+        if callable(refresh_visual_hints):
+            refresh_visual_hints()
+
         previous_active_playlist_index = self._get_active_playlist_index()
         self.active_playlist_index = index
         self._apply_equalizer_state(state)

@@ -210,6 +210,12 @@ class FrameUIMixin:
         self._refresh_shortcuts_hint_layout()
         event.Skip()
 
+    def _on_video_erase_background(self, _event):
+        # Intentionally do nothing (and do not Skip): the native MPV surface
+        # owns this area, so suppressing the default background erase avoids
+        # flicker during resizes without touching focus or the video output.
+        return
+
     def _show_keyboard_help_dialog(self):
         dialog = wx.Dialog(
             self,
@@ -400,6 +406,10 @@ class FrameUIMixin:
         while self.audio_output_menu.GetMenuItemCount():
             self.audio_output_menu.Delete(self.audio_output_menu.FindItemByPosition(0))
 
+        # Same fix as the recent menus: unbind the handlers tied to the previous
+        # item ids so repeated device-list refreshes don't leak frame bindings.
+        for previous_item_id in getattr(self, "_audio_output_menu_ids", []):
+            self.Unbind(wx.EVT_MENU, id=int(previous_item_id))
         self._audio_output_menu_actions = {}
         self._audio_output_menu_ids = []
 
@@ -599,17 +609,29 @@ class FrameUIMixin:
             on_show_context_menu=self.on_playlist_browser_show_context_menu,
         )
 
-        video_panel = wx.Panel(page, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN)
+        video_panel = wx.Panel(
+            page,
+            style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.NO_FULL_REPAINT_ON_RESIZE,
+        )
         video_panel.SetName("Painel de vídeo")
         video_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_panel.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
         video_panel.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
+        # MPV paints the native child surface, so the wx-side background never
+        # needs erasing. Swallowing EVT_ERASE_BACKGROUND removes the black
+        # flash behind the video while the border is dragged (wxWiki
+        # Flicker-Free Drawing).
+        video_panel.Bind(wx.EVT_ERASE_BACKGROUND, self._on_video_erase_background)
 
-        video_surface = wx.Window(video_panel, style=wx.NO_BORDER | wx.WANTS_CHARS)
+        video_surface = wx.Window(
+            video_panel,
+            style=wx.NO_BORDER | wx.WANTS_CHARS | wx.NO_FULL_REPAINT_ON_RESIZE,
+        )
         video_surface.SetName("Superfície de vídeo")
         video_surface.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_surface.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
         video_surface.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
+        video_surface.Bind(wx.EVT_ERASE_BACKGROUND, self._on_video_erase_background)
 
         video_hint_overlay = wx.StaticText(
             video_panel,
