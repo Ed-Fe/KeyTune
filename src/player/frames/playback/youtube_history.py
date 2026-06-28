@@ -58,6 +58,10 @@ class YouTubeHistoryMixin:
         if not tracking_state or tracking_state.get("attempted"):
             return False
 
+        settings = getattr(self, "settings", None)
+        if settings is not None and not getattr(settings, "youtube_music_save_history", True):
+            return False
+
         media_path = str(tracking_state.get("media_path") or "").strip()
         if not media_path or not self._media_paths_match(media_path, self._player_loaded_media_path()):
             return False

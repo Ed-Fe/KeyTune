@@ -467,10 +467,27 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
 
+        self.youtube_music_save_history_checkbox = wx.CheckBox(
+            page,
+            label="Salvar músicas escutadas no &histórico do YouTube Music",
+        )
+        self._configure_checkbox(
+            self.youtube_music_save_history_checkbox,
+            "Salvar músicas escutadas no histórico do YouTube Music",
+            (
+                "Quando ligada, ao escutar uma faixa do YouTube Music por tempo suficiente o player "
+                "marca essa faixa como assistida no seu histórico do YouTube Music. Desligue para "
+                "tocar sem registrar nada no histórico da sua conta."
+            ),
+        )
+
         self.youtube_music_library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(
             self.youtube_music_autoplay_related_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
+        self.youtube_music_library_box.Add(
+            self.youtube_music_save_history_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
         )
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
@@ -635,6 +652,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
+        self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
         self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
         try:
             logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
@@ -680,6 +698,7 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_library_page_size = int(self.youtube_music_library_page_size_ctrl.GetValue())
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
+        settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]

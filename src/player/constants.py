@@ -32,6 +32,7 @@ DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS = 24
 DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
 DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
 DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED = False
+DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY = True
 YOUTUBE_MUSIC_RADIO_FETCH_LIMIT = 50
 # How long before the end of the last track we start fetching related content
 # (radio) proactively, so the new items and their stream are ready in time for a
