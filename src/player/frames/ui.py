@@ -232,12 +232,13 @@ class FrameUIMixin:
             style=wx.TE_MULTILINE | wx.TE_READONLY,
         )
         instructions.SetName("Ajuda rápida de atalhos")
-        instructions.SetHelpText("Lista os atalhos principais do player e do navegador de itens.")
         instructions.SetInsertionPoint(0)
 
         button_sizer = dialog.CreateStdDialogButtonSizer(wx.OK)
         if button_sizer is not None:
-            ok_button = dialog.FindWindowById(wx.ID_OK)
+            # Descendant-scoped FindWindow (not the global FindWindowById) so we
+            # never rename a wx.ID_OK button in another open dialog.
+            ok_button = dialog.FindWindow(wx.ID_OK)
             if ok_button is not None:
                 ok_button.SetLabel("F&echar")
 
@@ -248,6 +249,10 @@ class FrameUIMixin:
 
         dialog.SetSizerAndFit(root_sizer)
         dialog.SetSize((560, 460))
+        # Only an OK/"Fechar" button exists here, so ESC must map to it for the
+        # keyboard-first close to work like every other dialog in the app.
+        dialog.SetEscapeId(wx.ID_OK)
+        dialog.CentreOnParent()
         try:
             dialog.ShowModal()
         finally:
@@ -470,21 +475,9 @@ class FrameUIMixin:
         self.progress_panel.SetSizer(progress_sizer)
 
         self.progress_panel.SetName("Painel de tempo")
-        self.progress_panel.SetHelpText(
-            "Mostra o andamento da mídia atual com o tempo decorrido e a duração total quando disponível."
-        )
         self.progress_label.SetName("Tempo da mídia")
-        self.progress_label.SetHelpText(
-            "Mostra o tempo decorrido e o tempo total da mídia atual."
-        )
         self.progress_gauge.SetName("Barra de tempo")
-        self.progress_gauge.SetHelpText(
-            "Mostra visualmente o andamento da mídia atual sem alterar o foco do teclado."
-        )
         self.shortcuts_hint_label.SetName("Dicas rápidas de atalhos")
-        self.shortcuts_hint_label.SetHelpText(
-            "Resume os atalhos mais usados para abrir mídia, controlar a reprodução e acessar a ajuda."
-        )
         self.shortcuts_hint_label.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
         attach_named_accessible(
             self.progress_label,
@@ -639,9 +632,6 @@ class FrameUIMixin:
             style=wx.ALIGN_CENTER_HORIZONTAL,
         )
         video_hint_overlay.SetName("Ajuda visual do player")
-        video_hint_overlay.SetHelpText(
-            "Mostra os atalhos principais quando não há mídia carregada na aba atual."
-        )
         video_hint_overlay.SetForegroundColour(wx.Colour(235, 235, 235))
 
         video_panel_sizer = wx.BoxSizer(wx.VERTICAL)

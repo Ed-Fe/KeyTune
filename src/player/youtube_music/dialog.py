@@ -16,6 +16,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         self.SetSize((780, 560))
         self.Layout()
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
     def _configure_file_picker_accessibility(self):
         picker_text_ctrl = None
@@ -26,9 +27,6 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         if isinstance(picker_text_ctrl, wx.TextCtrl):
             picker_text_ctrl.SetName("Caminho do arquivo de conexão")
-            picker_text_ctrl.SetHelpText(
-                "Mostra o caminho do arquivo selecionado para conectar sua conta do YouTube Music."
-            )
 
         picker_button = None
         try:
@@ -39,10 +37,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         if isinstance(picker_button, wx.Control):
             picker_button.SetLabel("&Procurar...")
             picker_button.SetName("Procurar arquivo de conexão")
-            picker_button.SetHelpText(
-                "Abre a janela para escolher um arquivo de conexão exportado do navegador."
-            )
-            picker_button.SetToolTip(picker_button.GetHelpText())
+            picker_button.SetToolTip("Abre a janela para escolher um arquivo de conexão exportado do navegador.")
 
     def _build_ui(self):
         root_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -64,9 +59,6 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             style=wx.TE_MULTILINE,
         )
         self.headers_value.SetName("Dados de conexão do YouTube Music")
-        self.headers_value.SetHelpText(
-            "Cole aqui os dados copiados do navegador apenas se você não for usar um arquivo."
-        )
 
         file_row = wx.BoxSizer(wx.HORIZONTAL)
         file_label = wx.StaticText(self, label="Arquivo de conexão")
@@ -79,9 +71,6 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
                 "Todos os arquivos|*.*"
             ),
             style=wx.FLP_OPEN | wx.FLP_FILE_MUST_EXIST,
-        )
-        self.browser_file_picker.SetHelpText(
-            "Escolha o arquivo exportado do navegador para conectar sua conta do YouTube Music."
         )
         self._configure_file_picker_accessibility()
         file_row.Add(file_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
@@ -108,9 +97,6 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         )
         rotation_warning.Wrap(720)
         rotation_warning.SetName("Aviso sobre validade dos cookies do YouTube Music")
-        rotation_warning.SetHelpText(
-            "Explica por que a conexão expira rápido e como exportar os cookies em uma janela anônima para que durem."
-        )
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         # Use FindWindow (descendant-scoped) instead of FindWindowById, which is
@@ -120,10 +106,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         if ok_button is not None:
             ok_button.SetLabel("&Conectar")
             ok_button.SetName("Conectar ao YouTube Music")
-            ok_button.SetHelpText(
-                "Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music."
-            )
-            ok_button.SetToolTip(ok_button.GetHelpText())
+            ok_button.SetToolTip("Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music.")
         cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:
             cancel_button.SetLabel("&Cancelar")
@@ -168,6 +151,7 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
         self.SetMinSize(self.GetSize())
         self.Layout()
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
     def _build_ui(self, *, default_name):
         root_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -185,9 +169,6 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
         name_label = wx.StaticText(self, label="&Nome da playlist:")
         self.name_value = wx.TextCtrl(self, value=default_name, style=wx.TE_PROCESS_ENTER)
         self.name_value.SetName("Nome da nova playlist do YouTube Music")
-        self.name_value.SetHelpText(
-            "Digite o nome que a nova playlist terá na sua conta do YouTube Music."
-        )
         self.name_value.Bind(wx.EVT_TEXT_ENTER, self._on_confirm)
 
         self.privacy_box = wx.RadioBox(
@@ -199,10 +180,6 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
         )
         self.privacy_box.SetSelection(0)
         self.privacy_box.SetName("Privacidade da nova playlist do YouTube Music")
-        self.privacy_box.SetHelpText(
-            "Escolha quem pode ver a playlist: Privada (só você), Não listada (quem tiver o link) "
-            "ou Pública (qualquer pessoa)."
-        )
 
         privacy_hint = wx.StaticText(
             self,
@@ -220,8 +197,7 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
         if ok_button is not None:
             ok_button.SetLabel("&Criar")
             ok_button.SetName("Criar playlist do YouTube Music")
-            ok_button.SetHelpText("Cria a playlist com o nome e a privacidade informados.")
-            ok_button.SetToolTip(ok_button.GetHelpText())
+            ok_button.SetToolTip("Cria a playlist com o nome e a privacidade informados.")
             ok_button.Bind(wx.EVT_BUTTON, self._on_confirm)
         cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:
@@ -286,6 +262,7 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
         self.SetSize((760, 500))
         self.Layout()
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
     def _set_action(self, action):
         self._selected_action = str(action or "").strip()
@@ -293,7 +270,6 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
 
     def _bind_action_button(self, button, action, *, help_text):
         button.SetName(button.GetLabelText())
-        button.SetHelpText(help_text)
         button.SetToolTip(help_text)
         button.Bind(wx.EVT_BUTTON, lambda _event: self._set_action(action))
 
@@ -341,23 +317,12 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
         )
         instructions.Wrap(720)
         instructions.SetName("Instruções sobre runtime JavaScript do YouTube Music")
-        instructions.SetHelpText(
-            "Explica por que o yt-dlp precisa de um runtime JavaScript e oferece caminhos para instalar ou abrir a documentação."
-        )
-
-        instructions.SetName("Instrucoes sobre runtime JavaScript do YouTube Music")
-        instructions.SetHelpText(
-            "Explica por que a reproducao do YouTube precisa desse componente e oferece caminhos para instalar ou abrir a documentacao."
-        )
 
         note = wx.StaticText(
             self,
             label=(
                 "Se preferir entender o cenário técnico antes de instalar, abra a guia oficial do yt-dlp sobre EJS e desafios JavaScript."
             ),
-        )
-        note.SetLabel(
-            "Se quiser ver a explicacao tecnica completa, abra a documentacao oficial do yt-dlp."
         )
         note.Wrap(720)
 
@@ -380,8 +345,7 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
         )
         close_button = wx.Button(self, wx.ID_CANCEL, "&Fechar")
         close_button.SetName("Fechar")
-        close_button.SetHelpText("Fecha esta janela sem abrir instaladores nem sites.")
-        close_button.SetToolTip(close_button.GetHelpText())
+        close_button.SetToolTip("Fecha esta janela sem abrir instaladores nem sites.")
         secondary_button_row.Add(guide_button, 0, wx.RIGHT, 8)
         secondary_button_row.Add(close_button, 0)
 

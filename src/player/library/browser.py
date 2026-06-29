@@ -73,9 +73,6 @@ class PlaylistBrowserPanel(wx.Panel):
         self.header_label = wx.StaticText(self, label="Playlist")
         self.items_list = VirtualItemsListCtrl(self, self._get_display_label)
         self.items_list.SetName("Lista de itens")
-        self.items_list.SetHelpText(
-            "Mostra a playlist atual ou os itens da pasta atual. Use setas para navegar e digite letras para localizar rapidamente."
-        )
         self.hint_label = wx.StaticText(
             self,
             label="Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player.",

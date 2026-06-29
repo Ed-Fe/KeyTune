@@ -47,7 +47,6 @@ class EqualizerTabPanel(wx.Panel):
         context_box = wx.StaticBoxSizer(wx.StaticBox(self, label="Contexto"), wx.VERTICAL)
         self.target_tab_label = wx.StaticText(self, label="Aba alvo: nenhuma")
         self.target_tab_label.SetName("Aba de mídia alvo do equalizador")
-        self.target_tab_label.SetHelpText("Informa qual aba de mídia receberá os ajustes do equalizador.")
         context_box.Add(self.target_tab_label, 0, wx.ALL | wx.EXPAND, 6)
         root_sizer.Add(context_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
@@ -61,13 +60,11 @@ class EqualizerTabPanel(wx.Panel):
         controls_box = wx.StaticBoxSizer(wx.StaticBox(self, label="Preset ativo"), wx.VERTICAL)
         self.enable_checkbox = wx.CheckBox(self, label="Ativar &equalizador nesta aba")
         self.enable_checkbox.SetName("Ativar equalizador nesta aba")
-        self.enable_checkbox.SetHelpText("Liga ou desliga o equalizador apenas para a aba de mídia ativa.")
         self.enable_checkbox.SetToolTip("Liga ou desliga o equalizador apenas para a aba de mídia ativa.")
 
         preset_label = wx.StaticText(self, label="Preset:")
         self.preset_choice = wx.Choice(self)
         self.preset_choice.SetName("Preset do equalizador")
-        self.preset_choice.SetHelpText("Escolha o preset que será usado na aba de mídia ativa.")
         self.preset_choice.SetToolTip("Escolha o preset que será usado na aba de mídia ativa.")
 
         preset_description_label = wx.StaticText(self, label="Descrição do preset:")
@@ -77,9 +74,6 @@ class EqualizerTabPanel(wx.Panel):
         )
         self.preset_description_ctrl.SetMinSize((-1, 72))
         self.preset_description_ctrl.SetName("Descrição do preset atual")
-        self.preset_description_ctrl.SetHelpText(
-            "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
-        )
         self.preset_description_ctrl.SetToolTip(
             "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
         )
@@ -146,7 +140,6 @@ class EqualizerTabPanel(wx.Panel):
         values_grid.Add(wx.StaticText(self, label="Pré-amplificação:"), 0, wx.ALIGN_CENTER_VERTICAL)
         self.preamp_value_label = wx.StaticText(self, label="0.0 dB")
         self.preamp_value_label.SetName("Pré-amplificação atual do preset")
-        self.preamp_value_label.SetHelpText("Mostra o ganho geral do preset selecionado antes das bandas.")
         values_grid.Add(self.preamp_value_label, 0, wx.ALIGN_CENTER_VERTICAL)
         values_box.Add(values_grid, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
@@ -172,7 +165,6 @@ class EqualizerTabPanel(wx.Panel):
 
     def _configure_action_button(self, button, *, name, description):
         button.SetName(name)
-        button.SetHelpText(description)
         button.SetToolTip(description)
 
     def _update_action_buttons(self, selected_preset):
@@ -262,7 +254,6 @@ class EqualizerTabPanel(wx.Panel):
             self.preset_description_ctrl.ChangeValue(preset_description)
             self.preset_description_ctrl.SetInsertionPoint(0)
             preset_choice_help_text = self._preset_choice_help_text(selected_preset)
-            self.preset_choice.SetHelpText(preset_choice_help_text)
             self.preset_choice.SetToolTip(preset_choice_help_text)
             self.preamp_value_label.SetLabel(
                 f"{selected_preset.preamp_db:+.1f} dB" if selected_preset else "0.0 dB"

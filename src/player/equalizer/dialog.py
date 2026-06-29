@@ -1,6 +1,5 @@
 import wx
 
-from ..accessibility import attach_named_accessible
 from .models import (
     DEFAULT_EQUALIZER_PREAMP_DB,
     EQUALIZER_GAIN_MAX_DB,
@@ -46,7 +45,6 @@ class EqualizerPresetDialog(wx.Dialog):
         name_label = wx.StaticText(panel, label="Nome do preset:")
         self.name_ctrl = wx.TextCtrl(panel)
         self.name_ctrl.SetName("Nome do preset")
-        self.name_ctrl.SetHelpText("Digite um nome único e fácil de reconhecer para o preset.")
         self.name_ctrl.SetToolTip("Digite um nome único e fácil de reconhecer para o preset.")
         name_help = wx.StaticText(
             panel,
@@ -97,10 +95,8 @@ class EqualizerPresetDialog(wx.Dialog):
         self.save_button = wx.Button(panel, wx.ID_OK, "&Salvar")
         self.cancel_button = wx.Button(panel, wx.ID_CANCEL, "&Cancelar")
         self.save_button.SetName("Salvar preset do equalizador")
-        self.save_button.SetHelpText("Salva o preset com o nome e os ajustes informados.")
         self.save_button.SetToolTip("Salva o preset com o nome e os ajustes informados.")
         self.cancel_button.SetName("Cancelar edição do preset do equalizador")
-        self.cancel_button.SetHelpText("Fecha a janela sem salvar as alterações do preset.")
         self.cancel_button.SetToolTip("Fecha a janela sem salvar as alterações do preset.")
         self.save_button.SetDefault()
         button_sizer.AddButton(self.save_button)
@@ -115,6 +111,7 @@ class EqualizerPresetDialog(wx.Dialog):
         self.SetSizerAndFit(frame_sizer)
         self.SetMinSize((640, 680))
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
         self._populate_controls(
             preset_name=preset_name,
@@ -152,18 +149,15 @@ class EqualizerPresetDialog(wx.Dialog):
         )
         control.SetDigits(1)
         control.SetName(f"{name} (dB)")
-        control.SetHelpText(help_text)
         control.SetToolTip(help_text)
-        attach_named_accessible(
-            control,
-            name=f"{name} em decibéis",
-            description=help_text,
-            value_provider=lambda current_control=control: f"{float(current_control.GetValue()):+.1f} dB",
-        )
+        # Unlike the Preferences wx.SpinCtrl, wx.SpinCtrlDouble wraps its edit
+        # field and spin buttons in an extra ROLE_SYSTEM_CLIENT window. wx-dev
+        # confirms NVDA/JAWS can read the value through that wrapper but never
+        # the label, and that this cannot be fixed via wx.Accessible/SetName
+        # (https://groups.google.com/g/wx-dev/c/nEaCaK6vHZU). So we bypass the
+        # accessibility tree entirely and announce the labeled value directly
+        # through the screen reader on focus and on change.
         self._gain_control_names[control.GetId()] = name
-        # NVDA/JAWS read the native value of wx.SpinCtrlDouble and ignore the
-        # wx.Accessible Name on this composite control, so we explicitly
-        # announce the labeled value on focus and on change.
         control.Bind(wx.EVT_SET_FOCUS, self.on_gain_control_focus)
         control.Bind(wx.EVT_SPINCTRLDOUBLE, self.on_gain_control_changed)
         return control
@@ -175,7 +169,12 @@ class EqualizerPresetDialog(wx.Dialog):
         help_label = wx.StaticText(parent, label=help_text)
         help_label.Wrap(250)
 
-        box_sizer = wx.StaticBoxSizer(wx.StaticBox(parent, label=label_text), wx.VERTICAL)
+        # Plain vertical sizer instead of a per-control StaticBox: each gain
+        # control already lives inside a section box ("Pré-amplificação" /
+        # "Bandas do equalizador"), so an extra box per control just repeated the
+        # caption as a third copy of the label. The visible label stays; the
+        # accessible name is guaranteed by the focus/change announcement above.
+        box_sizer = wx.BoxSizer(wx.VERTICAL)
         box_sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         box_sizer.Add(control, 0, wx.ALL | wx.EXPAND, 6)
         box_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
@@ -245,6 +244,8 @@ class EqualizerPresetDialog(wx.Dialog):
     def on_gain_control_focus(self, event):
         control = event.GetEventObject()
         if isinstance(control, wx.SpinCtrlDouble):
+            # CallAfter so our announcement is spoken after (and replaces) the
+            # screen reader's own bare "edit selected 0.0" on focus.
             wx.CallAfter(self._announce_from_parent, self._gain_control_message(control))
         event.Skip()
 

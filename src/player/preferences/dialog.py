@@ -46,9 +46,6 @@ class PreferencesDialog(wx.Dialog):
 
         self.notebook = wx.Notebook(panel)
         self.notebook.SetName("Categorias de preferências")
-        self.notebook.SetHelpText(
-            "Use as guias Geral, Reprodução, Acessibilidade e Recursos adicionais para navegar pelas configurações."
-        )
 
         self._build_general_tab()
         self._build_playback_tab()
@@ -73,6 +70,7 @@ class PreferencesDialog(wx.Dialog):
         self.SetSizerAndFit(frame_sizer)
         self.SetMinSize((620, 480))
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
         self._populate_controls(settings)
         # ESC handling is provided by SetEscapeId(wx.ID_CANCEL) above;
@@ -140,14 +138,8 @@ class PreferencesDialog(wx.Dialog):
             assoc_help.Wrap(500)
             self._register_assoc_button = wx.Button(page, label="&Registrar como player padrão")
             self._register_assoc_button.SetName("Registrar como player padrão")
-            self._register_assoc_button.SetHelpText(
-                "Adiciona o player à lista Abrir Com do Windows para formatos de mídia e playlists."
-            )
             self._unregister_assoc_button = wx.Button(page, label="&Desregistrar associações")
             self._unregister_assoc_button.SetName("Desregistrar associações")
-            self._unregister_assoc_button.SetHelpText(
-                "Remove o player da lista Abrir Com do Windows."
-            )
 
             self._register_assoc_button.Bind(wx.EVT_BUTTON, self._on_register_associations)
             self._unregister_assoc_button.Bind(wx.EVT_BUTTON, self._on_unregister_associations)
@@ -185,9 +177,6 @@ class PreferencesDialog(wx.Dialog):
 
         open_log_folder_button = wx.Button(page, label="Abrir pasta de &logs")
         open_log_folder_button.SetName("Abrir pasta de logs")
-        open_log_folder_button.SetHelpText(
-            "Abre no explorador de arquivos a pasta onde os arquivos de log são salvos."
-        )
         open_log_folder_button.Bind(wx.EVT_BUTTON, self._on_open_log_folder)
 
         rotation_note = wx.StaticText(
@@ -514,6 +503,10 @@ class PreferencesDialog(wx.Dialog):
 
     def _on_toggle_logging_enabled(self, _event):
         self._refresh_logging_controls()
+        if self.logging_enabled_checkbox.GetValue():
+            self._announce_from_parent("Registro de logs ativado. Nível de detalhe disponível.")
+        else:
+            self._announce_from_parent("Registro de logs desativado. Nível de detalhe indisponível.")
 
     def _refresh_logging_controls(self):
         enabled = self.logging_enabled_checkbox.GetValue()
@@ -532,12 +525,10 @@ class PreferencesDialog(wx.Dialog):
     def _configure_checkbox(self, checkbox, name, help_text):
         checkbox.SetName(name)
         checkbox.SetToolTip(help_text)
-        checkbox.SetHelpText(help_text)
 
     def _configure_control(self, control, name, help_text):
         control.SetName(name)
         control.SetToolTip(help_text)
-        control.SetHelpText(help_text)
 
     def _build_spin_control_group(self, parent, label_text, help_text, min_value, max_value):
         label = wx.StaticText(parent, label=f"{label_text}:")
@@ -552,7 +543,13 @@ class PreferencesDialog(wx.Dialog):
         return self._build_labeled_control_group(parent, label_text, label, control, help_text), control
 
     def _build_labeled_control_group(self, parent, label_text, visible_label, control, help_text):
-        box_sizer = wx.StaticBoxSizer(wx.StaticBox(parent, label=label_text), wx.VERTICAL)
+        # A plain vertical sizer, not a per-control StaticBox: each control here
+        # already lives inside a section StaticBox (e.g. "Controles de
+        # reprodução"), so wrapping every single field in its own box repeated
+        # the same caption as a third copy of the label (box caption == visible
+        # label == accessible name) and nested groupings the screen reader
+        # announces on entry. The visible label and accessible name remain.
+        box_sizer = wx.BoxSizer(wx.VERTICAL)
         help_label = wx.StaticText(parent, label=help_text)
         visible_label.Wrap(500)
         help_label.Wrap(500)
@@ -562,11 +559,27 @@ class PreferencesDialog(wx.Dialog):
         box_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         return box_sizer
 
+    def _announce_from_parent(self, message):
+        if not message:
+            return
+        parent = self.GetParent()
+        announce = getattr(parent, "_announce", None)
+        if callable(announce):
+            announce(message)
+
     def _on_toggle_youtube_music_manage_dependencies(self, _event):
         self._refresh_additional_resources_controls()
+        if self.youtube_music_manage_dependencies_checkbox.GetValue():
+            self._announce_from_parent("Integração com YouTube Music ativada. Opções adicionais disponíveis.")
+        else:
+            self._announce_from_parent("Integração com YouTube Music desativada. Opções adicionais ocultadas.")
 
     def _on_toggle_youtube_music_auto_update_dependencies(self, _event):
         self._refresh_additional_resources_controls()
+        if self.youtube_music_auto_update_dependencies_checkbox.GetValue():
+            self._announce_from_parent("Atualização automática ativada. Intervalo de atualização disponível.")
+        else:
+            self._announce_from_parent("Atualização automática desativada. Intervalo de atualização indisponível.")
 
     def _refresh_additional_resources_controls(self):
         managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()

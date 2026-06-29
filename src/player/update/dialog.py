@@ -34,11 +34,9 @@ class UpdateAvailableDialog(wx.Dialog):
         )
         details_label.Wrap(560)
         details_label.SetName("Resumo da atualização")
-        details_label.SetHelpText("Mostra a versão encontrada, o nome do arquivo e o tamanho do download.")
 
         notes_label = wx.StaticText(panel, label="O que mudou nesta versão:")
         notes_label.SetName("Título das mudanças")
-        notes_label.SetHelpText("Indica que a área abaixo mostra as notas da release ou o changelog desta versão.")
 
         self.notes_ctrl = wx.TextCtrl(
             panel,
@@ -47,7 +45,6 @@ class UpdateAvailableDialog(wx.Dialog):
         )
         self.notes_ctrl.SetMinSize((560, 240))
         self.notes_ctrl.SetName("Mudanças da atualização")
-        self.notes_ctrl.SetHelpText("Mostra as notas da release publicadas no GitHub antes do download.")
 
         root_sizer.Add(details_label, 0, wx.ALL | wx.EXPAND, 10)
         root_sizer.Add(notes_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
@@ -57,7 +54,6 @@ class UpdateAvailableDialog(wx.Dialog):
             warning_label = wx.StaticText(panel, label=install_message)
             warning_label.Wrap(560)
             warning_label.SetName("Aviso sobre instalação")
-            warning_label.SetHelpText("Explica qualquer limitação para instalar a atualização automaticamente.")
             root_sizer.Add(warning_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
@@ -76,6 +72,7 @@ class UpdateAvailableDialog(wx.Dialog):
         self.SetSizerAndFit(frame_sizer)
         self.SetMinSize((620, 460))
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
     def _format_release_notes(self, release_notes: str) -> str:
         normalized_notes = str(release_notes or "").strip()
@@ -110,16 +107,13 @@ class UpdateDownloadDialog(wx.Dialog):
         )
         self.status_label.Wrap(420)
         self.status_label.SetName("Status do download")
-        self.status_label.SetHelpText("Informa o andamento atual do download da atualização.")
 
         self.progress_gauge = wx.Gauge(panel, range=1000, style=wx.GA_HORIZONTAL | wx.GA_SMOOTH)
         self.progress_gauge.SetName("Progresso do download")
-        self.progress_gauge.SetHelpText("Mostra o progresso do download da atualização.")
 
         self.detail_label = wx.StaticText(panel, label="Aguardando resposta do servidor...")
         self.detail_label.Wrap(420)
         self.detail_label.SetName("Detalhes do download")
-        self.detail_label.SetHelpText("Mostra os bytes já baixados e o tamanho total quando disponível.")
 
         root_sizer.Add(self.status_label, 0, wx.ALL | wx.EXPAND, 10)
         root_sizer.Add(self.progress_gauge, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -140,6 +134,7 @@ class UpdateDownloadDialog(wx.Dialog):
         # ESC must trigger a graceful cancel (waiting for the worker thread)
         # instead of letting wx end the modal directly via the Cancel button.
         self.SetEscapeId(wx.ID_NONE)
+        self.CentreOnParent()
 
         self.cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel)
         self.Bind(wx.EVT_CLOSE, self.on_close)

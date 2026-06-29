@@ -78,13 +78,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		status_box = wx.StaticBoxSizer(wx.StaticBox(self, label="Conta e biblioteca"), wx.VERTICAL)
 		self.connection_label = wx.StaticText(self, label="Conta: não conectada")
 		self.connection_label.SetName("Status da conta do YouTube Music")
-		self.connection_label.SetHelpText("Informa se existe uma conta do YouTube Music conectada nesta instalação.")
 		self.library_summary_label = wx.StaticText(self, label="Biblioteca: nenhuma playlist carregada.")
 		self.library_summary_label.SetName("Resumo da biblioteca do YouTube Music")
-		self.library_summary_label.SetHelpText("Resume quantas playlists ou mixes estão disponíveis na aba do YouTube Music.")
 		self.status_message_label = wx.StaticText(self, label="")
 		self.status_message_label.SetName("Mensagem da central do YouTube Music")
-		self.status_message_label.SetHelpText("Mostra o resultado da última atualização, busca ou ação do YouTube Music.")
 		self.status_message_label.Wrap(620)
 
 		attach_named_accessible(
@@ -133,7 +130,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			),
 		):
 			button.SetName(name)
-			button.SetHelpText(description)
 			button.SetToolTip(description)
 			button_sizer.Add(button, 0, wx.RIGHT, 8)
 
@@ -146,9 +142,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			style=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE,
 		)
 		self.search_pane.SetName("Seção de busca do YouTube Music e do YouTube")
-		self.search_pane.SetHelpText(
-			"Expanda para pesquisar músicas, vídeos e playlists do YouTube Music ou vídeos do YouTube."
-		)
 		self.search_pane.Collapse(True)
 		self.search_pane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self._on_collapsible_pane_changed)
 		search_pane_window = self.search_pane.GetPane()
@@ -166,9 +159,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 		search_label = wx.StaticText(search_pane_window, label="Buscar por:")
 		self.search_query_ctrl = wx.TextCtrl(search_pane_window, style=wx.TE_PROCESS_ENTER)
 		self.search_query_ctrl.SetName("Busca do YouTube Music e do YouTube")
-		self.search_query_ctrl.SetHelpText(
-			"Digite o que deseja procurar no YouTube Music ou no YouTube e pressione Enter para pesquisar."
-		)
 
 		search_scope_row = wx.BoxSizer(wx.HORIZONTAL)
 		search_scope_label = wx.StaticText(search_pane_window, label="Escopo:")
@@ -178,15 +168,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 		)
 		self.search_scope_choice.SetSelection(0)
 		self.search_scope_choice.SetName("Escopo da busca do YouTube")
-		self.search_scope_choice.SetHelpText(
-			"Escolhe se a busca será feita no catálogo do YouTube Music ou em vídeos do YouTube."
-		)
 		self.search_button = wx.Button(search_pane_window, label="&Pesquisar")
 		self.search_button.SetName("Pesquisar no YouTube Music ou no YouTube")
-		self.search_button.SetHelpText(
-			"Executa a busca usando o texto informado e o escopo selecionado."
-		)
-		self.search_button.SetToolTip(self.search_button.GetHelpText())
+		self.search_button.SetToolTip("Executa a busca usando o texto informado e o escopo selecionado.")
 		search_scope_row.Add(search_scope_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
 		search_scope_row.Add(self.search_scope_choice, 1, wx.RIGHT, 8)
 		search_scope_row.Add(self.search_button, 0)
@@ -220,7 +204,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			),
 		):
 			button.SetName(name)
-			button.SetHelpText(description)
 			button.SetToolTip(description)
 		browse_row.Add(browse_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
 		browse_row.Add(self.charts_button, 0, wx.RIGHT, 8)
@@ -230,7 +213,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		self.search_results_label = wx.StaticText(search_pane_window, label="Resultados da busca: nenhum ainda.")
 		self.search_results_label.SetName("Resumo da busca do YouTube")
-		self.search_results_label.SetHelpText("Mostra quantos resultados a busca atual retornou.")
 		attach_named_accessible(
 			self.search_results_label,
 			name="Resumo da busca do YouTube",
@@ -240,9 +222,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		self.search_results_list = VirtualItemsListCtrl(search_pane_window, self._get_search_result_label)
 		self.search_results_list.SetName("Resultados da busca do YouTube")
-		self.search_results_list.SetHelpText(
-			"Mostra os resultados da última busca. Use setas para navegar, Enter para adicionar a seleção à playlist atual e Shift+F10 para abrir o menu de ações."
-		)
 		self.search_results_list.SetMinSize((-1, 180))
 
 		search_actions = wx.BoxSizer(wx.HORIZONTAL)
@@ -262,7 +241,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			),
 		):
 			button.SetName(name)
-			button.SetHelpText(description)
 			button.SetToolTip(description)
 			search_actions.Add(button, 0, wx.RIGHT, 8)
 
@@ -291,9 +269,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 			style=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE,
 		)
 		self.manual_pane.SetName("Seção para abrir playlist ou vídeo por link")
-		self.manual_pane.SetHelpText(
-			"Expanda para colar um link de playlist, mix ou vídeo do YouTube Music/YouTube."
-		)
 		self.manual_pane.Collapse(True)
 		self.manual_pane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self._on_collapsible_pane_changed)
 		manual_pane_window = self.manual_pane.GetPane()
@@ -305,15 +280,9 @@ class YouTubeMusicTabPanel(wx.Panel):
 		manual_intro.Wrap(620)
 		self.manual_source_ctrl = wx.TextCtrl(manual_pane_window, style=wx.TE_PROCESS_ENTER)
 		self.manual_source_ctrl.SetName("Link da playlist, mix ou vídeo do YouTube Music")
-		self.manual_source_ctrl.SetHelpText(
-			"Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube que deseja abrir."
-		)
 		self.manual_open_button = wx.Button(manual_pane_window, label="&Abrir link")
 		self.manual_open_button.SetName("Abrir playlist ou vídeo do YouTube Music")
-		self.manual_open_button.SetHelpText(
-			"Abre a playlist, mix ou vídeo informado no campo acima."
-		)
-		self.manual_open_button.SetToolTip(self.manual_open_button.GetHelpText())
+		self.manual_open_button.SetToolTip("Abre a playlist, mix ou vídeo informado no campo acima.")
 
 		manual_box.Add(manual_intro, 0, wx.ALL | wx.EXPAND, 6)
 		manual_box.Add(self.manual_source_ctrl, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
@@ -324,42 +293,22 @@ class YouTubeMusicTabPanel(wx.Panel):
 		filter_label = wx.StaticText(self, label="Filtro:")
 		self.filter_ctrl = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
 		self.filter_ctrl.SetName("Filtro da biblioteca do YouTube Music")
-		self.filter_ctrl.SetHelpText(
-			"Filtra a lista por título, tipo da lista ou quantidade de faixas, sem abrir mão do teclado."
-		)
 		self.results_label = wx.StaticText(self, label="Mostrando 0 de 0 resultados.")
 		self.results_label.SetName("Contagem de resultados do YouTube Music")
-		self.results_label.SetHelpText("Informa quantas playlists ou mixes aparecem após o filtro aplicado.")
 		self.playlists_list = wx.ListBox(self)
 		self.playlists_list.SetName("Lista de playlists do YouTube Music")
-		self.playlists_list.SetHelpText(
-			"Mostra as playlists e mixes disponíveis. Use setas para navegar, Enter para abrir e Tab para sair da aba."
-			" Pressione Page Down ou desça até o último item para carregar mais playlists."
-		)
 		self.open_selected_button = wx.Button(self, label="A&brir seleção")
 		self.open_selected_button.SetName("Abrir playlist selecionada do YouTube Music")
-		self.open_selected_button.SetHelpText(
-			"Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music."
-		)
-		self.open_selected_button.SetToolTip(self.open_selected_button.GetHelpText())
+		self.open_selected_button.SetToolTip("Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music.")
 		self.new_playlist_button = wx.Button(self, label="&Nova playlist...")
 		self.new_playlist_button.SetName("Criar nova playlist no YouTube Music")
-		self.new_playlist_button.SetHelpText(
-			"Cria uma nova playlist (privada) na conta conectada do YouTube Music."
-		)
-		self.new_playlist_button.SetToolTip(self.new_playlist_button.GetHelpText())
+		self.new_playlist_button.SetToolTip("Cria uma nova playlist (privada) na conta conectada do YouTube Music.")
 		self.delete_playlist_button = wx.Button(self, label="E&xcluir playlist...")
 		self.delete_playlist_button.SetName("Excluir playlist do YouTube Music")
-		self.delete_playlist_button.SetHelpText(
-			"Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
-		)
-		self.delete_playlist_button.SetToolTip(self.delete_playlist_button.GetHelpText())
+		self.delete_playlist_button.SetToolTip("Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação.")
 		self.load_more_button = wx.Button(self, label="Carregar &mais playlists")
 		self.load_more_button.SetName("Carregar mais playlists do YouTube Music")
-		self.load_more_button.SetHelpText(
-			"Busca o próximo lote de playlists da biblioteca quando ainda existem mais a carregar."
-		)
-		self.load_more_button.SetToolTip(self.load_more_button.GetHelpText())
+		self.load_more_button.SetToolTip("Busca o próximo lote de playlists da biblioteca quando ainda existem mais a carregar.")
 		self.load_more_button.Disable()
 		help_label = wx.StaticText(
 			self,

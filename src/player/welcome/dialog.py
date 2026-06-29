@@ -39,17 +39,14 @@ class WelcomeDialog(wx.Dialog):
         nav_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.skip_button = wx.Button(panel, label="Pu&lar tutorial")
         self.skip_button.SetName("Pular tutorial")
-        self.skip_button.SetHelpText("Fecha a apresentação imediatamente, sem ver as páginas restantes.")
         self.skip_button.Bind(wx.EVT_BUTTON, self._on_skip)
 
         self.back_button = wx.Button(panel, label="&Voltar")
         self.back_button.SetName("Voltar")
-        self.back_button.SetHelpText("Volta para a página anterior do tutorial.")
         self.back_button.Bind(wx.EVT_BUTTON, self._on_back)
 
         self.next_button = wx.Button(panel, label="&Avançar")
         self.next_button.SetName("Avançar")
-        self.next_button.SetHelpText("Avança para a próxima página do tutorial.")
         self.next_button.Bind(wx.EVT_BUTTON, self._on_next)
         self.next_button.SetDefault()
 
@@ -66,6 +63,7 @@ class WelcomeDialog(wx.Dialog):
         self.SetSizerAndFit(frame_sizer)
         self.SetMinSize((640, 520))
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
         self._current_page_index = 0
         self._show_page(0)
@@ -83,7 +81,6 @@ class WelcomeDialog(wx.Dialog):
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP,
         )
         text_ctrl.SetName(name)
-        text_ctrl.SetHelpText(help_text)
         text_ctrl.SetInsertionPoint(0)
         page_sizer.Add(text_ctrl, 1, wx.ALL | wx.EXPAND, 10)
 
@@ -154,12 +151,10 @@ class WelcomeDialog(wx.Dialog):
         button_row = wx.BoxSizer(wx.HORIZONTAL)
         shortcuts_button = wx.Button(page, label="Ver ajuda rápida de atalhos (&F1)")
         shortcuts_button.SetName("Ver ajuda rápida de atalhos")
-        shortcuts_button.SetHelpText("Abre a mesma janela de atalhos mostrada ao pressionar F1.")
         shortcuts_button.Bind(wx.EVT_BUTTON, self._on_show_shortcuts_clicked)
 
         manual_button = wx.Button(page, label="Abrir &manual do usuário")
         manual_button.SetName("Abrir manual do usuário")
-        manual_button.SetHelpText("Abre o manual completo do KeyTune no navegador padrão.")
         manual_button.Bind(wx.EVT_BUTTON, self._on_open_manual_clicked)
 
         button_row.Add(shortcuts_button, 0, wx.RIGHT, 8)

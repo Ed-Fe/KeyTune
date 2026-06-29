@@ -51,27 +51,19 @@ class OpenSourceDialog(wx.Dialog):
         )
         description.Wrap(420)
 
-        source_label = wx.StaticText(self, label="Arquivo, pasta ou link")
+        source_label = wx.StaticText(self, label="Arquivo, pasta ou &link")
         self.source_text = wx.TextCtrl(self, value=str(initial_source or ""), style=wx.TE_PROCESS_ENTER)
-        self.source_text.SetName("Caminho ou link")
-        self.source_text.SetHelpText(
-            "Informe um arquivo existente, uma playlist .m3u/.m3u8, uma pasta local ou um link de mídia."
-        )
+        self.source_text.SetName("Arquivo, pasta ou link")
 
         browse_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.browse_file_button = wx.Button(self, label="Ar&quivo...")
         self.browse_folder_button = wx.Button(self, label="&Pasta...")
-        self.browse_file_button.SetHelpText("Escolhe um arquivo de mídia ou playlist.")
-        self.browse_folder_button.SetHelpText("Escolhe uma pasta local.")
         browse_sizer.Add(self.browse_file_button, 0, wx.RIGHT, 8)
         browse_sizer.Add(self.browse_folder_button, 0)
 
-        mode_label = wx.StaticText(self, label="Abrir como")
+        mode_label = wx.StaticText(self, label="Abrir co&mo")
         self.mode_choice = wx.Choice(self, choices=[label for label, _value in self._mode_options])
-        self.mode_choice.SetName("Modo de abertura")
-        self.mode_choice.SetHelpText(
-            "Escolhe se a origem será aberta como playlist ou como navegador de pasta."
-        )
+        self.mode_choice.SetName("Abrir como")
 
         mode_index = 0
         for index, (_label, value) in enumerate(self._mode_options):
@@ -106,6 +98,7 @@ class OpenSourceDialog(wx.Dialog):
         self.SetSizerAndFit(root_sizer)
         self.SetMinSize((500, 260))
         self.SetEscapeId(wx.ID_CANCEL)
+        self.CentreOnParent()
 
         self._last_announced_source_kind = None
 
