@@ -130,4 +130,4 @@ jobs:
           files: |
             artifacts/KeyTune-Setup.exe
             artifacts/KeyTune-Setup.exe.sha256
-          body_path: .github/release-notes.md
+          body_path: CHANGELOG.md
