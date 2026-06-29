@@ -43,6 +43,7 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - The update dialog shows the GitHub release body as the changelog — keep `CHANGELOG.md` and the published release notes consistent (the app doesn't read the file).
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Full feature list and shortcut inventory: `README.md`, `docs/manual.md`.
+- Run `python scripts/generate_credits.py` after editing `requirements.txt` (or before a release) to keep `docs/credits.md` — shown by the About dialog — accurate; it's also regenerated automatically during Windows release builds.
 
 ## Detailed rules (`.github/`)
 

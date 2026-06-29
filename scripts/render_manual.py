@@ -180,7 +180,7 @@ def build_toc_html(headings: list[tuple[int, str, str]]) -> str:
     """.format(items="\n        ".join(toc_items))
 
 
-def render_markdown(source_text: str, title: str) -> str:
+def render_markdown(source_text: str, title: str, source_url: str = "https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md") -> str:
     headings = collect_headings(source_text)
     body = markdown.markdown(
         source_text,
@@ -212,7 +212,7 @@ def render_markdown(source_text: str, title: str) -> str:
       <h1>{escape(title)}</h1>
       {body}
       <footer>
-        Gerado em {generated_date} &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver fonte no GitHub</a>
+        Gerado em {generated_date} &mdash; <a href="{source_url}">ver fonte no GitHub</a>
       </footer>
     </section>
   </main>

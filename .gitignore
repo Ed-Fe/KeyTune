@@ -17,3 +17,5 @@ dist/
 *.spec
 .copilot_*
 test_final.py
+docs/credits.html
+docs/manual.html

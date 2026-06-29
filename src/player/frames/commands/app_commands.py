@@ -1,10 +1,18 @@
 import wx
 
+from ...about import AboutDialog
 from ...log import setup_logging
 from ...preferences import PreferencesDialog
 
 
 class AppCommandsMixin:
+    def on_open_about(self, _event):
+        dialog = AboutDialog(self, on_open_credits=self._open_credits_document)
+        try:
+            dialog.ShowModal()
+        finally:
+            dialog.Destroy()
+
     def on_open_preferences(self, _event):
         previous_settings = self.settings
         dialog = PreferencesDialog(

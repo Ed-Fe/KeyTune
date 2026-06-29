@@ -85,6 +85,18 @@ if ($LASTEXITCODE -ne 0) {
     throw "Falha ao renderizar o manual em HTML."
 }
 
+Write-Step "Gerando créditos de bibliotecas e contribuidores"
+& $PythonExe scripts\generate_credits.py
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao gerar docs\credits.md."
+}
+
+Write-Step "Renderizando créditos em HTML"
+& $PythonExe scripts\render_manual.py docs\credits.md dist\KeyTune\docs\credits.html
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao renderizar os créditos em HTML."
+}
+
 Write-Step "Copiando runtime do MPV"
 $MpvRuntimeDir = "build\mpv-runtime"
 $targetRoot = "dist\KeyTune\mpv"

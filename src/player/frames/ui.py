@@ -61,6 +61,57 @@ class FrameUIMixin:
         self._set_status_message(f"Abrindo manual: {manual_path.name}")
         return True
 
+    def _credits_candidate_paths(self):
+        candidates = []
+
+        if getattr(sys, "frozen", False):
+            executable_dir = Path(sys.executable).resolve().parent
+            candidates.append(executable_dir / "docs" / "credits.html")
+
+        repo_root = Path(__file__).resolve().parents[3]
+        candidates.append(repo_root / "docs" / "credits.html")
+        candidates.append(Path.cwd() / "docs" / "credits.html")
+        candidates.append(repo_root / "docs" / "credits.md")
+        candidates.append(Path.cwd() / "docs" / "credits.md")
+
+        unique_candidates = []
+        seen = set()
+        for candidate in candidates:
+            normalized_candidate = str(candidate)
+            if normalized_candidate in seen:
+                continue
+            seen.add(normalized_candidate)
+            unique_candidates.append(candidate)
+        return unique_candidates
+
+    def _open_credits_document(self):
+        credits_path = next((path for path in self._credits_candidate_paths() if path.is_file()), None)
+        if credits_path is None:
+            wx.MessageBox(
+                "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto.",
+                "Créditos do KeyTune",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+            return False
+
+        try:
+            launched = wx.LaunchDefaultBrowser(credits_path.resolve().as_uri())
+        except Exception:
+            launched = False
+
+        if not launched:
+            wx.MessageBox(
+                "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema.",
+                "Créditos do KeyTune",
+                wx.OK | wx.ICON_ERROR,
+                self,
+            )
+            return False
+
+        self._set_status_message(f"Abrindo créditos: {credits_path.name}")
+        return True
+
     def _primary_shortcuts_hint_text(self):
         return (
             "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
@@ -387,12 +438,15 @@ class FrameUIMixin:
         self.menu_open_manual_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
         self.menu_show_welcome_screen_id = wx.NewIdRef()
+        self.menu_about_id = wx.NewIdRef()
         help_menu.Append(self.menu_show_welcome_screen_id, "Mostrar tela de &boas-vindas")
         help_menu.Append(self.menu_open_manual_id, "Abrir &manual do usuário")
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_keyboard_help_id, "Ajuda rápida de &atalhos\tF1")
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_check_updates_id, "Verificar &atualizações")
+        help_menu.AppendSeparator()
+        help_menu.Append(self.menu_about_id, "&Sobre o KeyTune")
 
         menu_bar.Append(file_menu, "&Arquivo")
         menu_bar.Append(playback_menu, "&Reprodução")
@@ -573,6 +627,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_check_for_updates, id=self.menu_check_updates_id)
         self.Bind(wx.EVT_MENU, self.on_open_preferences, id=self.menu_preferences_id)
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
+        self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
         self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)

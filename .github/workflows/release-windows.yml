@@ -46,6 +46,14 @@ jobs:
         run: |
           python scripts/render_manual.py docs/manual.md dist\KeyTune\docs\manual.html
 
+      - name: Generate credits
+        run: |
+          python scripts/generate_credits.py
+
+      - name: Render credits as HTML
+        run: |
+          python scripts/render_manual.py docs/credits.md dist\KeyTune\docs\credits.html
+
       - name: Bundle MPV runtime into dist
         shell: powershell
         run: |
