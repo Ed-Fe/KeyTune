@@ -304,18 +304,57 @@ Além de abrir e salvar playlists, o KeyTune permite editar suas playlists diret
 
 ### Sessão do YouTube Music
 
-Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretamente com o YouTube Music, especialmente na primeira vez ou quando a autenticação expirar. Se isso acontecer, exporte os cookies a partir de uma janela **anônima/privada**:
+#### O que são cookies
 
-1. Abra uma janela anônima/privada do seu navegador.
-2. Faça login em [music.youtube.com](https://music.youtube.com/) com sua conta.
-3. Instale a extensão [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) (ou use outra que exporte cookies).
-4. Clique na extensão e exporte os cookies no formato `cookies.txt`.
-5. Feche a janela anônima **sem abrir o YouTube de novo nela**.
-6. No KeyTune, use a opção de importar ou carregar a sessão do YouTube Music quando ela for exibida.
+Cookies são pequenos arquivos de texto que navegadores armazenam para lembrar suas preferências e informações de login em sites. Quando você faz login no YouTube Music, o navegador salva cookies que contêm sua autenticação. Ao exportar esses cookies, você está transferindo essa informação de sessão logada para o KeyTune, permitindo que o aplicativo acesse sua conta sem pedir sua senha.
 
-O arquivo exportado contém informações de acesso da sua conta. Use apenas no seu computador e só com a conta que você quer conectar ao aplicativo.
+#### Por que usar uma janela anônima
 
-Usar uma janela anônima evita que o Google troque constantemente os cookies — como aquela sessão não continua sendo usada, os cookies exportados não são renovados e a autenticação dura muito mais.
+Usar uma janela anônima (também chamada de navegação privada) é importante porque o Google constantemente renova os cookies nas janelas normais. Se você exportasse cookies de uma sessão regular, eles se tornariam inválidos rapidamente conforme o navegador os renovasse. Na janela anônima, como a sessão não continua sendo usada depois que você a fecha, os cookies não são renovados e permanecem válidos por muito mais tempo.
+
+#### Passo a passo: exportar cookies do YouTube Music
+
+**Pré-requisito:** instale a extensão [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) em seu navegador (funciona em Chrome, Edge e navegadores baseados em Chromium).
+
+**1. Ativar a extensão em abas anônimas**
+
+Primeiro, configure a extensão para funcionar em abas privadas:
+
+1. Pressione `Ctrl+L` para focar a barra de endereços.
+2. Pressione `Escape` para sair da caixa de edição da barra de endereços.
+3. Pressione `Alt+F` para abrir o menu do navegador.
+4. Navegue com as setas até **Extensões**, expanda o submenu pressionando `Enter` e escolha **Gerenciar extensões**.
+5. Localize **Get cookies.txt LOCALLY** e clique em **Detalhes** (ou "Saiba mais").
+6. Na página de detalhes, localize a opção **Permitir em abas privadas** ou **Permitir em navegação anônima** e ative-a.
+7. Feche a página e retorne ao seu navegador.
+
+**2. Fazer login e exportar cookies**
+
+1. Abra uma nova aba anônima/privada (geralmente `Ctrl+Shift+N` ou `Ctrl+Shift+P`).
+2. Navegue para [music.youtube.com](https://music.youtube.com/).
+3. Faça login com sua conta Google e escolha sua conta de música, se houver múltiplas opções.
+4. Depois de completar o login, pressione `Ctrl+L` para focar a barra de endereços.
+5. Pressione `Escape` para sair da caixa de edição da barra de endereços (pode ser necessário).
+6. Navegue com `Tab` até alcançar a seção de **Extensões**. Expanda-a pressionando `Enter`.
+7. Continue navegando com `Tab` até encontrar a extensão **Get cookies.txt LOCALLY** e clique nela (ou pressione `Enter`).
+8. Uma página abrirá com os cookies. Procure pelo botão **Exportar** ou **Download** (geralmente o primeiro botão da página) e clique para baixar o arquivo `cookies.txt`.
+9. **Importante**: feche a aba anônima **sem navegar para nenhum outro site**. Isso garante que os cookies não sejam renovados.
+
+**3. Importar no KeyTune**
+
+1. No KeyTune, abra a aba do YouTube Music (`Ctrl+Shift+Y`).
+2. Na seção **Conta e biblioteca**, clique em **Conectar conta...**.
+3. Um diálogo abrirá oferecendo a opção de importar uma sessão. Escolha o arquivo `cookies.txt` que você acabou de baixar.
+4. A conta será conectada e você poderá usar o YouTube Music normalmente.
+
+#### Informações de segurança
+
+O arquivo `cookies.txt` exportado contém informações de autenticação da sua conta. Por segurança:
+
+- Use o arquivo apenas no seu próprio computador.
+- Não compartilhe o arquivo com outras pessoas.
+- Delete o arquivo após importá-lo no KeyTune se desejar (o KeyTune mantém uma cópia interna e segura).
+- Se desconectar a conta no KeyTune, os cookies armazenados serão removidos.
 
 ### Atalhos
 
