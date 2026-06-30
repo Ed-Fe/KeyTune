@@ -1,6 +1,7 @@
 import wx
 
 from ...about import AboutDialog
+from ...i18n import _
 from ...log import setup_logging
 from ...preferences import PreferencesDialog
 
@@ -56,9 +57,9 @@ class AppCommandsMixin:
             handle_youtube_music_preferences_change(previous_settings)
 
         if audio_output_updated:
-            self._announce("Preferências salvas.")
+            self._announce(_("Preferências salvas."))
         else:
-            self._announce("Preferências salvas, mas o dispositivo de áudio anterior foi mantido.")
+            self._announce(_("Preferências salvas, mas o dispositivo de áudio anterior foi mantido."))
 
     def on_select_audio_output_device(self, event):
         selected_device_id = self._audio_output_menu_actions.get(event.GetId())
@@ -135,8 +136,8 @@ class AppCommandsMixin:
         if not getattr(self, "_update_restart_pending", False) and self.settings.confirm_on_exit and event.CanVeto():
             with wx.MessageDialog(
                 self,
-                "Deseja realmente sair do KeyTune?",
-                "Confirmar saída",
+                _("Deseja realmente sair do KeyTune?"),
+                _("Confirmar saída"),
                 wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
             ) as dialog:
                 if dialog.ShowModal() != wx.ID_YES:

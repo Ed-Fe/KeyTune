@@ -1,11 +1,12 @@
 from ...constants import PROGRESS_GAUGE_RANGE
+from ...i18n import _
 from ...library import folder_display_name
 
 
 class PlaybackControlsMixin:
     def _format_time_ms(self, milliseconds):
         if milliseconds is None or milliseconds < 0:
-            return "tempo desconhecido"
+            return _("tempo desconhecido")
 
         total_seconds = int(milliseconds // 1000)
         hours, remainder = divmod(total_seconds, 3600)
@@ -126,7 +127,7 @@ class PlaybackControlsMixin:
 
         self.player.set_time(0)
         self._update_time_bar()
-        self._announce("Início do arquivo.")
+        self._announce(_("Início do arquivo."))
 
     def _seek_to_end(self):
         if self._crossfade_state:
@@ -145,7 +146,7 @@ class PlaybackControlsMixin:
             self.player.set_time(max(0, media_length - 1000))
 
         self._update_time_bar()
-        self._announce("Fim do arquivo.")
+        self._announce(_("Fim do arquivo."))
 
     def _toggle_play_pause(self):
         state = self._get_playlist_state()
@@ -173,10 +174,10 @@ class PlaybackControlsMixin:
                 if state:
                     state.was_playing = False
                 self._update_time_bar()
-                self._announce("Pausado.")
+                self._announce(_("Pausado."))
                 if hasattr(self, "_set_status_message") and state and state.current_media_path:
                     self._set_status_message(
-                        f"Pausado: {self._media_label(state.current_media_path)}",
+                        _("Pausado: {name}").format(name=self._media_label(state.current_media_path)),
                         auto_clear_ms=0,
                     )
                 refresh_smtc = getattr(self, "_refresh_smtc_state", None)
@@ -190,10 +191,10 @@ class PlaybackControlsMixin:
             if state:
                 state.was_playing = True
             self._update_time_bar()
-            self._announce("Reprodução retomada.")
+            self._announce(_("Reprodução retomada."))
             if hasattr(self, "_set_status_message") and state and state.current_media_path:
                 self._set_status_message(
-                    f"Tocando: {self._media_label(state.current_media_path)}",
+                    _("Tocando: {name}").format(name=self._media_label(state.current_media_path)),
                     auto_clear_ms=0,
                 )
             refresh_smtc = getattr(self, "_refresh_smtc_state", None)
@@ -202,7 +203,7 @@ class PlaybackControlsMixin:
 
     def _announce_playback_time(self):
         if not self.player.get_media():
-            self._announce("Nenhuma mídia carregada.")
+            self._announce(_("Nenhuma mídia carregada."))
             return
 
         current_time = self.player.get_time()
@@ -213,15 +214,15 @@ class PlaybackControlsMixin:
         current_label = self._format_time_ms(current_time)
 
         if total_time is None or total_time <= 0:
-            self._announce(f"Tempo atual: {current_label}.")
+            self._announce(_("Tempo atual: {time}.").format(time=current_label))
             return
 
         total_label = self._format_time_ms(total_time)
         percentage = int(max(0, min(100, round((max(0, current_time) / total_time) * 100)))) if total_time > 0 else 0
-        self._announce(f"Tempo atual: {current_label} de {total_label}. {percentage}%.")
+        self._announce(_("Tempo atual: {current} de {total}. {percent}%.").format(current=current_label, total=total_label, percent=percentage))
 
     def _announce_current_volume(self):
-        self._announce(f"Volume atual: {self.current_volume}%.")
+        self._announce(_("Volume atual: {volume}%.").format(volume=self.current_volume))
 
     def _announce_player_status(self):
         current_tab = self._get_tab_state()
@@ -229,34 +230,34 @@ class PlaybackControlsMixin:
         status_parts = []
 
         if current_tab:
-            status_parts.append(f"Aba atual: {current_tab.title}.")
+            status_parts.append(_("Aba atual: {title}.").format(title=current_tab.title))
 
         if state and current_tab is not state:
-            status_parts.append(f"Aba de mídia ativa: {state.title}.")
+            status_parts.append(_("Aba de mídia ativa: {title}.").format(title=state.title))
 
         if state:
             if state.is_folder_tab and state.folder_current_path:
-                status_parts.append(f"Pasta atual: {folder_display_name(state.folder_current_path)}.")
+                status_parts.append(_("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path)))
 
         media_path = state.current_media_path if state else None
         if not media_path:
-            status_parts.append("Nenhuma mídia tocando agora.")
-            status_parts.append(f"Volume atual: {self.current_volume}%.")
+            status_parts.append(_("Nenhuma mídia tocando agora."))
+            status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
             if state:
-                shuffle_label = "ligado" if state.shuffle_enabled else "desligado"
-                status_parts.append(f"Aleatório {shuffle_label}.")
+                shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
+                status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
                 status_parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
             self._announce(" ".join(status_parts))
             return
 
         media_name = self._media_label(media_path)
-        playback_state = "tocando" if self.player.is_playing() else "pausado"
-        status_parts.append(f"Mídia: {media_name}. Estado: {playback_state}.")
+        playback_state = _("tocando") if self.player.is_playing() else _("pausado")
+        status_parts.append(_("Mídia: {name}. Estado: {state}.").format(name=media_name, state=playback_state))
 
         if state and state.item_count > 0:
-            status_parts.append(f"Item {state.current_index + 1} de {state.item_count}.")
-            shuffle_label = "ligado" if state.shuffle_enabled else "desligado"
-            status_parts.append(f"Aleatório {shuffle_label}.")
+            status_parts.append(_("Item {current} de {total}.").format(current=state.current_index + 1, total=state.item_count))
+            shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
+            status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
             status_parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
 
         current_time = self.player.get_time()
@@ -267,10 +268,10 @@ class PlaybackControlsMixin:
         if total_time is not None and total_time > 0:
             percentage = int(max(0, min(100, round((current_time / total_time) * 100))))
             status_parts.append(
-                f"Tempo {self._format_time_ms(current_time)} de {self._format_time_ms(total_time)}. {percentage}%."
+                _("Tempo {current} de {total}. {percent}%.").format(current=self._format_time_ms(current_time), total=self._format_time_ms(total_time), percent=percentage)
             )
         else:
-            status_parts.append(f"Tempo atual: {self._format_time_ms(current_time)}.")
+            status_parts.append(_("Tempo atual: {time}.").format(time=self._format_time_ms(current_time)))
 
-        status_parts.append(f"Volume atual: {self.current_volume}%.")
+        status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
         self._announce(" ".join(status_parts))

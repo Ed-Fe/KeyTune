@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable
 
+from .i18n import _
 from .audio_output import (
     AudioOutputDevice,
     audio_output_device_from_mpv_entry,
@@ -110,8 +111,7 @@ class MPVPlayer:
         except Exception as exc:
             _logger.error("Failed to create MPV player instance: %s", exc)
             raise RuntimeError(
-                "Não foi possível iniciar uma instância do MPV. "
-                f"Detalhes: {exc}"
+                _("Não foi possível iniciar uma instância do MPV.") + " " + _("Detalhes: {error}").format(error=exc)
             ) from exc
         try:
             self.set_audio_output_device(audio_output_device_id)

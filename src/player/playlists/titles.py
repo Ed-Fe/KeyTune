@@ -1,8 +1,10 @@
 import os
 
+from ..i18n import _
+
 
 def default_playlist_title(number):
-    return f"Playlist {number}"
+    return _("Playlist {number}").format(number=number)
 
 
 def build_playlist_title(items, explicit_title=None):
@@ -22,7 +24,7 @@ def build_playlist_title(items, explicit_title=None):
         if folder_name:
             return f"{folder_name} ({len(normalized_items)})"
 
-    return f"Seleção ({len(normalized_items)})"
+    return _("Seleção ({count})").format(count=len(normalized_items))
 
 
 def build_folder_tab_title(folder_path):

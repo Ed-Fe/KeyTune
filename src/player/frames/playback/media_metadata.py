@@ -4,6 +4,8 @@ import time
 
 import wx
 
+from ...i18n import _
+
 from ...library import is_remote_media_path
 from ...playlists import PlaylistState
 from ...remote_media_metadata import resolve_remote_media_metadata, resolve_remote_media_playback
@@ -70,7 +72,7 @@ class MediaMetadataMixin:
 
     def _media_label(self, media_path):
         if not media_path:
-            return "Sem mídia"
+            return _("Sem mídia")
 
         checked_states = []
         current_state = self._get_playlist_state()

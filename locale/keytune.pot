@@ -117,6 +117,10 @@ msgstr ""
 msgid "&Voltar"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "A abertura externa aceita apenas uma playlist por vez."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "A instalação automática só está disponível na versão do Windows empacotada."
 msgstr ""
@@ -133,6 +137,10 @@ msgstr ""
 msgid "A pasta ainda está sendo carregada."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "A playlist atual está vazia."
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "A playlist precisa de pelo menos dois itens para reordenar."
 msgstr ""
@@ -143,6 +151,18 @@ msgstr ""
 
 #: src/player/frames/update.py
 msgid "A verificação já está em andamento."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "A área de transferência contém itens não suportados para colagem em lote."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "A área de transferência está vazia."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -173,8 +193,16 @@ msgstr ""
 msgid "Aba alvo: {title}"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Aba atual: {title}."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Aba de mídia alvo do equalizador"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Aba de mídia ativa: {title}."
 msgstr ""
 
 #: src/player/frames/library_tabs/tabs.py
@@ -226,6 +254,10 @@ msgstr ""
 msgid "Abrir &manual do usuário"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Abrir arquivos"
+msgstr ""
+
 #: src/player/library/open_dialog.py
 msgid "Abrir co&mo"
 msgstr ""
@@ -256,6 +288,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Adicionar à playlist do YouTube Music..."
 msgstr ""
 
 #: src/player/frames/library_tabs/tabs.py
@@ -318,6 +354,10 @@ msgstr ""
 msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Aleatório {state}."
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Aleatório: {status}."
 msgstr ""
@@ -370,6 +410,10 @@ msgstr ""
 msgid "Ar&quivo..."
 msgstr ""
 
+#: src/player/file_associations.py
+msgid "Arquivo de mídia — {app}"
+msgstr ""
+
 #: src/player/library/open_dialog.py
 msgid "Arquivo, pasta ou &link"
 msgstr ""
@@ -390,8 +434,16 @@ msgstr ""
 msgid "Arquivos existentes serão tentados como mídia."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Arquivos recentes"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Arquivos recentes limpos."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -482,6 +534,10 @@ msgstr ""
 msgid "Buscando conteúdo relacionado no YouTube Music."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Caminho copiado."
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "Cancelando..."
 msgstr ""
@@ -526,6 +582,14 @@ msgstr ""
 msgid "Colar e abrir em &nova playlist... (Ctrl+Shift+V)"
 msgstr ""
 
+#: src/player/frames/commands/browser_commands.py
+msgid "Colar em nova playlist"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Colar na playlist atual"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Como a interface é organizada"
 msgstr ""
@@ -542,12 +606,20 @@ msgstr ""
 msgid "Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."
 msgstr ""
 
+#: src/player/frames/commands/app_commands.py
+msgid "Confirmar saída"
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Contexto"
 msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Conteúdo da página atual"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Conteúdo da área de transferência não suportado."
 msgstr ""
 
 #: src/player/frames/library_tabs/related_autoplay.py
@@ -570,8 +642,20 @@ msgstr ""
 msgid "Controle de ganho"
 msgstr ""
 
+#: src/player/smtc/service.py
+msgid "Controles de mídia do sistema indisponíveis."
+msgstr ""
+
+#: src/player/smtc/service.py
+msgid "Controles de mídia do sistema indisponíveis. Instale o pacote 'winrt-Windows.Media.Playback' no Windows."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Copiar seleção"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -604,6 +688,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Créditos do KeyTune"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Curtir no YouTube Music"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -650,12 +738,21 @@ msgstr ""
 msgid "Deseja realmente excluir o preset {name}?"
 msgstr ""
 
+#: src/player/frames/commands/app_commands.py
+msgid "Deseja realmente sair do KeyTune?"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
 msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Detalhes do download"
+msgstr ""
+
+#: src/player/mpv_backend.py
+#: src/player/smtc/service.py
+msgid "Detalhes: {error}"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -676,6 +773,14 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Dispositivo de áu&dio"
+msgstr ""
+
+#: src/player/frames/playback/audio_output.py
+msgid "Dispositivo de áudio alterado para o padrão do sistema."
+msgstr ""
+
+#: src/player/frames/playback/audio_output.py
+msgid "Dispositivo de áudio alterado para {label}."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -790,8 +895,16 @@ msgstr ""
 msgid "Escolha um arquivo de mídia ou playlist"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Escolha um ou mais arquivos de mídia ou uma playlist"
+msgstr ""
+
 #: src/player/library/open_dialog.py
 msgid "Escolha uma pasta"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Escolha uma pasta para navegar"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -843,6 +956,10 @@ msgstr ""
 msgid "Festa"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Fim do arquivo."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Fones de ouvido"
 msgstr ""
@@ -887,8 +1004,13 @@ msgstr ""
 msgid "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. Pastas podem abrir como playlist ou no navegador."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
 #: src/player/library/open_dialog.py
 msgid "Informe um caminho local, uma pasta ou um link de mídia."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -897,6 +1019,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Interface"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Início do arquivo."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -919,8 +1045,16 @@ msgstr ""
 msgid "Item removido"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Item {current} de {total}."
+msgstr ""
+
 #: src/player/library/browser.py
 msgid "Itens"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Itens recentes limpos."
 msgstr ""
 
 #: src/player/frames/library_tabs/item_removal.py
@@ -941,6 +1075,22 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Limpar arquivos recentes"
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Limpar pastas recentes"
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Limpar playlists recentes"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Link copiado."
 msgstr ""
 
 #: src/player/library/open_dialog.py
@@ -1023,8 +1173,24 @@ msgstr ""
 msgid "Mídia suportada"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Mídia: {name}. Estado: {state}."
+msgstr ""
+
 #: src/player/library/open_dialog.py
 msgid "Navegador de pasta"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Nenhum arquivo compatível foi recebido do Explorador."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Nenhum arquivo de mídia ou playlist compatível foi selecionado."
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Nenhum arquivo recente."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1037,6 +1203,10 @@ msgstr ""
 
 #: src/player/library/browser.py
 msgid "Nenhum item nesta playlist."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Nenhum item selecionado para copiar."
 msgstr ""
 
 #: src/player/frames/library_loader.py
@@ -1080,6 +1250,7 @@ msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr ""
 
 #: src/player/frames/library_tabs/item_removal.py
+#: src/player/frames/playback/controls.py
 msgid "Nenhuma mídia carregada."
 msgstr ""
 
@@ -1088,11 +1259,17 @@ msgid "Nenhuma mídia compatível foi encontrada na pasta selecionada."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
+#: src/player/frames/playback/controls.py
+#: src/player/frames/playback/engine.py
 msgid "Nenhuma mídia tocando agora."
 msgstr ""
 
 #: src/player/library/browser.py
 msgid "Nenhuma pasta ou mídia nesta localização."
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Nenhuma pasta recente."
 msgstr ""
 
 #: src/player/frames/library_tabs/item_removal.py
@@ -1102,6 +1279,10 @@ msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Nenhuma playlist carregada."
+msgstr ""
+
+#: src/player/frames/recents.py
+msgid "Nenhuma playlist recente."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -1129,6 +1310,30 @@ msgstr ""
 msgid "Não foi encontrado o arquivo da atualização."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a mídia da área de transferência."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a mídia informada."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a pasta da área de transferência."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a pasta selecionada como playlist."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a playlist da área de transferência."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível abrir a playlist ou link informado."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "Não foi possível abrir o arquivo da atualização."
 msgstr ""
@@ -1149,6 +1354,10 @@ msgstr ""
 msgid "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível acessar a área de transferência."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "Não foi possível acessar as atualizações."
 msgstr ""
@@ -1164,6 +1373,22 @@ msgstr ""
 
 #: src/player/update/service.py
 msgid "Não foi possível encontrar o arquivo baixado."
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Não foi possível iniciar a mídia: {error}."
+msgstr ""
+
+#: src/player/frames/playback/backend.py
+msgid "Não foi possível iniciar a próxima faixa para o crossfade."
+msgstr ""
+
+#: src/player/mpv_backend.py
+msgid "Não foi possível iniciar uma instância do MPV."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Não foi possível interpretar o link informado como mídia ou playlist."
 msgstr ""
 
 #: src/player/update/service.py
@@ -1182,6 +1407,10 @@ msgstr ""
 msgid "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
 msgstr ""
 
+#: src/player/frames/playback/audio_output.py
+msgid "Não foi possível trocar o dispositivo de áudio: {error}."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "Não foi possível validar a integridade do arquivo."
 msgstr ""
@@ -1189,6 +1418,10 @@ msgstr ""
 #: src/player/frames/update.py
 #: src/player/update/service.py
 msgid "Não foi possível verificar as atualizações."
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Não gostei no YouTube Music"
 msgstr ""
 
 #: src/player/frames/library_tabs/tabs.py
@@ -1227,6 +1460,10 @@ msgstr ""
 msgid "O item já está no topo da playlist."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "O item recente selecionado não está mais disponível."
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "O que mudou nesta versão:"
 msgstr ""
@@ -1255,7 +1492,16 @@ msgstr ""
 msgid "Painel de vídeo"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Para abrir no navegador, informe uma pasta local válida."
+msgstr ""
+
+#: src/player/frames/commands/transport_commands.py
+msgid "Parado."
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
+#: src/player/frames/playback/controls.py
 msgid "Pasta atual: {name}."
 msgstr ""
 
@@ -1269,6 +1515,18 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Pastas recentes"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Pastas recentes limpas."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Pausado."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Pausado: {name}"
 msgstr ""
 
 #: src/player/about/dialog.py
@@ -1290,6 +1548,18 @@ msgstr ""
 
 #: src/player/frames/library_loader.py
 msgid "Playlist carregada: {title}. {count} item(ns)."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Playlist salva em {path}"
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Playlist salva: {title}."
+msgstr ""
+
+#: src/player/playlists/titles.py
+msgid "Playlist {number}"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -1317,12 +1587,24 @@ msgstr ""
 msgid "Playlists recentes"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Playlists recentes limpas."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Pop"
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Preferências"
+msgstr ""
+
+#: src/player/frames/commands/app_commands.py
+msgid "Preferências salvas, mas o dispositivo de áudio anterior foi mantido."
+msgstr ""
+
+#: src/player/frames/commands/app_commands.py
+msgid "Preferências salvas."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -1451,6 +1733,14 @@ msgstr ""
 msgid "Reggae"
 msgstr ""
 
+#: src/player/frames/commands/browser_commands.py
+msgid "Remover da playlist do YouTube Music"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Remover seleção"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Repetindo faixa atual. {position}"
 msgstr ""
@@ -1481,6 +1771,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Reprodução"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Reprodução retomada."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1527,6 +1821,10 @@ msgstr ""
 msgid "Salvar cópia do preset embutido"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Salvar playlist"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Salvar preset do equalizador"
 msgstr ""
@@ -1539,8 +1837,36 @@ msgstr ""
 msgid "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Selecione apenas uma playlist por vez."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Selecione uma única playlist ou apenas arquivos de mídia."
+msgstr ""
+
+#: src/player/playlists/titles.py
+msgid "Seleção ({count})"
+msgstr ""
+
+#: src/player/frames/playback/media_metadata.py
+msgid "Sem mídia"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre uma pasta no navegador\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr ""
+
+#: src/player/frames/session.py
+msgid "Sessão anterior restaurada com {count} abas."
+msgstr ""
+
+#: src/player/frames/session.py
+msgid "Sessão restaurada com {count} abas."
+msgstr ""
+
+#: src/player/frames/session.py
+msgid "Sessão restaurada com {count} abas. {title}. {position}"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -1571,8 +1897,20 @@ msgstr ""
 msgid "Techno"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Tempo atual: {current} de {total}. {percent}%."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Tempo atual: {time}."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Tempo da mídia"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Tempo {current} de {total}. {percent}%."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1581,6 +1919,11 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Tenta trazer presença de palco e mais ambiência."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+#: src/player/frames/playback/engine.py
+msgid "Tocando: {name}"
 msgstr ""
 
 #: src/player/constants.py
@@ -1664,6 +2007,10 @@ msgstr ""
 msgid "Voltar"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Volume atual: {volume}%."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "YouTube &Music por aba\tCtrl+Shift+Y"
 msgstr ""
@@ -1676,8 +2023,20 @@ msgstr ""
 msgid "desativado"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "desligado"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "ligado"
+msgstr ""
+
 #: src/player/frames/equalizer.py
 msgid "nenhuma aba de mídia"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "pausado"
 msgstr ""
 
 #: src/player/frames/library_tabs/tabs.py
@@ -1686,6 +2045,14 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "tamanho não informado"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "tempo desconhecido"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "tocando"
 msgstr ""
 
 #: src/player/about/dialog.py
@@ -1697,6 +2064,10 @@ msgid "{count} item adicionado a {title}."
 msgid_plural "{count} itens adicionados a {title}."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "{count} itens copiados."
+msgstr ""
 
 #: src/player/update/dialog.py
 msgid "{downloaded} baixados."

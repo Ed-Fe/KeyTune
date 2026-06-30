@@ -3,6 +3,8 @@ import queue
 import sys
 import threading
 
+
+from ...i18n import _
 import wx
 
 from ...log import get_logger
@@ -255,7 +257,7 @@ class PlayerBackendMixin:
             return
 
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
-        self._announce("Não foi possível iniciar a próxima faixa para o crossfade.")
+        self._announce(_("Não foi possível iniciar a próxima faixa para o crossfade."))
 
     def _smtc_refresh_if_active(self, player_key):
         if player_key != getattr(self, "_active_player_key", None):

@@ -10,12 +10,13 @@ import os
 import sys
 import winreg
 
+from .i18n import _
 from .constants import APP_TITLE, SUPPORTED_MEDIA_EXTENSIONS
 
 logger = logging.getLogger(__name__)
 
 _PROG_ID = f"{APP_TITLE}.MediaFile"
-_PROG_ID_DESCRIPTION = f"Arquivo de mídia — {APP_TITLE}"
+_PROG_ID_DESCRIPTION = _("Arquivo de mídia — {app}").format(app=APP_TITLE)
 _PLAYLIST_EXTENSIONS = {".m3u", ".m3u8"}
 _ALL_EXTENSIONS = SUPPORTED_MEDIA_EXTENSIONS | _PLAYLIST_EXTENSIONS
 

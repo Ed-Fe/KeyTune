@@ -3,6 +3,7 @@ import os
 import wx
 
 from ..constants import RECENT_ITEMS_LIMIT
+from ..i18n import _
 
 
 class FrameRecentsMixin:
@@ -123,20 +124,20 @@ class FrameRecentsMixin:
         self._refresh_recent_submenu(
             self.recent_files_menu,
             "recent_media_files",
-            "Nenhum arquivo recente.",
-            "Limpar arquivos recentes",
+            _("Nenhum arquivo recente."),
+            _("Limpar arquivos recentes"),
         )
         self._refresh_recent_submenu(
             self.recent_folders_menu,
             "recent_folders",
-            "Nenhuma pasta recente.",
-            "Limpar pastas recentes",
+            _("Nenhuma pasta recente."),
+            _("Limpar pastas recentes"),
         )
         self._refresh_recent_submenu(
             self.recent_playlists_menu,
             "recent_playlists",
-            "Nenhuma playlist recente.",
-            "Limpar playlists recentes",
+            _("Nenhuma playlist recente."),
+            _("Limpar playlists recentes"),
         )
 
         if recent_paths_changed:

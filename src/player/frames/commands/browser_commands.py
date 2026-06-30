@@ -1,5 +1,6 @@
 import wx
 
+from ...i18n import _
 from ...library import is_remote_media_path
 
 
@@ -49,16 +50,16 @@ class BrowserCommandsMixin:
         selected_count = len(selected_paths)
         menu = wx.Menu()
 
-        copy_item = menu.Append(wx.ID_ANY, "Copiar seleção")
-        paste_item = menu.Append(wx.ID_ANY, "Colar na playlist atual")
-        paste_new_item = menu.Append(wx.ID_ANY, "Colar em nova playlist")
+        copy_item = menu.Append(wx.ID_ANY, _("Copiar seleção"))
+        paste_item = menu.Append(wx.ID_ANY, _("Colar na playlist atual"))
+        paste_new_item = menu.Append(wx.ID_ANY, _("Colar em nova playlist"))
         menu.AppendSeparator()
-        remove_item = menu.Append(wx.ID_ANY, "Remover seleção")
+        remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
         menu.AppendSeparator()
-        like_item = menu.Append(wx.ID_ANY, "Curtir no YouTube Music")
-        dislike_item = menu.Append(wx.ID_ANY, "Não gostei no YouTube Music")
-        add_to_playlist_item = menu.Append(wx.ID_ANY, "Adicionar à playlist do YouTube Music...")
-        remove_from_youtube_playlist_item = menu.Append(wx.ID_ANY, "Remover da playlist do YouTube Music")
+        like_item = menu.Append(wx.ID_ANY, _("Curtir no YouTube Music"))
+        dislike_item = menu.Append(wx.ID_ANY, _("Não gostei no YouTube Music"))
+        add_to_playlist_item = menu.Append(wx.ID_ANY, _("Adicionar à playlist do YouTube Music..."))
+        remove_from_youtube_playlist_item = menu.Append(wx.ID_ANY, _("Remover da playlist do YouTube Music"))
 
         current_state = self._get_playlist_state()
         can_edit_playlist = bool(current_state and not current_state.is_folder_tab and not current_state.is_loading)
