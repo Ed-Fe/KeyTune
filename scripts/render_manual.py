@@ -109,6 +109,39 @@ footer {
 """
 
 
+# Localized chrome (everything around the translated Markdown body). Keys are
+# the language codes used by the rest of the project; ``pt_BR`` is the default.
+CHROME_STRINGS = {
+    "pt_BR": {
+        "html_lang": "pt-BR",
+        "toc_aria_label": "Índice do manual",
+        "generated_on": "Gerado em {date}",
+        "view_source": "ver fonte no GitHub",
+    },
+    "en": {
+        "html_lang": "en",
+        "toc_aria_label": "Manual table of contents",
+        "generated_on": "Generated on {date}",
+        "view_source": "view source on GitHub",
+    },
+}
+
+
+def chrome_for_language(language: str) -> dict:
+    return CHROME_STRINGS.get(language, CHROME_STRINGS["pt_BR"])
+
+
+def language_from_source(source: Path) -> str:
+    # docs/manual.en.md -> "en"; docs/manual.md -> "pt_BR".
+    suffixes = source.name.split(".")
+    if len(suffixes) >= 3:
+        candidate = suffixes[-2]
+        for code in CHROME_STRINGS:
+            if candidate == code or code.split("_", 1)[0] == candidate:
+                return code
+    return "pt_BR"
+
+
 def slugify_heading(title: str) -> str:
     normalized = unicodedata.normalize("NFKD", title)
     ascii_title = normalized.encode("ascii", "ignore").decode("ascii")
@@ -158,7 +191,7 @@ def inject_heading_ids(html_text: str, headings: list[tuple[int, str, str]]) -> 
     return heading_pattern.sub(replace, html_text, count=len(headings))
 
 
-def build_toc_html(headings: list[tuple[int, str, str]]) -> str:
+def build_toc_html(headings: list[tuple[int, str, str]], aria_label: str = "Índice do manual") -> str:
     toc_items = []
     for level, title, slug in headings:
         if level == 1:
@@ -172,15 +205,21 @@ def build_toc_html(headings: list[tuple[int, str, str]]) -> str:
         return ""
 
     return """
-    <nav class="toc" aria-label="Índice do manual">
+    <nav class="toc" aria-label="{aria_label}">
       <ol>
         {items}
       </ol>
     </nav>
-    """.format(items="\n        ".join(toc_items))
+    """.format(aria_label=escape(aria_label), items="\n        ".join(toc_items))
 
 
-def render_markdown(source_text: str, title: str, source_url: str = "https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md") -> str:
+def render_markdown(
+    source_text: str,
+    title: str,
+    source_url: str = "https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md",
+    language: str = "pt_BR",
+) -> str:
+    chrome = chrome_for_language(language)
     headings = collect_headings(source_text)
     body = markdown.markdown(
         source_text,
@@ -188,8 +227,13 @@ def render_markdown(source_text: str, title: str, source_url: str = "https://git
         output_format="html5",
     )
     body = inject_heading_ids(body, headings)
-    toc_html = build_toc_html(headings)
+    toc_html = build_toc_html(headings, aria_label=chrome["toc_aria_label"])
     generated_date = datetime.date.today().strftime("%d/%m/%Y")
+    footer_html = "{generated} &mdash; <a href=\"{url}\">{view_source}</a>".format(
+        generated=escape(chrome["generated_on"].format(date=generated_date)),
+        url=source_url,
+        view_source=escape(chrome["view_source"]),
+    )
 
     if toc_html:
         first_section_match = re.search(r"<h2\b", body)
@@ -199,7 +243,7 @@ def render_markdown(source_text: str, title: str, source_url: str = "https://git
             body = f"{body}{toc_html}"
 
     return f"""<!doctype html>
-<html lang="pt-BR">
+<html lang="{chrome['html_lang']}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -212,7 +256,7 @@ def render_markdown(source_text: str, title: str, source_url: str = "https://git
       <h1>{escape(title)}</h1>
       {body}
       <footer>
-        Gerado em {generated_date} &mdash; <a href="{source_url}">ver fonte no GitHub</a>
+        {footer_html}
       </footer>
     </section>
   </main>
@@ -225,8 +269,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Renderiza o manual em Markdown para HTML.")
     parser.add_argument("source", type=Path, help="Arquivo Markdown de origem")
     parser.add_argument("target", type=Path, help="Arquivo HTML de destino")
+    parser.add_argument(
+        "--language",
+        default=None,
+        help="Código do idioma do documento (ex.: pt_BR, en). Padrão: derivado do nome do arquivo.",
+    )
     args = parser.parse_args()
 
+    language = args.language or language_from_source(args.source)
     source_text = args.source.read_text(encoding="utf-8")
     title = next(
         (line.lstrip("# ").strip() for line in source_text.splitlines() if line.startswith("# ")),
@@ -239,7 +289,7 @@ def main() -> int:
     else:
         body_source = "\n".join(lines[:title_index] + lines[title_index + 1 :])
 
-    html_text = render_markdown(body_source, title)
+    html_text = render_markdown(body_source, title, language=language)
     args.target.parent.mkdir(parents=True, exist_ok=True)
     args.target.write_text(html_text, encoding="utf-8")
     return 0

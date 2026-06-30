@@ -56,9 +56,38 @@ SetupLogging=yes
 
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
+
+; User-visible installer strings, per language. Inno resolves {cm:Name} to the
+; language the user selects on the first wizard page. Keep both lists in sync.
+[CustomMessages]
+brazilianportuguese.DesktopIcon=Criar um atalho na área de trabalho
+english.DesktopIcon=Create a desktop shortcut
+brazilianportuguese.AdditionalShortcuts=Atalhos adicionais:
+english.AdditionalShortcuts=Additional shortcuts:
+brazilianportuguese.FileAssocGroup=Associações de arquivo (opcional):
+english.FileAssocGroup=File associations (optional):
+brazilianportuguese.AssocVideoAll=Associar todos os arquivos de vídeo
+english.AssocVideoAll=Associate all video files
+brazilianportuguese.AssocAudioAll=Associar todos os arquivos de áudio
+english.AssocAudioAll=Associate all audio files
+brazilianportuguese.AssocPlaylistAll=Associar todos os arquivos de playlist
+english.AssocPlaylistAll=Associate all playlist files
+brazilianportuguese.MediaFileType=Arquivo de mídia — {#AppName}
+english.MediaFileType=Media file — {#AppName}
+brazilianportuguese.OpenWithApp=Abrir no {#AppName}
+english.OpenWithApp=Open with {#AppName}
+brazilianportuguese.AppDescription=Reprodutor de mídia acessível, controlado por teclado.
+english.AppDescription=Accessible, keyboard-driven media player.
+brazilianportuguese.UninstallShortcut=Desinstalar o {#AppName}
+english.UninstallShortcut=Uninstall {#AppName}
+brazilianportuguese.LaunchApp=Iniciar o {#AppName}
+english.LaunchApp=Start {#AppName}
+brazilianportuguese.ReadManual=Ler o manual do {#AppName}
+english.ReadManual=Read the {#AppName} manual
 
 [Tasks]
-Name: "desktopicon"; Description: "Criar um atalho na área de trabalho"; GroupDescription: "Atalhos adicionais:"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:DesktopIcon}"; GroupDescription: "{cm:AdditionalShortcuts}"; Flags: unchecked
 
 ; File associations are opt-in: nothing is checked by default. Each category
 ; parent acts as a "select all" toggle for the extensions indented beneath it;
@@ -68,7 +97,7 @@ Name: "desktopicon"; Description: "Criar um atalho na área de trabalho"; GroupD
 ; NOTE: these lists mirror VIDEO_EXTENSIONS + AUDIO_ONLY_EXTENSIONS in
 ; src/player/constants.py (+ .m3u/.m3u8). Keep both in sync.
 
-Name: "assocvideo"; Description: "Associar todos os arquivos de vídeo"; GroupDescription: "Associações de arquivo (opcional):"; Flags: unchecked
+Name: "assocvideo"; Description: "{cm:AssocVideoAll}"; GroupDescription: "{cm:FileAssocGroup}"; Flags: unchecked
 Name: "assocvideo\mp4"; Description: ".mp4"; Flags: unchecked
 Name: "assocvideo\m4v"; Description: ".m4v"; Flags: unchecked
 Name: "assocvideo\mkv"; Description: ".mkv"; Flags: unchecked
@@ -85,7 +114,7 @@ Name: "assocvideo\m2ts"; Description: ".m2ts"; Flags: unchecked
 Name: "assocvideo\mts"; Description: ".mts"; Flags: unchecked
 Name: "assocvideo\ogv"; Description: ".ogv"; Flags: unchecked
 
-Name: "assocaudio"; Description: "Associar todos os arquivos de áudio"; GroupDescription: "Associações de arquivo (opcional):"; Flags: unchecked
+Name: "assocaudio"; Description: "{cm:AssocAudioAll}"; GroupDescription: "{cm:FileAssocGroup}"; Flags: unchecked
 Name: "assocaudio\mp3"; Description: ".mp3"; Flags: unchecked
 Name: "assocaudio\wav"; Description: ".wav"; Flags: unchecked
 Name: "assocaudio\flac"; Description: ".flac"; Flags: unchecked
@@ -102,7 +131,7 @@ Name: "assocaudio\mka"; Description: ".mka"; Flags: unchecked
 Name: "assocaudio\wv"; Description: ".wv"; Flags: unchecked
 Name: "assocaudio\ape"; Description: ".ape"; Flags: unchecked
 
-Name: "assocplaylist"; Description: "Associar todos os arquivos de playlist"; GroupDescription: "Associações de arquivo (opcional):"; Flags: unchecked
+Name: "assocplaylist"; Description: "{cm:AssocPlaylistAll}"; GroupDescription: "{cm:FileAssocGroup}"; Flags: unchecked
 Name: "assocplaylist\m3u"; Description: ".m3u"; Flags: unchecked
 Name: "assocplaylist\m3u8"; Description: ".m3u8"; Flags: unchecked
 
@@ -111,7 +140,7 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdi
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
-Name: "{group}\Desinstalar o {#AppName}"; Filename: "{uninstallexe}"
+Name: "{group}\{cm:UninstallShortcut}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
 
 [Registry]
@@ -121,15 +150,15 @@ Root: HKA; Subkey: "Software\{#AppName}"; ValueType: string; ValueName: "Install
 Root: HKA; Subkey: "Software\{#AppName}"; ValueType: string; ValueName: "Version"; ValueData: "{#AppVersion}"
 
 ; --- ProgId used for the Open command and as the default handler. ---
-Root: HKA; Subkey: "Software\Classes\{#ProgId}"; ValueType: string; ValueName: ""; ValueData: "Arquivo de mídia — {#AppName}"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\{#ProgId}"; ValueType: string; ValueName: ""; ValueData: "{cm:MediaFileType}"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\{#ProgId}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"
-Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\open"; ValueType: string; ValueName: ""; ValueData: "Abrir no {#AppName}"
+Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\open"; ValueType: string; ValueName: ""; ValueData: "{cm:OpenWithApp}"
 Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
 
 ; --- Capabilities + RegisteredApplications root: always present so KeyTune is
 ;     a registered application; per-extension entries below are opt-in. ---
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"
-Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "Reprodutor de mídia acessível, controlado por teclado."
+Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{cm:AppDescription}"
 Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#AppName}"; ValueData: "Software\{#AppName}\Capabilities"; Flags: uninsdeletevalue
 
 ; --- Per-extension registration, gated by the opt-in [Tasks]. Each extension
@@ -203,8 +232,8 @@ Root: HKA; Subkey: "Software\{#AppName}\Capabilities\FileAssociations"; ValueTyp
 
 [Run]
 ; Finished-page checkboxes for normal (interactive) installs.
-Filename: "{app}\{#AppExeName}"; Description: "Iniciar o {#AppName}"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\docs\manual.html"; Description: "Ler o manual do {#AppName}"; Flags: postinstall shellexec skipifsilent unchecked
+Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\docs\manual.html"; Description: "{cm:ReadManual}"; Flags: postinstall shellexec skipifsilent unchecked
 ; Silent in-app update path: relaunch the app automatically after replacing files.
 Filename: "{app}\{#AppExeName}"; Flags: nowait skipifnotsilent
 

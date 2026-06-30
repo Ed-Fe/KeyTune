@@ -1,0 +1,587 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: KeyTune\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/player/frames/ui.py
+msgid "&Anunciar"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Arquivo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Atualizar lista de dispositivos"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "&Avançar"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Cancelar"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "&Concluir"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Conteúdo Relacionado do YouTube Music (A)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Copiar caminho do item (Ctrl+C)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Exibir"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "&Fechar"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Nova playlist\tCtrl+T"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Padrão do sistema"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Preferências\tCtrl+,"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Recentes"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Reprodução"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Sair\tAlt+F4"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Salvar"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Sobre o KeyTune"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "&Voltar"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "A janela principal é dividida em algumas áreas:\n\nAbas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab para alternar entre elas, e Ctrl+T para criar uma nova.\n\nLista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco entre a lista e o player.\n\nÁrea do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\nBarra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual e mensagens rápidas sobre as ações realizadas."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "A&bas"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "A&juda"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Aba A&nterior\tCtrl+Shift+Tab"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrindo créditos: {name}"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrindo manual: {name}"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrir &Arquivos ou Playlist...\tCtrl+O"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrir &Pasta...\tCtrl+Shift+O"
+msgstr ""
+
+#: src/player/frames/ui.py
+#: src/player/welcome/dialog.py
+msgid "Abrir &manual do usuário"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Abrir manual do usuário"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Acessibilidade"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ajuda rápida de &atalhos\tF1"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ajuda rápida de atalhos"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ajuda rápida de atalhos:"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ajuda visual do player"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Alternar foco entre &itens e player\tTab"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Além de tocar arquivos locais, o KeyTune tem alguns recursos que podem ser úteis:\n\nPlaylists: crie, salve e reabra playlists em abas separadas, com embaralhar e modos de repetição configuráveis.\n\nEqualizador: ajuste a resposta de frequência da reprodução e salve seus próprios presets pelo menu Reprodução.\n\nYouTube Music (opcional): conecte sua conta para abrir suas playlists, curtir faixas e tocar conteúdo relacionado automaticamente ao fim de uma playlist.\n\nPreferências: em Configurações > Preferências é possível ajustar volume padrão, crossfade, restauração de sessão, anúncios do leitor de tela e mais."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Anunciar &Status (S)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Anunciar &Tempo (T)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Anunciar &Volume (V)"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Apenas erros (ERROR)"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Apresenta o player e o que é possível fazer com ele."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Arquivos recentes"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Atalhos e ajuda"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Automático (seguir o sistema)"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Avançar"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Avisos (WARNING)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Barra de tempo"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Bem-vindo ao KeyTune"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Categorias de preferências"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Co&lar na playlist atual / abrir... (Ctrl+V)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Colar e abrir em &nova playlist... (Ctrl+Shift+V)"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Como a interface é organizada"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Con&figurações"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Concluir"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Conteúdo da página atual"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Créditos do KeyTune"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Define o idioma de menus, diálogos e anúncios do leitor de tela. Use Automático para seguir o idioma do sistema operacional."
+msgstr ""
+
+#: src/player/constants.py
+msgid "Depuração (DEBUG)"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores."
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Descrição do aplicativo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Dicas rápidas de atalhos"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Dispositivo de áu&dio"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Em&baralhar (E)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Eq&ualizador por aba\tCtrl+Shift+E"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "F&echar"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Faixa &Anterior\tCtrl+PageUp"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Fechar A&ba / Playlist\tCtrl+W"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Fechar Mí&dia\tCtrl+Shift+W"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Geral"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idioma"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idioma da interface"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Informativo (INFO)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Inicialização e sessão"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Interface"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Licenciado sob a licença {license}."
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Licença do aplicativo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Lista de dispositivos de áudio atualizada. {count} dispositivo(s) disponível(is)."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Manual do KeyTune"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Modo de &Repetição (R)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Mostra o progresso da mídia atual."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Mostra o tempo decorrido e a duração total da mídia atual."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Mostrar tela de &boas-vindas"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Nenhum dispositivo detectado agora"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Não foi possível abrir o repositório do GitHub no navegador padrão."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Onde encontrar ajuda"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "P&arar\tCtrl+."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Painel de tempo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Painel de vídeo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Pastas recentes"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela."
+msgstr ""
+
+#: src/player/constants.py
+msgid "Playlist M3U"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Playlist M3U8"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Playlists"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Playlists recentes"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Preferências"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Próxima A&ba\tCtrl+Tab"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Próxima Fai&xa\tCtrl+PageDown"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Pu&lar tutorial"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Pular tutorial"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Página {current} de {total}: {title}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Recursos adicionais"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Recursos do player"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Recursos principais do KeyTune"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Repetir faixa atual"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Repetir playlist"
+msgstr ""
+
+#: src/player/constants.py
+msgid "Repetição desligada"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Reproduzir / Pa&usar\tEspaço"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Reprodução"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Resume os atalhos mais usados para controlar o player."
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Salvar Playli&st\tCtrl+Shift+S"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Saída de vídeo desativada\n\nEsta mídia está tocando só o áudio.\nAbra Preferências > Reprodução para reativar o vídeo quando quiser."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre uma pasta no navegador\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Sobre o KeyTune"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Sobre o {app}"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Superfície de vídeo"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Tempo da mídia"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Tempo: nenhuma mídia carregada."
+msgstr ""
+
+#: src/player/constants.py
+msgid "Todos os arquivos"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Ver &créditos completos"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Ver ajuda rápida de atalhos"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Ver ajuda rápida de atalhos (&F1)"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Ver créditos completos"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Ver código-fonte no &GitHub"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "Ver código-fonte no GitHub"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Verificar &atualizações"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "Voltar"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "YouTube &Music por aba\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/about/dialog.py
+msgid "{app} versão {version}"
+msgstr ""
+
+#: src/player/welcome/dialog.py
+msgid "{name}:"
+msgstr ""

@@ -1,5 +1,7 @@
 import wx
 
+from ..i18n import _
+
 
 class WelcomeDialog(wx.Dialog):
     """First-run tutorial: a short wizard explaining the player, its features, and where to get help."""
@@ -7,7 +9,7 @@ class WelcomeDialog(wx.Dialog):
     def __init__(self, parent, *, on_open_manual=None, on_show_shortcuts=None):
         super().__init__(
             parent,
-            title="Bem-vindo ao KeyTune",
+            title=_("Bem-vindo ao KeyTune"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
 
@@ -23,7 +25,7 @@ class WelcomeDialog(wx.Dialog):
         root_sizer.Add(self.page_title_label, 0, wx.ALL | wx.EXPAND, 10)
 
         self.book = wx.Simplebook(panel)
-        self.book.SetName("Conteúdo da página atual")
+        self.book.SetName(_("Conteúdo da página atual"))
 
         self._add_about_page()
         self._add_interface_page()
@@ -37,16 +39,16 @@ class WelcomeDialog(wx.Dialog):
         root_sizer.Add(self.page_indicator_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
 
         nav_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.skip_button = wx.Button(panel, label="Pu&lar tutorial")
-        self.skip_button.SetName("Pular tutorial")
+        self.skip_button = wx.Button(panel, label=_("Pu&lar tutorial"))
+        self.skip_button.SetName(_("Pular tutorial"))
         self.skip_button.Bind(wx.EVT_BUTTON, self._on_skip)
 
-        self.back_button = wx.Button(panel, label="&Voltar")
-        self.back_button.SetName("Voltar")
+        self.back_button = wx.Button(panel, label=_("&Voltar"))
+        self.back_button.SetName(_("Voltar"))
         self.back_button.Bind(wx.EVT_BUTTON, self._on_back)
 
-        self.next_button = wx.Button(panel, label="&Avançar")
-        self.next_button.SetName("Avançar")
+        self.next_button = wx.Button(panel, label=_("&Avançar"))
+        self.next_button.SetName(_("Avançar"))
         self.next_button.Bind(wx.EVT_BUTTON, self._on_next)
         self.next_button.SetDefault()
 
@@ -72,7 +74,7 @@ class WelcomeDialog(wx.Dialog):
         page = wx.Panel(self.book)
         page_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        text_label = wx.StaticText(page, label=f"{name}:")
+        text_label = wx.StaticText(page, label=_("{name}:").format(name=name))
         page_sizer.Add(text_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
 
         text_ctrl = wx.TextCtrl(
@@ -92,69 +94,77 @@ class WelcomeDialog(wx.Dialog):
 
     def _add_about_page(self):
         self._create_page(
-            "Sobre o KeyTune",
-            "Sobre o KeyTune",
-            "Apresenta o player e o que é possível fazer com ele.",
-            "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado "
-            "e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\n"
-            "Você pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, "
-            "opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\n"
-            "As próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis "
-            "e onde encontrar ajuda sempre que precisar.",
+            _("Sobre o KeyTune"),
+            _("Sobre o KeyTune"),
+            _("Apresenta o player e o que é possível fazer com ele."),
+            _(
+                "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado "
+                "e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\n"
+                "Você pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, "
+                "opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\n"
+                "As próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis "
+                "e onde encontrar ajuda sempre que precisar."
+            ),
         )
 
     def _add_interface_page(self):
         self._create_page(
-            "Interface",
-            "Como a interface é organizada",
-            "Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores.",
-            "A janela principal é dividida em algumas áreas:\n\n"
-            "Abas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab "
-            "para alternar entre elas, e Ctrl+T para criar uma nova.\n\n"
-            "Lista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens "
-            "de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco "
-            "entre a lista e o player.\n\n"
-            "Área do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está "
-            "tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, "
-            "setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\n"
-            "Barra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual "
-            "e mensagens rápidas sobre as ações realizadas.",
+            _("Interface"),
+            _("Como a interface é organizada"),
+            _("Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores."),
+            _(
+                "A janela principal é dividida em algumas áreas:\n\n"
+                "Abas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab "
+                "para alternar entre elas, e Ctrl+T para criar uma nova.\n\n"
+                "Lista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens "
+                "de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco "
+                "entre a lista e o player.\n\n"
+                "Área do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está "
+                "tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, "
+                "setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\n"
+                "Barra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual "
+                "e mensagens rápidas sobre as ações realizadas."
+            ),
         )
 
     def _add_features_page(self):
         self._create_page(
-            "Recursos do player",
-            "Recursos principais do KeyTune",
-            "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências.",
-            "Além de tocar arquivos locais, o KeyTune tem alguns recursos que podem ser úteis:\n\n"
-            "Playlists: crie, salve e reabra playlists em abas separadas, com embaralhar e modos de "
-            "repetição configuráveis.\n\n"
-            "Equalizador: ajuste a resposta de frequência da reprodução e salve seus próprios presets "
-            "pelo menu Reprodução.\n\n"
-            "YouTube Music (opcional): conecte sua conta para abrir suas playlists, curtir faixas e "
-            "tocar conteúdo relacionado automaticamente ao fim de uma playlist.\n\n"
-            "Preferências: em Configurações > Preferências é possível ajustar volume padrão, crossfade, "
-            "restauração de sessão, anúncios do leitor de tela e mais.",
+            _("Recursos do player"),
+            _("Recursos principais do KeyTune"),
+            _("Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."),
+            _(
+                "Além de tocar arquivos locais, o KeyTune tem alguns recursos que podem ser úteis:\n\n"
+                "Playlists: crie, salve e reabra playlists em abas separadas, com embaralhar e modos de "
+                "repetição configuráveis.\n\n"
+                "Equalizador: ajuste a resposta de frequência da reprodução e salve seus próprios presets "
+                "pelo menu Reprodução.\n\n"
+                "YouTube Music (opcional): conecte sua conta para abrir suas playlists, curtir faixas e "
+                "tocar conteúdo relacionado automaticamente ao fim de uma playlist.\n\n"
+                "Preferências: em Configurações > Preferências é possível ajustar volume padrão, crossfade, "
+                "restauração de sessão, anúncios do leitor de tela e mais."
+            ),
         )
 
     def _add_help_page(self):
         page, page_sizer = self._create_page(
-            "Atalhos e ajuda",
-            "Onde encontrar ajuda",
-            "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune.",
-            "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos "
-            "de teclado do KeyTune.\n\n"
-            "Para uma explicação mais detalhada de todos os recursos, abra o manual do usuário. "
-            "Os dois também estão disponíveis pelo menu Ajuda.",
+            _("Atalhos e ajuda"),
+            _("Onde encontrar ajuda"),
+            _("Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."),
+            _(
+                "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos "
+                "de teclado do KeyTune.\n\n"
+                "Para uma explicação mais detalhada de todos os recursos, abra o manual do usuário. "
+                "Os dois também estão disponíveis pelo menu Ajuda."
+            ),
         )
 
         button_row = wx.BoxSizer(wx.HORIZONTAL)
-        shortcuts_button = wx.Button(page, label="Ver ajuda rápida de atalhos (&F1)")
-        shortcuts_button.SetName("Ver ajuda rápida de atalhos")
+        shortcuts_button = wx.Button(page, label=_("Ver ajuda rápida de atalhos (&F1)"))
+        shortcuts_button.SetName(_("Ver ajuda rápida de atalhos"))
         shortcuts_button.Bind(wx.EVT_BUTTON, self._on_show_shortcuts_clicked)
 
-        manual_button = wx.Button(page, label="Abrir &manual do usuário")
-        manual_button.SetName("Abrir manual do usuário")
+        manual_button = wx.Button(page, label=_("Abrir &manual do usuário"))
+        manual_button.SetName(_("Abrir manual do usuário"))
         manual_button.Bind(wx.EVT_BUTTON, self._on_open_manual_clicked)
 
         button_row.Add(shortcuts_button, 0, wx.RIGHT, 8)
@@ -166,12 +176,16 @@ class WelcomeDialog(wx.Dialog):
         self.book.SetSelection(index)
         page_title = self._pages[index]
         self.page_title_label.SetLabel(page_title)
-        self.page_indicator_label.SetLabel(f"Página {index + 1} de {len(self._pages)}: {page_title}")
+        self.page_indicator_label.SetLabel(
+            _("Página {current} de {total}: {title}").format(
+                current=index + 1, total=len(self._pages), title=page_title
+            )
+        )
 
         self.back_button.Enable(index > 0)
         is_last_page = index == len(self._pages) - 1
-        self.next_button.SetLabel("&Concluir" if is_last_page else "&Avançar")
-        self.next_button.SetName("Concluir" if is_last_page else "Avançar")
+        self.next_button.SetLabel(_("&Concluir") if is_last_page else _("&Avançar"))
+        self.next_button.SetName(_("Concluir") if is_last_page else _("Avançar"))
 
         self.Layout()
         current_page = self.book.GetPage(index)

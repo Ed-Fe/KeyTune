@@ -17,6 +17,7 @@ from ..constants import (
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
 )
+from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
 
 
@@ -24,7 +25,7 @@ class PreferencesDialog(wx.Dialog):
     def __init__(self, parent, settings, *, audio_output_devices=None):
         super().__init__(
             parent,
-            title="Preferências",
+            title=_("Preferências"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
 
@@ -37,15 +38,17 @@ class PreferencesDialog(wx.Dialog):
 
         intro_label = wx.StaticText(
             panel,
-            label="Ajuste como o player inicia, salva estado e responde aos atalhos. "
-            "Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar.",
+            label=_(
+                "Ajuste como o player inicia, salva estado e responde aos atalhos. "
+                "Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
+            ),
         )
         intro_label.Wrap(540)
 
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
         self.notebook = wx.Notebook(panel)
-        self.notebook.SetName("Categorias de preferências")
+        self.notebook.SetName(_("Categorias de preferências"))
 
         self._build_general_tab()
         self._build_playback_tab()
@@ -55,8 +58,8 @@ class PreferencesDialog(wx.Dialog):
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
-        self.save_button = wx.Button(panel, wx.ID_OK, "&Salvar")
-        self.cancel_button = wx.Button(panel, wx.ID_CANCEL, "&Cancelar")
+        self.save_button = wx.Button(panel, wx.ID_OK, _("&Salvar"))
+        self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
         self.save_button.SetDefault()
         button_sizer.AddButton(self.save_button)
         button_sizer.AddButton(self.cancel_button)
@@ -77,15 +80,40 @@ class PreferencesDialog(wx.Dialog):
         # an extra EVT_CHAR_HOOK would duplicate that behavior.
 
     def _build_general_tab(self):
-        page, page_sizer = self._create_tab_page("Geral")
+        page, page_sizer = self._create_tab_page(_("Geral"))
 
         info_label = wx.StaticText(
             page,
-            label="Configurações relacionadas ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs.",
+            label=_("Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."),
         )
         info_label.Wrap(520)
 
-        general_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Inicialização e sessão"), wx.VERTICAL)
+        language_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Idioma")), wx.VERTICAL)
+        self._language_choice_codes = [""]
+        language_labels = [_("Automático (seguir o sistema)")]
+        for code in available_languages():
+            self._language_choice_codes.append(code)
+            language_labels.append(language_display_name(code))
+
+        language_group, self.language_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Idioma da interface"),
+            help_text=_(
+                "Define o idioma de menus, diálogos e anúncios do leitor de tela. "
+                "Use Automático para seguir o idioma do sistema operacional."
+            ),
+            choices=language_labels,
+        )
+        language_box.Add(language_group, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+
+        language_note = wx.StaticText(
+            page,
+            label=_("A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."),
+        )
+        language_note.Wrap(520)
+        language_box.Add(language_note, 0, wx.ALL | wx.EXPAND, 6)
+
+        general_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Inicialização e sessão")), wx.VERTICAL)
         self.restore_session_checkbox = wx.CheckBox(page, label="&Restaurar sessão ao iniciar")
         self.remember_window_size_checkbox = wx.CheckBox(page, label="Lembrar tamanho da &janela")
         self.remember_last_folder_checkbox = wx.CheckBox(page, label="Lembrar última &pasta usada")
@@ -194,16 +222,17 @@ class PreferencesDialog(wx.Dialog):
         log_box.Add(rotation_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(language_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(general_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         if assoc_box:
             page_sizer.Add(assoc_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(log_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Geral", select=True)
+        self.notebook.AddPage(page, _("Geral"), select=True)
 
     def _build_playback_tab(self):
-        page, page_sizer = self._create_tab_page("Reprodução")
+        page, page_sizer = self._create_tab_page(_("Reprodução"))
 
         info_label = wx.StaticText(
             page,
@@ -304,10 +333,10 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(playback_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Reprodução")
+        self.notebook.AddPage(page, _("Reprodução"))
 
     def _build_accessibility_tab(self):
-        page, page_sizer = self._create_tab_page("Acessibilidade")
+        page, page_sizer = self._create_tab_page(_("Acessibilidade"))
 
         info_label = wx.StaticText(
             page,
@@ -334,10 +363,10 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(accessibility_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Acessibilidade")
+        self.notebook.AddPage(page, _("Acessibilidade"))
 
     def _build_additional_resources_tab(self):
-        page, page_sizer = self._create_tab_page("Recursos adicionais")
+        page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
         self._additional_resources_page = page
 
         info_label = wx.StaticText(
@@ -492,7 +521,7 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(self.youtube_music_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(self.youtube_music_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Recursos adicionais")
+        self.notebook.AddPage(page, _("Recursos adicionais"))
 
     def _create_tab_page(self, name):
         page = wx.Panel(self.notebook)
@@ -646,6 +675,11 @@ class PreferencesDialog(wx.Dialog):
         return labels
 
     def _populate_controls(self, settings):
+        try:
+            language_index = self._language_choice_codes.index(settings.language or "")
+        except ValueError:
+            language_index = 0
+        self.language_choice.SetSelection(language_index)
         self.restore_session_checkbox.SetValue(settings.restore_session_on_startup)
         self.remember_window_size_checkbox.SetValue(settings.remember_window_size)
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
@@ -689,6 +723,11 @@ class PreferencesDialog(wx.Dialog):
 
     def get_settings(self):
         settings = replace(self._settings)
+        selected_language_index = self.language_choice.GetSelection()
+        if 0 <= selected_language_index < len(self._language_choice_codes):
+            settings.language = self._language_choice_codes[selected_language_index]
+        else:
+            settings.language = ""
         settings.restore_session_on_startup = self.restore_session_checkbox.GetValue()
         settings.remember_window_size = self.remember_window_size_checkbox.GetValue()
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()

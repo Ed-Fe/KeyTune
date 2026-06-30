@@ -1,3 +1,5 @@
+from .i18n import _
+
 APP_TITLE = "KeyTune"
 APP_VERSION = "1.1.0"
 APP_LICENSE = "MIT"
@@ -55,10 +57,10 @@ DEFAULT_LOGGING_ENABLED = True
 DEFAULT_LOGGING_LEVEL = "WARNING"
 LOGGING_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 LOGGING_LEVEL_LABELS = {
-    "DEBUG": "Depuração (DEBUG)",
-    "INFO": "Informativo (INFO)",
-    "WARNING": "Avisos (WARNING)",
-    "ERROR": "Apenas erros (ERROR)",
+    "DEBUG": _("Depuração (DEBUG)"),
+    "INFO": _("Informativo (INFO)"),
+    "WARNING": _("Avisos (WARNING)"),
+    "ERROR": _("Apenas erros (ERROR)"),
 }
 
 REPEAT_OFF = "off"
@@ -66,16 +68,16 @@ REPEAT_ONE = "one"
 REPEAT_ALL = "all"
 REPEAT_MODES = (REPEAT_OFF, REPEAT_ONE, REPEAT_ALL)
 REPEAT_MODE_LABELS = {
-    REPEAT_OFF: "Repetição desligada",
-    REPEAT_ONE: "Repetir faixa atual",
-    REPEAT_ALL: "Repetir playlist",
+    REPEAT_OFF: _("Repetição desligada"),
+    REPEAT_ONE: _("Repetir faixa atual"),
+    REPEAT_ALL: _("Repetir playlist"),
 }
 
 PLAYLIST_WILDCARD = (
-    "Playlists|*.m3u;*.m3u8|"
-    "Playlist M3U8|*.m3u8|"
-    "Playlist M3U|*.m3u|"
-    "Todos os arquivos|*.*"
+    f"{_('Playlists')}|*.m3u;*.m3u8|"
+    f"{_('Playlist M3U8')}|*.m3u8|"
+    f"{_('Playlist M3U')}|*.m3u|"
+    f"{_('Todos os arquivos')}|*.*"
 )
 
 # Standard container/codec extensions playable by the bundled MPV (FFmpeg)

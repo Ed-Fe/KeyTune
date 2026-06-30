@@ -15,7 +15,7 @@ Runtime instructions for coding agents — every line is loaded into each sessio
 ## Boundaries
 
 **Always**
-- User-facing text (labels, menus, status, screen-reader announcements) in **Portuguese**.
+- User-facing text (labels, menus, status, screen-reader announcements) in **Portuguese**, wrapped in `_()` (gettext). Portuguese is the source language; see `instructions/i18n.instructions.md`. After changing wrapped strings, run `python scripts/i18n.py extract` then `compile`.
 - Keyboard-first and accessibility-first: preserve existing shortcuts; no mouse-only flows.
 - Route screen-reader work through `src/player/accessibility.py`; keep `accessible-output2` defensive.
 - Keep Windows-only modules (`single_instance.py`, `file_associations.py`, `smtc/service.py`) isolated from cross-platform core.
@@ -43,12 +43,13 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - The update dialog shows the GitHub release body as the changelog — keep `CHANGELOG.md` and the published release notes consistent (the app doesn't read the file).
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Full feature list and shortcut inventory: `README.md`, `docs/manual.md`.
-- Run `python scripts/generate_credits.py` after editing `requirements.txt` (or before a release) to keep `docs/credits.md` — shown by the About dialog — accurate; it's also regenerated automatically during Windows release builds.
+- Run `python scripts/generate_credits.py --language pt_BR --language en` after editing `requirements.txt` (or before a release) to keep `docs/credits.md` and `docs/credits.en.md` — shown by the About dialog — accurate; they're also regenerated automatically during Windows release builds.
 
 ## Detailed rules (`.github/`)
 
 - `instructions/player-architecture.instructions.md` — module map, splitting modules, new integrations.
 - `instructions/player-ui-a11y.instructions.md` — wxPython UI, dialogs, menus, shortcuts, focus, screen reader.
+- `instructions/i18n.instructions.md` — localization: wrapping strings in `_()`, catalogs under `locale/`, translating the manual/credits/installer.
 - `instructions/update-release.instructions.md` — updater, Windows packaging, release notes, CHANGELOG.
 - `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes.
 - `prompts/accessibility-smoke-test.prompt.md`, `prompts/release-readiness.prompt.md` — verification checklists.

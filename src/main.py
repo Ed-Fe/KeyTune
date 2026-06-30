@@ -32,8 +32,39 @@ def _collect_initial_paths(argv=None, *, launch_targets=None):
     return initial_paths
 
 
+def _read_saved_language():
+    # Read just the language key straight from the settings JSON, without
+    # importing the preferences/constants modules. Those modules build several
+    # module-level label dictionaries through ``_()``, so the active language has
+    # to be set *before* they are imported for the labels to be translated.
+    try:
+        import json
+
+        from player.session import get_app_storage_dir
+
+        settings_path = os.path.join(get_app_storage_dir(), "settings.json")
+        with open(settings_path, "r", encoding="utf-8") as settings_file:
+            payload = json.load(settings_file)
+        if isinstance(payload, dict):
+            return str(payload.get("language") or "")
+    except Exception:
+        pass
+    return ""
+
+
+def _setup_language():
+    # Activate the saved interface language (or auto-detect) before any UI module
+    # is imported, so every string built at import/construction time is already
+    # translated.
+    from player.i18n import setup_translation
+
+    setup_translation(_read_saved_language())
+
+
 def main():
     bootstrap_mpv_runtime()
+
+    _setup_language()
 
     initial_paths = _collect_initial_paths()
 

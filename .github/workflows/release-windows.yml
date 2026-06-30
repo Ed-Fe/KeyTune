@@ -42,17 +42,40 @@ jobs:
         run: |
           python scripts/download_yt_dlp_release.py --channel stable --output-dir dist\KeyTune
 
-      - name: Render manual as HTML
+      - name: Compile translation catalogs
+        run: |
+          python scripts/i18n.py compile
+
+      - name: Bundle translation catalogs
+        shell: powershell
+        run: |
+          if (Test-Path "locale") {
+            Copy-Item -Path "locale" -Destination "dist\KeyTune\locale" -Recurse -Force
+          }
+
+      - name: Render manual as HTML (per language)
+        shell: powershell
         run: |
           python scripts/render_manual.py docs/manual.md dist\KeyTune\docs\manual.html
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar o manual." }
+          foreach ($manual in Get-ChildItem -Path "docs" -Filter "manual.*.md" -ErrorAction SilentlyContinue) {
+            python scripts/render_manual.py $manual.FullName ("dist\KeyTune\docs\" + $manual.BaseName + ".html")
+            if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar manual traduzido: $($manual.Name)." }
+          }
 
-      - name: Generate credits
+      - name: Generate credits (per language)
         run: |
-          python scripts/generate_credits.py
+          python scripts/generate_credits.py --language pt_BR --language en
 
-      - name: Render credits as HTML
+      - name: Render credits as HTML (per language)
+        shell: powershell
         run: |
           python scripts/render_manual.py docs/credits.md dist\KeyTune\docs\credits.html
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar os créditos." }
+          foreach ($credit in Get-ChildItem -Path "docs" -Filter "credits.*.md" -ErrorAction SilentlyContinue) {
+            python scripts/render_manual.py $credit.FullName ("dist\KeyTune\docs\" + $credit.BaseName + ".html")
+            if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar créditos traduzidos: $($credit.Name)." }
+          }
 
       - name: Bundle MPV runtime into dist
         shell: powershell

@@ -79,22 +79,45 @@ if ($LASTEXITCODE -ne 0) {
     throw "Falha ao baixar o yt-dlp oficial."
 }
 
-Write-Step "Renderizando manual em HTML"
+Write-Step "Compilando catálogos de tradução"
+& $PythonExe scripts\i18n.py compile
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao compilar os catálogos de tradução."
+}
+
+Write-Step "Empacotando catálogos de tradução"
+if (Test-Path "locale") {
+    Copy-Item -Path "locale" -Destination "dist\KeyTune\locale" -Recurse -Force
+}
+
+Write-Step "Renderizando manual em HTML (por idioma)"
 & $PythonExe scripts\render_manual.py docs\manual.md dist\KeyTune\docs\manual.html
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao renderizar o manual em HTML."
 }
-
-Write-Step "Gerando créditos de bibliotecas e contribuidores"
-& $PythonExe scripts\generate_credits.py
-if ($LASTEXITCODE -ne 0) {
-    throw "Falha ao gerar docs\credits.md."
+foreach ($manual in Get-ChildItem -Path "docs" -Filter "manual.*.md" -ErrorAction SilentlyContinue) {
+    & $PythonExe scripts\render_manual.py $manual.FullName ("dist\KeyTune\docs\" + $manual.BaseName + ".html")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Falha ao renderizar o manual traduzido: $($manual.Name)."
+    }
 }
 
-Write-Step "Renderizando créditos em HTML"
+Write-Step "Gerando créditos de bibliotecas e contribuidores (por idioma)"
+& $PythonExe scripts\generate_credits.py --language pt_BR --language en
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao gerar os créditos."
+}
+
+Write-Step "Renderizando créditos em HTML (por idioma)"
 & $PythonExe scripts\render_manual.py docs\credits.md dist\KeyTune\docs\credits.html
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao renderizar os créditos em HTML."
+}
+foreach ($credit in Get-ChildItem -Path "docs" -Filter "credits.*.md" -ErrorAction SilentlyContinue) {
+    & $PythonExe scripts\render_manual.py $credit.FullName ("dist\KeyTune\docs\" + $credit.BaseName + ".html")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Falha ao renderizar os créditos traduzidos: $($credit.Name)."
+    }
 }
 
 Write-Step "Copiando runtime do MPV"
