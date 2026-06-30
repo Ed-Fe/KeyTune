@@ -4,6 +4,8 @@ import unicodedata
 
 import wx
 
+from ..i18n import _
+
 
 TYPEAHEAD_RESET_SECONDS = 1.0
 
@@ -15,7 +17,7 @@ class VirtualItemsListCtrl(wx.ListCtrl):
             style=wx.LC_REPORT | wx.LC_NO_HEADER | wx.LC_VIRTUAL,
         )
         self._text_provider = text_provider
-        self.InsertColumn(0, "Itens")
+        self.InsertColumn(0, _("Itens"))
         self.Bind(wx.EVT_SIZE, self._on_size)
         self._sync_column_width()
 
@@ -70,12 +72,12 @@ class PlaylistBrowserPanel(wx.Panel):
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.header_label = wx.StaticText(self, label="Playlist")
+        self.header_label = wx.StaticText(self, label=_("Playlist"))
         self.items_list = VirtualItemsListCtrl(self, self._get_display_label)
-        self.items_list.SetName("Lista de itens")
+        self.items_list.SetName(_("Lista de itens"))
         self.hint_label = wx.StaticText(
             self,
-            label="Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player.",
+            label=_("Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."),
         )
         self.hint_label.Wrap(260)
 
@@ -100,10 +102,10 @@ class PlaylistBrowserPanel(wx.Panel):
             self._items = []
             self._base_labels = []
             self._playlist_current_index = wx.NOT_FOUND
-            self._show_placeholder(playlist_state.loading_message or "Carregando playlist...")
+            self._show_placeholder(playlist_state.loading_message or _("Carregando playlist..."))
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
-            self.header_label.SetLabel(f"{playlist_state.title} — carregando")
-            self.hint_label.SetLabel("Aguarde o carregamento da playlist. Tab volta ao player.")
+            self.header_label.SetLabel(_("{title} — carregando").format(title=playlist_state.title))
+            self.hint_label.SetLabel(_("Aguarde o carregamento da playlist. Tab volta ao player."))
             self.hint_label.Wrap(260)
             self._render_mode = "playlist"
             self._playlist_items_revision = playlist_state.items_revision
@@ -144,14 +146,14 @@ class PlaylistBrowserPanel(wx.Panel):
                 if existing_selection == wx.NOT_FOUND or existing_selection >= len(self._base_labels):
                     self._set_list_selection(selection, ensure_visible=False)
         else:
-            self._show_placeholder("Nenhum item nesta playlist.")
+            self._show_placeholder(_("Nenhum item nesta playlist."))
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
 
         self.header_label.SetLabel(
-            f"{playlist_state.title} — {len(playlist_state.items)} item(ns)"
+            _("{title} — {count} item(ns)").format(title=playlist_state.title, count=len(playlist_state.items))
         )
         self.hint_label.SetLabel(
-            "Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."
+            _("Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player.")
         )
         self.hint_label.Wrap(260)
         self._render_mode = "playlist"
@@ -181,11 +183,11 @@ class PlaylistBrowserPanel(wx.Panel):
             self._items = []
             self._base_labels = []
             self._folder_current_media_key = None
-            self._show_placeholder(loading_message or "Carregando itens da pasta...")
+            self._show_placeholder(loading_message or _("Carregando itens da pasta..."))
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
             self._folder_index_by_key = {}
-            self.header_label.SetLabel(f"{title} — {current_path}")
-            self.hint_label.SetLabel("Aguarde o carregamento da pasta. Tab volta ao player.")
+            self.header_label.SetLabel(_("{title} — {path}").format(title=title, path=current_path))
+            self.hint_label.SetLabel(_("Aguarde o carregamento da pasta. Tab volta ao player."))
             self.hint_label.Wrap(260)
             self._render_mode = "folder"
             self._folder_entries_revision = entries_revision
@@ -219,13 +221,13 @@ class PlaylistBrowserPanel(wx.Panel):
             selection = self._find_selection(selected_path, current_media_key)
             self._set_list_selection(selection, ensure_visible=False)
         else:
-            self._show_placeholder("Nenhuma pasta ou mídia nesta localização.")
+            self._show_placeholder(_("Nenhuma pasta ou mídia nesta localização."))
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
             self._folder_index_by_key = {}
 
-        self.header_label.SetLabel(f"{title} — {current_path}")
+        self.header_label.SetLabel(_("{title} — {path}").format(title=title, path=current_path))
         self.hint_label.SetLabel(
-            "Enter entra na pasta ou toca o arquivo. Backspace volta. Digite letras para localizar. Tab volta ao player."
+            _("Enter entra na pasta ou toca o arquivo. Backspace volta. Digite letras para localizar. Tab volta ao player.")
         )
         self.hint_label.Wrap(260)
         self._render_mode = "folder"

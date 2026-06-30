@@ -8,6 +8,7 @@ from ...constants import (
     YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
     YOUTUBE_MUSIC_RADIO_PREFETCH_LEAD_MS,
 )
+from ...i18n import _
 from ...log import get_logger
 from ...playlists import PlaylistState
 from ...youtube_music.playlists import extract_video_id_from_text, is_youtube_music_media
@@ -112,7 +113,7 @@ class RelatedAutoplayMixin:
                 # Proactive fetch still running: advance as soon as it lands.
                 request["advance_when_ready"] = True
                 _logger.debug("Related autoplay: awaiting in-flight prefetch for the seed track.")
-                self._announce("Buscando conteúdo relacionado no YouTube Music.")
+                self._announce(_("Buscando conteúdo relacionado no YouTube Music."))
                 return True
             if status == "appended":
                 # Items were already added proactively; advance into them now.
@@ -126,7 +127,7 @@ class RelatedAutoplayMixin:
             return False
 
         _logger.info("Fetching related content (radio) at end of playlist.")
-        self._announce("Buscando conteúdo relacionado no YouTube Music.")
+        self._announce(_("Buscando conteúdo relacionado no YouTube Music."))
         self._begin_related_youtube_music_fetch(seed_media_path, advance_when_ready=True)
         return True
 
@@ -191,7 +192,7 @@ class RelatedAutoplayMixin:
             if advance_when_ready:
                 self._related_autoplay = None
                 self._announce(
-                    f"Playlist {state.title} finalizada. Não foi possível buscar conteúdo relacionado: {error_message}."
+                    _("Playlist {title} finalizada. Não foi possível buscar conteúdo relacionado: {error}.").format(title=state.title, error=error_message)
                 )
             return
 
@@ -201,7 +202,7 @@ class RelatedAutoplayMixin:
             request["status"] = "failed"
             if advance_when_ready:
                 self._related_autoplay = None
-                self._announce(f"Playlist {state.title} finalizada. Nenhum conteúdo relacionado encontrado.")
+                self._announce(_("Playlist {title} finalizada. Nenhum conteúdo relacionado encontrado.").format(title=state.title))
             return
 
         if request.get("status") != "appended":
@@ -215,7 +216,7 @@ class RelatedAutoplayMixin:
             if callable(prefetch_upcoming):
                 prefetch_upcoming(state)
             if not advance_when_ready and hasattr(self, "_set_status_message"):
-                self._set_status_message("Conteúdo relacionado adicionado à playlist.")
+                self._set_status_message(_("Conteúdo relacionado adicionado à playlist."))
 
         if advance_when_ready:
             self._related_autoplay = None
@@ -224,11 +225,11 @@ class RelatedAutoplayMixin:
     def _advance_into_related_content(self, state):
         target = state.move_in_playback_order(1)
         if not target:
-            self._announce(f"Playlist {state.title} finalizada.")
+            self._announce(_("Playlist {title} finalizada.").format(title=state.title))
             return False
 
         self._play_media(
             index=self._get_active_playlist_index(),
-            announce_message=f"Conteúdo relacionado. {self._describe_playlist_position(state)}",
+            announce_message=_("Conteúdo relacionado. {position}").format(position=self._describe_playlist_position(state)),
         )
         return True

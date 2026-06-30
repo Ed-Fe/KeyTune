@@ -1,18 +1,21 @@
+from ...i18n import _
 from ...playlists import ScreenTabState
 
 
 class PlaylistItemRemovalMixin:
-    def _remove_item_from_current_playlist(self, item_index, announce_prefix="Item removido"):
+    def _remove_item_from_current_playlist(self, item_index, announce_prefix=None):
+        if announce_prefix is None:
+            announce_prefix = _("Item removido")
         if self._block_sensitive_action_during_youtube_music("close-media"):
             return
 
         state = self._get_playlist_state()
         if state and state.is_folder_tab:
-            self._announce("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta.")
+            self._announce(_("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."))
             return
 
         if not state or not 0 <= item_index < len(state.items):
-            self._announce("Nenhum item válido selecionado.")
+            self._announce(_("Nenhum item válido selecionado."))
             return
 
         removed_path = state.items[item_index]
@@ -31,7 +34,7 @@ class PlaylistItemRemovalMixin:
             self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
-            self._announce(f"{announce_prefix}: {removed_name}. Playlist vazia.")
+            self._announce(_("{prefix}: {name}. Playlist vazia.").format(prefix=announce_prefix, name=removed_name))
             return
 
         if removed_current_item:
@@ -39,7 +42,7 @@ class PlaylistItemRemovalMixin:
             state.select_index(next_index)
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=f"{announce_prefix}: {removed_name}. {self._describe_playlist_position(state)}",
+                announce_message=_("{prefix}: {name}.").format(prefix=announce_prefix, name=removed_name) + " " + self._describe_playlist_position(state),
             )
             return
 
@@ -49,9 +52,11 @@ class PlaylistItemRemovalMixin:
         state.current_media_path = state.items[state.current_index]
         state.reset_playback_order(preferred_index=state.current_index)
         self._refresh_playlist_browser()
-        self._announce(f"{announce_prefix}: {removed_name}. {state.item_count} itens na playlist.")
+        self._announce(_("{prefix}: {name}. {count} itens na playlist.").format(prefix=announce_prefix, name=removed_name, count=state.item_count))
 
-    def _remove_items_from_current_playlist(self, item_indexes, announce_prefix="Itens removidos"):
+    def _remove_items_from_current_playlist(self, item_indexes, announce_prefix=None):
+        if announce_prefix is None:
+            announce_prefix = _("Itens removidos")
         normalized_indexes = sorted(
             {
                 int(item_index)
@@ -61,24 +66,24 @@ class PlaylistItemRemovalMixin:
             reverse=True,
         )
         if not normalized_indexes:
-            self._announce("Nenhum item válido selecionado.")
+            self._announce(_("Nenhum item válido selecionado."))
             return
 
         if len(normalized_indexes) == 1:
-            self._remove_item_from_current_playlist(normalized_indexes[0], announce_prefix="Item removido")
+            self._remove_item_from_current_playlist(normalized_indexes[0], announce_prefix=_("Item removido"))
             return
 
         state = self._get_playlist_state()
         if state and state.is_folder_tab:
-            self._announce("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta.")
+            self._announce(_("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."))
             return
         if not state:
-            self._announce("Nenhuma playlist ativa.")
+            self._announce(_("Nenhuma playlist ativa."))
             return
 
         valid_indexes = [index for index in normalized_indexes if 0 <= index < len(state.items)]
         if not valid_indexes:
-            self._announce("Nenhum item válido selecionado.")
+            self._announce(_("Nenhum item válido selecionado."))
             return
 
         removed_current_item = state.current_index in valid_indexes
@@ -97,7 +102,7 @@ class PlaylistItemRemovalMixin:
             self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
-            self._announce(f"{announce_prefix}: {removed_count} itens. Playlist vazia.")
+            self._announce(_("{prefix}: {count} itens. Playlist vazia.").format(prefix=announce_prefix, count=removed_count))
             return
 
         if removed_current_item:
@@ -105,7 +110,7 @@ class PlaylistItemRemovalMixin:
             state.select_index(next_index)
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=f"{announce_prefix}: {removed_count} itens removidos. {self._describe_playlist_position(state)}",
+                announce_message=_("{prefix}: {count} itens removidos.").format(prefix=announce_prefix, count=removed_count) + " " + self._describe_playlist_position(state),
             )
             return
 
@@ -116,7 +121,7 @@ class PlaylistItemRemovalMixin:
         state.reset_playback_order(preferred_index=state.current_index)
         self._refresh_playlist_browser()
         self._announce(
-            f"{announce_prefix}: {removed_count} itens removidos. {state.item_count} itens na playlist."
+            _("{prefix}: {removed} itens removidos. {count} itens na playlist.").format(prefix=announce_prefix, removed=removed_count, count=state.item_count)
         )
 
     def _close_current_media(self):
@@ -125,7 +130,7 @@ class PlaylistItemRemovalMixin:
 
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
-            self._announce("Nenhuma mídia carregada.")
+            self._announce(_("Nenhuma mídia carregada."))
             return
 
         state = self._get_playlist_state()
@@ -137,11 +142,11 @@ class PlaylistItemRemovalMixin:
             self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
-            self._announce("Prévia fechada.")
+            self._announce(_("Prévia fechada."))
             return
 
         if not state or not state.current_media_path:
-            self._announce("Nenhuma mídia carregada.")
+            self._announce(_("Nenhuma mídia carregada."))
             return
 
-        self._remove_item_from_current_playlist(state.current_index, announce_prefix="Mídia fechada")
+        self._remove_item_from_current_playlist(state.current_index, announce_prefix=_("Mídia fechada"))

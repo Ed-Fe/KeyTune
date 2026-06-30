@@ -7,6 +7,7 @@ from ...constants import (
     REPEAT_OFF,
     REPEAT_ONE,
 )
+from ...i18n import _
 from ...library import folder_display_name
 from ...log import get_logger
 from ...playlists import ScreenTabState
@@ -22,17 +23,17 @@ class PlaylistPlaybackMixin:
     def _describe_playlist_position(self, state):
         if not state.current_media_path:
             if state.is_folder_tab and state.folder_current_path:
-                return f"Pasta atual: {folder_display_name(state.folder_current_path)}."
-            return "Nenhuma mídia tocando agora."
+                return _("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path))
+            return _("Nenhuma mídia tocando agora.")
 
         media_name = self._media_label(state.current_media_path)
         if state.is_folder_tab:
-            return f"Pasta atual: {folder_display_name(state.folder_current_path)}."
+            return _("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path))
 
         if state.item_count <= 1 or not 0 <= state.current_index < state.item_count:
-            return f"Item atual: {media_name}."
+            return _("Item atual: {name}.").format(name=media_name)
 
-        return f"Item atual: {media_name}. Item {state.current_index + 1} de {state.item_count}."
+        return _("Item atual: {name}. Item {current} de {total}.").format(name=media_name, current=state.current_index + 1, total=state.item_count)
 
     def _play_media(self, media_path=None, index=None, announce_message=None, allow_crossfade=False):
         self._suppress_next_auto_advance = False
@@ -121,7 +122,7 @@ class PlaylistPlaybackMixin:
         if not target:
             return False
 
-        loop_prefix = "Nova volta da playlist. " if wrapped_cycle else ""
+        loop_prefix = _("Nova volta da playlist. ") if wrapped_cycle else ""
         self._play_media(
             index=self._get_active_playlist_index(),
             announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
@@ -168,7 +169,7 @@ class PlaylistPlaybackMixin:
 
         state = self._get_playlist_state()
         if not state or not state.items:
-            self._announce("Nenhuma playlist carregada.")
+            self._announce(_("Nenhuma playlist carregada."))
             return
 
         if direction < 0 and self.player.get_media() is not None:
@@ -176,7 +177,7 @@ class PlaylistPlaybackMixin:
             if current_time is not None and current_time > PLAYBACK_RESTART_THRESHOLD_MS:
                 self.player.set_time(0)
                 self._update_time_bar()
-                self._announce("Início do item atual.")
+                self._announce(_("Início do item atual."))
                 return
 
         should_wrap = state.repeat_mode == REPEAT_ALL
@@ -184,7 +185,7 @@ class PlaylistPlaybackMixin:
         if not target:
             if direction > 0 and self._try_autoplay_related_youtube_music(state):
                 return
-            boundary_message = "Você já está no primeiro item." if direction < 0 else "Você já está no último item."
+            boundary_message = _("Você já está no primeiro item.") if direction < 0 else _("Você já está no último item.")
             self._announce(boundary_message)
             return
 
@@ -200,12 +201,12 @@ class PlaylistPlaybackMixin:
 
         state = self._get_playlist_state()
         if not state or not state.items:
-            self._announce("Nenhuma playlist carregada.")
+            self._announce(_("Nenhuma playlist carregada."))
             return
 
         target_index = len(state.items) - 1 if to_last else 0
         if state.current_index == target_index:
-            boundary_message = "Você já está no último item." if to_last else "Você já está no primeiro item."
+            boundary_message = _("Você já está no último item.") if to_last else _("Você já está no primeiro item.")
             self._announce(boundary_message)
             return
 
@@ -218,15 +219,15 @@ class PlaylistPlaybackMixin:
 
         state = self._get_playlist_state()
         if not state or not state.items:
-            self._announce("Nenhuma playlist carregada.")
+            self._announce(_("Nenhuma playlist carregada."))
             return
 
         if state.is_folder_tab:
-            self._announce("Não é possível reordenar arquivos no navegador de pastas.")
+            self._announce(_("Não é possível reordenar arquivos no navegador de pastas."))
             return
 
         if len(state.items) < 2:
-            self._announce("A playlist precisa de pelo menos dois itens para reordenar.")
+            self._announce(_("A playlist precisa de pelo menos dois itens para reordenar."))
             return
 
         current_index = state.current_index
@@ -236,12 +237,12 @@ class PlaylistPlaybackMixin:
                 current_index = media_index
                 state.current_index = current_index
             else:
-                self._announce("Nenhum item atual para reordenar.")
+                self._announce(_("Nenhum item atual para reordenar."))
                 return
 
         target_index = current_index + direction
         if not 0 <= target_index < len(state.items):
-            boundary_message = "O item já está no topo da playlist." if direction < 0 else "O item já está no final da playlist."
+            boundary_message = _("O item já está no topo da playlist.") if direction < 0 else _("O item já está no final da playlist.")
             self._announce(boundary_message)
             return
 
@@ -253,7 +254,7 @@ class PlaylistPlaybackMixin:
         state.reset_playback_order(preferred_index=target_index)
         self._refresh_playlist_browser()
         self._announce(
-            f"Item movido para a posição {target_index + 1} de {state.item_count}: {self._media_label(moved_item)}."
+            _("Item movido para a posição {pos} de {total}: {name}.").format(pos=target_index + 1, total=state.item_count, name=self._media_label(moved_item))
         )
 
     def _toggle_shuffle(self):
@@ -262,16 +263,16 @@ class PlaylistPlaybackMixin:
 
         state = self._get_playlist_state()
         if not state:
-            self._announce("Nenhuma playlist ativa.")
+            self._announce(_("Nenhuma playlist ativa."))
             return
 
         state.shuffle_enabled = not state.shuffle_enabled
         preferred_index = state.current_index if state.current_index >= 0 else 0
         state.reset_playback_order(preferred_index=preferred_index)
-        status = "ativado" if state.shuffle_enabled else "desativado"
-        self._announce(f"Modo aleatório {status}.")
+        status = _("ativado") if state.shuffle_enabled else _("desativado")
+        self._announce(_("Modo aleatório {status}.").format(status=status))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(f"Aleatório: {status}.")
+            self._set_status_message(_("Aleatório: {status}.").format(status=status))
         self._refresh_playlist_browser()
 
     def _cycle_repeat_mode(self):
@@ -280,7 +281,7 @@ class PlaylistPlaybackMixin:
 
         state = self._get_playlist_state()
         if not state:
-            self._announce("Nenhuma playlist ativa.")
+            self._announce(_("Nenhuma playlist ativa."))
             return
 
         current_mode_index = REPEAT_MODES.index(state.repeat_mode)
@@ -288,22 +289,22 @@ class PlaylistPlaybackMixin:
         self._announce(self._repeat_mode_message(state.repeat_mode) + ".")
         if hasattr(self, "_set_status_message"):
             mode_label = REPEAT_MODE_LABELS.get(state.repeat_mode, state.repeat_mode)
-            self._set_status_message(f"Repetir: {mode_label}.")
+            self._set_status_message(_("Repetir: {mode}.").format(mode=mode_label))
         self._refresh_playlist_browser()
 
     def _toggle_related_autoplay(self):
         self.settings.youtube_music_autoplay_related = not self.settings.youtube_music_autoplay_related
-        status = "ativado" if self.settings.youtube_music_autoplay_related else "desativado"
-        self._announce(f"Conteúdo relacionado do YouTube Music {status}.")
+        status = _("ativado") if self.settings.youtube_music_autoplay_related else _("desativado")
+        self._announce(_("Conteúdo relacionado do YouTube Music {status}.").format(status=status))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(f"Conteúdo relacionado: {status}.")
+            self._set_status_message(_("Conteúdo relacionado: {status}.").format(status=status))
         self._save_settings()
 
     def _handle_media_end(self):
         state = self._get_playlist_state()
         if not state:
             _logger.debug("Media end: no active playlist state.")
-            self._announce("Mídia finalizada.")
+            self._announce(_("Mídia finalizada."))
             return
 
         state.was_playing = False
@@ -319,7 +320,7 @@ class PlaylistPlaybackMixin:
             _logger.debug("Media end: repeat-one, replaying current track.")
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=f"Repetindo faixa atual. {self._describe_playlist_position(state)}",
+                announce_message=_("Repetindo faixa atual. {position}").format(position=self._describe_playlist_position(state)),
             )
             return
 
@@ -342,7 +343,7 @@ class PlaylistPlaybackMixin:
         target = state.move_in_playback_order(1, wrap=should_wrap)
         if target:
             _logger.debug("Media end: advancing to next track in playback order.")
-            loop_prefix = "Nova volta da playlist. " if wrapped_cycle else ""
+            loop_prefix = _("Nova volta da playlist. ") if wrapped_cycle else ""
             self._play_media(
                 index=self._get_active_playlist_index(),
                 announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
@@ -353,4 +354,4 @@ class PlaylistPlaybackMixin:
         if self._try_autoplay_related_youtube_music(state):
             return
 
-        self._announce(f"Playlist {state.title} finalizada.")
+        self._announce(_("Playlist {title} finalizada.").format(title=state.title))

@@ -3,6 +3,8 @@ import re
 import uuid
 from dataclasses import dataclass, field
 
+from ..i18n import _
+
 
 EQUALIZER_SCREEN_ID = "equalizer"
 EQUALIZER_GAIN_MIN_DB = -12.0
@@ -16,45 +18,45 @@ PRESET_SOURCE_CUSTOM = "custom"
 
 
 BUILTIN_PRESET_LABELS = {
-    "flat": "Padrão",
-    "classical": "Clássico",
-    "club": "Club",
-    "dance": "Dance",
-    "fullbass": "Graves profundos",
-    "fullbasstreble": "Graves e agudos",
-    "fulltreble": "Agudos realçados",
-    "headphones": "Fones de ouvido",
-    "largehall": "Sala ampla",
-    "live": "Ao vivo",
-    "party": "Festa",
-    "pop": "Pop",
-    "reggae": "Reggae",
-    "rock": "Rock",
-    "ska": "Ska",
-    "soft": "Suave",
-    "softrock": "Rock suave",
-    "techno": "Techno",
+    "flat": _("Padrão"),
+    "classical": _("Clássico"),
+    "club": _("Club"),
+    "dance": _("Dance"),
+    "fullbass": _("Graves profundos"),
+    "fullbasstreble": _("Graves e agudos"),
+    "fulltreble": _("Agudos realçados"),
+    "headphones": _("Fones de ouvido"),
+    "largehall": _("Sala ampla"),
+    "live": _("Ao vivo"),
+    "party": _("Festa"),
+    "pop": _("Pop"),
+    "reggae": _("Reggae"),
+    "rock": _("Rock"),
+    "ska": _("Ska"),
+    "soft": _("Suave"),
+    "softrock": _("Rock suave"),
+    "techno": _("Techno"),
 }
 
 BUILTIN_PRESET_DESCRIPTIONS = {
-    "flat": "Curva neutra, útil para manter o som original da mídia.",
-    "classical": "Realça definição e brilho sem exagerar nos graves.",
-    "club": "Empurra graves e agudos para uma escuta mais animada.",
-    "dance": "Dá mais impacto ao grave e mais brilho ao topo.",
-    "fullbass": "Prioriza subgraves e graves para dar mais peso à batida.",
-    "fullbasstreble": "Curva em V com graves fortes e agudos brilhantes.",
-    "fulltreble": "Destaca detalhes, pratos, vozes e brilho geral.",
-    "headphones": "Equilíbrio pensado para fones com sensação de clareza.",
-    "largehall": "Cria uma sensação mais aberta e ampla no som.",
-    "live": "Tenta trazer presença de palco e mais ambiência.",
-    "party": "Curva divertida para volumes casuais e músicas animadas.",
-    "pop": "Favorece voz, brilho e graves limpos para pop moderno.",
-    "reggae": "Dá mais corpo aos graves com médios mais relaxados.",
-    "rock": "Realça ataque de guitarras, caixa e presença geral.",
-    "ska": "Mantém baixo firme com médios e agudos vivos.",
-    "soft": "Escuta suave para reduzir agressividade em faixas brilhantes.",
-    "softrock": "Mistura equilíbrio com leve presença de voz e brilho.",
-    "techno": "Enfatiza batida, subgrave e brilho eletrônico.",
+    "flat": _("Curva neutra, útil para manter o som original da mídia."),
+    "classical": _("Realça definição e brilho sem exagerar nos graves."),
+    "club": _("Empurra graves e agudos para uma escuta mais animada."),
+    "dance": _("Dá mais impacto ao grave e mais brilho ao topo."),
+    "fullbass": _("Prioriza subgraves e graves para dar mais peso à batida."),
+    "fullbasstreble": _("Curva em V com graves fortes e agudos brilhantes."),
+    "fulltreble": _("Destaca detalhes, pratos, vozes e brilho geral."),
+    "headphones": _("Equilíbrio pensado para fones com sensação de clareza."),
+    "largehall": _("Cria uma sensação mais aberta e ampla no som."),
+    "live": _("Tenta trazer presença de palco e mais ambiência."),
+    "party": _("Curva divertida para volumes casuais e músicas animadas."),
+    "pop": _("Favorece voz, brilho e graves limpos para pop moderno."),
+    "reggae": _("Dá mais corpo aos graves com médios mais relaxados."),
+    "rock": _("Realça ataque de guitarras, caixa e presença geral."),
+    "ska": _("Mantém baixo firme com médios e agudos vivos."),
+    "soft": _("Escuta suave para reduzir agressividade em faixas brilhantes."),
+    "softrock": _("Mistura equilíbrio com leve presença de voz e brilho."),
+    "techno": _("Enfatiza batida, subgrave e brilho eletrônico."),
 }
 
 BUILTIN_PRESET_TABLE = {
@@ -157,7 +159,7 @@ class EqualizerPreset:
 
     @classmethod
     def from_dict(cls, data, *, fallback_band_count=None):
-        preset_name = str(data.get("name") or "Preset personalizado").strip() or "Preset personalizado"
+        preset_name = str(data.get("name") or _("Preset personalizado")).strip() or _("Preset personalizado")
         preset_id = str(data.get("id") or "").strip()
         if not preset_id.startswith(f"{PRESET_SOURCE_CUSTOM}:"):
             preset_id = generate_custom_preset_id()
@@ -277,7 +279,7 @@ def normalize_custom_presets(custom_presets, *, expected_band_count):
 
 
 def create_custom_preset(name, preamp_db, band_gains_db, *, preset_id=None):
-    normalized_name = str(name or "").strip() or "Preset personalizado"
+    normalized_name = str(name or "").strip() or _("Preset personalizado")
     normalized_bands = normalize_band_gains(
         list(band_gains_db or []),
         expected_count=len(list(band_gains_db or [])) or len(FALLBACK_EQUALIZER_FREQUENCIES_HZ),
@@ -295,7 +297,7 @@ def format_frequency_label(frequency_hz):
     try:
         numeric_frequency = float(frequency_hz)
     except (TypeError, ValueError):
-        return "Frequência"
+        return _("Frequência")
 
     if numeric_frequency >= 1000:
         rounded_khz = numeric_frequency / 1000

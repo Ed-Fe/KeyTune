@@ -2,6 +2,7 @@ import os
 
 import wx
 
+from ..i18n import _, ngettext
 from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name, scan_folder_contents
 from ..playlists import PlaylistState, build_playlist_title
 
@@ -155,13 +156,16 @@ class FrameLibraryNavigationMixin:
 
         if hasattr(self, "_set_status_message"):
             if added_count > 0:
-                suffix = "s" if added_count != 1 else ""
                 self._set_status_message(
-                    f"{added_count} item{suffix} adicionado{suffix} a {target_state.title}."
+                    ngettext(
+                        "{count} item adicionado a {title}.",
+                        "{count} itens adicionados a {title}.",
+                        added_count,
+                    ).format(count=added_count, title=target_state.title)
                 )
             else:
                 self._set_status_message(
-                    f"Reproduzindo item já presente em {target_state.title}."
+                    _("Reproduzindo item já presente em {title}.").format(title=target_state.title)
                 )
 
         return True
@@ -264,12 +268,12 @@ class FrameLibraryNavigationMixin:
             return
 
         if state.is_loading:
-            self._announce("A pasta ainda está sendo carregada.")
+            self._announce(_("A pasta ainda está sendo carregada."))
             return
 
         normalized_media_path = self._normalize_path(media_path)
         if not normalized_media_path or not os.path.isfile(normalized_media_path):
-            self._announce("O arquivo selecionado não está mais disponível.")
+            self._announce(_("O arquivo selecionado não está mais disponível."))
             self._refresh_playlist_browser()
             return
 
@@ -292,7 +296,7 @@ class FrameLibraryNavigationMixin:
 
         media_index = state.index_of_item(normalized_media_path)
         if media_index is None:
-            self._announce("O arquivo selecionado não pertence à pasta atual.")
+            self._announce(_("O arquivo selecionado não pertence à pasta atual."))
             self._refresh_playlist_browser()
             return
 
@@ -312,7 +316,7 @@ class FrameLibraryNavigationMixin:
 
         parent_path = os.path.dirname(state.folder_current_path)
         if not parent_path or parent_path == state.folder_current_path:
-            self._announce("Você já está na pasta raiz.")
+            self._announce(_("Você já está na pasta raiz."))
             return
 
         self._enter_folder_directory(
@@ -331,7 +335,7 @@ class FrameLibraryNavigationMixin:
         tab_index = self._prepare_folder_tab(normalized_folder_path)
         if tab_index is None:
             return False
-        self._announce(f"Carregando pasta: {folder_display_name(normalized_folder_path)}.")
+        self._announce(_("Carregando pasta: {name}.").format(name=folder_display_name(normalized_folder_path)))
         return True
 
     def _open_folder_as_playlist(self, folder_path):
@@ -406,12 +410,12 @@ class FrameLibraryNavigationMixin:
         self._refresh_playlist_browser()
         browser.focus_current_item()
         if announce:
-            self._announce("Modo navegação de itens.")
+            self._announce(_("Modo navegação de itens."))
 
     def _focus_player_controls(self, announce=True):
         self.SetFocus()
         if announce:
-            self._announce("Modo controle do player.")
+            self._announce(_("Modo controle do player."))
 
     def _toggle_navigation_mode(self):
         browser = self._get_browser_panel()

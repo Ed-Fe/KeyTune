@@ -10,6 +10,7 @@ from ..library import (
     load_playlist,
     scan_folder_contents,
 )
+from ..i18n import _
 from ..log import get_logger
 from ..playlists import PlaylistState, build_folder_tab_title
 
@@ -248,7 +249,7 @@ class FrameLibraryLoaderMixin:
             if self._is_current_playlist_state(state):
                 self._update_title()
                 self._refresh_playlist_browser()
-            wx.MessageBox(error_message, "Abrir playlist", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(error_message, _("Abrir playlist"), wx.OK | wx.ICON_ERROR, self)
             return
 
         if not items:
@@ -260,8 +261,8 @@ class FrameLibraryLoaderMixin:
                 self._update_title()
                 self._refresh_playlist_browser()
             wx.MessageBox(
-                "Nenhum item válido foi encontrado na playlist selecionada.",
-                "Abrir playlist",
+                _("Nenhum item válido foi encontrado na playlist selecionada."),
+                _("Abrir playlist"),
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -277,7 +278,7 @@ class FrameLibraryLoaderMixin:
         if self._is_current_playlist_state(state):
             self._play_media(
                 index=tab_index,
-                announce_message=f"Playlist carregada: {state.title}. {len(items)} item(ns).",
+                announce_message=_("Playlist carregada: {title}. {count} item(ns).").format(title=state.title, count=len(items)),
             )
 
     def _finish_folder_playlist_load_request(self, request, items, item_index_map, browser_item_labels, error_message):
@@ -302,7 +303,7 @@ class FrameLibraryLoaderMixin:
             if self._is_current_playlist_state(state):
                 self._update_title()
                 self._refresh_playlist_browser()
-            wx.MessageBox(error_message, "Abrir pasta como playlist", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(error_message, _("Abrir pasta como playlist"), wx.OK | wx.ICON_ERROR, self)
             return
 
         if not items:
@@ -314,8 +315,8 @@ class FrameLibraryLoaderMixin:
                 self._update_title()
                 self._refresh_playlist_browser()
             wx.MessageBox(
-                "Nenhuma mídia compatível foi encontrada na pasta selecionada.",
-                "Abrir pasta como playlist",
+                _("Nenhuma mídia compatível foi encontrada na pasta selecionada."),
+                _("Abrir pasta como playlist"),
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -329,7 +330,7 @@ class FrameLibraryLoaderMixin:
         if self._is_current_playlist_state(state):
             self._play_media(
                 index=tab_index,
-                announce_message=f"Pasta carregada como playlist: {state.title}. {len(items)} item(ns).",
+                announce_message=_("Pasta carregada como playlist: {title}. {count} item(ns).").format(title=state.title, count=len(items)),
             )
 
     def _finish_folder_load_request(
@@ -364,7 +365,7 @@ class FrameLibraryLoaderMixin:
             if self._is_current_playlist_state(state):
                 self._update_title()
                 self._refresh_playlist_browser()
-            self._announce(f"Não foi possível carregar a pasta selecionada: {error_message}.")
+            self._announce(_("Não foi possível carregar a pasta selecionada: {error}.").format(error=error_message))
             return
 
         recent_path = request.get("recent_path")
