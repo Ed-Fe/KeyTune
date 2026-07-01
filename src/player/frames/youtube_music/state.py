@@ -1,3 +1,4 @@
+from ...i18n import _
 import wx
 
 from player.youtube_music.models import YOUTUBE_MUSIC_SCREEN_ID
@@ -218,7 +219,7 @@ class LibraryStateMixin:
         return bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
 
     def _announce_youtube_music_integration_disabled(self):
-        message = (
+        message = _(
             "A integração com YouTube Music e YouTube está desativada. "
             "Ative essa opção em Preferências, na aba Recursos adicionais."
         )

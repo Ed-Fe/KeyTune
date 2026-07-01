@@ -2,6 +2,7 @@ import os
 from urllib import error, parse, request
 
 from ..constants import UPDATE_HTTP_TIMEOUT_SECONDS
+from ..i18n import _
 
 
 REMOTE_PREFIXES = (
@@ -122,7 +123,7 @@ def _download_playlist_lines(url):
         with request.urlopen(playlist_request, timeout=UPDATE_HTTP_TIMEOUT_SECONDS) as response:
             payload = response.read()
     except (OSError, ValueError, error.URLError) as exc:
-        raise OSError(f"Não foi possível abrir a playlist remota: {exc}.") from exc
+        raise OSError(_("Não foi possível abrir a playlist remota: {error}.").format(error=exc)) from exc
 
     for encoding in ("utf-8-sig", "utf-8", "cp1252"):
         try:

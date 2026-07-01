@@ -46,7 +46,9 @@ def normalize_mood_categories(raw_categories):
     return sections
 
 
-def normalize_mood_playlists(raw_playlists, *, badge="Mood ou gênero"):
+def normalize_mood_playlists(raw_playlists, *, badge=None):
+    if badge is None:
+        badge = _("Mood ou gênero")
     """Normalize ``get_mood_playlists`` items into playlist search results."""
     results = []
     seen_playlist_ids = set()

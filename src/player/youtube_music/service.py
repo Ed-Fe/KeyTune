@@ -21,6 +21,7 @@ from .playlists import (
 from .stream_cache import YouTubeMusicStreamCache, normalize_media_path
 from .streams import ResolvedStreamPlayback, resolve_stream_playback as resolve_music_stream_playback
 from ..log import get_logger
+from ..i18n import _
 
 
 _logger = get_logger(__name__)
@@ -229,7 +230,7 @@ class YouTubeMusicService:
         if source_file_path:
             normalized_source_file_path = os.path.abspath(os.path.normpath(str(source_file_path or "").strip()))
             if not normalized_source_file_path or not os.path.isfile(normalized_source_file_path):
-                raise RuntimeError("Selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.")
+                raise RuntimeError(_("Selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."))
             raw_auth_input = read_auth_file_text(normalized_source_file_path)
             source_name = os.path.basename(normalized_source_file_path)
             normalized_headers_raw = prepare_browser_auth_input(
@@ -313,7 +314,9 @@ class YouTubeMusicService:
     def get_mood_categories(self):
         return self._library.get_mood_categories()
 
-    def get_mood_playlists(self, params, *, badge="Mood ou gênero"):
+    def get_mood_playlists(self, params, *, badge=None):
+        if badge is None:
+            badge = _("Mood ou gênero")
         return self._library.get_mood_playlists(params, badge=badge)
 
     def get_liked_songs(self, *, limit=100):
@@ -334,7 +337,9 @@ class YouTubeMusicService:
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
         return self._library.get_playlist_content(playlist_id, fallback_title, require_auth=require_auth)
 
-    def get_radio_content(self, video_id, fallback_title="Conteúdo relacionado", *, limit=50):
+    def get_radio_content(self, video_id, fallback_title=None, *, limit=50):
+        if fallback_title is None:
+            fallback_title = _("Conteúdo relacionado")
         return self._library.get_radio_content(video_id, fallback_title, limit=limit)
 
     # -- Feedback / history (delegated) ----------------------------------------

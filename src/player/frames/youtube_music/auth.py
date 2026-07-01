@@ -1,3 +1,4 @@
+from ...i18n import _
 import wx
 
 from player.youtube_music.dialog import YouTubeMusicBrowserAuthDialog
@@ -5,7 +6,7 @@ from player.youtube_music.dialog import YouTubeMusicBrowserAuthDialog
 
 class AuthMixin:
     def _handle_invalid_youtube_music_auth(self, service, *, announce=True):
-        message = "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."
+        message = _("Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente.")
         try:
             service.disconnect()
         except Exception:
@@ -27,7 +28,7 @@ class AuthMixin:
         if bool(getattr(error, "should_disconnect", True)):
             return self._handle_invalid_youtube_music_auth(service, announce=announce)
 
-        message = "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
+        message = _("Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes.")
         service.clear_client_cache()
         self._youtube_music_library_status_message = message
         self._refresh_youtube_music_screen_later()
@@ -60,7 +61,7 @@ class AuthMixin:
         dialog = YouTubeMusicBrowserAuthDialog(self)
         try:
             if dialog.ShowModal() != wx.ID_OK:
-                self._announce("Conexão com o YouTube Music cancelada.")
+                self._announce(_("Conexão com o YouTube Music cancelada."))
                 return
 
             headers_raw = dialog.get_headers_raw()
@@ -70,7 +71,7 @@ class AuthMixin:
 
         if not headers_raw and not browser_json_path:
             wx.MessageBox(
-                "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.",
+                _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
                 "YouTube Music",
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -84,8 +85,7 @@ class AuthMixin:
             service.clear_client_cache()
             self._set_youtube_music_account_name("")
             wx.MessageBox(
-                "Não foi possível conectar a conta do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível conectar a conta do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -94,16 +94,16 @@ class AuthMixin:
             return
 
         self._set_youtube_music_account_name(account_name)
-        self._youtube_music_library_status_message = f"Conta conectada: {account_name}."
+        self._youtube_music_library_status_message = _("Conta conectada: {name}.").format(name=account_name)
         self._clear_youtube_music_library_cache(loaded=False, status_message=self._youtube_music_status_message())
         self._refresh_youtube_music_menu_state()
         self._refresh_pending_restored_youtube_music_tabs()
-        self._announce(f"Conta do YouTube Music conectada: {account_name}.")
+        self._announce(_("Conta do YouTube Music conectada: {name}.").format(name=account_name))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(f"YouTube Music conectado como {account_name}.")
+            self._set_status_message(_("YouTube Music conectado como {name}.").format(name=account_name))
         self.on_refresh_youtube_music_library(None, announce=False)
         wx.MessageBox(
-            f"Autenticação do navegador salva em:\n{saved_path}\n\nConta conectada: {account_name}",
+            _("Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}").format(path=saved_path, name=account_name),
             "YouTube Music",
             wx.OK | wx.ICON_INFORMATION,
             self,
@@ -112,13 +112,13 @@ class AuthMixin:
     def on_disconnect_youtube_music(self, _event):
         service = self._get_youtube_music_service()
         if not service.has_saved_browser_auth():
-            self._announce("Nenhuma conta do YouTube Music está conectada.")
+            self._announce(_("Nenhuma conta do YouTube Music está conectada."))
             self._refresh_youtube_music_menu_state()
             return
 
         with wx.MessageDialog(
             self,
-            "Deseja remover a autenticação salva do YouTube Music neste computador?",
+            _("Deseja remover a autenticação salva do YouTube Music neste computador?"),
             "YouTube Music",
             wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
         ) as dialog:
@@ -129,14 +129,14 @@ class AuthMixin:
         self._set_youtube_music_account_name("")
         self._clear_youtube_music_library_cache(
             loaded=False,
-            status_message="A conta do YouTube Music foi desconectada desta instalação.",
+            status_message=_("A conta do YouTube Music foi desconectada desta instalação."),
         )
         self._refresh_youtube_music_menu_state()
-        self._announce("Conta do YouTube Music desconectada.")
+        self._announce(_("Conta do YouTube Music desconectada."))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message("YouTube Music desconectado.")
+            self._set_status_message(_("YouTube Music desconectado."))
         wx.MessageBox(
-            "A autenticação salva do YouTube Music foi removida.",
+            _("A autenticação salva do YouTube Music foi removida."),
             "YouTube Music",
             wx.OK | wx.ICON_INFORMATION,
             self,

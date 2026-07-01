@@ -1,3 +1,4 @@
+from ...i18n import _
 import wx
 
 from player.youtube_music.models import get_search_scope_option
@@ -9,7 +10,7 @@ class SearchMixin:
     def _on_youtube_music_show_search_actions_menu(self, panel, anchor_window=None):
         selected_results = self._selected_youtube_music_search_results()
         if not selected_results:
-            self._announce("Selecione ao menos um resultado da busca para abrir o menu de ações.")
+            self._announce(_("Selecione ao menos um resultado da busca para abrir o menu de ações."))
             return False
 
         menu = wx.Menu()
@@ -115,7 +116,7 @@ class SearchMixin:
             prepared_labels.append(search_result.choice_label)
 
         if not prepared_items:
-            raise RuntimeError("A seleção atual não tem resultados reproduzíveis para adicionar à playlist escolhida.")
+            raise RuntimeError(_("A seleção atual não tem resultados reproduzíveis para adicionar à playlist escolhida."))
 
         return prepared_items, prepared_labels, playlist_result_count, skipped_count
 
@@ -124,14 +125,14 @@ class SearchMixin:
             title = str(getattr(search_results[0], "title", "") or "").strip()
             if title:
                 return title
-        return "Seleção do YouTube Music"
+        return _("Seleção do YouTube Music")
 
     def _announce_youtube_music_playlist_addition(self, added_count, target_title, playlist_result_count, skipped_count):
-        normalized_message = f"{added_count} item(ns) adicionado(s) à playlist: {target_title}."
+        normalized_message = _("{count} item(ns) adicionado(s) à playlist: {title}.").format(count=added_count, title=target_title)
         if playlist_result_count:
-            normalized_message = f"{normalized_message} {playlist_result_count} playlist(s) da busca foram expandidas."
+            normalized_message = normalized_message + " " + _("{count} playlist(s) da busca foram expandidas.").format(count=playlist_result_count)
         if skipped_count:
-            normalized_message = f"{normalized_message} {skipped_count} item(ns) da seleção foram ignorados."
+            normalized_message = normalized_message + " " + _("{count} item(ns) da seleção foram ignorados.").format(count=skipped_count)
         self._announce(normalized_message)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(normalized_message)
@@ -139,7 +140,7 @@ class SearchMixin:
     def _open_youtube_music_search_results_in_new_playlist(self):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce("Selecione ao menos um resultado da busca para abrir em uma nova playlist.")
+            self._announce(_("Selecione ao menos um resultado da busca para abrir em uma nova playlist."))
             return False
 
         def worker():
@@ -150,7 +151,7 @@ class SearchMixin:
             target_index = self._create_empty_playlist_tab(select=False)
             target_state = self._get_playlist_state(target_index)
             if not isinstance(target_state, PlaylistState):
-                self._announce("Não foi possível criar uma nova playlist para a seleção atual.")
+                self._announce(_("Não foi possível criar uma nova playlist para a seleção atual."))
                 return
 
             target_state.finish_library_load()
@@ -169,19 +170,18 @@ class SearchMixin:
             self._refresh_playlist_browser()
             self._update_title()
 
-            announce_message = f"Seleção aberta em nova playlist: {target_state.title}."
+            announce_message = _("Seleção aberta em nova playlist: {title}.").format(title=target_state.title)
             if playlist_result_count:
-                announce_message = f"{announce_message} {playlist_result_count} playlist(s) da busca foram expandidas."
+                announce_message = announce_message + " " + _("{count} playlist(s) da busca foram expandidas.").format(count=playlist_result_count)
             if skipped_count:
-                announce_message = f"{announce_message} {skipped_count} item(ns) da seleção foram ignorados."
+                announce_message = announce_message + " " + _("{count} item(ns) da seleção foram ignorados.").format(count=skipped_count)
             self._play_media(index=target_index, announce_message=announce_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(announce_message)
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível abrir a seleção em uma nova playlist.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível abrir a seleção em uma nova playlist.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -192,12 +192,12 @@ class SearchMixin:
     def _add_youtube_music_search_results_to_playlist_tab(self, target_index):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce("Selecione ao menos um resultado da busca para adicionar à playlist escolhida.")
+            self._announce(_("Selecione ao menos um resultado da busca para adicionar à playlist escolhida."))
             return False
 
         target_state = self._get_playlist_state(target_index)
         if not isinstance(target_state, PlaylistState) or target_state.is_folder_tab or target_state.is_loading:
-            self._announce("A playlist escolhida não está disponível para receber a seleção atual.")
+            self._announce(_("A playlist escolhida não está disponível para receber a seleção atual."))
             return False
 
         def worker():
@@ -212,7 +212,7 @@ class SearchMixin:
             )
 
             if added_count == 0:
-                self._announce(f"Os itens selecionados já estavam presentes na playlist: {target_state.title}.")
+                self._announce(_("Os itens selecionados já estavam presentes na playlist: {title}.").format(title=target_state.title))
                 return
 
             self._add_recent_media_paths(prepared_items)
@@ -229,8 +229,7 @@ class SearchMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível adicionar a seleção à playlist escolhida.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível adicionar a seleção à playlist escolhida.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -253,7 +252,7 @@ class SearchMixin:
     def _save_youtube_music_search_result(self):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce("Selecione ao menos um resultado da busca para salvar.")
+            self._announce(_("Selecione ao menos um resultado da busca para salvar."))
             return False
 
         service = self._get_youtube_music_service()
@@ -271,7 +270,7 @@ class SearchMixin:
                 if getattr(search_result, "result_type", "") == "playlist":
                     playlist_saved = True
             if success_count == 0:
-                raise RuntimeError("A seleção atual não tem resultados compatíveis para salvar na biblioteca.")
+                raise RuntimeError(_("A seleção atual não tem resultados compatíveis para salvar na biblioteca."))
             return success_count, playlist_saved
 
         def on_success(result):
@@ -289,8 +288,7 @@ class SearchMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível salvar o resultado no YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível salvar o resultado no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -301,12 +299,12 @@ class SearchMixin:
     def _add_youtube_music_search_results_to_current_playlist(self):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce("Selecione ao menos um resultado da busca para adicionar à playlist atual.")
+            self._announce(_("Selecione ao menos um resultado da busca para adicionar à playlist atual."))
             return False
 
         target_state = self._resolve_youtube_music_player_playlist_target()
         if not isinstance(target_state, PlaylistState):
-            self._announce("Não foi possível localizar uma playlist de destino no player.")
+            self._announce(_("Não foi possível localizar uma playlist de destino no player."))
             return False
 
         service = self._get_youtube_music_service()
@@ -323,7 +321,7 @@ class SearchMixin:
             )
 
             if added_count == 0:
-                self._announce("Os itens selecionados já estavam presentes na playlist atual.")
+                self._announce(_("Os itens selecionados já estavam presentes na playlist atual."))
                 return
 
             self._add_recent_media_paths(prepared_items)
@@ -338,8 +336,7 @@ class SearchMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível adicionar a seleção à playlist atual.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível adicionar a seleção à playlist atual.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -354,7 +351,7 @@ class SearchMixin:
 
         query = panel.get_search_query()
         if not query:
-            self._announce("Digite algo para pesquisar no YouTube Music ou no YouTube.")
+            self._announce(_("Digite algo para pesquisar no YouTube Music ou no YouTube."))
             return False
 
         search_scope_id = panel.get_search_scope_id()
@@ -363,7 +360,7 @@ class SearchMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce(f"Pesquisando em {scope_option.label}: {query}.")
+        self._announce(_("Pesquisando em {scope}: {query}.").format(scope=scope_option.label, query=query))
 
         def worker():
             return service.search(query, search_scope=search_scope_id)
@@ -385,7 +382,7 @@ class SearchMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível concluir a busca agora.\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível concluir a busca agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,

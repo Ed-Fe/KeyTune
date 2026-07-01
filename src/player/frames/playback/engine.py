@@ -67,9 +67,9 @@ class PlaybackEngineMixin:
                     player = self._managed_player(player_key)
                     player_instance = self._instance_for_player(player_key)
                     if player_instance is None:
-                        raise RuntimeError("Instância do backend de reprodução indisponível.")
+                        raise RuntimeError(_("Instância do backend de reprodução indisponível."))
                     if player is None:
-                        raise RuntimeError("Player de reprodução indisponível.")
+                        raise RuntimeError(_("Player de reprodução indisponível."))
                     media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
                     player.stop()
                     player.set_media(media)
@@ -281,7 +281,7 @@ class PlaybackEngineMixin:
     def _load_media(self, media_path):
         player_instance = self._instance_for_player(self._active_player_key)
         if player_instance is None:
-            raise RuntimeError("Instância do backend de reprodução indisponível.")
+            raise RuntimeError(_("Instância do backend de reprodução indisponível."))
 
         playback_media_path, playback_http_headers = self._resolve_media_for_playback(media_path)
         media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)

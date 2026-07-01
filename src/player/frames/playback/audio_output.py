@@ -152,7 +152,7 @@ class AudioOutputMixin:
             except Exception:
                 pass
             label = self._label_for_audio_output_device(preferred_device_id) or preferred_device_id
-            announcement = f"Dispositivo de áudio '{label}' restaurado."
+            announcement = _("Dispositivo de áudio '{label}' restaurado.").format(label=label)
 
         # Whenever the device list changes, ask MPV to reattach a real audio
         # output if it had fallen back to ``null`` (e.g. while no device was

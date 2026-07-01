@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from http.cookies import SimpleCookie
 
 from player.session import APP_STORAGE_DIR
+from ..i18n import _
 
 
 YTMUSIC_BROWSER_AUTH_FILE_NAME = "ytmusic_browser.json"
@@ -118,7 +119,7 @@ def read_auth_file_text(file_path):
         except UnicodeDecodeError:
             continue
 
-    raise RuntimeError("Não foi possível ler o arquivo de autenticação selecionado.")
+    raise RuntimeError(_("Não foi possível ler o arquivo de autenticação selecionado."))
 
 
 def prepare_browser_auth_input(raw_input, *, source_name="entrada"):

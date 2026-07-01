@@ -87,7 +87,7 @@ class PlayerBackendMixin:
     def _create_managed_player(self, player_key, instance=None):
         target_instance = instance or self._instance_for_player(player_key)
         if target_instance is None:
-            raise RuntimeError("Instância do backend de reprodução indisponível para o player.")
+            raise RuntimeError(_("Instância do backend de reprodução indisponível para o player."))
 
         player = target_instance.media_player_new()
         try:
