@@ -14,6 +14,7 @@ from .playlists import (
 )
 from .search import normalize_music_search_results, search_youtube_videos
 from ..log import get_logger
+from ..i18n import _
 
 
 _logger = get_logger(__name__)
@@ -83,7 +84,9 @@ class YouTubeMusicLibraryManager:
         raw_categories = client.get_mood_categories()
         return normalize_mood_categories(raw_categories)
 
-    def get_mood_playlists(self, params, *, badge="Mood ou gênero"):
+    def get_mood_playlists(self, params, *, badge=None):
+        if badge is None:
+            badge = _("Mood ou gênero")
         """Return the playlists for a "Moods & Genres" category as results.
 
         ``params`` is the opaque token obtained from :meth:`get_mood_categories`.
@@ -132,7 +135,7 @@ class YouTubeMusicLibraryManager:
         """Return the account's play history as song results (most recent first)."""
         client = self._get_client(require_auth=True)
         raw_history = client.get_history()
-        return normalize_track_items(raw_history, badge="Histórico")
+        return normalize_track_items(raw_history, badge=_("Histórico"))
 
     def get_user_library_playlists(self, *, limit=None):
         """Return the user's library playlists sorted by title.
@@ -216,7 +219,9 @@ class YouTubeMusicLibraryManager:
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists
 
-    def get_radio_content(self, video_id, fallback_title="Conteúdo relacionado", *, limit=50):
+    def get_radio_content(self, video_id, fallback_title=None, *, limit=50):
+        if fallback_title is None:
+            fallback_title = _("Conteúdo relacionado")
         """Fetch tracks related to *video_id* (YouTube Music's radio/"Watch Next").
 
         Uses the public client so related tracks can be fetched even when the
@@ -262,7 +267,7 @@ class YouTubeMusicLibraryManager:
 
         return YouTubeMusicPlaylistContent(
             playlist_id=radio_playlist_id,
-            title=str(fallback_title or "Conteúdo relacionado").strip(),
+            title=str(fallback_title or _("Conteúdo relacionado")).strip(),
             item_urls=item_urls,
             item_labels=item_labels,
         )
@@ -279,11 +284,11 @@ class YouTubeMusicLibraryManager:
         """
         normalized_playlist_id = str(playlist_id or "").strip()
         if not normalized_playlist_id:
-            raise RuntimeError("A playlist selecionada é inválida.")
+            raise RuntimeError(_("A playlist selecionada é inválida."))
 
         normalized_video_ids = self._dedupe_video_ids(video_ids)
         if not normalized_video_ids:
-            raise RuntimeError("Nenhuma faixa válida do YouTube Music foi selecionada.")
+            raise RuntimeError(_("Nenhuma faixa válida do YouTube Music foi selecionada."))
 
         client = self._get_client(require_auth=True)
         response = client.add_playlist_items(normalized_playlist_id, normalized_video_ids)
@@ -309,7 +314,7 @@ class YouTubeMusicLibraryManager:
         """
         normalized_title = str(title or "").strip()
         if not normalized_title:
-            raise RuntimeError("Informe um nome para a nova playlist.")
+            raise RuntimeError(_("Informe um nome para a nova playlist."))
 
         normalized_description = str(description or "").strip()
         normalized_privacy_status = self._normalize_privacy_status(privacy_status)
@@ -341,16 +346,16 @@ class YouTubeMusicLibraryManager:
         """
         normalized_playlist_id = str(playlist_id or "").strip()
         if not normalized_playlist_id:
-            raise RuntimeError("A playlist selecionada é inválida.")
+            raise RuntimeError(_("A playlist selecionada é inválida."))
         if is_watch_playlist_id(normalized_playlist_id):
-            raise RuntimeError("Mixes e rádios do YouTube Music não podem ser excluídos.")
+            raise RuntimeError(_("Mixes e rádios do YouTube Music não podem ser excluídos."))
 
         client = self._get_client(require_auth=True)
         # A small fetch is enough to read the ``owned`` flag; we don't need the
         # full track listing just to confirm deletion is allowed.
         playlist = client.get_playlist(normalized_playlist_id, limit=1)
         if not self._playlist_is_owned(playlist):
-            raise RuntimeError("Você só pode excluir playlists que você criou.")
+            raise RuntimeError(_("Você só pode excluir playlists que você criou."))
 
         response = client.delete_playlist(normalized_playlist_id)
         status_text = self._playlist_edit_status_text(response)
@@ -370,11 +375,11 @@ class YouTubeMusicLibraryManager:
         """
         normalized_playlist_id = str(playlist_id or "").strip()
         if not normalized_playlist_id:
-            raise RuntimeError("A playlist selecionada é inválida.")
+            raise RuntimeError(_("A playlist selecionada é inválida."))
 
         normalized_video_ids = self._dedupe_video_ids(video_ids)
         if not normalized_video_ids:
-            raise RuntimeError("Nenhuma faixa válida do YouTube Music foi selecionada.")
+            raise RuntimeError(_("Nenhuma faixa válida do YouTube Music foi selecionada."))
 
         client = self._get_client(require_auth=True)
         # The playlist detail also tells us whether the account can edit it
@@ -397,7 +402,7 @@ class YouTubeMusicLibraryManager:
                 videos_to_remove.append({"videoId": video_id, "setVideoId": set_video_id})
 
         if not videos_to_remove:
-            raise RuntimeError("As faixas selecionadas não foram encontradas nesta playlist.")
+            raise RuntimeError(_("As faixas selecionadas não foram encontradas nesta playlist."))
 
         response = client.remove_playlist_items(normalized_playlist_id, videos_to_remove)
         status_text = self._playlist_edit_status_text(response)

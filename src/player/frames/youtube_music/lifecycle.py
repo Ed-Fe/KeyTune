@@ -1,3 +1,4 @@
+from ...i18n import _
 import os
 import threading
 
@@ -123,7 +124,7 @@ class LifecycleMixin:
             return self._announce_youtube_music_integration_disabled()
 
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
-            message = (
+            message = _(
                 "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. "
                 "Aguarde a conclusão para abrir a central."
             )
@@ -144,11 +145,11 @@ class LifecycleMixin:
         ):
             if getattr(self, "_youtube_music_dependency_update_in_progress", False):
                 self._announce(
-                    "Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida."
+                    _("Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida.")
                 )
             else:
                 self._announce(
-                    "Carregando conta e biblioteca do YouTube Music. Por favor, aguarde."
+                    _("Carregando conta e biblioteca do YouTube Music. Por favor, aguarde.")
                 )
 
         self._open_screen_tab(
@@ -156,7 +157,7 @@ class LifecycleMixin:
             "YouTube Music",
             self._create_youtube_music_page,
             select=True,
-            activation_message=(
+            activation_message=_(
                 "Aba YouTube Music. Use os controles para conectar a conta, atualizar a biblioteca, pesquisar "
                 "no catálogo e abrir playlists, mixes, músicas ou vídeos."
             ),
@@ -181,7 +182,7 @@ class LifecycleMixin:
         # trigger this auto-load when it finishes.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
             self._youtube_music_library_status_message = (
-                "Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida."
+                _("Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida.")
             )
             self._refresh_youtube_music_screen_later()
             return
@@ -227,12 +228,12 @@ class LifecycleMixin:
 
         playlist_id = panel.get_selected_playlist_id()
         if not playlist_id:
-            self._announce("Selecione uma playlist ou mix do YouTube Music para abrir.")
+            self._announce(_("Selecione uma playlist ou mix do YouTube Music para abrir."))
             return
 
         playlist = self._playlist_summary_by_id(playlist_id)
         if playlist is None:
-            self._announce("A playlist selecionada não está mais disponível na lista atual.")
+            self._announce(_("A playlist selecionada não está mais disponível na lista atual."))
             return
 
         self._load_youtube_music_playlist(playlist)
@@ -241,7 +242,7 @@ class LifecycleMixin:
         panel = self._get_youtube_music_panel()
         manual_source = panel.get_manual_source() if panel is not None else ""
         if not manual_source:
-            self._announce("Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir.")
+            self._announce(_("Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir."))
             return
 
         playlist_id = extract_playlist_id_from_text(manual_source)
@@ -257,20 +258,20 @@ class LifecycleMixin:
             return
 
         wx.MessageBox(
-            "Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube.",
+            _("Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube."),
             "YouTube Music",
             wx.OK | wx.ICON_INFORMATION,
             self,
         )
 
     def _open_youtube_music_manual_video(self, video_url, video_id):
-        title = f"Vídeo do YouTube ({video_id})"
+        title = _("Vídeo do YouTube ({id})").format(id=video_id)
         self._open_prepared_media_playlist(
             [video_url],
             title,
             browser_item_labels=[title],
             source_path=video_url,
-            announce_message=f"Vídeo do YouTube aberto: {title}.",
+            announce_message=_("Vídeo do YouTube aberto: {title}.").format(title=title),
         )
 
     def _on_youtube_music_search_button(self):
@@ -347,12 +348,12 @@ class LifecycleMixin:
         def on_success(account_name):
             self._set_youtube_music_account_name(account_name)
             if account_name:
-                self._youtube_music_library_status_message = f"Conta conectada: {account_name}."
+                self._youtube_music_library_status_message = _("Conta conectada: {name}.").format(name=account_name)
             self._refresh_youtube_music_menu_state()
             if account_name:
-                self._announce(f"YouTube Music reconectado: {account_name}.")
+                self._announce(_("YouTube Music reconectado: {name}.").format(name=account_name))
                 if hasattr(self, "_set_status_message"):
-                    self._set_status_message(f"YouTube Music conectado como {account_name}.")
+                    self._set_status_message(_("YouTube Music conectado como {name}.").format(name=account_name))
             self._refresh_pending_restored_youtube_music_tabs()
 
         def on_error(_error):
@@ -379,7 +380,7 @@ class LifecycleMixin:
             return False
 
         display_title = str(fallback_title or normalized_playlist_id).strip() or normalized_playlist_id
-        self._announce(f"Carregando playlist do YouTube Music: {display_title}.")
+        self._announce(_("Carregando playlist do YouTube Music: {title}.").format(title=display_title))
 
         def worker():
             return service.get_playlist_content(
@@ -392,7 +393,7 @@ class LifecycleMixin:
             self._refresh_youtube_music_menu_state()
             if not playlist_content.item_urls:
                 wx.MessageBox(
-                    "A playlist selecionada não tem faixas reproduzíveis no momento.",
+                    _("A playlist selecionada não tem faixas reproduzíveis no momento."),
                     "YouTube Music",
                     wx.OK | wx.ICON_INFORMATION,
                     self,
@@ -404,18 +405,14 @@ class LifecycleMixin:
                 playlist_content.title,
                 browser_item_labels=playlist_content.item_labels,
                 source_path=service.build_playlist_source(normalized_playlist_id),
-                announce_message=(
-                    f"Playlist do YouTube Music carregada: {playlist_content.title}. "
-                    f"{len(playlist_content.item_urls)} item(ns)."
-                ),
+                announce_message=_("Playlist do YouTube Music carregada: {title}. {count} item(ns).").format(title=playlist_content.title, count=len(playlist_content.item_urls)),
             )
 
         def on_error(exc):
             service.clear_client_cache()
             self._refresh_youtube_music_menu_state()
             wx.MessageBox(
-                "Não foi possível carregar a playlist do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar a playlist do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,

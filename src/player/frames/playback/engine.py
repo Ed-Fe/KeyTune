@@ -2,6 +2,8 @@ import contextlib
 import queue
 import sys
 
+
+from ...i18n import _
 import wx
 
 from ...library import is_audio_playback_media
@@ -18,7 +20,7 @@ class PlaybackEngineMixin:
             return
 
         self._update_title()
-        self._announce("Nenhuma mídia tocando agora.")
+        self._announce(_("Nenhuma mídia tocando agora."))
 
     def _next_playback_request_serial(self):
         self._playback_request_serial += 1
@@ -65,9 +67,9 @@ class PlaybackEngineMixin:
                     player = self._managed_player(player_key)
                     player_instance = self._instance_for_player(player_key)
                     if player_instance is None:
-                        raise RuntimeError("Instância do backend de reprodução indisponível.")
+                        raise RuntimeError(_("Instância do backend de reprodução indisponível."))
                     if player is None:
-                        raise RuntimeError("Player de reprodução indisponível.")
+                        raise RuntimeError(_("Player de reprodução indisponível."))
                     media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
                     player.stop()
                     player.set_media(media)
@@ -225,7 +227,7 @@ class PlaybackEngineMixin:
                     except Exception:
                         handled = False
                 if not handled:
-                    self._announce(f"Não foi possível iniciar a mídia: {error_message}.")
+                    self._announce(_("Não foi possível iniciar a mídia: {error}.").format(error=error_message))
             return
 
         if request.get("crossfade"):
@@ -268,7 +270,7 @@ class PlaybackEngineMixin:
         announce_message = request.get("announce_message")
         if hasattr(self, "_set_status_message"):
             now_playing_label = self._media_label(media_path)
-            self._set_status_message(f"Tocando: {now_playing_label}", auto_clear_ms=0)
+            self._set_status_message(_("Tocando: {name}").format(name=now_playing_label), auto_clear_ms=0)
         if announce_message is not None:
             if announce_message:
                 self._announce(announce_message)
@@ -279,7 +281,7 @@ class PlaybackEngineMixin:
     def _load_media(self, media_path):
         player_instance = self._instance_for_player(self._active_player_key)
         if player_instance is None:
-            raise RuntimeError("Instância do backend de reprodução indisponível.")
+            raise RuntimeError(_("Instância do backend de reprodução indisponível."))
 
         playback_media_path, playback_http_headers = self._resolve_media_for_playback(media_path)
         media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)

@@ -22,6 +22,7 @@ from ..constants import (
     WINDOWS_SETUP_CHECKSUM_NAME,
     WINDOWS_SETUP_EXECUTABLE_NAME,
 )
+from ..i18n import _
 from ..install_info import read_install_info
 from ..log import get_logger
 
@@ -74,23 +75,23 @@ def fetch_latest_release() -> UpdateInfo:
 
     tag_name = normalize_version(payload.get("tag_name") or payload.get("name") or "")
     if not tag_name:
-        raise UpdateError("Não foi possível ler a versão mais recente.")
+        raise UpdateError(_("Não foi possível ler a versão mais recente."))
 
     _logger.debug("Latest release tag: %s", tag_name)
 
     assets = payload.get("assets")
     if not isinstance(assets, list):
-        raise UpdateError("Não foi possível ler os arquivos da atualização.")
+        raise UpdateError(_("Não foi possível ler os arquivos da atualização."))
 
     archive_asset = _select_archive_asset(assets)
     if archive_asset is None:
-        raise UpdateError("Não foi encontrado o arquivo da atualização.")
+        raise UpdateError(_("Não foi encontrado o arquivo da atualização."))
 
     checksum_asset = _select_checksum_asset(assets)
     archive_name = str(archive_asset.get("name") or WINDOWS_SETUP_EXECUTABLE_NAME)
     archive_url = str(archive_asset.get("browser_download_url") or "").strip()
     if not archive_url:
-        raise UpdateError("Não foi possível abrir o arquivo da atualização.")
+        raise UpdateError(_("Não foi possível abrir o arquivo da atualização."))
 
     return UpdateInfo(
         current_version=normalize_version(APP_VERSION),
@@ -133,11 +134,11 @@ def download_release_archive(
 
         if update_info.checksum_url:
             if progress_callback is not None:
-                progress_callback(downloaded_bytes, total_bytes, "Validando integridade do pacote...")
+                progress_callback(downloaded_bytes, total_bytes, _("Validando integridade do pacote..."))
             expected_checksum = _download_expected_checksum(update_info.checksum_url)
             actual_checksum = _calculate_sha256(target_path)
             if actual_checksum.lower() != expected_checksum.lower():
-                raise UpdateError("O arquivo baixado não pôde ser validado.")
+                raise UpdateError(_("O arquivo baixado não pôde ser validado."))
 
         _logger.info("Release archive integrity verified: %s", target_path)
         return target_path
@@ -152,7 +153,7 @@ def can_self_update() -> bool:
 
 def unsupported_install_message() -> str:
     return (
-        "A instalação automática só está disponível na versão do Windows empacotada."
+        _("A instalação automática só está disponível na versão do Windows empacotada.")
     )
 
 
@@ -179,7 +180,7 @@ def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pi
 
     installer_file = Path(installer_path).resolve()
     if not installer_file.exists():
-        raise UpdateError("Não foi possível encontrar o arquivo baixado.")
+        raise UpdateError(_("Não foi possível encontrar o arquivo baixado."))
 
     # Copy out of the temp download dir so it isn't cleaned while the installer runs.
     runner_directory = Path(tempfile.mkdtemp(prefix="keytune-setup-runner-"))
@@ -201,7 +202,7 @@ def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pi
         _logger.info("Installer update launched (elevated=%s): %s", needs_elevation, runner_installer)
     except OSError as exc:
         _logger.error("Failed to launch installer update: %s", exc)
-        raise UpdateError("Não foi possível abrir o instalador da atualização.") from exc
+        raise UpdateError(_("Não foi possível abrir o instalador da atualização.")) from exc
 
 
 def _launch_elevated(installer: Path) -> None:
@@ -282,13 +283,13 @@ def _fetch_json(url: str) -> dict:
         payload = json.loads(response_text)
     except error.URLError as exc:
         _logger.warning("Network error while fetching release info: %s", exc)
-        raise UpdateError("Não foi possível verificar as atualizações.") from exc
+        raise UpdateError(_("Não foi possível verificar as atualizações.")) from exc
     except json.JSONDecodeError as exc:
         _logger.warning("Failed to parse release info response: %s", exc)
-        raise UpdateError("Não foi possível verificar as atualizações.") from exc
+        raise UpdateError(_("Não foi possível verificar as atualizações.")) from exc
 
     if not isinstance(payload, dict):
-        raise UpdateError("Não foi possível verificar as atualizações.")
+        raise UpdateError(_("Não foi possível verificar as atualizações."))
     return payload
 
 
@@ -296,7 +297,7 @@ def _download_expected_checksum(url: str) -> str:
     checksum_text = _download_text(url)
     match = re.search(r"\b[a-fA-F0-9]{64}\b", checksum_text)
     if not match:
-        raise UpdateError("Não foi possível validar a integridade do arquivo.")
+        raise UpdateError(_("Não foi possível validar a integridade do arquivo."))
     return match.group(0)
 
 
@@ -307,9 +308,9 @@ def _download_text(url: str, *, accept_header: str = "text/plain") -> str:
         with request.urlopen(release_request, timeout=UPDATE_HTTP_TIMEOUT_SECONDS) as response:
             return response.read().decode("utf-8")
     except error.HTTPError as exc:
-        raise UpdateError("Não foi possível acessar as atualizações.") from exc
+        raise UpdateError(_("Não foi possível acessar as atualizações.")) from exc
     except error.URLError as exc:
-        raise UpdateError("Não foi possível acessar as atualizações.") from exc
+        raise UpdateError(_("Não foi possível acessar as atualizações.")) from exc
 
 
 def _download_file(url: str, target_path: Path, *, expected_size: int, progress_callback=None, cancel_event: Event | None = None):
@@ -324,7 +325,7 @@ def _download_file(url: str, target_path: Path, *, expected_size: int, progress_
                 total_bytes = content_length
 
             if progress_callback is not None:
-                progress_callback(0, total_bytes, "Baixando atualização...")
+                progress_callback(0, total_bytes, _("Baixando atualização..."))
 
             with open(target_path, "wb") as target_file:
                 while True:
@@ -338,11 +339,11 @@ def _download_file(url: str, target_path: Path, *, expected_size: int, progress_
                     target_file.write(chunk)
                     downloaded_bytes += len(chunk)
                     if progress_callback is not None:
-                        progress_callback(downloaded_bytes, total_bytes, "Baixando atualização...")
+                        progress_callback(downloaded_bytes, total_bytes, _("Baixando atualização..."))
     except error.HTTPError as exc:
-        raise UpdateError("Não foi possível baixar a atualização.") from exc
+        raise UpdateError(_("Não foi possível baixar a atualização.")) from exc
     except error.URLError as exc:
-        raise UpdateError("Não foi possível baixar a atualização.") from exc
+        raise UpdateError(_("Não foi possível baixar a atualização.")) from exc
     finally:
         if cancel_event is not None and cancel_event.is_set() and target_path.exists():
             try:
@@ -376,7 +377,7 @@ def _configured_update_repository() -> tuple[str, str]:
     repository_name = str(os.environ.get(UPDATE_REPOSITORY_NAME_ENV) or GITHUB_REPOSITORY_NAME).strip()
 
     if not repository_owner or not repository_name:
-        raise UpdateError("Não foi possível verificar as atualizações.")
+        raise UpdateError(_("Não foi possível verificar as atualizações."))
 
     return repository_owner, repository_name
 

@@ -2,6 +2,7 @@ import os
 
 import wx
 
+from ...i18n import _
 from ...library import folder_display_name
 from ...playlists import PlaylistState, ScreenTabState, default_playlist_title
 
@@ -321,7 +322,7 @@ class TabManagementMixin:
             if callable(tab_state.on_activate):
                 tab_state.on_activate()
             if announce:
-                self._announce(tab_state.activation_message or f"Aba {index + 1}: {tab_state.title}.")
+                self._announce(tab_state.activation_message or _("Aba {num}: {title}.").format(num=index + 1, title=tab_state.title))
             return
 
         state = self._get_playlist_state(index)
@@ -344,7 +345,7 @@ class TabManagementMixin:
             self._update_title()
             self._refresh_playlist_browser()
             if announce:
-                self._announce(state.loading_message or f"Carregando {state.title}.")
+                self._announce(state.loading_message or _("Carregando {title}.").format(title=state.title))
             return
 
         if not state.current_media_path:
@@ -354,10 +355,10 @@ class TabManagementMixin:
             if announce:
                 if state.is_folder_tab and state.folder_current_path:
                     self._announce(
-                        f"Aba {index + 1}: {state.title}. Pasta atual: {folder_display_name(state.folder_current_path)}."
+                        _("Aba {num}: {title}. Pasta atual: {folder}.").format(num=index + 1, title=state.title, folder=folder_display_name(state.folder_current_path))
                     )
                 else:
-                    self._announce(f"{state.title}. Nenhuma mídia tocando agora.")
+                    self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
             return
 
         if previous_active_playlist_index == index and self._player_has_loaded_media(state.current_media_path):
@@ -366,14 +367,14 @@ class TabManagementMixin:
             self._update_time_bar()
             self._refresh_playlist_browser()
             if announce:
-                self._announce(f"Aba {index + 1}: {state.title}. {self._describe_playlist_position(state)}")
+                self._announce(_("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state))
             return
 
         pause_after_restore = not state.was_playing
         self._update_title()
         self._refresh_playlist_browser()
         announce_message = (
-            f"Aba {index + 1}: {state.title}. {self._describe_playlist_position(state)}"
+            _("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state)
             if announce
             else None
         )
@@ -399,10 +400,10 @@ class TabManagementMixin:
                     self._unload_player()
                 self._reset_playlist_tabs()
                 self._refresh_playlist_browser()
-                self._announce(f"Aba fechada: {current_state.title}. Nova playlist vazia criada.")
+                self._announce(_("Aba fechada: {title}. Nova playlist vazia criada.").format(title=current_state.title))
                 return True
 
-            self._announce("Não é possível fechar a última aba.")
+            self._announce(_("Não é possível fechar a última aba."))
             return False
 
         if isinstance(current_state, ScreenTabState):
@@ -449,16 +450,14 @@ class TabManagementMixin:
             self._restore_screen_tab_focus(current_state, next_state)
 
         if next_state:
-            self._announce(
-                f"Aba fechada: {current_state.title if current_state else 'sem nome'}. "
-                + (
-                    f"Agora em {next_state.title}. {self._describe_playlist_position(next_state)}"
-                    if isinstance(next_state, PlaylistState)
-                    else f"Agora em {next_state.title}."
-                )
-            )
+            closed_name = current_state.title if current_state else _("sem nome")
+            if isinstance(next_state, PlaylistState):
+                suffix = _("Agora em {title}.").format(title=next_state.title) + " " + self._describe_playlist_position(next_state)
+            else:
+                suffix = _("Agora em {title}.").format(title=next_state.title)
+            self._announce(_("Aba fechada: {name}.").format(name=closed_name) + " " + suffix)
         else:
-            self._announce("Aba fechada.")
+            self._announce(_("Aba fechada."))
 
         return True
 

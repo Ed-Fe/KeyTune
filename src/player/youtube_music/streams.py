@@ -17,6 +17,7 @@ from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from ..log import get_logger
+from ..i18n import _
 
 
 _logger = get_logger(__name__)
@@ -171,7 +172,7 @@ def resolve_stream_playback(media_path):
                     continue
 
                 if not info:
-                    local_last_error = "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
+                    local_last_error = _("O yt-dlp não conseguiu abrir a faixa do YouTube Music.")
                     continue
 
                 try:
@@ -186,7 +187,7 @@ def resolve_stream_playback(media_path):
                 if resolved_playback.stream_url:
                     return resolved_playback, local_last_error, local_attempted_profiles
 
-                local_last_error = "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
+                local_last_error = _("O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa.")
 
         return None, local_last_error, local_attempted_profiles
 
@@ -225,9 +226,9 @@ def resolve_stream_playback(media_path):
                 _logger.warning("Prerelease self-heal update failed: %s", retry_error)
                 if retry_error:
                     if last_error:
-                        last_error = f"{last_error} Atualização avançada: {retry_error}"
+                        last_error = last_error + " " + _("Atualização avançada: {detail}").format(detail=retry_error)
                     else:
-                        last_error = f"Atualização avançada: {retry_error}"
+                        last_error = _("Atualização avançada: {detail}").format(detail=retry_error)
     finally:
         _remove_temporary_cookie_file(temporary_cookie_file_path)
 
@@ -281,7 +282,7 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
         )
         if nested_entry_stream_playback is not None:
             return nested_entry_stream_playback
-        raise RuntimeError("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music.")
+        raise RuntimeError(_("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music."))
 
     audio_only_formats = [fmt for fmt in formats if _is_audio_only_stream_format(fmt)]
     audio_capable_formats = [fmt for fmt in formats if _is_audio_capable_stream_format(fmt)]
@@ -301,7 +302,7 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
         )
         if nested_entry_stream_playback is not None:
             return nested_entry_stream_playback
-        raise RuntimeError("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music.")
+        raise RuntimeError(_("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music."))
 
     best_format = max(preferred_formats, key=_stream_format_score)
     selected_stream_url = _stream_url_from_candidate(best_format)
@@ -322,7 +323,7 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
         )
         if nested_entry_stream_playback is not None:
             return nested_entry_stream_playback
-        raise RuntimeError("O yt-dlp não retornou uma URL reproduzível para esta faixa do YouTube Music.")
+        raise RuntimeError(_("O yt-dlp não retornou uma URL reproduzível para esta faixa do YouTube Music."))
 
     return ResolvedStreamPlayback(
         stream_url=selected_stream_url,
@@ -676,16 +677,16 @@ def _build_stream_resolution_error_message(
 ):
     normalized_last_error = sanitize_sensitive_text(last_error)
     normalized_diagnostic_signals = set(diagnostic_signals or ())
-    base_message = "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
+    base_message = _("O yt-dlp não conseguiu abrir a faixa do YouTube Music.")
 
     if normalized_last_error:
-        base_message = f"{base_message} Detalhes técnicos: {normalized_last_error}."
+        base_message = base_message + " " + _("Detalhes técnicos: {detail}.").format(detail=normalized_last_error)
 
     if attempted_profiles > 1:
         base_message = f"{base_message} Perfis testados: {attempted_profiles}."
 
     if prerelease_retry_attempted:
-        base_message = f"{base_message} Foi tentada uma atualização avançada do yt-dlp."
+        base_message = base_message + " " + _("Foi tentada uma atualização avançada do yt-dlp.")
 
     if normalized_diagnostic_signals:
         signal_labels = [

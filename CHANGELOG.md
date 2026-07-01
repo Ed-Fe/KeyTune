@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Não lançado]
+
+### Adicionado
+- **Sistema de tradução (localização)**: a interface agora pode ser traduzida para outros idiomas. O Português (Brasil) é o idioma-fonte e o Inglês já vem incluído. Escolha o idioma em *Configurações > Preferências > Geral > Idioma* (ou deixe em Automático para seguir o sistema). O manual, os créditos e o instalador também são traduzíveis. Tradutores: veja `docs/translations.md`.
+
 ## [1.1.0] - 2026-06-29
 
 ### Adicionado

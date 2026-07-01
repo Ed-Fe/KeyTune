@@ -5,23 +5,37 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
+from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..welcome import WelcomeDialog
 
 
 class FrameUIMixin:
-    def _manual_candidate_paths(self):
+    def _localized_doc_names(self, stem):
+        # Prefer a translated document (e.g. manual.en.html) when a non-source
+        # language is active, then fall back to the Portuguese base document.
+        language = get_active_language()
+        names = []
+        if language and language != SOURCE_LANGUAGE:
+            names.append(f"{stem}.{language}.html")
+            names.append(f"{stem}.{language}.md")
+        names.append(f"{stem}.html")
+        names.append(f"{stem}.md")
+        return names
+
+    def _doc_candidate_paths(self, stem):
         candidates = []
+        names = self._localized_doc_names(stem)
+        repo_root = Path(__file__).resolve().parents[3]
 
         if getattr(sys, "frozen", False):
             executable_dir = Path(sys.executable).resolve().parent
-            candidates.append(executable_dir / "docs" / "manual.html")
+            for name in names:
+                candidates.append(executable_dir / "docs" / name)
 
-        repo_root = Path(__file__).resolve().parents[3]
-        candidates.append(repo_root / "docs" / "manual.html")
-        candidates.append(Path.cwd() / "docs" / "manual.html")
-        candidates.append(repo_root / "docs" / "manual.md")
-        candidates.append(Path.cwd() / "docs" / "manual.md")
+        for name in names:
+            candidates.append(repo_root / "docs" / name)
+            candidates.append(Path.cwd() / "docs" / name)
 
         unique_candidates = []
         seen = set()
@@ -33,12 +47,15 @@ class FrameUIMixin:
             unique_candidates.append(candidate)
         return unique_candidates
 
+    def _manual_candidate_paths(self):
+        return self._doc_candidate_paths("manual")
+
     def _open_manual_document(self):
         manual_path = next((path for path in self._manual_candidate_paths() if path.is_file()), None)
         if manual_path is None:
             wx.MessageBox(
-                "Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto.",
-                "Manual do KeyTune",
+                _("Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."),
+                _("Manual do KeyTune"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -51,45 +68,25 @@ class FrameUIMixin:
 
         if not launched:
             wx.MessageBox(
-                "Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema.",
-                "Manual do KeyTune",
+                _("Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."),
+                _("Manual do KeyTune"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
             return False
 
-        self._set_status_message(f"Abrindo manual: {manual_path.name}")
+        self._set_status_message(_("Abrindo manual: {name}").format(name=manual_path.name))
         return True
 
     def _credits_candidate_paths(self):
-        candidates = []
-
-        if getattr(sys, "frozen", False):
-            executable_dir = Path(sys.executable).resolve().parent
-            candidates.append(executable_dir / "docs" / "credits.html")
-
-        repo_root = Path(__file__).resolve().parents[3]
-        candidates.append(repo_root / "docs" / "credits.html")
-        candidates.append(Path.cwd() / "docs" / "credits.html")
-        candidates.append(repo_root / "docs" / "credits.md")
-        candidates.append(Path.cwd() / "docs" / "credits.md")
-
-        unique_candidates = []
-        seen = set()
-        for candidate in candidates:
-            normalized_candidate = str(candidate)
-            if normalized_candidate in seen:
-                continue
-            seen.add(normalized_candidate)
-            unique_candidates.append(candidate)
-        return unique_candidates
+        return self._doc_candidate_paths("credits")
 
     def _open_credits_document(self):
         credits_path = next((path for path in self._credits_candidate_paths() if path.is_file()), None)
         if credits_path is None:
             wx.MessageBox(
-                "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto.",
-                "Créditos do KeyTune",
+                _("Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."),
+                _("Créditos do KeyTune"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -102,24 +99,24 @@ class FrameUIMixin:
 
         if not launched:
             wx.MessageBox(
-                "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema.",
-                "Créditos do KeyTune",
+                _("Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."),
+                _("Créditos do KeyTune"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
             return False
 
-        self._set_status_message(f"Abrindo créditos: {credits_path.name}")
+        self._set_status_message(_("Abrindo créditos: {name}").format(name=credits_path.name))
         return True
 
     def _primary_shortcuts_hint_text(self):
-        return (
+        return _(
             "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
             "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
         )
 
     def _player_overlay_hint_text(self):
-        return (
+        return _(
             "Sem mídia carregada\n\n"
             "Ctrl+Alt+O abre mídia, playlist ou pasta\n"
             "Ctrl+O abre arquivos ou playlist\n"
@@ -131,7 +128,7 @@ class FrameUIMixin:
         )
 
     def _player_audio_only_text(self):
-        return (
+        return _(
             "Saída de vídeo desativada\n\n"
             "Esta mídia está tocando só o áudio.\n"
             "Abra Preferências > Reprodução para reativar o vídeo quando quiser."
@@ -150,7 +147,7 @@ class FrameUIMixin:
         return ""
 
     def _keyboard_help_text(self):
-        return (
+        return _(
             "Ajuda rápida de atalhos\n\n"
             "Arquivos e playlists\n"
             "Ctrl+Alt+O — Abrir mídia, playlist ou pasta\n"
@@ -270,19 +267,19 @@ class FrameUIMixin:
     def _show_keyboard_help_dialog(self):
         dialog = wx.Dialog(
             self,
-            title="Ajuda rápida de atalhos",
+            title=_("Ajuda rápida de atalhos"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
         dialog.SetMinSize((520, 420))
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
-        instructions_label = wx.StaticText(dialog, label="Ajuda rápida de atalhos:")
+        instructions_label = wx.StaticText(dialog, label=_("Ajuda rápida de atalhos:"))
         instructions = wx.TextCtrl(
             dialog,
             value=self._keyboard_help_text(),
             style=wx.TE_MULTILINE | wx.TE_READONLY,
         )
-        instructions.SetName("Ajuda rápida de atalhos")
+        instructions.SetName(_("Ajuda rápida de atalhos"))
         instructions.SetInsertionPoint(0)
 
         button_sizer = dialog.CreateStdDialogButtonSizer(wx.OK)
@@ -291,7 +288,7 @@ class FrameUIMixin:
             # never rename a wx.ID_OK button in another open dialog.
             ok_button = dialog.FindWindow(wx.ID_OK)
             if ok_button is not None:
-                ok_button.SetLabel("F&echar")
+                ok_button.SetLabel(_("F&echar"))
 
         root_sizer.Add(instructions_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 12)
         root_sizer.Add(instructions, 1, wx.ALL | wx.EXPAND, 12)
@@ -356,26 +353,26 @@ class FrameUIMixin:
         self.recent_files_menu = wx.Menu()
         self.recent_folders_menu = wx.Menu()
         self.recent_playlists_menu = wx.Menu()
-        file_menu.Append(self.menu_open_source_id, "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O")
-        file_menu.Append(self.menu_open_file_id, "Abrir &Arquivos ou Playlist...\tCtrl+O")
-        file_menu.Append(self.menu_open_folder_id, "Abrir &Pasta...\tCtrl+Shift+O")
+        file_menu.Append(self.menu_open_source_id, _("Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"))
+        file_menu.Append(self.menu_open_file_id, _("Abrir &Arquivos ou Playlist...\tCtrl+O"))
+        file_menu.Append(self.menu_open_folder_id, _("Abrir &Pasta...\tCtrl+Shift+O"))
         file_menu.AppendSeparator()
-        file_menu.Append(self.menu_copy_current_item_path_id, "&Copiar caminho do item (Ctrl+C)")
-        file_menu.Append(self.menu_paste_open_from_clipboard_id, "Co&lar na playlist atual / abrir... (Ctrl+V)")
+        file_menu.Append(self.menu_copy_current_item_path_id, _("&Copiar caminho do item (Ctrl+C)"))
+        file_menu.Append(self.menu_paste_open_from_clipboard_id, _("Co&lar na playlist atual / abrir... (Ctrl+V)"))
         file_menu.Append(
             self.menu_paste_open_from_clipboard_new_playlist_id,
-            "Colar e abrir em &nova playlist... (Ctrl+Shift+V)",
+            _("Colar e abrir em &nova playlist... (Ctrl+Shift+V)"),
         )
         file_menu.AppendSeparator()
-        self.recent_menu.AppendSubMenu(self.recent_files_menu, "Arquivos recentes")
-        self.recent_menu.AppendSubMenu(self.recent_folders_menu, "Pastas recentes")
-        self.recent_menu.AppendSubMenu(self.recent_playlists_menu, "Playlists recentes")
-        file_menu.AppendSubMenu(self.recent_menu, "&Recentes")
+        self.recent_menu.AppendSubMenu(self.recent_files_menu, _("Arquivos recentes"))
+        self.recent_menu.AppendSubMenu(self.recent_folders_menu, _("Pastas recentes"))
+        self.recent_menu.AppendSubMenu(self.recent_playlists_menu, _("Playlists recentes"))
+        file_menu.AppendSubMenu(self.recent_menu, _("&Recentes"))
         file_menu.AppendSeparator()
-        file_menu.Append(self.menu_save_playlist_id, "Salvar Playli&st\tCtrl+Shift+S")
-        file_menu.Append(self.menu_close_media_id, "Fechar Mí&dia\tCtrl+Shift+W")
+        file_menu.Append(self.menu_save_playlist_id, _("Salvar Playli&st\tCtrl+Shift+S"))
+        file_menu.Append(self.menu_close_media_id, _("Fechar Mí&dia\tCtrl+Shift+W"))
         file_menu.AppendSeparator()
-        file_menu.Append(wx.ID_EXIT, "&Sair\tAlt+F4")
+        file_menu.Append(wx.ID_EXIT, _("&Sair\tAlt+F4"))
 
         playback_menu = wx.Menu()
         self.playback_menu = playback_menu
@@ -396,64 +393,64 @@ class FrameUIMixin:
         self._audio_output_menu_actions = {}
         self._audio_output_menu_ids = []
         announce_menu = wx.Menu()
-        playback_menu.Append(self.menu_previous_track_id, "Faixa &Anterior\tCtrl+PageUp")
-        playback_menu.Append(self.menu_play_pause_id, "Reproduzir / Pa&usar\tEspaço")
-        playback_menu.Append(self.menu_stop_id, "P&arar\tCtrl+.")
-        playback_menu.Append(self.menu_next_track_id, "Próxima Fai&xa\tCtrl+PageDown")
+        playback_menu.Append(self.menu_previous_track_id, _("Faixa &Anterior\tCtrl+PageUp"))
+        playback_menu.Append(self.menu_play_pause_id, _("Reproduzir / Pa&usar\tEspaço"))
+        playback_menu.Append(self.menu_stop_id, _("P&arar\tCtrl+."))
+        playback_menu.Append(self.menu_next_track_id, _("Próxima Fai&xa\tCtrl+PageDown"))
         playback_menu.AppendSeparator()
-        playback_menu.Append(self.menu_add_to_youtube_playlist_id, "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A")
+        playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.AppendSeparator()
-        playback_menu.Append(self.menu_toggle_shuffle_id, "Em&baralhar (E)")
-        playback_menu.Append(self.menu_cycle_repeat_id, "Modo de &Repetição (R)")
-        playback_menu.Append(self.menu_toggle_related_autoplay_id, "&Conteúdo Relacionado do YouTube Music (A)")
-        playback_menu.AppendSubMenu(self.audio_output_menu, "Dispositivo de áu&dio")
-        announce_menu.Append(self.menu_announce_time_id, "Anunciar &Tempo (T)")
-        announce_menu.Append(self.menu_announce_volume_id, "Anunciar &Volume (V)")
-        announce_menu.Append(self.menu_announce_status_id, "Anunciar &Status (S)")
-        playback_menu.AppendSubMenu(announce_menu, "&Anunciar")
+        playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
+        playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
+        playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
+        playback_menu.AppendSubMenu(self.audio_output_menu, _("Dispositivo de áu&dio"))
+        announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
+        announce_menu.Append(self.menu_announce_volume_id, _("Anunciar &Volume (V)"))
+        announce_menu.Append(self.menu_announce_status_id, _("Anunciar &Status (S)"))
+        playback_menu.AppendSubMenu(announce_menu, _("&Anunciar"))
 
         view_menu = wx.Menu()
         self.view_menu = view_menu
         self.menu_playlist_browser_id = wx.NewIdRef()
-        view_menu.Append(self.menu_playlist_browser_id, "Alternar foco entre &itens e player\tTab")
-        view_menu.Append(self.menu_open_equalizer_id, "Eq&ualizador por aba\tCtrl+Shift+E")
-        view_menu.Append(self.menu_open_youtube_music_id, "YouTube &Music por aba\tCtrl+Shift+Y")
+        view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player\tTab"))
+        view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
+        view_menu.Append(self.menu_open_youtube_music_id, _("YouTube &Music por aba\tCtrl+Shift+Y"))
 
         tabs_menu = wx.Menu()
         self.menu_next_tab_id = wx.NewIdRef()
         self.menu_previous_tab_id = wx.NewIdRef()
-        tabs_menu.Append(self.menu_new_playlist_id, "&Nova playlist\tCtrl+T")
+        tabs_menu.Append(self.menu_new_playlist_id, _("&Nova playlist\tCtrl+T"))
         tabs_menu.AppendSeparator()
-        tabs_menu.Append(self.menu_next_tab_id, "Próxima A&ba\tCtrl+Tab")
-        tabs_menu.Append(self.menu_previous_tab_id, "Aba A&nterior\tCtrl+Shift+Tab")
+        tabs_menu.Append(self.menu_next_tab_id, _("Próxima A&ba\tCtrl+Tab"))
+        tabs_menu.Append(self.menu_previous_tab_id, _("Aba A&nterior\tCtrl+Shift+Tab"))
         tabs_menu.AppendSeparator()
-        tabs_menu.Append(self.menu_close_tab_id, "Fechar A&ba / Playlist\tCtrl+W")
+        tabs_menu.Append(self.menu_close_tab_id, _("Fechar A&ba / Playlist\tCtrl+W"))
 
         settings_menu = wx.Menu()
         self.menu_check_updates_id = wx.NewIdRef()
         self.menu_preferences_id = wx.NewIdRef()
-        settings_menu.Append(self.menu_preferences_id, "&Preferências\tCtrl+,")
+        settings_menu.Append(self.menu_preferences_id, _("&Preferências\tCtrl+,"))
 
         help_menu = wx.Menu()
         self.menu_open_manual_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
         self.menu_show_welcome_screen_id = wx.NewIdRef()
         self.menu_about_id = wx.NewIdRef()
-        help_menu.Append(self.menu_show_welcome_screen_id, "Mostrar tela de &boas-vindas")
-        help_menu.Append(self.menu_open_manual_id, "Abrir &manual do usuário")
+        help_menu.Append(self.menu_show_welcome_screen_id, _("Mostrar tela de &boas-vindas"))
+        help_menu.Append(self.menu_open_manual_id, _("Abrir &manual do usuário"))
         help_menu.AppendSeparator()
-        help_menu.Append(self.menu_keyboard_help_id, "Ajuda rápida de &atalhos\tF1")
+        help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
-        help_menu.Append(self.menu_check_updates_id, "Verificar &atualizações")
+        help_menu.Append(self.menu_check_updates_id, _("Verificar &atualizações"))
         help_menu.AppendSeparator()
-        help_menu.Append(self.menu_about_id, "&Sobre o KeyTune")
+        help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
 
-        menu_bar.Append(file_menu, "&Arquivo")
-        menu_bar.Append(playback_menu, "&Reprodução")
-        menu_bar.Append(view_menu, "&Exibir")
-        menu_bar.Append(tabs_menu, "A&bas")
-        menu_bar.Append(settings_menu, "Con&figurações")
-        menu_bar.Append(help_menu, "A&juda")
+        menu_bar.Append(file_menu, _("&Arquivo"))
+        menu_bar.Append(playback_menu, _("&Reprodução"))
+        menu_bar.Append(view_menu, _("&Exibir"))
+        menu_bar.Append(tabs_menu, _("A&bas"))
+        menu_bar.Append(settings_menu, _("Con&figurações"))
+        menu_bar.Append(help_menu, _("A&juda"))
         self.SetMenuBar(menu_bar)
         self._refresh_recent_menus()
         self._refresh_audio_output_menu()
@@ -472,7 +469,7 @@ class FrameUIMixin:
         self._audio_output_menu_actions = {}
         self._audio_output_menu_ids = []
 
-        default_item = self.audio_output_menu.AppendRadioItem(wx.NewIdRef(), "&Padrão do sistema")
+        default_item = self.audio_output_menu.AppendRadioItem(wx.NewIdRef(), _("&Padrão do sistema"))
         default_item_id = default_item.GetId()
         self._audio_output_menu_ids.append(default_item_id)
         self._audio_output_menu_actions[default_item_id] = ""
@@ -492,20 +489,24 @@ class FrameUIMixin:
                 self.Bind(wx.EVT_MENU, self.on_select_audio_output_device, id=item_id)
                 item.Check(device.device_id == current_device_id)
         else:
-            unavailable_item = self.audio_output_menu.Append(wx.ID_ANY, "Nenhum dispositivo detectado agora")
+            unavailable_item = self.audio_output_menu.Append(wx.ID_ANY, _("Nenhum dispositivo detectado agora"))
             unavailable_item.Enable(False)
 
         self.audio_output_menu.AppendSeparator()
         self.audio_output_menu.Append(
             self.menu_refresh_audio_output_devices_id,
-            "&Atualizar lista de dispositivos",
+            _("&Atualizar lista de dispositivos"),
         )
 
         if announce:
             if devices:
-                self._announce(f"Lista de dispositivos de áudio atualizada. {len(devices)} dispositivo(s) disponível(is).")
+                self._announce(
+                    _("Lista de dispositivos de áudio atualizada. {count} dispositivo(s) disponível(is).").format(
+                        count=len(devices)
+                    )
+                )
             else:
-                self._announce("Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora.")
+                self._announce(_("Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."))
 
     def _build_ui(self):
         panel = wx.Panel(self)
@@ -513,7 +514,7 @@ class FrameUIMixin:
 
         self.notebook = wx.Notebook(panel)
         self.progress_panel = wx.Panel(panel)
-        self.progress_label = wx.StaticText(self.progress_panel, label="Tempo: nenhuma mídia carregada.")
+        self.progress_label = wx.StaticText(self.progress_panel, label=_("Tempo: nenhuma mídia carregada."))
         self.progress_gauge = wx.Gauge(self.progress_panel, range=PROGRESS_GAUGE_RANGE, style=wx.GA_SMOOTH)
         self.shortcuts_hint_label = wx.StaticText(
             self.progress_panel,
@@ -528,27 +529,27 @@ class FrameUIMixin:
         progress_sizer.Add(self.shortcuts_hint_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         self.progress_panel.SetSizer(progress_sizer)
 
-        self.progress_panel.SetName("Painel de tempo")
-        self.progress_label.SetName("Tempo da mídia")
-        self.progress_gauge.SetName("Barra de tempo")
-        self.shortcuts_hint_label.SetName("Dicas rápidas de atalhos")
+        self.progress_panel.SetName(_("Painel de tempo"))
+        self.progress_label.SetName(_("Tempo da mídia"))
+        self.progress_gauge.SetName(_("Barra de tempo"))
+        self.shortcuts_hint_label.SetName(_("Dicas rápidas de atalhos"))
         self.shortcuts_hint_label.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
         attach_named_accessible(
             self.progress_label,
-            name="Tempo da mídia",
-            description="Mostra o tempo decorrido e a duração total da mídia atual.",
+            name=_("Tempo da mídia"),
+            description=_("Mostra o tempo decorrido e a duração total da mídia atual."),
             value_provider=lambda: self.progress_label.GetLabel(),
         )
         attach_named_accessible(
             self.progress_gauge,
-            name="Barra de tempo",
-            description="Mostra o progresso da mídia atual.",
+            name=_("Barra de tempo"),
+            description=_("Mostra o progresso da mídia atual."),
             value_provider=self._time_bar_accessible_value,
         )
         attach_named_accessible(
             self.shortcuts_hint_label,
-            name="Dicas rápidas de atalhos",
-            description="Resume os atalhos mais usados para controlar o player.",
+            name=_("Dicas rápidas de atalhos"),
+            description=_("Resume os atalhos mais usados para controlar o player."),
             value_provider=lambda: self.shortcuts_hint_label.GetLabel(),
         )
 
@@ -661,7 +662,7 @@ class FrameUIMixin:
             page,
             style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.NO_FULL_REPAINT_ON_RESIZE,
         )
-        video_panel.SetName("Painel de vídeo")
+        video_panel.SetName(_("Painel de vídeo"))
         video_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_panel.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
         video_panel.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
@@ -675,7 +676,7 @@ class FrameUIMixin:
             video_panel,
             style=wx.NO_BORDER | wx.WANTS_CHARS | wx.NO_FULL_REPAINT_ON_RESIZE,
         )
-        video_surface.SetName("Superfície de vídeo")
+        video_surface.SetName(_("Superfície de vídeo"))
         video_surface.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_surface.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
         video_surface.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
@@ -686,7 +687,7 @@ class FrameUIMixin:
             label=self._player_overlay_hint_text(),
             style=wx.ALIGN_CENTER_HORIZONTAL,
         )
-        video_hint_overlay.SetName("Ajuda visual do player")
+        video_hint_overlay.SetName(_("Ajuda visual do player"))
         video_hint_overlay.SetForegroundColour(wx.Colour(235, 235, 235))
 
         video_panel_sizer = wx.BoxSizer(wx.VERTICAL)

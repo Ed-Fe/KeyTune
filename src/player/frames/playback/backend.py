@@ -3,6 +3,8 @@ import queue
 import sys
 import threading
 
+
+from ...i18n import _
 import wx
 
 from ...log import get_logger
@@ -85,7 +87,7 @@ class PlayerBackendMixin:
     def _create_managed_player(self, player_key, instance=None):
         target_instance = instance or self._instance_for_player(player_key)
         if target_instance is None:
-            raise RuntimeError("Instância do backend de reprodução indisponível para o player.")
+            raise RuntimeError(_("Instância do backend de reprodução indisponível para o player."))
 
         player = target_instance.media_player_new()
         try:
@@ -255,7 +257,7 @@ class PlayerBackendMixin:
             return
 
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
-        self._announce("Não foi possível iniciar a próxima faixa para o crossfade.")
+        self._announce(_("Não foi possível iniciar a próxima faixa para o crossfade."))
 
     def _smtc_refresh_if_active(self, player_key):
         if player_key != getattr(self, "_active_player_key", None):

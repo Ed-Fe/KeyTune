@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -14,6 +15,33 @@ from player.constants import GITHUB_REPOSITORY_NAME, GITHUB_REPOSITORY_OWNER  # 
 REQUIREMENTS_PATH = REPO_ROOT / "requirements.txt"
 CREDITS_PATH = REPO_ROOT / "docs" / "credits.md"
 HTTP_TIMEOUT_SECONDS = 10
+
+# Localized headings for the credits document. The actual library/contributor
+# data is language-neutral, so only the surrounding text is translated. ``pt_BR``
+# is the default and is written to ``docs/credits.md``; other languages are
+# written to ``docs/credits.<language>.md``.
+CREDITS_STRINGS = {
+    "pt_BR": {
+        "title": "Créditos",
+        "libraries_heading": "Bibliotecas de terceiros",
+        "contributors_heading": "Contribuidores",
+        "contributors_section_pattern": r"^## Contribuidores\s*\n(.*?)(?:\n## |\Z)",
+        "no_contributors": "Ainda não há contribuidores externos registrados além do(s) mantenedor(es) original(is).",
+    },
+    "en": {
+        "title": "Credits",
+        "libraries_heading": "Third-party libraries",
+        "contributors_heading": "Contributors",
+        "contributors_section_pattern": r"^## Contributors\s*\n(.*?)(?:\n## |\Z)",
+        "no_contributors": "There are no external contributors registered yet beyond the original maintainer(s).",
+    },
+}
+
+
+def credits_path_for_language(language: str) -> Path:
+    if language == "pt_BR":
+        return CREDITS_PATH
+    return REPO_ROOT / "docs" / f"credits.{language}.md"
 
 REQUIREMENT_LINE_PATTERN = re.compile(r"^([A-Za-z0-9_.-]+)\s*([><=!~]=?\s*[\w.]+)?")
 
@@ -55,47 +83,68 @@ def fetch_contributors() -> list[str] | None:
     return contributors
 
 
-def read_previous_contributors_section(credits_text: str) -> list[str]:
-    match = re.search(r"^## Contribuidores\s*\n(.*?)(?:\n## |\Z)", credits_text, re.DOTALL | re.MULTILINE)
+def read_previous_contributors_section(credits_text: str, pattern: str) -> list[str]:
+    match = re.search(pattern, credits_text, re.DOTALL | re.MULTILINE)
     if not match:
         return []
     return [line for line in match.group(1).splitlines() if line.strip()]
 
 
-def render_credits(libraries: list[tuple[str, str, str]], contributors: list[str]) -> str:
+def render_credits(libraries: list[tuple[str, str, str]], contributors: list[str], language: str = "pt_BR") -> str:
+    strings = CREDITS_STRINGS.get(language, CREDITS_STRINGS["pt_BR"])
     library_lines = "\n".join(
         f"- [{name}]({url}){f' ({version})' if version else ''}" for name, version, url in libraries
     )
-    contributors_section = (
-        "\n".join(contributors)
-        if contributors
-        else "Ainda não há contribuidores externos registrados além do(s) mantenedor(es) original(is)."
-    )
+    contributors_section = "\n".join(contributors) if contributors else strings["no_contributors"]
 
-    return f"""# Créditos
+    return f"""# {strings["title"]}
 
-## Bibliotecas de terceiros
+## {strings["libraries_heading"]}
 
 {library_lines}
 
-## Contribuidores
+## {strings["contributors_heading"]}
 
 {contributors_section}
 """
 
 
+def generate_for_language(libraries, contributors_by_login, language: str) -> Path:
+    strings = CREDITS_STRINGS.get(language, CREDITS_STRINGS["pt_BR"])
+    target_path = credits_path_for_language(language)
+
+    contributors = contributors_by_login
+    if contributors is None:
+        previous_text = target_path.read_text(encoding="utf-8") if target_path.is_file() else ""
+        contributors = read_previous_contributors_section(previous_text, strings["contributors_section_pattern"])
+
+    credits_text = render_credits(libraries, contributors, language)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_text(credits_text, encoding="utf-8")
+    return target_path
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Gera o documento de créditos do KeyTune.")
+    parser.add_argument(
+        "--language",
+        action="append",
+        dest="languages",
+        choices=sorted(CREDITS_STRINGS),
+        help="Idioma(s) a gerar. Pode ser repetido. Padrão: pt_BR.",
+    )
+    args = parser.parse_args()
+    languages = args.languages or ["pt_BR"]
+
     requirements_text = REQUIREMENTS_PATH.read_text(encoding="utf-8")
     libraries = parse_requirements(requirements_text)
 
+    # Fetch contributors once (language-neutral); ``None`` means the network
+    # lookup failed and each language reuses its previously written list.
     contributors = fetch_contributors()
-    if contributors is None:
-        previous_text = CREDITS_PATH.read_text(encoding="utf-8") if CREDITS_PATH.is_file() else ""
-        contributors = read_previous_contributors_section(previous_text)
 
-    credits_text = render_credits(libraries, contributors)
-    CREDITS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CREDITS_PATH.write_text(credits_text, encoding="utf-8")
+    for language in languages:
+        generate_for_language(libraries, contributors, language)
     return 0
 
 

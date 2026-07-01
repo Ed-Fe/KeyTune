@@ -4,6 +4,7 @@ from .playlists import (
 )
 from .stream_cache import normalize_media_path
 from ..log import get_logger
+from ..i18n import _
 
 
 _logger = get_logger(__name__)
@@ -39,12 +40,12 @@ class YouTubeMusicFeedbackManager:
 
         if result_type == "song":
             if feedback_remove_token and not feedback_add_token:
-                return "A faixa já estava salva na biblioteca do YouTube Music."
+                return _("A faixa já estava salva na biblioteca do YouTube Music.")
             if feedback_add_token:
                 client.edit_song_library_status([feedback_add_token])
                 return "Faixa salva na biblioteca do YouTube Music."
 
-        raise RuntimeError("O resultado selecionado não pode ser salvo no YouTube Music.")
+        raise RuntimeError(_("O resultado selecionado não pode ser salvo no YouTube Music."))
 
     def get_media_feedback_status(self, media_path):
         """Return the like status (``LIKE``, ``DISLIKE``, ``INDIFFERENT``) of a media item, or ``None``."""
@@ -68,7 +69,7 @@ class YouTubeMusicFeedbackManager:
         normalized_media_path = normalize_media_path(media_path)
         video_id = extract_video_id_from_text(normalized_media_path)
         if not video_id:
-            raise RuntimeError("A mídia atual não tem um vídeo compatível para curtir ou marcar como não gostei.")
+            raise RuntimeError(_("A mídia atual não tem um vídeo compatível para curtir ou marcar como não gostei."))
 
         ytmusicapi = self._import_module()
         LikeStatus = ytmusicapi.LikeStatus
@@ -81,7 +82,7 @@ class YouTubeMusicFeedbackManager:
         }
         like_status = rating_map.get(normalized_rating)
         if like_status is None:
-            raise RuntimeError("A avaliação solicitada para a mídia atual é inválida.")
+            raise RuntimeError(_("A avaliação solicitada para a mídia atual é inválida."))
 
         client = self._get_client(require_auth=True)
         client.rate_song(video_id, like_status)
@@ -98,10 +99,10 @@ class YouTubeMusicFeedbackManager:
             )
 
         if like_status == LikeStatus.LIKE:
-            return "Mídia atual curtida no YouTube Music."
+            return _("Mídia atual curtida no YouTube Music.")
         if like_status == LikeStatus.DISLIKE:
-            return "Mídia atual marcada como não gostei no YouTube Music."
-        return "Avaliação da mídia atual removida no YouTube Music."
+            return _("Mídia atual marcada como não gostei no YouTube Music.")
+        return _("Avaliação da mídia atual removida no YouTube Music.")
 
     def report_playback_to_history(self, media_path):
         """Report a media item as played to the user's YouTube Music history."""

@@ -1,3 +1,4 @@
+from ...i18n import _
 import sys
 import threading
 
@@ -42,16 +43,16 @@ class BackgroundTaskMixin:
             return False
 
         messages = {
-            "track-navigation": (
+            "track-navigation": _(
                 "Aguarde o término da operação do YouTube Music antes de ir para a faixa anterior ou próxima."
             ),
-            "track-selection": (
+            "track-selection": _(
                 "Aguarde o término da operação do YouTube Music antes de trocar a faixa atual."
             ),
-            "playback-order": (
+            "playback-order": _(
                 "Aguarde o término da operação do YouTube Music antes de alterar repetição, embaralhamento ou a ordem da playlist."
             ),
-            "close-media": (
+            "close-media": _(
                 "Aguarde o término da operação do YouTube Music antes de fechar ou remover a mídia atual."
             ),
         }
@@ -59,7 +60,7 @@ class BackgroundTaskMixin:
         if action_kind == "track-navigation":
             self._play_windows_youtube_music_blocked_sound()
 
-        self._announce(messages.get(action_kind, "Aguarde o término da operação do YouTube Music."))
+        self._announce(messages.get(action_kind, _("Aguarde o término da operação do YouTube Music.")))
         return True
 
     def _set_youtube_music_operation_state(self, in_progress):
@@ -106,7 +107,7 @@ class BackgroundTaskMixin:
 
     def _run_youtube_music_background_task(self, worker, on_success, *, on_error=None):
         if getattr(self, "_youtube_music_operation_in_progress", False):
-            self._announce("O YouTube Music já está processando uma solicitação. Aguarde um momento.")
+            self._announce(_("O YouTube Music já está processando uma solicitação. Aguarde um momento."))
             return False
 
         self._begin_youtube_music_busy_state()

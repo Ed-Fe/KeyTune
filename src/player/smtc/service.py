@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import sys
 import threading
+from ..i18n import _
 from typing import Callable, Optional
 
 from ..log import get_logger
@@ -103,11 +104,11 @@ def smtc_dependency_error_message() -> str:
         return ""
     if _SMTC_IMPORT_ERROR is not None:
         return (
-            "Controles de mídia do sistema indisponíveis. "
-            "Instale o pacote 'winrt-Windows.Media.Playback' no Windows. "
-            f"Detalhes: {_SMTC_IMPORT_ERROR}"
+            _("Controles de mídia do sistema indisponíveis. Instale o pacote 'winrt-Windows.Media.Playback' no Windows.")
+            + " "
+            + _("Detalhes: {error}").format(error=_SMTC_IMPORT_ERROR)
         )
-    return "Controles de mídia do sistema indisponíveis."
+    return _("Controles de mídia do sistema indisponíveis.")
 
 
 class SmtcService:

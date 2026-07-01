@@ -38,6 +38,8 @@ from ..equalizer.models import EqualizerPreset
 
 @dataclass
 class AppSettings:
+    # Interface language. Empty string means "follow the operating system".
+    language: str = ""
     restore_session_on_startup: bool = DEFAULT_RESTORE_SESSION_ON_STARTUP
     remember_window_size: bool = DEFAULT_REMEMBER_WINDOW_SIZE
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
@@ -76,6 +78,7 @@ class AppSettings:
 
     def to_dict(self):
         return {
+            "language": self.language,
             "restore_session_on_startup": self.restore_session_on_startup,
             "remember_window_size": self.remember_window_size,
             "remember_last_folder": self.remember_last_folder,
@@ -114,6 +117,7 @@ class AppSettings:
     @classmethod
     def from_dict(cls, data):
         settings = cls()
+        settings.language = _normalize_language_preference(data.get("language", settings.language))
         settings.restore_session_on_startup = bool(data.get("restore_session_on_startup", settings.restore_session_on_startup))
         settings.remember_window_size = bool(data.get("remember_window_size", settings.remember_window_size))
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
@@ -202,6 +206,20 @@ class AppSettings:
         settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL
         settings.welcome_screen_completed = bool(data.get("welcome_screen_completed", settings.welcome_screen_completed))
         return settings
+
+
+def _normalize_language_preference(value):
+    # Empty string is the "automatic / follow the OS" sentinel; any other value
+    # is mapped onto a supported language code so a stale or unknown tag in the
+    # settings file never breaks startup.
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+
+    from ..i18n import SUPPORTED_LANGUAGES, normalize_language
+
+    normalized = normalize_language(raw)
+    return normalized if normalized in SUPPORTED_LANGUAGES else ""
 
 
 def _clamp_int(value, minimum, maximum, fallback):

@@ -17,6 +17,7 @@ from ..constants import (
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
 )
+from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
 
 
@@ -24,7 +25,7 @@ class PreferencesDialog(wx.Dialog):
     def __init__(self, parent, settings, *, audio_output_devices=None):
         super().__init__(
             parent,
-            title="Preferências",
+            title=_("Preferências"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
 
@@ -37,15 +38,17 @@ class PreferencesDialog(wx.Dialog):
 
         intro_label = wx.StaticText(
             panel,
-            label="Ajuste como o player inicia, salva estado e responde aos atalhos. "
-            "Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar.",
+            label=_(
+                "Ajuste como o player inicia, salva estado e responde aos atalhos. "
+                "Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
+            ),
         )
         intro_label.Wrap(540)
 
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
         self.notebook = wx.Notebook(panel)
-        self.notebook.SetName("Categorias de preferências")
+        self.notebook.SetName(_("Categorias de preferências"))
 
         self._build_general_tab()
         self._build_playback_tab()
@@ -55,8 +58,8 @@ class PreferencesDialog(wx.Dialog):
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
-        self.save_button = wx.Button(panel, wx.ID_OK, "&Salvar")
-        self.cancel_button = wx.Button(panel, wx.ID_CANCEL, "&Cancelar")
+        self.save_button = wx.Button(panel, wx.ID_OK, _("&Salvar"))
+        self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
         self.save_button.SetDefault()
         button_sizer.AddButton(self.save_button)
         button_sizer.AddButton(self.cancel_button)
@@ -77,39 +80,64 @@ class PreferencesDialog(wx.Dialog):
         # an extra EVT_CHAR_HOOK would duplicate that behavior.
 
     def _build_general_tab(self):
-        page, page_sizer = self._create_tab_page("Geral")
+        page, page_sizer = self._create_tab_page(_("Geral"))
 
         info_label = wx.StaticText(
             page,
-            label="Configurações relacionadas ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs.",
+            label=_("Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."),
         )
         info_label.Wrap(520)
 
-        general_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Inicialização e sessão"), wx.VERTICAL)
-        self.restore_session_checkbox = wx.CheckBox(page, label="&Restaurar sessão ao iniciar")
-        self.remember_window_size_checkbox = wx.CheckBox(page, label="Lembrar tamanho da &janela")
-        self.remember_last_folder_checkbox = wx.CheckBox(page, label="Lembrar última &pasta usada")
-        self.confirm_on_exit_checkbox = wx.CheckBox(page, label="Con&firmar ao sair")
+        language_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Idioma")), wx.VERTICAL)
+        self._language_choice_codes = [""]
+        language_labels = [_("Automático (seguir o sistema)")]
+        for code in available_languages():
+            self._language_choice_codes.append(code)
+            language_labels.append(language_display_name(code))
+
+        language_group, self.language_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Idioma da interface"),
+            help_text=_(
+                "Define o idioma de menus, diálogos e anúncios do leitor de tela. "
+                "Use Automático para seguir o idioma do sistema operacional."
+            ),
+            choices=language_labels,
+        )
+        language_box.Add(language_group, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+
+        language_note = wx.StaticText(
+            page,
+            label=_("A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."),
+        )
+        language_note.Wrap(520)
+        language_box.Add(language_note, 0, wx.ALL | wx.EXPAND, 6)
+
+        general_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Inicialização e sessão")), wx.VERTICAL)
+        self.restore_session_checkbox = wx.CheckBox(page, label=_("&Restaurar sessão ao iniciar"))
+        self.remember_window_size_checkbox = wx.CheckBox(page, label=_("Lembrar tamanho da &janela"))
+        self.remember_last_folder_checkbox = wx.CheckBox(page, label=_("Lembrar última &pasta usada"))
+        self.confirm_on_exit_checkbox = wx.CheckBox(page, label=_("Con&firmar ao sair"))
 
         self._configure_checkbox(
             self.restore_session_checkbox,
-            "Restaurar sessão ao iniciar",
-            "Reabre as abas e tenta retomar a última sessão salva ao iniciar o player.",
+            _("Restaurar sessão ao iniciar"),
+            _("Reabre as abas e tenta retomar a última sessão salva ao iniciar o player."),
         )
         self._configure_checkbox(
             self.remember_window_size_checkbox,
-            "Lembrar tamanho da janela",
-            "Salva e restaura o tamanho da janela principal entre execuções.",
+            _("Lembrar tamanho da janela"),
+            _("Salva e restaura o tamanho da janela principal entre execuções."),
         )
         self._configure_checkbox(
             self.remember_last_folder_checkbox,
-            "Lembrar última pasta usada",
-            "Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar.",
+            _("Lembrar última pasta usada"),
+            _("Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."),
         )
         self._configure_checkbox(
             self.confirm_on_exit_checkbox,
-            "Confirmar ao sair",
-            "Pede confirmação antes de fechar o player.",
+            _("Confirmar ao sair"),
+            _("Pede confirmação antes de fechar o player."),
         )
 
         for control in (
@@ -122,24 +150,24 @@ class PreferencesDialog(wx.Dialog):
 
         note_label = wx.StaticText(
             page,
-            label="As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player.",
+            label=_("As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player."),
         )
         note_label.Wrap(520)
 
         if sys.platform == "win32":
-            assoc_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Associação de arquivos"), wx.VERTICAL)
+            assoc_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Associação de arquivos")), wx.VERTICAL)
             assoc_help = wx.StaticText(
                 page,
-                label=(
+                label=_(
                     "Registra o player no menu Abrir Com do Windows para formatos de áudio, "
                     "vídeo e playlists. Depois, defina o player como padrão nas configurações do Windows."
                 ),
             )
             assoc_help.Wrap(500)
-            self._register_assoc_button = wx.Button(page, label="&Registrar como player padrão")
-            self._register_assoc_button.SetName("Registrar como player padrão")
-            self._unregister_assoc_button = wx.Button(page, label="&Desregistrar associações")
-            self._unregister_assoc_button.SetName("Desregistrar associações")
+            self._register_assoc_button = wx.Button(page, label=_("&Registrar como player padrão"))
+            self._register_assoc_button.SetName(_("Registrar como player padrão"))
+            self._unregister_assoc_button = wx.Button(page, label=_("&Desregistrar associações"))
+            self._unregister_assoc_button.SetName(_("Desregistrar associações"))
 
             self._register_assoc_button.Bind(wx.EVT_BUTTON, self._on_register_associations)
             self._unregister_assoc_button.Bind(wx.EVT_BUTTON, self._on_unregister_associations)
@@ -153,12 +181,12 @@ class PreferencesDialog(wx.Dialog):
         else:
             assoc_box = None
 
-        log_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Registro de logs"), wx.VERTICAL)
-        self.logging_enabled_checkbox = wx.CheckBox(page, label="Registrar &logs de diagnóstico")
+        log_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Registro de logs")), wx.VERTICAL)
+        self.logging_enabled_checkbox = wx.CheckBox(page, label=_("Registrar &logs de diagnóstico"))
         self._configure_checkbox(
             self.logging_enabled_checkbox,
-            "Registrar logs de diagnóstico",
-            (
+            _("Registrar logs de diagnóstico"),
+            _(
                 "Quando ligado, o player grava um arquivo de log rotativo em disco. "
                 "Útil para depurar problemas e anexar ao relato de bugs."
             ),
@@ -167,21 +195,21 @@ class PreferencesDialog(wx.Dialog):
 
         log_level_group, self.logging_level_choice = self._build_choice_control_group(
             page,
-            label_text="Nível de detalhe",
-            help_text=(
+            label_text=_("Nível de detalhe"),
+            help_text=_(
                 "Controla quanta informação é registrada. "
                 '"Apenas erros" é o mais silencioso; "Depuração" é o mais detalhado e pode gerar arquivos grandes.'
             ),
             choices=[LOGGING_LEVEL_LABELS[lvl] for lvl in LOGGING_LEVELS],
         )
 
-        open_log_folder_button = wx.Button(page, label="Abrir pasta de &logs")
-        open_log_folder_button.SetName("Abrir pasta de logs")
+        open_log_folder_button = wx.Button(page, label=_("Abrir pasta de &logs"))
+        open_log_folder_button.SetName(_("Abrir pasta de logs"))
         open_log_folder_button.Bind(wx.EVT_BUTTON, self._on_open_log_folder)
 
         rotation_note = wx.StaticText(
             page,
-            label=(
+            label=_(
                 "Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. "
                 "Os logs de sessões anteriores ficam em keytune.log.1, .2 e .3 na mesma pasta."
             ),
@@ -194,35 +222,36 @@ class PreferencesDialog(wx.Dialog):
         log_box.Add(rotation_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(language_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(general_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         if assoc_box:
             page_sizer.Add(assoc_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(log_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Geral", select=True)
+        self.notebook.AddPage(page, _("Geral"), select=True)
 
     def _build_playback_tab(self):
-        page, page_sizer = self._create_tab_page("Reprodução")
+        page, page_sizer = self._create_tab_page(_("Reprodução"))
 
         info_label = wx.StaticText(
             page,
-            label="Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas.",
+            label=_("Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."),
         )
         info_label.Wrap(520)
 
-        playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Controles de reprodução"), wx.VERTICAL)
-        self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label="Ativar e&mbaralhamento em novas playlists")
-        self.disable_video_output_checkbox = wx.CheckBox(page, label="Desativar saída de &vídeo (tocar só o áudio)")
+        playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Controles de reprodução")), wx.VERTICAL)
+        self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label=_("Ativar e&mbaralhamento em novas playlists"))
+        self.disable_video_output_checkbox = wx.CheckBox(page, label=_("Desativar saída de &vídeo (tocar só o áudio)"))
         self._configure_checkbox(
             self.shuffle_new_playlists_checkbox,
-            "Ativar embaralhamento em novas playlists",
-            "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências.",
+            _("Ativar embaralhamento em novas playlists"),
+            _("Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."),
         )
         self._configure_checkbox(
             self.disable_video_output_checkbox,
-            "Desativar saída de vídeo",
-            (
+            _("Desativar saída de vídeo"),
+            _(
                 "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. "
                 "Útil para evitar a abertura de janelas externas de vídeo no Windows."
             ),
@@ -230,22 +259,22 @@ class PreferencesDialog(wx.Dialog):
 
         volume_group, self.default_volume_ctrl = self._build_spin_control_group(
             page,
-            label_text="Volume padrão",
-            help_text="Define o volume inicial do player. 0 é mudo e 100 é o máximo.",
+            label_text=_("Volume padrão"),
+            help_text=_("Define o volume inicial do player. 0 é mudo e 100 é o máximo."),
             min_value=0,
             max_value=100,
         )
         volume_step_group, self.volume_step_ctrl = self._build_spin_control_group(
             page,
-            label_text="Passo de volume",
-            help_text="Valor usado ao aumentar ou diminuir o volume com as setas para cima e para baixo.",
+            label_text=_("Passo de volume"),
+            help_text=_("Valor usado ao aumentar ou diminuir o volume com as setas para cima e para baixo."),
             min_value=1,
             max_value=25,
         )
         crossfade_group, self.crossfade_ctrl = self._build_spin_control_group(
             page,
-            label_text="Crossfade (segundos, 0 desativa)",
-            help_text=(
+            label_text=_("Crossfade (segundos, 0 desativa)"),
+            help_text=_(
                 "Define por quantos segundos duas faixas de áudio se sobrepõem na transição. "
                 "Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio e "
                 "acontece automaticamente no final de cada faixa."
@@ -254,33 +283,33 @@ class PreferencesDialog(wx.Dialog):
             max_value=MAX_CROSSFADE_SECONDS,
         )
         self.crossfade_on_manual_change_checkbox = wx.CheckBox(
-            page, label="Aplicar crossfade ao trocar de faixa &manualmente"
+            page, label=_("Aplicar crossfade ao trocar de faixa &manualmente")
         )
         self._configure_checkbox(
             self.crossfade_on_manual_change_checkbox,
-            "Aplicar crossfade ao trocar de faixa manualmente",
-            (
+            _("Aplicar crossfade ao trocar de faixa manualmente"),
+            _(
                 "Quando ligado, o crossfade também é usado ao avançar ou voltar com os controles. "
                 "Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
             ),
         )
         seek_step_group, self.seek_step_ctrl = self._build_spin_control_group(
             page,
-            label_text="Passo de busca (segundos)",
-            help_text="Valor usado para avançar ou retroceder na mídia com as setas esquerda e direita.",
+            label_text=_("Passo de busca (segundos)"),
+            help_text=_("Valor usado para avançar ou retroceder na mídia com as setas esquerda e direita."),
             min_value=1,
             max_value=120,
         )
         repeat_group, self.repeat_mode_choice = self._build_choice_control_group(
             page,
-            label_text="Repetição padrão",
-            help_text="Modo de repetição aplicado automaticamente às playlists novas.",
+            label_text=_("Repetição padrão"),
+            help_text=_("Modo de repetição aplicado automaticamente às playlists novas."),
             choices=[REPEAT_MODE_LABELS[mode] for mode in REPEAT_MODES],
         )
         audio_output_group, self.audio_output_choice = self._build_choice_control_group(
             page,
-            label_text="Dispositivo de áudio",
-            help_text=(
+            label_text=_("Dispositivo de áudio"),
+            help_text=_(
                 "Escolhe a saída de áudio usada na reprodução. "
                 "Use Padrão do sistema para seguir o dispositivo principal do Windows."
             ),
@@ -304,29 +333,29 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(playback_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Reprodução")
+        self.notebook.AddPage(page, _("Reprodução"))
 
     def _build_accessibility_tab(self):
-        page, page_sizer = self._create_tab_page("Acessibilidade")
+        page, page_sizer = self._create_tab_page(_("Acessibilidade"))
 
         info_label = wx.StaticText(
             page,
-            label="Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências.",
+            label=_("Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."),
         )
         info_label.Wrap(520)
 
-        accessibility_box = wx.StaticBoxSizer(wx.StaticBox(page, label="Leitor de tela"), wx.VERTICAL)
-        self.announcements_enabled_checkbox = wx.CheckBox(page, label="Ativar a&núncios de acessibilidade")
+        accessibility_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Leitor de tela")), wx.VERTICAL)
+        self.announcements_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a&núncios de acessibilidade"))
         self._configure_checkbox(
             self.announcements_enabled_checkbox,
-            "Ativar anúncios de acessibilidade",
-            "Liga ou desliga os anúncios enviados ao leitor de tela.",
+            _("Ativar anúncios de acessibilidade"),
+            _("Liga ou desliga os anúncios enviados ao leitor de tela."),
         )
         accessibility_box.Add(self.announcements_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
 
         help_label = wx.StaticText(
             page,
-            label="Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas.",
+            label=_("Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."),
         )
         help_label.Wrap(520)
 
@@ -334,15 +363,15 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(accessibility_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Acessibilidade")
+        self.notebook.AddPage(page, _("Acessibilidade"))
 
     def _build_additional_resources_tab(self):
-        page, page_sizer = self._create_tab_page("Recursos adicionais")
+        page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
         self._additional_resources_page = page
 
         info_label = wx.StaticText(
             page,
-            label=(
+            label=_(
                 "Configure integrações e componentes opcionais do player. "
                 "Novos recursos adicionais poderão aparecer aqui no futuro, sem misturar essas opções com as preferências gerais."
             ),
@@ -350,39 +379,39 @@ class PreferencesDialog(wx.Dialog):
         info_label.Wrap(520)
 
         self.youtube_music_resources_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label="Integração com YouTube Music e YouTube"),
+            wx.StaticBox(page, label=_("Integração com YouTube Music e YouTube")),
             wx.VERTICAL,
         )
         self.youtube_music_manage_dependencies_checkbox = wx.CheckBox(
             page,
-            label="Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)",
+            label=_("Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)"),
         )
         self.youtube_music_auto_update_dependencies_checkbox = wx.CheckBox(
             page,
-            label="Atualizar automaticamente as dependências do YouTube Music",
+            label=_("Atualizar automaticamente as dependências do YouTube Music"),
         )
         self.youtube_music_use_nightly_yt_dlp_checkbox = wx.CheckBox(
             page,
-            label="Usar versão &nightly do yt-dlp (recomendado)",
+            label=_("Usar versão &nightly do yt-dlp (recomendado)"),
         )
 
         self._configure_checkbox(
             self.youtube_music_manage_dependencies_checkbox,
-            "Ativar integração com YouTube Music e YouTube",
-            (
+            _("Ativar integração com YouTube Music e YouTube"),
+            _(
                 "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do "
                 "YouTube Music em uma pasta local de recursos adicionais."
             ),
         )
         self._configure_checkbox(
             self.youtube_music_auto_update_dependencies_checkbox,
-            "Atualizar automaticamente dependências do YouTube Music",
-            "Verifica e aplica atualização automática das dependências no intervalo definido abaixo.",
+            _("Atualizar automaticamente dependências do YouTube Music"),
+            _("Verifica e aplica atualização automática das dependências no intervalo definido abaixo."),
         )
         self._configure_checkbox(
             self.youtube_music_use_nightly_yt_dlp_checkbox,
-            "Usar versão nightly do yt-dlp",
-            (
+            _("Usar versão nightly do yt-dlp"),
+            _(
                 "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram "
                 "extractors com frequência e o nightly costuma receber correções antes do canal estável."
             ),
@@ -390,8 +419,8 @@ class PreferencesDialog(wx.Dialog):
 
         self.youtube_music_dependency_interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
             page,
-            label_text="Intervalo de atualização (horas)",
-            help_text=(
+            label_text=_("Intervalo de atualização (horas)"),
+            help_text=_(
                 "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python "
                 "quando a aba YouTube Music é aberta."
             ),
@@ -406,7 +435,7 @@ class PreferencesDialog(wx.Dialog):
 
         self.youtube_music_dependencies_note_label = wx.StaticText(
             page,
-            label=(
+            label=_(
                 "Na primeira execução, o download pode levar alguns minutos e exige internet. "
                 "Ao desativar esta opção, o player apenas para de gerenciar esses recursos automaticamente; "
                 "os arquivos já baixados não são removidos."
@@ -416,14 +445,14 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_resources_box.Add(self.youtube_music_dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_library_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label="Biblioteca do YouTube Music"),
+            wx.StaticBox(page, label=_("Biblioteca do YouTube Music")),
             wx.VERTICAL,
         )
 
         page_size_group, self.youtube_music_library_page_size_ctrl = self._build_spin_control_group(
             page,
-            label_text="Playlists carregadas por vez",
-            help_text=(
+            label_text=_("Playlists carregadas por vez"),
+            help_text=_(
                 "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. "
                 "Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
             ),
@@ -433,8 +462,8 @@ class PreferencesDialog(wx.Dialog):
 
         home_limit_group, self.youtube_music_home_discovery_limit_ctrl = self._build_spin_control_group(
             page,
-            label_text="Mixes personalizadas para descobrir",
-            help_text=(
+            label_text=_("Mixes personalizadas para descobrir"),
+            help_text=_(
                 "Limite máximo de itens varridos na página inicial do YouTube Music para encontrar "
                 "mixes personalizadas. Valores menores deixam a sincronização mais rápida."
             ),
@@ -444,12 +473,12 @@ class PreferencesDialog(wx.Dialog):
 
         self.youtube_music_autoplay_related_checkbox = wx.CheckBox(
             page,
-            label="Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)",
+            label=_("Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)"),
         )
         self._configure_checkbox(
             self.youtube_music_autoplay_related_checkbox,
-            "Reproduzir conteúdo relacionado ao fim da playlist",
-            (
+            _("Reproduzir conteúdo relacionado ao fim da playlist"),
+            _(
                 "Quando a playlist termina e a última faixa é do YouTube Music, o player busca faixas "
                 "relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. "
                 "Também pode ser ligado ou desligado com a tecla A durante a reprodução."
@@ -458,12 +487,12 @@ class PreferencesDialog(wx.Dialog):
 
         self.youtube_music_save_history_checkbox = wx.CheckBox(
             page,
-            label="Salvar músicas escutadas no &histórico do YouTube Music",
+            label=_("Salvar músicas escutadas no &histórico do YouTube Music"),
         )
         self._configure_checkbox(
             self.youtube_music_save_history_checkbox,
-            "Salvar músicas escutadas no histórico do YouTube Music",
-            (
+            _("Salvar músicas escutadas no histórico do YouTube Music"),
+            _(
                 "Quando ligada, ao escutar uma faixa do YouTube Music por tempo suficiente o player "
                 "marca essa faixa como assistida no seu histórico do YouTube Music. Desligue para "
                 "tocar sem registrar nada no histórico da sua conta."
@@ -492,7 +521,7 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(self.youtube_music_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(self.youtube_music_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        self.notebook.AddPage(page, "Recursos adicionais")
+        self.notebook.AddPage(page, _("Recursos adicionais"))
 
     def _create_tab_page(self, name):
         page = wx.Panel(self.notebook)
@@ -504,9 +533,9 @@ class PreferencesDialog(wx.Dialog):
     def _on_toggle_logging_enabled(self, _event):
         self._refresh_logging_controls()
         if self.logging_enabled_checkbox.GetValue():
-            self._announce_from_parent("Registro de logs ativado. Nível de detalhe disponível.")
+            self._announce_from_parent(_("Registro de logs ativado. Nível de detalhe disponível."))
         else:
-            self._announce_from_parent("Registro de logs desativado. Nível de detalhe indisponível.")
+            self._announce_from_parent(_("Registro de logs desativado. Nível de detalhe indisponível."))
 
     def _refresh_logging_controls(self):
         enabled = self.logging_enabled_checkbox.GetValue()
@@ -570,16 +599,16 @@ class PreferencesDialog(wx.Dialog):
     def _on_toggle_youtube_music_manage_dependencies(self, _event):
         self._refresh_additional_resources_controls()
         if self.youtube_music_manage_dependencies_checkbox.GetValue():
-            self._announce_from_parent("Integração com YouTube Music ativada. Opções adicionais disponíveis.")
+            self._announce_from_parent(_("Integração com YouTube Music ativada. Opções adicionais disponíveis."))
         else:
-            self._announce_from_parent("Integração com YouTube Music desativada. Opções adicionais ocultadas.")
+            self._announce_from_parent(_("Integração com YouTube Music desativada. Opções adicionais ocultadas."))
 
     def _on_toggle_youtube_music_auto_update_dependencies(self, _event):
         self._refresh_additional_resources_controls()
         if self.youtube_music_auto_update_dependencies_checkbox.GetValue():
-            self._announce_from_parent("Atualização automática ativada. Intervalo de atualização disponível.")
+            self._announce_from_parent(_("Atualização automática ativada. Intervalo de atualização disponível."))
         else:
-            self._announce_from_parent("Atualização automática desativada. Intervalo de atualização indisponível.")
+            self._announce_from_parent(_("Atualização automática desativada. Intervalo de atualização indisponível."))
 
     def _refresh_additional_resources_controls(self):
         managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()
@@ -624,7 +653,7 @@ class PreferencesDialog(wx.Dialog):
 
     def _audio_output_choice_labels(self):
         self._audio_output_choice_ids = [""]
-        labels = ["Padrão do sistema"]
+        labels = [_("Padrão do sistema")]
 
         selected_device_id = normalize_audio_output_device_id(getattr(self._settings, "audio_output_device_id", ""))
         if not is_selectable_audio_output_device_id(selected_device_id):
@@ -640,12 +669,17 @@ class PreferencesDialog(wx.Dialog):
             seen_ids.add(device_id)
 
         if selected_device_id and selected_device_id not in seen_ids:
-            labels.append(f"Dispositivo salvo indisponível — {selected_device_id}")
+            labels.append(_("Dispositivo salvo indisponível — {device}").format(device=selected_device_id))
             self._audio_output_choice_ids.append(selected_device_id)
 
         return labels
 
     def _populate_controls(self, settings):
+        try:
+            language_index = self._language_choice_codes.index(settings.language or "")
+        except ValueError:
+            language_index = 0
+        self.language_choice.SetSelection(language_index)
         self.restore_session_checkbox.SetValue(settings.restore_session_on_startup)
         self.remember_window_size_checkbox.SetValue(settings.remember_window_size)
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
@@ -689,6 +723,11 @@ class PreferencesDialog(wx.Dialog):
 
     def get_settings(self):
         settings = replace(self._settings)
+        selected_language_index = self.language_choice.GetSelection()
+        if 0 <= selected_language_index < len(self._language_choice_codes):
+            settings.language = self._language_choice_codes[selected_language_index]
+        else:
+            settings.language = ""
         settings.restore_session_on_startup = self.restore_session_checkbox.GetValue()
         settings.remember_window_size = self.remember_window_size_checkbox.GetValue()
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()
@@ -733,10 +772,10 @@ class PreferencesDialog(wx.Dialog):
 
         if register_file_associations():
             response = wx.MessageBox(
-                "Associações registradas com sucesso.\n\n"
-                "Para definir o KeyTune como player padrão, abra as configurações de "
-                "Aplicativos padrão do Windows. Deseja abri-las agora?",
-                "Associação de arquivos",
+                _("Associações registradas com sucesso.")
+                + "\n\n"
+                + _("Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"),
+                _("Associação de arquivos"),
                 wx.YES_NO | wx.ICON_INFORMATION,
                 self,
             )
@@ -744,8 +783,8 @@ class PreferencesDialog(wx.Dialog):
                 self._open_default_apps_settings()
         else:
             wx.MessageBox(
-                "Não foi possível registrar as associações de arquivo.",
-                "Associação de arquivos",
+                _("Não foi possível registrar as associações de arquivo."),
+                _("Associação de arquivos"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -757,9 +796,10 @@ class PreferencesDialog(wx.Dialog):
             os.startfile("ms-settings:defaultapps")
         except OSError:
             wx.MessageBox(
-                "Não foi possível abrir as configurações do Windows.\n\n"
-                "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão.",
-                "Aplicativos padrão",
+                _("Não foi possível abrir as configurações do Windows.")
+                + "\n\n"
+                + _("Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."),
+                _("Aplicativos padrão"),
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -769,15 +809,15 @@ class PreferencesDialog(wx.Dialog):
 
         if unregister_file_associations():
             wx.MessageBox(
-                "Associações removidas.",
-                "Associação de arquivos",
+                _("Associações removidas."),
+                _("Associação de arquivos"),
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
         else:
             wx.MessageBox(
-                "Não foi possível remover as associações de arquivo.",
-                "Associação de arquivos",
+                _("Não foi possível remover as associações de arquivo."),
+                _("Associação de arquivos"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

@@ -1,6 +1,7 @@
 import wx
 
 from ..constants import APP_LICENSE, APP_TITLE, APP_VERSION, GITHUB_REPOSITORY_NAME, GITHUB_REPOSITORY_OWNER
+from ..i18n import _
 
 REPOSITORY_URL = f"https://github.com/{GITHUB_REPOSITORY_OWNER}/{GITHUB_REPOSITORY_NAME}"
 
@@ -9,7 +10,7 @@ class AboutDialog(wx.Dialog):
     def __init__(self, parent, *, on_open_credits=None):
         super().__init__(
             parent,
-            title=f"Sobre o {APP_TITLE}",
+            title=_("Sobre o {app}").format(app=APP_TITLE),
             style=wx.DEFAULT_DIALOG_STYLE,
         )
 
@@ -20,20 +21,20 @@ class AboutDialog(wx.Dialog):
 
         title_label = wx.StaticText(panel, label=f"{APP_TITLE} {APP_VERSION}")
         title_label.SetFont(title_label.GetFont().Bold())
-        title_label.SetName(f"{APP_TITLE} versão {APP_VERSION}")
+        title_label.SetName(_("{app} versão {version}").format(app=APP_TITLE, version=APP_VERSION))
 
         description_label = wx.StaticText(
             panel,
-            label=(
+            label=_(
                 "Player de áudio e vídeo pensado para ser usado inteiramente pelo teclado "
                 "e para funcionar bem com leitores de tela."
             ),
         )
         description_label.Wrap(480)
-        description_label.SetName("Descrição do aplicativo")
+        description_label.SetName(_("Descrição do aplicativo"))
 
-        license_label = wx.StaticText(panel, label=f"Licenciado sob a licença {APP_LICENSE}.")
-        license_label.SetName("Licença do aplicativo")
+        license_label = wx.StaticText(panel, label=_("Licenciado sob a licença {license}.").format(license=APP_LICENSE))
+        license_label.SetName(_("Licença do aplicativo"))
 
         root_sizer.Add(title_label, 0, wx.ALL | wx.EXPAND, 10)
         root_sizer.Add(description_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
@@ -41,12 +42,12 @@ class AboutDialog(wx.Dialog):
 
         button_row = wx.BoxSizer(wx.HORIZONTAL)
 
-        source_button = wx.Button(panel, label="Ver código-fonte no &GitHub")
-        source_button.SetName("Ver código-fonte no GitHub")
+        source_button = wx.Button(panel, label=_("Ver código-fonte no &GitHub"))
+        source_button.SetName(_("Ver código-fonte no GitHub"))
         source_button.Bind(wx.EVT_BUTTON, self._on_open_source_clicked)
 
-        credits_button = wx.Button(panel, label="Ver &créditos completos")
-        credits_button.SetName("Ver créditos completos")
+        credits_button = wx.Button(panel, label=_("Ver &créditos completos"))
+        credits_button.SetName(_("Ver créditos completos"))
         credits_button.Bind(wx.EVT_BUTTON, self._on_open_credits_clicked)
 
         button_row.Add(source_button, 0, wx.RIGHT, 8)
@@ -54,7 +55,7 @@ class AboutDialog(wx.Dialog):
         root_sizer.Add(button_row, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
-        close_button = wx.Button(panel, wx.ID_OK, "&Fechar")
+        close_button = wx.Button(panel, wx.ID_OK, _("&Fechar"))
         close_button.SetDefault()
         button_sizer.AddButton(close_button)
         button_sizer.Realize()
@@ -77,8 +78,8 @@ class AboutDialog(wx.Dialog):
 
         if not launched:
             wx.MessageBox(
-                "Não foi possível abrir o repositório do GitHub no navegador padrão.",
-                f"Sobre o {APP_TITLE}",
+                _("Não foi possível abrir o repositório do GitHub no navegador padrão."),
+                _("Sobre o {app}").format(app=APP_TITLE),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

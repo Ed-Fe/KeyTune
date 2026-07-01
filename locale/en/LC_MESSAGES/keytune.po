@@ -1,0 +1,442 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: KeyTune\n"
+"Language: en\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "&Anunciar"
+msgstr "&Announce"
+
+msgid "&Arquivo"
+msgstr "&File"
+
+msgid "&Atualizar lista de dispositivos"
+msgstr "&Refresh device list"
+
+msgid "&Avançar"
+msgstr "&Next"
+
+msgid "&Cancelar"
+msgstr "&Cancel"
+
+msgid "&Concluir"
+msgstr "&Finish"
+
+msgid "&Conteúdo Relacionado do YouTube Music (A)"
+msgstr "&Related YouTube Music content (A)"
+
+msgid "&Copiar caminho do item (Ctrl+C)"
+msgstr "&Copy item path (Ctrl+C)"
+
+msgid "&Exibir"
+msgstr "&View"
+
+msgid "&Fechar"
+msgstr "&Close"
+
+msgid "&Nova playlist\tCtrl+T"
+msgstr "&New playlist\tCtrl+T"
+
+msgid "&Padrão do sistema"
+msgstr "&System default"
+
+msgid "&Preferências\tCtrl+,"
+msgstr "&Preferences\tCtrl+,"
+
+msgid "&Recentes"
+msgstr "&Recent"
+
+msgid "&Reprodução"
+msgstr "&Playback"
+
+msgid "&Sair\tAlt+F4"
+msgstr "&Exit\tAlt+F4"
+
+msgid "&Salvar"
+msgstr "&Save"
+
+msgid "&Sobre o KeyTune"
+msgstr "&About KeyTune"
+
+msgid "&Voltar"
+msgstr "&Back"
+
+msgid "A janela principal é dividida em algumas áreas:\n\nAbas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab para alternar entre elas, e Ctrl+T para criar uma nova.\n\nLista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco entre a lista e o player.\n\nÁrea do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\nBarra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual e mensagens rápidas sobre as ações realizadas."
+msgstr "The main window is split into a few areas:\n\nTabs, at the top: each tab is an open playlist. Use Ctrl+Tab and Ctrl+Shift+Tab to switch between them, and Ctrl+T to create a new one.\n\nItem list, on the left of each tab: shows the files in the current playlist or the items in a folder. Use the arrow keys to move around, Enter to play or open, and Tab to move focus between the list and the player.\n\nPlayer area, on the right: shows the video when there is one, or just indicates that audio is playing. Playback is controlled from the keyboard: Space to play or pause, left/right arrows to seek, and up/down arrows for the volume.\n\nTime bar and status bar, at the bottom: show the progress of the current media and quick messages about the actions you take."
+
+msgid "A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."
+msgstr "The language change takes effect the next time KeyTune is opened."
+
+msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
+msgstr "At any time, press F1 to open a quick help with the full list of KeyTune keyboard shortcuts.\n\nFor a more detailed explanation of every feature, open the user manual. Both are also available from the Help menu."
+
+msgid "A&bas"
+msgstr "Ta&bs"
+
+msgid "A&juda"
+msgstr "&Help"
+
+msgid "Aba A&nterior\tCtrl+Shift+Tab"
+msgstr "Pre&vious tab\tCtrl+Shift+Tab"
+
+msgid "Abrindo créditos: {name}"
+msgstr "Opening credits: {name}"
+
+msgid "Abrindo manual: {name}"
+msgstr "Opening manual: {name}"
+
+msgid "Abrir &Arquivos ou Playlist...\tCtrl+O"
+msgstr "Open &Files or Playlist...\tCtrl+O"
+
+msgid "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"
+msgstr "Open &Media, Playlist or Folder...\tCtrl+Alt+O"
+
+msgid "Abrir &Pasta...\tCtrl+Shift+O"
+msgstr "Open &Folder...\tCtrl+Shift+O"
+
+msgid "Abrir &manual do usuário"
+msgstr "Open user &manual"
+
+msgid "Abrir manual do usuário"
+msgstr "Open user manual"
+
+msgid "Acessibilidade"
+msgstr "Accessibility"
+
+msgid "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"
+msgstr "Add to &YouTube Music Playlist\tCtrl+Shift+A"
+
+msgid "Ajuda rápida de &atalhos\tF1"
+msgstr "Quick &shortcuts help\tF1"
+
+msgid "Ajuda rápida de atalhos"
+msgstr "Quick shortcuts help"
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the path or link of the selected item\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save current playlist\nCtrl+T — New playlist\nCtrl+W — Close current tab or playlist\nCtrl+Shift+W — Close current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Seek backward or forward in the file\nShift+left / right arrow — Seek backward or forward 1 minute\nHome / End — Go to the start or to the end\nUp / down arrow — Increase or decrease the volume\nPlayback menu > Audio device — Change the sound output\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+left / right arrow — Previous or next track in the playlist\nAlt+up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last playlist item\nCtrl+L — Like the current media on YouTube Music\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle related YouTube Music content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go back a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
+
+msgid "Ajuda rápida de atalhos:"
+msgstr "Quick shortcuts help:"
+
+msgid "Ajuda visual do player"
+msgstr "Player visual hint"
+
+msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
+msgstr "Adjust how the player starts up, saves state and responds to shortcuts. Use the tabs to move between categories. Press Esc to cancel or Enter on Save to confirm."
+
+msgid "Alternar foco entre &itens e player\tTab"
+msgstr "Toggle focus between &items and player\tTab"
+
+msgid "Além de tocar arquivos locais, o KeyTune tem alguns recursos que podem ser úteis:\n\nPlaylists: crie, salve e reabra playlists em abas separadas, com embaralhar e modos de repetição configuráveis.\n\nEqualizador: ajuste a resposta de frequência da reprodução e salve seus próprios presets pelo menu Reprodução.\n\nYouTube Music (opcional): conecte sua conta para abrir suas playlists, curtir faixas e tocar conteúdo relacionado automaticamente ao fim de uma playlist.\n\nPreferências: em Configurações > Preferências é possível ajustar volume padrão, crossfade, restauração de sessão, anúncios do leitor de tela e mais."
+msgstr "Besides playing local files, KeyTune has a few features that can be handy:\n\nPlaylists: create, save and reopen playlists in separate tabs, with configurable shuffle and repeat modes.\n\nEqualizer: adjust the frequency response of playback and save your own presets from the Playback menu.\n\nYouTube Music (optional): connect your account to open your playlists, like tracks and automatically play related content at the end of a playlist.\n\nPreferences: under Settings > Preferences you can adjust the default volume, crossfade, session restore, screen reader announcements and more."
+
+msgid "Anunciar &Status (S)"
+msgstr "Announce &Status (S)"
+
+msgid "Anunciar &Tempo (T)"
+msgstr "Announce &Time (T)"
+
+msgid "Anunciar &Volume (V)"
+msgstr "Announce &Volume (V)"
+
+msgid "Apenas erros (ERROR)"
+msgstr "Errors only (ERROR)"
+
+msgid "Apresenta o player e o que é possível fazer com ele."
+msgstr "Introduces the player and what you can do with it."
+
+msgid "Arquivos recentes"
+msgstr "Recent files"
+
+msgid "Atalhos e ajuda"
+msgstr "Shortcuts and help"
+
+msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgstr "Main shortcuts: Ctrl+Alt+O open media, playlist or folder · Ctrl+O open files or playlist · Ctrl+Shift+O open folder · Space play/pause · ←/→ seek · ↑/↓ volume · Tab items/player · Ctrl+Shift+Y YouTube Music hub (optional) · F1 help"
+
+msgid "Automático (seguir o sistema)"
+msgstr "Automatic (follow the system)"
+
+msgid "Avançar"
+msgstr "Next"
+
+msgid "Avisos (WARNING)"
+msgstr "Warnings (WARNING)"
+
+msgid "Barra de tempo"
+msgstr "Time bar"
+
+msgid "Bem-vindo ao KeyTune"
+msgstr "Welcome to KeyTune"
+
+msgid "Categorias de preferências"
+msgstr "Preference categories"
+
+msgid "Co&lar na playlist atual / abrir... (Ctrl+V)"
+msgstr "Pas&te into current playlist / open... (Ctrl+V)"
+
+msgid "Colar e abrir em &nova playlist... (Ctrl+Shift+V)"
+msgstr "Paste and open in a &new playlist... (Ctrl+Shift+V)"
+
+msgid "Como a interface é organizada"
+msgstr "How the interface is organized"
+
+msgid "Con&figurações"
+msgstr "&Settings"
+
+msgid "Concluir"
+msgstr "Finish"
+
+msgid "Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."
+msgstr "Settings related to language, player startup, the saved session, exit behavior and logging."
+
+msgid "Conteúdo da página atual"
+msgstr "Current page content"
+
+msgid "Créditos do KeyTune"
+msgstr "KeyTune credits"
+
+msgid "Define o idioma de menus, diálogos e anúncios do leitor de tela. Use Automático para seguir o idioma do sistema operacional."
+msgstr "Sets the language of menus, dialogs and screen reader announcements. Use Automatic to follow the operating system language."
+
+msgid "Depuração (DEBUG)"
+msgstr "Debugging (DEBUG)"
+
+msgid "Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores."
+msgstr "Describes the main areas of the player window: tabs, item list, player and bottom bars."
+
+msgid "Descrição do aplicativo"
+msgstr "Application description"
+
+msgid "Dicas rápidas de atalhos"
+msgstr "Quick shortcut hints"
+
+msgid "Dispositivo de áu&dio"
+msgstr "Au&dio device"
+
+msgid "Em&baralhar (E)"
+msgstr "Shu&ffle (E)"
+
+msgid "Eq&ualizador por aba\tCtrl+Shift+E"
+msgstr "Eq&ualizer in a tab\tCtrl+Shift+E"
+
+msgid "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."
+msgstr "Explains how to open the quick shortcuts help and the full KeyTune manual."
+
+msgid "F&echar"
+msgstr "Cl&ose"
+
+msgid "Faixa &Anterior\tCtrl+PageUp"
+msgstr "&Previous Track\tCtrl+PageUp"
+
+msgid "Fechar A&ba / Playlist\tCtrl+W"
+msgstr "Close Ta&b / Playlist\tCtrl+W"
+
+msgid "Fechar Mí&dia\tCtrl+Shift+W"
+msgstr "Close Me&dia\tCtrl+Shift+W"
+
+msgid "Geral"
+msgstr "General"
+
+msgid "Idioma"
+msgstr "Language"
+
+msgid "Idioma da interface"
+msgstr "Interface language"
+
+msgid "Informativo (INFO)"
+msgstr "Informational (INFO)"
+
+msgid "Inicialização e sessão"
+msgstr "Startup and session"
+
+msgid "Interface"
+msgstr "Interface"
+
+msgid "Licenciado sob a licença {license}."
+msgstr "Licensed under the {license} license."
+
+msgid "Licença do aplicativo"
+msgstr "Application license"
+
+msgid "Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."
+msgstr "Audio device list refreshed, but no device was detected right now."
+
+msgid "Lista de dispositivos de áudio atualizada. {count} dispositivo(s) disponível(is)."
+msgstr "Audio device list refreshed. {count} device(s) available."
+
+msgid "Manual do KeyTune"
+msgstr "KeyTune manual"
+
+msgid "Modo de &Repetição (R)"
+msgstr "&Repeat Mode (R)"
+
+msgid "Mostra o progresso da mídia atual."
+msgstr "Shows the progress of the current media."
+
+msgid "Mostra o tempo decorrido e a duração total da mídia atual."
+msgstr "Shows the elapsed time and total duration of the current media."
+
+msgid "Mostrar tela de &boas-vindas"
+msgstr "Show &welcome screen"
+
+msgid "Nenhum dispositivo detectado agora"
+msgstr "No device detected right now"
+
+msgid "Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."
+msgstr "Could not open the KeyTune manual in the system's default viewer."
+
+msgid "Não foi possível abrir o repositório do GitHub no navegador padrão."
+msgstr "Could not open the GitHub repository in the default browser."
+
+msgid "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."
+msgstr "Could not open the KeyTune credits in the system's default viewer."
+
+msgid "Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
+msgstr "Could not locate the KeyTune manual. Generate the release HTML version or check the project's docs folder."
+
+msgid "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
+msgstr "Could not locate the KeyTune credits. Generate the release HTML version or check the project's docs folder."
+
+msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgstr "KeyTune is an audio and video player designed to be used entirely from the keyboard and to work well with screen readers. You never need to use the mouse.\n\nYou can open media files, folders and playlists, organize everything in tabs and, optionally, connect your YouTube Music account to play your playlists and your library.\n\nThe next pages show how the interface is organized, which features are available and where to find help whenever you need it."
+
+msgid "Onde encontrar ajuda"
+msgstr "Where to find help"
+
+msgid "P&arar\tCtrl+."
+msgstr "S&top\tCtrl+."
+
+msgid "Painel de tempo"
+msgstr "Time panel"
+
+msgid "Painel de vídeo"
+msgstr "Video panel"
+
+msgid "Pastas recentes"
+msgstr "Recent folders"
+
+msgid "Player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela."
+msgstr "Audio and video player designed to be used entirely from the keyboard and to work well with screen readers."
+
+msgid "Playlist M3U"
+msgstr "M3U playlist"
+
+msgid "Playlist M3U8"
+msgstr "M3U8 playlist"
+
+msgid "Playlists"
+msgstr "Playlists"
+
+msgid "Playlists recentes"
+msgstr "Recent playlists"
+
+msgid "Preferências"
+msgstr "Preferences"
+
+msgid "Próxima A&ba\tCtrl+Tab"
+msgstr "Next Ta&b\tCtrl+Tab"
+
+msgid "Próxima Fai&xa\tCtrl+PageDown"
+msgstr "Next Trac&k\tCtrl+PageDown"
+
+msgid "Pu&lar tutorial"
+msgstr "S&kip tutorial"
+
+msgid "Pular tutorial"
+msgstr "Skip tutorial"
+
+msgid "Página {current} de {total}: {title}"
+msgstr "Page {current} of {total}: {title}"
+
+msgid "Recursos adicionais"
+msgstr "Additional features"
+
+msgid "Recursos do player"
+msgstr "Player features"
+
+msgid "Recursos principais do KeyTune"
+msgstr "Main KeyTune features"
+
+msgid "Repetir faixa atual"
+msgstr "Repeat current track"
+
+msgid "Repetir playlist"
+msgstr "Repeat playlist"
+
+msgid "Repetição desligada"
+msgstr "Repeat off"
+
+msgid "Reproduzir / Pa&usar\tEspaço"
+msgstr "Play / Pa&use\tSpace"
+
+msgid "Reprodução"
+msgstr "Playback"
+
+msgid "Resume os atalhos mais usados para controlar o player."
+msgstr "Summarizes the most used shortcuts for controlling the player."
+
+msgid "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."
+msgstr "Summarizes the player features beyond basic playback: playlists, equalizer, YouTube Music and preferences."
+
+msgid "Salvar Playli&st\tCtrl+Shift+S"
+msgstr "Save Playli&st\tCtrl+Shift+S"
+
+msgid "Saída de vídeo desativada\n\nEsta mídia está tocando só o áudio.\nAbra Preferências > Reprodução para reativar o vídeo quando quiser."
+msgstr "Video output disabled\n\nThis media is playing audio only.\nOpen Preferences > Playback to re-enable video whenever you want."
+
+msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre uma pasta no navegador\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr "No media loaded\n\nCtrl+Alt+O opens media, playlist or folder\nCtrl+O opens files or playlist\nCtrl+Shift+O opens a folder in the browser\nSpace plays or pauses\nTab switches between items and player\nCtrl+Shift+Y opens the YouTube Music hub when the optional integration is enabled\nF1 shows the quick shortcuts help"
+
+msgid "Sobre o KeyTune"
+msgstr "About KeyTune"
+
+msgid "Sobre o {app}"
+msgstr "About {app}"
+
+msgid "Superfície de vídeo"
+msgstr "Video surface"
+
+msgid "Tempo da mídia"
+msgstr "Media time"
+
+msgid "Tempo: nenhuma mídia carregada."
+msgstr "Time: no media loaded."
+
+msgid "Todos os arquivos"
+msgstr "All files"
+
+msgid "Ver &créditos completos"
+msgstr "View full &credits"
+
+msgid "Ver ajuda rápida de atalhos"
+msgstr "View quick shortcuts help"
+
+msgid "Ver ajuda rápida de atalhos (&F1)"
+msgstr "View quick shortcuts help (&F1)"
+
+msgid "Ver créditos completos"
+msgstr "View full credits"
+
+msgid "Ver código-fonte no &GitHub"
+msgstr "View source code on &GitHub"
+
+msgid "Ver código-fonte no GitHub"
+msgstr "View source code on GitHub"
+
+msgid "Verificar &atualizações"
+msgstr "Check for &updates"
+
+msgid "Voltar"
+msgstr "Back"
+
+msgid "YouTube &Music por aba\tCtrl+Shift+Y"
+msgstr "YouTube &Music in a tab\tCtrl+Shift+Y"
+
+msgid "{app} versão {version}"
+msgstr "{app} version {version}"
+
+msgid "{name}:"
+msgstr "{name}:"

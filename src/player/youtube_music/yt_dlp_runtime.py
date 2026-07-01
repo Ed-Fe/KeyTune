@@ -14,6 +14,7 @@ from urllib import error, request
 
 from ..constants import APP_TITLE, APP_VERSION, UPDATE_DOWNLOAD_CHUNK_SIZE, UPDATE_HTTP_TIMEOUT_SECONDS
 from ..session import get_app_storage_dir
+from ..i18n import _
 
 
 YTDLP_EXECUTABLE_NAME = "yt-dlp.exe" if sys.platform.startswith("win") else "yt-dlp"
@@ -163,7 +164,7 @@ def install_or_update_yt_dlp_executable(
             )
             actual_checksum = _calculate_sha256(download_path)
             if actual_checksum.casefold() != expected_checksum.casefold():
-                raise RuntimeError("O executável yt-dlp baixado não passou na validação de integridade.")
+                raise RuntimeError(_("O executável yt-dlp baixado não passou na validação de integridade."))
 
             shutil.copyfile(download_path, temporary_target_path)
             os.replace(temporary_target_path, target_path)
@@ -202,7 +203,7 @@ def extract_info(
 
     normalized_media_path = str(media_path or "").strip()
     if not normalized_media_path:
-        raise RuntimeError("Nenhuma mídia válida foi informada ao yt-dlp.")
+        raise RuntimeError(_("Nenhuma mídia válida foi informada ao yt-dlp."))
 
     command = _build_yt_dlp_command(
         executable_path=executable_path,
@@ -233,11 +234,11 @@ def extract_info(
             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
         )
     except FileNotFoundError as exc:
-        raise RuntimeError("Não foi possível iniciar o executável yt-dlp.") from exc
+        raise RuntimeError(_("Não foi possível iniciar o executável yt-dlp.")) from exc
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError("O yt-dlp demorou demais para responder e foi interrompido.") from exc
+        raise RuntimeError(_("O yt-dlp demorou demais para responder e foi interrompido.")) from exc
     except OSError as exc:
-        raise RuntimeError("O executável yt-dlp falhou ao iniciar.") from exc
+        raise RuntimeError(_("O executável yt-dlp falhou ao iniciar.")) from exc
 
     stdout_text = str(completed_process.stdout or "").strip()
     stderr_text = str(completed_process.stderr or "").strip()
@@ -396,18 +397,18 @@ def _fetch_latest_release(*, include_prerelease: bool) -> YtDlpReleaseInfo:
     payload = _download_json(api_url)
     assets = payload.get("assets")
     if not isinstance(assets, list):
-        raise RuntimeError("Não foi possível ler os arquivos da release do yt-dlp.")
+        raise RuntimeError(_("Não foi possível ler os arquivos da release do yt-dlp."))
 
     executable_asset = _find_release_asset(assets, YTDLP_RELEASE_ASSET_NAME)
     checksum_asset = _find_release_asset(assets, YTDLP_RELEASE_CHECKSUM_ASSET_NAME)
     if executable_asset is None or checksum_asset is None:
-        raise RuntimeError("A release do yt-dlp não publicou todos os arquivos necessários.")
+        raise RuntimeError(_("A release do yt-dlp não publicou todos os arquivos necessários."))
 
     executable_url = str(executable_asset.get("browser_download_url") or "").strip()
     checksum_url = str(checksum_asset.get("browser_download_url") or "").strip()
     version_text = str(payload.get("tag_name") or payload.get("name") or "").strip()
     if not executable_url or not checksum_url or not version_text:
-        raise RuntimeError("A release do yt-dlp veio com metadados incompletos.")
+        raise RuntimeError(_("A release do yt-dlp veio com metadados incompletos."))
 
     return YtDlpReleaseInfo(
         version=version_text,
@@ -426,10 +427,10 @@ def _download_json(url: str) -> dict:
         with request.urlopen(release_request, timeout=UPDATE_HTTP_TIMEOUT_SECONDS) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (error.HTTPError, error.URLError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Não foi possível consultar a release mais recente do yt-dlp.") from exc
+        raise RuntimeError(_("Não foi possível consultar a release mais recente do yt-dlp.")) from exc
 
     if not isinstance(payload, dict):
-        raise RuntimeError("A resposta da release do yt-dlp veio em formato inválido.")
+        raise RuntimeError(_("A resposta da release do yt-dlp veio em formato inválido."))
     return payload
 
 
@@ -455,7 +456,7 @@ def _download_binary_file(url: str, destination_path: Path, *, timeout_seconds: 
             with open(destination_path, "wb") as target_file:
                 shutil.copyfileobj(response, target_file, length=UPDATE_DOWNLOAD_CHUNK_SIZE)
     except (error.HTTPError, error.URLError, OSError) as exc:
-        raise RuntimeError("Não foi possível baixar os arquivos oficiais do yt-dlp.") from exc
+        raise RuntimeError(_("Não foi possível baixar os arquivos oficiais do yt-dlp.")) from exc
 
 
 def _extract_expected_checksum(checksum_text: str, *, asset_name: str) -> str:
@@ -467,7 +468,7 @@ def _extract_expected_checksum(checksum_text: str, *, asset_name: str) -> str:
         checksum_value = normalized_line.split()[0].strip()
         if len(checksum_value) == 64:
             return checksum_value
-    raise RuntimeError("Não foi possível localizar o checksum oficial do yt-dlp baixado.")
+    raise RuntimeError(_("Não foi possível localizar o checksum oficial do yt-dlp baixado."))
 
 
 def _calculate_sha256(file_path: Path) -> str:

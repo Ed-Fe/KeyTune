@@ -1,3 +1,4 @@
+from ...i18n import _, ngettext
 import wx
 
 from player.youtube_music.dialog import YouTubeMusicCreatePlaylistDialog
@@ -24,11 +25,11 @@ class PlaylistEditMixin:
         state = self._get_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
-            self._announce("Nenhuma mídia está carregada para avaliar.")
+            self._announce(_("Nenhuma mídia está carregada para avaliar."))
             return False
 
         if not is_youtube_music_media(media_path):
-            self._announce("A mídia atual não veio do YouTube Music ou do YouTube.")
+            self._announce(_("A mídia atual não veio do YouTube Music ou do YouTube."))
             return False
 
         service = self._get_youtube_music_service()
@@ -39,9 +40,9 @@ class PlaylistEditMixin:
         normalized_rating = str(rating or "").strip().upper()
         if current_status == normalized_rating:
             if normalized_rating == "DISLIKE":
-                normalized_message = "A mídia atual já está marcada como não gostei no YouTube Music."
+                normalized_message = _("A mídia atual já está marcada como não gostei no YouTube Music.")
             else:
-                normalized_message = "A mídia atual já está curtida no YouTube Music."
+                normalized_message = _("A mídia atual já está curtida no YouTube Music.")
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
@@ -62,8 +63,7 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível avaliar a mídia atual no YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível avaliar a mídia atual no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -151,7 +151,7 @@ class PlaylistEditMixin:
         state = self._get_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
-            self._announce("Nenhuma mídia está tocando para ser adicionada.")
+            self._announce(_("Nenhuma mídia está tocando para ser adicionada."))
             return False
         return self._add_media_paths_to_youtube_playlist([media_path])
 
@@ -161,7 +161,7 @@ class PlaylistEditMixin:
     def _add_media_paths_to_youtube_playlist(self, media_paths):
         video_ids = self._youtube_music_video_ids_from_paths(media_paths)
         if not video_ids:
-            self._announce("A seleção não contém faixas do YouTube Music para adicionar.")
+            self._announce(_("A seleção não contém faixas do YouTube Music para adicionar."))
             return False
 
         service = self._get_youtube_music_service()
@@ -169,7 +169,7 @@ class PlaylistEditMixin:
             return False
 
         track_count = len(video_ids)
-        track_label = "faixa" if track_count == 1 else "faixas"
+        track_label = _("faixa") if track_count == 1 else _("faixas")
 
         playlists = self._editable_youtube_music_playlists()
         if not playlists:
@@ -179,7 +179,7 @@ class PlaylistEditMixin:
 
         selected_playlist = self._prompt_for_youtube_music_playlist(
             playlists,
-            f"Selecione a playlist para adicionar {track_count} {track_label}:",
+            _("Selecione a playlist para adicionar {count} {label}:").format(count=track_count, label=track_label),
             allow_create=True,
         )
         if selected_playlist is None:
@@ -195,12 +195,11 @@ class PlaylistEditMixin:
                 normalized_added = int(added_count)
             except (TypeError, ValueError):
                 normalized_added = track_count
-            added_verb = "adicionada" if normalized_added == 1 else "adicionadas"
-            added_noun = "faixa" if normalized_added == 1 else "faixas"
-            message = (
-                f"{normalized_added} {added_noun} {added_verb} à playlist {selected_playlist.title}"
-                " no YouTube Music."
-            )
+            message = ngettext(
+                "{count} faixa adicionada à playlist {title} no YouTube Music.",
+                "{count} faixas adicionadas à playlist {title} no YouTube Music.",
+                normalized_added,
+            ).format(count=normalized_added, title=selected_playlist.title)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
             self._announce(message)
@@ -209,30 +208,29 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível adicionar à playlist do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível adicionar à playlist do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
 
-        self._announce(f"Adicionando {track_count} {track_label} à playlist {selected_playlist.title}...")
+        self._announce(_("Adicionando {count} {label} à playlist {title}...").format(count=track_count, label=track_label, title=selected_playlist.title))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _remove_selected_media_from_youtube_playlist(self, media_paths, item_indexes):
         state = self._get_playlist_state()
         if state is None or state.is_folder_tab:
-            self._announce("Abra uma playlist do YouTube Music para remover faixas dela.")
+            self._announce(_("Abra uma playlist do YouTube Music para remover faixas dela."))
             return False
 
         playlist_id = extract_playlist_id_from_source(getattr(state, "source_path", None))
         if not playlist_id or is_watch_playlist_id(playlist_id):
-            self._announce("A aba atual não é uma playlist editável do YouTube Music.")
+            self._announce(_("A aba atual não é uma playlist editável do YouTube Music."))
             return False
 
         video_ids = self._youtube_music_video_ids_from_paths(media_paths)
         if not video_ids:
-            self._announce("A seleção não contém faixas do YouTube Music para remover.")
+            self._announce(_("A seleção não contém faixas do YouTube Music para remover."))
             return False
 
         service = self._get_youtube_music_service()
@@ -247,14 +245,19 @@ class PlaylistEditMixin:
         )
 
         track_count = len(video_ids)
-        track_label = "faixa" if track_count == 1 else "faixas"
+        track_label = _("faixa") if track_count == 1 else _("faixas")
 
         # Editing a remote playlist changes the user's account and is not
         # undoable from the player, so confirm before touching the server.
         confirmation = wx.MessageBox(
-            f"Remover {track_count} {track_label} da playlist \"{playlist_title}\" no YouTube Music?\n\n"
-            "Isso altera a playlist diretamente na sua conta e não pode ser desfeito pelo player.",
-            "Remover da playlist do YouTube Music",
+            ngettext(
+                "Remover {count} faixa da playlist \"{title}\" no YouTube Music?",
+                "Remover {count} faixas da playlist \"{title}\" no YouTube Music?",
+                track_count,
+            ).format(count=track_count, title=playlist_title)
+            + "\n\n"
+            + _("Isso altera a playlist diretamente na sua conta e não pode ser desfeito pelo player."),
+            _("Remover da playlist do YouTube Music"),
             wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
             self,
         )
@@ -276,10 +279,13 @@ class PlaylistEditMixin:
             if local_indexes:
                 self._remove_items_from_current_playlist(
                     local_indexes,
-                    announce_prefix="Removido da playlist do YouTube Music",
+                    announce_prefix=_("Removido da playlist do YouTube Music"),
                 )
-            removed_noun = "faixa removida" if normalized_removed == 1 else "faixas removidas"
-            message = f"{normalized_removed} {removed_noun} da playlist {playlist_title} no YouTube Music."
+            message = ngettext(
+                "{count} faixa removida da playlist {title} no YouTube Music.",
+                "{count} faixas removidas da playlist {title} no YouTube Music.",
+                normalized_removed,
+            ).format(count=normalized_removed, title=playlist_title)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
             if hasattr(self, "_set_status_message"):
@@ -289,14 +295,13 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível remover da playlist do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível remover da playlist do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
 
-        self._announce(f"Removendo {track_count} {track_label} da playlist {playlist_title}...")
+        self._announce(_("Removendo {count} {label} da playlist {title}...").format(count=track_count, label=track_label, title=playlist_title))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _prompt_for_new_youtube_music_playlist(self, *, track_count=0, default_name=""):
@@ -351,13 +356,13 @@ class PlaylistEditMixin:
 
         def on_success(_new_playlist_id):
             if track_count:
-                track_label = "faixa" if track_count == 1 else "faixas"
-                message = (
-                    f"Playlist \"{playlist_name}\" ({privacy_label}) criada no YouTube Music"
-                    f" com {track_count} {track_label}."
-                )
+                message = ngettext(
+                    "Playlist \"{name}\" ({privacy}) criada no YouTube Music com {count} faixa.",
+                    "Playlist \"{name}\" ({privacy}) criada no YouTube Music com {count} faixas.",
+                    track_count,
+                ).format(name=playlist_name, privacy=privacy_label, count=track_count)
             else:
-                message = f"Playlist \"{playlist_name}\" ({privacy_label}) criada no YouTube Music."
+                message = _("Playlist \"{name}\" ({privacy}) criada no YouTube Music.").format(name=playlist_name, privacy=privacy_label)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
             self._announce(message)
@@ -368,14 +373,13 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível criar a playlist no YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível criar a playlist no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
 
-        self._announce(f"Criando a playlist \"{playlist_name}\" no YouTube Music...")
+        self._announce(_("Criando a playlist \"{name}\" no YouTube Music...").format(name=playlist_name))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _on_youtube_music_delete_playlist_button(self):
@@ -388,10 +392,10 @@ class PlaylistEditMixin:
 
         playlist_id = panel.get_selected_playlist_id()
         if not playlist_id:
-            self._announce("Selecione uma playlist do YouTube Music para excluir.")
+            self._announce(_("Selecione uma playlist do YouTube Music para excluir."))
             return False
         if is_watch_playlist_id(playlist_id):
-            self._announce("Mixes e rádios do YouTube Music não podem ser excluídos.")
+            self._announce(_("Mixes e rádios do YouTube Music não podem ser excluídos."))
             return False
 
         service = self._get_youtube_music_service()
@@ -404,9 +408,10 @@ class PlaylistEditMixin:
         # Deleting a remote playlist removes it from the account entirely and
         # is not undoable from the player, so confirm before touching the server.
         confirmation = wx.MessageBox(
-            f"Excluir a playlist \"{playlist_title}\" do YouTube Music?\n\n"
-            "Isso remove a playlist inteira da sua conta e não pode ser desfeito pelo player.",
-            "Excluir playlist do YouTube Music",
+            _("Excluir a playlist \"{title}\" do YouTube Music?").format(title=playlist_title)
+            + "\n\n"
+            + _("Isso remove a playlist inteira da sua conta e não pode ser desfeito pelo player."),
+            _("Excluir playlist do YouTube Music"),
             wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
             self,
         )
@@ -417,7 +422,7 @@ class PlaylistEditMixin:
             return service.delete_playlist(playlist_id)
 
         def on_success(_deleted_playlist_id):
-            message = f"Playlist \"{playlist_title}\" excluída do YouTube Music."
+            message = _("Playlist \"{title}\" excluída do YouTube Music.").format(title=playlist_title)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
             self._announce(message)
@@ -427,14 +432,13 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível excluir a playlist do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível excluir a playlist do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
 
-        self._announce(f"Excluindo a playlist \"{playlist_title}\" do YouTube Music...")
+        self._announce(_("Excluindo a playlist \"{title}\" do YouTube Music...").format(title=playlist_title))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _rate_selected_playlist_items(self, media_paths, rating):
@@ -445,7 +449,7 @@ class PlaylistEditMixin:
         ]
         youtube_media_paths = [media_path for media_path in normalized_media_paths if is_youtube_music_media(media_path)]
         if not youtube_media_paths:
-            self._announce("A seleção atual não contém itens do YouTube Music ou do YouTube.")
+            self._announce(_("A seleção atual não contém itens do YouTube Music ou do YouTube."))
             return False
 
         service = self._get_youtube_music_service()
@@ -455,9 +459,9 @@ class PlaylistEditMixin:
         rateable_media_paths = self._selected_youtube_music_media_paths_to_rate(youtube_media_paths, rating)
         if not rateable_media_paths:
             if str(rating or "").strip().upper() == "DISLIKE":
-                normalized_message = "Os itens selecionados já estão marcados como não gostei no YouTube Music."
+                normalized_message = _("Os itens selecionados já estão marcados como não gostei no YouTube Music.")
             else:
-                normalized_message = "Os itens selecionados já estão curtidos no YouTube Music."
+                normalized_message = _("Os itens selecionados já estão curtidos no YouTube Music.")
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
@@ -474,17 +478,17 @@ class PlaylistEditMixin:
 
         def on_success(rated_count):
             if str(rating or "").strip().upper() == "DISLIKE":
-                normalized_message = (
-                    "Item marcado como não gostei no YouTube Music."
-                    if rated_count == 1
-                    else f"{rated_count} item(ns) marcados como não gostei no YouTube Music."
-                )
+                normalized_message = ngettext(
+                    "Item marcado como não gostei no YouTube Music.",
+                    "{count} itens marcados como não gostei no YouTube Music.",
+                    rated_count,
+                ).format(count=rated_count)
             else:
-                normalized_message = (
-                    "Item curtido no YouTube Music."
-                    if rated_count == 1
-                    else f"{rated_count} item(ns) curtidos no YouTube Music."
-                )
+                normalized_message = ngettext(
+                    "Item curtido no YouTube Music.",
+                    "{count} itens curtidos no YouTube Music.",
+                    rated_count,
+                ).format(count=rated_count)
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
@@ -493,8 +497,7 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível avaliar a seleção atual no YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível avaliar a seleção atual no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,

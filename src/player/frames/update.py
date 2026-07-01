@@ -5,6 +5,7 @@ import threading
 import wx
 
 from ..constants import STARTUP_UPDATE_CHECK_DELAY_MS
+from ..i18n import _
 from ..update import (
     UpdateAvailableDialog,
     UpdateDownloadDialog,
@@ -36,8 +37,8 @@ class FrameUpdateMixin:
         if self._update_check_in_progress:
             if manual:
                 wx.MessageBox(
-                    "A verificação já está em andamento.",
-                    "Atualizações",
+                    _("A verificação já está em andamento."),
+                    _("Atualizações"),
                     wx.OK | wx.ICON_INFORMATION,
                     self,
                 )
@@ -45,7 +46,7 @@ class FrameUpdateMixin:
 
         self._update_check_in_progress = True
         if hasattr(self, "_set_status_message") and manual:
-            self._set_status_message("Verificando atualizações...", auto_clear_ms=0)
+            self._set_status_message(_("Verificando atualizações..."), auto_clear_ms=0)
         worker_thread = threading.Thread(target=self._update_check_worker, args=(manual,), daemon=True)
         worker_thread.start()
 
@@ -56,7 +57,7 @@ class FrameUpdateMixin:
             wx.CallAfter(self._finish_update_check, manual, None, str(exc))
             return
         except Exception:
-            wx.CallAfter(self._finish_update_check, manual, None, "Não foi possível verificar as atualizações.")
+            wx.CallAfter(self._finish_update_check, manual, None, _("Não foi possível verificar as atualizações."))
             return
 
         wx.CallAfter(self._finish_update_check, manual, update_info, "")
@@ -66,7 +67,7 @@ class FrameUpdateMixin:
 
         if error_message:
             if manual:
-                wx.MessageBox(error_message, "Atualizações", wx.OK | wx.ICON_ERROR, self)
+                wx.MessageBox(error_message, _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message("")
             return
@@ -74,21 +75,21 @@ class FrameUpdateMixin:
         if update_info is None:
             if manual:
                 wx.MessageBox(
-                    "Você já está na versão mais recente.",
-                    "Atualizações",
+                    _("Você já está na versão mais recente."),
+                    _("Atualizações"),
                     wx.OK | wx.ICON_INFORMATION,
                     self,
                 )
             if hasattr(self, "_set_status_message"):
-                self._set_status_message("Você está na versão mais recente.")
+                self._set_status_message(_("Você está na versão mais recente."))
             return
 
         new_version = getattr(update_info, "version", None) or getattr(update_info, "tag", None) or ""
         if hasattr(self, "_set_status_message"):
             if new_version:
-                self._set_status_message(f"Atualização disponível: versão {new_version}.")
+                self._set_status_message(_("Atualização disponível: versão {version}.").format(version=new_version))
             else:
-                self._set_status_message("Atualização disponível.")
+                self._set_status_message(_("Atualização disponível."))
 
         self._prompt_for_update(update_info, manual=manual)
 
@@ -104,7 +105,7 @@ class FrameUpdateMixin:
         if not can_self_update():
             wx.MessageBox(
                 unsupported_install_message(),
-                "Atualizações",
+                _("Atualizações"),
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -124,9 +125,9 @@ class FrameUpdateMixin:
 
         if dialog_result != wx.ID_OK:
             if error_message:
-                wx.MessageBox(error_message, "Atualizações", wx.OK | wx.ICON_ERROR, self)
+                wx.MessageBox(error_message, _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             elif was_cancelled:
-                self._announce("Download da atualização cancelado.")
+                self._announce(_("Download da atualização cancelado."))
             return
 
         try:
@@ -134,11 +135,11 @@ class FrameUpdateMixin:
             self._save_session()
             launch_installer_update(downloaded_file_path)
         except UpdateError as exc:
-            wx.MessageBox(str(exc), "Atualizações", wx.OK | wx.ICON_ERROR, self)
+            wx.MessageBox(str(exc), _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             return
 
         self._update_restart_pending = True
-        self._announce("Atualização baixada. O player será reiniciado para concluir a instalação.")
+        self._announce(_("Atualização baixada. O player será reiniciado para concluir a instalação."))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message("Atualização baixada. Reiniciando para instalar...", auto_clear_ms=0)
+            self._set_status_message(_("Atualização baixada. Reiniciando para instalar..."), auto_clear_ms=0)
         self.Close()

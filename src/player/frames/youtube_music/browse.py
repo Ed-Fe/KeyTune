@@ -1,3 +1,4 @@
+from ...i18n import _
 import threading
 
 import wx
@@ -13,7 +14,7 @@ class BrowseMixin:
         if panel is None:
             return False
 
-        self._announce("Escolha um país no menu para carregar o que está em alta.")
+        self._announce(_("Escolha um país no menu para carregar o que está em alta."))
         self._show_youtube_music_charts_menu(panel, anchor_window, get_chart_country_groups())
         return True
 
@@ -55,7 +56,7 @@ class BrowseMixin:
     def _load_youtube_music_charts(self, country_code, country_label=""):
         country_label = str(country_label or "").strip() or get_chart_country_label(country_code)
         service = self._get_youtube_music_service()
-        self._announce(f"Carregando o que está em alta em {country_label}.")
+        self._announce(_("Carregando o que está em alta em {country}.").format(country=country_label))
 
         def worker():
             return service.get_charts(country_code)
@@ -63,10 +64,10 @@ class BrowseMixin:
         def on_success(chart_results):
             result_count = len(chart_results)
             if result_count == 0:
-                search_summary = f"Em alta em {country_label}: nenhum destaque disponível."
+                search_summary = _("Em alta em {country}: nenhum destaque disponível.").format(country=country_label)
             else:
                 search_summary = (
-                    f"Em alta em {country_label}: {result_count} lista(s) de destaque."
+                    _("Em alta em {country}: {count} lista(s) de destaque.").format(country=country_label, count=result_count)
                 )
             self._set_youtube_music_search_results(
                 chart_results,
@@ -77,7 +78,7 @@ class BrowseMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                f"Não foi possível carregar as paradas agora.\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar as paradas agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -91,27 +92,26 @@ class BrowseMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce("Carregando as categorias de moods e gêneros do YouTube Music.")
+        self._announce(_("Carregando as categorias de moods e gêneros do YouTube Music."))
 
         def worker():
             return service.get_mood_categories()
 
         def on_success(sections):
             if not sections:
-                message = "Nenhuma categoria de moods e gêneros está disponível agora."
+                message = _("Nenhuma categoria de moods e gêneros está disponível agora.")
                 self._youtube_music_library_status_message = message
                 self._refresh_youtube_music_screen_later()
                 self._announce(message)
                 return
             self._announce(
-                "Escolha uma categoria de moods e gêneros no menu para carregar as playlists."
+                _("Escolha uma categoria de moods e gêneros no menu para carregar as playlists.")
             )
             self._show_youtube_music_mood_menu(panel, anchor_window, sections)
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível carregar as categorias de moods e gêneros agora.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar as categorias de moods e gêneros agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -141,7 +141,7 @@ class BrowseMixin:
     def _load_youtube_music_mood_playlists(self, category):
         category_title = str(getattr(category, "title", "") or "").strip() or "Categoria"
         service = self._get_youtube_music_service()
-        self._announce(f"Carregando playlists de {category_title}.")
+        self._announce(_("Carregando playlists de {category}.").format(category=category_title))
 
         def worker():
             return service.get_mood_playlists(category.params, badge=category_title)
@@ -149,10 +149,10 @@ class BrowseMixin:
         def on_success(results):
             result_count = len(results)
             if result_count == 0:
-                search_summary = f"Moods e gêneros — {category_title}: nenhuma playlist disponível."
+                search_summary = _("Moods e gêneros — {category}: nenhuma playlist disponível.").format(category=category_title)
             else:
                 search_summary = (
-                    f"Moods e gêneros — {category_title}: {result_count} playlist(s)."
+                    _("Moods e gêneros — {category}: {count} playlist(s).").format(category=category_title, count=result_count)
                 )
             self._set_youtube_music_search_results(
                 results,
@@ -163,8 +163,7 @@ class BrowseMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível carregar as playlists desta categoria agora.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar as playlists desta categoria agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -179,7 +178,7 @@ class BrowseMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce("Carregando suas músicas curtidas do YouTube Music.")
+        self._announce(_("Carregando suas músicas curtidas do YouTube Music."))
 
         def worker():
             return service.get_liked_songs(limit=self._YOUTUBE_MUSIC_LIKED_SONGS_LIMIT)
@@ -187,9 +186,9 @@ class BrowseMixin:
         def on_success(results):
             result_count = len(results)
             if result_count == 0:
-                search_summary = "Curtidas: nenhuma faixa curtida encontrada."
+                search_summary = _("Curtidas: nenhuma faixa curtida encontrada.")
             else:
-                search_summary = f"Curtidas: {result_count} faixa(s)."
+                search_summary = _("Curtidas: {count} faixa(s).").format(count=result_count)
             self._set_youtube_music_search_results(
                 results,
                 search_summary=search_summary,
@@ -199,8 +198,7 @@ class BrowseMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível carregar suas músicas curtidas agora.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar suas músicas curtidas agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -215,7 +213,7 @@ class BrowseMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce("Carregando seu histórico do YouTube Music.")
+        self._announce(_("Carregando seu histórico do YouTube Music."))
 
         def worker():
             return service.get_history()
@@ -223,9 +221,9 @@ class BrowseMixin:
         def on_success(results):
             result_count = len(results)
             if result_count == 0:
-                search_summary = "Histórico: nenhuma faixa recente encontrada."
+                search_summary = _("Histórico: nenhuma faixa recente encontrada.")
             else:
-                search_summary = f"Histórico: {result_count} faixa(s) recentes."
+                search_summary = _("Histórico: {count} faixa(s) recentes.").format(count=result_count)
             self._set_youtube_music_search_results(
                 results,
                 search_summary=search_summary,
@@ -235,8 +233,7 @@ class BrowseMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível carregar seu histórico agora.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar seu histórico agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -262,7 +259,7 @@ class BrowseMixin:
 
         service = self._get_youtube_music_service()
         if announce:
-            self._announce("Atualizando playlists e mixes do YouTube Music.")
+            self._announce(_("Atualizando playlists e mixes do YouTube Music."))
 
         page_size = int(self._youtube_music_library_page_size())
         self._youtube_music_library_limit = page_size
@@ -355,11 +352,10 @@ class BrowseMixin:
 
         def on_error(exc):
             self._refresh_youtube_music_menu_state()
-            self._youtube_music_library_status_message = "Não foi possível atualizar a biblioteca do YouTube Music."
+            self._youtube_music_library_status_message = _("Não foi possível atualizar a biblioteca do YouTube Music.")
             self._refresh_youtube_music_screen_later()
             wx.MessageBox(
-                "Não foi possível listar as playlists do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível listar as playlists do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -372,7 +368,7 @@ class BrowseMixin:
 
     def _load_more_youtube_music_playlists(self):
         if not self._youtube_music_library_has_more_playlists():
-            self._announce("Não há mais playlists para carregar.")
+            self._announce(_("Não há mais playlists para carregar."))
             return False
 
         if not self._ensure_youtube_music_authenticated():
@@ -380,7 +376,7 @@ class BrowseMixin:
 
         service = self._get_youtube_music_service()
         next_limit = self._youtube_music_current_library_limit() + int(self._youtube_music_library_page_size())
-        self._announce("Carregando mais playlists do YouTube Music.")
+        self._announce(_("Carregando mais playlists do YouTube Music."))
 
         def worker():
             return service.get_user_library_playlists(limit=next_limit)
@@ -433,12 +429,11 @@ class BrowseMixin:
                 has_more_playlists=has_more,
             )
             self._refresh_youtube_music_menu_state()
-            self._announce(f"{playlist_count} playlist(s) na biblioteca agora.")
+            self._announce(_("{count} playlist(s) na biblioteca agora.").format(count=playlist_count))
 
         def on_error(exc):
             wx.MessageBox(
-                "Não foi possível carregar mais playlists do YouTube Music.\n\n"
-                f"Detalhes: {self._format_youtube_music_error_detail(exc)}",
+                _("Não foi possível carregar mais playlists do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -472,7 +467,7 @@ class BrowseMixin:
             self._set_youtube_music_library_cache(merged, status_message=summary_message)
             self._refresh_youtube_music_menu_state()
             if announce and added:
-                self._announce(f"{added} mix(es) personalizada(s) carregada(s).")
+                self._announce(_("{count} mix(es) personalizada(s) carregada(s).").format(count=added))
 
         def on_error(_exc):
             existing_playlists = self._youtube_music_library_cache()

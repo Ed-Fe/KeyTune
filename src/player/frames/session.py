@@ -1,5 +1,6 @@
 from ..constants import DEFAULT_VOLUME
 from ..playlists import PlaylistState
+from ..i18n import _
 from ..session import load_session, save_session
 
 
@@ -78,15 +79,14 @@ class FrameSessionMixin:
         current_state = self._get_playlist_state(selected_tab)
         if current_state and current_state.current_media_path:
             self._announce(
-                f"Sessão restaurada com {len(self.playlists)} abas. "
-                f"{current_state.title}. {self._describe_playlist_position(current_state)}"
+                _("Sessão restaurada com {count} abas. {title}. {position}").format(count=len(self.playlists), title=current_state.title, position=self._describe_playlist_position(current_state))
             )
         else:
-            self._announce(f"Sessão restaurada com {len(self.playlists)} abas.")
+            self._announce(_("Sessão restaurada com {count} abas.").format(count=len(self.playlists)))
 
         if hasattr(self, "_set_status_message"):
             self._set_status_message(
-                f"Sessão anterior restaurada com {len(self.playlists)} abas."
+                _("Sessão anterior restaurada com {count} abas.").format(count=len(self.playlists))
             )
 
         return True

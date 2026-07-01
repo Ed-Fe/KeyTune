@@ -1,3 +1,4 @@
+from ...i18n import _
 import shutil
 import subprocess
 import threading
@@ -69,7 +70,7 @@ class DependencyMixin:
             )
         except OSError:
             wx.MessageBox(
-                f"Não foi possível abrir a instalação automática de {normalized_runtime_label}.",
+                _("Não foi possível abrir a instalação automática de {runtime}.").format(runtime=normalized_runtime_label),
                 "YouTube Music",
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -125,7 +126,7 @@ class DependencyMixin:
         if selected_action in url_actions:
             self._open_external_url(
                 url_actions[selected_action],
-                failure_message="Não foi possível abrir o navegador para mostrar a página solicitada.",
+                failure_message=_("Não foi possível abrir o navegador para mostrar a página solicitada."),
             )
             return True
 
@@ -161,7 +162,7 @@ class DependencyMixin:
     def _youtube_music_dependency_versions_text(self, versions):
         normalized_versions = dict(versions or {})
         if not normalized_versions:
-            return "versão indisponível"
+            return _("versão indisponível")
 
         ordered_labels = []
         for package_name in sorted(normalized_versions.keys()):
@@ -201,9 +202,9 @@ class DependencyMixin:
 
             versions_text = self._youtube_music_dependency_versions_text(getattr(result, "versions", {}))
             if getattr(result, "updated", False):
-                status_message = f"Recursos adicionais do YouTube Music atualizados ({versions_text})."
+                status_message = _("Recursos adicionais do YouTube Music atualizados ({versions}).").format(versions=versions_text)
             else:
-                status_message = f"Recursos adicionais do YouTube Music prontos ({versions_text})."
+                status_message = _("Recursos adicionais do YouTube Music prontos ({versions}).").format(versions=versions_text)
 
             self._youtube_music_library_status_message = status_message
             self._refresh_youtube_music_screen_later()
@@ -215,7 +216,7 @@ class DependencyMixin:
             self._continue_youtube_music_startup_after_dependency_setup()
 
         def on_error(exc):
-            status_message = "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
+            status_message = _("Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music.")
             self._youtube_music_library_status_message = status_message
             self._refresh_youtube_music_screen_later()
             if hasattr(self, "_set_status_message"):
@@ -224,7 +225,7 @@ class DependencyMixin:
                 self._continue_youtube_music_startup_after_dependency_setup()
             if manual:
                 wx.MessageBox(
-                    f"{status_message}\n\nDetalhes: {self._format_youtube_music_error_detail(exc)}",
+                    status_message + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                     "YouTube Music",
                     wx.OK | wx.ICON_ERROR,
                     self,
@@ -286,7 +287,7 @@ class DependencyMixin:
         has_managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
         if has_managed_dependencies and not had_managed_dependencies:
             self._prompt_for_missing_youtube_javascript_runtime()
-            self._youtube_music_library_status_message = "Recursos adicionais do YouTube Music ativados. Preparando dependências..."
+            self._youtube_music_library_status_message = _("Recursos adicionais do YouTube Music ativados. Preparando dependências...")
             self._refresh_youtube_music_screen_later()
             self._start_youtube_music_dependency_update(force_update=False, manual=True)
             return

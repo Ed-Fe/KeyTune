@@ -3,27 +3,33 @@ import os
 import wx
 
 from ..constants import PLAYLIST_WILDCARD, SUPPORTED_MEDIA_EXTENSIONS
+from ..i18n import _
 from .playlist_io import is_playlist_source, is_remote_media_path
 
 
 OPEN_MODE_PLAYLIST = "playlist"
 OPEN_MODE_FOLDER_BROWSER = "folder_browser"
-OPEN_SOURCE_DIALOG_TITLE = "Abrir mídia, playlist ou pasta"
+OPEN_SOURCE_DIALOG_TITLE = _("Abrir mídia, playlist ou pasta")
 
 
 def build_supported_media_wildcard(include_playlists=False):
     media_pattern = ";".join(f"*{extension}" for extension in sorted(SUPPORTED_MEDIA_EXTENSIONS))
     if not include_playlists:
-        return "Mídia suportada|" + media_pattern + "|Todos os arquivos|*.*"
+        return _("Mídia suportada") + "|" + media_pattern + "|" + _("Todos os arquivos") + "|*.*"
 
     return (
-        "Playlists e mídias suportadas|*.m3u;*.m3u8;"
+        _("Playlists e mídias suportadas")
+        + "|*.m3u;*.m3u8;"
         + media_pattern
         + "|"
         + PLAYLIST_WILDCARD
-        + "|Mídia suportada|"
+        + "|"
+        + _("Mídia suportada")
+        + "|"
         + media_pattern
-        + "|Todos os arquivos|*.*"
+        + "|"
+        + _("Todos os arquivos")
+        + "|*.*"
     )
 
 
@@ -36,34 +42,34 @@ class OpenSourceDialog(wx.Dialog):
         )
         self._default_dir = default_dir if os.path.isdir(default_dir) else ""
         self._mode_options = [
-            ("Playlist", OPEN_MODE_PLAYLIST),
-            ("Navegador de pasta", OPEN_MODE_FOLDER_BROWSER),
+            (_("Playlist"), OPEN_MODE_PLAYLIST),
+            (_("Navegador de pasta"), OPEN_MODE_FOLDER_BROWSER),
         ]
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
         description = wx.StaticText(
             self,
-            label=(
+            label=_(
                 "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. "
                 "Pastas podem abrir como playlist ou no navegador."
             ),
         )
         description.Wrap(420)
 
-        source_label = wx.StaticText(self, label="Arquivo, pasta ou &link")
+        source_label = wx.StaticText(self, label=_("Arquivo, pasta ou &link"))
         self.source_text = wx.TextCtrl(self, value=str(initial_source or ""), style=wx.TE_PROCESS_ENTER)
-        self.source_text.SetName("Arquivo, pasta ou link")
+        self.source_text.SetName(_("Arquivo, pasta ou link"))
 
         browse_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.browse_file_button = wx.Button(self, label="Ar&quivo...")
-        self.browse_folder_button = wx.Button(self, label="&Pasta...")
+        self.browse_file_button = wx.Button(self, label=_("Ar&quivo..."))
+        self.browse_folder_button = wx.Button(self, label=_("&Pasta..."))
         browse_sizer.Add(self.browse_file_button, 0, wx.RIGHT, 8)
         browse_sizer.Add(self.browse_folder_button, 0)
 
-        mode_label = wx.StaticText(self, label="Abrir co&mo")
+        mode_label = wx.StaticText(self, label=_("Abrir co&mo"))
         self.mode_choice = wx.Choice(self, choices=[label for label, _value in self._mode_options])
-        self.mode_choice.SetName("Abrir como")
+        self.mode_choice.SetName(_("Abrir como"))
 
         mode_index = 0
         for index, (_label, value) in enumerate(self._mode_options):
@@ -80,10 +86,10 @@ class OpenSourceDialog(wx.Dialog):
         if button_sizer is not None:
             ok_button = self.FindWindow(wx.ID_OK)
             if ok_button is not None:
-                ok_button.SetLabel("&Abrir")
+                ok_button.SetLabel(_("&Abrir"))
             cancel_button = self.FindWindow(wx.ID_CANCEL)
             if cancel_button is not None:
-                cancel_button.SetLabel("&Cancelar")
+                cancel_button.SetLabel(_("&Cancelar"))
 
         root_sizer.Add(description, 0, wx.ALL | wx.EXPAND, 12)
         root_sizer.Add(source_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
@@ -131,7 +137,7 @@ class OpenSourceDialog(wx.Dialog):
     def _on_confirm(self, event):
         if not self.get_source():
             wx.MessageBox(
-                "Informe um caminho local, uma pasta ou um link de mídia.",
+                _("Informe um caminho local, uma pasta ou um link de mídia."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -147,7 +153,7 @@ class OpenSourceDialog(wx.Dialog):
         wildcard = self._source_file_wildcard()
         with wx.FileDialog(
             self,
-            "Escolha um arquivo de mídia ou playlist",
+            _("Escolha um arquivo de mídia ou playlist"),
             defaultDir=default_dir,
             wildcard=wildcard,
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
@@ -162,7 +168,7 @@ class OpenSourceDialog(wx.Dialog):
         default_dir = self._browse_default_directory(source)
         with wx.DirDialog(
             self,
-            "Escolha uma pasta",
+            _("Escolha uma pasta"),
             defaultPath=default_dir,
             style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
         ) as dialog:
@@ -213,13 +219,13 @@ class OpenSourceDialog(wx.Dialog):
             self.mode_choice.Enable(False)
 
         status_message = {
-            "empty": "Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução.",
-            "folder": "Esta pasta pode abrir como playlist estática ou no navegador de pastas.",
-            "playlist": "Arquivos e links .m3u/.m3u8 são abertos como playlist.",
-            "media": "Arquivos de mídia são abertos como playlist com um item.",
-            "file": "Arquivos existentes serão tentados como mídia.",
-            "remote": "Links remotos serão tentados como mídia, exceto quando forem playlists .m3u/.m3u8.",
-            "unknown": "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia.",
+            "empty": _("Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução."),
+            "folder": _("Esta pasta pode abrir como playlist estática ou no navegador de pastas."),
+            "playlist": _("Arquivos e links .m3u/.m3u8 são abertos como playlist."),
+            "media": _("Arquivos de mídia são abertos como playlist com um item."),
+            "file": _("Arquivos existentes serão tentados como mídia."),
+            "remote": _("Links remotos serão tentados como mídia, exceto quando forem playlists .m3u/.m3u8."),
+            "unknown": _("Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia."),
         }.get(source_kind, "")
         self.status_label.SetLabel(status_message)
         self.status_label.Wrap(max(320, self.GetClientSize().Width - 24))

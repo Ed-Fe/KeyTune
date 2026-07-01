@@ -3,6 +3,7 @@ import time
 import wx
 
 from ...audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
+from ...i18n import _
 from ...log import get_logger
 
 
@@ -151,7 +152,7 @@ class AudioOutputMixin:
             except Exception:
                 pass
             label = self._label_for_audio_output_device(preferred_device_id) or preferred_device_id
-            announcement = f"Dispositivo de áudio '{label}' restaurado."
+            announcement = _("Dispositivo de áudio '{label}' restaurado.").format(label=label)
 
         # Whenever the device list changes, ask MPV to reattach a real audio
         # output if it had fallen back to ``null`` (e.g. while no device was
@@ -380,7 +381,7 @@ class AudioOutputMixin:
             if callable(refresh_audio_output_menu):
                 refresh_audio_output_menu()
             if announce:
-                self._announce(f"Não foi possível trocar o dispositivo de áudio: {exc}.")
+                self._announce(_("Não foi possível trocar o dispositivo de áudio: {error}.").format(error=exc))
             return False
 
         self.settings.audio_output_device_id = normalized_device_id
@@ -397,8 +398,8 @@ class AudioOutputMixin:
                         selected_device = device
                         break
                 device_label = selected_device.menu_label if selected_device else normalized_device_id
-                self._announce(f"Dispositivo de áudio alterado para {device_label}.")
+                self._announce(_("Dispositivo de áudio alterado para {label}.").format(label=device_label))
             else:
-                self._announce("Dispositivo de áudio alterado para o padrão do sistema.")
+                self._announce(_("Dispositivo de áudio alterado para o padrão do sistema."))
 
         return True

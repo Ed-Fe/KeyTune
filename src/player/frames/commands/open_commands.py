@@ -15,6 +15,7 @@ from ...library import (
     playlist_display_name,
     save_playlist,
 )
+from ...i18n import _
 from ...playlists import ScreenTabState
 
 
@@ -40,7 +41,7 @@ class OpenCommandsMixin:
     def on_open(self, _event):
         with wx.FileDialog(
             self,
-            "Escolha um ou mais arquivos de mídia ou uma playlist",
+            _("Escolha um ou mais arquivos de mídia ou uma playlist"),
             defaultDir=self._default_dialog_directory(),
             wildcard=build_supported_media_wildcard(include_playlists=True),
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE,
@@ -52,12 +53,12 @@ class OpenCommandsMixin:
         if not paths:
             return
 
-        self._open_selected_files(paths, dialog_title="Abrir arquivos")
+        self._open_selected_files(paths, dialog_title=_("Abrir arquivos"))
 
     def on_open_folder(self, _event):
         with wx.DirDialog(
             self,
-            "Escolha uma pasta para navegar",
+            _("Escolha uma pasta para navegar"),
             defaultPath=self._default_dialog_directory(),
             style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
         ) as dialog:
@@ -77,19 +78,19 @@ class OpenCommandsMixin:
         browser = self._get_browser_panel()
         selected_items = browser.get_selected_item_paths() if browser else []
         if not selected_items:
-            self._announce("Nenhum item selecionado para copiar.")
+            self._announce(_("Nenhum item selecionado para copiar."))
             return
 
         if not self._copy_text_to_clipboard("\n".join(selected_items)):
-            self._announce("Não foi possível acessar a área de transferência.")
+            self._announce(_("Não foi possível acessar a área de transferência."))
             return
 
         if len(selected_items) == 1 and is_remote_media_path(selected_items[0]):
-            self._announce("Link copiado.")
+            self._announce(_("Link copiado."))
         elif len(selected_items) == 1:
-            self._announce("Caminho copiado.")
+            self._announce(_("Caminho copiado."))
         else:
-            self._announce(f"{len(selected_items)} itens copiados.")
+            self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
 
     def on_paste_open_from_clipboard(self, _event):
         if isinstance(self._get_tab_state(), ScreenTabState):
@@ -97,7 +98,7 @@ class OpenCommandsMixin:
 
         text = self._read_text_from_clipboard()
         if not text:
-            self._announce("A área de transferência está vazia.")
+            self._announce(_("A área de transferência está vazia."))
             return
 
         self._open_from_clipboard_text(text, force_new_playlist=False)
@@ -108,7 +109,7 @@ class OpenCommandsMixin:
 
         text = self._read_text_from_clipboard()
         if not text:
-            self._announce("A área de transferência está vazia.")
+            self._announce(_("A área de transferência está vazia."))
             return
 
         self._open_from_clipboard_text(text, force_new_playlist=True)
@@ -140,7 +141,7 @@ class OpenCommandsMixin:
         ]
         normalized_sources = [line for line in normalized_lines if line]
         if not normalized_sources:
-            self._announce("A área de transferência está vazia.")
+            self._announce(_("A área de transferência está vazia."))
             return
 
         if len(normalized_sources) > 1:
@@ -148,7 +149,7 @@ class OpenCommandsMixin:
             for source in normalized_sources:
                 if is_remote_media_path(source):
                     if is_playlist_source(source):
-                        self._announce("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links.")
+                        self._announce(_("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."))
                         return
                     media_sources.append(source)
                     continue
@@ -156,17 +157,17 @@ class OpenCommandsMixin:
                 normalized_local = self._normalize_path(source)
                 if normalized_local and os.path.isfile(normalized_local):
                     if is_playlist_source(normalized_local):
-                        self._announce("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links.")
+                        self._announce(_("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."))
                         return
                     media_sources.append(normalized_local)
                     continue
 
-                self._announce("A área de transferência contém itens não suportados para colagem em lote.")
+                self._announce(_("A área de transferência contém itens não suportados para colagem em lote."))
                 return
 
             open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
             if not open_media(media_sources):
-                self._announce("Não foi possível abrir a mídia da área de transferência.")
+                self._announce(_("Não foi possível abrir a mídia da área de transferência."))
             return
 
         normalized_source = normalized_sources[0]
@@ -174,33 +175,33 @@ class OpenCommandsMixin:
         if is_remote_media_path(normalized_source):
             if is_playlist_source(normalized_source):
                 if not self._open_playlist_source(normalized_source):
-                    self._announce("Não foi possível abrir a playlist da área de transferência.")
+                    self._announce(_("Não foi possível abrir a playlist da área de transferência."))
                 return
 
             open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
             if not open_media([normalized_source]):
-                self._announce("Não foi possível abrir a mídia da área de transferência.")
+                self._announce(_("Não foi possível abrir a mídia da área de transferência."))
             return
 
         normalized_local = self._normalize_path(normalized_source)
         if normalized_local:
             if os.path.isdir(normalized_local):
                 if not self._open_folder_path(normalized_local):
-                    self._announce("Não foi possível abrir a pasta da área de transferência.")
+                    self._announce(_("Não foi possível abrir a pasta da área de transferência."))
                 return
 
             if os.path.isfile(normalized_local):
                 if is_playlist_source(normalized_local):
                     if not self._open_playlist_source(normalized_local):
-                        self._announce("Não foi possível abrir a playlist da área de transferência.")
+                        self._announce(_("Não foi possível abrir a playlist da área de transferência."))
                     return
 
                 open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
                 if not open_media([normalized_local]):
-                    self._announce("Não foi possível abrir a mídia da área de transferência.")
+                    self._announce(_("Não foi possível abrir a mídia da área de transferência."))
                 return
 
-        self._announce("Conteúdo da área de transferência não suportado.")
+        self._announce(_("Conteúdo da área de transferência não suportado."))
 
     def _show_open_source_dialog(self, initial_source="", initial_mode=OPEN_MODE_PLAYLIST):
         source_value = initial_source
@@ -224,12 +225,14 @@ class OpenCommandsMixin:
             if self._open_source_from_dialog(source_value, open_mode):
                 return
 
-    def _open_selected_files(self, paths, dialog_title="Abrir arquivos"):
+    def _open_selected_files(self, paths, dialog_title=None):
+        if dialog_title is None:
+            dialog_title = _("Abrir arquivos")
         media_paths, playlist_paths = self._split_selected_files(paths)
 
         if playlist_paths and media_paths:
             wx.MessageBox(
-                "Selecione uma única playlist ou apenas arquivos de mídia.",
+                _("Selecione uma única playlist ou apenas arquivos de mídia."),
                 dialog_title,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -238,7 +241,7 @@ class OpenCommandsMixin:
 
         if len(playlist_paths) > 1:
             wx.MessageBox(
-                "Selecione apenas uma playlist por vez.",
+                _("Selecione apenas uma playlist por vez."),
                 dialog_title,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -252,7 +255,7 @@ class OpenCommandsMixin:
             return self._open_media_paths(media_paths)
 
         wx.MessageBox(
-            "Nenhum arquivo de mídia ou playlist compatível foi selecionado.",
+            _("Nenhum arquivo de mídia ou playlist compatível foi selecionado."),
             dialog_title,
             wx.OK | wx.ICON_WARNING,
             self,
@@ -263,11 +266,11 @@ class OpenCommandsMixin:
         media_paths, playlist_paths = self._split_selected_files(paths)
 
         if playlist_paths and media_paths:
-            self._announce("Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist.")
+            self._announce(_("Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."))
             return False
 
         if len(playlist_paths) > 1:
-            self._announce("A abertura externa aceita apenas uma playlist por vez.")
+            self._announce(_("A abertura externa aceita apenas uma playlist por vez."))
             return False
 
         if media_paths:
@@ -276,14 +279,14 @@ class OpenCommandsMixin:
         if playlist_paths:
             return self._open_playlist_source(playlist_paths[0])
 
-        self._announce("Nenhum arquivo compatível foi recebido do Explorador.")
+        self._announce(_("Nenhum arquivo compatível foi recebido do Explorador."))
         return False
 
     def _open_source_from_dialog(self, source_value, open_mode):
         normalized_source = str(source_value or "").strip()
         if not normalized_source:
             wx.MessageBox(
-                "Informe um caminho local, uma pasta ou um link de mídia.",
+                _("Informe um caminho local, uma pasta ou um link de mídia."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_INFORMATION,
                 self,
@@ -299,7 +302,7 @@ class OpenCommandsMixin:
                 return True
 
             wx.MessageBox(
-                "Para abrir no navegador, informe uma pasta local válida.",
+                _("Para abrir no navegador, informe uma pasta local válida."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_WARNING,
                 self,
@@ -311,7 +314,7 @@ class OpenCommandsMixin:
                 return True
 
             wx.MessageBox(
-                "Não foi possível abrir a pasta selecionada como playlist.",
+                _("Não foi possível abrir a pasta selecionada como playlist."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -323,7 +326,7 @@ class OpenCommandsMixin:
                 return True
 
             wx.MessageBox(
-                "Não foi possível abrir a playlist ou link informado.",
+                _("Não foi possível abrir a playlist ou link informado."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -335,7 +338,7 @@ class OpenCommandsMixin:
                 return True
 
             wx.MessageBox(
-                "Não foi possível abrir a mídia informada.",
+                _("Não foi possível abrir a mídia informada."),
                 OPEN_SOURCE_DIALOG_TITLE,
                 wx.OK | wx.ICON_ERROR,
                 self,
@@ -343,9 +346,9 @@ class OpenCommandsMixin:
             return False
 
         message = (
-            "Não foi possível interpretar o link informado como mídia ou playlist."
+            _("Não foi possível interpretar o link informado como mídia ou playlist.")
             if is_remote_media_path(normalized_source)
-            else "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
+            else _("Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia.")
         )
         wx.MessageBox(message, OPEN_SOURCE_DIALOG_TITLE, wx.OK | wx.ICON_WARNING, self)
         return False
@@ -353,7 +356,7 @@ class OpenCommandsMixin:
     def on_save_playlist(self, _event):
         state = self._get_playlist_state()
         if not state or not state.items:
-            self._announce("A playlist atual está vazia.")
+            self._announce(_("A playlist atual está vazia."))
             return
 
         default_name = os.path.basename(state.source_path) if state.source_path else f"{state.title}.m3u8"
@@ -361,7 +364,7 @@ class OpenCommandsMixin:
 
         with wx.FileDialog(
             self,
-            "Salvar playlist",
+            _("Salvar playlist"),
             wildcard=PLAYLIST_WILDCARD,
             defaultDir=default_dir,
             defaultFile=default_name,
@@ -384,9 +387,9 @@ class OpenCommandsMixin:
         self._update_title()
         self._refresh_playlist_browser()
         self._add_recent_path("recent_playlists", playlist_path)
-        self._announce(f"Playlist salva: {state.title}.")
+        self._announce(_("Playlist salva: {title}.").format(title=state.title))
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(f"Playlist salva em {playlist_path}")
+            self._set_status_message(_("Playlist salva em {path}").format(path=playlist_path))
 
     def on_recent_menu_action(self, event):
         action = self._recent_menu_actions.get(event.GetId())
@@ -397,11 +400,11 @@ class OpenCommandsMixin:
         action_kind, attribute_name, path = action
         if action_kind == "clear":
             announcements = {
-                "recent_media_files": "Arquivos recentes limpos.",
-                "recent_folders": "Pastas recentes limpas.",
-                "recent_playlists": "Playlists recentes limpas.",
+                "recent_media_files": _("Arquivos recentes limpos."),
+                "recent_folders": _("Pastas recentes limpas."),
+                "recent_playlists": _("Playlists recentes limpas."),
             }
-            self._clear_recent_paths(attribute_name, announcements.get(attribute_name, "Itens recentes limpos."))
+            self._clear_recent_paths(attribute_name, announcements.get(attribute_name, _("Itens recentes limpos.")))
             return
 
         if path and attribute_name == "recent_media_files":
@@ -416,4 +419,4 @@ class OpenCommandsMixin:
 
         if path:
             self._remove_recent_path(attribute_name, path)
-        self._announce("O item recente selecionado não está mais disponível.")
+        self._announce(_("O item recente selecionado não está mais disponível."))

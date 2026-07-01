@@ -15,6 +15,7 @@ import zipfile
 from urllib import error, request
 
 from ..constants import APP_TITLE, APP_VERSION, UPDATE_DOWNLOAD_CHUNK_SIZE, UPDATE_HTTP_TIMEOUT_SECONDS
+from ..i18n import _
 from ..session import get_app_storage_dir
 from .yt_dlp_runtime import (
     get_managed_yt_dlp_executable_path,
@@ -116,7 +117,7 @@ def ensure_yt_dlp_executable_available() -> None:
         include_prerelease=youtube_dependency_nightly_yt_dlp_enabled(),
     )
     if not yt_dlp_executable_available():
-        raise RuntimeError("O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução.")
+        raise RuntimeError(_("O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução."))
 
 
 def get_installed_youtube_dependency_versions() -> dict[str, str]:
@@ -256,7 +257,7 @@ def _install_or_update_ytmusicapi(
 
         actual_sha256 = _calculate_sha256(wheel_path)
         if actual_sha256.casefold() != wheel_info.sha256.casefold():
-            raise RuntimeError("O wheel da ytmusicapi baixado não passou na validação de integridade.")
+            raise RuntimeError(_("O wheel da ytmusicapi baixado não passou na validação de integridade."))
 
         _remove_previous_ytmusicapi_install(target_dir)
         _extract_wheel(wheel_path, target_dir)
@@ -274,17 +275,17 @@ def _fetch_latest_ytmusicapi_wheel_info(*, timeout_seconds: int) -> _PyPIWheelIn
 
     info_section = payload.get("info") if isinstance(payload, dict) else None
     if not isinstance(info_section, dict):
-        raise RuntimeError("A resposta da PyPI para ytmusicapi veio em formato inválido.")
+        raise RuntimeError(_("A resposta da PyPI para ytmusicapi veio em formato inválido."))
     version_text = str(info_section.get("version") or "").strip()
     if not version_text:
-        raise RuntimeError("A PyPI não informou a versão mais recente da ytmusicapi.")
+        raise RuntimeError(_("A PyPI não informou a versão mais recente da ytmusicapi."))
 
     releases_section = payload.get("releases") if isinstance(payload, dict) else None
     if not isinstance(releases_section, dict):
-        raise RuntimeError("A PyPI não publicou a lista de releases da ytmusicapi.")
+        raise RuntimeError(_("A PyPI não publicou a lista de releases da ytmusicapi."))
     assets = releases_section.get(version_text)
     if not isinstance(assets, list) or not assets:
-        raise RuntimeError("A PyPI não publicou arquivos para a versão mais recente da ytmusicapi.")
+        raise RuntimeError(_("A PyPI não publicou arquivos para a versão mais recente da ytmusicapi."))
 
     for asset in assets:
         if not isinstance(asset, dict):
@@ -304,7 +305,7 @@ def _fetch_latest_ytmusicapi_wheel_info(*, timeout_seconds: int) -> _PyPIWheelIn
             sha256=sha256_digest,
         )
 
-    raise RuntimeError("A release mais recente da ytmusicapi não publicou um wheel utilizável.")
+    raise RuntimeError(_("A release mais recente da ytmusicapi não publicou um wheel utilizável."))
 
 
 def _download_json(url: str, *, timeout_seconds: int) -> dict:
@@ -322,10 +323,10 @@ def _download_json(url: str, *, timeout_seconds: int) -> dict:
         ) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (error.HTTPError, error.URLError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Não foi possível consultar a release mais recente da ytmusicapi.") from exc
+        raise RuntimeError(_("Não foi possível consultar a release mais recente da ytmusicapi.")) from exc
 
     if not isinstance(payload, dict):
-        raise RuntimeError("A resposta da PyPI veio em formato inválido.")
+        raise RuntimeError(_("A resposta da PyPI veio em formato inválido."))
     return payload
 
 
@@ -345,7 +346,7 @@ def _download_binary_file(url: str, destination_path: Path, *, timeout_seconds: 
             with open(destination_path, "wb") as target_file:
                 shutil.copyfileobj(response, target_file, length=UPDATE_DOWNLOAD_CHUNK_SIZE)
     except (error.HTTPError, error.URLError, OSError) as exc:
-        raise RuntimeError("Não foi possível baixar o wheel oficial da ytmusicapi.") from exc
+        raise RuntimeError(_("Não foi possível baixar o wheel oficial da ytmusicapi.")) from exc
 
 
 def _calculate_sha256(file_path: Path) -> str:
@@ -393,12 +394,12 @@ def _extract_wheel(wheel_path: Path, target_dir: Path) -> None:
                 # the target directory.
                 normalized_member = member_name.replace("\\", "/")
                 if normalized_member.startswith("/") or ".." in normalized_member.split("/"):
-                    raise RuntimeError("O wheel da ytmusicapi contém caminhos inválidos.")
+                    raise RuntimeError(_("O wheel da ytmusicapi contém caminhos inválidos."))
             wheel_archive.extractall(target_dir)
     except zipfile.BadZipFile as exc:
-        raise RuntimeError("O wheel da ytmusicapi baixado está corrompido.") from exc
+        raise RuntimeError(_("O wheel da ytmusicapi baixado está corrompido.")) from exc
     except OSError as exc:
-        raise RuntimeError("Não foi possível extrair o wheel da ytmusicapi.") from exc
+        raise RuntimeError(_("Não foi possível extrair o wheel da ytmusicapi.")) from exc
 
 
 def _clear_dependency_modules(module_names: tuple[str, ...]) -> None:

@@ -2,6 +2,7 @@ import re
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from .models import YouTubeMusicPlaylistSummary
+from ..i18n import _
 
 
 YTMUSIC_SOURCE_PREFIX = "ytmusic://"
@@ -90,7 +91,7 @@ def is_watch_playlist_id(playlist_id):
 def build_watch_url(video_id, playlist_id=None):
     normalized_video_id = str(video_id or "").strip()
     if not normalized_video_id:
-        raise RuntimeError("A faixa do YouTube Music não tem videoId válido.")
+        raise RuntimeError(_("A faixa do YouTube Music não tem videoId válido."))
 
     query_items = [("v", normalized_video_id)]
     normalized_playlist_id = str(playlist_id or "").strip()
@@ -102,7 +103,7 @@ def build_watch_url(video_id, playlist_id=None):
 def build_youtube_watch_url(video_id):
     normalized_video_id = str(video_id or "").strip()
     if not normalized_video_id:
-        raise RuntimeError("O vídeo do YouTube não tem videoId válido.")
+        raise RuntimeError(_("O vídeo do YouTube não tem videoId válido."))
 
     return f"https://www.youtube.com/watch?{urlencode([('v', normalized_video_id)])}"
 

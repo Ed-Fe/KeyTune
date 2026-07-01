@@ -1,3 +1,6 @@
+from ...i18n import _
+
+
 class TransportCommandsMixin:
     def on_new_playlist(self, _event):
         tab_index = self._create_empty_playlist_tab(select=False)
@@ -25,9 +28,9 @@ class TransportCommandsMixin:
                 state.was_playing = False
                 state.last_position_ms = 0
             self._update_time_bar()
-            self._announce("Parado.")
+            self._announce(_("Parado."))
             if hasattr(self, "_set_status_message"):
-                self._set_status_message("Parado.", auto_clear_ms=0)
+                self._set_status_message(_("Parado."), auto_clear_ms=0)
             refresh_smtc = getattr(self, "_refresh_smtc_state", None)
             if callable(refresh_smtc):
                 refresh_smtc()

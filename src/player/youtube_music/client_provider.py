@@ -1,4 +1,5 @@
 from ..log import get_logger
+from ..i18n import _
 
 
 _logger = get_logger(__name__)
@@ -41,7 +42,7 @@ class YouTubeMusicClientProvider:
         YTMusic = ytmusicapi_module.YTMusic
 
         if require_auth and not has_saved_auth:
-            raise RuntimeError("Faça a autenticação do navegador antes de buscar playlists.")
+            raise RuntimeError(_("Faça a autenticação do navegador antes de buscar playlists."))
 
         if require_auth:
             self._authenticated_client = YTMusic(auth_file_path)
