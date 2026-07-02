@@ -57,6 +57,22 @@ class FrameSessionMixin:
         self.current_volume = max(0, min(100, saved_volume))
         self._apply_current_volume()
 
+        try:
+            saved_playback_rate = float(session_payload.get("playback_rate", 1.0))
+        except (TypeError, ValueError):
+            saved_playback_rate = 1.0
+
+        self.current_playback_rate = max(0.25, min(3.0, saved_playback_rate))
+        self._apply_current_playback_rate()
+
+        try:
+            saved_pitch_semitones = int(session_payload.get("pitch_semitones", 0))
+        except (TypeError, ValueError):
+            saved_pitch_semitones = 0
+
+        self.current_pitch_semitones = max(-12, min(12, saved_pitch_semitones))
+        self._apply_equalizer_state_to_current_playback()
+
         if self.settings.remember_window_size:
             saved_window_size = session_payload.get("window_size")
             if (
@@ -109,6 +125,8 @@ class FrameSessionMixin:
         payload = {
             "selected_tab": selected_tab,
             "volume": self.current_volume,
+            "playback_rate": self.current_playback_rate,
+            "pitch_semitones": self.current_pitch_semitones,
             "playlists": playlist_states,
         }
 

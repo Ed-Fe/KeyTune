@@ -243,6 +243,7 @@ class PlaybackEngineMixin:
             else:
                 self._apply_equalizer_state_to_player(self._managed_player(player_key), state)
                 self._apply_volume_to_player(player_key, 0)
+                self._apply_playback_rate_to_player(player_key, getattr(self, "current_playback_rate", 1.0))
             return
 
         self._set_active_player(player_key)
@@ -252,6 +253,7 @@ class PlaybackEngineMixin:
         self._next_runtime_stream_title_refresh = 0.0
 
         self._apply_current_volume()
+        self._apply_current_playback_rate()
         # The MPV backend already applies the resume position and pause-on-start
         # via loadfile options, so we just refresh the UI here. Avoid re-issuing
         # set_time after-the-fact: it raced with the user's first arrow seeks on

@@ -37,6 +37,8 @@ class MediaPlayerFrame(
         self._initial_paths = list(initial_paths or [])
         self._initialize_equalizer_support()
         self.current_volume = self.settings.default_volume
+        self.current_playback_rate = 1.0
+        self.current_pitch_semitones = 0
         self.playlists = []
         self.active_playlist_index = None
         self.announcer = ScreenReaderAnnouncer()

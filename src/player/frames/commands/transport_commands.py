@@ -58,6 +58,24 @@ class TransportCommandsMixin:
     def on_announce_volume(self, _event):
         self._announce_current_volume()
 
+    def on_increase_playback_rate(self, _event):
+        self._change_playback_rate(0.25)
+
+    def on_decrease_playback_rate(self, _event):
+        self._change_playback_rate(-0.25)
+
+    def on_reset_playback_rate(self, _event):
+        self._reset_playback_rate()
+
+    def on_increase_pitch(self, _event):
+        self._change_pitch_semitones(1)
+
+    def on_decrease_pitch(self, _event):
+        self._change_pitch_semitones(-1)
+
+    def on_reset_pitch(self, _event):
+        self._reset_pitch_semitones()
+
     def on_announce_status(self, _event):
         self._announce_player_status()
 

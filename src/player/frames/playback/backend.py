@@ -287,6 +287,48 @@ class PlayerBackendMixin:
 
         return self._apply_volume_to_player(self._active_player_key, self.current_volume)
 
+    def _apply_playback_rate_to_player(self, player_key, rate):
+        player = self._managed_player(player_key)
+        if player is None:
+            return False
+
+        try:
+            player.set_rate(rate)
+        except Exception:
+            return False
+
+        return True
+
+    def _apply_current_playback_rate(self):
+        if not hasattr(self, "player"):
+            return False
+
+        return self._apply_playback_rate_to_player(self._active_player_key, getattr(self, "current_playback_rate", 1.0))
+
+    def _pitch_shift_filter_segment(self):
+        # Speed (mpv's `speed` property) already preserves pitch on its own via
+        # scaletempo2, so this is a separate, deliberate pitch shift (changing
+        # the key) via the rubberband filter's independent pitch-scale option.
+        semitones = getattr(self, "current_pitch_semitones", 0)
+        if not semitones:
+            return ""
+
+        pitch_scale = 2.0 ** (semitones / 12.0)
+        return f"rubberband=pitch-scale={pitch_scale:.6f}"
+
+    def _apply_audio_filter_chain_to_player(self, player, equalizer_chain=""):
+        if player is None:
+            return False
+
+        filter_parts = [part for part in (equalizer_chain, self._pitch_shift_filter_segment()) if part]
+
+        try:
+            player.set_audio_filters(",".join(filter_parts))
+        except Exception:
+            return False
+
+        return True
+
     def _shutdown_player_backend(self):
         self._begin_player_backend_shutdown()
         self._finish_player_backend_shutdown()
@@ -412,4 +454,5 @@ class PlayerBackendMixin:
         self._bind_player_to_window()
         self._apply_equalizer_state()
         self._apply_current_volume()
+        self._apply_current_playback_rate()
         self._update_time_bar()

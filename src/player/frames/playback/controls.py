@@ -2,6 +2,13 @@ from ...constants import PROGRESS_GAUGE_RANGE
 from ...i18n import _
 from ...library import folder_display_name
 
+PLAYBACK_RATE_STEP = 0.25
+PLAYBACK_RATE_MIN = 0.25
+PLAYBACK_RATE_MAX = 3.0
+
+PITCH_SEMITONES_MIN = -12
+PITCH_SEMITONES_MAX = 12
+
 
 class PlaybackControlsMixin:
     def _format_time_ms(self, milliseconds):
@@ -114,6 +121,44 @@ class PlaybackControlsMixin:
     def _change_volume(self, delta):
         self.current_volume = max(0, min(100, self.current_volume + delta))
         self._apply_current_volume()
+
+    def _format_playback_rate(self, rate):
+        return f"{rate:g}x"
+
+    def _change_playback_rate(self, delta):
+        new_rate = round(self.current_playback_rate + delta, 2)
+        self.current_playback_rate = max(PLAYBACK_RATE_MIN, min(PLAYBACK_RATE_MAX, new_rate))
+        self._apply_current_playback_rate()
+        self._announce_current_playback_rate()
+
+    def _reset_playback_rate(self):
+        self.current_playback_rate = 1.0
+        self._apply_current_playback_rate()
+        self._announce_current_playback_rate()
+
+    def _announce_current_playback_rate(self):
+        self._announce(
+            _("Velocidade de reprodução: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
+        )
+
+    def _format_pitch_label(self, semitones):
+        if semitones == 0:
+            return _("tom original")
+        return _("{semitones:+d} semitons").format(semitones=semitones)
+
+    def _change_pitch_semitones(self, delta):
+        new_semitones = self.current_pitch_semitones + delta
+        self.current_pitch_semitones = max(PITCH_SEMITONES_MIN, min(PITCH_SEMITONES_MAX, new_semitones))
+        self._apply_equalizer_state_to_current_playback()
+        self._announce_current_pitch()
+
+    def _reset_pitch_semitones(self):
+        self.current_pitch_semitones = 0
+        self._apply_equalizer_state_to_current_playback()
+        self._announce_current_pitch()
+
+    def _announce_current_pitch(self):
+        self._announce(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
 
     def _seek_to_start(self):
         if self._crossfade_state:
@@ -243,6 +288,10 @@ class PlaybackControlsMixin:
         if not media_path:
             status_parts.append(_("Nenhuma mídia tocando agora."))
             status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
+            status_parts.append(
+                _("Velocidade atual: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
+            )
+            status_parts.append(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
             if state:
                 shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
                 status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
@@ -253,6 +302,10 @@ class PlaybackControlsMixin:
         media_name = self._media_label(media_path)
         playback_state = _("tocando") if self.player.is_playing() else _("pausado")
         status_parts.append(_("Mídia: {name}. Estado: {state}.").format(name=media_name, state=playback_state))
+        status_parts.append(
+            _("Velocidade atual: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
+        )
+        status_parts.append(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
 
         if state and state.item_count > 0:
             status_parts.append(_("Item {current} de {total}.").format(current=state.current_index + 1, total=state.item_count))

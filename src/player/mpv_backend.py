@@ -343,6 +343,18 @@ class MPVPlayer:
         except Exception:
             pass
 
+    def set_rate(self, rate):
+        try:
+            self._player.speed = max(0.25, min(4.0, float(rate)))
+        except Exception:
+            pass
+
+    def get_rate(self):
+        try:
+            return float(self._player.speed)
+        except Exception:
+            return 1.0
+
     def list_audio_output_devices(self) -> list[AudioOutputDevice]:
         raw_devices = self._get_runtime_property("audio-device-list", default=[])
         return self._parse_audio_output_device_list(raw_devices)

@@ -83,36 +83,23 @@ class FrameEqualizerMixin:
         return self._get_playlist_state()
 
     def _apply_equalizer_state_to_player(self, player, state=None):
-        if not self._equalizer_supported() or player is None:
+        if player is None:
             return False
 
         state = state or self._get_equalizer_target_state()
-        if not state:
-            return False
 
-        try:
-            if not state.equalizer_enabled:
-                player.set_audio_filters("")
-                return True
-        except Exception:
-            return False
+        equalizer_chain = ""
+        if self._equalizer_supported() and state and state.equalizer_enabled:
+            preset = self._get_equalizer_preset(state.equalizer_preset_id)
+            if preset is not None:
+                equalizer_chain = build_mpv_equalizer_filter(
+                    preset,
+                    band_frequencies_hz=self._equalizer_band_frequencies(),
+                )
 
-        preset = self._get_equalizer_preset(state.equalizer_preset_id)
-        if preset is None:
-            return False
-
-        filter_chain = build_mpv_equalizer_filter(
-            preset,
-            band_frequencies_hz=self._equalizer_band_frequencies(),
-        )
-        if not filter_chain:
-            return False
-
-        try:
-            player.set_audio_filters(filter_chain)
-            return True
-        except Exception:
-            return False
+        # Delegates the actual `af` write so the equalizer chain is combined
+        # with any active pitch shift instead of one overwriting the other.
+        return self._apply_audio_filter_chain_to_player(player, equalizer_chain)
 
     def _apply_equalizer_state(self, state=None):
         if not hasattr(self, "player"):

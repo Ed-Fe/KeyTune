@@ -299,4 +299,28 @@ class KeyNavigationMixin:
             self._change_volume(-self.settings.volume_step)
             return
 
+        if not event.ControlDown() and not event.AltDown() and not event.ShiftDown() and key_code == ord("]"):
+            self._change_playback_rate(0.25)
+            return
+
+        if not event.ControlDown() and not event.AltDown() and not event.ShiftDown() and key_code == ord("["):
+            self._change_playback_rate(-0.25)
+            return
+
+        if not event.ControlDown() and not event.AltDown() and not event.ShiftDown() and key_code == ord("\\"):
+            self._reset_playback_rate()
+            return
+
+        if not event.ControlDown() and not event.AltDown() and event.ShiftDown() and key_code == ord("]"):
+            self._change_pitch_semitones(1)
+            return
+
+        if not event.ControlDown() and not event.AltDown() and event.ShiftDown() and key_code == ord("["):
+            self._change_pitch_semitones(-1)
+            return
+
+        if not event.ControlDown() and not event.AltDown() and event.ShiftDown() and key_code == ord("\\"):
+            self._reset_pitch_semitones()
+            return
+
         event.Skip()
