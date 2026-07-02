@@ -115,10 +115,23 @@ class KeyNavigationMixin:
         event.Skip()
         return True
 
+    def _focused_control_accepts_text_input(self):
+        focused_window = wx.Window.FindFocus()
+        return isinstance(focused_window, wx.TextEntry)
+
     def on_key_down(self, event):
         key_code = event.GetKeyCode()
         browser = self._get_browser_panel()
         current_tab = self._get_tab_state()
+
+        if (
+            not event.ControlDown()
+            and not event.AltDown()
+            and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1)
+            and self._focused_control_accepts_text_input()
+        ):
+            event.Skip()
+            return
 
         if key_code == wx.WXK_F1:
             self.on_show_keyboard_help(None)
