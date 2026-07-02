@@ -110,6 +110,11 @@ class AppCommandsMixin:
         maybe_keepalive_smtc = getattr(self, "_maybe_keepalive_smtc", None)
         if callable(maybe_keepalive_smtc):
             maybe_keepalive_smtc()
+        # Poll for the automatic crossfade start window here, on the slower
+        # progress timer, instead of on the high-frequency crossfade timer.
+        # The crossfade window already includes startup headroom, so 500 ms
+        # granularity is plenty to decide when to begin the transition — and
+        # the 15 ms timer can stay idle until a crossfade is actually running.
         maybe_start_crossfade = getattr(self, "_maybe_start_automatic_crossfade", None)
         if callable(maybe_start_crossfade) and getattr(self, "_crossfade_state", None) is None:
             maybe_start_crossfade()
@@ -145,6 +150,9 @@ class AppCommandsMixin:
             self.crossfade_timer.Stop()
         self._dispose_equalizer_ui_cache()
 
+        # Signal every background worker to stop up front so their shutdown
+        # waits overlap instead of stacking. The session save (disk I/O) then
+        # runs while those workers wind down, and the joins happen afterwards.
         self._begin_library_loader_shutdown()
         self._begin_player_backend_shutdown()
         self.announcer.request_close()
@@ -158,59 +166,25 @@ class AppCommandsMixin:
         self.Destroy()
 
     def toggle_lyrics_panel(self):
-        """
-        Toggles the visibility of the lyrics panel and updates the UI checkbox.
-        """
-        if hasattr(self, 'lyrics_panel'):
-            is_shown = self.lyrics_panel.IsShown()
-            self.lyrics_panel.Show(not is_shown)
-            
-            if hasattr(self, 'lyrics_checkbox'):
-                self.lyrics_checkbox.SetValue(not is_shown)
-                
-            self.Layout()
-            
-            if not is_shown and hasattr(self.lyrics_panel, 'lyrics_text_ctrl'):
-                self.lyrics_panel.lyrics_text_ctrl.SetFocus()
+        """Toggle the lyrics panel visibility and sync the UI checkbox.
 
-    def on_key_down(self, event):
+        When the panel becomes visible its text control receives focus so a
+        screen-reader user lands directly on the lyrics.
         """
-        Global keyboard hook for shortcuts.
-        Passes the event down the MRO chain to preserve playback controls.
-        """
-        keycode = event.GetKeyCode()
-        modifiers = event.GetModifiers()
-
-        # Check if the lyrics text control is focused
-        focused_window = wx.Window.FindFocus()
-        is_lyrics_focused = (
-            hasattr(self, 'lyrics_panel') 
-            and self.lyrics_panel.IsShown()
-            and hasattr(self.lyrics_panel, 'lyrics_text_ctrl')
-            and focused_window == self.lyrics_panel.lyrics_text_ctrl
-        )
-
-        # If lyrics are focused, prevent arrow keys/Home/End from affecting playback (volume/seek)
-        if is_lyrics_focused and keycode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT, wx.WXK_HOME, wx.WXK_END, wx.WXK_PAGEUP, wx.WXK_PAGEDOWN):
-            event.Skip()
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        if lyrics_panel is None:
             return
 
-        # Shortcut: Esc closes the lyrics panel if it is open
-        if keycode == wx.WXK_ESCAPE and modifiers == wx.MOD_NONE:
-            if hasattr(self, 'lyrics_panel') and self.lyrics_panel.IsShown():
-                self.toggle_lyrics_panel()
-                
-                # Restore focus to the main panel so the screen reader doesn't get lost
-                if hasattr(self, 'notebook'):
-                    self.notebook.SetFocus()
-                return
+        is_shown = lyrics_panel.IsShown()
+        lyrics_panel.Show(not is_shown)
 
-        # Shortcut: Ctrl+L toggles the lyrics panel
-        if keycode == ord('L') and modifiers == wx.MOD_CONTROL:
-            self.toggle_lyrics_panel()
-            return
-            
-        try:
-            super().on_key_down(event)
-        except AttributeError:
-            event.Skip()
+        lyrics_checkbox = getattr(self, "lyrics_checkbox", None)
+        if lyrics_checkbox is not None:
+            lyrics_checkbox.SetValue(not is_shown)
+
+        self.Layout()
+
+        if not is_shown:
+            text_ctrl = getattr(lyrics_panel, "lyrics_text_ctrl", None)
+            if text_ctrl is not None:
+                text_ctrl.SetFocus()

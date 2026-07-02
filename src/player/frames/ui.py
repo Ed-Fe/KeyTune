@@ -171,8 +171,8 @@ class FrameUIMixin:
             "Alt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\n"
             "Alt+Seta cima / baixo — Mover o item atual na playlist\n"
             "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
-            "Ctrl+L — Alternar painel de letras (Lyrics)\n"
-            "Ctrl+Alt+L — Curtir mídia atual no YouTube Music\n"
+            "Ctrl+L — Curtir mídia atual no YouTube Music\n"
+            "Ctrl+Alt+L — Alternar painel de letras\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "E — Alternar modo aleatório\n"
@@ -517,9 +517,9 @@ class FrameUIMixin:
         self.progress_panel = wx.Panel(panel)
         self.progress_label = wx.StaticText(self.progress_panel, label=_("Tempo: nenhuma mídia carregada."))
         
-        # New Lyrics Checkbox integrated alongside the progress label
-        self.lyrics_checkbox = wx.CheckBox(self.progress_panel, label=_("Lyrics"))
-        self.lyrics_checkbox.SetName(_("Painel de Letras"))
+        # Lyrics panel toggle integrated alongside the progress label
+        self.lyrics_checkbox = wx.CheckBox(self.progress_panel, label=_("Letras"))
+        self.lyrics_checkbox.SetName(_("Painel de letras"))
         self.lyrics_checkbox.Bind(wx.EVT_CHECKBOX, self.on_toggle_lyrics)
         
         top_progress_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -553,7 +553,7 @@ class FrameUIMixin:
         )
         attach_named_accessible(
             self.lyrics_checkbox,
-            name=_("Painel de Letras"),
+            name=_("Painel de letras"),
             description=_("Ativa ou desativa a exibição das letras da música."),
             value_provider=lambda: _("Ativado") if self.lyrics_checkbox.GetValue() else _("Desativado"),
         )
