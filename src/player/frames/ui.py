@@ -176,6 +176,7 @@ class FrameUIMixin:
             "Alt+Seta cima / baixo — Mover o item atual na playlist\n"
             "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
             "Ctrl+L — Curtir mídia atual no YouTube Music\n"
+            "Ctrl+Alt+L — Alternar painel de letras\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
@@ -537,6 +538,16 @@ class FrameUIMixin:
         self.notebook = wx.Notebook(panel)
         self.progress_panel = wx.Panel(panel)
         self.progress_label = wx.StaticText(self.progress_panel, label=_("Tempo: nenhuma mídia carregada."))
+        
+        # Lyrics panel toggle integrated alongside the progress label
+        self.lyrics_checkbox = wx.CheckBox(self.progress_panel, label=_("Letras"))
+        self.lyrics_checkbox.SetName(_("Painel de letras"))
+        self.lyrics_checkbox.Bind(wx.EVT_CHECKBOX, self.on_toggle_lyrics)
+        
+        top_progress_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        top_progress_sizer.Add(self.progress_label, 1, wx.ALIGN_CENTER_VERTICAL)
+        top_progress_sizer.Add(self.lyrics_checkbox, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 10)
+
         self.progress_gauge = wx.Gauge(self.progress_panel, range=PROGRESS_GAUGE_RANGE, style=wx.GA_SMOOTH)
         self.shortcuts_hint_label = wx.StaticText(
             self.progress_panel,
@@ -546,7 +557,7 @@ class FrameUIMixin:
         self.crossfade_timer = wx.Timer(self)
 
         progress_sizer = wx.BoxSizer(wx.VERTICAL)
-        progress_sizer.Add(self.progress_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
+        progress_sizer.Add(top_progress_sizer, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
         progress_sizer.Add(self.progress_gauge, 0, wx.ALL | wx.EXPAND, 10)
         progress_sizer.Add(self.shortcuts_hint_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         self.progress_panel.SetSizer(progress_sizer)
@@ -561,6 +572,12 @@ class FrameUIMixin:
             name=_("Tempo da mídia"),
             description=_("Mostra o tempo decorrido e a duração total da mídia atual."),
             value_provider=lambda: self.progress_label.GetLabel(),
+        )
+        attach_named_accessible(
+            self.lyrics_checkbox,
+            name=_("Painel de letras"),
+            description=_("Ativa ou desativa a exibição das letras da música."),
+            value_provider=lambda: _("Ativado") if self.lyrics_checkbox.GetValue() else _("Desativado"),
         )
         attach_named_accessible(
             self.progress_gauge,
@@ -745,3 +762,7 @@ class FrameUIMixin:
 
     def on_manage_queue(self, _event):
         self._open_queue_manager()
+
+    def on_toggle_lyrics(self, _event):
+        if hasattr(self, 'toggle_lyrics_panel'):
+            self.toggle_lyrics_panel()

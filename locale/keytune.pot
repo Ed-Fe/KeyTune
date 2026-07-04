@@ -660,7 +660,7 @@ msgid "Ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -865,6 +865,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ativa ou desativa a exibição das letras da música."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ativado"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -1085,6 +1093,14 @@ msgstr ""
 
 #: src/player/frames/library_tabs/related_autoplay.py
 msgid "Buscando conteúdo relacionado no YouTube Music."
+msgstr ""
+
+#: src/player/lyrics/service.py
+msgid "Buscando letra no YouTube Music..."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Buscando letra..."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1385,6 +1401,10 @@ msgstr ""
 msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "Copiar letra completa"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Copiar seleção"
 msgstr ""
@@ -1517,6 +1537,10 @@ msgstr ""
 msgid "Depuração (DEBUG)"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Desativado"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Desativar saída de &vídeo (tocar só o áudio)"
 msgstr ""
@@ -1527,6 +1551,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Desconectar conta do YouTube Music"
+msgstr ""
+
+#: src/player/lyrics/service.py
+msgid "Desconhecido"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -2065,6 +2093,10 @@ msgstr ""
 msgid "Informativo (INFO)"
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "Informações da faixa incompletas para buscar a letra."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Informe o nome e a privacidade da nova playlist."
 msgstr ""
@@ -2231,6 +2263,10 @@ msgstr ""
 msgid "Já existe um preset com esse nome. Escolha outro nome."
 msgstr ""
 
+#: src/player/lyrics/service.py
+msgid "LRCLIB"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Leitor de tela"
 msgstr ""
@@ -2249,6 +2285,35 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Lembrar última pasta usada"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra completa copiada."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra copiada."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra da música"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra da música {info}"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra não encontrada em nenhum banco de dados para: {query}"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+#: src/player/frames/playback/engine.py
+msgid "Letra não encontrada para esta mídia."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Letras"
 msgstr ""
 
 #: src/player/about/dialog.py
@@ -2930,6 +2995,10 @@ msgstr ""
 msgid "Não gostei no YouTube Music"
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "Não há letra para copiar."
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Não há mais playlists para carregar."
 msgstr ""
@@ -3104,6 +3173,11 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Padrão do sistema"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+#: src/player/frames/ui.py
+msgid "Painel de letras"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3818,6 +3892,7 @@ msgstr ""
 msgid "Seleção do YouTube Music"
 msgstr ""
 
+#: src/player/frames/playback/engine.py
 #: src/player/frames/playback/media_metadata.py
 msgid "Sem mídia"
 msgstr ""
@@ -3935,6 +4010,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Traz para os resultados abaixo o histórico de reprodução da conta conectada, da mais recente para a mais antiga."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Trecho da letra copiado."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -4085,6 +4164,10 @@ msgstr ""
 msgid "Vídeo do YouTube aberto: {title}."
 msgstr ""
 
+#: src/player/lyrics/service.py
+msgid "YT Music"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "YouTube &Music por aba\tCtrl+Shift+Y"
 msgstr ""
@@ -4118,12 +4201,20 @@ msgstr ""
 msgid "YouTube — vídeos"
 msgstr ""
 
+#: src/player/lyrics/service.py
+msgid "[{source}: {title} - {artist}]"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "ativado"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
 msgid "desativado"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "desconhecida"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -4351,6 +4442,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "África do Sul"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
 msgstr ""
 
 #: src/player/youtube_music/models.py

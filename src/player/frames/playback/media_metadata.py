@@ -137,6 +137,15 @@ class MediaMetadataMixin:
         refresh_smtc = getattr(self, "_refresh_smtc_state", None)
         if callable(refresh_smtc):
             refresh_smtc()
+
+        # --- GATILHO DAS LETRAS PARA ATUALIZAÇÕES EM TEMPO REAL ---
+        # Se a música mudou de nome no meio da reprodução (como em rádios web), 
+        # aciona a busca da letra nova silenciosamente.
+        current_state = getattr(self, "_get_playlist_state", lambda: None)()
+        if current_state and getattr(current_state, "current_media_path", None) == normalized_media_path:
+            if hasattr(self, 'lyrics_panel'):
+                self.lyrics_panel.load_lyrics_for_track(normalized_artist, normalized_title)
+
         return True
 
     def _queue_remote_media_metadata_resolution(self, media_path):

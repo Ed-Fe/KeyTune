@@ -119,6 +119,24 @@ class KeyNavigationMixin:
         focused_window = wx.Window.FindFocus()
         return isinstance(focused_window, wx.TextEntry)
 
+    def _lyrics_text_is_focused(self):
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        if lyrics_panel is None or not lyrics_panel.IsShown():
+            return False
+        text_ctrl = getattr(lyrics_panel, "lyrics_text_ctrl", None)
+        return text_ctrl is not None and wx.Window.FindFocus() == text_ctrl
+
+    def _close_lyrics_panel(self):
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        if lyrics_panel is None or not lyrics_panel.IsShown():
+            return
+        self.toggle_lyrics_panel()
+        # Restore focus to the notebook so the screen reader does not get lost
+        # on the now-hidden panel.
+        notebook = getattr(self, "notebook", None)
+        if notebook is not None:
+            notebook.SetFocus()
+
     def on_key_down(self, event):
         key_code = event.GetKeyCode()
         browser = self._get_browser_panel()
@@ -136,6 +154,31 @@ class KeyNavigationMixin:
         if key_code == wx.WXK_F1:
             self.on_show_keyboard_help(None)
             return
+
+        # Ctrl+Alt+L toggles the lyrics panel. Plain Ctrl+L stays reserved for
+        # rating the current YouTube Music media (handled further below).
+        if event.ControlDown() and event.AltDown() and not event.ShiftDown() and key_code in (ord("L"), ord("l")):
+            self.toggle_lyrics_panel()
+            return
+
+        # While the lyrics text is focused, let it own caret navigation instead
+        # of driving playback (seek/volume); Esc closes the panel.
+        if self._lyrics_text_is_focused():
+            if key_code == wx.WXK_ESCAPE:
+                self._close_lyrics_panel()
+                return
+            if key_code in (
+                wx.WXK_UP,
+                wx.WXK_DOWN,
+                wx.WXK_LEFT,
+                wx.WXK_RIGHT,
+                wx.WXK_HOME,
+                wx.WXK_END,
+                wx.WXK_PAGEUP,
+                wx.WXK_PAGEDOWN,
+            ):
+                event.Skip()
+                return
 
         if event.ControlDown() and event.ShiftDown() and key_code in (ord("Y"), ord("y")):
             self.on_open_youtube_music(None)
@@ -232,17 +275,11 @@ class KeyNavigationMixin:
             self.on_save_playlist(None)
             return
 
-        if event.ControlDown() and key_code in (ord("L"), ord("l")):
-            if event.ShiftDown():
-                rate_current_youtube_music_media = getattr(self, "_rate_current_youtube_music_media", None)
-                if callable(rate_current_youtube_music_media):
-                    rate_current_youtube_music_media("DISLIKE")
-                    return
-            else:
-                rate_current_youtube_music_media = getattr(self, "_rate_current_youtube_music_media", None)
-                if callable(rate_current_youtube_music_media):
-                    rate_current_youtube_music_media("LIKE")
-                    return
+        if event.ControlDown() and not event.AltDown() and key_code in (ord("L"), ord("l")):
+            rate_current_youtube_music_media = getattr(self, "_rate_current_youtube_music_media", None)
+            if callable(rate_current_youtube_music_media):
+                rate_current_youtube_music_media("DISLIKE" if event.ShiftDown() else "LIKE")
+            return
 
         if event.ControlDown() and key_code in (ord("B"), ord("b")):
             self.on_toggle_playlist_browser(None)

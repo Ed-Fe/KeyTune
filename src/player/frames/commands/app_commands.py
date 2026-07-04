@@ -251,3 +251,27 @@ class AppCommandsMixin:
             dialog.ShowModal()
         finally:
             dialog.Destroy()
+
+    def toggle_lyrics_panel(self):
+        """Toggle the lyrics panel visibility and sync the UI checkbox.
+
+        When the panel becomes visible its text control receives focus so a
+        screen-reader user lands directly on the lyrics.
+        """
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        if lyrics_panel is None:
+            return
+
+        is_shown = lyrics_panel.IsShown()
+        lyrics_panel.Show(not is_shown)
+
+        lyrics_checkbox = getattr(self, "lyrics_checkbox", None)
+        if lyrics_checkbox is not None:
+            lyrics_checkbox.SetValue(not is_shown)
+
+        self.Layout()
+
+        if not is_shown:
+            text_ctrl = getattr(lyrics_panel, "lyrics_text_ctrl", None)
+            if text_ctrl is not None:
+                text_ctrl.SetFocus()

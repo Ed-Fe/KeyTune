@@ -266,6 +266,16 @@ class PlaybackEngineMixin:
         resolved_display_title = str(request.get("resolved_display_title", "") or "").strip()
         resolved_display_artist = str(request.get("resolved_display_artist", "") or "").strip()
         self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
+        
+        # --- GATILHO DE BUSCA DA LETRA NO INÍCIO DA REPRODUÇÃO ---
+        if hasattr(self, 'lyrics_panel'):
+            if resolved_display_artist and resolved_display_title:
+                # Usa os dados se eles já vieram preenchidos na requisição
+                self.lyrics_panel.load_lyrics_for_track(resolved_display_artist, resolved_display_title)
+            else:
+                # Limpa a tela caso ainda não saiba o que é (será preenchido depois pelo media_metadata.py)
+                self.lyrics_panel.update_lyrics(_("Letra não encontrada para esta mídia."))
+
         if not resolved_display_title:
             self._queue_remote_media_metadata_resolution(media_path)
 
@@ -309,6 +319,11 @@ class PlaybackEngineMixin:
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
         self._stop_all_players(unload=False)
         self._clear_youtube_music_history_tracking()
+        
+        # Limpa o painel de letras quando o player parar totalmente
+        if hasattr(self, 'lyrics_panel'):
+            self.lyrics_panel.update_lyrics(_("Sem mídia"))
+            
         try:
             for player_key in getattr(self, "_player_keys", ()):
                 player = self._managed_player(player_key)

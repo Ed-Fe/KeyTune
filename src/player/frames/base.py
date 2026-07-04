@@ -7,6 +7,7 @@ from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
 from .equalizer import FrameEqualizerMixin
 from .library import FrameLibraryMixin
+from .lyrics_panel import LyricsPanel
 from .playback import FramePlaybackMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
@@ -54,6 +55,16 @@ class MediaPlayerFrame(
 
         self._build_menu_bar()
         self._build_ui()
+        
+        # Início da integração do painel de letras
+        main_panel = self.notebook.GetParent()
+        self.lyrics_panel = LyricsPanel(main_panel)
+        self.lyrics_panel.Hide()
+        
+        # Inserindo o painel de letras no sizer principal, entre o notebook e os controles
+        main_sizer = main_panel.GetSizer()
+        main_sizer.Insert(1, self.lyrics_panel, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 4)
+        
         self._bind_events()
         self._refresh_youtube_music_menu_state()
 
