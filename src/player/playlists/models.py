@@ -43,7 +43,7 @@ class PlaylistState:
     title: str
     items: list[str] = field(default_factory=list)
     item_index_map: dict[str, int] = field(default_factory=dict)
-    custom_queue: list[int] = field(default_factory=list)
+    custom_queue: list[str] = field(default_factory=list)
     is_loading: bool = False
     loading_message: str | None = None
     library_request_serial: int = 0
@@ -192,16 +192,71 @@ class PlaylistState:
     def enqueue_item(self, media_path, label=None):
         if not media_path:
             return False
-            
+
         normalized_path = str(media_path)
         if normalized_path not in self.item_index_map:
+            # Preserve the current shuffle order so appending a brand-new item
+            # for the queue doesn't reshuffle everything still to play.
+            preserved_order = list(self.playback_order) if self.shuffle_enabled else None
             self.append_items([normalized_path], [label])
-            
-        index = self.item_index_map.get(normalized_path)
-        if index is not None:
-            self.custom_queue.append(index)
-            return True
-        return False
+            if preserved_order is not None:
+                new_index = self.item_index_map.get(normalized_path)
+                if new_index is not None and new_index not in preserved_order:
+                    preserved_order.append(new_index)
+                if len(preserved_order) == len(self.items):
+                    self.playback_order = preserved_order
+                    if self.current_index in preserved_order:
+                        self.playback_order_position = preserved_order.index(self.current_index)
+
+        if normalized_path not in self.item_index_map:
+            return False
+        if normalized_path in self.custom_queue:
+            return False
+
+        self.custom_queue.append(normalized_path)
+        return True
+
+    def dequeue_item(self, media_path):
+        normalized_path = str(media_path)
+        if normalized_path not in self.custom_queue:
+            return False
+        self.custom_queue = [path for path in self.custom_queue if path != normalized_path]
+        return True
+
+    def is_queued(self, media_path):
+        return str(media_path) in self.custom_queue
+
+    def clear_queue(self):
+        had_entries = bool(self.custom_queue)
+        self.custom_queue = []
+        return had_entries
+
+    def queue_paths(self):
+        # Only surface entries that still resolve to a playlist item; stale
+        # paths (removed meanwhile) are dropped so the manager never lists them.
+        resolved = [path for path in self.custom_queue if path in self.item_index_map]
+        if len(resolved) != len(self.custom_queue):
+            self.custom_queue = resolved
+        return list(resolved)
+
+    def remove_queue_entry(self, position):
+        self.queue_paths()
+        if not 0 <= position < len(self.custom_queue):
+            return None
+        return self.custom_queue.pop(position)
+
+    def move_queue_entry(self, position, direction):
+        self.queue_paths()
+        if not 0 <= position < len(self.custom_queue):
+            return None
+        target = position + (1 if direction > 0 else -1)
+        if not 0 <= target < len(self.custom_queue):
+            return None
+        self.custom_queue[position], self.custom_queue[target] = (
+            self.custom_queue[target],
+            self.custom_queue[position],
+        )
+        return target
 
     def set_items_prepared(self, items, item_index_map, browser_item_labels, start_index=0, auto_select=True):
         self._apply_prepared_items(items, item_index_map, browser_item_labels)
@@ -307,9 +362,9 @@ class PlaylistState:
         self.sync_playback_order()
 
         if direction > 0:
-            for target_index in self.custom_queue:
-                if 0 <= target_index < len(self.items):
-                    return self.items[target_index]
+            for queued_path in self.custom_queue:
+                if queued_path in self.item_index_map:
+                    return queued_path
 
         if not self.shuffle_enabled:
             target_index = self.current_index + direction
@@ -388,8 +443,9 @@ class PlaylistState:
 
         if direction > 0:
             while self.custom_queue:
-                target_index = self.custom_queue.pop(0)
-                if 0 <= target_index < len(self.items):
+                queued_path = self.custom_queue.pop(0)
+                target_index = self.item_index_map.get(queued_path)
+                if target_index is not None and 0 <= target_index < len(self.items):
                     return self.select_index(target_index, reset_playback_order=False)
 
         if not self.shuffle_enabled:
@@ -449,8 +505,9 @@ class PlaylistState:
         state.items = items
         
         raw_queue = data.get("custom_queue", [])
-        state.custom_queue = [int(i) for i in raw_queue if isinstance(i, (int, str)) and str(i).isdigit()]
-        
+        item_set = set(items)
+        state.custom_queue = [str(path) for path in raw_queue if path and str(path) in item_set]
+
         raw_browser_item_labels = data.get("browser_item_labels")
         if isinstance(raw_browser_item_labels, list):
             state.browser_item_labels = [str(label or "") for label in raw_browser_item_labels]

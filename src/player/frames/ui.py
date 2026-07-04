@@ -179,6 +179,7 @@ class FrameUIMixin:
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
+            "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
             "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
@@ -230,7 +231,7 @@ class FrameUIMixin:
                 if getattr(page, "video_hint_wrap_width", None) != wrap_width:
                     video_hint_overlay.Wrap(wrap_width)
                     page.video_hint_wrap_width = wrap_width
-                self._layout_video_page(page)
+            self._layout_video_page(page)
 
     def _layout_video_page(self, page):
         video_panel = getattr(page, "video_panel", None)
@@ -387,6 +388,7 @@ class FrameUIMixin:
         self.menu_next_track_id = wx.NewIdRef()
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
+        self.menu_manage_queue_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
@@ -412,6 +414,7 @@ class FrameUIMixin:
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
+        playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
@@ -607,6 +610,7 @@ class FrameUIMixin:
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("O"), int(self.menu_open_folder_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_ALT, ord("O"), int(self.menu_open_source_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("F"), int(self.menu_enqueue_item_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("Q"), int(self.menu_manage_queue_id)),
             ]
         )
         self.SetAcceleratorTable(accelerators)
@@ -633,6 +637,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_next_track, id=self.menu_next_track_id)
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
+        self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
@@ -736,5 +741,7 @@ class FrameUIMixin:
         self._add_current_media_to_youtube_playlist()
 
     def on_enqueue_item(self, _event):
-        if hasattr(self, "_enqueue_selected_item"):
-            self._enqueue_selected_item()
+        self._enqueue_selected_item()
+
+    def on_manage_queue(self, _event):
+        self._open_queue_manager()

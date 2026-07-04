@@ -90,7 +90,7 @@ class BrowserCommandsMixin:
         )
         menu.Bind(
             wx.EVT_MENU,
-            lambda _event: getattr(self, "_enqueue_selected_item")() if hasattr(self, "_enqueue_selected_item") else None,
+            lambda _event: self._enqueue_selected_item(),
             id=enqueue_item.GetId(),
         )
         menu.Bind(

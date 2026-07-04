@@ -3,6 +3,7 @@ import wx
 from ...about import AboutDialog
 from ...i18n import _
 from ...log import setup_logging
+from ...playlists.queue_dialog import QueueManagerDialog
 from ...preferences import PreferencesDialog
 
 
@@ -166,8 +167,9 @@ class AppCommandsMixin:
         self.Destroy()
 
     def _enqueue_selected_item(self):
-        # Pega a aba de playlist atual que o usuário está navegando
-        state = self._get_playlist_state()
+        # A fila pertence sempre à playlist que está tocando (opção a): assim
+        # "adicionar à fila" afeta o que toca a seguir, não a aba navegada.
+        state = self._get_active_playlist_state()
         if not state:
             self._announce(_("Nenhuma playlist ativa."))
             return
@@ -179,7 +181,7 @@ class AppCommandsMixin:
         if browser:
             paths = browser.get_selected_item_paths()
 
-        # Se nada foi selecionado na lista, tenta pegar a música que está tocando agora
+        # Se nada foi selecionado na lista, usa a música que está tocando agora
         if not paths and state.current_media_path:
             paths = [state.current_media_path]
 
@@ -188,23 +190,64 @@ class AppCommandsMixin:
             return
 
         added = 0
-        last_label = ""
-        
-        # Enfileira cada caminho encontrado
-        for path in paths:
-            idx = state.index_of_item(path)
-            label = None
-            if idx is not None and 0 <= idx < len(state.browser_item_labels):
-                label = state.browser_item_labels[idx]
-                
-            if state.enqueue_item(path, label):
-                added += 1
-                last_label = label or state.current_item_name() or _("Item")
+        removed = 0
+        last_added_label = ""
+        last_removed_label = ""
 
-        # Feedback para o leitor de tela
-        if added == 1:
-            self._announce(_("{item} adicionado à fila de reprodução.").format(item=last_label))
+        # Alterna cada caminho: se já está na fila, remove; caso contrário, enfileira.
+        for path in paths:
+            label = self._queue_entry_label(state, path)
+            if state.is_queued(path):
+                if state.dequeue_item(path):
+                    removed += 1
+                    last_removed_label = label
+            elif state.enqueue_item(path, label):
+                added += 1
+                last_added_label = label
+
+        self._announce_queue_toggle(added, removed, last_added_label, last_removed_label)
+
+    def _announce_queue_toggle(self, added, removed, added_label, removed_label):
+        if added and removed:
+            self._announce(
+                _("{added} itens adicionados e {removed} removidos da fila de reprodução.").format(
+                    added=added, removed=removed
+                )
+            )
+        elif added == 1:
+            self._announce(_("{item} adicionado à fila de reprodução.").format(item=added_label))
         elif added > 1:
             self._announce(_("{count} itens adicionados à fila de reprodução.").format(count=added))
+        elif removed == 1:
+            self._announce(_("{item} removido da fila de reprodução.").format(item=removed_label))
+        elif removed > 1:
+            self._announce(_("{count} itens removidos da fila de reprodução.").format(count=removed))
         else:
-            self._announce(_("O item já está na fila ou não pôde ser adicionado."))
+            self._announce(_("Nenhum item pôde ser adicionado à fila."))
+
+    def _queue_entry_label(self, state, path):
+        label = self._media_label_from_playlist_state(state, path)
+        return label or self._media_label(path)
+
+    def _open_queue_manager(self):
+        state = self._get_active_playlist_state()
+        if not state:
+            self._announce(_("Nenhuma playlist ativa."))
+            return
+
+        if not state.queue_paths():
+            self._announce(_("A fila de reprodução está vazia. Use Ctrl+Shift+F para adicionar itens."))
+            return
+
+        dialog = QueueManagerDialog(
+            self,
+            get_entries=lambda: [(path, self._queue_entry_label(state, path)) for path in state.queue_paths()],
+            on_remove=state.remove_queue_entry,
+            on_move=state.move_queue_entry,
+            on_clear=state.clear_queue,
+            announce=self._announce,
+        )
+        try:
+            dialog.ShowModal()
+        finally:
+            dialog.Destroy()
