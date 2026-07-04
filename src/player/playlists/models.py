@@ -43,6 +43,7 @@ class PlaylistState:
     title: str
     items: list[str] = field(default_factory=list)
     item_index_map: dict[str, int] = field(default_factory=dict)
+    custom_queue: list[int] = field(default_factory=list)
     is_loading: bool = False
     loading_message: str | None = None
     library_request_serial: int = 0
@@ -89,6 +90,7 @@ class PlaylistState:
         self.loading_message = None
         self.items = []
         self.item_index_map = {}
+        self.custom_queue = []
         self.browser_item_labels = []
         self.items_revision += 1
         self.current_index = -1
@@ -158,6 +160,7 @@ class PlaylistState:
             self.was_playing = False
             self.playback_order = []
             self.playback_order_position = 0
+            self.custom_queue = []
             return
 
         if auto_select:
@@ -186,6 +189,20 @@ class PlaylistState:
         )
         self.sync_playback_order()
 
+    def enqueue_item(self, media_path, label=None):
+        if not media_path:
+            return False
+            
+        normalized_path = str(media_path)
+        if normalized_path not in self.item_index_map:
+            self.append_items([normalized_path], [label])
+            
+        index = self.item_index_map.get(normalized_path)
+        if index is not None:
+            self.custom_queue.append(index)
+            return True
+        return False
+
     def set_items_prepared(self, items, item_index_map, browser_item_labels, start_index=0, auto_select=True):
         self._apply_prepared_items(items, item_index_map, browser_item_labels)
         if not self.items:
@@ -195,6 +212,7 @@ class PlaylistState:
             self.was_playing = False
             self.playback_order = []
             self.playback_order_position = 0
+            self.custom_queue = []
             return
 
         if auto_select:
@@ -288,6 +306,11 @@ class PlaylistState:
 
         self.sync_playback_order()
 
+        if direction > 0:
+            for target_index in self.custom_queue:
+                if 0 <= target_index < len(self.items):
+                    return self.items[target_index]
+
         if not self.shuffle_enabled:
             target_index = self.current_index + direction
             if 0 <= target_index < len(self.items):
@@ -363,6 +386,12 @@ class PlaylistState:
 
         self.sync_playback_order()
 
+        if direction > 0:
+            while self.custom_queue:
+                target_index = self.custom_queue.pop(0)
+                if 0 <= target_index < len(self.items):
+                    return self.select_index(target_index, reset_playback_order=False)
+
         if not self.shuffle_enabled:
             target_index = self.current_index + direction
             if wrap:
@@ -395,6 +424,7 @@ class PlaylistState:
         return {
             "title": self.title,
             "items": list(self.items),
+            "custom_queue": list(self.custom_queue),
             "browser_item_labels": list(self.browser_item_labels),
             "current_index": self.current_index,
             "current_media_path": self.current_media_path,
@@ -417,6 +447,10 @@ class PlaylistState:
         title = str(data.get("title") or build_playlist_title(items))
         state = cls(title=title)
         state.items = items
+        
+        raw_queue = data.get("custom_queue", [])
+        state.custom_queue = [int(i) for i in raw_queue if isinstance(i, (int, str)) and str(i).isdigit()]
+        
         raw_browser_item_labels = data.get("browser_item_labels")
         if isinstance(raw_browser_item_labels, list):
             state.browser_item_labels = [str(label or "") for label in raw_browser_item_labels]

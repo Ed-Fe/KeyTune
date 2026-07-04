@@ -164,3 +164,47 @@ class AppCommandsMixin:
         self._shutdown_smtc_service()
         self.announcer.close()
         self.Destroy()
+
+    def _enqueue_selected_item(self):
+        # Pega a aba de playlist atual que o usuário está navegando
+        state = self._get_playlist_state()
+        if not state:
+            self._announce(_("Nenhuma playlist ativa."))
+            return
+
+        browser = self._get_browser_panel()
+        paths = []
+
+        # Tenta pegar as músicas que estão selecionadas na lista, ignorando o foco
+        if browser:
+            paths = browser.get_selected_item_paths()
+
+        # Se nada foi selecionado na lista, tenta pegar a música que está tocando agora
+        if not paths and state.current_media_path:
+            paths = [state.current_media_path]
+
+        if not paths:
+            self._announce(_("Nenhum item selecionado para adicionar à fila."))
+            return
+
+        added = 0
+        last_label = ""
+        
+        # Enfileira cada caminho encontrado
+        for path in paths:
+            idx = state.index_of_item(path)
+            label = None
+            if idx is not None and 0 <= idx < len(state.browser_item_labels):
+                label = state.browser_item_labels[idx]
+                
+            if state.enqueue_item(path, label):
+                added += 1
+                last_label = label or state.current_item_name() or _("Item")
+
+        # Feedback para o leitor de tela
+        if added == 1:
+            self._announce(_("{item} adicionado à fila de reprodução.").format(item=last_label))
+        elif added > 1:
+            self._announce(_("{count} itens adicionados à fila de reprodução.").format(count=added))
+        else:
+            self._announce(_("O item já está na fila ou não pôde ser adicionado."))

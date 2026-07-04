@@ -54,6 +54,8 @@ class BrowserCommandsMixin:
         paste_item = menu.Append(wx.ID_ANY, _("Colar na playlist atual"))
         paste_new_item = menu.Append(wx.ID_ANY, _("Colar em nova playlist"))
         menu.AppendSeparator()
+        enqueue_item = menu.Append(wx.ID_ANY, _("Adicionar à &Fila\tCtrl+Shift+F"))
+        menu.AppendSeparator()
         remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
         menu.AppendSeparator()
         like_item = menu.Append(wx.ID_ANY, _("Curtir no YouTube Music"))
@@ -70,6 +72,7 @@ class BrowserCommandsMixin:
         on_editable_youtube_playlist = bool(self._current_tab_youtube_music_playlist_id())
 
         copy_item.Enable(selected_count > 0)
+        enqueue_item.Enable(selected_count > 0)
         remove_item.Enable(selected_count > 0 and can_edit_playlist)
         like_item.Enable(has_youtube_items and bool(like_rateable_paths))
         dislike_item.Enable(has_youtube_items and bool(dislike_rateable_paths))
@@ -84,6 +87,11 @@ class BrowserCommandsMixin:
             wx.EVT_MENU,
             lambda _event: self.on_paste_open_from_clipboard_new_playlist(None),
             id=paste_new_item.GetId(),
+        )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: getattr(self, "_enqueue_selected_item")() if hasattr(self, "_enqueue_selected_item") else None,
+            id=enqueue_item.GetId(),
         )
         menu.Bind(
             wx.EVT_MENU,
