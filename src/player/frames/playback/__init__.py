@@ -8,6 +8,7 @@ import surface (``from player.frames.playback import FramePlaybackMixin``) and
 """
 
 from .audio_output import AudioOutputMixin
+from .autodj import AutoDjMixin
 from .backend import PlayerBackendMixin
 from .controls import PlaybackControlsMixin
 from .crossfade import CrossfadeMixin
@@ -28,6 +29,7 @@ from .youtube_history import YouTubeHistoryMixin
 class FramePlaybackMixin(
     PlayerBackendMixin,
     AudioOutputMixin,
+    AutoDjMixin,
     CrossfadeMixin,
     PlaybackEngineMixin,
     YouTubeHistoryMixin,
@@ -39,6 +41,7 @@ class FramePlaybackMixin(
 
 __all__ = [
     "FramePlaybackMixin",
+    "AutoDjMixin",
     "is_music_youtube_url",
     "is_youtube_music_media",
     "_STREAM_ARTIFACT_TITLE_SUFFIXES",

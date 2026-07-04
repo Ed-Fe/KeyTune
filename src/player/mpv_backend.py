@@ -572,6 +572,33 @@ class MPVPlayer:
         except Exception:
             pass
 
+    def audio_filter_command(self, label: str, command: str, value, target: str = "all") -> bool:
+        """Send a runtime command to the labeled audio filter (``af-command``).
+
+        Lets a filter parameter (e.g. the Auto DJ bass-swap gain) change
+        smoothly mid-playback: rewriting ``af`` rebuilds the whole filter
+        chain and can glitch the audio, while ``af-command`` adjusts the
+        running filter in place.
+
+        ``target`` names the filter *inside* the labeled lavfi graph (e.g.
+        ``"bass"``). Passing a concrete target matters: with ``"all"``, the
+        graph's auxiliary sink/format filters answer "unsupported" last and
+        mpv reports the whole command as failed even though the real filter
+        applied it.
+        """
+        try:
+            self._player.command("af-command", str(label), str(command), str(value), str(target))
+            return True
+        except Exception:
+            pass
+        try:
+            # Older mpv builds lack the in-graph target argument; the 3-arg
+            # form still delivers the command to the labeled filter's graph.
+            self._player.command("af-command", str(label), str(command), str(value))
+            return True
+        except Exception:
+            return False
+
 
 class MPVInstance:
     def __init__(self, *, video_output_enabled: bool = True, audio_output_device_id: str = ""):

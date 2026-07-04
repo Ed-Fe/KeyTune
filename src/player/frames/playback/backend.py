@@ -320,7 +320,18 @@ class PlayerBackendMixin:
         if player is None:
             return False
 
-        filter_parts = [part for part in (equalizer_chain, self._pitch_shift_filter_segment()) if part]
+        # During an Auto DJ transition the player may carry a labeled bass
+        # filter (the bass swap); it must survive equalizer/pitch reapplies.
+        auto_dj_bass_segment = ""
+        bass_segment_getter = getattr(self, "_auto_dj_bass_filter_segment_for_player", None)
+        if callable(bass_segment_getter):
+            auto_dj_bass_segment = bass_segment_getter(player)
+
+        filter_parts = [
+            part
+            for part in (equalizer_chain, self._pitch_shift_filter_segment(), auto_dj_bass_segment)
+            if part
+        ]
 
         try:
             player.set_audio_filters(",".join(filter_parts))

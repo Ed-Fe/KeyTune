@@ -30,6 +30,12 @@ class CrossfadeMixin:
             timer.Stop()
 
     def _crossfade_duration_ms(self):
+        # An active Auto DJ plan drives the blend length (a whole number of
+        # beats of the outgoing track), overriding the user's fixed crossfade
+        # setting — and making the crossfade engage even when that setting is 0.
+        plan = getattr(self, "_auto_dj_pending_plan", None)
+        if plan and plan.get("duration_ms"):
+            return int(plan["duration_ms"])
         crossfade_seconds = int(getattr(self.settings, "crossfade_seconds", 0) or 0)
         return max(0, crossfade_seconds * 1000)
 
@@ -81,6 +87,35 @@ class CrossfadeMixin:
 
         self._stop_player(incoming_key, unload=True)
         self._apply_volume_to_player(outgoing_key, self.current_volume)
+        # Auto DJ may request a cue-in position (the incoming track's first
+        # beat) so the blend starts on a beat rather than on the intro/silence.
+        auto_dj_start_ms = 0
+        auto_dj_start_getter = getattr(self, "_auto_dj_incoming_start_ms", None)
+        if callable(auto_dj_start_getter):
+            auto_dj_start_ms = auto_dj_start_getter()
+        # Phase-lock: when active, the incoming track is loaded paused at its cue
+        # point and unpaused later, exactly on a beat of the outgoing track.
+        phase_lock = False
+        phase_lock_getter = getattr(self, "_auto_dj_phase_lock_active", None)
+        if callable(phase_lock_getter):
+            phase_lock = bool(phase_lock_getter())
+        # Bass swap: attach the labeled bass filters up front — the incoming
+        # enters with its low band cut, the outgoing gets a transparent (0 dB)
+        # node — so mid-blend gain changes are in-place af-commands instead of
+        # chain rebuilds (which glitch the audio).
+        bass_swap = False
+        bass_swap_getter = getattr(self, "_auto_dj_bass_swap_active", None)
+        if callable(bass_swap_getter):
+            bass_swap = bool(bass_swap_getter())
+        if bass_swap:
+            attach_bass = getattr(self, "_auto_dj_attach_bass_filter", None)
+            gains_getter = getattr(self, "_auto_dj_bass_swap_gains", None)
+            if callable(attach_bass) and callable(gains_getter):
+                incoming_bass_db, outgoing_bass_db = gains_getter(0.0)
+                attach_bass(incoming_key, incoming_bass_db)
+                attach_bass(outgoing_key, outgoing_bass_db)
+            else:
+                bass_swap = False
         request = self._queue_media_start(
             media_path,
             tab_index=tab_index,
@@ -88,6 +123,8 @@ class CrossfadeMixin:
             player_key=incoming_key,
             initial_volume=0,
             crossfade=True,
+            start_position_ms=auto_dj_start_ms,
+            pause_incoming=phase_lock,
         )
         self._crossfade_state = {
             "phase": "pending",
@@ -102,6 +139,12 @@ class CrossfadeMixin:
             "started_at": None,
             "outgoing_ended": False,
             "pending_timeout_seconds": self._crossfade_pending_timeout_seconds(media_path),
+            "phase_lock": phase_lock,
+            "armed_target_ms": None,
+            "armed_at": None,
+            "bass_swap": bass_swap,
+            "bass_last_incoming_db": None,
+            "bass_last_outgoing_db": None,
         }
         self._ensure_crossfade_timer_running()
         return True
@@ -138,6 +181,10 @@ class CrossfadeMixin:
             self._stop_player(outgoing_key, unload=True)
 
         self._crossfade_state = None
+        self._auto_dj_pending_plan = None
+        clear_bass_filters = getattr(self, "_auto_dj_clear_bass_filters", None)
+        if callable(clear_bass_filters):
+            clear_bass_filters()
         self._stop_crossfade_timer()
         self._apply_current_volume()
 
@@ -162,10 +209,38 @@ class CrossfadeMixin:
         self._apply_volume_to_player(crossfade_state["incoming_key"], incoming_volume)
         self._apply_volume_to_player(crossfade_state["outgoing_key"], outgoing_volume)
 
+        if crossfade_state.get("bass_swap"):
+            self._apply_bass_swap_gains(crossfade_state, progress)
+
         if progress >= 1.0:
             self._finish_crossfade()
 
         return True
+
+    def _apply_bass_swap_gains(self, crossfade_state, progress):
+        """Drive the low-band handover during a running Auto DJ blend.
+
+        Gain changes go through ``af-command`` (no chain rebuild) and are only
+        pushed when they moved audibly (>= 0.5 dB) since the last push, so the
+        15 ms timer does not spam the players.
+        """
+
+        gains_getter = getattr(self, "_auto_dj_bass_swap_gains", None)
+        gain_setter = getattr(self, "_auto_dj_set_bass_gain", None)
+        if not callable(gains_getter) or not callable(gain_setter):
+            return
+
+        incoming_db, outgoing_db = gains_getter(progress)
+
+        last_incoming_db = crossfade_state.get("bass_last_incoming_db")
+        if last_incoming_db is None or abs(incoming_db - last_incoming_db) >= 0.5:
+            gain_setter(crossfade_state.get("incoming_key"), incoming_db)
+            crossfade_state["bass_last_incoming_db"] = incoming_db
+
+        last_outgoing_db = crossfade_state.get("bass_last_outgoing_db")
+        if last_outgoing_db is None or abs(outgoing_db - last_outgoing_db) >= 0.5:
+            gain_setter(crossfade_state.get("outgoing_key"), outgoing_db)
+            crossfade_state["bass_last_outgoing_db"] = outgoing_db
 
     def _finish_crossfade(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
@@ -178,6 +253,12 @@ class CrossfadeMixin:
             self._stop_player(outgoing_key, unload=True)
 
         self._crossfade_state = None
+        # The incoming (now active) track keeps the Auto DJ tempo-match rate that
+        # was applied to it; only the plan bookkeeping is cleared here.
+        self._auto_dj_pending_plan = None
+        clear_bass_filters = getattr(self, "_auto_dj_clear_bass_filters", None)
+        if callable(clear_bass_filters):
+            clear_bass_filters()
         self._stop_crossfade_timer()
         self._apply_current_volume()
 
@@ -219,16 +300,94 @@ class CrossfadeMixin:
                     )
                 return
             incoming_player = self._managed_player(crossfade_state.get("incoming_key"))
+            if crossfade_state.get("phase_lock"):
+                # The incoming track is loaded paused at its cue point. Once it
+                # is ready, arm the transition (compute the outgoing beat to
+                # unpause on) instead of starting the blend immediately.
+                if self._crossfade_incoming_ready_paused(incoming_player):
+                    self._arm_phase_lock_crossfade()
+                return
             if incoming_player is not None and incoming_player.is_playing():
                 self._begin_pending_crossfade()
+            return
+
+        if crossfade_state.get("phase") == "armed":
+            self._tick_phase_lock_armed()
             return
 
         if crossfade_state.get("phase") == "running":
             self._apply_crossfade_volumes()
 
-    def _begin_pending_crossfade(self):
+    def _crossfade_incoming_ready_paused(self, player):
+        """Readiness signal for a paused, cued incoming track: the file has
+        loaded (so its duration is known and the cue seek has been applied)."""
+
+        if player is None:
+            return False
+        try:
+            length = player.get_length()
+        except Exception:
+            return False
+        return length is not None and length > 0
+
+    def _arm_phase_lock_crossfade(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
         if not crossfade_state or crossfade_state.get("phase") != "pending":
+            return
+
+        outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
+        if outgoing_player is None or not outgoing_player.is_playing():
+            # No outgoing beat grid to lock onto — just start the blend now.
+            self._begin_pending_crossfade()
+            return
+
+        outgoing_time_ms = outgoing_player.get_time()
+        target_ms = None
+        target_getter = getattr(self, "_auto_dj_next_beat_target_ms", None)
+        if callable(target_getter) and outgoing_time_ms is not None and outgoing_time_ms >= 0:
+            target_ms = target_getter(outgoing_time_ms)
+
+        if target_ms is None:
+            # Past the last analyzed beat (near the track's end); fire now.
+            self._begin_pending_crossfade()
+            return
+
+        crossfade_state["armed_target_ms"] = target_ms
+        crossfade_state["armed_at"] = time.monotonic()
+        crossfade_state["phase"] = "armed"
+
+    def _tick_phase_lock_armed(self):
+        crossfade_state = getattr(self, "_crossfade_state", None)
+        if not crossfade_state or crossfade_state.get("phase") != "armed":
+            return
+
+        outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
+        if (
+            outgoing_player is None
+            or not outgoing_player.is_playing()
+            or crossfade_state.get("outgoing_ended")
+        ):
+            self._begin_pending_crossfade()
+            return
+
+        # Safety net: never stay armed for more than ~2 s (e.g. if the user
+        # seeked the outgoing track past the target beat).
+        armed_at = crossfade_state.get("armed_at")
+        if armed_at is not None and (time.monotonic() - armed_at) > 2.0:
+            self._begin_pending_crossfade()
+            return
+
+        outgoing_time_ms = outgoing_player.get_time()
+        if outgoing_time_ms is None or outgoing_time_ms < 0:
+            return
+
+        target_ms = crossfade_state.get("armed_target_ms")
+        if target_ms is None or outgoing_time_ms >= target_ms:
+            self._begin_pending_crossfade()
+
+    def _begin_pending_crossfade(self):
+        crossfade_state = getattr(self, "_crossfade_state", None)
+        if not crossfade_state or crossfade_state.get("phase") not in ("pending", "armed"):
             return False
 
         tab_index = crossfade_state.get("tab_index")
@@ -243,6 +402,14 @@ class CrossfadeMixin:
         if incoming_player is None:
             self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
             return False
+
+        if crossfade_state.get("phase_lock"):
+            # Unpause the pre-loaded, cued incoming track at this exact instant
+            # (we are on a beat of the outgoing track) so their beats align.
+            try:
+                incoming_player.play()
+            except Exception:
+                pass
 
         self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
@@ -273,7 +440,16 @@ class CrossfadeMixin:
                 and outgoing_length is not None
                 and outgoing_length > 0
             ):
-                actual_remaining = max(0, outgoing_length - outgoing_time)
+                # An Auto DJ plan ends the blend at the outgoing track's energy
+                # cue-out (its outro), not at the end of the file — the produced
+                # fade-out past that point is cut off entirely.
+                outgoing_end = outgoing_length
+                end_getter = getattr(self, "_auto_dj_outgoing_end_ms", None)
+                if callable(end_getter):
+                    plan_end_ms = end_getter()
+                    if plan_end_ms:
+                        outgoing_end = min(outgoing_end, plan_end_ms)
+                actual_remaining = max(0, outgoing_end - outgoing_time)
                 crossfade_state["duration_ms"] = max(
                     500, min(crossfade_state["duration_ms"], actual_remaining),
                 )

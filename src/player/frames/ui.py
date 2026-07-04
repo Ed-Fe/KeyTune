@@ -181,6 +181,7 @@ class FrameUIMixin:
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
             "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
+            "D — Alternar Auto DJ: mixa as faixas locais casando o BPM (requer a biblioteca librosa)\n"
             "T — Anunciar tempo\n"
             "V — Anunciar volume\n"
             "S — Anunciar status\n\n"
@@ -389,6 +390,7 @@ class FrameUIMixin:
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
         self.menu_toggle_related_autoplay_id = wx.NewIdRef()
+        self.menu_toggle_auto_dj_id = wx.NewIdRef()
         self.menu_increase_playback_rate_id = wx.NewIdRef()
         self.menu_decrease_playback_rate_id = wx.NewIdRef()
         self.menu_reset_playback_rate_id = wx.NewIdRef()
@@ -413,6 +415,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
+        playback_menu.AppendCheckItem(self.menu_toggle_auto_dj_id, _("Auto &DJ (mixagem por BPM) (D)"))
         playback_menu.Append(self.menu_increase_playback_rate_id, _("Aumentar &Velocidade (])"))
         playback_menu.Append(self.menu_decrease_playback_rate_id, _("Diminuir Ve&locidade ([)"))
         playback_menu.Append(self.menu_reset_playback_rate_id, _("Restaurar Velocidade &Normal (\\)"))
@@ -632,6 +635,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_related_autoplay, id=self.menu_toggle_related_autoplay_id)
+        self.Bind(wx.EVT_MENU, self.on_toggle_auto_dj, id=self.menu_toggle_auto_dj_id)
         self.Bind(wx.EVT_MENU, self.on_increase_playback_rate, id=self.menu_increase_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_decrease_playback_rate, id=self.menu_decrease_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_reset_playback_rate, id=self.menu_reset_playback_rate_id)

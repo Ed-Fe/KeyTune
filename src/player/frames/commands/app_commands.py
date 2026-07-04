@@ -115,8 +115,22 @@ class AppCommandsMixin:
         # The crossfade window already includes startup headroom, so 500 ms
         # granularity is plenty to decide when to begin the transition — and
         # the 15 ms timer can stay idle until a crossfade is actually running.
+        # Auto DJ gets first say: when enabled it picks a beat-aware transition
+        # point and drives a tempo-matched crossfade. If it starts a transition
+        # we skip the regular time-based crossfade for this tick.
+        auto_dj_started = False
+        maybe_start_auto_dj = getattr(self, "_maybe_start_auto_dj_transition", None)
+        if callable(maybe_start_auto_dj) and getattr(self, "_crossfade_state", None) is None:
+            auto_dj_started = bool(maybe_start_auto_dj())
+        # While Auto DJ is enabled it owns transitions; don't also run the fixed
+        # time-based crossfade (it would compete for the same handoff).
         maybe_start_crossfade = getattr(self, "_maybe_start_automatic_crossfade", None)
-        if callable(maybe_start_crossfade) and getattr(self, "_crossfade_state", None) is None:
+        if (
+            not auto_dj_started
+            and not getattr(self, "auto_dj_enabled", False)
+            and callable(maybe_start_crossfade)
+            and getattr(self, "_crossfade_state", None) is None
+        ):
             maybe_start_crossfade()
 
     def on_crossfade_timer(self, _event):

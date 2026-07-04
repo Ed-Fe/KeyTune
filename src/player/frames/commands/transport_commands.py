@@ -52,6 +52,9 @@ class TransportCommandsMixin:
     def on_toggle_related_autoplay(self, _event):
         self._toggle_related_autoplay()
 
+    def on_toggle_auto_dj(self, _event):
+        self.toggle_auto_dj()
+
     def on_announce_time(self, _event):
         self._announce_playback_time()
 

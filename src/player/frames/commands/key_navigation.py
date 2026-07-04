@@ -184,6 +184,10 @@ class KeyNavigationMixin:
             self._toggle_related_autoplay()
             return
 
+        if not event.ControlDown() and not event.AltDown() and key_code in (ord("D"), ord("d")):
+            self.toggle_auto_dj()
+            return
+
         if event.AltDown() and not event.ControlDown() and key_code == wx.WXK_UP:
             self._move_current_item(-1)
             return

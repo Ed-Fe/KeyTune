@@ -96,6 +96,23 @@ class PlaybackEngineMixin:
                             play_kwargs["start_seconds"] = normalized_restore_position_ms / 1000.0
                         if request.get("pause_after_start"):
                             play_kwargs["pause_on_start"] = True
+                    else:
+                        # Auto DJ cue-in: start the incoming track on its first
+                        # beat instead of at 0, so the blend overlaps real
+                        # rhythmic content (not the intro/silence) — the
+                        # difference between a beatmatch and a plain fade.
+                        raw_start_position_ms = request.get("start_position_ms", 0) or 0
+                        try:
+                            normalized_start_position_ms = int(raw_start_position_ms)
+                        except (TypeError, ValueError):
+                            normalized_start_position_ms = 0
+                        if normalized_start_position_ms > 0:
+                            play_kwargs["start_seconds"] = normalized_start_position_ms / 1000.0
+                        if request.get("pause_incoming"):
+                            # Phase-lock: load the incoming track paused at its
+                            # cue point; it is unpaused later, exactly on a beat
+                            # of the outgoing track.
+                            play_kwargs["pause_on_start"] = True
                     player.play(**play_kwargs)
                     if request.get("crossfade"):
                         try:
@@ -126,6 +143,8 @@ class PlaybackEngineMixin:
         player_key=None,
         initial_volume=None,
         crossfade=False,
+        start_position_ms=0,
+        pause_incoming=False,
     ):
         target_player_key = player_key or self._active_player_key
         target_player = self._managed_player(target_player_key)
@@ -156,6 +175,8 @@ class PlaybackEngineMixin:
             "player_key": target_player_key,
             "initial_volume": self.current_volume if initial_volume is None else initial_volume,
             "crossfade": bool(crossfade),
+            "start_position_ms": int(start_position_ms or 0),
+            "pause_incoming": bool(pause_incoming),
         }
         if (
             not crossfade
@@ -243,7 +264,10 @@ class PlaybackEngineMixin:
             else:
                 self._apply_equalizer_state_to_player(self._managed_player(player_key), state)
                 self._apply_volume_to_player(player_key, 0)
-                self._apply_playback_rate_to_player(player_key, getattr(self, "current_playback_rate", 1.0))
+                incoming_rate = self._auto_dj_incoming_playback_rate(
+                    getattr(self, "current_playback_rate", 1.0)
+                )
+                self._apply_playback_rate_to_player(player_key, incoming_rate)
             return
 
         self._set_active_player(player_key)
