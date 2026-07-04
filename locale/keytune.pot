@@ -1360,6 +1360,10 @@ msgstr ""
 msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "Copiar letra completa"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Copiar seleção"
 msgstr ""
@@ -2211,6 +2215,14 @@ msgid "Lembrar última pasta usada"
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
+msgid "Letra completa copiada."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Letra copiada."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
 msgid "Letra da música"
 msgstr ""
 
@@ -2891,6 +2903,10 @@ msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
 msgid "Não gostei no YouTube Music"
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Não há letra para copiar."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -3880,6 +3896,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Traz para os resultados abaixo o histórico de reprodução da conta conectada, da mais recente para a mais antiga."
+msgstr ""
+
+#: src/player/frames/lyrics_panel.py
+msgid "Trecho da letra copiado."
 msgstr ""
 
 #: src/player/youtube_music/models.py
