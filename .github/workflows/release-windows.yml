@@ -65,7 +65,7 @@ jobs:
 
       - name: Generate credits (per language)
         run: |
-          python scripts/generate_credits.py --language pt_BR --language en
+          python scripts/generate_credits.py --language pt_BR --language en --language es
 
       - name: Render credits as HTML (per language)
         shell: powershell

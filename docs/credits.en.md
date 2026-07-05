@@ -13,4 +13,6 @@
 
 ## Contributors
 
-There are no external contributors registered yet beyond the original maintainer(s).
+- [Ed-Fe](https://github.com/Ed-Fe)
+- [claude](https://github.com/claude)
+- [viniciusSiqueira195](https://github.com/viniciusSiqueira195)

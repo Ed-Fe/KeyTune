@@ -103,7 +103,7 @@ foreach ($manual in Get-ChildItem -Path "docs" -Filter "manual.*.md" -ErrorActio
 }
 
 Write-Step "Gerando créditos de bibliotecas e contribuidores (por idioma)"
-& $PythonExe scripts\generate_credits.py --language pt_BR --language en
+& $PythonExe scripts\generate_credits.py --language pt_BR --language en --language es
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar os créditos."
 }

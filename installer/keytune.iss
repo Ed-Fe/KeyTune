@@ -246,7 +246,7 @@ Root: HKA; Subkey: "Software\{#AppName}\Capabilities\FileAssociations"; ValueTyp
 [Run]
 ; Finished-page checkboxes for normal (interactive) installs.
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\docs\manual.html"; Description: "{cm:ReadManual}"; Flags: postinstall shellexec skipifsilent unchecked
+Filename: "{code:GetManualPath}"; Description: "{cm:ReadManual}"; Flags: postinstall shellexec skipifsilent unchecked
 ; Silent in-app update path: relaunch the app automatically after replacing files.
 Filename: "{app}\{#AppExeName}"; Flags: nowait skipifnotsilent
 
@@ -257,4 +257,17 @@ begin
     Result := 'machine'
   else
     Result := 'user';
+end;
+
+function GetManualPath(Param: string): string;
+begin
+  if ActiveLanguage = 'english' then
+    Result := ExpandConstant('{app}\docs\manual.en.html')
+  else if ActiveLanguage = 'spanish' then
+    Result := ExpandConstant('{app}\docs\manual.es.html')
+  else
+    Result := ExpandConstant('{app}\docs\manual.html');
+
+  if not FileExists(Result) then
+    Result := ExpandConstant('{app}\docs\manual.html');
 end;
