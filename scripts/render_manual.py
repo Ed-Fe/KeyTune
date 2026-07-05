@@ -124,6 +124,12 @@ CHROME_STRINGS = {
         "generated_on": "Generated on {date}",
         "view_source": "view source on GitHub",
     },
+    "es": {
+        "html_lang": "es",
+        "toc_aria_label": "Índice del manual",
+        "generated_on": "Generado el {date}",
+        "view_source": "ver código fuente en GitHub",
+    },
 }
 
 

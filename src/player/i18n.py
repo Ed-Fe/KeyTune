@@ -43,6 +43,7 @@ AUTOMATIC_LANGUAGE = "auto"
 SUPPORTED_LANGUAGES = {
     "pt_BR": "Português (Brasil)",
     "en": "English",
+    "es": "Español",
 }
 
 # Prefixes used to map an operating-system locale (e.g. ``en_US``) onto one of
@@ -50,6 +51,7 @@ SUPPORTED_LANGUAGES = {
 _LANGUAGE_PREFIX_ALIASES = {
     "pt": "pt_BR",
     "en": "en",
+    "es": "es",
 }
 
 _active_translation: _gettext.NullTranslations = _gettext.NullTranslations()

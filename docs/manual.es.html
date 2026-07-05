@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual de KeyTune</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --text: #1f2328;
+  --muted: #5c6470;
+  --accent: #205375;
+  --accent-soft: #d9e7f0;
+  --border: #d7d0c4;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+  line-height: 1.65;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(32, 83, 117, 0.12), transparent 35%),
+    linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+}
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 18px 48px rgba(31, 35, 40, 0.08);
+  padding: 36px;
+}
+h1, h2, h3 { line-height: 1.2; }
+h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); }
+h2 { margin-top: 2.25rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+h3 { margin-top: 1.5rem; }
+p, li { font-size: 1rem; }
+a { color: var(--accent); }
+code {
+  background: var(--accent-soft);
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+}
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #111827;
+  color: #f9fafb;
+}
+pre code { background: transparent; padding: 0; }
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  background: rgba(32, 83, 117, 0.04);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: rgba(32, 83, 117, 0.08); }
+footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.toc {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(32, 83, 117, 0.04);
+}
+.toc h2 {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.15rem;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.toc li { margin: 0.25rem 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Manual de KeyTune</h1>
+      <p>KeyTune es un reproductor multimedia creado para usarse con teclado y con foco en la accesibilidad. Está pensado para funcionar bien con playlists, navegación por carpetas y para conservar lo que estabas haciendo entre una apertura y otra.</p>
+<p>Este proyecto fue desarrollado con asistencia de IA, incluyendo GitHub Copilot, Codex de OpenAI y Claude Code de Anthropic.</p>
+<p>Este manual presenta las funciones principales de la aplicación y las acciones más comunes para empezar a usar el reproductor con rapidez.</p>
+
+    <nav class="toc" aria-label="Índice del manual">
+      <ol>
+        <li class="toc-level-2"><a href="#que-ofrece-keytune">Qué ofrece KeyTune</a></li>
+        <li class="toc-level-2"><a href="#primeros-pasos">Primeros pasos</a></li>
+        <li class="toc-level-2"><a href="#interfaz">Interfaz</a></li>
+        <li class="toc-level-2"><a href="#como-abrir-medios">Cómo abrir medios</a></li>
+        <li class="toc-level-2"><a href="#playlist-carpetas-y-pestanas">Playlist, carpetas y pestañas</a></li>
+        <li class="toc-level-3"><a href="#atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</a></li>
+        <li class="toc-level-3"><a href="#atajos-de-reproduccion">Atajos de reproducción</a></li>
+        <li class="toc-level-3"><a href="#navegador-de-elementos">Navegador de elementos</a></li>
+        <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
+        <li class="toc-level-4"><a href="#modo-carpeta">Modo carpeta</a></li>
+        <li class="toc-level-4"><a href="#localizacion-rapida-por-escritura">Localización rápida por escritura</a></li>
+        <li class="toc-level-2"><a href="#configuracion">Configuración</a></li>
+        <li class="toc-level-3"><a href="#general">General</a></li>
+        <li class="toc-level-3"><a href="#reproduccion">Reproducción</a></li>
+        <li class="toc-level-3"><a href="#accesibilidad">Accesibilidad</a></li>
+        <li class="toc-level-3"><a href="#recursos-adicionales">Recursos adicionales</a></li>
+        <li class="toc-level-4"><a href="#integracion-con-youtube-music-y-youtube">Integración con YouTube Music y YouTube</a></li>
+        <li class="toc-level-4"><a href="#biblioteca-de-youtube-music">Biblioteca de YouTube Music</a></li>
+        <li class="toc-level-2"><a href="#ecualizador">Ecualizador</a></li>
+        <li class="toc-level-3"><a href="#como-usar">Cómo usar</a></li>
+        <li class="toc-level-4"><a href="#botones-de-gestion-de-presets">Botones de gestión de presets</a></li>
+        <li class="toc-level-4"><a href="#editor-de-preset">Editor de preset</a></li>
+        <li class="toc-level-3"><a href="#presets-integrados">Presets integrados</a></li>
+        <li class="toc-level-3"><a href="#consejos">Consejos</a></li>
+        <li class="toc-level-2"><a href="#youtube-music">YouTube Music</a></li>
+        <li class="toc-level-3"><a href="#cuenta-y-biblioteca">Cuenta y biblioteca</a></li>
+        <li class="toc-level-3"><a href="#busqueda-en-el-catalogo-y-en-youtube">Búsqueda en el catálogo y en YouTube</a></li>
+        <li class="toc-level-3"><a href="#abrir-playlist-o-video">Abrir playlist o video</a></li>
+        <li class="toc-level-3"><a href="#administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</a></li>
+        <li class="toc-level-3"><a href="#sesion-de-youtube-music">Sesión de YouTube Music</a></li>
+        <li class="toc-level-4"><a href="#que-son-las-cookies">Qué son las cookies</a></li>
+        <li class="toc-level-4"><a href="#por-que-usar-una-ventana-de-incognito">Por qué usar una ventana de incógnito</a></li>
+        <li class="toc-level-4"><a href="#paso-a-paso-exportar-cookies-de-youtube-music">Paso a paso: exportar cookies de YouTube Music</a></li>
+        <li class="toc-level-4"><a href="#informacion-de-seguridad">Información de seguridad</a></li>
+        <li class="toc-level-3"><a href="#atajos">Atajos</a></li>
+        <li class="toc-level-2"><a href="#recursos-de-accesibilidad">Recursos de accesibilidad</a></li>
+        <li class="toc-level-2"><a href="#actualizaciones">Actualizaciones</a></li>
+        <li class="toc-level-2"><a href="#solucion-de-problemas">Solución de problemas</a></li>
+        <li class="toc-level-2"><a href="#para-desarrolladores">Para desarrolladores</a></li>
+      </ol>
+    </nav>
+    <h2 id="que-ofrece-keytune">Qué ofrece KeyTune</h2>
+<ul>
+<li>Reproducción multimedia con control por teclado</li>
+<li>Playlists en pestañas</li>
+<li>Navegación por carpetas con vista previa</li>
+<li>Ecualizador por pestaña con predefinidos y presets personalizados</li>
+<li>Pestaña dedicada de YouTube Music, abierta con <code>Ctrl+Shift+Y</code></li>
+<li>Carga y guardado de playlists</li>
+<li>Restauración de lo que estaba abierto en la última sesión</li>
+<li>Lista de archivos, carpetas y playlists recientes</li>
+<li>Anuncios de accesibilidad cuando hay lectores de pantalla disponibles</li>
+</ul>
+<h2 id="primeros-pasos">Primeros pasos</h2>
+<ol>
+<li>Descarga el instalador <code>KeyTune-Setup.exe</code> más reciente en la página de <a href="https://github.com/ed-fe/KeyTune/releases">lanzamientos</a>.</li>
+<li>Ejecuta el instalador y sigue los pasos. En la página de tareas adicionales puedes marcar la creación de un acceso directo en el escritorio y elegir qué formatos de audio, video y playlist quieres asociar con KeyTune; todo es opcional y está desmarcado de forma predeterminada. Asociar un formato registra KeyTune como opción en el menú <em>Abrir con</em>; para que abra esos archivos automáticamente, todavía debes confirmarlo como predeterminado en la configuración de Windows.</li>
+<li>Al final, el instalador ofrece iniciar KeyTune y abrir este manual.</li>
+<li>En ejecuciones futuras, cuando haya una actualización disponible, la propia aplicación muestra un diálogo con las novedades y pide confirmación antes de descargarla e instalarla (consulta <a href="#actualizaciones">Actualizaciones</a>).</li>
+</ol>
+<p>KeyTune depende del runtime de MPV para reproducir medios. El instalador ya incluye ese runtime; si el reproductor abre pero no reproduce nada, consulta la sección <a href="#solución-de-problemas">Solución de problemas</a>.</p>
+<h2 id="interfaz">Interfaz</h2>
+<p>Al abrir KeyTune por primera vez, la ventana principal muestra una sola pestaña de playlist vacía, sin nada para reproducir todavía. La ventana se divide en cuatro áreas:</p>
+<ul>
+<li><strong>Barra de menús</strong>, en la parte superior: <strong>Archivo</strong> (abrir medios/carpeta/playlist, recientes, guardar), <strong>Reproducción</strong> (reproducir/pausar, pista anterior/siguiente, aleatorio, repetición, dispositivo de audio, anuncios), <strong>Ver</strong> (alternar foco, ecualizador, YouTube Music), <strong>Pestañas</strong> (nueva pestaña, navegación entre pestañas, cerrar), <strong>Configuración</strong> (preferencias) y <strong>Ayuda</strong> (manual, atajos, buscar actualizaciones).</li>
+<li><strong>Área de pestañas</strong>, que ocupa la mayor parte de la ventana: cada pestaña representa una playlist o una carpeta abierta (consulta <a href="#playlist-carpetas-y-pestañas">Playlist, carpetas y pestañas</a>). Dentro de cada pestaña, el espacio se divide en dos partes lado a lado:<ul>
+<li>a la <strong>izquierda</strong>, el navegador de elementos: la lista de la playlist o el contenido de la carpeta actual;</li>
+<li>a la <strong>derecha</strong>, el área del reproductor. Cuando el medio actual es un video, esta área muestra el cuadro de video; para audio, o cuando no hay nada cargado, muestra un texto de apoyo con los atajos más usados para empezar.</li>
+</ul>
+</li>
+<li><strong>Panel de tiempo</strong>, debajo del área de pestañas: muestra el tiempo transcurrido y la duración del medio actual, una barra de progreso visual y un resumen de los atajos principales.</li>
+<li><strong>Barra de estado</strong>, en el borde inferior de la ventana: muestra mensajes breves y temporales sobre la última acción realizada (por ejemplo, al abrir un archivo o guardar una playlist).</li>
+</ul>
+<p>Usa <code>Tab</code> o <code>Ctrl+B</code> para mover el foco entre el navegador de elementos y el reproductor dentro de la pestaña activa, y <code>F1</code> en cualquier momento para abrir la ayuda rápida de atajos.</p>
+<h2 id="como-abrir-medios">Cómo abrir medios</h2>
+<p>Puedes abrir archivos multimedia, una playlist local, una carpeta o una ruta y enlace compatible usando los atajos o el menú <strong>Archivo</strong>:</p>
+<ul>
+<li><code>Ctrl+Alt+O</code> - diálogo unificado que acepta cualquier tipo: archivo, carpeta, playlist, enlace o ID de YouTube Music.</li>
+<li><code>Ctrl+O</code> - abre archivos multimedia o una playlist <code>.m3u</code>/<code>.m3u8</code>.</li>
+<li><code>Ctrl+Shift+O</code> - abre una carpeta directamente en el navegador de carpetas.</li>
+<li><code>Ctrl+V</code> - pega una ruta o enlace desde el portapapeles en la playlist actual.</li>
+<li><code>Ctrl+Shift+V</code> - pega y abre en una nueva playlist.</li>
+</ul>
+<p>Formatos multimedia compatibles directamente:</p>
+<ul>
+<li>Audio: <code>.mp3</code>, <code>.wav</code>, <code>.flac</code>, <code>.aac</code>, <code>.ogg</code>, <code>.oga</code>, <code>.m4a</code>, <code>.opus</code>, <code>.wma</code>, <code>.aiff</code>, <code>.aif</code>, <code>.ac3</code>, <code>.mka</code>, <code>.wv</code>, <code>.ape</code>.</li>
+<li>Video: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
+</ul>
+<p>El menú <strong>Archivo &gt; Recientes</strong> guarda por separado los últimos <strong>Archivos recientes</strong>, <strong>Carpetas recientes</strong> y <strong>Playlists recientes</strong>, lo que facilita volver a abrir lo que usaste antes sin tener que navegar de nuevo.</p>
+<h2 id="playlist-carpetas-y-pestanas">Playlist, carpetas y pestañas</h2>
+<p>Cada playlist queda en una pestaña separada. Esto ayuda a separar contextos, como una lista de canciones para escuchar ahora, una carpeta con archivos locales o una colección que quieres mantener organizada.</p>
+<p>La pestaña activa define lo que se está reproduciendo y lo que aparece en el navegador lateral. Puedes mantener una pestaña para una playlist guardada, otra para una carpeta completa y otras para listas temporales, sin mezclar todo en el mismo contexto. Las pestañas se pueden abrir, alternar y cerrar sin afectar a las demás.</p>
+<h3 id="atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</h3>
+<p>Los atajos para abrir medios, carpetas, playlists y enlaces están en la sección <a href="#cómo-abrir-medios">Cómo abrir medios</a>, más arriba. Los atajos siguientes son específicos de las pestañas y de la playlist actual:</p>
+<ul>
+<li><code>Ctrl+T</code>: abrir una nueva pestaña de playlist</li>
+<li><code>Ctrl+W</code>: cerrar la pestaña o playlist actual</li>
+<li><code>Ctrl+Shift+W</code>: cerrar el medio actual</li>
+<li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: navegar a la pestaña siguiente o anterior</li>
+<li><code>Ctrl+Shift+E</code>: abrir el ecualizador de la pestaña activa</li>
+<li><code>Ctrl+C</code>: copiar la ruta o enlace del elemento seleccionado</li>
+<li><code>Ctrl+Shift+S</code>: guardar la playlist actual</li>
+<li><code>Ctrl+B</code>: alternar foco entre el navegador de elementos y el reproductor</li>
+</ul>
+<h3 id="atajos-de-reproduccion">Atajos de reproducción</h3>
+<ul>
+<li><code>Espacio</code>: reproducir o pausar</li>
+<li><code>Flecha izquierda</code> / <code>Flecha derecha</code>: retroceder o avanzar en el medio actual</li>
+<li><code>Shift+Flecha izquierda</code> / <code>Shift+Flecha derecha</code>: retroceder o avanzar 1 minuto en el medio actual</li>
+<li><code>Home</code> / <code>End</code>: ir al inicio o al final del medio</li>
+<li><code>Flecha arriba</code> / <code>Flecha abajo</code>: subir o bajar el volumen</li>
+<li><code>Ctrl+.</code>: detener la reproducción</li>
+<li><code>Ctrl+PageUp</code> / <code>Ctrl+PageDown</code>: pista anterior o siguiente en la playlist</li>
+<li><code>Alt+Flecha izquierda</code> / <code>Alt+Flecha derecha</code>: pista anterior o siguiente en la playlist (alternativa a <code>Ctrl+PageUp</code>/<code>Ctrl+PageDown</code>)</li>
+<li><code>Alt+Flecha arriba</code> / <code>Alt+Flecha abajo</code>: mover el elemento actual hacia arriba o hacia abajo en la playlist</li>
+<li><code>Alt+Home</code> / <code>Alt+End</code>: ir al primer o al último elemento de la playlist</li>
+<li><code>E</code>: alternar modo aleatorio</li>
+<li><code>R</code>: alternar modo de repetición</li>
+<li><code>A</code>: alternar la reproducción de contenido relacionado de YouTube Music (radio automática al final de la playlist)</li>
+<li><code>T</code>: anunciar el tiempo actual del medio</li>
+<li><code>V</code>: anunciar el volumen actual</li>
+<li><code>S</code>: anunciar el estado del reproductor</li>
+<li><code>Ctrl+L</code>: marcar con me gusta el medio actual en YouTube Music</li>
+<li><code>Ctrl+Shift+L</code>: marcar el medio actual como no me gusta en YouTube Music</li>
+</ul>
+<p>El atajo <code>Ctrl+W</code> cierra directamente la pestaña activa; el atajo <code>Ctrl+Shift+W</code> cierra o descarga el medio actual en la pestaña activa.</p>
+<h3 id="navegador-de-elementos">Navegador de elementos</h3>
+<p>El navegador está a la izquierda de la ventana y opera en dos modos distintos según lo que haya en la pestaña activa: <strong>modo playlist</strong> y <strong>modo carpeta</strong>. Usa <code>Tab</code> o <code>Ctrl+B</code> para alternar el foco entre el navegador y el reproductor.</p>
+<h4 id="modo-playlist">Modo playlist</h4>
+<p>Cuando la pestaña contiene una playlist, el navegador muestra todos los elementos de la secuencia. El elemento en reproducción queda marcado con <code>▶</code> al inicio de la línea. Los atajos disponibles son:</p>
+<ul>
+<li><code>Enter</code>: reproduce el elemento seleccionado inmediatamente.</li>
+<li><code>Delete</code>: elimina el elemento seleccionado de la playlist.</li>
+<li><code>Shift+F10</code>: abre el menú contextual con acciones adicionales sobre el elemento o sobre toda la selección (la lista acepta selección múltiple). Además de copiar, pegar y eliminar, el menú trae las acciones de YouTube Music cuando la selección contiene pistas de ese origen: <strong>Me gusta</strong>/<strong>No me gusta</strong>, <strong>Agregar a playlist de YouTube Music...</strong> y, cuando la pestaña actual es una playlist tuya de YouTube Music, <strong>Quitar de la playlist de YouTube Music</strong>. Consulta <a href="#administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</a>.</li>
+<li><code>Tab</code> / <code>Esc</code>: devuelve el foco al reproductor.</li>
+</ul>
+<h4 id="modo-carpeta">Modo carpeta</h4>
+<p>Cuando la pestaña proviene de una carpeta abierta con <code>Ctrl+Shift+O</code>, el navegador muestra el contenido del directorio actual: subcarpetas y archivos multimedia. A medida que avanza la reproducción, el elemento correspondiente al medio actual se resalta automáticamente. Al mover la selección a un archivo multimedia, el reproductor ya inicia la reproducción de ese archivo. Los atajos disponibles son:</p>
+<ul>
+<li><code>Enter</code>: entra en la subcarpeta seleccionada o reproduce el archivo multimedia.</li>
+<li><code>Backspace</code>: vuelve a la carpeta superior (equivale a seleccionar <code>..</code>).</li>
+<li><code>Shift+F10</code>: abre el menú contextual.</li>
+<li><code>Tab</code> / <code>Esc</code>: devuelve el foco al reproductor.</li>
+</ul>
+<h4 id="localizacion-rapida-por-escritura">Localización rápida por escritura</h4>
+<p>En ambos modos, escribir letras o números mueve la selección al primer elemento cuyo nombre comienza con los caracteres escritos. La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas. Después de un segundo sin escribir, el acumulador de caracteres se reinicia y la siguiente letra inicia una nueva búsqueda.</p>
+<p>Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.</p>
+<h2 id="configuracion">Configuración</h2>
+<p>Las preferencias están en <code>Ctrl+,</code> y se dividen en cuatro pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong> y <strong>Recursos adicionales</strong>.</p>
+<h3 id="general">General</h3>
+<p>La pestaña <strong>General</strong> reúne las opciones que controlan cómo KeyTune vuelve a funcionar en la próxima apertura:</p>
+<ul>
+<li><strong>Restaurar sesión al iniciar</strong>: reabre las pestañas e intenta retomar el estado de la ejecución anterior.</li>
+<li><strong>Recordar tamaño de la ventana</strong>: guarda y restaura el tamaño de la ventana principal entre ejecuciones.</li>
+<li><strong>Recordar última carpeta usada</strong>: usa la última carpeta abierta como directorio inicial en los diálogos de abrir y guardar.</li>
+<li><strong>Confirmar al salir</strong>: pide confirmación antes de cerrar el reproductor.</li>
+</ul>
+<p>En esta misma pestaña está la sección <strong>Asociación de archivos</strong> (Windows). El botón <strong>Registrar como reproductor predeterminado</strong> agrega KeyTune al menú <em>Abrir con</em> para formatos de audio, video y playlists. Después de registrar, define la app como predeterminada en la configuración de Windows si quieres que esos archivos se abran directamente en KeyTune. El botón <strong>Anular registro de asociaciones</strong> deshace ese registro.</p>
+<p>La pestaña <strong>General</strong> también incluye la sección <strong>Registro de logs</strong>:</p>
+<ul>
+<li><strong>Registrar logs de diagnóstico</strong>: cuando está activado, el reproductor graba un archivo de log rotativo en disco. Útil para depurar problemas y adjuntarlo al reporte de errores. Los logs se graban en inglés.</li>
+<li><strong>Nivel de detalle</strong>: controla cuánta información se registra. <em>Solo errores</em> es el más silencioso; <em>Depuración</em> es el más detallado y puede generar archivos grandes. Solo está disponible cuando el registro está activado.</li>
+<li><strong>Abrir carpeta de logs</strong>: abre en el explorador de archivos la carpeta donde se guardan los archivos de log.</li>
+</ul>
+<p>Los logs se rotan automáticamente cada 2 MB y se conservan hasta 3 archivos anteriores. Los archivos de sesiones anteriores quedan en <code>keytune.log.1</code>, <code>.2</code> y <code>.3</code> en la misma carpeta.</p>
+<h3 id="reproduccion">Reproducción</h3>
+<p>La pestaña <strong>Reproducción</strong> controla el comportamiento de audio y el estado inicial de nuevas playlists:</p>
+<ul>
+<li><strong>Volumen predeterminado</strong>: volumen al iniciar el reproductor (0-100).</li>
+<li><strong>Paso de volumen</strong>: cuánto aumenta o disminuye el volumen cada pulsación de <code>Flecha arriba</code>/<code>Flecha abajo</code> (1-25).</li>
+<li><strong>Crossfade (segundos)</strong>: superposición de audio entre pistas en la transición automática (0-12 s). Usa 0 para desactivarlo. El crossfade solo se aplica entre archivos de audio.</li>
+<li><strong>Paso de búsqueda (segundos)</strong>: cuánto avanza o retrocede en el medio cada pulsación de <code>Flecha izquierda</code>/<code>Flecha derecha</code> (1-120 s).</li>
+<li><strong>Repetición predeterminada</strong>: modo de repetición aplicado automáticamente a playlists nuevas. Las opciones son <em>Repetición desactivada</em>, <em>Repetir pista actual</em> y <em>Repetir playlist</em>.</li>
+<li><strong>Dispositivo de audio</strong>: salida de sonido usada en la reproducción. <em>Predeterminado del sistema</em> sigue el dispositivo principal de Windows.</li>
+<li><strong>Activar aleatorio en nuevas playlists</strong>: activa automáticamente el modo aleatorio en playlists creadas después de guardar.</li>
+<li><strong>Aplicar crossfade al cambiar de pista manualmente</strong>: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista.</li>
+<li><strong>Desactivar salida de video (reproducir solo audio)</strong>: mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar ventanas externas de video.</li>
+</ul>
+<h3 id="accesibilidad">Accesibilidad</h3>
+<p>La pestaña <strong>Accesibilidad</strong> tiene una sola opción: <strong>Activar anuncios de accesibilidad</strong>. Cuando está activada, el reproductor anuncia cambios de tiempo, volumen, cambio de pestañas y estado al lector de pantalla. Cuando está desactivada, esos anuncios se suprimen. Los atajos de anuncio bajo demanda (<code>T</code>, <code>V</code>, <code>S</code>) siguen funcionando independientemente de esta configuración; consulta <a href="#recursos-de-accesibilidad">Recursos de accesibilidad</a> para ver detalles.</p>
+<h3 id="recursos-adicionales">Recursos adicionales</h3>
+<p>La pestaña <strong>Recursos adicionales</strong> concentra las integraciones opcionales. Actualmente reúne los controles de YouTube Music y YouTube en dos secciones.</p>
+<h4 id="integracion-con-youtube-music-y-youtube">Integración con YouTube Music y YouTube</h4>
+<ul>
+<li><strong>Activar recursos adicionales para YouTube Music y YouTube (yt-dlp y ytmusicapi)</strong>: descarga y mantiene un ejecutable <code>yt-dlp</code> y los paquetes Python necesarios en una carpeta local. Sin esto, la pestaña de YouTube Music no funciona. En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar, los archivos ya descargados no se eliminan.</li>
+<li><strong>Actualizar automáticamente las dependencias de YouTube Music</strong>: verifica y aplica actualizaciones en el intervalo definido abajo. Solo aparece cuando la opción anterior está activada.</li>
+<li><strong>Usar versión nightly de yt-dlp (recomendado)</strong>: descarga builds nightly de <code>yt-dlp</code>. Recomendado porque YouTube y YouTube Music cambian los mecanismos de extracción con frecuencia y la nightly suele recibir correcciones antes que el canal estable. Solo aparece cuando la integración está activada.</li>
+<li><strong>Intervalo de actualización (horas)</strong>: cada cuánto tiempo el reproductor intenta actualizar las dependencias cuando se abre la pestaña YouTube Music (1-720 h). Solo está disponible cuando la actualización automática está activada.</li>
+</ul>
+<h4 id="biblioteca-de-youtube-music">Biblioteca de YouTube Music</h4>
+<p>Esta sección solo aparece cuando la integración está activada.</p>
+<ul>
+<li><strong>Playlists cargadas por vez</strong>: cuántas playlists de la biblioteca se traen en cada carga (5-200). Valores menores aceleran la apertura; al llegar al final de la lista el reproductor ofrece cargar más.</li>
+<li><strong>Mixes personalizadas para descubrir</strong>: límite máximo de elementos recorridos en la página inicial de YouTube Music para encontrar mixes personalizadas (5-200). Valores menores hacen que la sincronización sea más rápida.</li>
+<li><strong>Reproducir contenido relacionado al final de la playlist (radio automática)</strong>: cuando la última pista de YouTube Music termina naturalmente - o cuando pides la siguiente pista estando en la última -, el reproductor busca pistas relacionadas (la radio de YouTube Music) y continúa reproduciendo automáticamente. Para una transición continua, la búsqueda empieza poco antes del final de la última pista y el enlace de la siguiente ya se resuelve con anticipación, evitando una pausa mientras se descubre el contenido. También se puede activar o desactivar con la tecla <code>A</code> durante la reproducción.</li>
+<li><strong>Guardar canciones escuchadas en el historial de YouTube Music</strong>: activada de forma predeterminada. Al escuchar una pista de YouTube Music durante el tiempo suficiente (cerca del 30% de la duración, entre 15 y 30 segundos), el reproductor marca esa pista como vista en el historial de tu cuenta de YouTube Music. Desactívala para reproducir pistas de YouTube Music sin registrar nada en el historial.</li>
+</ul>
+<h2 id="ecualizador">Ecualizador</h2>
+<p>El ecualizador se abre por pestaña con <code>Ctrl+Shift+E</code>, así que cada playlist puede tener su propio ajuste.</p>
+<p>En la práctica, esto permite dejar una playlist con graves reforzados y otra con un ajuste más neutro sin tener que rehacer todo cada vez que cambias de contexto.</p>
+<h3 id="como-usar">Cómo usar</h3>
+<p>Al abrir el ecualizador, el campo <strong>Pestaña destino</strong> muestra qué playlist recibirá los ajustes. Usa la casilla <strong>Activar ecualizador en esta pestaña</strong> para activar o desactivar el efecto solo en esa pestaña.</p>
+<p>El campo <strong>Preset</strong> lista todos los presets disponibles. Los integrados aparecen con el sufijo <em>(integrado)</em>. Al seleccionar uno, el campo <strong>Descripción</strong> muestra una nota sobre el perfil sonoro y la sección <strong>Resumen del preset</strong> muestra los valores de preamplificación y de cada banda para revisarlos antes de aplicar.</p>
+<h4 id="botones-de-gestion-de-presets">Botones de gestión de presets</h4>
+<ul>
+<li><strong>Nuevo...</strong>: crea un preset personalizado desde cero. Abre el editor para que definas el nombre, la preamplificación y la ganancia de cada banda. Usa este botón cuando quieras una curva que no existe entre los presets integrados.</li>
+<li><strong>Editar...</strong>: edita un preset personalizado ya existente. Este botón solo aparece así cuando el preset seleccionado es personalizado.</li>
+<li><strong>Guardar copia...</strong>: cuando el preset seleccionado es integrado, el botón cambia de nombre a <strong>Guardar copia...</strong> y crea una versión editable basada en él. Usa este camino para partir de un preset integrado y ajustarlo.</li>
+<li><strong>Duplicar...</strong>: crea una copia de un preset personalizado con un nuevo nombre, manteniendo el original intacto. No disponible para presets integrados.</li>
+<li><strong>Eliminar</strong>: elimina permanentemente el preset personalizado seleccionado. No disponible para presets integrados.</li>
+<li><strong>Aplicar a todas las pestañas</strong>: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.</li>
+</ul>
+<h4 id="editor-de-preset">Editor de preset</h4>
+<p>El editor muestra el campo de nombre, el control de preamplificación y un control por banda de frecuencia. Cada banda acepta valores de -12,0 dB a +12,0 dB. Los valores positivos refuerzan la frecuencia; los valores negativos atenúan. La preamplificación ajusta la ganancia general antes de todas las bandas.</p>
+<h3 id="presets-integrados">Presets integrados</h3>
+<p>KeyTune incluye 18 presets listos para usar:</p>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Perfil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Predeterminado</td>
+<td>Curva neutra, mantiene el sonido original</td>
+</tr>
+<tr>
+<td>Clásico</td>
+<td>Realza definición y brillo sin exagerar los graves</td>
+</tr>
+<tr>
+<td>Club</td>
+<td>Graves y agudos más animados</td>
+</tr>
+<tr>
+<td>Dance</td>
+<td>Más impacto en los graves y brillo en la parte alta</td>
+</tr>
+<tr>
+<td>Graves profundos</td>
+<td>Prioriza subgraves y graves para dar peso al beat</td>
+</tr>
+<tr>
+<td>Graves y agudos</td>
+<td>Curva en V con graves fuertes y agudos brillantes</td>
+</tr>
+<tr>
+<td>Agudos realzados</td>
+<td>Destaca detalles, voces y brillo general</td>
+</tr>
+<tr>
+<td>Auriculares</td>
+<td>Equilibrio pensado para auriculares con sensación de claridad</td>
+</tr>
+<tr>
+<td>Sala amplia</td>
+<td>Crea una sensación más abierta y amplia</td>
+</tr>
+<tr>
+<td>En vivo</td>
+<td>Presencia de escenario y ambiente</td>
+</tr>
+<tr>
+<td>Fiesta</td>
+<td>Curva para volúmenes casuales y música animada</td>
+</tr>
+<tr>
+<td>Pop</td>
+<td>Voz, brillo y graves limpios</td>
+</tr>
+<tr>
+<td>Reggae</td>
+<td>Más cuerpo en los graves con medios relajados</td>
+</tr>
+<tr>
+<td>Rock</td>
+<td>Ataque de guitarras, caja y presencia general</td>
+</tr>
+<tr>
+<td>Ska</td>
+<td>Bajo firme con medios y agudos vivos</td>
+</tr>
+<tr>
+<td>Suave</td>
+<td>Escucha suave, reduce agresividad</td>
+</tr>
+<tr>
+<td>Rock suave</td>
+<td>Equilibrio con leve presencia de voz y brillo</td>
+</tr>
+<tr>
+<td>Techno</td>
+<td>Beat, subgrave y brillo electrónico</td>
+</tr>
+</tbody>
+</table>
+<h3 id="consejos">Consejos</h3>
+<ul>
+<li>Reduce la preamplificación si el sonido empieza a distorsionar.</li>
+<li>Haz ajustes pequeños en las bandas para evitar exageraciones.</li>
+<li>Usa <strong>Guardar copia...</strong> sobre un preset integrado para partir de una curva lista y ajustar solo lo necesario.</li>
+<li>Usa <strong>Duplicar...</strong> en vez de editar directamente cuando quieras experimentar sin perder la versión anterior.</li>
+</ul>
+<h2 id="youtube-music">YouTube Music</h2>
+<p>KeyTune incluye una pestaña dedicada a YouTube Music. Usa <code>Ctrl+Shift+Y</code> para abrirla. Funciona como una pestaña separada, así que puedes dejar la biblioteca local en una pestaña y YouTube Music en otra.</p>
+<p>Para que la pestaña funcione, es necesario activar la integración en <code>Ctrl+,</code> &gt; <strong>Recursos adicionales</strong> y conectar una cuenta.</p>
+<p>La integración de YouTube Music depende de la forma en que cambia el sitio y de cómo <code>yt-dlp</code> interpreta esas páginas. Por eso, puede haber errores, fallas temporales e incluso paradas sin explicación aparente; cuando eso ocurra, normalmente es necesario actualizar las dependencias o intentar de nuevo más tarde.</p>
+<h3 id="cuenta-y-biblioteca">Cuenta y biblioteca</h3>
+<p>La sección <strong>Cuenta y biblioteca</strong> muestra el estado de la cuenta conectada, el resumen de la biblioteca cargada y el último mensaje de operación. Tiene tres botones:</p>
+<ul>
+<li><strong>Conectar cuenta...</strong>: abre el diálogo para conectar una cuenta de YouTube Music o renovar la autenticación guardada.</li>
+<li><strong>Desconectar cuenta</strong>: elimina la autenticación guardada de esta instalación.</li>
+<li><strong>Actualizar biblioteca</strong>: vuelve a buscar las playlists y mixes disponibles en la cuenta conectada.</li>
+</ul>
+<p>Debajo de la sección de cuenta queda la lista <strong>Playlists y mixes</strong> con todas las playlists y mixes de la biblioteca. Usa el campo <strong>Filtro</strong> para localizar elementos por nombre. El contador sobre la lista muestra cuántos elementos están visibles después del filtro. Debajo de la lista están las acciones:</p>
+<ul>
+<li><strong>Abrir selección</strong>: abre la playlist o mix seleccionado en una nueva pestaña (<code>Enter</code> en la lista hace lo mismo).</li>
+<li><strong>Nueva playlist...</strong>: crea una playlist nueva en tu cuenta. El reproductor pide el nombre y la privacidad (Privada, No listada o Pública). Consulta <a href="#administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</a>.</li>
+<li><strong>Eliminar playlist...</strong>: elimina la playlist seleccionada de tu cuenta, con confirmación. Solo funciona en playlists que creaste; mixes, listas de éxitos y playlists de terceros no se pueden eliminar.</li>
+<li><strong>Cargar más playlists</strong>: trae el siguiente lote cuando hay más playlists para cargar. También puedes presionar <code>Page Down</code> estando al final de la lista.</li>
+</ul>
+<h3 id="busqueda-en-el-catalogo-y-en-youtube">Búsqueda en el catálogo y en YouTube</h3>
+<p>La sección <strong>Búsqueda en el catálogo y en YouTube</strong> está contraída de forma predeterminada. Expándela para buscar. Tiene:</p>
+<ul>
+<li><strong>Campo de búsqueda</strong>: escribe lo que quieres buscar y presiona <code>Enter</code> o haz clic en <strong>Buscar</strong>.</li>
+<li><strong>Alcance</strong>: elige dónde se hará la búsqueda. Las opciones disponibles son:<ul>
+<li><em>YouTube Music - canciones</em>: pistas del catálogo de YouTube Music.</li>
+<li><em>YouTube Music - videos</em>: videoclips y contenido en video de YouTube Music.</li>
+<li><em>YouTube Music - playlists</em>: playlists del catálogo de YouTube Music.</li>
+<li><em>YouTube - videos</em>: videos de YouTube en general, sin exigir cuenta.</li>
+</ul>
+</li>
+<li><strong>Explorar</strong>: cuatro botones traen más contenido a la misma lista de resultados:<ul>
+<li><strong>En tendencia...</strong>: abre un menú con <em>Global</em> en la parte superior y los demás países agrupados en submenús por continente. Al elegir un país, las listas de éxitos y los destacados en tendencia de YouTube Music aparecen en la lista, como playlists que puedes abrir o guardar en la biblioteca. No exige cuenta conectada.</li>
+<li><strong>Moods y géneros...</strong>: abre un menú con las categorías de moods y géneros de YouTube Music (por ejemplo <em>Enfoque</em>, <em>Entrenamiento</em>, <em>Pop</em>, <em>Rock</em>). Al elegir una categoría, sus playlists aparecen en la lista. No exige cuenta conectada.</li>
+<li><strong>Me gusta</strong>: carga las pistas marcadas con me gusta (la playlist <em>Liked Music</em> de tu cuenta). Exige cuenta conectada.</li>
+<li><strong>Historial</strong>: carga tu historial de reproducción de YouTube Music, desde la pista más reciente hasta la más antigua. Exige cuenta conectada.</li>
+</ul>
+</li>
+<li><strong>Lista de resultados</strong>: muestra los elementos encontrados (de la búsqueda, de las listas en tendencia, de moods y géneros, de los me gusta o del historial). La lista permite <strong>selección múltiple</strong>: usa <code>Ctrl+Flechas</code> para mover el foco sin alterar la selección, <code>Ctrl+Espacio</code> para marcar o desmarcar el elemento enfocado y <code>Shift+Flechas</code> para seleccionar un intervalo. <code>Enter</code> agrega la selección a la playlist actual; <code>Ctrl+Enter</code> abre la selección en una nueva playlist; <code>Shift+F10</code> o el botón <strong>Acciones...</strong> abre el menú contextual con opciones adicionales.</li>
+<li><strong>Guardar en Music</strong>: guarda la selección en la biblioteca de YouTube Music cuando el resultado es compatible (playlists o pistas).</li>
+</ul>
+<h3 id="abrir-playlist-o-video">Abrir playlist o video</h3>
+<p>La sección <strong>Abrir playlist o video</strong> también está contraída de forma predeterminada. Expándela para pegar un enlace de playlist, mix o video de YouTube Music o de YouTube. Haz clic en <strong>Abrir enlace</strong> o presiona <code>Enter</code> en el campo para abrir.</p>
+<h3 id="administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</h3>
+<p>Además de abrir y guardar playlists, KeyTune permite editar tus playlists directamente en la cuenta conectada. Todas estas acciones exigen cuenta conectada y modifican la playlist <strong>en tu cuenta de YouTube Music</strong>; lo que involucra eliminar se confirma antes y el reproductor no puede deshacerlo.</p>
+<p><strong>Agregar pistas a una playlist.</strong> Selecciona una o más pistas de YouTube Music (en la playlist actual o en la lista de resultados de búsqueda) y usa <strong>Agregar a playlist de YouTube Music...</strong> en el menú contextual (<code>Shift+F10</code>), o presiona <code>Ctrl+Shift+A</code> para agregar la pista que está sonando. Aparece una lista de tus playlists editables; mixes y radios personalizadas no entran en esa lista porque no aceptan edición. En la parte superior de la lista está la opción <strong>Crear nueva playlist...</strong>, que crea una playlist nueva ya con la selección actual (el mismo comportamiento de la app de YouTube Music).</p>
+<p><strong>Quitar pistas de una playlist.</strong> Con una playlist tuya de YouTube Music abierta en la pestaña actual, selecciona las pistas y usa <strong>Quitar de la playlist de YouTube Music</strong> en el menú contextual. El reproductor pide confirmación y, al concluir, también quita las pistas de la pestaña abierta para que la lista siga reflejando la cuenta. La eliminación solo se ofrece en playlists que creaste o donde eres colaborador.</p>
+<p><strong>Crear una playlist.</strong> Usa <strong>Nueva playlist...</strong> en la sección <em>Playlists y mixes</em> para crear una playlist vacía, o <strong>Crear nueva playlist...</strong> en el diálogo de agregar pistas para crearla ya con la selección. En ambos casos el reproductor abre un diálogo donde informas el <strong>nombre</strong> y eliges la <strong>privacidad</strong>: <em>Privada</em> (solo tú la ves), <em>No listada</em> (visible para quien tenga el enlace) o <em>Pública</em> (aparece en tu perfil y puede aparecer en búsquedas). El valor predeterminado es Privada. Después de crearla, la biblioteca se actualiza para que la nueva playlist aparezca en la lista.</p>
+<p><strong>Eliminar una playlist.</strong> Selecciona la playlist en la lista <em>Playlists y mixes</em> y usa <strong>Eliminar playlist...</strong>. Solo se pueden eliminar playlists que creaste; el reproductor confirma antes y actualiza la biblioteca enseguida.</p>
+<h3 id="sesion-de-youtube-music">Sesión de YouTube Music</h3>
+<h4 id="que-son-las-cookies">Qué son las cookies</h4>
+<p>Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al exportar esas cookies, estás transfiriendo esa información de sesión iniciada a KeyTune, lo que permite que la aplicación acceda a tu cuenta sin pedir tu contraseña.</p>
+<h4 id="por-que-usar-una-ventana-de-incognito">Por qué usar una ventana de incógnito</h4>
+<p>Usar una ventana de incógnito (también llamada navegación privada) es importante porque Google renueva constantemente las cookies en las ventanas normales. Si exportaras cookies de una sesión regular, se volverían inválidas rápidamente a medida que el navegador las renovara. En la ventana de incógnito, como la sesión no se sigue usando después de cerrarla, las cookies no se renuevan y permanecen válidas por mucho más tiempo.</p>
+<h4 id="paso-a-paso-exportar-cookies-de-youtube-music">Paso a paso: exportar cookies de YouTube Music</h4>
+<p><strong>Requisito previo:</strong> instala la extensión <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> en tu navegador (funciona en Chrome, Edge y navegadores basados en Chromium).</p>
+<p><strong>1. Activar la extensión en pestañas de incógnito</strong></p>
+<p>Primero, configura la extensión para funcionar en pestañas privadas:</p>
+<ol>
+<li>Presiona <code>Ctrl+L</code> para enfocar la barra de direcciones.</li>
+<li>Presiona <code>Esc</code> para salir del cuadro de edición de la barra de direcciones.</li>
+<li>Presiona <code>Alt+F</code> para abrir el menú del navegador.</li>
+<li>Navega con las flechas hasta <strong>Extensiones</strong>, expande el submenú presionando <code>Enter</code> y elige <strong>Administrar extensiones</strong>.</li>
+<li>Localiza <strong>Get cookies.txt LOCALLY</strong> y haz clic en <strong>Detalles</strong> (o "Más información").</li>
+<li>En la página de detalles, localiza la opción <strong>Permitir en pestañas privadas</strong> o <strong>Permitir en incógnito</strong> y actívala.</li>
+<li>Cierra la página y vuelve a tu navegador.</li>
+</ol>
+<p><strong>2. Iniciar sesión y exportar cookies</strong></p>
+<ol>
+<li>Abre una nueva pestaña de incógnito/privada (generalmente <code>Ctrl+Shift+N</code> o <code>Ctrl+Shift+P</code>).</li>
+<li>Navega a <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
+<li>Inicia sesión con tu cuenta de Google y elige tu cuenta de música, si hay varias opciones.</li>
+<li>Después de completar el inicio de sesión, presiona <code>Ctrl+L</code> para enfocar la barra de direcciones.</li>
+<li>Presiona <code>Esc</code> para salir del cuadro de edición de la barra de direcciones (puede ser necesario).</li>
+<li>Navega con <code>Tab</code> hasta alcanzar la sección de <strong>Extensiones</strong>. Expándela presionando <code>Enter</code>.</li>
+<li>Continúa navegando con <code>Tab</code> hasta encontrar la extensión <strong>Get cookies.txt LOCALLY</strong> y haz clic en ella (o presiona <code>Enter</code>).</li>
+<li>Se abrirá una página con las cookies. Busca el botón <strong>Exportar</strong> o <strong>Download</strong> (generalmente el primer botón de la página) y haz clic para descargar el archivo <code>cookies.txt</code>.</li>
+<li><strong>Importante</strong>: cierra la pestaña de incógnito <strong>sin navegar a ningún otro sitio</strong>. Esto garantiza que las cookies no se renueven.</li>
+</ol>
+<p><strong>3. Importar en KeyTune</strong></p>
+<ol>
+<li>En KeyTune, abre la pestaña de YouTube Music (<code>Ctrl+Shift+Y</code>).</li>
+<li>En la sección <strong>Cuenta y biblioteca</strong>, haz clic en <strong>Conectar cuenta...</strong>.</li>
+<li>Se abrirá un diálogo que ofrece la opción de importar una sesión. Elige el archivo <code>cookies.txt</code> que acabas de descargar.</li>
+<li>La cuenta se conectará y podrás usar YouTube Music normalmente.</li>
+</ol>
+<h4 id="informacion-de-seguridad">Información de seguridad</h4>
+<p>El archivo <code>cookies.txt</code> exportado contiene información de autenticación de tu cuenta. Por seguridad:</p>
+<ul>
+<li>Usa el archivo solo en tu propio equipo.</li>
+<li>No compartas el archivo con otras personas.</li>
+<li>Elimina el archivo después de importarlo en KeyTune si lo deseas (KeyTune mantiene una copia interna y segura).</li>
+<li>Si desconectas la cuenta en KeyTune, las cookies almacenadas se eliminarán.</li>
+</ul>
+<h3 id="atajos">Atajos</h3>
+<ul>
+<li><code>Ctrl+Shift+Y</code>: abrir la pestaña de YouTube Music</li>
+<li><code>Ctrl+Shift+A</code>: agregar el medio actual a una playlist de YouTube Music</li>
+<li><code>Enter</code> en el campo de búsqueda: ejecutar la búsqueda</li>
+<li><code>Enter</code> en la lista de resultados: agregar el elemento a la playlist actual</li>
+<li><code>Ctrl+Enter</code> en la lista de resultados: abrir el elemento en una nueva playlist</li>
+<li><code>Ctrl+Espacio</code> en la lista de resultados: marcar o desmarcar el elemento enfocado (selección múltiple)</li>
+<li><code>Ctrl+Flechas</code> en la lista de resultados: mover el foco sin alterar la selección</li>
+<li><code>Shift+Flechas</code> en la lista de resultados: seleccionar un intervalo de elementos</li>
+<li><code>Shift+F10</code> en la lista de resultados: abrir el menú de acciones</li>
+<li><code>Enter</code> en la lista de playlists de la biblioteca: abrir la selección</li>
+<li><code>Page Down</code> al final de la lista de playlists: cargar más playlists</li>
+<li><code>Esc</code>: cerrar la pestaña cuando esté enfocada</li>
+</ul>
+<h2 id="recursos-de-accesibilidad">Recursos de accesibilidad</h2>
+<p>La aplicación fue diseñada para lectores de pantalla y uso por teclado. En general:</p>
+<ul>
+<li>el foco evita saltos innecesarios al área nativa de video;</li>
+<li>los anuncios de estado y de navegación se hacen cuando el soporte de accesibilidad está disponible;</li>
+<li>los campos, botones y listas tienen nombres y descripciones legibles por lectores de pantalla.</li>
+</ul>
+<p>Si usas lector de pantalla, los atajos de anuncio bajo demanda <code>T</code>, <code>V</code> y <code>S</code> (descritos en <a href="#atajos-de-reproducción">Atajos de reproducción</a>) y la ayuda rápida <code>F1</code> ayudan a orientarte sin depender de los eventos automáticos.</p>
+<p>Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en <code>Ctrl+,</code> &gt; <strong>Accesibilidad</strong>.</p>
+<h2 id="actualizaciones">Actualizaciones</h2>
+<p>Al iniciar, KeyTune puede verificar actualizaciones automáticamente. Para verificar manualmente en cualquier momento, usa el menú <strong>Ayuda &gt; Buscar actualizaciones</strong>.</p>
+<p>Cuando haya una versión nueva, la aplicación muestra un diálogo con las notas del lanzamiento, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, la aplicación descarga el paquete, muestra el avance de la descarga y pide permiso para instalar después de que el archivo esté listo. Si cancelas o cierras el diálogo, no se instala nada y el reproductor continúa funcionando normalmente.</p>
+<h2 id="solucion-de-problemas">Solución de problemas</h2>
+<p>Si la aplicación no abre correctamente, primero confirma si la instalación se completó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y si el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.</p>
+<p>Si el reproductor no encuentra el runtime de MPV, verifica si está en una de estas rutas: una carpeta <code>mpv/</code> junto al ejecutable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, la caché guardada de la ejecución anterior o una instalación de Chocolatey compatible.</p>
+<p>Si un medio no abre, prueba otro archivo local para separar un problema de ruta inválida, permiso o tipo de archivo incompatible.</p>
+<p>Si la asociación de archivos no funciona como se esperaba, hay dos pasos separados que confirmar: primero, que KeyTune fue registrado como opción (durante la instalación o después en <strong>Configuración &gt; General &gt; Registrar como reproductor predeterminado</strong>); segundo, que fue elegido como aplicación predeterminada para esos formatos en la configuración de apps predeterminadas de Windows. El registro por sí solo no convierte a KeyTune automáticamente en el predeterminado.</p>
+<p>Si la restauración de sesión falla, abre la app una vez sin depender de la sesión anterior y verifica si la configuración de ventana y carpeta se está guardando normalmente.</p>
+<p>Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre <code>Ctrl+,</code> &gt; <strong>Recursos adicionales</strong> y confirma que la opción <strong>Activar recursos adicionales para YouTube Music y YouTube</strong> esté marcada. La descarga inicial puede tardar algunos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de <code>yt-dlp</code> en las mismas preferencias; suele recibir correcciones antes que el canal estable.</p>
+<p>Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección <a href="#sesión-de-youtube-music">Sesión de YouTube Music</a> y reconecta la cuenta.</p>
+<p>Para investigar otros problemas, activa el registro de logs en <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Registro de logs</strong>. Con <strong>Registrar logs de diagnóstico</strong> activado y el nivel ajustado a <em>Depuración</em>, el reproductor graba información detallada en <code>keytune.log</code> en la carpeta de datos. Usa <strong>Abrir carpeta de logs</strong> para localizar el archivo y, si necesitas reportar un problema, adjúntalo a la issue.</p>
+<h2 id="para-desarrolladores">Para desarrolladores</h2>
+<p>KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
+      <footer>
+        Generado el 05/07/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver código fuente en GitHub</a>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

@@ -35,6 +35,13 @@ CREDITS_STRINGS = {
         "contributors_section_pattern": r"^## Contributors\s*\n(.*?)(?:\n## |\Z)",
         "no_contributors": "There are no external contributors registered yet beyond the original maintainer(s).",
     },
+    "es": {
+        "title": "Créditos",
+        "libraries_heading": "Bibliotecas de terceros",
+        "contributors_heading": "Colaboradores",
+        "contributors_section_pattern": r"^## Colaboradores\s*\n(.*?)(?:\n## |\Z)",
+        "no_contributors": "Todavía no hay colaboradores externos registrados además del o de los mantenedores originales.",
+    },
 }
 
 

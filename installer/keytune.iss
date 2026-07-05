@@ -57,34 +57,47 @@ SetupLogging=yes
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 ; User-visible installer strings, per language. Inno resolves {cm:Name} to the
 ; language the user selects on the first wizard page. Keep both lists in sync.
 [CustomMessages]
 brazilianportuguese.DesktopIcon=Criar um atalho na área de trabalho
 english.DesktopIcon=Create a desktop shortcut
+spanish.DesktopIcon=Crear un acceso directo en el escritorio
 brazilianportuguese.AdditionalShortcuts=Atalhos adicionais:
 english.AdditionalShortcuts=Additional shortcuts:
+spanish.AdditionalShortcuts=Accesos directos adicionales:
 brazilianportuguese.FileAssocGroup=Associações de arquivo (opcional):
 english.FileAssocGroup=File associations (optional):
+spanish.FileAssocGroup=Asociaciones de archivo (opcional):
 brazilianportuguese.AssocVideoAll=Associar todos os arquivos de vídeo
 english.AssocVideoAll=Associate all video files
+spanish.AssocVideoAll=Asociar todos los archivos de video
 brazilianportuguese.AssocAudioAll=Associar todos os arquivos de áudio
 english.AssocAudioAll=Associate all audio files
+spanish.AssocAudioAll=Asociar todos los archivos de audio
 brazilianportuguese.AssocPlaylistAll=Associar todos os arquivos de playlist
 english.AssocPlaylistAll=Associate all playlist files
+spanish.AssocPlaylistAll=Asociar todos los archivos de lista de reproducción
 brazilianportuguese.MediaFileType=Arquivo de mídia — {#AppName}
 english.MediaFileType=Media file — {#AppName}
+spanish.MediaFileType=Archivo multimedia — {#AppName}
 brazilianportuguese.OpenWithApp=Abrir no {#AppName}
 english.OpenWithApp=Open with {#AppName}
+spanish.OpenWithApp=Abrir con {#AppName}
 brazilianportuguese.AppDescription=Reprodutor de mídia acessível, controlado por teclado.
 english.AppDescription=Accessible, keyboard-driven media player.
+spanish.AppDescription=Reproductor multimedia accesible, controlado por teclado.
 brazilianportuguese.UninstallShortcut=Desinstalar o {#AppName}
 english.UninstallShortcut=Uninstall {#AppName}
+spanish.UninstallShortcut=Desinstalar {#AppName}
 brazilianportuguese.LaunchApp=Iniciar o {#AppName}
 english.LaunchApp=Start {#AppName}
+spanish.LaunchApp=Iniciar {#AppName}
 brazilianportuguese.ReadManual=Ler o manual do {#AppName}
 english.ReadManual=Read the {#AppName} manual
+spanish.ReadManual=Leer el manual de {#AppName}
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:DesktopIcon}"; GroupDescription: "{cm:AdditionalShortcuts}"; Flags: unchecked
