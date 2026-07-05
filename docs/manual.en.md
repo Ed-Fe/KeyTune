@@ -10,8 +10,10 @@ This manual presents the application's main features and the most common actions
 
 - Keyboard-controlled media playback
 - Tabbed playlists
+- A playback queue to organize what plays next
 - Folder navigation with preview
 - Per-tab equalizer with built-in profiles and custom presets
+- A lyrics panel with automatic fetching and text copying
 - Dedicated YouTube Music tab, opened with `Ctrl+Shift+Y`
 - Loading and saving playlists
 - Restoration of what was open in the last session
@@ -76,6 +78,14 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `Ctrl+Shift+S`: save the current playlist
 - `Ctrl+B`: switch focus between the item browser and the player
 
+### Playback queue
+
+The playback queue organizes what should play after the current track, without depending on the order of the playlist you are browsing. It always belongs to the playlist that is currently playing.
+
+Use `Ctrl+Shift+F` or the **Playback > Add to Playback Queue** menu to add or remove items from the queue. To view, remove, reorder, or clear the entire queue, use `Ctrl+Shift+Q` or the **Playback > Manage Playback Queue** menu.
+
+If the queue is empty, the queue manager tells you so and asks you to add items first.
+
 ### Playback shortcuts
 
 - `Space`: play or pause
@@ -91,6 +101,12 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `E`: toggle shuffle mode
 - `R`: toggle repeat mode
 - `A`: toggle playback of related YouTube Music content (automatic radio at the end of the playlist)
+- `]` / `[`: increase or decrease playback speed
+- `Shift+]` / `Shift+[`: increase or decrease playback pitch by semitones
+- `Shift+\`: restore the original pitch
+- `Ctrl+Alt+L`: toggle the lyrics panel
+- `Ctrl+Shift+F`: add the selected item to the playback queue
+- `Ctrl+Shift+Q`: manage the playback queue
 - `T`: announce the current media time
 - `V`: announce the current volume
 - `S`: announce the player status
@@ -382,6 +398,8 @@ The application was designed for screen readers and keyboard use. In general:
 If you use a screen reader, the on-demand announcement shortcuts `T`, `V`, and `S` (described in [Playback shortcuts](#playback-shortcuts)) and the `F1` quick help help you orient yourself without depending on automatic events.
 
 Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in `Ctrl+,` > **Accessibility**.
+
+The lyrics panel is also designed for this use: `Ctrl+Alt+L` or the **Lyrics** checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the **Copy full lyrics** button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.
 
 ## Updates
 

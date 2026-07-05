@@ -10,8 +10,10 @@ Este manual presenta las funciones principales de la aplicación y las acciones 
 
 - Reproducción multimedia con control por teclado
 - Playlists en pestañas
+- Una cola de reproducción para organizar lo que sonará después
 - Navegación por carpetas con vista previa
 - Ecualizador por pestaña con predefinidos y presets personalizados
+- Un panel de letras con búsqueda automática y copia del texto
 - Pestaña dedicada de YouTube Music, abierta con `Ctrl+Shift+Y`
 - Carga y guardado de playlists
 - Restauración de lo que estaba abierto en la última sesión
@@ -76,6 +78,14 @@ Los atajos para abrir medios, carpetas, playlists y enlaces están en la secció
 - `Ctrl+Shift+S`: guardar la playlist actual
 - `Ctrl+B`: alternar foco entre el navegador de elementos y el reproductor
 
+### Cola de reproducción
+
+La cola de reproducción organiza lo que debe sonar después de la pista actual, sin depender del orden de la playlist que estés navegando. Siempre pertenece a la playlist que está sonando en ese momento.
+
+Usa `Ctrl+Shift+F` o el menú **Reproducción > Agregar a la Cola de Reproducción** para agregar o quitar elementos de la cola. Para ver, quitar, reordenar o vaciar toda la cola, usa `Ctrl+Shift+Q` o el menú **Reproducción > Administrar la Cola de Reproducción**.
+
+Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.
+
 ### Atajos de reproducción
 
 - `Espacio`: reproducir o pausar
@@ -91,6 +101,12 @@ Los atajos para abrir medios, carpetas, playlists y enlaces están en la secció
 - `E`: alternar modo aleatorio
 - `R`: alternar modo de repetición
 - `A`: alternar la reproducción de contenido relacionado de YouTube Music (radio automática al final de la playlist)
+- `]` / `[`: aumentar o disminuir la velocidad de reproducción
+- `Shift+]` / `Shift+[`: aumentar o disminuir el tono de la reproducción en semitonos
+- `Shift+\`: restaurar el tono original
+- `Ctrl+Alt+L`: alternar el panel de letras
+- `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
+- `Ctrl+Shift+Q`: administrar la cola de reproducción
 - `T`: anunciar el tiempo actual del medio
 - `V`: anunciar el volumen actual
 - `S`: anunciar el estado del reproductor
@@ -382,6 +398,8 @@ La aplicación fue diseñada para lectores de pantalla y uso por teclado. En gen
 Si usas lector de pantalla, los atajos de anuncio bajo demanda `T`, `V` y `S` (descritos en [Atajos de reproducción](#atajos-de-reproducción)) y la ayuda rápida `F1` ayudan a orientarte sin depender de los eventos automáticos.
 
 Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en `Ctrl+,` > **Accesibilidad**.
+
+El panel de letras también está pensado para ese uso: `Ctrl+Alt+L` o la casilla **Letras** en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón **Copiar letra completa**. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.
 
 ## Actualizaciones
 

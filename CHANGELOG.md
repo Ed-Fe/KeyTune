@@ -8,7 +8,10 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Não lançado]
 
 ### Adicionado
-- **Sistema de tradução (localização)**: a interface agora pode ser traduzida para outros idiomas. O Português (Brasil) é o idioma-fonte e o Inglês já vem incluído. Escolha o idioma em *Configurações > Preferências > Geral > Idioma* (ou deixe em Automático para seguir o sistema). O manual, os créditos e o instalador também são traduzíveis. Tradutores: veja `docs/translations.md`.
+- **Sistema de tradução (localização)**: a interface agora pode ser traduzida para outros idiomas. O Português (Brasil) é o idioma-fonte e o Inglês e o Espanhol já vêm incluídos. Escolha o idioma em *Configurações > Preferências > Geral > Idioma* (ou deixe em Automático para seguir o sistema). O manual, os créditos e o instalador também são traduzíveis. Tradutores: veja `docs/translations.md`.
+- **Fila de reprodução**: adiciona uma fila independente para organizar o que toca em seguida, com ações para adicionar, gerenciar, remover, reordenar e limpar itens.
+- **Painel de letras**: busca e exibe letras automaticamente ao trocar de faixa, com alternância rápida, leitura por teclado e cópia do conteúdo.
+- **Velocidade e tom da reprodução**: adiciona atalhos para aumentar, diminuir e restaurar a velocidade (`]`, `[`, `\`) e para alterar ou resetar o tom em semitons (`Shift+]`, `Shift+[`, `Shift+\`).
 
 ## [1.1.0] - 2026-06-29
 

@@ -10,8 +10,10 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 
 - Reprodução de mídia com controle por teclado
 - Playlists em abas
+- Fila de reprodução independente para organizar o que toca em seguida
 - Navegação por pastas com pré-visualização
 - Equalizador por aba com predefinições e presets personalizados
+- Painel de letras com busca automática e cópia do texto
 - Aba dedicada do YouTube Music, aberta com `Ctrl+Shift+Y`
 - Carregamento e gravação de playlists
 - Restauração do que estava aberto na última sessão
@@ -76,6 +78,14 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 
+### Fila de reprodução
+
+A fila de reprodução organiza o que deve tocar depois da faixa atual, sem depender da ordem da playlist que você está navegando. Ela sempre pertence à playlist que está tocando no momento.
+
+Use `Ctrl+Shift+F` ou o menu **Reprodução > Adicionar à Fila de Reprodução** para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use `Ctrl+Shift+Q` ou o menu **Reprodução > Gerenciar Fila de Reprodução**.
+
+Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.
+
 ### Atalhos de reprodução
 
 - `Espaço`: reproduzir ou pausar
@@ -91,6 +101,12 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `E`: alternar modo aleatório
 - `R`: alternar modo de repetição
 - `A`: alternar a reprodução de conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)
+- `]` / `[`: aumentar ou diminuir a velocidade de reprodução
+- `Shift+]` / `Shift+[`: aumentar ou diminuir o tom da reprodução em semitons
+- `Shift+\`: restaurar o tom original
+- `Ctrl+Alt+L`: alternar o painel de letras
+- `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
+- `Ctrl+Shift+Q`: gerenciar a fila de reprodução
 - `T`: anunciar o tempo atual da mídia
 - `V`: anunciar o volume atual
 - `S`: anunciar o status do player
@@ -382,6 +398,8 @@ O aplicativo foi projetado para leitores de tela e uso por teclado. Em geral:
 Se você usa leitor de tela, os atalhos de anúncio sob demanda `T`, `V` e `S` (descritos em [Atalhos de reprodução](#atalhos-de-reproducao)) e a ajuda rápida `F1` ajudam a se localizar sem depender dos eventos automáticos.
 
 Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em `Ctrl+,` > **Acessibilidade**.
+
+O painel de letras também foi pensado para esse uso: `Ctrl+Alt+L` ou a caixa **Letras** na área de tempo mostram ou ocultam o painel, e o texto pode ser lido, navegado com as setas e copiado pelo botão **Copiar letra completa**. Ao trocar de faixa, o player tenta buscar a letra automaticamente primeiro no LRCLIB e depois no YouTube Music.
 
 ## Atualizações
 

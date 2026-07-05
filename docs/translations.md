@@ -1,82 +1,90 @@
-# Traduzindo o KeyTune
+# Translating KeyTune
 
-O KeyTune usa o sistema de tradução padrão do Python (GNU `gettext`). O idioma
-em que o código é escrito — **Português (Brasil)** — é o *idioma-fonte*: cada
-texto visível ao usuário aparece em Português dentro do código, e as traduções
-para outros idiomas ficam em catálogos separados, sob `locale/`.
+KeyTune uses Python's standard translation system (GNU `gettext`). The
+language the code is written in - **Portuguese (Brazil)** - is the source
+language: every user-visible string appears in Portuguese inside the code, and
+translations for other languages live in separate catalogs under `locale/`.
 
-Isso significa que **você não precisa mexer no código** para adicionar um idioma:
-basta criar um catálogo de tradução.
+That means you **do not need to change the code** to add a language: you only
+need to create a translation catalog.
 
-## Estrutura
+English and Spanish are already available as examples in the repository.
+
+## Structure
 
 ```
 locale/
-  keytune.pot                      # modelo com todos os textos do programa
-  en/LC_MESSAGES/keytune.po        # tradução para inglês (texto editável)
-  en/LC_MESSAGES/keytune.mo        # versão compilada que o app carrega
+  keytune.pot                      # template with all program strings
+  en/LC_MESSAGES/keytune.po        # editable translation for English
+  en/LC_MESSAGES/keytune.mo        # compiled version loaded by the app
+  es/LC_MESSAGES/keytune.po        # editable translation for Spanish
+  es/LC_MESSAGES/keytune.mo        # compiled version loaded by the app
 ```
 
-- `.pot` — modelo gerado a partir do código. Não traduza este arquivo; use-o
-  como base para criar um novo idioma.
-- `.po` — o arquivo que você edita, com cada `msgid` (texto-fonte em Português)
-  e seu `msgstr` (sua tradução).
-- `.mo` — versão binária compilada do `.po`. É o que o aplicativo lê em tempo de
-  execução, então **precisa ser recompilada** sempre que o `.po` muda.
+- `.pot` - template generated from the code. Do not translate this file; use it
+  as the base for a new language.
+- `.po` - the file you edit, with each `msgid` (source text in Portuguese) and
+  its `msgstr` (your translation).
+- `.mo` - the binary version compiled from the `.po`. This is what the
+  application reads at runtime, so it **must be recompiled** whenever the `.po`
+  changes.
 
-## Adicionando um novo idioma
+## Adding a new language
 
-1. Registre o idioma em `src/player/i18n.py`, no dicionário `SUPPORTED_LANGUAGES`
-   (código do idioma → nome nativo). Use códigos como `en`, `es`, `fr`, `pt_BR`.
-2. Atualize o modelo a partir do código atual:
+1. Register the language in `src/player/i18n.py`, in the
+   `SUPPORTED_LANGUAGES` dictionary (language code -> native name). Use codes
+   such as `en`, `es`, `fr`, `pt_BR`.
+2. Refresh the template from the current code:
 
    ```
    python scripts/i18n.py extract
    ```
 
-3. Copie `locale/keytune.pot` para `locale/<idioma>/LC_MESSAGES/keytune.po` e
-   traduza cada `msgstr`. Deixe `msgstr ""` em branco para os textos que ainda
-   não traduziu — o app cai de volta no Português automaticamente.
-4. Compile os catálogos:
+3. Copy `locale/keytune.pot` to `locale/<language>/LC_MESSAGES/keytune.po` and
+   translate each `msgstr`. Leave `msgstr ""` blank for strings you have not
+   translated yet - the app falls back to Portuguese automatically.
+4. Compile the catalogs:
 
    ```
    python scripts/i18n.py compile
    ```
 
-5. Abra o KeyTune, vá em *Configurações > Preferências > Geral > Idioma* e
-   escolha o novo idioma (a mudança vale na próxima abertura do app).
+5. Open KeyTune, go to *Settings > Preferences > General > Language*, and pick
+   the new language (the change takes effect the next time the app starts).
 
-## Dicas para traduzir
+## Translation tips
 
-- **Aceleradores de menu** (`&`): o `&` marca a tecla de atalho do menu
-  (ex.: `&Arquivo` → Alt+A). Mantenha um `&` na sua tradução, de preferência em
-  uma letra única dentro de cada menu.
-- **Atalhos após tabulação** (`\t`): em textos como `Salvar\tCtrl+S`, a parte
-  após o `\t` é o atalho exibido. **Não traduza nem altere** o atalho.
-- **Marcadores `{...}`**: textos como `Sobre o {app}` ou `Página {current} de
-  {total}` contêm campos preenchidos pelo programa. Mantenha os nomes entre
-  chaves exatamente como estão; só reordene se fizer sentido no seu idioma.
-- **Quebras de linha** (`\n`): preserve as quebras de linha do texto-fonte.
+- **Menu accelerators** (`&`): the `&` marks the menu shortcut key
+  (for example, `&File` -> Alt+F). Keep one `&` in your translation, ideally on
+  a unique letter in each menu.
+- **Tab-separated shortcuts** (`\t`): in texts like `Save\tCtrl+S`, the part
+  after `\t` is the displayed shortcut. **Do not translate or alter** the
+  shortcut.
+- **Placeholders** (`{...}`): texts like `About {app}` or `Page {current} of
+  {total}` contain fields filled in by the program. Keep the names inside the
+  braces exactly as they are; only reorder them if it makes sense in your
+  language.
+- **Line breaks** (`\n`): preserve the line breaks from the source text.
 
-## Manual, créditos e instalador
+## Manual, credits, and installer
 
-- **Manual**: crie `docs/manual.<idioma>.md` (ex.: `docs/manual.en.md`). O build
-  o renderiza para `manual.<idioma>.html` e o app abre essa versão quando o
-  idioma correspondente está ativo, caindo de volta no manual em Português se a
-  tradução não existir.
-- **Créditos**: as listas de bibliotecas e contribuidores são neutras; só os
-  títulos são traduzidos. Adicione o idioma em `CREDITS_STRINGS`, em
-  `scripts/generate_credits.py`, e gere com
-  `python scripts/generate_credits.py --language <idioma>`.
-- **Instalador**: adicione o idioma em `[Languages]` e traduza as entradas de
-  `[CustomMessages]` em `installer/keytune.iss` (os textos do assistente vêm
-  prontos dos arquivos `.isl` do Inno Setup).
+- **Manual**: create `docs/manual.<language>.md` (for example,
+  `docs/manual.en.md`). The build renders it to `manual.<language>.html`, and
+  the app opens that version when the corresponding language is active, falling
+  back to the Portuguese manual if the translation does not exist.
+- **Credits**: the library and contributor lists are language-neutral; only the
+  titles are translated. Add the language in `CREDITS_STRINGS` in
+  `scripts/generate_credits.py`, and generate it with
+  `python scripts/generate_credits.py --language <language>`.
+- **Installer**: add the language in `[Languages]` and translate the entries in
+  `[CustomMessages]` in `installer/keytune.iss` (the wizard texts come ready
+  from the Inno Setup `.isl` files).
 
-## Ferramenta `scripts/i18n.py`
+## `scripts/i18n.py`
 
-Não depende de `xgettext`/`msgfmt` instalados — é Python puro:
+It does not depend on `xgettext`/`msgfmt` being installed - it is pure Python:
 
-- `python scripts/i18n.py extract` — varre `src/` e reescreve
+- `python scripts/i18n.py extract` - scans `src/` and rewrites
   `locale/keytune.pot`.
-- `python scripts/i18n.py compile` — compila todos os `locale/**/keytune.po` em
-  `.mo`. O build de release também roda isso automaticamente.
+- `python scripts/i18n.py compile` - compiles all `locale/**/keytune.po` files
+  into `.mo`. The release build runs this automatically too.
