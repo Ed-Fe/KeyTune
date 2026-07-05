@@ -20,12 +20,19 @@ class LyricsPanel(wx.Panel):
 
         self.SetName(_("Painel de letras"))
         self._current_request_id = 0
+        # Track already fetched/fetching, so repeated metadata refreshes (web
+        # radios update their title every few seconds) don't re-lookup the same
+        # song over and over. Reset via reset_loaded_track() when playback stops.
+        self._loaded_track_key = None
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # TE_DONTWRAP keeps each lyric line on a single caret line: a screen
+        # reader then reads a whole line per arrow press instead of the short
+        # fragments that soft word-wrap produces. Long lines scroll horizontally.
         self.lyrics_text_ctrl = wx.TextCtrl(
             self,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.VSCROLL,
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_DONTWRAP | wx.HSCROLL | wx.VSCROLL,
         )
         # EVT_CHAR_HOOK lets the panel own copy/navigation keys before the main
         # player's global shortcuts can act on them.
@@ -41,6 +48,10 @@ class LyricsPanel(wx.Panel):
 
         self.SetSizer(root_sizer)
 
+    def reset_loaded_track(self):
+        """Forget the last looked-up track so playing it again fetches fresh."""
+        self._loaded_track_key = None
+
     def update_lyrics(self, text):
         """Set the lyrics text on the main UI thread."""
         if text:
@@ -52,6 +63,15 @@ class LyricsPanel(wx.Panel):
         """Start a background lookup for the given track without blocking the UI."""
         artist_str = str(artist or "").strip()
         title_str = str(title or "").strip()
+
+        # Skip if this is the same track we already looked up: streaming
+        # metadata keeps firing this with the current title, which would
+        # otherwise restart the lookup repeatedly for the same song.
+        track_key = (artist_str.casefold(), title_str.casefold())
+        if track_key == self._loaded_track_key:
+            return
+        self._loaded_track_key = track_key
+
         self._attach_accessible(self._accessible_name_for(artist_str, title_str))
 
         if not artist_str and not title_str:
@@ -142,29 +162,17 @@ class LyricsPanel(wx.Panel):
             self._announce(_("Não há letra para copiar."))
 
     def _on_text_char_hook(self, event):
-        """Own copy and navigation keys before the frame's global shortcuts."""
+        """Add the two lyrics-specific niceties on top of the frame's global
+        text-field routing: a copy that announces feedback, and Down at the end
+        of the text jumping to the copy button. Caret movement, word jumps and
+        select-all are handled natively (the frame lets text fields own them)."""
         key_code = event.GetKeyCode()
-        no_mods = not event.ControlDown() and not event.AltDown() and not event.ShiftDown()
         ctrl_only = event.ControlDown() and not event.ShiftDown() and not event.AltDown()
+        no_mods = not event.ControlDown() and not event.AltDown() and not event.ShiftDown()
 
-        # Swallow a bare 'C' so the player's global "copy media link" shortcut
-        # does not fire while the reader is inside the lyrics text.
-        if no_mods and key_code in (ord("C"), ord("c")):
+        if ctrl_only and key_code in (ord("C"), ord("c")):
+            self._copy_selection_or_all()
             return
-
-        if ctrl_only:
-            if key_code in (ord("C"), ord("c")):
-                self._copy_selection_or_all()
-                return
-            if key_code in (ord("A"), ord("a")):
-                self.lyrics_text_ctrl.SelectAll()
-                return
-            if key_code == wx.WXK_END:
-                self.lyrics_text_ctrl.SetInsertionPointEnd()
-                return
-            if key_code == wx.WXK_HOME:
-                self.lyrics_text_ctrl.SetInsertionPoint(0)
-                return
 
         # Down at the end of the text jumps to the copy button (Tab also works).
         if no_mods and key_code == wx.WXK_DOWN:

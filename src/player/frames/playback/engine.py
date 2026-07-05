@@ -244,6 +244,11 @@ class PlaybackEngineMixin:
                 self._apply_equalizer_state_to_player(self._managed_player(player_key), state)
                 self._apply_volume_to_player(player_key, 0)
                 self._apply_playback_rate_to_player(player_key, getattr(self, "current_playback_rate", 1.0))
+                # Carry the resolved title/artist to the crossfade completion so
+                # it can refresh the display metadata and lyrics for the incoming
+                # track (this early return skips that work below).
+                crossfade_state["resolved_display_title"] = str(request.get("resolved_display_title", "") or "").strip()
+                crossfade_state["resolved_display_artist"] = str(request.get("resolved_display_artist", "") or "").strip()
             return
 
         self._set_active_player(player_key)
@@ -267,14 +272,10 @@ class PlaybackEngineMixin:
         resolved_display_artist = str(request.get("resolved_display_artist", "") or "").strip()
         self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
         
-        # --- GATILHO DE BUSCA DA LETRA NO INÍCIO DA REPRODUÇÃO ---
-        if hasattr(self, 'lyrics_panel'):
-            if resolved_display_artist and resolved_display_title:
-                # Usa os dados se eles já vieram preenchidos na requisição
-                self.lyrics_panel.load_lyrics_for_track(resolved_display_artist, resolved_display_title)
-            else:
-                # Limpa a tela caso ainda não saiba o que é (será preenchido depois pelo media_metadata.py)
-                self.lyrics_panel.update_lyrics(_("Letra não encontrada para esta mídia."))
+        # Busca a letra da faixa que acabou de entrar. O caminho de crossfade
+        # (_begin_pending_crossfade) chama o mesmo helper, já que ele retorna
+        # antes deste ponto durante uma transição.
+        self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
 
         if not resolved_display_title:
             self._queue_remote_media_metadata_resolution(media_path)
@@ -289,6 +290,28 @@ class PlaybackEngineMixin:
             return
 
         self._announce(self._describe_playlist_position(state))
+
+    def _refresh_lyrics_for_active_media(self, resolved_display_title, resolved_display_artist):
+        """Kick off the lyrics lookup for the media that just became active.
+
+        Shared by the normal start (``_finish_media_start``) and the crossfade
+        completion (``_begin_pending_crossfade``) so lyrics follow every track
+        change regardless of how the transition happened.
+        """
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        if lyrics_panel is None:
+            return
+
+        title = str(resolved_display_title or "").strip()
+        artist = str(resolved_display_artist or "").strip()
+        if title:
+            # Basta o título; a busca lida com o artista ausente.
+            lyrics_panel.load_lyrics_for_track(artist, title)
+        else:
+            # Título ainda desconhecido: limpa e deixa o media_metadata.py
+            # preencher quando ele for resolvido.
+            lyrics_panel.reset_loaded_track()
+            lyrics_panel.update_lyrics(_("Letra não encontrada para esta mídia."))
 
     def _load_media(self, media_path):
         player_instance = self._instance_for_player(self._active_player_key)
@@ -322,6 +345,7 @@ class PlaybackEngineMixin:
         
         # Limpa o painel de letras quando o player parar totalmente
         if hasattr(self, 'lyrics_panel'):
+            self.lyrics_panel.reset_loaded_track()
             self.lyrics_panel.update_lyrics(_("Sem mídia"))
             
         try:

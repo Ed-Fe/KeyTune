@@ -413,7 +413,9 @@ class FrameLibraryNavigationMixin:
             self._announce(_("Modo navegação de itens."))
 
     def _focus_player_controls(self, announce=True):
-        self.SetFocus()
+        # Focus the wx video panel (a restorable child) rather than the frame,
+        # so returning to the window/closing a dialog lands back on the player.
+        self._focus_player_surface()
         if announce:
             self._announce(_("Modo controle do player."))
 

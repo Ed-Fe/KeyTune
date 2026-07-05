@@ -126,8 +126,8 @@ msgstr "Player visual hint"
 msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
 msgstr "Adjust how the player starts up, saves state and responds to shortcuts. Use the tabs to move between categories. Press Esc to cancel or Enter on Save to confirm."
 
-msgid "Alternar foco entre &itens e player\tTab"
-msgstr "Toggle focus between &items and player\tTab"
+msgid "Alternar foco entre &itens e player (Tab)"
+msgstr "Toggle focus between &items and player (Tab)"
 
 msgid "Além de tocar arquivos locais, o KeyTune tem alguns recursos que podem ser úteis:\n\nPlaylists: crie, salve e reabra playlists em abas separadas, com embaralhar e modos de repetição configuráveis.\n\nEqualizador: ajuste a resposta de frequência da reprodução e salve seus próprios presets pelo menu Reprodução.\n\nYouTube Music (opcional): conecte sua conta para abrir suas playlists, curtir faixas e tocar conteúdo relacionado automaticamente ao fim de uma playlist.\n\nPreferências: em Configurações > Preferências é possível ajustar volume padrão, crossfade, restauração de sessão, anúncios do leitor de tela e mais."
 msgstr "Besides playing local files, KeyTune has a few features that can be handy:\n\nPlaylists: create, save and reopen playlists in separate tabs, with configurable shuffle and repeat modes.\n\nEqualizer: adjust the frequency response of playback and save your own presets from the Playback menu.\n\nYouTube Music (optional): connect your account to open your playlists, like tracks and automatically play related content at the end of a playlist.\n\nPreferences: under Settings > Preferences you can adjust the default volume, crossfade, session restore, screen reader announcements and more."
@@ -324,8 +324,11 @@ msgstr "S&top\tCtrl+."
 msgid "Painel de tempo"
 msgstr "Time panel"
 
-msgid "Painel de vídeo"
-msgstr "Video panel"
+msgid "Área do player"
+msgstr "Player area"
+
+msgid "Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."
+msgstr "Playback area. Use Space to play or pause and the arrow keys to navigate."
 
 msgid "Pastas recentes"
 msgstr "Recent folders"
@@ -381,8 +384,8 @@ msgstr "Repeat playlist"
 msgid "Repetição desligada"
 msgstr "Repeat off"
 
-msgid "Reproduzir / Pa&usar\tEspaço"
-msgstr "Play / Pa&use\tSpace"
+msgid "Reproduzir / Pa&usar (Espaço)"
+msgstr "Play / Pa&use (Space)"
 
 msgid "Reprodução"
 msgstr "Playback"

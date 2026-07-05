@@ -409,7 +409,7 @@ class FrameUIMixin:
         self._audio_output_menu_ids = []
         announce_menu = wx.Menu()
         playback_menu.Append(self.menu_previous_track_id, _("Faixa &Anterior\tCtrl+PageUp"))
-        playback_menu.Append(self.menu_play_pause_id, _("Reproduzir / Pa&usar\tEspaço"))
+        playback_menu.Append(self.menu_play_pause_id, _("Reproduzir / Pa&usar (Espaço)"))
         playback_menu.Append(self.menu_stop_id, _("P&arar\tCtrl+."))
         playback_menu.Append(self.menu_next_track_id, _("Próxima Fai&xa\tCtrl+PageDown"))
         playback_menu.AppendSeparator()
@@ -435,7 +435,7 @@ class FrameUIMixin:
         view_menu = wx.Menu()
         self.view_menu = view_menu
         self.menu_playlist_browser_id = wx.NewIdRef()
-        view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player\tTab"))
+        view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("YouTube &Music por aba\tCtrl+Shift+Y"))
 
@@ -711,10 +711,19 @@ class FrameUIMixin:
             page,
             style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.NO_FULL_REPAINT_ON_RESIZE,
         )
-        video_panel.SetName(_("Painel de vídeo"))
+        video_panel.SetName(_("Área do player"))
+        # A plain wx.Panel does not expose its SetName() to the screen reader
+        # (it just reads the generic "panel" role), so register a real
+        # accessible name/description — this is the control the player focus
+        # lands on.
+        attach_named_accessible(
+            video_panel,
+            name=_("Área do player"),
+            description=_("Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."),
+        )
         video_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_panel.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
-        video_panel.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
+        video_panel.Bind(wx.EVT_SET_FOCUS, lambda event, panel=video_panel: self.on_video_panel_focus(event, panel))
         # MPV paints the native child surface, so the wx-side background never
         # needs erasing. Swallowing EVT_ERASE_BACKGROUND removes the black
         # flash behind the video while the border is dragged (wxWiki
@@ -728,7 +737,7 @@ class FrameUIMixin:
         video_surface.SetName(_("Superfície de vídeo"))
         video_surface.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_surface.Bind(wx.EVT_SIZE, self.on_video_panel_resize)
-        video_surface.Bind(wx.EVT_SET_FOCUS, self.on_video_panel_focus)
+        video_surface.Bind(wx.EVT_SET_FOCUS, lambda event, panel=video_panel: self.on_video_panel_focus(event, panel))
         video_surface.Bind(wx.EVT_ERASE_BACKGROUND, self._on_video_erase_background)
 
         video_hint_overlay = wx.StaticText(

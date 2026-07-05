@@ -704,7 +704,7 @@ msgid "Altere o nome, a pré-amplificação e as bandas do preset personalizado.
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Alternar foco entre &itens e player\tTab"
+msgid "Alternar foco entre &itens e player (Tab)"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3184,10 +3184,6 @@ msgstr ""
 msgid "Painel de tempo"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Painel de vídeo"
-msgstr ""
-
 #: src/player/youtube_music/models.py
 msgid "Panamá"
 msgstr ""
@@ -3663,7 +3659,7 @@ msgid "Reproduzindo item já presente em {title}."
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Reproduzir / Pa&usar\tEspaço"
+msgid "Reproduzir / Pa&usar (Espaço)"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4446,6 +4442,14 @@ msgstr ""
 
 #: src/player/frames/lyrics_panel.py
 msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Área do player"
 msgstr ""
 
 #: src/player/youtube_music/models.py

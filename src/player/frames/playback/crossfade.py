@@ -252,6 +252,14 @@ class CrossfadeMixin:
         self._update_time_bar()
         self._refresh_playlist_browser()
 
+        # The incoming track's _finish_media_start returned early (crossfade
+        # branch) before applying display metadata / fetching lyrics, so do it
+        # here — this is where the incoming media actually becomes the active one.
+        resolved_display_title = str(crossfade_state.get("resolved_display_title", "") or "").strip()
+        resolved_display_artist = str(crossfade_state.get("resolved_display_artist", "") or "").strip()
+        self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
+        self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
+
         announce_message = crossfade_state.get("announce_message")
         if announce_message is not None:
             if announce_message:

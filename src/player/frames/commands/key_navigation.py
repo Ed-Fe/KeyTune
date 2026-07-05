@@ -115,9 +115,27 @@ class KeyNavigationMixin:
         event.Skip()
         return True
 
-    def _focused_control_accepts_text_input(self):
+    def _focused_window_drives_playback(self):
+        """Whether bare keys (Space, arrows, letters) should control playback.
+
+        The single-key playback shortcuts belong to the "player surface": the
+        frame itself (where focus lands from the video area) and the playlist
+        list. Any other focused control — buttons, checkboxes, edit fields,
+        screen-tab widgets, the lyrics panel — must own those keys so, e.g.,
+        Space activates the control instead of toggling play/pause.
+        """
         focused_window = wx.Window.FindFocus()
-        return isinstance(focused_window, wx.TextEntry)
+        if focused_window is None:
+            return False
+        if focused_window is self:
+            return True
+        page = self.notebook.GetCurrentPage() if hasattr(self, "notebook") else None
+        if page is not None and focused_window is getattr(page, "video_panel", None):
+            return True
+        browser = self._get_browser_panel()
+        if browser is not None and focused_window is getattr(browser, "items_list", None):
+            return True
+        return False
 
     def _lyrics_text_is_focused(self):
         lyrics_panel = getattr(self, "lyrics_panel", None)
@@ -130,23 +148,35 @@ class KeyNavigationMixin:
         lyrics_panel = getattr(self, "lyrics_panel", None)
         if lyrics_panel is None or not lyrics_panel.IsShown():
             return
+        # toggle_lyrics_panel hides the panel and restores focus to wherever it
+        # was before the panel opened (not the tab switcher).
         self.toggle_lyrics_panel()
-        # Restore focus to the notebook so the screen reader does not get lost
-        # on the now-hidden panel.
-        notebook = getattr(self, "notebook", None)
-        if notebook is not None:
-            notebook.SetFocus()
 
     def on_key_down(self, event):
         key_code = event.GetKeyCode()
         browser = self._get_browser_panel()
         current_tab = self._get_tab_state()
 
+        # A focused text field owns the whole keyboard: caret moves, word jumps
+        # (Ctrl+Arrows), selection (Shift+...) and clipboard keys must reach the
+        # control, not the global player shortcuts (Left/Right = seek, Ctrl+C =
+        # copy media path, etc.). Only Esc and F1 stay global (close panel/tab,
+        # help). This covers the lyrics reader and every edit field (Filtro,
+        # busca, link).
+        if isinstance(wx.Window.FindFocus(), wx.TextEntry) and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1):
+            event.Skip()
+            return
+
+        # Bare keys (no Ctrl/Alt) drive playback only while focus is on the
+        # player surface — the frame or the playlist list. On any other control
+        # (buttons, checkboxes, screen-tab widgets, the lyrics copy button) let
+        # the control own the key so Space activates it instead of toggling
+        # play/pause. Esc, F1 and Tab stay globally routed below.
         if (
             not event.ControlDown()
             and not event.AltDown()
-            and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1)
-            and self._focused_control_accepts_text_input()
+            and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1, wx.WXK_TAB)
+            and not self._focused_window_drives_playback()
         ):
             event.Skip()
             return
@@ -161,24 +191,12 @@ class KeyNavigationMixin:
             self.toggle_lyrics_panel()
             return
 
-        # While the lyrics text is focused, let it own caret navigation instead
-        # of driving playback (seek/volume); Esc closes the panel.
-        if self._lyrics_text_is_focused():
-            if key_code == wx.WXK_ESCAPE:
-                self._close_lyrics_panel()
-                return
-            if key_code in (
-                wx.WXK_UP,
-                wx.WXK_DOWN,
-                wx.WXK_LEFT,
-                wx.WXK_RIGHT,
-                wx.WXK_HOME,
-                wx.WXK_END,
-                wx.WXK_PAGEUP,
-                wx.WXK_PAGEDOWN,
-            ):
-                event.Skip()
-                return
+        # While the lyrics text is focused, Esc closes the panel. Caret keys are
+        # handled natively — the player-surface guard above already lets the
+        # text control own them instead of driving seek/volume.
+        if self._lyrics_text_is_focused() and key_code == wx.WXK_ESCAPE:
+            self._close_lyrics_panel()
+            return
 
         if event.ControlDown() and event.ShiftDown() and key_code in (ord("Y"), ord("y")):
             self.on_open_youtube_music(None)

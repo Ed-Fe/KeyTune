@@ -133,4 +133,4 @@ class MediaPlayerFrame(
         if self.IsIconized():
             self.Iconize(False)
         self.Raise()
-        self.SetFocus()
+        self._focus_player_surface()

@@ -127,8 +127,35 @@ class AppCommandsMixin:
         self._bind_player_to_window()
         self._refresh_player_visual_hints()
 
-    def on_video_panel_focus(self, _event):
-        wx.CallAfter(self.SetFocus)
+    def on_video_panel_focus(self, event, video_panel=None):
+        # Keep keyboard focus on the wx video panel — a real, screen-reader
+        # labelled child that wx can restore on window activation — instead of
+        # bouncing to the frame (which, not being its own child, wx can't
+        # restore, so focus fell onto the tab switcher). SetFocusIgnoringChildren
+        # focuses the panel itself rather than delegating down to the native MPV
+        # surface, which must never hold keyboard focus. When wx restores focus
+        # via the delegating SetFocus() (e.g. on activation), the surface briefly
+        # gets it and this handler pulls it back up to the panel.
+        if video_panel is not None and wx.Window.FindFocus() is not video_panel:
+            wx.CallAfter(self._focus_player_surface, video_panel)
+        event.Skip()
+
+    def _focus_player_surface(self, video_panel=None):
+        """Move keyboard focus to the player area (the wx video panel).
+
+        With no argument, targets the current page's video panel. Returns True
+        when a panel was focused, False if it fell back to the frame.
+        """
+        if video_panel is None:
+            page = self.notebook.GetCurrentPage() if hasattr(self, "notebook") else None
+            video_panel = getattr(page, "video_panel", None) if page is not None else None
+
+        if isinstance(video_panel, wx.Window) and bool(video_panel) and video_panel.IsShownOnScreen():
+            video_panel.SetFocusIgnoringChildren()
+            return True
+
+        self.SetFocus()
+        return False
 
     def on_exit(self, _event):
         self.Close()
@@ -255,14 +282,22 @@ class AppCommandsMixin:
     def toggle_lyrics_panel(self):
         """Toggle the lyrics panel visibility and sync the UI checkbox.
 
-        When the panel becomes visible its text control receives focus so a
-        screen-reader user lands directly on the lyrics.
+        Opening moves focus to the lyrics text so a screen-reader user lands
+        directly on the lyrics; closing returns focus to wherever it was before
+        opening (the player, the item list, ...) instead of jumping to the tab
+        switcher.
         """
         lyrics_panel = getattr(self, "lyrics_panel", None)
         if lyrics_panel is None:
             return
 
         is_shown = lyrics_panel.IsShown()
+
+        if not is_shown:
+            # Remember the pre-open focus so closing can restore it.
+            focused = wx.Window.FindFocus()
+            self._focus_before_lyrics = focused if isinstance(focused, wx.Window) else None
+
         lyrics_panel.Show(not is_shown)
 
         lyrics_checkbox = getattr(self, "lyrics_checkbox", None)
@@ -275,3 +310,33 @@ class AppCommandsMixin:
             text_ctrl = getattr(lyrics_panel, "lyrics_text_ctrl", None)
             if text_ctrl is not None:
                 text_ctrl.SetFocus()
+        else:
+            self._restore_focus_before_lyrics()
+
+    def _restore_focus_before_lyrics(self):
+        """Return focus to the control that had it before the lyrics opened.
+
+        Falls back to the active item list, then the frame (player area), so
+        focus never gets stranded on the now-hidden panel or the tab switcher.
+        """
+        lyrics_panel = getattr(self, "lyrics_panel", None)
+        target = getattr(self, "_focus_before_lyrics", None)
+        self._focus_before_lyrics = None
+
+        if (
+            isinstance(target, wx.Window)
+            and bool(target)
+            and target is not lyrics_panel
+            and not self._window_is_descendant_of(target, lyrics_panel)
+            and target.IsShownOnScreen()
+            and target.IsEnabled()
+        ):
+            target.SetFocus()
+            return
+
+        browser = self._get_browser_panel()
+        items_list = getattr(browser, "items_list", None) if browser is not None else None
+        if items_list is not None:
+            items_list.SetFocus()
+        else:
+            self._focus_player_surface()
