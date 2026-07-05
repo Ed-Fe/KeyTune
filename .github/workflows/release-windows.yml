@@ -151,13 +151,14 @@ jobs:
         shell: powershell
         run: |
           $version = "${{ github.ref_name }}".TrimStart("v")
-          $changelog = Get-Content CHANGELOG.md -Raw
+          $utf8 = [System.Text.UTF8Encoding]::new($false)
+          $changelog = [System.IO.File]::ReadAllText((Resolve-Path "CHANGELOG.md"), $utf8)
           $pattern = "(?ms)^## \[$([regex]::Escape($version))\].*?(?=^## \[|\z)"
           $match = [regex]::Match($changelog, $pattern)
           if (-not $match.Success) {
             throw "Não foi possível localizar a seção da versão $version no CHANGELOG.md."
           }
-          Set-Content -Path "artifacts\release-body.md" -Value $match.Value.Trim() -Encoding utf8
+          [System.IO.File]::WriteAllText((Join-Path (Resolve-Path "artifacts") "release-body.md"), $match.Value.Trim(), $utf8)
 
       - name: Publish installer to GitHub Release
         uses: softprops/action-gh-release@v3
