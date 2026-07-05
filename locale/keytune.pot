@@ -13,6 +13,10 @@ msgstr ""
 msgid " Há mais para carregar."
 msgstr ""
 
+#: src/player/youtube_music/search.py
+msgid " visualizações"
+msgstr ""
+
 #: src/player/library/open_dialog.py
 msgid "&Abrir"
 msgstr ""
@@ -232,12 +236,28 @@ msgstr ""
 msgid "A autenticação salva do YouTube Music foi removida."
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "A autenticação salva do YouTube Music não é mais válida."
+msgstr ""
+
+#: src/player/youtube_music/feedback_manager.py
+msgid "A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}."
+msgstr ""
+
 #: src/player/youtube_music/feedback_manager.py
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
 msgid "A conta do YouTube Music foi desconectada desta instalação."
+msgstr ""
+
+#: src/player/youtube_music/dependencies.py
+msgid "A dependência ytmusicapi foi baixada, mas não pôde ser carregada. Reinicie o aplicativo e tente novamente."
+msgstr ""
+
+#: src/player/youtube_music/dependencies.py
+msgid "A dependência ytmusicapi não está instalada. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
 msgstr ""
 
 #: src/player/youtube_music/playlists.py
@@ -254,6 +274,10 @@ msgstr ""
 
 #: src/player/update/service.py
 msgid "A instalação automática só está disponível na versão do Windows empacotada."
+msgstr ""
+
+#: src/player/frames/youtube_music/dependencies.py
+msgid "A instalação de {runtime} foi aberta em uma nova janela."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -289,6 +313,10 @@ msgid "A nova playlist será criada com {count} faixa da seleção atual."
 msgid_plural "A nova playlist será criada com {count} faixas da seleção atual."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/frames/youtube_music/tasks.py
+msgid "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
+msgstr ""
 
 #: src/player/frames/library_navigation.py
 msgid "A pasta ainda está sendo carregada."
@@ -340,6 +368,10 @@ msgstr ""
 
 #: src/player/youtube_music/dependencies.py
 msgid "A resposta da PyPI veio em formato inválido."
+msgstr ""
+
+#: src/player/youtube_music/service.py
+msgid "A resposta da conta do YouTube Music veio em formato inválido."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -514,6 +546,10 @@ msgstr ""
 msgid "Abrir &Pasta...\tCtrl+Shift+O"
 msgstr ""
 
+#: src/player/frames/youtube_music/state.py
+msgid "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+msgstr ""
+
 #: src/player/frames/ui.py
 #: src/player/welcome/dialog.py
 msgid "Abrir &manual do usuário"
@@ -541,6 +577,10 @@ msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Abrir mídia, playlist ou pasta"
+msgstr ""
+
+#: src/player/file_associations.py
+msgid "Abrir no {app}"
 msgstr ""
 
 #: src/player/frames/library_loader.py
@@ -571,6 +611,10 @@ msgstr ""
 msgid "Abrir playlist selecionada do YouTube Music"
 msgstr ""
 
+#: src/player/frames/youtube_music/search.py
+msgid "Abrir seleção em nova playlist"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Abrir site do &Bun"
 msgstr ""
@@ -589,6 +633,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "Adicionando {count} {label} à playlist {title}..."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Adicionar seleção..."
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -907,8 +955,20 @@ msgstr ""
 msgid "Ativar integração com YouTube Music e YouTube"
 msgstr ""
 
+#: src/player/frames/youtube_music/state.py
+msgid "Ativar integração nas &Preferências..."
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Atuali&zar biblioteca"
+msgstr ""
+
+#: src/player/frames/youtube_music/dependencies.py
+msgid "Atualizando os recursos adicionais do YouTube Music. A central ficará disponível quando a atualização terminar."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -917,6 +977,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "Atualizar autenticação..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -967,6 +1035,10 @@ msgstr ""
 msgid "Atualizações"
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Aumentar &Tom (Shift+])"
 msgstr ""
@@ -985,6 +1057,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Automático (seguir o sistema)"
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "Avaliação da mídia atual enviada ao YouTube Music."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
@@ -1051,6 +1127,34 @@ msgstr ""
 msgid "Biblioteca do YouTube Music"
 msgstr ""
 
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music atualizada: {playlists} playlist(s) e {mixes} mix(es)."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {items} item(ns) ({mixes} mix(es) personalizada(s) adicionada(s))."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {items} item(ns). Não foi possível carregar mixes personalizadas."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) (todas)."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s)."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s). Use 'Carregar mais' ou desça até o final da lista para trazer mais."
+msgstr ""
+
+#: src/player/frames/youtube_music/browse.py
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s). Há mais para carregar."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Biblioteca: carregando playlists e mixes…"
 msgstr ""
@@ -1077,6 +1181,14 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Busca do YouTube Music e do YouTube"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Busca em {scope}: nenhum resultado para {query}."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Busca em {scope}: {count} resultado(s) para {query}."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1199,6 +1311,10 @@ msgstr ""
 msgid "Carregar suas músicas curtidas do YouTube Music"
 msgstr ""
 
+#: src/player/frames/youtube_music/browse.py
+msgid "Categorias"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Categorias de preferências"
 msgstr ""
@@ -1232,6 +1348,7 @@ msgid "Colar na playlist atual"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
+#: src/player/youtube_music/service.py
 msgid "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
 msgstr ""
 
@@ -1261,6 +1378,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Concluir"
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "Conectar &conta..."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1660,6 +1781,10 @@ msgid "Dispositivo de áudio"
 msgstr ""
 
 #: src/player/frames/playback/audio_output.py
+msgid "Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
+msgstr ""
+
+#: src/player/frames/playback/audio_output.py
 msgid "Dispositivo de áudio '{label}' restaurado."
 msgstr ""
 
@@ -1741,6 +1866,22 @@ msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
 msgid "Em alta em {country}: {count} lista(s) de destaque."
+msgstr ""
+
+#: src/player/youtube_music/charts.py
+msgid "Em alta · diário"
+msgstr ""
+
+#: src/player/youtube_music/charts.py
+msgid "Em alta · gênero"
+msgstr ""
+
+#: src/player/youtube_music/charts.py
+msgid "Em alta · semanal"
+msgstr ""
+
+#: src/player/youtube_music/charts.py
+msgid "Em alta · vídeos"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1875,6 +2016,10 @@ msgstr ""
 msgid "Estados Unidos"
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", que dispensa PO Token quando há cookies de conta válidos."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Estônia"
 msgstr ""
@@ -1939,6 +2084,14 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Faixa &Anterior\tCtrl+PageUp"
+msgstr ""
+
+#: src/player/youtube_music/playlists.py
+msgid "Faixa sem título"
+msgstr ""
+
+#: src/player/frames/youtube_music/tasks.py
+msgid "Falha desconhecida."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -2137,6 +2290,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Instalar &Node.js"
+msgstr ""
+
+#: src/player/frames/youtube_music/dependencies.py
+msgid "Instalação de {runtime} aberta no Windows Package Manager."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -2954,6 +3111,10 @@ msgstr ""
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr ""
 
+#: src/player/youtube_music/dependencies.py
+msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Não foi possível registrar as associações de arquivo."
 msgstr ""
@@ -2972,6 +3133,10 @@ msgstr ""
 
 #: src/player/frames/playback/audio_output.py
 msgid "Não foi possível trocar o dispositivo de áudio: {error}."
+msgstr ""
+
+#: src/player/youtube_music/service.py
+msgid "Não foi possível validar a autenticação do YouTube Music agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -3031,6 +3196,34 @@ msgstr ""
 msgid "O YouTube Music já está processando uma solicitação. Aguarde um momento."
 msgstr ""
 
+#: src/player/youtube_music/library_manager.py
+msgid "O YouTube Music não adicionou as faixas. Elas já podem estar na playlist ou a playlist não permite edição."
+msgstr ""
+
+#: src/player/youtube_music/library_manager.py
+msgid "O YouTube Music não confirmou a criação da playlist. Tente novamente."
+msgstr ""
+
+#: src/player/youtube_music/library_manager.py
+msgid "O YouTube Music não excluiu a playlist (status: {status})."
+msgstr ""
+
+#: src/player/youtube_music/library_manager.py
+msgid "O YouTube Music não removeu as faixas (status: {status})."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. Se já estiver autenticado, refaça o login com cookies recém-exportados."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "O arquivo baixado não pôde ser validado."
 msgstr ""
@@ -3057,6 +3250,18 @@ msgstr ""
 
 #: src/player/youtube_music/dependencies.py
 msgid "O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução."
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O executável yt-dlp não está disponível. Ative os Recursos adicionais do YouTube Music ou use uma build do player que já inclua o yt-dlp."
+msgstr ""
+
+#: src/player/youtube_music/dependencies.py
+msgid "O executável yt-dlp não está disponível. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "O export de cookies não contém um cookie de autenticação compatível do YouTube Music. Faça login em music.youtube.com e exporte novamente os cookies da sessão ativa."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -3115,12 +3320,24 @@ msgstr ""
 msgid "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
 msgstr ""
 
+#: src/player/youtube_music/search.py
+msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O yt-dlp não retornou dados válidos."
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O yt-dlp não retornou uma URL reproduzível para esta faixa do YouTube Music."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "O {source} não contém um browser.json válido nem um export JSON de cookies compatível."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3159,12 +3376,20 @@ msgstr ""
 msgid "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. Aguarde a conclusão para abrir a central."
 msgstr ""
 
+#: src/player/youtube_music/dependencies.py
+msgid "Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. Reinicie o aplicativo e tente novamente."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Os valores abaixo mostram a curva do preset atualmente selecionado."
 msgstr ""
 
 #: src/player/frames/ui.py
 msgid "P&arar\tCtrl+."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "PO Token ausente"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -3200,6 +3425,10 @@ msgstr ""
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
+msgstr ""
+
 #: src/player/frames/commands/transport_commands.py
 msgid "Parado."
 msgstr ""
@@ -3214,6 +3443,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Passo de volume"
+msgstr ""
+
+#: src/player/frames/library_navigation.py
+msgid "Pasta aberta no navegador: {name}."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -3247,6 +3480,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Pede confirmação antes de fechar o player."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "Perfis testados: {count}."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3599,6 +3836,10 @@ msgstr ""
 msgid "Reino Unido"
 msgstr ""
 
+#: src/player/frames/youtube_music/dependencies.py
+msgid "Reinstalando yt-dlp na versão {channel}..."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Remove a autenticação salva da conta do YouTube Music nesta instalação."
 msgstr ""
@@ -3684,6 +3925,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "República Tcheca"
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Resolvendo {label}..."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3921,6 +4166,10 @@ msgstr ""
 msgid "Seção {label} {state}."
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "Sinais detectados: {signals}."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Ska"
 msgstr ""
@@ -3977,8 +4226,13 @@ msgstr ""
 msgid "Tempo {current} de {total}. {percent}%."
 msgstr ""
 
+#: src/player/frames/playback/controls.py
 #: src/player/frames/ui.py
 msgid "Tempo: nenhuma mídia carregada."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Tempo: {current} / duração desconhecida"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -4140,6 +4394,10 @@ msgstr ""
 msgid "Você só pode excluir playlists que você criou."
 msgstr ""
 
+#: src/player/youtube_music/library_manager.py
+msgid "Você só pode remover faixas de playlists que criou ou onde é colaborador."
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Voltar"
 msgstr ""
@@ -4165,7 +4423,12 @@ msgid "YT Music"
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/frames/youtube_music/state.py
 msgid "YouTube &Music por aba\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -4205,16 +4468,30 @@ msgstr ""
 msgid "ativado"
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "autenticação/bloqueio do YouTube"
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "desafio JavaScript (EJS)"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "desativado"
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
+#: src/player/frames/youtube_music/dependencies.py
+#: src/player/youtube_music/dependencies.py
 msgid "desconhecida"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "desligado"
+msgstr ""
+
+#: src/player/frames/youtube_music/dependencies.py
+msgid "estável"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -4230,12 +4507,28 @@ msgstr ""
 msgid "faixas"
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "formatos SABR sem URL direta"
+msgstr ""
+
+#: src/player/youtube_music/feedback_manager.py
+msgid "indisponível"
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 msgid "ligado"
 msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "nenhuma aba de mídia"
+msgstr ""
+
+#: src/player/frames/youtube_music/dependencies.py
+msgid "nightly"
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "não listada"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -4246,6 +4539,14 @@ msgstr ""
 msgid "playlist"
 msgstr ""
 
+#: src/player/frames/youtube_music/playlists.py
+msgid "privada"
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "pública"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "recolhida"
 msgstr ""
@@ -4254,8 +4555,16 @@ msgstr ""
 msgid "resultado"
 msgstr ""
 
+#: src/player/frames/youtube_music/dependencies.py
+msgid "runtime JavaScript"
+msgstr ""
+
 #: src/player/frames/library_tabs/tabs.py
 msgid "sem nome"
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "somente formatos de imagem"
 msgstr ""
 
 #: src/player/update/dialog.py

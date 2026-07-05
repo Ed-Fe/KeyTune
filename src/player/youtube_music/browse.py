@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from ..i18n import _
 from .models import YOUTUBE_SEARCH_SOURCE_MUSIC, YouTubeMediaSearchResult
 from .search import _normalize_music_track_result
 
@@ -86,7 +87,7 @@ def _normalize_browse_playlist(item, *, badge):
         title=title,
         detail_text=" · ".join(detail_parts),
         playlist_id=playlist_id,
-        source_badge=str(badge or "").strip() or "Mood ou gênero",
+        source_badge=str(badge or "").strip() or _("Mood ou gênero"),
     )
 
 

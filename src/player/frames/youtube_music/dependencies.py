@@ -50,7 +50,7 @@ class DependencyMixin:
 
     def _launch_youtube_music_javascript_runtime_install(self, package_id, runtime_label):
         normalized_package_id = str(package_id or "").strip()
-        normalized_runtime_label = str(runtime_label or "").strip() or "runtime JavaScript"
+        normalized_runtime_label = str(runtime_label or "").strip() or _("runtime JavaScript")
         if not normalized_package_id:
             return False
 
@@ -78,11 +78,11 @@ class DependencyMixin:
             return False
 
         self._announce(
-            f"A instalação de {normalized_runtime_label} foi aberta em uma nova janela."
+            _("A instalação de {runtime} foi aberta em uma nova janela.").format(runtime=normalized_runtime_label)
         )
         if hasattr(self, "_set_status_message"):
             self._set_status_message(
-                f"Instalação de {normalized_runtime_label} aberta no Windows Package Manager.",
+                _("Instalação de {runtime} aberta no Windows Package Manager.").format(runtime=normalized_runtime_label),
             )
         return True
 
@@ -166,7 +166,7 @@ class DependencyMixin:
 
         ordered_labels = []
         for package_name in sorted(normalized_versions.keys()):
-            package_version = str(normalized_versions.get(package_name) or "desconhecida").strip() or "desconhecida"
+            package_version = str(normalized_versions.get(package_name) or _("desconhecida")).strip() or _("desconhecida")
             ordered_labels.append(f"{package_name} {package_version}")
 
         return ", ".join(ordered_labels)
@@ -186,7 +186,7 @@ class DependencyMixin:
         self._refresh_youtube_music_menu_state()
 
         if announce_start:
-            status_message = (
+            status_message = _(
                 "Atualizando os recursos adicionais do YouTube Music. "
                 "A central ficará disponível quando a atualização terminar."
             )
@@ -298,10 +298,10 @@ class DependencyMixin:
             had_nightly = bool(getattr(previous_settings, "youtube_music_use_nightly_yt_dlp", False))
             has_nightly = bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False))
             if had_nightly != has_nightly:
-                channel_label = "nightly" if has_nightly else "estável"
-                self._youtube_music_library_status_message = (
-                    f"Reinstalando yt-dlp na versão {channel_label}..."
-                )
+                channel_label = _("nightly") if has_nightly else _("estável")
+                self._youtube_music_library_status_message = _(
+                    "Reinstalando yt-dlp na versão {channel}..."
+                ).format(channel=channel_label)
                 self._refresh_youtube_music_screen_later()
                 self._start_youtube_music_dependency_update(force_update=True, manual=True)
                 return

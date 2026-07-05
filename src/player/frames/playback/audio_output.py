@@ -141,9 +141,7 @@ class AudioOutputMixin:
                 except Exception:
                     pass
             label = self._label_for_audio_output_device(preferred_device_id) or preferred_device_id
-            announcement = (
-                f"Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
-            )
+            announcement = _("Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema.").format(label=label)
         elif preferred_device_id and preferred_device_id in available_ids and current_device_id != preferred_device_id:
             _logger.info("Preferred audio output device restored: %r", preferred_device_id)
             try:

@@ -61,7 +61,7 @@ def register_file_associations() -> bool:
             0,
             winreg.KEY_WRITE,
         ) as key:
-            winreg.SetValueEx(key, "", 0, winreg.REG_SZ, f"Abrir no {APP_TITLE}")
+            winreg.SetValueEx(key, "", 0, winreg.REG_SZ, _("Abrir no {app}").format(app=APP_TITLE))
 
         with winreg.CreateKeyEx(
             winreg.HKEY_CURRENT_USER,

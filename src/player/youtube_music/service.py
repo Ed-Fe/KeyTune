@@ -34,12 +34,16 @@ class YouTubeMusicAuthValidationError(RuntimeError):
 
 
 class InvalidYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
-    def __init__(self, message="A autenticação salva do YouTube Music não é mais válida."):
+    def __init__(self, message=None):
+        if message is None:
+            message = _("A autenticação salva do YouTube Music não é mais válida.")
         super().__init__(message, should_disconnect=True)
 
 
 class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
-    def __init__(self, message="Não foi possível validar a autenticação do YouTube Music agora."):
+    def __init__(self, message=None):
+        if message is None:
+            message = _("Não foi possível validar a autenticação do YouTube Music agora.")
         super().__init__(message, should_disconnect=False)
 
 
@@ -243,7 +247,7 @@ class YouTubeMusicService:
 
         if not normalized_headers_raw:
             raise RuntimeError(
-                "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
+                _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.")
             )
 
         ytmusicapi = import_ytmusicapi_module()
@@ -278,7 +282,7 @@ class YouTubeMusicService:
 
         if not isinstance(account_info, dict):
             raise TemporaryYouTubeMusicAuthError(
-                "A resposta da conta do YouTube Music veio em formato inválido."
+                _("A resposta da conta do YouTube Music veio em formato inválido.")
             )
 
         self._account_info = account_info

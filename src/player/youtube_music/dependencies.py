@@ -108,8 +108,8 @@ def ensure_yt_dlp_executable_available() -> None:
 
     if not youtube_dependency_management_enabled():
         raise RuntimeError(
-            "O executável yt-dlp não está disponível. "
-            "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+            _("O executável yt-dlp não está disponível. "
+              "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente.")
         )
 
     install_or_update_youtube_dependencies(
@@ -191,8 +191,8 @@ def install_or_update_youtube_dependencies(
 
     if not youtube_dependencies_available():
         raise RuntimeError(
-            "Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. "
-            "Reinicie o aplicativo e tente novamente."
+            _("Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. "
+              "Reinicie o aplicativo e tente novamente.")
         )
 
     versions_after = get_installed_youtube_dependency_versions()
@@ -216,8 +216,8 @@ def import_ytmusicapi_module(*, reload: bool = False):
     except Exception as initial_error:
         if not youtube_dependency_management_enabled():
             raise RuntimeError(
-                "A dependência ytmusicapi não está instalada. "
-                "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+                _("A dependência ytmusicapi não está instalada. "
+                  "Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente.")
             ) from initial_error
 
         try:
@@ -227,15 +227,15 @@ def import_ytmusicapi_module(*, reload: bool = False):
             )
         except Exception as exc:
             raise RuntimeError(
-                f"Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {exc}"
+                _("Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}").format(detail=exc)
             ) from exc
 
         try:
             return importlib.import_module(YTMUSICAPI_IMPORT_NAME)
         except Exception as final_error:
             raise RuntimeError(
-                "A dependência ytmusicapi foi baixada, mas não pôde ser carregada. "
-                "Reinicie o aplicativo e tente novamente."
+                _("A dependência ytmusicapi foi baixada, mas não pôde ser carregada. "
+                  "Reinicie o aplicativo e tente novamente.")
             ) from final_error
 
 
@@ -455,7 +455,7 @@ def _resolve_module_version(module) -> str:
         except Exception:
             pass
 
-    return "desconhecida"
+    return _("desconhecida")
 
 
 def _normalize_interval_hours(value: int) -> int:

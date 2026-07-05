@@ -12,6 +12,9 @@ msgstr " (integrado)"
 msgid " Há mais para carregar."
 msgstr " Hay más para cargar."
 
+msgid " visualizações"
+msgstr " visualizaciones"
+
 msgid "&Abrir"
 msgstr "&Abrir"
 
@@ -171,11 +174,23 @@ msgstr "La apertura externa acepta solo una playlist por vez."
 msgid "A autenticação salva do YouTube Music foi removida."
 msgstr "La autenticación guardada de YouTube Music fue eliminada."
 
+msgid "A autenticação salva do YouTube Music não é mais válida."
+msgstr "La autenticación guardada de YouTube Music ya no es válida."
+
+msgid "A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}."
+msgstr "La valoración se envió, pero el servidor aún devolvió likeStatus={status}."
+
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr "La valoración solicitada para el medio actual no es válida."
 
 msgid "A conta do YouTube Music foi desconectada desta instalação."
 msgstr "La cuenta de YouTube Music fue desconectada de esta instalación."
+
+msgid "A dependência ytmusicapi foi baixada, mas não pôde ser carregada. Reinicie o aplicativo e tente novamente."
+msgstr "La dependencia ytmusicapi se descargó, pero no se pudo cargar. Reinicia la aplicación e inténtalo de nuevo."
+
+msgid "A dependência ytmusicapi não está instalada. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+msgstr "La dependencia ytmusicapi no está instalada. Activa los Recursos adicionales en Preferencias para descargar y actualizar automáticamente."
 
 msgid "A faixa do YouTube Music não tem videoId válido."
 msgstr "La pista de YouTube Music no tiene un videoId válido."
@@ -188,6 +203,9 @@ msgstr "La cola de reproducción está vacía. Usa Ctrl+Shift+F para agregar ele
 
 msgid "A instalação automática só está disponível na versão do Windows empacotada."
 msgstr "La instalación automática solo está disponible en la versión de Windows empaquetada."
+
+msgid "A instalação de {runtime} foi aberta em uma nova janela."
+msgstr "La instalación de {runtime} se abrió en una nueva ventana."
 
 msgid "A integração com YouTube Music e YouTube está desativada. Ative essa opção em Preferências, na aba Recursos adicionais."
 msgstr "La integración con YouTube Music y YouTube está desactivada. Activa esta opción en Preferencias, en la pestaña Recursos adicionales."
@@ -214,6 +232,9 @@ msgid "A nova playlist será criada com {count} faixa da seleção atual."
 msgid_plural "A nova playlist será criada com {count} faixas da seleção atual."
 msgstr[0] "La nueva playlist se creará con {count} pista de la selección actual."
 msgstr[1] "La nueva playlist se creará con {count} pistas de la selección actual."
+
+msgid "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
+msgstr "La operación de YouTube Music tardó más de lo esperado y se canceló para evitar un bloqueo."
 
 msgid "A pasta ainda está sendo carregada."
 msgstr "La carpeta todavía se está cargando."
@@ -253,6 +274,9 @@ msgstr "La respuesta de PyPI para ytmusicapi vino en un formato no válido."
 
 msgid "A resposta da PyPI veio em formato inválido."
 msgstr "La respuesta de PyPI vino en un formato no válido."
+
+msgid "A resposta da conta do YouTube Music veio em formato inválido."
+msgstr "La respuesta de la cuenta de YouTube Music llegó en un formato no válido."
 
 msgid "A resposta da release do yt-dlp veio em formato inválido."
 msgstr "La respuesta de la versión de yt-dlp vino en un formato no válido."
@@ -383,6 +407,9 @@ msgstr "Abrir &medio, playlist o carpeta...\tCtrl+Alt+O"
 msgid "Abrir &Pasta...\tCtrl+Shift+O"
 msgstr "Abrir &carpeta...\tCtrl+Shift+O"
 
+msgid "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+msgstr "Abrir &central de YouTube Music...\tCtrl+Shift+Y"
+
 msgid "Abrir &manual do usuário"
 msgstr "Abrir &manual del usuario"
 
@@ -403,6 +430,9 @@ msgstr "Abrir manual del usuario"
 
 msgid "Abrir mídia, playlist ou pasta"
 msgstr "Abrir medio, playlist o carpeta"
+
+msgid "Abrir no {app}"
+msgstr "Abrir en {app}"
 
 msgid "Abrir pasta como playlist"
 msgstr "Abrir carpeta como playlist"
@@ -425,6 +455,9 @@ msgstr "Abrir playlist o video de YouTube Music"
 msgid "Abrir playlist selecionada do YouTube Music"
 msgstr "Abrir playlist seleccionada de YouTube Music"
 
+msgid "Abrir seleção em nova playlist"
+msgstr "Abrir selección en una nueva playlist"
+
 msgid "Abrir site do &Bun"
 msgstr "Abrir sitio de &Bun"
 
@@ -439,6 +472,9 @@ msgstr "Accesibilidad"
 
 msgid "Adicionando {count} {label} à playlist {title}..."
 msgstr "Agregando {count} {label} a la playlist {title}..."
+
+msgid "Adicionar seleção..."
+msgstr "Agregar selección..."
 
 msgid "Adicionar à &Fila\tCtrl+Shift+F"
 msgstr "Agregar a la &cola\tCtrl+Shift+F"
@@ -677,14 +713,29 @@ msgstr "Activar ecualizador en esta pestaña"
 msgid "Ativar integração com YouTube Music e YouTube"
 msgstr "Activar integración con YouTube Music y YouTube"
 
+msgid "Ativar integração nas &Preferências..."
+msgstr "Activar integración en &Preferencias..."
+
+msgid "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y"
+msgstr "Activa la integración de YouTube Music en &Preferencias...\tCtrl+Shift+Y"
+
 msgid "Atuali&zar biblioteca"
 msgstr "Actuali&zar biblioteca"
+
+msgid "Atualizando os recursos adicionais do YouTube Music. A central ficará disponível quando a atualização terminar."
+msgstr "Actualizando los recursos adicionales de YouTube Music. La central estará disponible cuando termine la actualización."
 
 msgid "Atualizando playlists e mixes do YouTube Music."
 msgstr "Actualizando playlists y mixes de YouTube Music."
 
 msgid "Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida."
 msgstr "Actualizando recursos adicionales de YouTube Music. La biblioteca se cargará a continuación."
+
+msgid "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
+msgstr "Actualizando recursos adicionales de YouTube Music. Inténtalo de nuevo en un momento."
+
+msgid "Atualizar autenticação..."
+msgstr "Actualizar autenticación..."
 
 msgid "Atualizar automaticamente as dependências do YouTube Music"
 msgstr "Actualizar automáticamente las dependencias de YouTube Music"
@@ -722,6 +773,9 @@ msgstr "Actualización disponible: versión {version}."
 msgid "Atualizações"
 msgstr "Actualizaciones"
 
+msgid "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente."
+msgstr "Actualiza los recursos adicionales de YouTube Music y vuelve a hacer la autenticación del navegador antes de intentarlo de nuevo."
+
 msgid "Aumentar &Tom (Shift+])"
 msgstr "Subir &tono (Shift+])"
 
@@ -736,6 +790,9 @@ msgstr "Autenticación del navegador guardada en:\n{path}\n\nCuenta conectada: {
 
 msgid "Automático (seguir o sistema)"
 msgstr "Automático (seguir el sistema)"
+
+msgid "Avaliação da mídia atual enviada ao YouTube Music."
+msgstr "Valoración del medio actual enviada a YouTube Music."
 
 msgid "Avaliação da mídia atual removida no YouTube Music."
 msgstr "Valoración del medio actual eliminada en YouTube Music."
@@ -785,6 +842,27 @@ msgstr "Bienvenido a KeyTune"
 msgid "Biblioteca do YouTube Music"
 msgstr "Biblioteca de YouTube Music"
 
+msgid "Biblioteca do YouTube Music atualizada: {playlists} playlist(s) e {mixes} mix(es)."
+msgstr "Biblioteca de YouTube Music actualizada: {playlists} playlist(s) y {mixes} mix(es)."
+
+msgid "Biblioteca do YouTube Music: {items} item(ns) ({mixes} mix(es) personalizada(s) adicionada(s))."
+msgstr "Biblioteca de YouTube Music: {items} elemento(s) ({mixes} mix(es) personalizado(s) agregado(s))."
+
+msgid "Biblioteca do YouTube Music: {items} item(ns). Não foi possível carregar mixes personalizadas."
+msgstr "Biblioteca de YouTube Music: {items} elemento(s). No se pudieron cargar mixes personalizados."
+
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) (todas)."
+msgstr "Biblioteca de YouTube Music: {playlists} playlist(s) cargada(s) (todas)."
+
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s)."
+msgstr "Biblioteca de YouTube Music: {playlists} playlist(s) cargada(s) y {mixes} mix(es) personalizado(s)."
+
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s). Use 'Carregar mais' ou desça até o final da lista para trazer mais."
+msgstr "Biblioteca de YouTube Music: {playlists} playlist(s) cargada(s) y {mixes} mix(es) personalizado(s). Usa 'Cargar más' o baja hasta el final de la lista para traer más."
+
+msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s). Há mais para carregar."
+msgstr "Biblioteca de YouTube Music: {playlists} playlist(s) cargada(s). Hay más para cargar."
+
 msgid "Biblioteca: carregando playlists e mixes…"
 msgstr "Biblioteca: cargando playlists y mixes…"
 
@@ -805,6 +883,12 @@ msgstr "Brasil"
 
 msgid "Busca do YouTube Music e do YouTube"
 msgstr "Búsqueda de YouTube Music y YouTube"
+
+msgid "Busca em {scope}: nenhum resultado para {query}."
+msgstr "Búsqueda en {scope}: ningún resultado para {query}."
+
+msgid "Busca em {scope}: {count} resultado(s) para {query}."
+msgstr "Búsqueda en {scope}: {count} resultado(s) para {query}."
 
 msgid "Busca no catálogo e no YouTube"
 msgstr "Búsqueda en el catálogo y en YouTube"
@@ -896,6 +980,9 @@ msgstr "Cargar tu historial de YouTube Music"
 msgid "Carregar suas músicas curtidas do YouTube Music"
 msgstr "Cargar tus canciones con me gusta de YouTube Music"
 
+msgid "Categorias"
+msgstr "Categorías"
+
 msgid "Categorias de preferências"
 msgstr "Categorías de preferencias"
 
@@ -943,6 +1030,9 @@ msgstr "Con&firmar al salir"
 
 msgid "Concluir"
 msgstr "Finalizar"
+
+msgid "Conectar &conta..."
+msgstr "Conectar &cuenta..."
 
 msgid "Conectar ao YouTube Music"
 msgstr "Conectar a YouTube Music"
@@ -1235,6 +1325,9 @@ msgstr "Dispositivo de au&dio"
 msgid "Dispositivo de áudio"
 msgstr "Dispositivo de audio"
 
+msgid "Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
+msgstr "Dispositivo de audio '{label}' no disponible. Usando el predeterminado del sistema."
+
 msgid "Dispositivo de áudio '{label}' restaurado."
 msgstr "Dispositivo de audio '{label}' restaurado."
 
@@ -1297,6 +1390,18 @@ msgstr "En tendencia en {country}: ningún destacado disponible."
 
 msgid "Em alta em {country}: {count} lista(s) de destaque."
 msgstr "En tendencia en {country}: {count} lista(s) de destacados."
+
+msgid "Em alta · diário"
+msgstr "Tendencias · diario"
+
+msgid "Em alta · gênero"
+msgstr "Tendencias · género"
+
+msgid "Em alta · semanal"
+msgstr "Tendencias · semanal"
+
+msgid "Em alta · vídeos"
+msgstr "Tendencias · videos"
 
 msgid "Em&baralhar (E)"
 msgstr "&Aleatorio (E)"
@@ -1397,6 +1502,9 @@ msgstr "Esta carpeta puede abrirse como playlist estática o en el navegador de 
 msgid "Estados Unidos"
 msgstr "Estados Unidos"
 
+msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", que dispensa PO Token quando há cookies de conta válidos."
+msgstr "Este contenido requiere un PO Token que yt-dlp no puede generar por sí solo. Inicia sesión en YouTube Music desde el menú de la aplicación para usar el cliente \"tv\", que no necesita PO Token cuando hay cookies de cuenta válidas."
+
 msgid "Estônia"
 msgstr "Estonia"
 
@@ -1444,6 +1552,12 @@ msgstr "&Cerrar"
 
 msgid "Faixa &Anterior\tCtrl+PageUp"
 msgstr "Pista &anterior\tCtrl+PageUp"
+
+msgid "Faixa sem título"
+msgstr "Pista sin título"
+
+msgid "Falha desconhecida."
+msgstr "Error desconocido."
 
 msgid "Favorece voz, brilho e graves limpos para pop moderno."
 msgstr "Favorece la voz, el brillo y los graves limpios para el pop moderno."
@@ -1591,6 +1705,9 @@ msgstr "Instalar &Deno"
 
 msgid "Instalar &Node.js"
 msgstr "Instalar &Node.js"
+
+msgid "Instalação de {runtime} aberta no Windows Package Manager."
+msgstr "Instalación de {runtime} abierta en Windows Package Manager."
 
 msgid "Instruções sobre runtime JavaScript do YouTube Music"
 msgstr "Instrucciones sobre el runtime de JavaScript de YouTube Music"
@@ -2196,6 +2313,9 @@ msgstr "No se pudo localizar los créditos de KeyTune. Genera la versión HTML d
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr "No se pudo localizar una playlist de destino en el reproductor."
 
+msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
+msgstr "No se pudo preparar la dependencia ytmusicapi automáticamente. Detalles: {detail}"
+
 msgid "Não foi possível registrar as associações de arquivo."
 msgstr "No se pudieron registrar las asociaciones de archivo."
 
@@ -2210,6 +2330,9 @@ msgstr "No se pudo guardar el resultado en YouTube Music."
 
 msgid "Não foi possível trocar o dispositivo de áudio: {error}."
 msgstr "No se pudo cambiar el dispositivo de audio: {error}."
+
+msgid "Não foi possível validar a autenticação do YouTube Music agora."
+msgstr "No se pudo validar la autenticación de YouTube Music en este momento."
 
 msgid "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
 msgstr "No se pudo validar la autenticación guardada de YouTube Music ahora. Inténtalo de nuevo en unos instantes."
@@ -2253,6 +2376,27 @@ msgstr "El Windows Package Manager no está disponible en esta instalación. Usa
 msgid "O YouTube Music já está processando uma solicitação. Aguarde um momento."
 msgstr "YouTube Music ya está procesando una solicitud. Espera un momento."
 
+msgid "O YouTube Music não adicionou as faixas. Elas já podem estar na playlist ou a playlist não permite edição."
+msgstr "YouTube Music no agregó las pistas. Puede que ya estén en la playlist o que la playlist no permita edición."
+
+msgid "O YouTube Music não confirmou a criação da playlist. Tente novamente."
+msgstr "YouTube Music no confirmó la creación de la playlist. Inténtalo de nuevo."
+
+msgid "O YouTube Music não excluiu a playlist (status: {status})."
+msgstr "YouTube Music no eliminó la playlist (estado: {status})."
+
+msgid "O YouTube Music não removeu as faixas (status: {status})."
+msgstr "YouTube Music no quitó las pistas (estado: {status})."
+
+msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. Se já estiver autenticado, refaça o login com cookies recém-exportados."
+msgstr "YouTube exigió un PO Token (Proof of Origin) para reproducir esta pista en los clientes web/mweb. Inicia sesión en YouTube Music desde el menú de la aplicación (la opción \"Autenticar\") usando cookies de una ventana privada del navegador — el cliente \"tv\" usa esas cookies para reproducir sin PO Token. Si ya estás autenticado, vuelve a iniciar sesión con cookies recién exportadas."
+
+msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
+msgstr "YouTube exigió validación JavaScript. Comprueba que el sistema tenga Deno 2+ o Node.js 20+ instalado e inténtalo de nuevo después de actualizar los recursos adicionales."
+
+msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
+msgstr "YouTube puede estar exigiendo un token adicional en el cliente actual. Actualiza los recursos adicionales e inténtalo de nuevo en unos instantes."
+
 msgid "O arquivo baixado não pôde ser validado."
 msgstr "No se pudo validar el archivo descargado."
 
@@ -2273,6 +2417,15 @@ msgstr "El ejecutable de yt-dlp no se pudo iniciar."
 
 msgid "O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução."
 msgstr "El ejecutable de yt-dlp se descargó, pero no se pudo preparar en esta ejecución."
+
+msgid "O executável yt-dlp não está disponível. Ative os Recursos adicionais do YouTube Music ou use uma build do player que já inclua o yt-dlp."
+msgstr "El ejecutable yt-dlp no está disponible. Activa los Recursos adicionales de YouTube Music o usa una compilación del reproductor que ya incluya yt-dlp."
+
+msgid "O executável yt-dlp não está disponível. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+msgstr "El ejecutable yt-dlp no está disponible. Activa los Recursos adicionales en Preferencias para descargar y actualizar automáticamente."
+
+msgid "O export de cookies não contém um cookie de autenticação compatível do YouTube Music. Faça login em music.youtube.com e exporte novamente os cookies da sessão ativa."
+msgstr "La exportación de cookies no contiene una cookie de autenticación compatible de YouTube Music. Inicia sesión en music.youtube.com y vuelve a exportar las cookies de la sesión activa."
 
 msgid "O item já está no fim da fila."
 msgstr "El elemento ya está al final de la cola."
@@ -2316,11 +2469,20 @@ msgstr "yt-dlp no pudo abrir la pista de YouTube Music."
 msgid "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
 msgstr "yt-dlp no pudo determinar una URL de reproducción compatible para esta pista."
 
+msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+msgstr "yt-dlp no pudo buscar videos en YouTube."
+
+msgid "O yt-dlp não retornou dados válidos."
+msgstr "yt-dlp no devolvió datos válidos."
+
 msgid "O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music."
 msgstr "yt-dlp no devolvió un stream de audio compatible para esta pista de YouTube Music."
 
 msgid "O yt-dlp não retornou uma URL reproduzível para esta faixa do YouTube Music."
 msgstr "yt-dlp no devolvió una URL reproducible para esta pista de YouTube Music."
+
+msgid "O {source} não contém um browser.json válido nem um export JSON de cookies compatível."
+msgstr "El {source} no contiene un browser.json válido ni una exportación JSON de cookies compatible."
 
 msgid "Oceania"
 msgstr "Oceanía"
@@ -2349,11 +2511,17 @@ msgstr "Los logs se rotan automáticamente cada 2 MB y se conservan hasta 3 arch
 msgid "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. Aguarde a conclusão para abrir a central."
 msgstr "Los recursos adicionales de YouTube Music todavía se están actualizando. Espera a que terminen para abrir el panel."
 
+msgid "Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. Reinicie o aplicativo e tente novamente."
+msgstr "Los recursos adicionales de YouTube Music se prepararon, pero no todos se pudieron cargar. Reinicia la aplicación e inténtalo de nuevo."
+
 msgid "Os valores abaixo mostram a curva do preset atualmente selecionado."
 msgstr "Los valores de abajo muestran la curva del preset actualmente seleccionado."
 
 msgid "P&arar\tCtrl+."
 msgstr "&Detener\tCtrl+."
+
+msgid "PO Token ausente"
+msgstr "PO Token ausente"
 
 msgid "Padrão"
 msgstr "Predeterminado"
@@ -2379,6 +2547,9 @@ msgstr "Para abrir en el navegador, indica una carpeta local válida."
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr "Para definir KeyTune como reproductor predeterminado, abre la configuración de Aplicaciones predeterminadas de Windows. ¿Quieres abrirla ahora?"
 
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
+msgstr "Para reproducir desde YouTube Music, yt-dlp necesita un runtime JavaScript instalado en el sistema (Deno 2+ recomendado o Node.js 20+). Sin él, yt-dlp no puede resolver las firmas de audio/video de YouTube y ningún cliente devuelve formatos reproducibles. Instala uno de estos runtimes e inténtalo de nuevo."
+
 msgid "Parado."
 msgstr "Detenido."
 
@@ -2390,6 +2561,9 @@ msgstr "Paso de búsqueda (segundos)"
 
 msgid "Passo de volume"
 msgstr "Paso de volumen"
+
+msgid "Pasta aberta no navegador: {name}."
+msgstr "Carpeta abierta en el navegador: {name}."
 
 msgid "Pasta atual: {name}."
 msgstr "Carpeta actual: {name}."
@@ -2414,6 +2588,9 @@ msgstr "Pausado: {name}"
 
 msgid "Pede confirmação antes de fechar o player."
 msgstr "Pide confirmación antes de cerrar el reproductor."
+
+msgid "Perfis testados: {count}."
+msgstr "Perfiles probados: {count}."
 
 msgid "Peru"
 msgstr "Perú"
@@ -2675,6 +2852,9 @@ msgstr "Registro de logs desactivado. Nivel de detalle no disponible."
 msgid "Reino Unido"
 msgstr "Reino Unido"
 
+msgid "Reinstalando yt-dlp na versão {channel}..."
+msgstr "Reinstalando yt-dlp en la versión {channel}..."
+
 msgid "Remove a autenticação salva da conta do YouTube Music nesta instalação."
 msgstr "Elimina la autenticación guardada de la cuenta de YouTube Music en esta instalación."
 
@@ -2739,6 +2919,9 @@ msgstr "República Dominicana"
 
 msgid "República Tcheca"
 msgstr "República Checa"
+
+msgid "Resolvendo {label}..."
+msgstr "Resolviendo {label}..."
 
 msgid "Restaurar &Tom Original (Shift+\\)"
 msgstr "Restaurar &tono original (Shift+\\)"
@@ -2914,6 +3097,9 @@ msgstr "Sección para abrir una playlist o video por enlace"
 msgid "Seção {label} {state}."
 msgstr "Sección {label} {state}."
 
+msgid "Sinais detectados: {signals}."
+msgstr "Señales detectadas: {signals}."
+
 msgid "Ska"
 msgstr "Ska"
 
@@ -2958,6 +3144,9 @@ msgstr "Tiempo {current} de {total}. {percent}%."
 
 msgid "Tempo: nenhuma mídia carregada."
 msgstr "Tiempo: ningún medio cargado."
+
+msgid "Tempo: {current} / duração desconhecida"
+msgstr "Tiempo: {current} / duración desconocida"
 
 msgid "Tenta trazer presença de palco e mais ambiência."
 msgstr "Intenta aportar presencia de escenario y más ambiente."
@@ -3076,6 +3265,9 @@ msgstr "Ya estás en el último elemento."
 msgid "Você só pode excluir playlists que você criou."
 msgstr "Solo puedes eliminar playlists que hayas creado."
 
+msgid "Você só pode remover faixas de playlists que criou ou onde é colaborador."
+msgstr "Solo puedes quitar pistas de playlists que creaste o en las que eres colaborador."
+
 msgid "Voltar"
 msgstr "Atrás"
 
@@ -3096,6 +3288,9 @@ msgstr "YT Music"
 
 msgid "YouTube &Music por aba\tCtrl+Shift+Y"
 msgstr "YouTube &Music por pestaña\tCtrl+Shift+Y"
+
+msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
+msgstr "YouTube &Music por pestaña (actívalo en Preferencias)\tCtrl+Shift+Y"
 
 msgid "YouTube Music conectado como {name}."
 msgstr "YouTube Music conectado como {name}."
@@ -3124,6 +3319,12 @@ msgstr "[{source}: {title} - {artist}]"
 msgid "ativado"
 msgstr "activado"
 
+msgid "autenticação/bloqueio do YouTube"
+msgstr "autenticación/bloqueo de YouTube"
+
+msgid "desafio JavaScript (EJS)"
+msgstr "desafío JavaScript (EJS)"
+
 msgid "desativado"
 msgstr "desactivado"
 
@@ -3132,6 +3333,9 @@ msgstr "desconocida"
 
 msgid "desligado"
 msgstr "desactivado"
+
+msgid "estável"
+msgstr "estable"
 
 msgid "expandida"
 msgstr "expandida"
@@ -3142,11 +3346,23 @@ msgstr "pista"
 msgid "faixas"
 msgstr "pistas"
 
+msgid "formatos SABR sem URL direta"
+msgstr "formatos SABR sin URL directa"
+
+msgid "indisponível"
+msgstr "no disponible"
+
 msgid "ligado"
 msgstr "activado"
 
 msgid "nenhuma aba de mídia"
 msgstr "ninguna pestaña de medios"
+
+msgid "nightly"
+msgstr "nightly"
+
+msgid "não listada"
+msgstr "no listada"
 
 msgid "pausado"
 msgstr "pausado"
@@ -3154,14 +3370,26 @@ msgstr "pausado"
 msgid "playlist"
 msgstr "playlist"
 
+msgid "privada"
+msgstr "privada"
+
+msgid "pública"
+msgstr "pública"
+
 msgid "recolhida"
 msgstr "contraída"
 
 msgid "resultado"
 msgstr "resultado"
 
+msgid "runtime JavaScript"
+msgstr "runtime JavaScript"
+
 msgid "sem nome"
 msgstr "sin nombre"
+
+msgid "somente formatos de imagem"
+msgstr "solo formatos de imagen"
 
 msgid "tamanho não informado"
 msgstr "tamaño no indicado"

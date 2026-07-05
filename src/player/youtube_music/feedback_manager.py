@@ -93,9 +93,9 @@ class YouTubeMusicFeedbackManager:
             confirmed_status = str(confirmed_song.get("likeStatus") or "").strip().upper()
 
         if confirmed_status != normalized_rating:
-            confirmed_label = confirmed_status or "indisponível"
+            confirmed_label = confirmed_status or _("indisponível")
             return (
-                f"A avaliação foi enviada, mas o servidor ainda retornou likeStatus={confirmed_label}."
+                _("A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}.").format(status=confirmed_label)
             )
 
         if like_status == LikeStatus.LIKE:

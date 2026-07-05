@@ -67,7 +67,7 @@ class PlaybackControlsMixin:
 
         media = self.player.get_media() if hasattr(self, "player") else None
         if media is None:
-            self._set_progress_label("Tempo: nenhuma mídia carregada.")
+            self._set_progress_label(_("Tempo: nenhuma mídia carregada."))
             self._set_progress_gauge_value(0)
             self._maybe_refresh_player_visual_hints()
             return
@@ -80,7 +80,7 @@ class PlaybackControlsMixin:
         current_label = self._format_time_ms(current_time)
 
         if total_time is None or total_time <= 0:
-            self._set_progress_label(f"Tempo: {current_label} / duração desconhecida")
+            self._set_progress_label(_("Tempo: {current} / duração desconhecida").format(current=current_label))
             if self.player.is_playing():
                 # Pulse() drives an indeterminate animation, so it must run every
                 # tick; invalidate the cached value so a later real SetValue applies.

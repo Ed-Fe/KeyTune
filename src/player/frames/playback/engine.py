@@ -163,7 +163,7 @@ class PlaybackEngineMixin:
             and hasattr(self, "_set_status_message")
         ):
             self._set_status_message(
-                f"Resolvendo {self._media_label(media_path)}...",
+                _("Resolvendo {label}...").format(label=self._media_label(media_path)),
                 auto_clear_ms=0,
             )
         self._playback_queue.put(request)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from ..i18n import _
 from .models import YOUTUBE_SEARCH_SOURCE_MUSIC, YouTubeMediaSearchResult
 
 
@@ -9,10 +10,10 @@ from .models import YOUTUBE_SEARCH_SOURCE_MUSIC, YouTubeMediaSearchResult
 # an openable playlist result so it flows through the existing search-results
 # list, playback, and "save to library" paths unchanged.
 _CHART_SECTION_BADGES = (
-    ("daily", "Em alta · diário"),
-    ("weekly", "Em alta · semanal"),
-    ("videos", "Em alta · vídeos"),
-    ("genres", "Em alta · gênero"),
+    ("daily", _("Em alta · diário")),
+    ("weekly", _("Em alta · semanal")),
+    ("videos", _("Em alta · vídeos")),
+    ("genres", _("Em alta · gênero")),
 )
 
 

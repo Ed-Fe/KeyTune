@@ -40,11 +40,11 @@ _COOKIE_FORWARDING_ALLOWED_HOST_SUFFIXES = (
 )
 
 _STREAM_DIAGNOSTIC_SIGNAL_LABELS = {
-    "auth_blocked": "autenticação/bloqueio do YouTube",
-    "js_challenge": "desafio JavaScript (EJS)",
-    "po_token": "PO Token ausente",
-    "sabr_missing_url": "formatos SABR sem URL direta",
-    "only_images": "somente formatos de imagem",
+    "auth_blocked": _("autenticação/bloqueio do YouTube"),
+    "js_challenge": _("desafio JavaScript (EJS)"),
+    "po_token": _("PO Token ausente"),
+    "sabr_missing_url": _("formatos SABR sem URL direta"),
+    "only_images": _("somente formatos de imagem"),
 }
 
 _PRERELEASE_SELF_HEAL_ATTEMPTED = False
@@ -89,10 +89,10 @@ def resolve_stream_playback(media_path):
     available_js_runtimes = find_all_available_javascript_runtimes()
     if not available_js_runtimes:
         raise RuntimeError(
-            "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-            "(Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas "
-            "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
-            "Instale um desses runtimes e tente novamente."
+            _("Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
+              "(Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas "
+              "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
+              "Instale um desses runtimes e tente novamente.")
         )
 
     playback_auth = load_saved_playback_auth()
@@ -683,7 +683,7 @@ def _build_stream_resolution_error_message(
         base_message = base_message + " " + _("Detalhes técnicos: {detail}.").format(detail=normalized_last_error)
 
     if attempted_profiles > 1:
-        base_message = f"{base_message} Perfis testados: {attempted_profiles}."
+        base_message = base_message + " " + _("Perfis testados: {count}.").format(count=attempted_profiles)
 
     if prerelease_retry_attempted:
         base_message = base_message + " " + _("Foi tentada uma atualização avançada do yt-dlp.")
@@ -693,32 +693,32 @@ def _build_stream_resolution_error_message(
             _STREAM_DIAGNOSTIC_SIGNAL_LABELS.get(signal, signal)
             for signal in sorted(normalized_diagnostic_signals)
         ]
-        base_message = f"{base_message} Sinais detectados: {', '.join(signal_labels)}."
+        base_message = base_message + " " + _("Sinais detectados: {signals}.").format(signals=", ".join(signal_labels))
 
     guidance_parts = []
     if "auth_blocked" in normalized_diagnostic_signals:
         guidance_parts.append(
-            "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente."
+            _("Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente.")
         )
 
     if "js_challenge" in normalized_diagnostic_signals:
         guidance_parts.append(
-            "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
+            _("O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais.")
         )
 
     if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:
         guidance_parts.append(
-            "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. "
-            "Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de "
-            "uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. "
-            "Se já estiver autenticado, refaça o login com cookies recém-exportados."
+            _("O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. "
+              "Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de "
+              "uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. "
+              "Se já estiver autenticado, refaça o login com cookies recém-exportados.")
         )
 
     if "po_token" in normalized_diagnostic_signals:
         guidance_parts.append(
-            "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. "
-            "Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", "
-            "que dispensa PO Token quando há cookies de conta válidos."
+            _("Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. "
+              "Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", "
+              "que dispensa PO Token quando há cookies de conta válidos.")
         )
 
     if guidance_parts:
@@ -726,14 +726,14 @@ def _build_stream_resolution_error_message(
 
     lowered_error = normalized_last_error.lower()
     if any(term in lowered_error for term in ("not a bot", "sign in", "captcha", "429", "403")):
-        return (
-            f"{base_message} Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador "
+        return base_message + " " + _(
+            "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador "
             "antes de tentar novamente."
         )
 
     if any(term in lowered_error for term in ("po token", "pot", "missing_pot")):
-        return (
-            f"{base_message} O YouTube pode estar exigindo um token adicional no cliente atual. "
+        return base_message + " " + _(
+            "O YouTube pode estar exigindo um token adicional no cliente atual. "
             "Atualize os recursos adicionais e tente novamente em alguns instantes."
         )
 

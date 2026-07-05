@@ -16,9 +16,9 @@ class PlaylistEditMixin:
     _CREATE_NEW_PLAYLIST_CHOICE = object()
 
     _PLAYLIST_PRIVACY_LABELS = {
-        "PRIVATE": "privada",
-        "UNLISTED": "não listada",
-        "PUBLIC": "pública",
+        "PRIVATE": _("privada"),
+        "UNLISTED": _("não listada"),
+        "PUBLIC": _("pública"),
     }
 
     def _rate_current_youtube_music_media(self, rating):
@@ -54,7 +54,7 @@ class PlaylistEditMixin:
             return service.rate_media_feedback(media_path, rating)
 
         def on_success(message):
-            normalized_message = str(message or "Avaliação da mídia atual enviada ao YouTube Music.").strip()
+            normalized_message = str(message or _("Avaliação da mídia atual enviada ao YouTube Music.")).strip()
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)

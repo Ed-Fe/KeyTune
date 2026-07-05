@@ -296,8 +296,8 @@ class YouTubeMusicLibraryManager:
         status_text = self._playlist_edit_status_text(response)
         if "SUCCEEDED" not in status_text.upper():
             raise RuntimeError(
-                "O YouTube Music não adicionou as faixas. Elas já podem estar na"
-                " playlist ou a playlist não permite edição."
+                _("O YouTube Music não adicionou as faixas. Elas já podem estar na"
+                  " playlist ou a playlist não permite edição.")
             )
 
         added_count = self._playlist_edit_result_count(response)
@@ -331,7 +331,7 @@ class YouTubeMusicLibraryManager:
         new_playlist_id = self._extract_created_playlist_id(response)
         if not new_playlist_id:
             raise RuntimeError(
-                "O YouTube Music não confirmou a criação da playlist. Tente novamente."
+                _("O YouTube Music não confirmou a criação da playlist. Tente novamente.")
             )
         return new_playlist_id
 
@@ -361,7 +361,7 @@ class YouTubeMusicLibraryManager:
         status_text = self._playlist_edit_status_text(response)
         if status_text and "SUCCEEDED" not in status_text.upper():
             raise RuntimeError(
-                f"O YouTube Music não excluiu a playlist (status: {status_text})."
+                _("O YouTube Music não excluiu a playlist (status: {status}).").format(status=status_text)
             )
         return normalized_playlist_id
 
@@ -390,7 +390,7 @@ class YouTubeMusicLibraryManager:
         playlist = client.get_playlist(normalized_playlist_id, limit=None)
         if not self._playlist_is_editable(playlist):
             raise RuntimeError(
-                "Você só pode remover faixas de playlists que criou ou onde é colaborador."
+                _("Você só pode remover faixas de playlists que criou ou onde é colaborador.")
             )
 
         set_video_id_by_video_id = self._map_set_video_ids(playlist)
@@ -408,7 +408,7 @@ class YouTubeMusicLibraryManager:
         status_text = self._playlist_edit_status_text(response)
         if status_text and "SUCCEEDED" not in status_text.upper():
             raise RuntimeError(
-                f"O YouTube Music não removeu as faixas (status: {status_text})."
+                _("O YouTube Music não removeu as faixas (status: {status}).").format(status=status_text)
             )
 
         return len(videos_to_remove)

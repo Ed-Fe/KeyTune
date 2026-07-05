@@ -130,7 +130,7 @@ class BrowseMixin:
                     lambda _event, chosen=category: self._load_youtube_music_mood_playlists(chosen),
                     id=menu_item.GetId(),
                 )
-            menu.AppendSubMenu(submenu, section_title or "Categorias")
+            menu.AppendSubMenu(submenu, section_title or _("Categorias"))
 
         anchor = anchor_window or getattr(panel, "moods_button", None) or self
         try:
@@ -248,7 +248,7 @@ class BrowseMixin:
         # Don't issue API calls while the dependency update may be refreshing
         # ytmusicapi files or replacing the managed yt-dlp executable.
         if getattr(self, "_youtube_music_dependency_update_in_progress", False):
-            message = (
+            message = _(
                 "Atualizando recursos adicionais do YouTube Music. Tente novamente em instantes."
             )
             self._youtube_music_library_status_message = message
@@ -328,16 +328,16 @@ class BrowseMixin:
 
             playlist_count = len(playlists)
             if has_more:
-                summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)"
-                    f" e {mix_added} mix(es) personalizada(s)."
+                summary_message = _(
+                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)"
+                    " e {mixes} mix(es) personalizada(s)."
                     " Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-                )
+                ).format(playlists=playlist_count, mixes=mix_added)
             else:
-                summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)"
-                    f" e {mix_added} mix(es) personalizada(s)."
-                )
+                summary_message = _(
+                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)"
+                    " e {mixes} mix(es) personalizada(s)."
+                ).format(playlists=playlist_count, mixes=mix_added)
             self._set_youtube_music_library_cache(
                 merged,
                 status_message=summary_message,
@@ -346,8 +346,8 @@ class BrowseMixin:
             self._refresh_youtube_music_menu_state()
             if announce:
                 self._announce(
-                    f"Biblioteca do YouTube Music atualizada: {playlist_count} playlist(s)"
-                    f" e {mix_added} mix(es)."
+                    _("Biblioteca do YouTube Music atualizada: {playlists} playlist(s)"
+                      " e {mixes} mix(es).").format(playlists=playlist_count, mixes=mix_added)
                 )
 
         def on_error(exc):
@@ -415,14 +415,14 @@ class BrowseMixin:
 
             self._youtube_music_library_limit = next_limit
             if has_more:
-                summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s)."
+                summary_message = _(
+                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)."
                     " Há mais para carregar."
-                )
+                ).format(playlists=playlist_count)
             else:
-                summary_message = (
-                    f"Biblioteca do YouTube Music: {playlist_count} playlist(s) carregada(s) (todas)."
-                )
+                summary_message = _(
+                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) (todas)."
+                ).format(playlists=playlist_count)
             self._set_youtube_music_library_cache(
                 merged,
                 status_message=summary_message,
@@ -460,10 +460,10 @@ class BrowseMixin:
                 existing_ids.add(mix.playlist_id)
                 added += 1
             merged.sort(key=lambda playlist: playlist.title.casefold())
-            summary_message = (
-                f"Biblioteca do YouTube Music: {len(merged)} item(ns) "
-                f"({added} mix(es) personalizada(s) adicionada(s))."
-            )
+            summary_message = _(
+                "Biblioteca do YouTube Music: {items} item(ns) "
+                "({mixes} mix(es) personalizada(s) adicionada(s))."
+            ).format(items=len(merged), mixes=added)
             self._set_youtube_music_library_cache(merged, status_message=summary_message)
             self._refresh_youtube_music_menu_state()
             if announce and added:
@@ -471,10 +471,10 @@ class BrowseMixin:
 
         def on_error(_exc):
             existing_playlists = self._youtube_music_library_cache()
-            summary_message = (
-                f"Biblioteca do YouTube Music: {len(existing_playlists)} item(ns)."
+            summary_message = _(
+                "Biblioteca do YouTube Music: {items} item(ns)."
                 " Não foi possível carregar mixes personalizadas."
-            )
+            ).format(items=len(existing_playlists))
             self._youtube_music_library_status_message = summary_message
             self._refresh_youtube_music_screen_later()
             self._refresh_youtube_music_menu_state()

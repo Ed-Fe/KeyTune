@@ -8,6 +8,7 @@ from .models import (
     YOUTUBE_SEARCH_SOURCE_YOUTUBE,
     YouTubeMediaSearchResult,
 )
+from ..i18n import _
 from .playlists import build_watch_url, build_youtube_watch_url
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 
@@ -56,7 +57,7 @@ def search_youtube_videos(query, *, limit=15):
         info = response.data
     except Exception as exc:
         raise RuntimeError(
-            _clean_external_tool_error(exc) or "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+            _clean_external_tool_error(exc) or _("O yt-dlp não conseguiu pesquisar vídeos no YouTube.")
         ) from exc
 
     results = []
@@ -244,7 +245,7 @@ def _format_view_count(view_count):
 
     if normalized_view_count <= 0:
         return ""
-    return f"{normalized_view_count:,}".replace(",", ".") + " visualizações"
+    return f"{normalized_view_count:,}".replace(",", ".") + _(" visualizações")
 
 
 def _clean_external_tool_error(error):

@@ -138,7 +138,7 @@ def prepare_browser_auth_input(raw_input, *, source_name="entrada"):
             return _build_headers_raw_from_cookie(cookie_header)
 
         raise RuntimeError(
-            f"O {source_name} não contém um browser.json válido nem um export JSON de cookies compatível."
+            _("O {source} não contém um browser.json válido nem um export JSON de cookies compatível.").format(source=source_name)
         )
 
     cookie_header = _cookie_header_from_netscape_text(normalized_input)
@@ -624,8 +624,8 @@ def _build_headers_raw_from_cookie(cookie_header):
     authorization = _authorization_from_cookie(normalized_cookie_header, origin)
     if not authorization:
         raise RuntimeError(
-            "O export de cookies não contém um cookie de autenticação compatível do YouTube Music. "
-            "Faça login em music.youtube.com e exporte novamente os cookies da sessão ativa."
+            _("O export de cookies não contém um cookie de autenticação compatível do YouTube Music. "
+              "Faça login em music.youtube.com e exporte novamente os cookies da sessão ativa.")
         )
 
     return "\n".join(

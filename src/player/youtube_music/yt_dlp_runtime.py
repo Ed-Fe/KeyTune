@@ -197,8 +197,8 @@ def extract_info(
     executable_path = find_yt_dlp_executable_path()
     if executable_path is None:
         raise RuntimeError(
-            "O executável yt-dlp não está disponível. Ative os Recursos adicionais do YouTube Music "
-            "ou use uma build do player que já inclua o yt-dlp."
+            _("O executável yt-dlp não está disponível. Ative os Recursos adicionais do YouTube Music "
+              "ou use uma build do player que já inclua o yt-dlp.")
         )
 
     normalized_media_path = str(media_path or "").strip()
@@ -250,7 +250,7 @@ def extract_info(
             stderr_text=stderr_text,
         )
 
-    error_message = stderr_text or stdout_text or "O yt-dlp não retornou dados válidos."
+    error_message = stderr_text or stdout_text or _("O yt-dlp não retornou dados válidos.")
     raise RuntimeError(error_message)
 
 

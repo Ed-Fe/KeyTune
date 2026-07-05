@@ -14,7 +14,7 @@ class BackgroundTaskMixin:
         normalized_error_detail = sanitize_sensitive_text(error, max_length=2000)
         if normalized_error_detail:
             return normalized_error_detail
-        return "Falha desconhecida."
+        return _("Falha desconhecida.")
 
     def _is_youtube_music_operation_in_progress(self):
         return bool(getattr(self, "_youtube_music_operation_in_progress", False))
@@ -24,7 +24,7 @@ class BackgroundTaskMixin:
 
     def _announce_track_navigation_blocked_by_youtube_music(self):
         self._announce(
-            "Aguarde o término da operação do YouTube Music antes de ir para a faixa anterior ou próxima."
+            _("Aguarde o término da operação do YouTube Music antes de ir para a faixa anterior ou próxima.")
         )
 
     def _play_windows_youtube_music_blocked_sound(self):
@@ -141,7 +141,7 @@ class BackgroundTaskMixin:
         self._cancel_youtube_music_task_watchdog()
         self._end_youtube_music_busy_state()
         self._announce(
-            "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
+            _("A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento.")
         )
         self._drain_youtube_music_pending_callbacks()
 

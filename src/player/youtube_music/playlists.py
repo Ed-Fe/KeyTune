@@ -211,7 +211,7 @@ def is_music_youtube_url(media_path):
 
 
 def track_display_label(track):
-    title = str(track.get("title") or "Faixa sem título").strip()
+    title = str(track.get("title") or _("Faixa sem título")).strip()
     artist_names = []
     for artist in track.get("artists") or []:
         artist_name = str(artist.get("name") or "").strip()

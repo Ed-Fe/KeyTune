@@ -220,7 +220,7 @@ class FrameLibraryNavigationMixin:
                 "folder_path": normalized_folder_path,
                 "recent_path": normalized_folder_path,
                 "focus_items": True,
-                "completion_announcement": f"Pasta aberta no navegador: {folder_display_name(normalized_folder_path)}.",
+                "completion_announcement": _("Pasta aberta no navegador: {name}.").format(name=folder_display_name(normalized_folder_path)),
             }
         )
         self._show_loading_library_tab(target_index, state)

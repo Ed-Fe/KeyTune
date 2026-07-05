@@ -15,7 +15,7 @@ class SearchMixin:
 
         menu = wx.Menu()
         add_menu = wx.Menu()
-        open_new_item = add_menu.Append(wx.ID_ANY, "Abrir seleção em nova playlist")
+        open_new_item = add_menu.Append(wx.ID_ANY, _("Abrir seleção em nova playlist"))
 
         add_targets = self._youtube_music_search_playlist_tab_targets()
         target_items = []
@@ -30,7 +30,7 @@ class SearchMixin:
         for menu_item, _target in target_items:
             menu_item.Enable(can_add_selection)
 
-        menu.AppendSubMenu(add_menu, "Adicionar seleção...")
+        menu.AppendSubMenu(add_menu, _("Adicionar seleção..."))
 
         add_menu.Bind(
             wx.EVT_MENU,
@@ -368,10 +368,10 @@ class SearchMixin:
         def on_success(search_results):
             result_count = len(search_results)
             if result_count == 0:
-                search_summary = f"Busca em {scope_option.label}: nenhum resultado para {query}."
+                search_summary = _("Busca em {scope}: nenhum resultado para {query}.").format(scope=scope_option.label, query=query)
             else:
-                search_summary = (
-                    f"Busca em {scope_option.label}: {result_count} resultado(s) para {query}."
+                search_summary = _("Busca em {scope}: {count} resultado(s) para {query}.").format(
+                    scope=scope_option.label, count=result_count, query=query
                 )
             self._set_youtube_music_search_results(
                 search_results,

@@ -256,9 +256,9 @@ class LibraryStateMixin:
 
         if login_item is not None:
             login_item.SetItemLabel(
-                ("Atualizar autenticação..." if has_saved_auth else "Conectar &conta...")
+                (_("Atualizar autenticação...") if has_saved_auth else _("Conectar &conta..."))
                 if integration_enabled
-                else "Ativar integração nas &Preferências..."
+                else _("Ativar integração nas &Preferências...")
             )
             login_item.Enable(integration_enabled and not operation_in_progress)
 
@@ -267,9 +267,9 @@ class LibraryStateMixin:
 
         if open_playlist_item is not None:
             open_playlist_item.SetItemLabel(
-                "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+                _("Abrir &central do YouTube Music...\tCtrl+Shift+Y")
                 if integration_enabled
-                else "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y"
+                else _("Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y")
             )
             open_playlist_item.Enable(integration_enabled and not operation_in_progress)
 
@@ -278,9 +278,9 @@ class LibraryStateMixin:
 
         if open_tab_item is not None:
             open_tab_item.SetItemLabel(
-                "YouTube &Music por aba\tCtrl+Shift+Y"
+                _("YouTube &Music por aba\tCtrl+Shift+Y")
                 if integration_enabled
-                else "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
+                else _("YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y")
             )
             open_tab_item.Enable(integration_enabled and not operation_in_progress)
 
