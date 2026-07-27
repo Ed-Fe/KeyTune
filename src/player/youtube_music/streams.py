@@ -16,6 +16,7 @@ from .dependencies import (
 from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
+from .yt_dlp_runtime import find_incompatible_javascript_runtimes
 from ..log import get_logger
 from ..i18n import _
 
@@ -50,9 +51,6 @@ _STREAM_DIAGNOSTIC_SIGNAL_LABELS = {
 _PRERELEASE_SELF_HEAL_ATTEMPTED = False
 _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS = (
     "runtime javascript",
-    "node.js 20+",
-    "deno 2+",
-    "bun",
     "yt-dlp",
 )
 
@@ -69,7 +67,10 @@ def is_missing_javascript_runtime_error_message(error_message):
     normalized_error_message = " ".join(str(error_message or "").split()).casefold()
     if not normalized_error_message:
         return False
-    return all(marker in normalized_error_message for marker in _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS)
+    return all(marker in normalized_error_message for marker in _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS) and any(
+        marker in normalized_error_message
+        for marker in ("deno 2.3+", "node.js 22+", "quickjs", "runtime compatível")
+    )
 
 
 def resolve_stream_url(media_path):
@@ -88,9 +89,21 @@ def resolve_stream_playback(media_path):
 
     available_js_runtimes = find_all_available_javascript_runtimes()
     if not available_js_runtimes:
+        incompatible_js_runtimes = find_incompatible_javascript_runtimes()
+        if incompatible_js_runtimes:
+            runtime_versions = ", ".join(
+                f"{runtime_name} {version or _('versão desconhecida')}"
+                for runtime_name, version in incompatible_js_runtimes.items()
+            )
+            raise RuntimeError(
+                _("O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: "
+                  "{runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS "
+                  "2023-12-9+ e Bun de 1.2.11 até 1.3.14.").format(runtimes=runtime_versions)
+            )
         raise RuntimeError(
             _("Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-              "(Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas "
+              "(Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. "
+              "Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas "
               "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
               "Instale um desses runtimes e tente novamente.")
         )
@@ -105,10 +118,8 @@ def resolve_stream_playback(media_path):
         "extract_flat": False,
         "ignore_no_formats_error": True,
         "socket_timeout": YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS,
-        # yt-dlp only enables JS challenge providers (NodeJCP, DenoJCP, BunJCP) when
-        # the corresponding runtime is explicitly enabled. Official executables
-        # enable Deno by default, but Node and Bun must still be passed via
-        # ``--js-runtimes`` when present.
+        # yt-dlp only enables non-Deno JS challenge providers when they are
+        # explicitly selected, so pass every compatible runtime discovered.
         "js_runtimes": dict(available_js_runtimes),
     }
     temporary_cookie_file_path = ""
@@ -703,7 +714,8 @@ def _build_stream_resolution_error_message(
 
     if "js_challenge" in normalized_diagnostic_signals:
         guidance_parts.append(
-            _("O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais.")
+            _("O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ "
+              "ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais.")
         )
 
     if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:

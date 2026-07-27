@@ -458,9 +458,6 @@ msgstr "Open selected YouTube Music playlist"
 msgid "Abrir seleção em nova playlist"
 msgstr "Open selection in a new playlist"
 
-msgid "Abrir site do &Bun"
-msgstr "Open &Bun website"
-
 msgid "Abrir site do &Deno"
 msgstr "Open &Deno website"
 
@@ -1697,9 +1694,6 @@ msgstr "Enter a local folder, an existing file, a .m3u/.m3u8 playlist or a media
 msgid "Inicialização e sessão"
 msgstr "Startup and session"
 
-msgid "Instalar &Bun"
-msgstr "Install &Bun"
-
 msgid "Instalar &Deno"
 msgstr "Install &Deno"
 
@@ -2391,8 +2385,8 @@ msgstr "YouTube Music did not remove the tracks (status: {status})."
 msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. Se já estiver autenticado, refaça o login com cookies recém-exportados."
 msgstr "YouTube required a PO Token (Proof of Origin) to play this track on the web/mweb clients. Log in to YouTube Music from the application menu (the \"Authenticate\" option) using cookies from a private browser window — the \"tv\" client uses those cookies to play without a PO Token. If you are already authenticated, log in again with freshly exported cookies."
 
-msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
-msgstr "YouTube required JavaScript validation. Make sure the system has Deno 2+ or Node.js 20+ installed and try again after updating the additional resources."
+msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
+msgstr "YouTube required JavaScript validation. Make sure the system has Deno 2.3+, Node.js 22+, or QuickJS 2023-12-9+ installed, then try again after updating the additional resources."
 
 msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
 msgstr "YouTube may be requiring an additional token on the current client. Update the additional resources and try again in a few moments."
@@ -2462,6 +2456,9 @@ msgstr "The ytmusicapi wheel contains invalid paths."
 
 msgid "O yt-dlp demorou demais para responder e foi interrompido."
 msgstr "yt-dlp took too long to respond and was interrupted."
+
+msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS 2023-12-9+ e Bun de 1.2.11 até 1.3.14."
+msgstr "yt-dlp found an installed JavaScript runtime, but none of the versions are compatible: {runtimes}. Update to Deno 2.3+ or Node.js 22+; QuickJS 2023-12-9+ and Bun from 1.2.11 through 1.3.14 are also supported."
 
 msgid "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
 msgstr "yt-dlp could not open the YouTube Music track."
@@ -2538,8 +2535,8 @@ msgstr "Time panel"
 msgid "Panamá"
 msgstr "Panama"
 
-msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nVocê pode instalar qualquer uma destas opções:\n1. Deno 2+ (recomendado pelo projeto yt-dlp)\n2. Node.js 20+ (opção mais conhecida)\n3. Bun 1.0.31+ (descontinuado no yt-dlp; use só se não puder instalar Deno ou Node.js)\n\n"
-msgstr "To open music and videos from YouTube more reliably, the player needs a system component called a JavaScript runtime.\n\nWithout it, YouTube may block the preparation of the audio or video and playback does not start.\n\nYou can install any of these options:\n1. Deno 2+ (recommended by the yt-dlp project)\n2. Node.js 20+ (best-known option)\n3. Bun 1.0.31+ (discontinued in yt-dlp; use only if you cannot install Deno or Node.js)\n\n"
+msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nInstale uma destas opções:\n1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n2. Node.js 22+\n\nPara usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece sua instalação automática.\n\n"
+msgstr "To open music and videos from YouTube more reliably, the player needs a system component called a JavaScript runtime.\n\nWithout it, YouTube may block audio or video preparation and playback will not start.\n\nInstall one of these options:\n1. Deno 2.3+ (recommended by the yt-dlp project)\n2. Node.js 22+\n\nFor advanced users, QuickJS 2023-12-9+ is also compatible. Bun support is deprecated and limited to versions 1.2.11 through 1.3.14, so KeyTune does not offer automatic installation for it.\n\n"
 
 msgid "Para abrir no navegador, informe uma pasta local válida."
 msgstr "To open in the browser, enter a valid local folder."
@@ -2547,8 +2544,8 @@ msgstr "To open in the browser, enter a valid local folder."
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr "To set KeyTune as the default player, open the Windows Default apps settings. Do you want to open them now?"
 
-msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
-msgstr "To play from YouTube Music, yt-dlp needs a JavaScript runtime installed on the system (Deno 2+ recommended or Node.js 20+). Without it, yt-dlp cannot resolve YouTube's audio/video signatures and no client returns playable formats. Install one of these runtimes and try again."
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
+msgstr "To play from YouTube Music, yt-dlp needs a compatible JavaScript runtime installed on the system (Deno 2.3+ recommended or Node.js 22+). QuickJS 2023-12-9+ is also compatible. Without one, yt-dlp cannot resolve YouTube's audio/video signatures and no client returns playable formats. Install one of these runtimes and try again."
 
 msgid "Parado."
 msgstr "Stopped."
@@ -3402,6 +3399,9 @@ msgstr "playing"
 
 msgid "tom original"
 msgstr "original pitch"
+
+msgid "versão desconhecida"
+msgstr "unknown version"
 
 msgid "versão indisponível"
 msgstr "version unavailable"

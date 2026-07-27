@@ -21,11 +21,9 @@ from ._helpers import (
 class DependencyMixin:
     _YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL = "https://deno.com/"
     _YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL = "https://nodejs.org/"
-    _YOUTUBE_MUSIC_JS_RUNTIME_BUN_URL = "https://bun.sh/"
     _YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL = "https://github.com/yt-dlp/yt-dlp/wiki/EJS"
     _YOUTUBE_MUSIC_JS_RUNTIME_DENO_WINGET_ID = "DenoLand.Deno"
     _YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID = "OpenJS.NodeJS.LTS"
-    _YOUTUBE_MUSIC_JS_RUNTIME_BUN_WINGET_ID = "Oven-sh.Bun"
 
     def _open_external_url(self, url, *, failure_message):
         normalized_url = str(url or "").strip()
@@ -106,15 +104,10 @@ class DependencyMixin:
                 self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID,
                 "Node.js",
             ),
-            "install-bun": (
-                self._YOUTUBE_MUSIC_JS_RUNTIME_BUN_WINGET_ID,
-                "Bun",
-            ),
         }
         url_actions = {
             "open-deno": self._YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL,
             "open-node": self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL,
-            "open-bun": self._YOUTUBE_MUSIC_JS_RUNTIME_BUN_URL,
             "open-guide": self._YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL,
         }
 

@@ -43,7 +43,7 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self.assertTrue(
             is_missing_javascript_runtime_error_message(
                 "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-                "(Deno 2+ recomendado, Node.js 20+ ou Bun)."
+                "(Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível."
             )
         )
 
@@ -53,6 +53,17 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
                 "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
             )
         )
+
+    def test_resolve_stream_playback_reports_installed_but_incompatible_runtime(self):
+        with patch(
+            "player.youtube_music.streams.find_all_available_javascript_runtimes",
+            return_value={},
+        ), patch(
+            "player.youtube_music.streams.find_incompatible_javascript_runtimes",
+            return_value={"node": "20.19.4"},
+        ):
+            with self.assertRaisesRegex(RuntimeError, "node 20.19.4"):
+                resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
 
     def test_resolve_stream_playback_configures_ytdlp_and_uses_temporary_cookie_file(self):
         playback_auth = YouTubeMusicPlaybackAuth(

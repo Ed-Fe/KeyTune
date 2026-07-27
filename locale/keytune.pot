@@ -616,10 +616,6 @@ msgid "Abrir seleção em nova playlist"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Abrir site do &Bun"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
 msgid "Abrir site do &Deno"
 msgstr ""
 
@@ -2281,10 +2277,6 @@ msgid "Inicialização e sessão"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Instalar &Bun"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
 msgid "Instalar &Deno"
 msgstr ""
 
@@ -3217,7 +3209,7 @@ msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa no
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2+ ou Node.js 20+ instalado e tente novamente após atualizar os recursos adicionais."
+msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -3310,6 +3302,10 @@ msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O yt-dlp demorou demais para responder e foi interrompido."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS 2023-12-9+ e Bun de 1.2.11 até 1.3.14."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -3414,7 +3410,7 @@ msgid "Panamá"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nVocê pode instalar qualquer uma destas opções:\n1. Deno 2+ (recomendado pelo projeto yt-dlp)\n2. Node.js 20+ (opção mais conhecida)\n3. Bun 1.0.31+ (descontinuado no yt-dlp; use só se não puder instalar Deno ou Node.js)\n\n"
+msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nInstale uma destas opções:\n1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n2. Node.js 22+\n\nPara usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece sua instalação automática.\n\n"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3426,7 +3422,7 @@ msgid "Para definir o KeyTune como player padrão, abra as configurações de Ap
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2+ recomendado ou Node.js 20+). Sem ele, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
 msgstr ""
 
 #: src/player/frames/commands/transport_commands.py
@@ -4581,6 +4577,10 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "tom original"
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "versão desconhecida"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py

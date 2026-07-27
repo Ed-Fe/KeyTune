@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -24,14 +25,20 @@ YTDLP_STABLE_REPOSITORY = ("yt-dlp", "yt-dlp")
 YTDLP_NIGHTLY_REPOSITORY = ("yt-dlp", "yt-dlp-nightly-builds")
 YTDLP_COMMAND_TIMEOUT_SECONDS = 30
 YTDLP_UPDATE_TIMEOUT_SECONDS = 180
-# Ordered by yt-dlp's own recommendation (see the yt-dlp EJS wiki): Deno is the
-# recommended runtime and the only one enabled by default; Node is the next best
-# alternative. Bun support is deprecated upstream (versions after 1.3.14 are
-# unsupported and it may be dropped entirely), so it is tried last and only as a
-# best-effort fallback when nothing better is installed.
-SUPPORTED_JS_RUNTIME_EXECUTABLES = ("deno", "node", "bun")
+# Ordered by yt-dlp's priority (see the yt-dlp EJS wiki). Bun support is
+# deprecated upstream and restricted to a narrow version range.
+SUPPORTED_JS_RUNTIME_EXECUTABLES = ("deno", "node", "qjs", "bun")
 
 _YTDLP_UPDATE_LOCK = threading.Lock()
+
+
+@dataclass(frozen=True, slots=True)
+class JavascriptRuntimeInfo:
+    runtime_name: str
+    executable_name: str
+    executable_path: str
+    version: str
+    supported: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,20 +55,130 @@ class YtDlpReleaseInfo:
     checksum_url: str
 
 
+_JAVASCRIPT_RUNTIME_SPECS = (
+    ("deno", "deno", ("--version",), r"^deno\s+(\S+)", (2, 3, 0), None),
+    ("node", "node", ("--version",), r"^v(\S+)", (22, 0, 0), None),
+    ("quickjs", "qjs", ("--help",), r"^QuickJS(?:-ng)?\s+version\s+(\S+)", (2023, 12, 9), None),
+    ("bun", "bun", ("--version",), r"^(\S+)", (1, 2, 11), (1, 3, 14)),
+)
+
+
 def find_available_javascript_runtime() -> str:
-    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
-        if shutil.which(executable_name):
-            return executable_name
+    available_runtimes = find_all_available_javascript_runtimes()
+    for runtime_name, *_unused in _JAVASCRIPT_RUNTIME_SPECS:
+        if runtime_name in available_runtimes:
+            return runtime_name
     return ""
 
 
 def find_all_available_javascript_runtimes() -> dict[str, str]:
-    discovered: dict[str, str] = {}
-    for executable_name in SUPPORTED_JS_RUNTIME_EXECUTABLES:
-        executable_path = shutil.which(executable_name)
-        if executable_path:
-            discovered[executable_name] = executable_path
-    return discovered
+    return {
+        runtime.runtime_name: runtime.executable_path
+        for runtime in inspect_javascript_runtimes()
+        if runtime.supported
+    }
+
+
+def find_incompatible_javascript_runtimes() -> dict[str, str]:
+    return {
+        runtime.runtime_name: runtime.version
+        for runtime in inspect_javascript_runtimes()
+        if not runtime.supported
+    }
+
+
+def inspect_javascript_runtimes() -> tuple[JavascriptRuntimeInfo, ...]:
+    discovered: list[JavascriptRuntimeInfo] = []
+    for runtime_name, executable_name, version_args, version_pattern, minimum_version, maximum_version in (
+        _JAVASCRIPT_RUNTIME_SPECS
+    ):
+        executable_path = _find_javascript_runtime_executable(executable_name)
+        if not executable_path:
+            continue
+        version_output = _get_executable_version_output(executable_path, version_args)
+        version_match = re.search(version_pattern, version_output, flags=re.MULTILINE)
+        version = version_match.group(1) if version_match else ""
+        version_tuple = _parse_version_tuple(version)
+        is_quickjs_ng = runtime_name == "quickjs" and "QuickJS-ng" in version_output
+        supported = bool(version_tuple) and (
+            is_quickjs_ng
+            or (
+                version_tuple >= minimum_version
+                and (maximum_version is None or version_tuple <= maximum_version)
+            )
+        )
+        discovered.append(
+            JavascriptRuntimeInfo(
+                runtime_name=runtime_name,
+                executable_name=executable_name,
+                executable_path=executable_path,
+                version=version,
+                supported=supported,
+            )
+        )
+    return tuple(discovered)
+
+
+def _find_javascript_runtime_executable(executable_name: str) -> str:
+    candidate_names = [executable_name]
+    if sys.platform.startswith("win"):
+        candidate_names.insert(0, f"{executable_name}.exe")
+
+    candidates: list[Path] = []
+    path_match = shutil.which(executable_name)
+    if path_match:
+        candidates.append(Path(path_match))
+
+    yt_dlp_path = find_yt_dlp_executable_path()
+    if yt_dlp_path is not None:
+        candidates.extend(yt_dlp_path.parent / candidate_name for candidate_name in candidate_names)
+
+    if getattr(sys, "frozen", False):
+        executable_dir = Path(sys.executable).resolve().parent
+        candidates.extend(executable_dir / candidate_name for candidate_name in candidate_names)
+
+    candidates.extend(Path.cwd() / candidate_name for candidate_name in candidate_names)
+
+    seen: set[str] = set()
+    for candidate in candidates:
+        try:
+            resolved_candidate = str(candidate.resolve())
+        except OSError:
+            resolved_candidate = str(candidate)
+        if resolved_candidate in seen:
+            continue
+        seen.add(resolved_candidate)
+        if candidate.is_file():
+            return resolved_candidate
+    return ""
+
+
+def _get_executable_version_output(executable_path: str, version_args: tuple[str, ...]) -> str:
+    try:
+        completed_process = subprocess.run(
+            [executable_path, *version_args],
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=5,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    return "\n".join(
+        part.strip()
+        for part in (completed_process.stdout, completed_process.stderr)
+        if str(part or "").strip()
+    )
+
+
+def _parse_version_tuple(version: str) -> tuple[int, ...]:
+    version_parts = re.findall(r"\d+", str(version or ""))
+    if not version_parts:
+        return ()
+    return tuple(int(part) for part in version_parts[:3])
 
 
 def get_managed_yt_dlp_dir() -> Path:

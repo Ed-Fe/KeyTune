@@ -246,10 +246,8 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
 class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
     ACTION_INSTALL_DENO = "install-deno"
     ACTION_INSTALL_NODE = "install-node"
-    ACTION_INSTALL_BUN = "install-bun"
     ACTION_OPEN_DENO = "open-deno"
     ACTION_OPEN_NODE = "open-node"
-    ACTION_OPEN_BUN = "open-bun"
     ACTION_OPEN_GUIDE = "open-guide"
 
     def __init__(self, parent, *, winget_available):
@@ -293,12 +291,10 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
             True: (
                 (_("Instalar &Deno"), self.ACTION_INSTALL_DENO),
                 (_("Instalar &Node.js"), self.ACTION_INSTALL_NODE),
-                (_("Instalar &Bun"), self.ACTION_INSTALL_BUN),
             ),
             False: (
                 (_("Abrir site do &Deno"), self.ACTION_OPEN_DENO),
                 (_("Abrir site do &Node.js"), self.ACTION_OPEN_NODE),
-                (_("Abrir site do &Bun"), self.ACTION_OPEN_BUN),
             ),
         }
 
@@ -308,10 +304,12 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
                 "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um "
                 "complemento do sistema chamado runtime JavaScript.\n\n"
                 "Sem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\n"
-                "Você pode instalar qualquer uma destas opções:\n"
-                "1. Deno 2+ (recomendado pelo projeto yt-dlp)\n"
-                "2. Node.js 20+ (opção mais conhecida)\n"
-                "3. Bun 1.0.31+ (descontinuado no yt-dlp; use só se não puder instalar Deno ou Node.js)\n\n"
+                "Instale uma destas opções:\n"
+                "1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n"
+                "2. Node.js 22+\n\n"
+                "Para usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está "
+                "descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece "
+                "sua instalação automática.\n\n"
             ).format() + f"{install_hint}\n\n" + _(
                 "Depois da instalação, feche e abra o player novamente para que o novo runtime seja "
                 "encontrado no PATH do sistema."
