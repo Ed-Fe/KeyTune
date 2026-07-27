@@ -299,6 +299,10 @@ class TabManagementMixin:
         state.clear_folder_location()
         state.title = title
         state.source_path = source_path
+
+        self.notebook.SetPageText(target_index, title)
+        self._select_tab(target_index, announce=False)
+
         state.set_items_prepared(
             normalized_items,
             {item: index for index, item in enumerate(normalized_items)},
@@ -306,8 +310,6 @@ class TabManagementMixin:
             start_index=0,
         )
 
-        self.notebook.SetPageText(target_index, title)
-        self._select_tab(target_index, announce=False)
         self._refresh_playlist_browser()
         self._play_media(index=target_index, announce_message=announce_message)
         return target_index

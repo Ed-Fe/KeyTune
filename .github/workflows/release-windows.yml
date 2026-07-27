@@ -34,6 +34,19 @@ jobs:
         run: |
           pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
 
+      - name: Validate system media controls in packaged application
+        shell: powershell
+        run: |
+          $process = Start-Process `
+            -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+            -ArgumentList "--smtc-smoke-test" `
+            -Wait `
+            -PassThru `
+            -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) {
+            throw "O executável não conseguiu inicializar os controles de mídia do sistema."
+          }
+
       - name: Download MPV runtime
         run: |
           python scripts/download_mpv_runtime.py --output-dir build\mpv-runtime

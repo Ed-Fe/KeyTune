@@ -37,9 +37,9 @@ class FrameSmtcMixin:
             on_next=self._smtc_dispatch_next,
             on_previous=self._smtc_dispatch_previous,
         )
+        self._smtc_service = service
         if not service.start():
             return
-        self._smtc_service = service
 
     def _shutdown_smtc_service(self) -> None:
         service = getattr(self, "_smtc_service", None)
@@ -62,9 +62,11 @@ class FrameSmtcMixin:
         if service is None:
             return
         try:
-            service.reassert()
+            recovered = service.reassert(force_rebuild=True)
         except Exception:
-            pass
+            recovered = False
+        if not recovered:
+            return
         # Force the next keep-alive tick to refresh metadata/status promptly.
         self._smtc_last_keepalive = 0.0
         self._refresh_smtc_state()
@@ -77,7 +79,7 @@ class FrameSmtcMixin:
         Windows "now playing" surface in sync as Microsoft recommends.
         """
         service = getattr(self, "_smtc_service", None)
-        if service is None or not service.is_available():
+        if service is None:
             return
 
         player = getattr(self, "player", None)
@@ -96,9 +98,11 @@ class FrameSmtcMixin:
         self._smtc_last_keepalive = now
 
         try:
-            service.reassert()
+            recovered = service.reassert()
         except Exception:
-            pass
+            recovered = False
+        if not recovered:
+            return
         self._refresh_smtc_state()
 
     # --- Button dispatchers (called from a background thread) ---

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pathlib
 import sys
 import unittest
+from unittest.mock import Mock, patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -32,6 +33,29 @@ class MainArgumentFilteringTests(unittest.TestCase):
             initial_paths,
             [r"C:\midia\track.mp3", r"C:\playlists\favoritas.m3u8"],
         )
+
+    @patch("player.smtc.SmtcService")
+    def test_smtc_smoke_test_starts_and_stops_service(self, service_class):
+        service = Mock()
+        service.start.return_value = True
+        service_class.return_value = service
+
+        result = main._run_smtc_smoke_test()
+
+        self.assertEqual(result, 0)
+        service.start.assert_called_once_with()
+        service.stop.assert_called_once_with()
+
+    @patch("player.smtc.SmtcService")
+    def test_smtc_smoke_test_fails_when_service_cannot_start(self, service_class):
+        service = Mock()
+        service.start.return_value = False
+        service_class.return_value = service
+
+        result = main._run_smtc_smoke_test()
+
+        self.assertEqual(result, 1)
+        service.stop.assert_not_called()
 
 
 if __name__ == "__main__":

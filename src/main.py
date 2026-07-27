@@ -4,6 +4,9 @@ import sys
 from player.mpv_runtime import bootstrap_mpv_runtime
 
 
+_SMTC_SMOKE_TEST_ARGUMENT = "--smtc-smoke-test"
+
+
 def _normalize_launch_path(path):
     normalized_path = str(path or "").strip().strip('"')
     if not normalized_path:
@@ -61,7 +64,20 @@ def _setup_language():
     setup_translation(_read_saved_language())
 
 
+def _run_smtc_smoke_test():
+    from player.smtc import SmtcService
+
+    service = SmtcService()
+    if not service.start():
+        return 1
+    service.stop()
+    return 0
+
+
 def main():
+    if _SMTC_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
+        return _run_smtc_smoke_test()
+
     bootstrap_mpv_runtime()
 
     _setup_language()
@@ -74,12 +90,13 @@ def main():
     # or a focus request for a bare launch) and exit. Only start a new instance
     # when none is already running.
     if try_send_to_existing_instance(initial_paths):
-        return
+        return 0
 
     from player.app import main as app_main
 
     app_main(initial_paths=initial_paths)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

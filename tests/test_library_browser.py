@@ -52,6 +52,19 @@ class PlaylistBrowserPanelTests(unittest.TestCase):
         self.assertEqual(panel.items_list.focus_calls, [0])
         self.assertEqual(panel.items_list.visible_calls, [0])
 
+    def test_activate_selected_prefers_focused_item_over_stale_selection(self):
+        panel = PlaylistBrowserPanel.__new__(PlaylistBrowserPanel)
+        panel._items = ["primeiro", "segundo"]
+        panel.items_list = _FakeListCtrl(selected=0, focused=1)
+        panel._on_activate_item = Mock()
+
+        panel._activate_selected()
+
+        panel._on_activate_item.assert_called_once_with(1)
+        self.assertEqual(panel.items_list.selected, 1)
+        self.assertEqual(panel.items_list.focus_calls, [1])
+        self.assertEqual(panel.items_list.visible_calls, [1])
+
 
 if __name__ == "__main__":
     unittest.main()

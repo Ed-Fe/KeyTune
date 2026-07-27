@@ -180,7 +180,7 @@ class SmtcService:
             self._cleanup_locked()
             return False
 
-    def reassert(self) -> bool:
+    def reassert(self, *, force_rebuild: bool = False) -> bool:
         """Reclaim ownership of the system media transport controls.
 
         Windows can silently drop a stale SMTC session when the audio
@@ -194,6 +194,9 @@ class SmtcService:
         if not _load_smtc_dependencies():
             return False
         with self._lock:
+            if force_rebuild:
+                self._cleanup_locked()
+                return self._start_locked()
             if not self._available or self._smtc is None:
                 return self._start_locked()
             try:

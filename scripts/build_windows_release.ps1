@@ -73,6 +73,17 @@ if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
 
+Write-Step "Validando controles de mídia do sistema no executável"
+$smtcSmokeProcess = Start-Process `
+    -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+    -ArgumentList "--smtc-smoke-test" `
+    -Wait `
+    -PassThru `
+    -WindowStyle Hidden
+if ($smtcSmokeProcess.ExitCode -ne 0) {
+    throw "O executável não conseguiu inicializar os controles de mídia do sistema."
+}
+
 Write-Step "Baixando yt-dlp oficial ($YtDlpChannel)"
 & $PythonExe scripts\download_yt_dlp_release.py --channel $YtDlpChannel --output-dir "dist\KeyTune"
 if ($LASTEXITCODE -ne 0) {
