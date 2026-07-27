@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-07-27
+
+### Corrigido
+- **Reprodução automática de playlists**: playlists preparadas pelo YouTube Music voltam a iniciar corretamente a primeira faixa.
+- **Controles de mídia Bluetooth**: recupera a integração com os controles de mídia do Windows após reconexões.
+- **YouTube Music e yt-dlp**: identifica runtimes JavaScript compatíveis e informa quando os instalados estão desatualizados ou incompatíveis.
+- **Notas da versão**: preserva a codificação UTF-8 ao publicar no GitHub e mostra o conteúdo como texto puro no diálogo de atualização.
+
 ## [1.2.0] - 2026-07-05
 
 ### Adicionado
