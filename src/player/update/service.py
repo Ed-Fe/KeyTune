@@ -242,6 +242,22 @@ def format_byte_count(byte_count: int) -> str:
     return f"{size} B"
 
 
+def release_notes_to_plain_text(release_notes: str) -> str:
+    text = str(release_notes or "").strip()
+    if not text:
+        return ""
+
+    text = re.sub(r"(?m)^[ \t]{0,3}#{1,6}[ \t]*", "", text)
+    text = re.sub(r"(?m)^\s*>\s?", "", text)
+    text = re.sub(r"(?m)^\s*```.*$", "", text)
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1 (\2)", text)
+    text = re.sub(r"`([^`\r\n]+)`", r"\1", text)
+    text = re.sub(r"(\*\*|__)(.+?)\1", r"\2", text)
+    text = re.sub(r"(?<!\w)([*_])(.+?)\1", r"\2", text)
+    text = re.sub(r"(?m)^\[(\d+(?:\.\d+)*)\]", r"\1", text)
+    return "\n".join(line.rstrip() for line in text.splitlines()).strip()
+
+
 def _version_key(version: str) -> tuple[int, ...]:
     parts = [int(part) for part in re.findall(r"\d+", normalize_version(version))]
     return tuple(parts or [0])

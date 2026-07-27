@@ -5,7 +5,14 @@ import threading
 import wx
 
 from ..i18n import _
-from .service import UpdateCancelledError, UpdateError, UpdateInfo, download_release_archive, format_byte_count
+from .service import (
+    UpdateCancelledError,
+    UpdateError,
+    UpdateInfo,
+    download_release_archive,
+    format_byte_count,
+    release_notes_to_plain_text,
+)
 
 
 class UpdateAvailableDialog(wx.Dialog):
@@ -81,7 +88,7 @@ class UpdateAvailableDialog(wx.Dialog):
         self.CentreOnParent()
 
     def _format_release_notes(self, release_notes: str) -> str:
-        normalized_notes = str(release_notes or "").strip()
+        normalized_notes = release_notes_to_plain_text(release_notes)
         if normalized_notes:
             return normalized_notes
         return _("As notas desta versão ainda não foram publicadas na release do GitHub.")
