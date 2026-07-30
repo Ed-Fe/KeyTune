@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-07-30
+
+### Corrigido
+- **Reprodução do YouTube Music**: adiciona fallback de sessão para tentar perfis sem autenticação quando o YouTube recusa a reprodução autenticada.
+
 ## [1.2.1] - 2026-07-27
 
 ### Corrigido
