@@ -9,6 +9,7 @@ import wx
 
 from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
+from .helpers import is_youtube_music_media
 
 
 _logger = get_logger(__name__)
@@ -211,8 +212,9 @@ class PlayerBackendMixin:
         wx.CallAfter(self._handle_player_started, player_key)
         wx.CallAfter(self._smtc_refresh_if_active, player_key)
 
-    def _on_media_player_error(self, _event, player_key):
-        wx.CallAfter(self._handle_player_error, player_key)
+    def _on_media_player_error(self, event, player_key):
+        error_detail = str(getattr(event, "detail", "") or "").strip()
+        wx.CallAfter(self._handle_player_error, player_key, error_detail)
 
     def _handle_player_end_reached(self, player_key):
         crossfade_state = getattr(self, "_crossfade_state", None)
@@ -247,10 +249,53 @@ class PlayerBackendMixin:
 
         self._begin_pending_crossfade()
 
-    def _handle_player_error(self, player_key):
-        _logger.warning("MPV playback error on player slot '%s'", player_key)
+    def _handle_player_error(self, player_key, error_detail=""):
+        _logger.warning(
+            "MPV playback error on player slot '%s' (%s)",
+            player_key,
+            error_detail or "no detail",
+        )
         crossfade_state = getattr(self, "_crossfade_state", None)
+        media_path = self._player_loaded_media_path(player_key)
+        is_http_403 = str(error_detail or "").strip().upper() == "HTTP 403"
+        if is_http_403 and is_youtube_music_media(media_path):
+            service = self._youtube_music_service_for_playback()
+            next_playback_mode = (
+                service.advance_stream_playback_after_http_403()
+                if service is not None
+                else ""
+            )
+            if next_playback_mode:
+                if hasattr(self, "_set_status_message"):
+                    retry_message = _("O YouTube recusou a reprodução. Tentando outro perfil...")
+                    if next_playback_mode == "visionos":
+                        retry_message = _("A reprodução autenticada foi recusada. Tentando sem a conta...")
+                    self._set_status_message(
+                        retry_message,
+                        auto_clear_ms=0,
+                    )
+                if crossfade_state and crossfade_state.get("incoming_key") == player_key:
+                    if self._fallback_pending_crossfade_to_regular_playback():
+                        return
+                elif player_key == getattr(self, "_active_player_key", None):
+                    tab_index = self._get_active_playlist_index()
+                    state = self._get_playlist_state(tab_index)
+                    if state and state.current_media_path == media_path:
+                        self._queue_media_start(
+                            media_path,
+                            tab_index=tab_index,
+                            announce_message="",
+                        )
+                        return
+
         if not crossfade_state or crossfade_state.get("incoming_key") != player_key:
+            if player_key == getattr(self, "_active_player_key", None):
+                message = _("Não foi possível reproduzir a mídia.")
+                if error_detail:
+                    message = _("Não foi possível reproduzir a mídia: {detail}.").format(detail=error_detail)
+                if hasattr(self, "_set_status_message"):
+                    self._set_status_message(message)
+                self._announce(message)
             return
 
         if self._fallback_pending_crossfade_to_regular_playback():

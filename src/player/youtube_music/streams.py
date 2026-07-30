@@ -77,7 +77,7 @@ def resolve_stream_url(media_path):
     return resolve_stream_playback(media_path).stream_url
 
 
-def resolve_stream_playback(media_path):
+def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_player_client=""):
     global _PRERELEASE_SELF_HEAL_ATTEMPTED
 
     normalized_media_path = str(media_path or "").strip()
@@ -109,6 +109,11 @@ def resolve_stream_playback(media_path):
         )
 
     playback_auth = load_saved_playback_auth()
+    use_saved_auth = bool(use_account_cookies)
+    cookie_header = playback_auth.cookie_header if use_saved_auth else ""
+    cookie_file_path = playback_auth.cookie_file_path if use_saved_auth else ""
+    yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
+    playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
 
     base_options = {
         "quiet": True,
@@ -123,34 +128,39 @@ def resolve_stream_playback(media_path):
         "js_runtimes": dict(available_js_runtimes),
     }
     temporary_cookie_file_path = ""
-    if playback_auth.cookie_header:
-        temporary_cookie_file_path = create_temporary_browser_auth_cookie_file(playback_auth.cookie_header)
+    if cookie_header:
+        temporary_cookie_file_path = create_temporary_browser_auth_cookie_file(cookie_header)
 
     if temporary_cookie_file_path:
         base_options["cookiefile"] = temporary_cookie_file_path
-    elif playback_auth.cookie_file_path:
-        base_options["cookiefile"] = playback_auth.cookie_file_path
+    elif cookie_file_path:
+        base_options["cookiefile"] = cookie_file_path
 
-    if playback_auth.yt_dlp_http_headers:
-        base_options["http_headers"] = dict(playback_auth.yt_dlp_http_headers)
+    if yt_dlp_http_headers:
+        base_options["http_headers"] = dict(yt_dlp_http_headers)
 
-    has_account_cookies = bool(playback_auth.cookie_header) or bool(playback_auth.cookie_file_path)
+    has_account_cookies = bool(cookie_header) or bool(cookie_file_path)
 
     # Per yt-dlp PO Token guide (https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide):
     # - "tv" does NOT require PO Token; with account cookies it returns playable formats.
-    # - "tv_simply" also avoids PO Token but does NOT accept account cookies.
-    # - "default" (web) needs PO Token in theory, but works in practice for many tracks
-    #   and is kept as a last fallback for redundancy.
+    # - "visionos" currently exposes high-quality audio without account cookies.
+    # - "tv_simply" avoids PO Token and does not accept account cookies, so it is
+    #   kept as the final anonymous fallback.
     # Keep this list short: each profile is a full extractor round-trip and they are slow.
     if has_account_cookies:
         extractor_profiles = [
             {"extractor_args": {"youtube": {"player_client": ["tv"]}}},
-            {"extractor_args": {"youtube": {"player_client": ["default"]}}},
         ]
     else:
+        normalized_anonymous_player_client = str(anonymous_player_client or "").strip()
+        anonymous_player_clients = (
+            [normalized_anonymous_player_client]
+            if normalized_anonymous_player_client
+            else ["visionos", "tv_simply"]
+        )
         extractor_profiles = [
-            {"extractor_args": {"youtube": {"player_client": ["tv_simply"]}}},
-            {"extractor_args": {"youtube": {"player_client": ["default"]}}},
+            {"extractor_args": {"youtube": {"player_client": [player_client]}}}
+            for player_client in anonymous_player_clients
         ]
 
     format_selectors = ["bestaudio/best"]
@@ -189,7 +199,7 @@ def resolve_stream_playback(media_path):
                 try:
                     resolved_playback = _preferred_stream_from_info(
                         info,
-                        playback_auth_headers=playback_auth.playback_http_headers,
+                        playback_auth_headers=playback_http_headers,
                     )
                 except RuntimeError as exc:
                     local_last_error = _clean_external_tool_error(exc) or str(exc)

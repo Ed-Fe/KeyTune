@@ -269,6 +269,9 @@ msgstr "La versión de yt-dlp vino con metadatos incompletos."
 msgid "A release mais recente da ytmusicapi não publicou um wheel utilizável."
 msgstr "La versión más reciente de ytmusicapi no publicó un wheel utilizable."
 
+msgid "A reprodução autenticada foi recusada. Tentando sem a conta..."
+msgstr "La reproducción autenticada fue rechazada. Intentando sin la cuenta..."
+
 msgid "A resposta da PyPI para ytmusicapi veio em formato inválido."
 msgstr "La respuesta de PyPI para ytmusicapi vino en un formato no válido."
 
@@ -2319,6 +2322,12 @@ msgstr "No se pudieron eliminar las asociaciones de archivo."
 msgid "Não foi possível remover da playlist do YouTube Music."
 msgstr "No se pudo quitar de la playlist de YouTube Music."
 
+msgid "Não foi possível reproduzir a mídia."
+msgstr "No se pudo reproducir el contenido multimedia."
+
+msgid "Não foi possível reproduzir a mídia: {detail}."
+msgstr "No se pudo reproducir el contenido multimedia: {detail}."
+
 msgid "Não foi possível salvar o resultado no YouTube Music."
 msgstr "No se pudo guardar el resultado en YouTube Music."
 
@@ -2390,6 +2399,9 @@ msgstr "YouTube exigió validación JavaScript. Comprueba que el sistema tenga D
 
 msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
 msgstr "YouTube puede estar exigiendo un token adicional en el cliente actual. Actualiza los recursos adicionales e inténtalo de nuevo en unos instantes."
+
+msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
+msgstr "YouTube rechazó la reproducción. Intentando con otro perfil..."
 
 msgid "O arquivo baixado não pôde ser validado."
 msgstr "No se pudo validar el archivo descargado."

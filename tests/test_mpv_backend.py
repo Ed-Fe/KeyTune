@@ -210,6 +210,19 @@ class MPVPlayerTests(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         self.assertEqual(len(end_reached), 0)
 
+    def test_error_event_includes_http_status_reported_by_mpv(self):
+        player, core = self._make_player_with_loaded_media(
+            path="https://rr1---sn.example.googlevideo.com/audio.webm"
+        )
+        errors = self._count_errors(player)
+        log_handler = core.created_with_kwargs["log_handler"]
+
+        log_handler("error", "curl", "HTTP error 403")
+        self._emit_end_file(core, self.fake_module.MpvEventEndFile.ERROR)
+
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0].detail, "HTTP 403")
+
     def test_resume_after_pause_does_not_reload_media(self):
         player = mpv_backend.MPVPlayer(video_output_enabled=False)
         media = mpv_backend.MPVMedia(path="song.mp3")

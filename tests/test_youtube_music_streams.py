@@ -211,10 +211,54 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self.assertEqual(
             captured_profiles,
             [
+                {"youtube": {"player_client": ["visionos"]}},
                 {"youtube": {"player_client": ["tv_simply"]}},
-                {"youtube": {"player_client": ["default"]}},
             ],
         )
+
+    def test_resolve_stream_playback_can_ignore_saved_account_cookies(self):
+        playback_auth = YouTubeMusicPlaybackAuth(
+            cookie_header="SID=abc; HSID=def",
+            user_agent="Mozilla/5.0 Teste",
+            cookie_file_path="C:/tmp/ytmusic_cookies.txt",
+        )
+        captured_calls = []
+
+        def fake_extract(media_path, **kwargs):
+            captured_calls.append((media_path, kwargs))
+            return _response(
+                {
+                    "formats": [
+                        {
+                            "url": "https://rr1---sn.example.googlevideo.com/audio.webm",
+                            "vcodec": "none",
+                            "acodec": "opus",
+                            "protocol": "https",
+                            "abr": 128,
+                        }
+                    ],
+                    "http_headers": {"User-Agent": "yt-test/1.0"},
+                }
+            )
+
+        with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=playback_auth), patch(
+            "player.youtube_music.streams.create_temporary_browser_auth_cookie_file",
+        ) as create_temp_cookie_file, patch(
+            "player.youtube_music.streams.extract_yt_dlp_info",
+            side_effect=fake_extract,
+        ):
+            resolved_playback = resolve_stream_playback(
+                "https://www.youtube.com/watch?v=abc123DEF45",
+                use_account_cookies=False,
+            )
+
+        self.assertEqual(resolved_playback.http_headers, {"User-Agent": "yt-test/1.0"})
+        self.assertEqual(len(captured_calls), 1)
+        _media_path, kwargs = captured_calls[0]
+        self.assertEqual(kwargs["cookie_file_path"], "")
+        self.assertIsNone(kwargs["http_headers"])
+        self.assertEqual(kwargs["extractor_args"], {"youtube": {"player_client": ["visionos"]}})
+        create_temp_cookie_file.assert_not_called()
 
     def test_resolve_stream_playback_accepts_audio_with_missing_acodec_metadata(self):
         with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=YouTubeMusicPlaybackAuth()):

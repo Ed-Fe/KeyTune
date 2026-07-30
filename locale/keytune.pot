@@ -362,6 +362,10 @@ msgstr ""
 msgid "A release mais recente da ytmusicapi não publicou um wheel utilizável."
 msgstr ""
 
+#: src/player/frames/playback/backend.py
+msgid "A reprodução autenticada foi recusada. Tentando sem a conta..."
+msgstr ""
+
 #: src/player/youtube_music/dependencies.py
 msgid "A resposta da PyPI para ytmusicapi veio em formato inválido."
 msgstr ""
@@ -3119,6 +3123,14 @@ msgstr ""
 msgid "Não foi possível remover da playlist do YouTube Music."
 msgstr ""
 
+#: src/player/frames/playback/backend.py
+msgid "Não foi possível reproduzir a mídia."
+msgstr ""
+
+#: src/player/frames/playback/backend.py
+msgid "Não foi possível reproduzir a mídia: {detail}."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível salvar o resultado no YouTube Music."
 msgstr ""
@@ -3214,6 +3226,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
+msgstr ""
+
+#: src/player/frames/playback/backend.py
+msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
 msgstr ""
 
 #: src/player/update/service.py

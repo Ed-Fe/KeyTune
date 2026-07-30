@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import re
 import sys
 from dataclasses import dataclass
 from enum import Enum
@@ -39,6 +40,12 @@ class MPVMedia:
     http_headers: dict[str, str] | None = None
 
 
+@dataclass(slots=True)
+class MPVPlaybackError:
+    detail: str = ""
+    native_event: Any = None
+
+
 class MPVEventManager:
     def __init__(self):
         self._callbacks: dict[PlayerEventType, list[tuple[Callable[..., Any], tuple[Any, ...]]]] = {
@@ -71,6 +78,7 @@ class MPVPlayer:
         self._bound_handle: str | None = None
         self._bound_video_output = video_output_enabled
         self._last_end_reason: int | None = None
+        self._last_playback_error_detail = ""
         # With ``keep-open=yes`` MPV does NOT send an end-file event at the
         # natural end of a track (the file stays loaded, paused on the last
         # frame). The documented way to detect a natural end is to observe the
@@ -98,6 +106,8 @@ class MPVPlayer:
             # download instead of giving up. These are ignored for local files.
             "network_timeout": 60,
             "stream_lavf_o": "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5",
+            "log_handler": self._handle_log_message,
+            "loglevel": "warn",
         }
         if not video_output_enabled:
             player_kwargs["video"] = False
@@ -185,7 +195,13 @@ class MPVPlayer:
                 self._loaded_media_path = None
                 self._needs_load = True
                 self._eof_reached_state = False
-                self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_ERROR, event)
+                self._event_manager.emit(
+                    PlayerEventType.MEDIA_PLAYER_ERROR,
+                    MPVPlaybackError(
+                        detail=self._last_playback_error_detail,
+                        native_event=event,
+                    ),
+                )
                 return
             # ``keep-open=no`` setups still deliver EOF here; honor it so end of
             # track keeps working if ``keep-open`` is ever turned off. Guard
@@ -221,6 +237,12 @@ class MPVPlayer:
             self._player.observe_property("eof-reached", _on_eof_reached)
         except Exception:
             _logger.warning("Could not observe 'eof-reached'; natural end of track may not be detected.")
+
+    def _handle_log_message(self, _level, _prefix, message):
+        normalized_message = " ".join(str(message or "").split())
+        match = re.search(r"\bHTTP error\s+(\d{3})\b", normalized_message, re.IGNORECASE)
+        if match is not None:
+            self._last_playback_error_detail = f"HTTP {match.group(1)}"
 
     def event_manager(self):
         return self._event_manager
@@ -271,6 +293,7 @@ class MPVPlayer:
         if self._bound_handle and self._bound_video_output:
             self._set_window_handle(self._bound_handle)
         if self._needs_load or self._loaded_media_path != media.path:
+            self._last_playback_error_detail = ""
             self._apply_media_http_headers(media)
             loadfile_options: dict[str, str] = {}
             if start_seconds is not None:

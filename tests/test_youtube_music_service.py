@@ -17,6 +17,50 @@ from player.youtube_music.streams import ResolvedStreamPlayback
 
 
 class YouTubeMusicServiceTests(unittest.TestCase):
+    def test_switches_stream_resolution_to_anonymous_mode_for_the_session(self):
+        service = YouTubeMusicService()
+        media_path = "https://www.youtube.com/watch?v=abc123DEF45"
+        resolved_playback = ResolvedStreamPlayback(
+            stream_url="https://rr1---sn.example.googlevideo.com/audio.webm",
+        )
+
+        with patch.object(service, "has_saved_browser_auth", return_value=True), patch(
+            "player.youtube_music.service.resolve_music_stream_playback",
+            return_value=resolved_playback,
+        ) as resolve_stream:
+            service.resolve_stream_playback(media_path)
+            next_mode = service.advance_stream_playback_after_http_403()
+            service.resolve_stream_playback(media_path)
+
+        self.assertEqual(next_mode, "visionos")
+        self.assertEqual(
+            [
+                (
+                    call.kwargs["use_account_cookies"],
+                    call.kwargs["anonymous_player_client"],
+                )
+                for call in resolve_stream.call_args_list
+            ],
+            [(True, ""), (False, "")],
+        )
+
+    def test_http_403_advances_stream_profiles_once_per_session(self):
+        service = YouTubeMusicService()
+
+        with patch.object(service, "has_saved_browser_auth", return_value=True):
+            self.assertEqual(service.advance_stream_playback_after_http_403(), "visionos")
+            self.assertEqual(service.advance_stream_playback_after_http_403(), "tv_simply")
+            self.assertEqual(service.advance_stream_playback_after_http_403(), "")
+
+        with patch(
+            "player.youtube_music.service.resolve_music_stream_playback",
+            return_value=ResolvedStreamPlayback(stream_url="https://media.example.invalid/audio.mp4"),
+        ) as resolve_stream:
+            service.resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
+
+        self.assertFalse(resolve_stream.call_args.kwargs["use_account_cookies"])
+        self.assertEqual(resolve_stream.call_args.kwargs["anonymous_player_client"], "tv_simply")
+
     def test_cache_ttl_respects_expiring_signed_urls(self):
         service = YouTubeMusicService()
         media_path = "https://www.youtube.com/watch?v=abc123DEF45"
