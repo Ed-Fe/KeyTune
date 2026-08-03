@@ -64,22 +64,36 @@ class AuthMixin:
                 self._announce(_("Conexão com o YouTube Music cancelada."))
                 return
 
+            auth_mode = dialog.get_auth_mode()
+            selected_browser = dialog.get_selected_browser()
             headers_raw = dialog.get_headers_raw()
             browser_json_path = dialog.get_browser_json_path()
         finally:
             dialog.Destroy()
 
-        if not headers_raw and not browser_json_path:
-            wx.MessageBox(
-                _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
-                "YouTube Music",
-                wx.OK | wx.ICON_INFORMATION,
-                self,
-            )
-            return
-
         try:
-            saved_path = service.save_browser_auth(headers_raw=headers_raw, source_file_path=browser_json_path)
+            if auth_mode == "browser":
+                if not selected_browser:
+                    wx.MessageBox(
+                        _("Selecione um navegador na lista antes de conectar."),
+                        "YouTube Music",
+                        wx.OK | wx.ICON_INFORMATION,
+                        self,
+                    )
+                    return
+                saved_path = service.save_browser_auth_from_browser(selected_browser)
+            else:
+                # Modo manual — comportamento original intacto
+                if not headers_raw and not browser_json_path:
+                    wx.MessageBox(
+                        _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
+                        "YouTube Music",
+                        wx.OK | wx.ICON_INFORMATION,
+                        self,
+                    )
+                    return
+                saved_path = service.save_browser_auth(headers_raw=headers_raw, source_file_path=browser_json_path)
+
             account_name = service.get_connected_account_name()
         except Exception as exc:
             service.clear_client_cache()

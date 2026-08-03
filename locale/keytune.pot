@@ -101,6 +101,10 @@ msgstr ""
 msgid "&Exibir"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "&Exportar do navegador instalado"
+msgstr ""
+
 #: src/player/about/dialog.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/youtube_music/dialog.py
@@ -113,6 +117,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "&Histórico"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "&Informar manualmente (arquivo ou texto)"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -241,10 +249,6 @@ msgid "A autenticação salva do YouTube Music não é mais válida."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
-msgid "A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}."
-msgstr ""
-
-#: src/player/youtube_music/feedback_manager.py
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr ""
 
@@ -258,6 +262,10 @@ msgstr ""
 
 #: src/player/youtube_music/dependencies.py
 msgid "A dependência ytmusicapi não está instalada. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "A exportação de cookies do {browser} demorou demais e foi cancelada."
 msgstr ""
 
 #: src/player/youtube_music/playlists.py
@@ -820,7 +828,7 @@ msgid "Argentina"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Arquivo de conexão"
+msgid "Arquivo de conexão:"
 msgstr ""
 
 #: src/player/file_associations.py
@@ -1231,6 +1239,10 @@ msgstr ""
 msgid "Caminho copiado."
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Caminho de saída inválido para o arquivo de cookies."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Caminho do arquivo de conexão"
 msgstr ""
@@ -1390,10 +1402,6 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Conectar ou atualizar acesso do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Conecte sua conta do YouTube Music usando uma destas opções:\n\n1. Caminho mais simples: faça login em music.youtube.com no navegador e exporte os cookies da sessão para um arquivo.\n2. Se você já tiver um browser.json, um JSON de cookies ou um cookies.txt, selecione esse arquivo abaixo.\n3. O campo de texto é opcional e serve apenas para quem prefere colar manualmente os dados do navegador."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -1619,7 +1627,7 @@ msgid "Curva neutra, útil para manter o som original da mídia."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Dados copiados do navegador (opcional)"
+msgid "Dados copiados do navegador (opcional):"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1737,7 +1745,7 @@ msgid "Detalhes: {error}"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Dica: se quiser o caminho mais fácil, use uma extensão de exportar cookies no navegador para gerar um arquivo JSON ou cookies.txt da sessão já conectada no YouTube Music."
+msgid "Dica: certifique-se de estar logado em music.youtube.com no navegador selecionado. Feche outras janelas do navegador se a exportação falhar."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1956,12 +1964,24 @@ msgstr ""
 msgid "Equilíbrio pensado para fones com sensação de clareza."
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Exportar e Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Escolha o preset que será usado na aba de mídia ativa."
 msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
 msgstr ""
 
 #: src/player/library/open_dialog.py
@@ -2078,6 +2098,10 @@ msgstr ""
 msgid "Explorar:"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "F&echar"
 msgstr ""
@@ -2120,6 +2144,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Fechar Mí&dia\tCtrl+Shift+W"
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "Feche o {browser} completamente e tente exportar novamente."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -2529,6 +2557,10 @@ msgstr ""
 msgid "Lista de itens"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Lista de navegadores disponíveis"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Lista de playlists do YouTube Music"
 msgstr ""
@@ -2576,6 +2608,14 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Modo de &Repetição (R)"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Modo de conexão"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Modo de conexão com o YouTube Music"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2686,6 +2726,18 @@ msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Navegador de pasta"
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Navegador para exportar cookies do YouTube Music"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Navegador:"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3047,6 +3099,10 @@ msgstr ""
 msgid "Não foi possível excluir a playlist do YouTube Music."
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Não foi possível exportar cookies do {browser}."
+msgstr ""
+
 #: src/player/youtube_music/dependencies.py
 msgid "Não foi possível extrair o wheel da ytmusicapi."
 msgstr ""
@@ -3334,6 +3390,14 @@ msgstr ""
 
 #: src/player/youtube_music/search.py
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "O yt-dlp não foi encontrado. Verifique se as dependências do YouTube Music estão instaladas."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "O yt-dlp não gerou o arquivo de cookies esperado para {browser}. Verifique se você está logado em music.youtube.com nesse navegador."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -4117,8 +4181,16 @@ msgstr ""
 msgid "Selecione apenas uma playlist por vez."
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Selecione o navegador instalado do qual os cookies do YouTube Music serão exportados. Certifique-se de estar logado em music.youtube.com nesse navegador."
+msgstr ""
+
 #: src/player/youtube_music/service.py
 msgid "Selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "Selecione um navegador na lista antes de conectar."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -4312,10 +4384,6 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music."
 msgstr ""
 
 #: src/player/update/service.py
@@ -4521,10 +4589,6 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "formatos SABR sem URL direta"
-msgstr ""
-
-#: src/player/youtube_music/feedback_manager.py
-msgid "indisponível"
 msgstr ""
 
 #: src/player/frames/playback/controls.py

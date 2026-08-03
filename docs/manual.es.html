@@ -118,6 +118,7 @@ footer {
         <li class="toc-level-2"><a href="#como-abrir-medios">Cómo abrir medios</a></li>
         <li class="toc-level-2"><a href="#playlist-carpetas-y-pestanas">Playlist, carpetas y pestañas</a></li>
         <li class="toc-level-3"><a href="#atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</a></li>
+        <li class="toc-level-3"><a href="#cola-de-reproduccion">Cola de reproducción</a></li>
         <li class="toc-level-3"><a href="#atajos-de-reproduccion">Atajos de reproducción</a></li>
         <li class="toc-level-3"><a href="#navegador-de-elementos">Navegador de elementos</a></li>
         <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
@@ -143,8 +144,8 @@ footer {
         <li class="toc-level-3"><a href="#administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</a></li>
         <li class="toc-level-3"><a href="#sesion-de-youtube-music">Sesión de YouTube Music</a></li>
         <li class="toc-level-4"><a href="#que-son-las-cookies">Qué son las cookies</a></li>
-        <li class="toc-level-4"><a href="#por-que-usar-una-ventana-de-incognito">Por qué usar una ventana de incógnito</a></li>
-        <li class="toc-level-4"><a href="#paso-a-paso-exportar-cookies-de-youtube-music">Paso a paso: exportar cookies de YouTube Music</a></li>
+        <li class="toc-level-4"><a href="#como-conectar-mediante-extraccion-directa-del-navegador">Cómo conectar mediante extracción directa del navegador</a></li>
+        <li class="toc-level-4"><a href="#paso-a-paso-alternativo-exportacion-manual-de-cookies-txt">Paso a paso alternativo: exportación manual de cookies.txt</a></li>
         <li class="toc-level-4"><a href="#informacion-de-seguridad">Información de seguridad</a></li>
         <li class="toc-level-3"><a href="#atajos">Atajos</a></li>
         <li class="toc-level-2"><a href="#recursos-de-accesibilidad">Recursos de accesibilidad</a></li>
@@ -157,8 +158,10 @@ footer {
 <ul>
 <li>Reproducción multimedia con control por teclado</li>
 <li>Playlists en pestañas</li>
+<li>Una cola de reproducción para organizar lo que sonará después</li>
 <li>Navegación por carpetas con vista previa</li>
 <li>Ecualizador por pestaña con predefinidos y presets personalizados</li>
+<li>Un panel de letras con búsqueda automática y copia del texto</li>
 <li>Pestaña dedicada de YouTube Music, abierta con <code>Ctrl+Shift+Y</code></li>
 <li>Carga y guardado de playlists</li>
 <li>Restauración de lo que estaba abierto en la última sesión</li>
@@ -216,6 +219,10 @@ footer {
 <li><code>Ctrl+Shift+S</code>: guardar la playlist actual</li>
 <li><code>Ctrl+B</code>: alternar foco entre el navegador de elementos y el reproductor</li>
 </ul>
+<h3 id="cola-de-reproduccion">Cola de reproducción</h3>
+<p>La cola de reproducción organiza lo que debe sonar después de la pista actual, sin depender del orden de la playlist que estés navegando. Siempre pertenece a la playlist que está sonando en ese momento.</p>
+<p>Usa <code>Ctrl+Shift+F</code> o el menú <strong>Reproducción &gt; Agregar a la Cola de Reproducción</strong> para agregar o quitar elementos de la cola. Para ver, quitar, reordenar o vaciar toda la cola, usa <code>Ctrl+Shift+Q</code> o el menú <strong>Reproducción &gt; Administrar la Cola de Reproducción</strong>.</p>
+<p>Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.</p>
 <h3 id="atajos-de-reproduccion">Atajos de reproducción</h3>
 <ul>
 <li><code>Espacio</code>: reproducir o pausar</li>
@@ -231,11 +238,17 @@ footer {
 <li><code>E</code>: alternar modo aleatorio</li>
 <li><code>R</code>: alternar modo de repetición</li>
 <li><code>A</code>: alternar la reproducción de contenido relacionado de YouTube Music (radio automática al final de la playlist)</li>
+<li><code>]</code> / <code>[</code>: aumentar o disminuir la velocidad de reproducción</li>
+<li><code>Shift+]</code> / <code>Shift+[</code>: aumentar o disminuir el tono de la reproducción en semitonos</li>
+<li><code>Shift+\</code>: restaurar el tono original</li>
+<li><code>Ctrl+Alt+L</code>: alternar el panel de letras</li>
+<li><code>Ctrl+Shift+F</code>: agregar el elemento seleccionado a la cola de reproducción</li>
+<li><code>Ctrl+Shift+Q</code>: administrar la cola de reproducción</li>
 <li><code>T</code>: anunciar el tiempo actual del medio</li>
 <li><code>V</code>: anunciar el volumen actual</li>
 <li><code>S</code>: anunciar el estado del reproductor</li>
 <li><code>Ctrl+L</code>: marcar con me gusta el medio actual en YouTube Music</li>
-<li><code>Ctrl+Shift+L</code>: marcar el medio actual como no me gusta en YouTube Music</li>
+<li><code>Ctrl+Shift+L</code>: marcar el medio actual como no me gusta en YouTube Music (y pasar a la siguiente pista)</li>
 </ul>
 <p>El atajo <code>Ctrl+W</code> cierra directamente la pestaña activa; el atajo <code>Ctrl+Shift+W</code> cierra o descarga el medio actual en la pestaña activa.</p>
 <h3 id="navegador-de-elementos">Navegador de elementos</h3>
@@ -465,14 +478,25 @@ footer {
 <p><strong>Crear una playlist.</strong> Usa <strong>Nueva playlist...</strong> en la sección <em>Playlists y mixes</em> para crear una playlist vacía, o <strong>Crear nueva playlist...</strong> en el diálogo de agregar pistas para crearla ya con la selección. En ambos casos el reproductor abre un diálogo donde informas el <strong>nombre</strong> y eliges la <strong>privacidad</strong>: <em>Privada</em> (solo tú la ves), <em>No listada</em> (visible para quien tenga el enlace) o <em>Pública</em> (aparece en tu perfil y puede aparecer en búsquedas). El valor predeterminado es Privada. Después de crearla, la biblioteca se actualiza para que la nueva playlist aparezca en la lista.</p>
 <p><strong>Eliminar una playlist.</strong> Selecciona la playlist en la lista <em>Playlists y mixes</em> y usa <strong>Eliminar playlist...</strong>. Solo se pueden eliminar playlists que creaste; el reproductor confirma antes y actualiza la biblioteca enseguida.</p>
 <h3 id="sesion-de-youtube-music">Sesión de YouTube Music</h3>
+<ol>
+<li><strong>Extraer del navegador instalado (Recomendado):</strong> Selecciona tu navegador principal (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave o Opera) de la lista y haz clic en <strong>Conectar</strong>. KeyTune extraerá la sesión directamente del perfil del navegador mediante <code>yt-dlp</code>.</li>
+<li><strong>Importación de archivo o texto manual:</strong> Para navegadores no listados o configuraciones personalizadas, puedes importar un archivo <code>cookies.txt</code> exportado o pegar los encabezados HTTP de la sesión.</li>
+</ol>
 <h4 id="que-son-las-cookies">Qué son las cookies</h4>
-<p>Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al exportar esas cookies, estás transfiriendo esa información de sesión iniciada a KeyTune, lo que permite que la aplicación acceda a tu cuenta sin pedir tu contraseña.</p>
-<h4 id="por-que-usar-una-ventana-de-incognito">Por qué usar una ventana de incógnito</h4>
-<p>Usar una ventana de incógnito (también llamada navegación privada) es importante porque Google renueva constantemente las cookies en las ventanas normales. Si exportaras cookies de una sesión regular, se volverían inválidas rápidamente a medida que el navegador las renovara. En la ventana de incógnito, como la sesión no se sigue usando después de cerrarla, las cookies no se renuevan y permanecen válidas por mucho más tiempo.</p>
-<h4 id="paso-a-paso-exportar-cookies-de-youtube-music">Paso a paso: exportar cookies de YouTube Music</h4>
-<p><strong>Requisito previo:</strong> instala la extensión <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> en tu navegador (funciona en Chrome, Edge y navegadores basados en Chromium).</p>
+<p>Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al conectar tu cuenta en KeyTune, la aplicación utiliza esa información de sesión iniciada para acceder a tu biblioteca sin pedir tu contraseña.</p>
+<h4 id="como-conectar-mediante-extraccion-directa-del-navegador">Cómo conectar mediante extracción directa del navegador</h4>
+<ol>
+<li>Asegúrate de tener la sesión iniciada en tu cuenta de <a href="https://music.youtube.com/">YouTube Music</a> en tu navegador (Chrome, Edge, Firefox, Brave o Opera).</li>
+<li>En KeyTune, abre la pestaña de YouTube Music (<code>Ctrl+Shift+Y</code>).</li>
+<li>En la sección <strong>Cuenta y biblioteca</strong>, haz clic en <strong>Conectar cuenta...</strong>.</li>
+<li>En el diálogo que se abre, selecciona la opción <strong>Extraer del navegador instalado</strong>.</li>
+<li>Elige tu navegador en la lista y haz clic en el botón <strong>Conectar</strong>.</li>
+</ol>
+<h4 id="paso-a-paso-alternativo-exportacion-manual-de-cookies-txt">Paso a paso alternativo: exportación manual de cookies.txt</h4>
+<p>Si optas por el modo manual o usas un navegador no compatible directamente:</p>
+<p><strong>Requisito previo:</strong> instala la extensión <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> en tu navegador.</p>
 <p><strong>1. Activar la extensión en pestañas de incógnito</strong></p>
-<p>Primero, configura la extensión para funcionar en pestañas privadas:</p>
+<p>Usar una pestaña de incógnito/privada evita que Google renueve las cookies con frecuencia durante el uso normal del navegador.</p>
 <ol>
 <li>Presiona <code>Ctrl+L</code> para enfocar la barra de direcciones.</li>
 <li>Presiona <code>Esc</code> para salir del cuadro de edición de la barra de direcciones.</li>
@@ -484,22 +508,16 @@ footer {
 </ol>
 <p><strong>2. Iniciar sesión y exportar cookies</strong></p>
 <ol>
-<li>Abre una nueva pestaña de incógnito/privada (generalmente <code>Ctrl+Shift+N</code> o <code>Ctrl+Shift+P</code>).</li>
+<li>Abre una nueva pestaña de incógnito/privada (<code>Ctrl+Shift+N</code> o <code>Ctrl+Shift+P</code>).</li>
 <li>Navega a <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
-<li>Inicia sesión con tu cuenta de Google y elige tu cuenta de música, si hay varias opciones.</li>
-<li>Después de completar el inicio de sesión, presiona <code>Ctrl+L</code> para enfocar la barra de direcciones.</li>
-<li>Presiona <code>Esc</code> para salir del cuadro de edición de la barra de direcciones (puede ser necesario).</li>
-<li>Navega con <code>Tab</code> hasta alcanzar la sección de <strong>Extensiones</strong>. Expándela presionando <code>Enter</code>.</li>
-<li>Continúa navegando con <code>Tab</code> hasta encontrar la extensión <strong>Get cookies.txt LOCALLY</strong> y haz clic en ella (o presiona <code>Enter</code>).</li>
-<li>Se abrirá una página con las cookies. Busca el botón <strong>Exportar</strong> o <strong>Download</strong> (generalmente el primer botón de la página) y haz clic para descargar el archivo <code>cookies.txt</code>.</li>
-<li><strong>Importante</strong>: cierra la pestaña de incógnito <strong>sin navegar a ningún otro sitio</strong>. Esto garantiza que las cookies no se renueven.</li>
+<li>Inicia sesión con tu cuenta de Google.</li>
+<li>Abre la extensión <strong>Get cookies.txt LOCALLY</strong> y haz clic en <strong>Exportar</strong> o <strong>Download</strong> para guardar el archivo <code>cookies.txt</code>.</li>
+<li>Cierra la pestaña de incógnito sin navegar a otros sitios.</li>
 </ol>
 <p><strong>3. Importar en KeyTune</strong></p>
 <ol>
-<li>En KeyTune, abre la pestaña de YouTube Music (<code>Ctrl+Shift+Y</code>).</li>
-<li>En la sección <strong>Cuenta y biblioteca</strong>, haz clic en <strong>Conectar cuenta...</strong>.</li>
-<li>Se abrirá un diálogo que ofrece la opción de importar una sesión. Elige el archivo <code>cookies.txt</code> que acabas de descargar.</li>
-<li>La cuenta se conectará y podrás usar YouTube Music normalmente.</li>
+<li>En el diálogo <strong>Conectar cuenta...</strong> de KeyTune, selecciona <strong>Importar archivo o texto manual</strong>.</li>
+<li>Selecciona el archivo <code>cookies.txt</code> descargado (o pega el texto de los encabezados) y haz clic en <strong>Conectar</strong>.</li>
 </ol>
 <h4 id="informacion-de-seguridad">Información de seguridad</h4>
 <p>El archivo <code>cookies.txt</code> exportado contiene información de autenticación de tu cuenta. Por seguridad:</p>
@@ -533,6 +551,7 @@ footer {
 </ul>
 <p>Si usas lector de pantalla, los atajos de anuncio bajo demanda <code>T</code>, <code>V</code> y <code>S</code> (descritos en <a href="#atajos-de-reproducción">Atajos de reproducción</a>) y la ayuda rápida <code>F1</code> ayudan a orientarte sin depender de los eventos automáticos.</p>
 <p>Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en <code>Ctrl+,</code> &gt; <strong>Accesibilidad</strong>.</p>
+<p>El panel de letras también está pensado para ese uso: <code>Ctrl+Alt+L</code> o la casilla <strong>Letras</strong> en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón <strong>Copiar letra completa</strong>. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.</p>
 <h2 id="actualizaciones">Actualizaciones</h2>
 <p>Al iniciar, KeyTune puede verificar actualizaciones automáticamente. Para verificar manualmente en cualquier momento, usa el menú <strong>Ayuda &gt; Buscar actualizaciones</strong>.</p>
 <p>Cuando haya una versión nueva, la aplicación muestra un diálogo con las notas del lanzamiento, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, la aplicación descarga el paquete, muestra el avance de la descarga y pide permiso para instalar después de que el archivo esté listo. Si cancelas o cierras el diálogo, no se instala nada y el reproductor continúa funcionando normalmente.</p>
@@ -548,7 +567,7 @@ footer {
 <h2 id="para-desarrolladores">Para desarrolladores</h2>
 <p>KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generado el 05/07/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver código fuente en GitHub</a>
+        Generado el 03/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

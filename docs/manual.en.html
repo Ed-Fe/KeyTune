@@ -118,6 +118,7 @@ footer {
         <li class="toc-level-2"><a href="#how-to-open-media">How to open media</a></li>
         <li class="toc-level-2"><a href="#playlist-folders-and-tabs">Playlist, folders, and tabs</a></li>
         <li class="toc-level-3"><a href="#tab-and-item-shortcuts">Tab and item shortcuts</a></li>
+        <li class="toc-level-3"><a href="#playback-queue">Playback queue</a></li>
         <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
         <li class="toc-level-3"><a href="#item-browser">Item browser</a></li>
         <li class="toc-level-4"><a href="#playlist-mode">Playlist mode</a></li>
@@ -143,8 +144,8 @@ footer {
         <li class="toc-level-3"><a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a></li>
         <li class="toc-level-3"><a href="#youtube-music-session">YouTube Music session</a></li>
         <li class="toc-level-4"><a href="#what-cookies-are">What cookies are</a></li>
-        <li class="toc-level-4"><a href="#why-use-an-incognito-window">Why use an incognito window</a></li>
-        <li class="toc-level-4"><a href="#step-by-step-export-youtube-music-cookies">Step by step: export YouTube Music cookies</a></li>
+        <li class="toc-level-4"><a href="#how-to-connect-via-direct-browser-extraction">How to connect via direct browser extraction</a></li>
+        <li class="toc-level-4"><a href="#alternative-step-by-step-manual-cookies-txt-export">Alternative step by step: manual cookies.txt export</a></li>
         <li class="toc-level-4"><a href="#security-information">Security information</a></li>
         <li class="toc-level-3"><a href="#shortcuts">Shortcuts</a></li>
         <li class="toc-level-2"><a href="#accessibility-features">Accessibility features</a></li>
@@ -157,8 +158,10 @@ footer {
 <ul>
 <li>Keyboard-controlled media playback</li>
 <li>Tabbed playlists</li>
+<li>A playback queue to organize what plays next</li>
 <li>Folder navigation with preview</li>
 <li>Per-tab equalizer with built-in profiles and custom presets</li>
+<li>A lyrics panel with automatic fetching and text copying</li>
 <li>Dedicated YouTube Music tab, opened with <code>Ctrl+Shift+Y</code></li>
 <li>Loading and saving playlists</li>
 <li>Restoration of what was open in the last session</li>
@@ -216,6 +219,10 @@ footer {
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
 <li><code>Ctrl+B</code>: switch focus between the item browser and the player</li>
 </ul>
+<h3 id="playback-queue">Playback queue</h3>
+<p>The playback queue organizes what should play after the current track, without depending on the order of the playlist you are browsing. It always belongs to the playlist that is currently playing.</p>
+<p>Use <code>Ctrl+Shift+F</code> or the <strong>Playback &gt; Add to Playback Queue</strong> menu to add or remove items from the queue. To view, remove, reorder, or clear the entire queue, use <code>Ctrl+Shift+Q</code> or the <strong>Playback &gt; Manage Playback Queue</strong> menu.</p>
+<p>If the queue is empty, the queue manager tells you so and asks you to add items first.</p>
 <h3 id="playback-shortcuts">Playback shortcuts</h3>
 <ul>
 <li><code>Space</code>: play or pause</li>
@@ -231,11 +238,17 @@ footer {
 <li><code>E</code>: toggle shuffle mode</li>
 <li><code>R</code>: toggle repeat mode</li>
 <li><code>A</code>: toggle playback of related YouTube Music content (automatic radio at the end of the playlist)</li>
+<li><code>]</code> / <code>[</code>: increase or decrease playback speed</li>
+<li><code>Shift+]</code> / <code>Shift+[</code>: increase or decrease playback pitch by semitones</li>
+<li><code>Shift+\</code>: restore the original pitch</li>
+<li><code>Ctrl+Alt+L</code>: toggle the lyrics panel</li>
+<li><code>Ctrl+Shift+F</code>: add the selected item to the playback queue</li>
+<li><code>Ctrl+Shift+Q</code>: manage the playback queue</li>
 <li><code>T</code>: announce the current media time</li>
 <li><code>V</code>: announce the current volume</li>
 <li><code>S</code>: announce the player status</li>
 <li><code>Ctrl+L</code>: like the current media on YouTube Music</li>
-<li><code>Ctrl+Shift+L</code>: mark the current media as disliked on YouTube Music</li>
+<li><code>Ctrl+Shift+L</code>: mark the current media as disliked on YouTube Music (and skip to the next track)</li>
 </ul>
 <p>The <code>Ctrl+W</code> shortcut closes the active tab directly; the <code>Ctrl+Shift+W</code> shortcut closes or unloads the current media in the active tab.</p>
 <h3 id="item-browser">Item browser</h3>
@@ -465,14 +478,26 @@ footer {
 <p><strong>Creating a playlist.</strong> Use <strong>New playlist...</strong> in the <em>Playlists and mixes</em> section to create an empty playlist, or <strong>Create new playlist...</strong> in the add tracks dialog to create it already with the selection. In both cases, the player opens a dialog where you enter the <strong>name</strong> and choose the <strong>privacy</strong>: <em>Private</em> (only you can see it), <em>Unlisted</em> (visible to anyone with the link), or <em>Public</em> (appears on your profile and may appear in searches). The default is Private. After creating it, the library is refreshed so the new playlist appears in the list.</p>
 <p><strong>Deleting a playlist.</strong> Select the playlist in the <em>Playlists and mixes</em> list and use <strong>Delete playlist...</strong>. You can only delete playlists you created; the player confirms first and then refreshes the library.</p>
 <h3 id="youtube-music-session">YouTube Music session</h3>
+<p>To use your library features (saved playlists, history, likes, and ratings), you need to connect your YouTube Music account. KeyTune offers two connection modes in the <strong>Connect account</strong> dialog:</p>
+<ol>
+<li><strong>Extract from installed browser (Recommended):</strong> Select your primary browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave, or Opera) from the list and click <strong>Connect</strong>. KeyTune extracts the session directly from the browser profile using <code>yt-dlp</code>.</li>
+<li><strong>Import file or manual text:</strong> For unlisted browsers or custom configurations, you can import an exported <code>cookies.txt</code> file or paste session HTTP headers.</li>
+</ol>
 <h4 id="what-cookies-are">What cookies are</h4>
-<p>Cookies are small text files that browsers store to remember your preferences and login information on websites. When you log in to YouTube Music, the browser saves cookies that contain your authentication. By exporting these cookies, you are transferring that logged-in session information to KeyTune, allowing the application to access your account without asking for your password.</p>
-<h4 id="why-use-an-incognito-window">Why use an incognito window</h4>
-<p>Using an incognito window (also called private browsing) is important because Google constantly renews cookies in normal windows. If you exported cookies from a regular session, they would become invalid quickly as the browser renewed them. In the incognito window, because the session is no longer used after you close it, the cookies are not renewed and remain valid for much longer.</p>
-<h4 id="step-by-step-export-youtube-music-cookies">Step by step: export YouTube Music cookies</h4>
-<p><strong>Prerequisite:</strong> install the <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> extension in your browser (works in Chrome, Edge, and Chromium-based browsers).</p>
+<p>Cookies are small text files that browsers store to remember your preferences and login information on websites. When you log in to YouTube Music, the browser saves cookies that contain your authentication. When connecting your account in KeyTune, the application uses this logged-in session information to access your library without asking for your password.</p>
+<h4 id="how-to-connect-via-direct-browser-extraction">How to connect via direct browser extraction</h4>
+<ol>
+<li>Make sure you are logged into your account on <a href="https://music.youtube.com/">YouTube Music</a> in your browser (Chrome, Edge, Firefox, Brave, or Opera).</li>
+<li>In KeyTune, open the YouTube Music tab (<code>Ctrl+Shift+Y</code>).</li>
+<li>In the <strong>Account and library</strong> section, click <strong>Connect account...</strong>.</li>
+<li>In the dialog that opens, select <strong>Extract from installed browser</strong>.</li>
+<li>Select your browser from the list and click <strong>Connect</strong>.</li>
+</ol>
+<h4 id="alternative-step-by-step-manual-cookies-txt-export">Alternative step by step: manual cookies.txt export</h4>
+<p>If you choose manual mode or use a browser that is not directly supported:</p>
+<p><strong>Prerequisite:</strong> install the <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> extension in your browser.</p>
 <p><strong>1. Enable the extension in incognito tabs</strong></p>
-<p>First, configure the extension to work in private tabs:</p>
+<p>Using an incognito/private tab prevents Google from frequently renewing cookies during normal browser use.</p>
 <ol>
 <li>Press <code>Ctrl+L</code> to focus the address bar.</li>
 <li>Press <code>Esc</code> to exit the address bar edit box.</li>
@@ -484,22 +509,16 @@ footer {
 </ol>
 <p><strong>2. Log in and export cookies</strong></p>
 <ol>
-<li>Open a new incognito/private tab (usually <code>Ctrl+Shift+N</code> or <code>Ctrl+Shift+P</code>).</li>
+<li>Open a new incognito/private tab (<code>Ctrl+Shift+N</code> or <code>Ctrl+Shift+P</code>).</li>
 <li>Navigate to <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
-<li>Log in with your Google account and choose your music account if there are multiple options.</li>
-<li>After completing login, press <code>Ctrl+L</code> to focus the address bar.</li>
-<li>Press <code>Esc</code> to exit the address bar edit box (may be necessary).</li>
-<li>Navigate with <code>Tab</code> until you reach the <strong>Extensions</strong> section. Expand it by pressing <code>Enter</code>.</li>
-<li>Continue navigating with <code>Tab</code> until you find the <strong>Get cookies.txt LOCALLY</strong> extension and click it (or press <code>Enter</code>).</li>
-<li>A page will open with the cookies. Look for the <strong>Export</strong> or <strong>Download</strong> button (usually the first button on the page) and click it to download the <code>cookies.txt</code> file.</li>
-<li><strong>Important</strong>: close the incognito tab <strong>without navigating to any other site</strong>. This ensures the cookies are not renewed.</li>
+<li>Log in with your Google account.</li>
+<li>Open the <strong>Get cookies.txt LOCALLY</strong> extension and click <strong>Export</strong> or <strong>Download</strong> to save the <code>cookies.txt</code> file.</li>
+<li>Close the incognito tab without navigating to other sites.</li>
 </ol>
 <p><strong>3. Import into KeyTune</strong></p>
 <ol>
-<li>In KeyTune, open the YouTube Music tab (<code>Ctrl+Shift+Y</code>).</li>
-<li>In the <strong>Account and library</strong> section, click <strong>Connect account...</strong>.</li>
-<li>A dialog will open offering the option to import a session. Choose the <code>cookies.txt</code> file you just downloaded.</li>
-<li>The account will be connected and you can use YouTube Music normally.</li>
+<li>In KeyTune's <strong>Connect account...</strong> dialog, select <strong>Import file or manual text</strong>.</li>
+<li>Select the downloaded <code>cookies.txt</code> file (or paste header text) and click <strong>Connect</strong>.</li>
 </ol>
 <h4 id="security-information">Security information</h4>
 <p>The exported <code>cookies.txt</code> file contains authentication information for your account. For security:</p>
@@ -533,6 +552,7 @@ footer {
 </ul>
 <p>If you use a screen reader, the on-demand announcement shortcuts <code>T</code>, <code>V</code>, and <code>S</code> (described in <a href="#playback-shortcuts">Playback shortcuts</a>) and the <code>F1</code> quick help help you orient yourself without depending on automatic events.</p>
 <p>Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in <code>Ctrl+,</code> &gt; <strong>Accessibility</strong>.</p>
+<p>The lyrics panel is also designed for this use: <code>Ctrl+Alt+L</code> or the <strong>Lyrics</strong> checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the <strong>Copy full lyrics</strong> button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.</p>
 <h2 id="updates">Updates</h2>
 <p>On startup, KeyTune can check for updates automatically. To check manually at any time, use the <strong>Help &gt; Check for updates</strong> menu.</p>
 <p>When a new version is available, the application shows a dialog with the release notes, the file name, and the download size before asking for confirmation. If you accept, the application downloads the package, shows download progress, and asks for permission to install after the file is ready. If you cancel or close the dialog, nothing is installed and the player continues working normally.</p>
@@ -548,7 +568,7 @@ footer {
 <h2 id="for-developers">For developers</h2>
 <p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generated on 05/07/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">view source on GitHub</a>
+        Generated on 03/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

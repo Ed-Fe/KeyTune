@@ -2,6 +2,7 @@ import json
 import os
 import re
 import stat
+import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
@@ -14,6 +15,16 @@ from ..i18n import _
 YTMUSIC_BROWSER_AUTH_FILE_NAME = "ytmusic_browser.json"
 YTMUSIC_BROWSER_AUTH_COOKIE_FILE_NAME = "ytmusic_cookies.txt"
 _REDACTED_VALUE = "[oculto]"
+
+# Pares (nome_yt_dlp, rótulo exibido) para navegadores suportados nativamente
+# pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
+SUPPORTED_BROWSERS: list[tuple[str, str]] = [
+    ("edge", "Microsoft Edge"),
+    ("chrome", "Google Chrome"),
+    ("brave", "Brave"),
+    ("firefox", "Firefox"),
+    ("opera", "Opera / Opera GX"),
+]
 
 
 @dataclass(slots=True)
@@ -109,6 +120,124 @@ def _get_storage_dir():
     storage_dir = os.path.join(base_dir, APP_STORAGE_DIR)
     os.makedirs(storage_dir, exist_ok=True)
     return storage_dir
+
+
+def export_cookies_from_browser(browser_name: str, output_path: str) -> str:
+    """Exporta cookies do YouTube Music diretamente do perfil do navegador instalado.
+
+    Usa ``yt-dlp --cookies-from-browser <browser_name>`` para acessar o banco de
+    cookies do sistema sem necessidade de extensão de navegador.  O arquivo
+    Netscape gerado é salvo em *output_path* com permissões restritas.
+
+    Args:
+        browser_name: Identificador do navegador para o yt-dlp
+                      (edge, chrome, brave, firefox, opera).
+        output_path:  Caminho absoluto onde o arquivo de cookies será gravado.
+
+    Returns:
+        O caminho normalizado do arquivo gerado (*output_path*).
+
+    Raises:
+        RuntimeError: Se o yt-dlp não estiver disponível, se o navegador não
+                      for reconhecido, ou se a exportação falhar.
+    """
+    from .yt_dlp_runtime import find_yt_dlp_executable_path  # importação local para evitar ciclo
+
+    _supported_names = {name for name, _label in SUPPORTED_BROWSERS}
+    normalized_browser = str(browser_name or "").strip().lower()
+    if normalized_browser not in _supported_names:
+        raise RuntimeError(
+            _("Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual.").format(
+                browser=browser_name
+            )
+        )
+
+    yt_dlp_path = find_yt_dlp_executable_path()
+    if yt_dlp_path is None:
+        raise RuntimeError(
+            _("O yt-dlp não foi encontrado. Verifique se as dependências do YouTube Music estão instaladas.")
+        )
+
+    normalized_output_path = os.path.abspath(os.path.normpath(str(output_path or "").strip()))
+    if not normalized_output_path:
+        raise RuntimeError(_("Caminho de saída inválido para o arquivo de cookies."))
+
+    os.makedirs(os.path.dirname(normalized_output_path), exist_ok=True)
+
+    # Arquivo temporário na mesma pasta para escrita atômica
+    tmp_fd, tmp_path = tempfile.mkstemp(
+        suffix=".tmp",
+        prefix="ytmusic_cookies_export_",
+        dir=os.path.dirname(normalized_output_path),
+    )
+    os.close(tmp_fd)
+
+    try:
+        result = subprocess.run(
+            [
+                str(yt_dlp_path),
+                "--ignore-config",
+                "--cookies-from-browser", normalized_browser,
+                "--cookies", tmp_path,
+                "--skip-download",
+                "--quiet",
+                "--no-warnings",
+                "https://music.youtube.com",
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+
+        if result.returncode != 0:
+            error_detail = str(result.stderr or result.stdout or "").strip()
+            # Mensagem orientada ao caso mais comum: navegador com SQLite bloqueado
+            if "database is locked" in error_detail.lower() or "sqlite" in error_detail.lower():
+                raise RuntimeError(
+                    _("Feche o {browser} completamente e tente exportar novamente.").format(
+                        browser=browser_name
+                    )
+                )
+            raise RuntimeError(
+                _("Não foi possível exportar cookies do {browser}.").format(browser=browser_name)
+                + (f"\n\n{error_detail[:300]}" if error_detail else "")
+            )
+
+        if not os.path.isfile(tmp_path) or os.path.getsize(tmp_path) == 0:
+            raise RuntimeError(
+                _("O yt-dlp não gerou o arquivo de cookies esperado para {browser}. "
+                  "Verifique se você está logado em music.youtube.com nesse navegador.").format(
+                    browser=browser_name
+                )
+            )
+
+        os.replace(tmp_path, normalized_output_path)
+        harden_sensitive_file_permissions(normalized_output_path)
+        return normalized_output_path
+
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(
+            _("A exportação de cookies do {browser} demorou demais e foi cancelada.").format(
+                browser=browser_name
+            )
+        )
+    except RuntimeError:
+        raise
+    except Exception as exc:
+        raise RuntimeError(
+            _("Erro inesperado ao exportar cookies do {browser}: {detail}").format(
+                browser=browser_name, detail=str(exc)
+            )
+        ) from exc
+    finally:
+        try:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+        except OSError:
+            pass
 
 
 def read_auth_file_text(file_path):

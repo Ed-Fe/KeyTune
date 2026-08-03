@@ -111,7 +111,7 @@ Si la cola está vacía, el administrador te lo indica y te pide que primero agr
 - `V`: anunciar el volumen actual
 - `S`: anunciar el estado del reproductor
 - `Ctrl+L`: marcar con me gusta el medio actual en YouTube Music
-- `Ctrl+Shift+L`: marcar el medio actual como no me gusta en YouTube Music
+- `Ctrl+Shift+L`: marcar el medio actual como no me gusta en YouTube Music (y pasar a la siguiente pista)
 
 El atajo `Ctrl+W` cierra directamente la pestaña activa; el atajo `Ctrl+Shift+W` cierra o descarga el medio actual en la pestaña activa.
 
@@ -320,21 +320,30 @@ Además de abrir y guardar playlists, KeyTune permite editar tus playlists direc
 
 ### Sesión de YouTube Music
 
+1. **Extraer del navegador instalado (Recomendado):** Selecciona tu navegador principal (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave o Opera) de la lista y haz clic en **Conectar**. KeyTune extraerá la sesión directamente del perfil del navegador mediante `yt-dlp`.
+2. **Importación de archivo o texto manual:** Para navegadores no listados o configuraciones personalizadas, puedes importar un archivo `cookies.txt` exportado o pegar los encabezados HTTP de la sesión.
+
 #### Qué son las cookies
 
-Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al exportar esas cookies, estás transfiriendo esa información de sesión iniciada a KeyTune, lo que permite que la aplicación acceda a tu cuenta sin pedir tu contraseña.
+Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al conectar tu cuenta en KeyTune, la aplicación utiliza esa información de sesión iniciada para acceder a tu biblioteca sin pedir tu contraseña.
 
-#### Por qué usar una ventana de incógnito
+#### Cómo conectar mediante extracción directa del navegador
 
-Usar una ventana de incógnito (también llamada navegación privada) es importante porque Google renueva constantemente las cookies en las ventanas normales. Si exportaras cookies de una sesión regular, se volverían inválidas rápidamente a medida que el navegador las renovara. En la ventana de incógnito, como la sesión no se sigue usando después de cerrarla, las cookies no se renuevan y permanecen válidas por mucho más tiempo.
+1. Asegúrate de tener la sesión iniciada en tu cuenta de [YouTube Music](https://music.youtube.com/) en tu navegador (Chrome, Edge, Firefox, Brave o Opera).
+2. En KeyTune, abre la pestaña de YouTube Music (`Ctrl+Shift+Y`).
+3. En la sección **Cuenta y biblioteca**, haz clic en **Conectar cuenta...**.
+4. En el diálogo que se abre, selecciona la opción **Extraer del navegador instalado**.
+5. Elige tu navegador en la lista y haz clic en el botón **Conectar**.
 
-#### Paso a paso: exportar cookies de YouTube Music
+#### Paso a paso alternativo: exportación manual de cookies.txt
 
-**Requisito previo:** instala la extensión [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) en tu navegador (funciona en Chrome, Edge y navegadores basados en Chromium).
+Si optas por el modo manual o usas un navegador no compatible directamente:
+
+**Requisito previo:** instala la extensión [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) en tu navegador.
 
 **1. Activar la extensión en pestañas de incógnito**
 
-Primero, configura la extensión para funcionar en pestañas privadas:
+Usar una pestaña de incógnito/privada evita que Google renueve las cookies con frecuencia durante el uso normal del navegador.
 
 1. Presiona `Ctrl+L` para enfocar la barra de direcciones.
 2. Presiona `Esc` para salir del cuadro de edición de la barra de direcciones.
@@ -346,22 +355,16 @@ Primero, configura la extensión para funcionar en pestañas privadas:
 
 **2. Iniciar sesión y exportar cookies**
 
-1. Abre una nueva pestaña de incógnito/privada (generalmente `Ctrl+Shift+N` o `Ctrl+Shift+P`).
+1. Abre una nueva pestaña de incógnito/privada (`Ctrl+Shift+N` o `Ctrl+Shift+P`).
 2. Navega a [music.youtube.com](https://music.youtube.com/).
-3. Inicia sesión con tu cuenta de Google y elige tu cuenta de música, si hay varias opciones.
-4. Después de completar el inicio de sesión, presiona `Ctrl+L` para enfocar la barra de direcciones.
-5. Presiona `Esc` para salir del cuadro de edición de la barra de direcciones (puede ser necesario).
-6. Navega con `Tab` hasta alcanzar la sección de **Extensiones**. Expándela presionando `Enter`.
-7. Continúa navegando con `Tab` hasta encontrar la extensión **Get cookies.txt LOCALLY** y haz clic en ella (o presiona `Enter`).
-8. Se abrirá una página con las cookies. Busca el botón **Exportar** o **Download** (generalmente el primer botón de la página) y haz clic para descargar el archivo `cookies.txt`.
-9. **Importante**: cierra la pestaña de incógnito **sin navegar a ningún otro sitio**. Esto garantiza que las cookies no se renueven.
+3. Inicia sesión con tu cuenta de Google.
+4. Abre la extensión **Get cookies.txt LOCALLY** y haz clic en **Exportar** o **Download** para guardar el archivo `cookies.txt`.
+5. Cierra la pestaña de incógnito sin navegar a otros sitios.
 
 **3. Importar en KeyTune**
 
-1. En KeyTune, abre la pestaña de YouTube Music (`Ctrl+Shift+Y`).
-2. En la sección **Cuenta y biblioteca**, haz clic en **Conectar cuenta...**.
-3. Se abrirá un diálogo que ofrece la opción de importar una sesión. Elige el archivo `cookies.txt` que acabas de descargar.
-4. La cuenta se conectará y podrás usar YouTube Music normalmente.
+1. En el diálogo **Conectar cuenta...** de KeyTune, selecciona **Importar archivo o texto manual**.
+2. Selecciona el archivo `cookies.txt` descargado (o pega el texto de los encabezados) y haz clic en **Conectar**.
 
 #### Información de seguridad
 

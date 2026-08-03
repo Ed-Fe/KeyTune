@@ -391,7 +391,6 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
     def test_rate_media_feedback_calls_rate_song_for_like(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -406,11 +405,11 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         self.assertEqual(message, "Mídia atual curtida no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
     def test_rate_media_feedback_calls_rate_song_for_dislike(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "DISLIKE"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -425,7 +424,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         self.assertEqual(message, "Mídia atual marcada como não gostei no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "DISLIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
     def test_rate_media_feedback_rejects_invalid_rating_without_calling_api(self):
         authenticated_client = Mock()
@@ -444,9 +444,11 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         authenticated_client.rate_song.assert_not_called()
 
-    def test_rate_media_feedback_reports_server_mismatch_after_write(self):
+    def test_rate_media_feedback_returns_success_regardless_of_server_propagation_delay(self):
+        # O YouTube Music propaga avaliações de forma assíncrona: o get_song()
+        # imediatamente após rate_song() pode retornar o status anterior.
+        # O player não deve fazer get_song() nem reportar falso alarme.
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "INDIFFERENT"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -459,12 +461,12 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         ):
             message = service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "LIKE")
 
-        self.assertEqual(
-            message,
-            "A avaliação foi enviada, mas o servidor ainda retornou likeStatus=INDIFFERENT.",
-        )
+        # Mesmo que o servidor ainda não reflita o novo status, a mensagem
+        # deve ser a de sucesso (a avaliação foi enviada sem exceção).
+        self.assertEqual(message, "Mídia atual curtida no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

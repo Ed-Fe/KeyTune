@@ -1,7 +1,9 @@
 import os
 
 from .auth import (
+    SUPPORTED_BROWSERS,
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
+    export_cookies_from_browser,
     get_browser_auth_file_path,
     get_browser_auth_cookie_file_path,
     harden_sensitive_file_permissions,
@@ -304,6 +306,41 @@ class YouTubeMusicService:
         self._reset_stream_playback_mode()
         _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
+
+    def save_browser_auth_from_browser(self, browser_name: str) -> str:
+        """Exporta cookies diretamente do navegador instalado e salva a autenticação.
+
+        Suporta os navegadores da constante :data:`SUPPORTED_BROWSERS` em
+        ``auth.py`` (edge, chrome, brave, firefox, opera).  Para qualquer outro
+        navegador o chamador deve usar :meth:`save_browser_auth` com arquivo ou
+        texto manual.
+
+        Args:
+            browser_name: Identificador do navegador (chave yt-dlp).
+
+        Returns:
+            Caminho do arquivo ``ytmusic_browser.json`` gerado.
+
+        Raises:
+            RuntimeError: Se o navegador não for suportado, o yt-dlp não
+                          estiver disponível, ou a exportação falhar.
+        """
+        _logger.info("YouTube Music browser auth export requested (browser=%s)", browser_name)
+        target_cookie_file_path = self.browser_auth_cookie_file_path
+
+        # Exporta o cookies.txt diretamente do perfil do navegador
+        export_cookies_from_browser(browser_name, target_cookie_file_path)
+
+        # Lê o arquivo gerado e aproveita o fluxo existente de save_browser_auth
+        # para criar também o browser.json via ytmusicapi.setup()
+        raw_cookie_content = read_auth_file_text(target_cookie_file_path)
+        saved_path = self.save_browser_auth(headers_raw=raw_cookie_content)
+        _logger.info(
+            "YouTube Music browser auth from browser saved (browser=%s, path=%s)",
+            browser_name,
+            saved_path,
+        )
+        return saved_path
 
     # -- Account info ----------------------------------------------------------
 

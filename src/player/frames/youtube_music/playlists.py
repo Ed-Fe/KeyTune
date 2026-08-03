@@ -60,6 +60,8 @@ class PlaylistEditMixin:
             self._announce(normalized_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
+            if normalized_rating == "DISLIKE":
+                self._play_adjacent_item(1)
 
         def on_error(exc):
             wx.MessageBox(
