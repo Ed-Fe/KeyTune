@@ -3438,6 +3438,9 @@ msgstr "Use 'Load more' or scroll to the end of the list to fetch more."
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr "Use Ctrl+Shift+W to close the current preview or Backspace to go up a folder."
 
+msgid "Use Espaço para tocar ou pausar e as setas para navegar."
+msgstr "Use Space to play or pause and the arrow keys to navigate."
+
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
 msgstr "Use a short, clear name. Example: Custom deep bass."
 
@@ -3820,9 +3823,6 @@ msgstr "South Africa"
 
 msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
 msgstr "Lyrics reading area. Use the arrow keys to navigate through the text."
-
-msgid "Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."
-msgstr "Playback area. Use Space to play or pause and the arrow keys to navigate."
 
 msgid "Área do player"
 msgstr "Player area"

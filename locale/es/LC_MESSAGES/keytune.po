@@ -3438,6 +3438,9 @@ msgstr "Usa 'Cargar más' o baja hasta el final de la lista para traer más."
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr "Usa Ctrl+Shift+W para cerrar la vista previa actual o Backspace para volver a la carpeta anterior."
 
+msgid "Use Espaço para tocar ou pausar e as setas para navegar."
+msgstr "Usa Espacio para reproducir o pausar y las flechas para navegar."
+
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
 msgstr "Usa un nombre corto y claro. Ejemplo: Graves profundos personalizados."
 
@@ -3820,9 +3823,6 @@ msgstr "Sudáfrica"
 
 msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
 msgstr "Área de lectura de las letras. Usa las flechas para navegar por el texto."
-
-msgid "Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."
-msgstr "Área de reproducción. Usa Espacio para reproducir o pausar y las flechas para navegar."
 
 msgid "Área do player"
 msgstr "Área del reproductor"

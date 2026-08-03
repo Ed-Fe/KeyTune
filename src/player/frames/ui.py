@@ -772,7 +772,7 @@ class FrameUIMixin:
         attach_named_accessible(
             video_panel,
             name=_("Área do player"),
-            description=_("Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."),
+            description=_("Use Espaço para tocar ou pausar e as setas para navegar."),
         )
         video_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_panel.Bind(wx.EVT_SIZE, self.on_video_panel_resize)

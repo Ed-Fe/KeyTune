@@ -4617,6 +4617,10 @@ msgstr ""
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Use Espaço para tocar ou pausar e as setas para navegar."
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
 msgstr ""
@@ -5123,10 +5127,6 @@ msgstr ""
 
 #: src/player/frames/lyrics_panel.py
 msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Área de reprodução. Use Espaço para tocar ou pausar e as setas para navegar."
 msgstr ""
 
 #: src/player/frames/ui.py
