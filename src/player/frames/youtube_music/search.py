@@ -1,4 +1,4 @@
-from ...i18n import _
+from ...i18n import _, ngettext
 import wx
 
 from player.youtube_music.models import get_search_scope_option
@@ -128,11 +128,23 @@ class SearchMixin:
         return _("Seleção do YouTube Music")
 
     def _announce_youtube_music_playlist_addition(self, added_count, target_title, playlist_result_count, skipped_count):
-        normalized_message = _("{count} item(ns) adicionado(s) à playlist: {title}.").format(count=added_count, title=target_title)
+        normalized_message = ngettext(
+            "{count} item adicionado à playlist: {title}.",
+            "{count} itens adicionados à playlist: {title}.",
+            added_count,
+        ).format(count=added_count, title=target_title)
         if playlist_result_count:
-            normalized_message = normalized_message + " " + _("{count} playlist(s) da busca foram expandidas.").format(count=playlist_result_count)
+            normalized_message = normalized_message + " " + ngettext(
+                "{count} playlist da busca foi expandida.",
+                "{count} playlists da busca foram expandidas.",
+                playlist_result_count,
+            ).format(count=playlist_result_count)
         if skipped_count:
-            normalized_message = normalized_message + " " + _("{count} item(ns) da seleção foram ignorados.").format(count=skipped_count)
+            normalized_message = normalized_message + " " + ngettext(
+                "{count} item da seleção foi ignorado.",
+                "{count} itens da seleção foram ignorados.",
+                skipped_count,
+            ).format(count=skipped_count)
         self._announce(normalized_message)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(normalized_message)
@@ -172,9 +184,17 @@ class SearchMixin:
 
             announce_message = _("Seleção aberta em nova playlist: {title}.").format(title=target_state.title)
             if playlist_result_count:
-                announce_message = announce_message + " " + _("{count} playlist(s) da busca foram expandidas.").format(count=playlist_result_count)
+                announce_message = announce_message + " " + ngettext(
+                    "{count} playlist da busca foi expandida.",
+                    "{count} playlists da busca foram expandidas.",
+                    playlist_result_count,
+                ).format(count=playlist_result_count)
             if skipped_count:
-                announce_message = announce_message + " " + _("{count} item(ns) da seleção foram ignorados.").format(count=skipped_count)
+                announce_message = announce_message + " " + ngettext(
+                    "{count} item da seleção foi ignorado.",
+                    "{count} itens da seleção foram ignorados.",
+                    skipped_count,
+                ).format(count=skipped_count)
             self._play_media(index=target_index, announce_message=announce_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(announce_message)
@@ -275,11 +295,11 @@ class SearchMixin:
 
         def on_success(result):
             success_count, playlist_saved = result
-            normalized_message = (
-                "Resultado salvo no YouTube Music."
-                if success_count == 1
-                else f"{success_count} resultado(s) salvo(s) no YouTube Music."
-            )
+            normalized_message = ngettext(
+                "{count} resultado salvo no YouTube Music.",
+                "{count} resultados salvos no YouTube Music.",
+                success_count,
+            ).format(count=success_count)
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
@@ -370,9 +390,11 @@ class SearchMixin:
             if result_count == 0:
                 search_summary = _("Busca em {scope}: nenhum resultado para {query}.").format(scope=scope_option.label, query=query)
             else:
-                search_summary = _("Busca em {scope}: {count} resultado(s) para {query}.").format(
-                    scope=scope_option.label, count=result_count, query=query
-                )
+                search_summary = ngettext(
+                    "Busca em {scope}: {count} resultado para {query}.",
+                    "Busca em {scope}: {count} resultados para {query}.",
+                    result_count,
+                ).format(scope=scope_option.label, count=result_count, query=query)
             self._set_youtube_music_search_results(
                 search_results,
                 search_summary=search_summary,

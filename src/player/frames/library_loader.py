@@ -278,7 +278,11 @@ class FrameLibraryLoaderMixin:
         if self._is_current_playlist_state(state):
             self._play_media(
                 index=tab_index,
-                announce_message=_("Playlist carregada: {title}. {count} item(ns).").format(title=state.title, count=len(items)),
+                announce_message=ngettext(
+                    "Playlist carregada: {title}. {count} item.",
+                    "Playlist carregada: {title}. {count} itens.",
+                    len(items),
+                ).format(title=state.title, count=len(items)),
             )
 
     def _finish_folder_playlist_load_request(self, request, items, item_index_map, browser_item_labels, error_message):
@@ -330,7 +334,11 @@ class FrameLibraryLoaderMixin:
         if self._is_current_playlist_state(state):
             self._play_media(
                 index=tab_index,
-                announce_message=_("Pasta carregada como playlist: {title}. {count} item(ns).").format(title=state.title, count=len(items)),
+                announce_message=ngettext(
+                    "Pasta carregada como playlist: {title}. {count} item.",
+                    "Pasta carregada como playlist: {title}. {count} itens.",
+                    len(items),
+                ).format(title=state.title, count=len(items)),
             )
 
     def _finish_folder_load_request(

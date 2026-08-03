@@ -119,11 +119,13 @@ footer {
         <li class="toc-level-2"><a href="#playlist-pastas-e-abas">Playlist, pastas e abas</a></li>
         <li class="toc-level-3"><a href="#atalhos-de-abas-e-itens">Atalhos de abas e itens</a></li>
         <li class="toc-level-3"><a href="#fila-de-reproducao">Fila de reprodução</a></li>
+        <li class="toc-level-3"><a href="#temporizador-de-desligamento">Temporizador de desligamento</a></li>
         <li class="toc-level-3"><a href="#atalhos-de-reproducao">Atalhos de reprodução</a></li>
         <li class="toc-level-3"><a href="#navegador-de-itens">Navegador de itens</a></li>
         <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
         <li class="toc-level-4"><a href="#modo-pasta">Modo pasta</a></li>
         <li class="toc-level-4"><a href="#localizacao-rapida-por-digitacao">Localização rápida por digitação</a></li>
+        <li class="toc-level-4"><a href="#busca-na-playlist-ou-pasta-atual">Busca na playlist ou pasta atual</a></li>
         <li class="toc-level-2"><a href="#configuracoes">Configurações</a></li>
         <li class="toc-level-3"><a href="#geral">Geral</a></li>
         <li class="toc-level-3"><a href="#reproducao">Reprodução</a></li>
@@ -159,6 +161,8 @@ footer {
 <li>Reprodução de mídia com controle por teclado</li>
 <li>Playlists em abas</li>
 <li>Fila de reprodução independente para organizar o que toca em seguida</li>
+<li>Busca dentro da playlist ou pasta atual, com navegação entre os resultados por teclado</li>
+<li>Temporizador de desligamento com durações prontas ou pausa ao fim da faixa</li>
 <li>Navegação por pastas com pré-visualização</li>
 <li>Equalizador por aba com predefinições e presets personalizados</li>
 <li>Painel de letras com busca automática e cópia do texto</li>
@@ -218,11 +222,24 @@ footer {
 <li><code>Ctrl+C</code>: copiar o caminho ou link do item selecionado</li>
 <li><code>Ctrl+Shift+S</code>: salvar a playlist atual</li>
 <li><code>Ctrl+B</code>: alternar foco entre o navegador de itens e o player</li>
+<li><code>Ctrl+F</code>: localizar um item na playlist ou pasta atual</li>
+<li><code>F3</code> / <code>Shift+F3</code>: próximo ou anterior resultado da busca</li>
 </ul>
 <h3 id="fila-de-reproducao">Fila de reprodução</h3>
 <p>A fila de reprodução organiza o que deve tocar depois da faixa atual, sem depender da ordem da playlist que você está navegando. Ela sempre pertence à playlist que está tocando no momento.</p>
 <p>Use <code>Ctrl+Shift+F</code> ou o menu <strong>Reprodução &gt; Adicionar à Fila de Reprodução</strong> para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use <code>Ctrl+Shift+Q</code> ou o menu <strong>Reprodução &gt; Gerenciar Fila de Reprodução</strong>.</p>
 <p>Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.</p>
+<h3 id="temporizador-de-desligamento">Temporizador de desligamento</h3>
+<p>O temporizador pausa a reprodução sozinho depois de um tempo combinado — útil para ouvir algo antes de dormir sem deixar o player tocando a noite toda. Ele <strong>pausa</strong> em vez de parar, então a posição da mídia é preservada e basta <code>Espaço</code> para continuar de onde parou.</p>
+<p>Use <code>Ctrl+Shift+D</code> ou o menu <strong>Reprodução &gt; Temporizador de desligamento</strong> para configurá-lo. As opções são:</p>
+<ul>
+<li><strong>Durações prontas</strong>: 5, 10, 15, 30, 45, 60, 90 ou 120 minutos, disponíveis direto no submenu.</li>
+<li><strong>Tempo personalizado</strong>: qualquer valor de 1 a 720 minutos, na caixa de configuração.</li>
+<li><strong>Ao fim da faixa atual</strong>: a reprodução termina quando a faixa acabar, sem avançar para a próxima, sem repetir e sem puxar conteúdo relacionado.</li>
+<li><strong>Não usar temporizador</strong>: cancela o agendamento.</li>
+</ul>
+<p>O submenu ainda traz <strong>Tempo restante</strong>, que anuncia quanto falta, e <strong>Cancelar temporizador</strong>, ativo apenas quando há um temporizador agendado.</p>
+<p>Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta 1 minuto. O estado do temporizador também entra no anúncio de status da tecla <code>S</code>.</p>
 <h3 id="atalhos-de-reproducao">Atalhos de reprodução</h3>
 <ul>
 <li><code>Espaço</code>: reproduzir ou pausar</li>
@@ -244,6 +261,7 @@ footer {
 <li><code>Ctrl+Alt+L</code>: alternar o painel de letras</li>
 <li><code>Ctrl+Shift+F</code>: adicionar o item selecionado à fila de reprodução</li>
 <li><code>Ctrl+Shift+Q</code>: gerenciar a fila de reprodução</li>
+<li><code>Ctrl+Shift+D</code>: configurar o temporizador de desligamento</li>
 <li><code>T</code>: anunciar o tempo atual da mídia</li>
 <li><code>V</code>: anunciar o volume atual</li>
 <li><code>S</code>: anunciar o status do player</li>
@@ -271,6 +289,23 @@ footer {
 </ul>
 <h4 id="localizacao-rapida-por-digitacao">Localização rápida por digitação</h4>
 <p>Nos dois modos, digitar letras ou números move a seleção para o primeiro item cujo nome começa com os caracteres digitados. A busca ignora acentos e diferenças entre maiúsculas e minúsculas. Após um segundo sem digitar, o acumulador de caracteres é resetado e a próxima letra inicia uma nova busca.</p>
+<h4 id="busca-na-playlist-ou-pasta-atual">Busca na playlist ou pasta atual</h4>
+<p>Para procurar em listas grandes, use a busca completa em vez da digitação rápida. Ela encontra o texto em <strong>qualquer parte</strong> do nome do item, não apenas no início.</p>
+<ul>
+<li><code>Ctrl+F</code>: abre a caixa <strong>Localizar item</strong>. Digite o texto e confirme com <code>Enter</code> ou com o botão <strong>Localizar</strong>.</li>
+<li><code>F3</code>: vai para o próximo resultado.</li>
+<li><code>Shift+F3</code>: volta para o resultado anterior.</li>
+</ul>
+<p>Também é possível abrir a busca pelo menu <strong>Exibir &gt; Localizar item</strong>, que traz igualmente <strong>Próximo resultado</strong> e <strong>Resultado anterior</strong>.</p>
+<p>Detalhes úteis:</p>
+<ul>
+<li>A busca ignora acentos e diferenças entre maiúsculas e minúsculas, do mesmo jeito que a digitação rápida.</li>
+<li>Ela percorre os itens exibidos na aba ativa, então funciona tanto em playlists locais quanto em pastas e em listas vindas do YouTube Music.</li>
+<li>A primeira busca considera o item já selecionado; a partir daí, <code>F3</code> e <code>Shift+F3</code> avançam ou voltam.</li>
+<li>O leitor de tela lê o nome do item encontrado. A posição na busca aparece na barra de status, como em “Busca “rock”: resultado 2 de 7.”, junto com um aviso quando a busca dá a volta na lista.</li>
+<li>O texto procurado fica guardado durante a sessão: <code>F3</code> repete a última busca sem reabrir a caixa. Se ainda não houver um texto, <code>F3</code> abre a caixa de busca.</li>
+<li>Se nada corresponder, a seleção atual é mantida e o player informa que não há itens correspondentes.</li>
+</ul>
 <p>Para tarefas de organização, vale pensar nas abas como espaços de trabalho independentes: uma aba para tocar algo agora, outra para revisar a biblioteca e outra para testes ou coleções temporárias.</p>
 <h2 id="configuracoes">Configurações</h2>
 <p>As preferências ficam em <code>Ctrl+,</code> e são divididas em quatro abas: <strong>Geral</strong>, <strong>Reprodução</strong>, <strong>Acessibilidade</strong> e <strong>Recursos adicionais</strong>.</p>
@@ -553,6 +588,7 @@ footer {
 </ul>
 <p>Se você usa leitor de tela, os atalhos de anúncio sob demanda <code>T</code>, <code>V</code> e <code>S</code> (descritos em <a href="#atalhos-de-reproducao">Atalhos de reprodução</a>) e a ajuda rápida <code>F1</code> ajudam a se localizar sem depender dos eventos automáticos.</p>
 <p>Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em <code>Ctrl+,</code> &gt; <strong>Acessibilidade</strong>.</p>
+<p>A busca de itens evita anúncios redundantes: como <code>Ctrl+F</code>, <code>F3</code> e <code>Shift+F3</code> movem a seleção para o item encontrado, quem lê a faixa é o próprio leitor de tela, e a posição na busca fica só na barra de status. O temporizador, por sua vez, avisa ao ser agendado, faltando 5 minutos, faltando 1 minuto e ao pausar a reprodução; seu estado também aparece no anúncio da tecla <code>S</code>.</p>
 <p>O painel de letras também foi pensado para esse uso: <code>Ctrl+Alt+L</code> ou a caixa <strong>Letras</strong> na área de tempo mostram ou ocultam o painel, e o texto pode ser lido, navegado com as setas e copiado pelo botão <strong>Copiar letra completa</strong>. Ao trocar de faixa, o player tenta buscar a letra automaticamente primeiro no LRCLIB e depois no YouTube Music.</p>
 <h2 id="atualizacoes">Atualizações</h2>
 <p>Ao iniciar, o KeyTune pode verificar atualizações automaticamente. Para verificar manualmente a qualquer momento, use o menu <strong>Ajuda &gt; Verificar atualizações</strong>.</p>

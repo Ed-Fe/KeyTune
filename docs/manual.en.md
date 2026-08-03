@@ -11,6 +11,8 @@ This manual presents the application's main features and the most common actions
 - Keyboard-controlled media playback
 - Tabbed playlists
 - A playback queue to organize what plays next
+- Search within the current playlist or folder, with keyboard navigation between results
+- Sleep timer with preset durations or a pause at the end of the current track
 - Folder navigation with preview
 - Per-tab equalizer with built-in profiles and custom presets
 - A lyrics panel with automatic fetching and text copying
@@ -77,6 +79,8 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `Ctrl+C`: copy the path or link of the selected item
 - `Ctrl+Shift+S`: save the current playlist
 - `Ctrl+B`: switch focus between the item browser and the player
+- `Ctrl+F`: find an item in the current playlist or folder
+- `F3` / `Shift+F3`: next or previous search result
 
 ### Playback queue
 
@@ -85,6 +89,21 @@ The playback queue organizes what should play after the current track, without d
 Use `Ctrl+Shift+F` or the **Playback > Add to Playback Queue** menu to add or remove items from the queue. To view, remove, reorder, or clear the entire queue, use `Ctrl+Shift+Q` or the **Playback > Manage Playback Queue** menu.
 
 If the queue is empty, the queue manager tells you so and asks you to add items first.
+
+### Sleep timer
+
+The sleep timer pauses playback on its own after an agreed amount of time - handy for listening to something before falling asleep without leaving the player running all night. It **pauses** instead of stopping, so the media position is preserved and `Space` resumes right where it left off.
+
+Use `Ctrl+Shift+D` or the **Playback > Sleep Timer** menu to set it up. The options are:
+
+- **Preset durations**: 5, 10, 15, 30, 45, 60, 90, or 120 minutes, available directly in the submenu.
+- **Custom time**: any value from 1 to 720 minutes, in the configuration dialog.
+- **At the end of the current track**: playback ends when the track finishes, without advancing to the next one, repeating, or pulling in related content.
+- **Do not use a timer**: cancels the schedule.
+
+The submenu also offers **Time remaining**, which announces how much is left, and **Cancel timer**, enabled only while a timer is scheduled.
+
+While the countdown runs, the player warns you when 5 minutes and when 1 minute are left. The timer state is also part of the status announcement on the `S` key.
 
 ### Playback shortcuts
 
@@ -107,6 +126,7 @@ If the queue is empty, the queue manager tells you so and asks you to add items 
 - `Ctrl+Alt+L`: toggle the lyrics panel
 - `Ctrl+Shift+F`: add the selected item to the playback queue
 - `Ctrl+Shift+Q`: manage the playback queue
+- `Ctrl+Shift+D`: configure the sleep timer
 - `T`: announce the current media time
 - `V`: announce the current volume
 - `S`: announce the player status
@@ -140,6 +160,25 @@ When the tab came from a folder opened with `Ctrl+Shift+O`, the browser displays
 #### Quick location by typing
 
 In both modes, typing letters or numbers moves the selection to the first item whose name starts with the typed characters. The search ignores accents and differences between uppercase and lowercase. After one second without typing, the character accumulator is reset and the next letter starts a new search.
+
+#### Search within the current playlist or folder
+
+To search long lists, use the full search instead of quick typing. It finds the text **anywhere** in the item name, not just at the beginning.
+
+- `Ctrl+F`: opens the **Find item** dialog. Type the text and confirm with `Enter` or the **Find** button.
+- `F3`: goes to the next result.
+- `Shift+F3`: goes back to the previous result.
+
+The search can also be opened from the **View > Find item** menu, which likewise offers **Next result** and **Previous result**.
+
+Useful details:
+
+- The search ignores accents and case differences, just like quick typing.
+- It scans the items shown in the active tab, so it works in local playlists as well as folders and lists coming from YouTube Music.
+- The first search considers the item already selected; from then on, `F3` and `Shift+F3` move forward or back.
+- The screen reader reads the name of the matching item. The search position appears in the status bar, such as `Search "rock": result 2 of 7.`, along with a note when the search wraps around the list.
+- The search text is kept for the session: `F3` repeats the last search without reopening the dialog. If there is no text yet, `F3` opens the search dialog.
+- If nothing matches, the current selection is kept and the player reports that there are no matching items.
 
 For organization tasks, it is useful to think of tabs as independent workspaces: one tab to play something now, another to review the library, and another for tests or temporary collections.
 
@@ -405,6 +444,8 @@ The application was designed for screen readers and keyboard use. In general:
 If you use a screen reader, the on-demand announcement shortcuts `T`, `V`, and `S` (described in [Playback shortcuts](#playback-shortcuts)) and the `F1` quick help help you orient yourself without depending on automatic events.
 
 Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in `Ctrl+,` > **Accessibility**.
+
+Item search avoids redundant announcements: since `Ctrl+F`, `F3`, and `Shift+F3` move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the `S` key announcement.
 
 The lyrics panel is also designed for this use: `Ctrl+Alt+L` or the **Lyrics** checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the **Copy full lyrics** button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.
 

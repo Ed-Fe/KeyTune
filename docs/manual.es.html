@@ -119,11 +119,13 @@ footer {
         <li class="toc-level-2"><a href="#playlist-carpetas-y-pestanas">Playlist, carpetas y pestañas</a></li>
         <li class="toc-level-3"><a href="#atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</a></li>
         <li class="toc-level-3"><a href="#cola-de-reproduccion">Cola de reproducción</a></li>
+        <li class="toc-level-3"><a href="#temporizador-de-apagado">Temporizador de apagado</a></li>
         <li class="toc-level-3"><a href="#atajos-de-reproduccion">Atajos de reproducción</a></li>
         <li class="toc-level-3"><a href="#navegador-de-elementos">Navegador de elementos</a></li>
         <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
         <li class="toc-level-4"><a href="#modo-carpeta">Modo carpeta</a></li>
         <li class="toc-level-4"><a href="#localizacion-rapida-por-escritura">Localización rápida por escritura</a></li>
+        <li class="toc-level-4"><a href="#busqueda-en-la-playlist-o-carpeta-actual">Búsqueda en la playlist o carpeta actual</a></li>
         <li class="toc-level-2"><a href="#configuracion">Configuración</a></li>
         <li class="toc-level-3"><a href="#general">General</a></li>
         <li class="toc-level-3"><a href="#reproduccion">Reproducción</a></li>
@@ -159,6 +161,8 @@ footer {
 <li>Reproducción multimedia con control por teclado</li>
 <li>Playlists en pestañas</li>
 <li>Una cola de reproducción para organizar lo que sonará después</li>
+<li>Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado</li>
+<li>Temporizador de apagado con duraciones predefinidas o pausa al final de la pista</li>
 <li>Navegación por carpetas con vista previa</li>
 <li>Ecualizador por pestaña con predefinidos y presets personalizados</li>
 <li>Un panel de letras con búsqueda automática y copia del texto</li>
@@ -218,11 +222,24 @@ footer {
 <li><code>Ctrl+C</code>: copiar la ruta o enlace del elemento seleccionado</li>
 <li><code>Ctrl+Shift+S</code>: guardar la playlist actual</li>
 <li><code>Ctrl+B</code>: alternar foco entre el navegador de elementos y el reproductor</li>
+<li><code>Ctrl+F</code>: localizar un elemento en la playlist o carpeta actual</li>
+<li><code>F3</code> / <code>Shift+F3</code>: siguiente o anterior resultado de la búsqueda</li>
 </ul>
 <h3 id="cola-de-reproduccion">Cola de reproducción</h3>
 <p>La cola de reproducción organiza lo que debe sonar después de la pista actual, sin depender del orden de la playlist que estés navegando. Siempre pertenece a la playlist que está sonando en ese momento.</p>
 <p>Usa <code>Ctrl+Shift+F</code> o el menú <strong>Reproducción &gt; Agregar a la Cola de Reproducción</strong> para agregar o quitar elementos de la cola. Para ver, quitar, reordenar o vaciar toda la cola, usa <code>Ctrl+Shift+Q</code> o el menú <strong>Reproducción &gt; Administrar la Cola de Reproducción</strong>.</p>
 <p>Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.</p>
+<h3 id="temporizador-de-apagado">Temporizador de apagado</h3>
+<p>El temporizador pausa la reproducción por sí solo después del tiempo acordado, útil para escuchar algo antes de dormir sin dejar el reproductor sonando toda la noche. <strong>Pausa</strong> en lugar de detener, así que la posición del archivo se conserva y basta con <code>Espacio</code> para continuar donde quedó.</p>
+<p>Usa <code>Ctrl+Shift+D</code> o el menú <strong>Reproducción &gt; Temporizador de apagado</strong> para configurarlo. Las opciones son:</p>
+<ul>
+<li><strong>Duraciones predefinidas</strong>: 5, 10, 15, 30, 45, 60, 90 o 120 minutos, disponibles directamente en el submenú.</li>
+<li><strong>Tiempo personalizado</strong>: cualquier valor de 1 a 720 minutos, en el cuadro de configuración.</li>
+<li><strong>Al final de la pista actual</strong>: la reproducción termina cuando acabe la pista, sin avanzar a la siguiente, sin repetir y sin traer contenido relacionado.</li>
+<li><strong>No usar temporizador</strong>: cancela la programación.</li>
+</ul>
+<p>El submenú también incluye <strong>Tiempo restante</strong>, que anuncia cuánto falta, y <strong>Cancelar temporizador</strong>, activo solo cuando hay un temporizador programado.</p>
+<p>Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos y cuando falta 1 minuto. El estado del temporizador también entra en el anuncio de estado de la tecla <code>S</code>.</p>
 <h3 id="atajos-de-reproduccion">Atajos de reproducción</h3>
 <ul>
 <li><code>Espacio</code>: reproducir o pausar</li>
@@ -244,6 +261,7 @@ footer {
 <li><code>Ctrl+Alt+L</code>: alternar el panel de letras</li>
 <li><code>Ctrl+Shift+F</code>: agregar el elemento seleccionado a la cola de reproducción</li>
 <li><code>Ctrl+Shift+Q</code>: administrar la cola de reproducción</li>
+<li><code>Ctrl+Shift+D</code>: configurar el temporizador de apagado</li>
 <li><code>T</code>: anunciar el tiempo actual del medio</li>
 <li><code>V</code>: anunciar el volumen actual</li>
 <li><code>S</code>: anunciar el estado del reproductor</li>
@@ -271,6 +289,23 @@ footer {
 </ul>
 <h4 id="localizacion-rapida-por-escritura">Localización rápida por escritura</h4>
 <p>En ambos modos, escribir letras o números mueve la selección al primer elemento cuyo nombre comienza con los caracteres escritos. La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas. Después de un segundo sin escribir, el acumulador de caracteres se reinicia y la siguiente letra inicia una nueva búsqueda.</p>
+<h4 id="busqueda-en-la-playlist-o-carpeta-actual">Búsqueda en la playlist o carpeta actual</h4>
+<p>Para buscar en listas grandes, usa la búsqueda completa en lugar de la escritura rápida. Encuentra el texto en <strong>cualquier parte</strong> del nombre del elemento, no solo al comienzo.</p>
+<ul>
+<li><code>Ctrl+F</code>: abre el cuadro <strong>Localizar elemento</strong>. Escribe el texto y confirma con <code>Enter</code> o con el botón <strong>Localizar</strong>.</li>
+<li><code>F3</code>: va al siguiente resultado.</li>
+<li><code>Shift+F3</code>: vuelve al resultado anterior.</li>
+</ul>
+<p>La búsqueda también se abre desde el menú <strong>Ver &gt; Localizar elemento</strong>, que igualmente ofrece <strong>Siguiente resultado</strong> y <strong>Resultado anterior</strong>.</p>
+<p>Detalles útiles:</p>
+<ul>
+<li>La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas, igual que la escritura rápida.</li>
+<li>Recorre los elementos mostrados en la pestaña activa, así que funciona tanto en playlists locales como en carpetas y en listas provenientes de YouTube Music.</li>
+<li>La primera búsqueda considera el elemento ya seleccionado; a partir de ahí, <code>F3</code> y <code>Shift+F3</code> avanzan o retroceden.</li>
+<li>El lector de pantalla lee el nombre del elemento encontrado. La posición en la búsqueda aparece en la barra de estado, como en «Búsqueda "rock": resultado 2 de 7.», junto con un aviso cuando la búsqueda da la vuelta a la lista.</li>
+<li>El texto buscado se guarda durante la sesión: <code>F3</code> repite la última búsqueda sin reabrir el cuadro. Si aún no hay texto, <code>F3</code> abre el cuadro de búsqueda.</li>
+<li>Si nada coincide, se mantiene la selección actual y el reproductor informa que no hay elementos correspondientes.</li>
+</ul>
 <p>Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.</p>
 <h2 id="configuracion">Configuración</h2>
 <p>Las preferencias están en <code>Ctrl+,</code> y se dividen en cuatro pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong> y <strong>Recursos adicionales</strong>.</p>
@@ -552,6 +587,7 @@ footer {
 </ul>
 <p>Si usas lector de pantalla, los atajos de anuncio bajo demanda <code>T</code>, <code>V</code> y <code>S</code> (descritos en <a href="#atajos-de-reproducción">Atajos de reproducción</a>) y la ayuda rápida <code>F1</code> ayudan a orientarte sin depender de los eventos automáticos.</p>
 <p>Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en <code>Ctrl+,</code> &gt; <strong>Accesibilidad</strong>.</p>
+<p>La búsqueda de elementos evita anuncios redundantes: como <code>Ctrl+F</code>, <code>F3</code> y <code>Shift+F3</code> mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla <code>S</code>.</p>
 <p>El panel de letras también está pensado para ese uso: <code>Ctrl+Alt+L</code> o la casilla <strong>Letras</strong> en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón <strong>Copiar letra completa</strong>. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.</p>
 <h2 id="actualizaciones">Actualizaciones</h2>
 <p>Al iniciar, KeyTune puede verificar actualizaciones automáticamente. Para verificar manualmente en cualquier momento, usa el menú <strong>Ayuda &gt; Buscar actualizaciones</strong>.</p>

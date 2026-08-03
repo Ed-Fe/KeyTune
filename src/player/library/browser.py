@@ -4,10 +4,20 @@ import unicodedata
 
 import wx
 
-from ..i18n import _
+from ..i18n import _, ngettext
 
 
 TYPEAHEAD_RESET_SECONDS = 1.0
+
+
+def normalize_search_text(text):
+    """Fold accents and case so buscas comparem texto de forma tolerante."""
+    if not text:
+        return ""
+
+    normalized = unicodedata.normalize("NFKD", text)
+    without_accents = "".join(character for character in normalized if not unicodedata.combining(character))
+    return without_accents.casefold().strip()
 
 
 class VirtualItemsListCtrl(wx.ListCtrl):
@@ -150,7 +160,11 @@ class PlaylistBrowserPanel(wx.Panel):
             self._set_list_selection(wx.NOT_FOUND, ensure_visible=False)
 
         self.header_label.SetLabel(
-            _("{title} — {count} item(ns)").format(title=playlist_state.title, count=len(playlist_state.items))
+            ngettext(
+                "{title} — {count} item",
+                "{title} — {count} itens",
+                len(playlist_state.items),
+            ).format(title=playlist_state.title, count=len(playlist_state.items))
         )
         self.hint_label.SetLabel(
             _("Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player.")
@@ -277,6 +291,29 @@ class PlaylistBrowserPanel(wx.Panel):
 
         path = getattr(item, "path", None)
         return path or None
+
+    def has_searchable_items(self):
+        """Whether the list currently holds real items (not a placeholder)."""
+        return bool(self._items) and not self._has_placeholder
+
+    def search_labels(self):
+        """Labels usados pela busca (Ctrl+F), na mesma ordem da lista."""
+        if self._has_placeholder:
+            return []
+        return [self._item_search_label(index) for index in range(len(self._items))]
+
+    def get_selected_index(self):
+        return self._get_selected_index()
+
+    def focus_search_result(self, index):
+        """Seleciona um resultado de busca e devolve o foco para a lista."""
+        if self._has_placeholder or not 0 <= index < len(self._items):
+            return False
+
+        self._clear_typeahead()
+        self._set_list_selection(index, ensure_visible=True)
+        self.items_list.SetFocus()
+        return True
 
     def get_selected_indexes(self):
         selections = []
@@ -446,12 +483,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self._typeahead_timestamp = 0.0
 
     def _normalize_search_text(self, text):
-        if not text:
-            return ""
-
-        normalized = unicodedata.normalize("NFKD", text)
-        without_accents = "".join(character for character in normalized if not unicodedata.combining(character))
-        return without_accents.casefold().strip()
+        return normalize_search_text(text)
 
     def _item_search_label(self, index):
         if not 0 <= index < len(self._items):

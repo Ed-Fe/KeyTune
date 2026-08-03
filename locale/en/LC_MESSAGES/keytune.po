@@ -24,6 +24,9 @@ msgstr "&Open link"
 msgid "&Anunciar"
 msgstr "&Announce"
 
+msgid "&Aplicar"
+msgstr "&Apply"
+
 msgid "&Arquivo"
 msgstr "&File"
 
@@ -47,6 +50,9 @@ msgstr "&Connect"
 
 msgid "&Conectar conta..."
 msgstr "&Connect account..."
+
+msgid "&Configurar temporizador...\tCtrl+Shift+D"
+msgstr "&Configure timer...\tCtrl+Shift+D"
 
 msgid "&Conteúdo Relacionado do YouTube Music (A)"
 msgstr "&Related YouTube Music content (A)"
@@ -75,6 +81,9 @@ msgstr "&Edit..."
 msgid "&Exibir"
 msgstr "&View"
 
+msgid "&Exportar do navegador instalado"
+msgstr "&Export from installed browser"
+
 msgid "&Fechar"
 msgstr "&Close"
 
@@ -84,8 +93,20 @@ msgstr "&Manage playback queue\tCtrl+Shift+Q"
 msgid "&Histórico"
 msgstr "&History"
 
+msgid "&Informar manualmente (arquivo ou texto)"
+msgstr "Enter &manually (file or text)"
+
 msgid "&Limpar tudo"
 msgstr "&Clear all"
+
+msgid "&Localizar"
+msgstr "&Find"
+
+msgid "&Localizar item...\tCtrl+F"
+msgstr "&Find item...\tCtrl+F"
+
+msgid "&Minutos personalizados"
+msgstr "Custom &minutes"
 
 msgid "&Nome da playlist:"
 msgstr "&Playlist name:"
@@ -153,6 +174,9 @@ msgstr "&About KeyTune"
 msgid "&Subir"
 msgstr "Move &up"
 
+msgid "&Tempo restante"
+msgstr "&Time remaining"
+
 msgid "&Voltar"
 msgstr "&Back"
 
@@ -171,17 +195,20 @@ msgstr "The current tab is not an editable YouTube Music playlist."
 msgid "A abertura externa aceita apenas uma playlist por vez."
 msgstr "External opening accepts only one playlist at a time."
 
+msgid "A autenticação informada não contém cookies válidos do YouTube."
+msgstr "The provided authentication does not contain valid YouTube cookies."
+
 msgid "A autenticação salva do YouTube Music foi removida."
 msgstr "The saved YouTube Music authentication has been removed."
 
 msgid "A autenticação salva do YouTube Music não é mais válida."
 msgstr "The saved YouTube Music authentication is no longer valid."
 
-msgid "A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}."
-msgstr "The rating was sent, but the server still returned likeStatus={status}."
-
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr "The rating requested for the current media is invalid."
+
+msgid "A busca ignora acentos e maiúsculas e encontra o texto em qualquer parte do nome. Use F3 para o próximo resultado e Shift+F3 para o anterior."
+msgstr "The search ignores accents and case and finds the text anywhere in the name. Use F3 for the next result and Shift+F3 for the previous one."
 
 msgid "A conta do YouTube Music foi desconectada desta instalação."
 msgstr "The YouTube Music account has been disconnected from this installation."
@@ -191,6 +218,9 @@ msgstr "The ytmusicapi dependency was downloaded, but could not be loaded. Resta
 
 msgid "A dependência ytmusicapi não está instalada. Ative os Recursos adicionais nas Preferências para baixar e atualizar automaticamente."
 msgstr "The ytmusicapi dependency is not installed. Enable Additional resources in Preferences to download and update automatically."
+
+msgid "A exportação de cookies do {browser} demorou demais e foi cancelada."
+msgstr "Cookie export from {browser} took too long and was canceled."
 
 msgid "A faixa do YouTube Music não tem videoId válido."
 msgstr "The YouTube Music track has no valid videoId."
@@ -527,8 +557,8 @@ msgstr "Quick &shortcuts help\tF1"
 msgid "Ajuda rápida de atalhos"
 msgstr "Quick shortcuts help"
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the path or link of the selected item\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nPlayback menu > Audio device — Change the sound output\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador de desligamento (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the path or link of the selected item\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nPlayback menu > Audio device — Change the sound output\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nCtrl+Shift+D — Sleep timer (preset durations or end of track)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nCtrl+F — Find an item in the current playlist or folder\nF3 / Shift+F3 — Next or previous search result\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
 
 msgid "Ajuda rápida de atalhos:"
 msgstr "Quick shortcuts help:"
@@ -581,6 +611,12 @@ msgstr "Announce &time (T)"
 msgid "Anunciar &Volume (V)"
 msgstr "Announce &volume (V)"
 
+msgid "Ao &fim da faixa atual"
+msgstr "At the &end of the current track"
+
+msgid "Ao fim da faixa atual"
+msgstr "At the end of the current track"
+
 msgid "Ao vivo"
 msgstr "Live"
 
@@ -611,8 +647,8 @@ msgstr "&File..."
 msgid "Argentina"
 msgstr "Argentina"
 
-msgid "Arquivo de conexão"
-msgstr "Connection file"
+msgid "Arquivo de conexão:"
+msgstr "Connection file:"
 
 msgid "Arquivo de mídia — {app}"
 msgstr "Media file — {app}"
@@ -677,8 +713,8 @@ msgstr "&Refresh access..."
 msgid "Atalhos e ajuda"
 msgstr "Shortcuts and help"
 
-msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
-msgstr "Main shortcuts: Ctrl+Alt+O open media, playlist or folder · Ctrl+O open files or playlist · Ctrl+Shift+O open folder · Space play/pause · ←/→ seek · ↑/↓ volume · Tab items/player · Ctrl+Shift+Y YouTube Music hub (optional) · F1 help"
+msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgstr "Main shortcuts: Ctrl+Alt+O open media, playlist or folder · Ctrl+O open files or playlist · Ctrl+Shift+O open folder · Space play/pause · ←/→ seek · ↑/↓ volume · Tab items/player · Ctrl+F find item (F3 next) · Ctrl+Shift+D sleep timer · Ctrl+Shift+Y YouTube Music hub (optional) · F1 help"
 
 msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
 msgstr "Turns on shuffle mode automatically for playlists created after saving preferences."
@@ -842,26 +878,25 @@ msgstr "Welcome to KeyTune"
 msgid "Biblioteca do YouTube Music"
 msgstr "YouTube Music library"
 
-msgid "Biblioteca do YouTube Music atualizada: {playlists} playlist(s) e {mixes} mix(es)."
-msgstr "YouTube Music library updated: {playlists} playlist(s) and {mixes} mix(es)."
+msgid "Biblioteca do YouTube Music atualizada: {count} playlist."
+msgid_plural "Biblioteca do YouTube Music atualizada: {count} playlists."
+msgstr[0] "YouTube Music library updated: {count} playlist."
+msgstr[1] "YouTube Music library updated: {count} playlists."
 
-msgid "Biblioteca do YouTube Music: {items} item(ns) ({mixes} mix(es) personalizada(s) adicionada(s))."
-msgstr "YouTube Music library: {items} item(s) ({mixes} custom mix(es) added)."
+msgid "Biblioteca do YouTube Music: {count} item."
+msgid_plural "Biblioteca do YouTube Music: {count} itens."
+msgstr[0] "YouTube Music library: {count} item."
+msgstr[1] "YouTube Music library: {count} items."
 
-msgid "Biblioteca do YouTube Music: {items} item(ns). Não foi possível carregar mixes personalizadas."
-msgstr "YouTube Music library: {items} item(s). Could not load custom mixes."
+msgid "Biblioteca do YouTube Music: {count} playlist carregada (todas)."
+msgid_plural "Biblioteca do YouTube Music: {count} playlists carregadas (todas)."
+msgstr[0] "YouTube Music library: {count} playlist loaded (all)."
+msgstr[1] "YouTube Music library: {count} playlists loaded (all)."
 
-msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) (todas)."
-msgstr "YouTube Music library: {playlists} playlist(s) loaded (all)."
-
-msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s)."
-msgstr "YouTube Music library: {playlists} playlist(s) loaded and {mixes} custom mix(es)."
-
-msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) e {mixes} mix(es) personalizada(s). Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-msgstr "YouTube Music library: {playlists} playlist(s) loaded and {mixes} custom mix(es). Use 'Load more' or scroll to the end of the list to bring more."
-
-msgid "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s). Há mais para carregar."
-msgstr "YouTube Music library: {playlists} playlist(s) loaded. There are more to load."
+msgid "Biblioteca do YouTube Music: {count} playlist carregada."
+msgid_plural "Biblioteca do YouTube Music: {count} playlists carregadas."
+msgstr[0] "YouTube Music library: {count} playlist loaded."
+msgstr[1] "YouTube Music library: {count} playlists loaded."
 
 msgid "Biblioteca: carregando playlists e mixes…"
 msgstr "Library: loading playlists and mixes…"
@@ -872,8 +907,10 @@ msgstr "Library: connect an account to list playlists and mixes."
 msgid "Biblioteca: nenhuma playlist carregada."
 msgstr "Library: no playlists loaded."
 
-msgid "Biblioteca: {count} playlist(s) e mix(es) disponíveis."
-msgstr "Library: {count} playlist(s) and mix(es) available."
+msgid "Biblioteca: {count} playlist ou mix disponível."
+msgid_plural "Biblioteca: {count} playlists e mixes disponíveis."
+msgstr[0] "Library: {count} playlist or mix available."
+msgstr[1] "Library: {count} playlists and mixes available."
 
 msgid "Bolívia"
 msgstr "Bolivia"
@@ -881,14 +918,28 @@ msgstr "Bolivia"
 msgid "Brasil"
 msgstr "Brazil"
 
+msgid "Brave"
+msgstr "Brave"
+
+msgid "Busca \"{query}\": resultado {position} de {total}, voltando ao fim da lista."
+msgstr "Search \"{query}\": result {position} of {total}, wrapping to the end of the list."
+
+msgid "Busca \"{query}\": resultado {position} de {total}, voltando ao início da lista."
+msgstr "Search \"{query}\": result {position} of {total}, wrapping to the beginning of the list."
+
+msgid "Busca \"{query}\": resultado {position} de {total}."
+msgstr "Search \"{query}\": result {position} of {total}."
+
 msgid "Busca do YouTube Music e do YouTube"
 msgstr "YouTube Music and YouTube search"
 
 msgid "Busca em {scope}: nenhum resultado para {query}."
 msgstr "Search in {scope}: no results for {query}."
 
-msgid "Busca em {scope}: {count} resultado(s) para {query}."
-msgstr "Search in {scope}: {count} result(s) for {query}."
+msgid "Busca em {scope}: {count} resultado para {query}."
+msgid_plural "Busca em {scope}: {count} resultados para {query}."
+msgstr[0] "Search in {scope}: {count} result for {query}."
+msgstr[1] "Search in {scope}: {count} results for {query}."
 
 msgid "Busca no catálogo e no YouTube"
 msgstr "Search in the catalog and on YouTube"
@@ -917,8 +968,14 @@ msgstr "Belgium"
 msgid "C&urtidas"
 msgstr "&Liked"
 
+msgid "Ca&ncelar temporizador"
+msgstr "Ca&ncel timer"
+
 msgid "Caminho copiado."
 msgstr "Path copied."
+
+msgid "Caminho de saída inválido para o arquivo de cookies."
+msgstr "Invalid output path for the cookie file."
 
 msgid "Caminho do arquivo de conexão"
 msgstr "Connection file path"
@@ -1031,6 +1088,9 @@ msgstr "Con&firm on exit"
 msgid "Concluir"
 msgstr "Finish"
 
+msgid "Conectando a conta do YouTube Music..."
+msgstr "Connecting the YouTube Music account..."
+
 msgid "Conectar &conta..."
 msgstr "Connect &account..."
 
@@ -1039,9 +1099,6 @@ msgstr "Connect to YouTube Music"
 
 msgid "Conectar ou atualizar acesso do YouTube Music"
 msgstr "Connect or refresh YouTube Music access"
-
-msgid "Conecte sua conta do YouTube Music usando uma destas opções:\n\n1. Caminho mais simples: faça login em music.youtube.com no navegador e exporte os cookies da sessão para um arquivo.\n2. Se você já tiver um browser.json, um JSON de cookies ou um cookies.txt, selecione esse arquivo abaixo.\n3. O campo de texto é opcional e serve apenas para quem prefere colar manualmente os dados do navegador."
-msgstr "Connect your YouTube Music account using one of these options:\n\n1. Simplest path: log in to music.youtube.com in your browser and export the session cookies to a file.\n2. If you already have a browser.json, a cookies JSON or a cookies.txt, select that file below.\n3. The text field is optional and is only for those who prefer to paste the browser data manually."
 
 msgid "Conexão com o YouTube Music cancelada."
 msgstr "YouTube Music connection cancelled."
@@ -1193,8 +1250,10 @@ msgstr "KeyTune credits"
 msgid "Curtidas: nenhuma faixa curtida encontrada."
 msgstr "Liked: no liked tracks found."
 
-msgid "Curtidas: {count} faixa(s)."
-msgstr "Liked: {count} track(s)."
+msgid "Curtidas: {count} faixa."
+msgid_plural "Curtidas: {count} faixas."
+msgstr[0] "Liked: {count} track."
+msgstr[1] "Liked: {count} tracks."
 
 msgid "Curtir no YouTube Music"
 msgstr "Like on YouTube Music"
@@ -1208,8 +1267,8 @@ msgstr "V-shaped curve with strong bass and bright treble."
 msgid "Curva neutra, útil para manter o som original da mídia."
 msgstr "Neutral curve, useful to keep the original sound of the media."
 
-msgid "Dados copiados do navegador (opcional)"
-msgstr "Data copied from the browser (optional)"
+msgid "Dados copiados do navegador (opcional):"
+msgstr "Data copied from the browser (optional):"
 
 msgid "Dados de conexão do YouTube Music"
 msgstr "YouTube Music connection data"
@@ -1292,9 +1351,6 @@ msgstr "Details: {detail}"
 msgid "Detalhes: {error}"
 msgstr "Details: {error}"
 
-msgid "Dica: se quiser o caminho mais fácil, use uma extensão de exportar cookies no navegador para gerar um arquivo JSON ou cookies.txt da sessão já conectada no YouTube Music."
-msgstr "Tip: if you want the easiest path, use a cookie-export extension in your browser to generate a JSON or cookies.txt file of the session already signed in to YouTube Music."
-
 msgid "Dicas rápidas de atalhos"
 msgstr "Quick shortcut tips"
 
@@ -1309,6 +1365,9 @@ msgstr "Type a name for the preset."
 
 msgid "Digite um nome único e fácil de reconhecer para o preset."
 msgstr "Type a unique, easy-to-recognize name for the preset."
+
+msgid "Digite um texto para localizar."
+msgstr "Type some text to search for."
 
 msgid "Diminuir T&om (Shift+[)"
 msgstr "Lower &pitch (Shift+[)"
@@ -1388,8 +1447,10 @@ msgstr "&Trending..."
 msgid "Em alta em {country}: nenhum destaque disponível."
 msgstr "Trending in {country}: no highlights available."
 
-msgid "Em alta em {country}: {count} lista(s) de destaque."
-msgstr "Trending in {country}: {count} highlight list(s)."
+msgid "Em alta em {country}: {count} lista de destaque."
+msgid_plural "Em alta em {country}: {count} listas de destaque."
+msgstr[0] "Trending in {country}: {count} featured chart."
+msgstr[1] "Trending in {country}: {count} featured charts."
 
 msgid "Em alta · diário"
 msgstr "Trending · daily"
@@ -1411,6 +1472,9 @@ msgstr "United Arab Emirates"
 
 msgid "Empurra graves e agudos para uma escuta mais animada."
 msgstr "Pushes bass and treble for a livelier listen."
+
+msgid "Encerrar a reprodução"
+msgstr "Stop playback"
 
 msgid "Enfatiza batida, subgrave e brilho eletrônico."
 msgstr "Emphasizes the beat, sub-bass and electronic brightness."
@@ -1457,11 +1521,23 @@ msgstr "Equalizer: {name}."
 msgid "Equilíbrio pensado para fones com sensação de clareza."
 msgstr "Balance designed for headphones with a sense of clarity."
 
+msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
+msgstr "Unexpected error while exporting cookies from {browser}: {detail}"
+
+msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgstr "Choose how to connect your YouTube Music account.\n\nOption 1 — Installed browser: select the browser from the list and click \"Connect\". The player will import the cookies automatically.\n\nOption 2 — Manual: paste the browser data or choose a previously exported browser.json, cookie JSON, or cookies.txt file."
+
 msgid "Escolha o preset que será usado na aba de mídia ativa."
 msgstr "Choose the preset that will be used on the active media tab."
 
 msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
 msgstr "Choose the preset that will be used on the active media tab. Current preset description: {desc}"
+
+msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
+msgstr "Choose when KeyTune should pause playback automatically."
+
+msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
+msgstr "Choose whether to export cookies directly from an installed browser or provide the data manually using a file or text."
 
 msgid "Escolha um arquivo de mídia ou playlist"
 msgstr "Choose a media file or playlist"
@@ -1547,6 +1623,9 @@ msgstr "Explore YouTube Music moods and genres"
 msgid "Explorar:"
 msgstr "Browse:"
 
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
+msgstr "Exports cookies from the selected browser or validates the provided file or text and connects your YouTube Music account."
+
 msgid "F&echar"
 msgstr "&Close"
 
@@ -1580,6 +1659,9 @@ msgstr "Close t&ab / playlist\tCtrl+W"
 msgid "Fechar Mí&dia\tCtrl+Shift+W"
 msgstr "Close me&dia\tCtrl+Shift+W"
 
+msgid "Feche o {browser} completamente e tente exportar novamente."
+msgstr "Close {browser} completely and try exporting again."
+
 msgid "Festa"
 msgstr "Party"
 
@@ -1600,6 +1682,12 @@ msgstr "End of file."
 
 msgid "Finlândia"
 msgstr "Finland"
+
+msgid "Firefox (recomendado)"
+msgstr "Firefox (recommended)"
+
+msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
+msgstr "Firefox is the most compatible option. On Windows, Chrome, Edge, and Brave may need to be completely closed or may prevent extraction; in that case, use Firefox or manual import."
 
 msgid "Foi tentada uma atualização avançada do yt-dlp."
 msgstr "An advanced yt-dlp update was attempted."
@@ -1622,6 +1710,9 @@ msgstr "Manage playback queue"
 msgid "Global"
 msgstr "Global"
 
+msgid "Google Chrome"
+msgstr "Google Chrome"
+
 msgid "Graves e agudos"
 msgstr "Bass and treble"
 
@@ -1637,8 +1728,10 @@ msgstr "History"
 msgid "Histórico: nenhuma faixa recente encontrada."
 msgstr "History: no recent tracks found."
 
-msgid "Histórico: {count} faixa(s) recentes."
-msgstr "History: {count} recent track(s)."
+msgid "Histórico: {count} faixa recente."
+msgid_plural "Histórico: {count} faixas recentes."
+msgstr[0] "History: {count} recent track."
+msgstr[1] "History: {count} recent tracks."
 
 msgid "Holanda"
 msgstr "Netherlands"
@@ -1648,6 +1741,9 @@ msgstr "Honduras"
 
 msgid "Hungria"
 msgstr "Hungary"
+
+msgid "Há mais para carregar."
+msgstr "There is more to load."
 
 msgid "Identificação do preset"
 msgstr "Preset identification"
@@ -1878,14 +1974,31 @@ msgstr "Lists the YouTube Music moods and genres categories and loads the playli
 msgid "Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."
 msgstr "Audio device list refreshed, but no device was detected now."
 
-msgid "Lista de dispositivos de áudio atualizada. {count} dispositivo(s) disponível(is)."
-msgstr "Audio device list refreshed. {count} device(s) available."
+msgid "Lista de dispositivos de áudio atualizada. {count} dispositivo disponível."
+msgid_plural "Lista de dispositivos de áudio atualizada. {count} dispositivos disponíveis."
+msgstr[0] "Audio device list updated. {count} device available."
+msgstr[1] "Audio device list updated. {count} devices available."
 
 msgid "Lista de itens"
 msgstr "Item list"
 
+msgid "Lista de navegadores disponíveis"
+msgstr "List of available browsers"
+
 msgid "Lista de playlists do YouTube Music"
 msgstr "YouTube Music playlist list"
+
+msgid "Localiza itens da lista ativa."
+msgstr "Finds items in the active list."
+
+msgid "Localiza itens da pasta aberta em {title}."
+msgstr "Finds items in the folder open in {title}."
+
+msgid "Localiza itens da playlist {title}."
+msgstr "Finds items in the {title} playlist."
+
+msgid "Localizar item"
+msgstr "Find item"
 
 msgid "Luxemburgo"
 msgstr "Luxembourg"
@@ -1901,6 +2014,12 @@ msgstr "KeyTune manual"
 
 msgid "Mensagem da central do YouTube Music"
 msgstr "YouTube Music hub message"
+
+msgid "Microsoft Edge"
+msgstr "Microsoft Edge"
+
+msgid "Minutos personalizados"
+msgstr "Custom minutes"
 
 msgid "Mistura equilíbrio com leve presença de voz e brilho."
 msgstr "Mixes balance with a slight presence of voice and brightness."
@@ -1920,6 +2039,12 @@ msgstr "Player control mode."
 msgid "Modo de &Repetição (R)"
 msgstr "&Repeat mode (R)"
 
+msgid "Modo de conexão"
+msgstr "Connection mode"
+
+msgid "Modo de conexão com o YouTube Music"
+msgstr "YouTube Music connection mode"
+
 msgid "Modo de repetição aplicado automaticamente às playlists novas."
 msgstr "Repeat mode applied automatically to new playlists."
 
@@ -1935,8 +2060,10 @@ msgstr "Moods and &genres..."
 msgid "Moods e gêneros — {category}: nenhuma playlist disponível."
 msgstr "Moods and genres — {category}: no playlists available."
 
-msgid "Moods e gêneros — {category}: {count} playlist(s)."
-msgstr "Moods and genres — {category}: {count} playlist(s)."
+msgid "Moods e gêneros — {category}: {count} playlist."
+msgid_plural "Moods e gêneros — {category}: {count} playlists."
+msgstr[0] "Moods and genres — {category}: {count} playlist."
+msgstr[1] "Moods and genres — {category}: {count} playlists."
 
 msgid "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
 msgstr "Shows the description of the currently selected preset. Read-only field."
@@ -2001,6 +2128,15 @@ msgstr "On first run, the download may take a few minutes and requires internet.
 msgid "Navegador de pasta"
 msgstr "Folder browser"
 
+msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
+msgstr "Unrecognized browser: {browser}. Choose one from the list or use manual import."
+
+msgid "Navegador para exportar cookies do YouTube Music"
+msgstr "Browser used to export YouTube Music cookies"
+
+msgid "Navegador:"
+msgstr "Browser:"
+
 msgid "Nenhum arquivo compatível foi recebido do Explorador."
 msgstr "No compatible file was received from Explorer."
 
@@ -2010,11 +2146,17 @@ msgstr "No compatible media file or playlist was selected."
 msgid "Nenhum arquivo recente."
 msgstr "No recent files."
 
+msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
+msgstr "No valid YouTube cookies were found in {browser}. Make sure you are signed in at music.youtube.com."
+
 msgid "Nenhum dispositivo detectado agora"
 msgstr "No device detected now"
 
 msgid "Nenhum item atual para reordenar."
 msgstr "No current item to reorder."
+
+msgid "Nenhum item corresponde a \"{query}\"."
+msgstr "No item matches \"{query}\"."
 
 msgid "Nenhum item nesta playlist."
 msgstr "No items in this playlist."
@@ -2051,6 +2193,9 @@ msgstr "No preset selected to delete."
 
 msgid "Nenhum preset selecionado."
 msgstr "No preset selected."
+
+msgid "Nenhum temporizador de desligamento ativo."
+msgstr "No sleep timer is active."
 
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
 msgstr "No active media tab to configure the equalizer."
@@ -2235,6 +2380,9 @@ msgstr "Could not load the playlists of this category right now."
 msgid "Não foi possível carregar mais playlists do YouTube Music."
 msgstr "Could not load more YouTube Music playlists."
 
+msgid "Não foi possível carregar mixes personalizadas."
+msgstr "Custom mixes could not be loaded."
+
 msgid "Não foi possível carregar seu histórico agora."
 msgstr "Could not load your history right now."
 
@@ -2264,6 +2412,9 @@ msgstr "Could not find the downloaded file."
 
 msgid "Não foi possível excluir a playlist do YouTube Music."
 msgstr "Could not delete the YouTube Music playlist."
+
+msgid "Não foi possível exportar cookies do {browser}."
+msgstr "Could not export cookies from {browser}."
 
 msgid "Não foi possível extrair o wheel da ytmusicapi."
 msgstr "Could not extract the ytmusicapi wheel."
@@ -2310,6 +2461,9 @@ msgstr "Could not locate the KeyTune credits. Generate the HTML version of the r
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr "Could not locate a target playlist in the player."
 
+msgid "Não foi possível preparar a autenticação do YouTube Music."
+msgstr "Could not prepare YouTube Music authentication."
+
 msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
 msgstr "Could not prepare the ytmusicapi dependency automatically. Details: {detail}"
 
@@ -2352,6 +2506,9 @@ msgstr "Could not check for updates."
 msgid "Não gostei no YouTube Music"
 msgstr "Dislike on YouTube Music"
 
+msgid "Não há itens para localizar nesta aba."
+msgstr "There are no items to search in this tab."
+
 msgid "Não há letra para copiar."
 msgstr "There are no lyrics to copy."
 
@@ -2360,6 +2517,9 @@ msgstr "There are no more playlists to load."
 
 msgid "Não listada"
 msgstr "Unlisted"
+
+msgid "Não usar temporizador"
+msgstr "Do not use a timer"
 
 msgid "Não é possível fechar a última aba."
 msgstr "The last tab cannot be closed."
@@ -2375,6 +2535,9 @@ msgstr "KeyTune is an audio and video player designed to be used entirely with t
 
 msgid "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
 msgstr "The Windows Package Manager is not available on this installation. Use the buttons below to open the official websites."
+
+msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
+msgstr "Windows could not decrypt the cookies from {browser}. Try using Firefox or manual import."
 
 msgid "O YouTube Music já está processando uma solicitação. Aguarde um momento."
 msgstr "YouTube Music is already processing a request. Please wait a moment."
@@ -2481,6 +2644,12 @@ msgstr "yt-dlp could not determine a compatible playback URL for this track."
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
 msgstr "yt-dlp could not search for videos on YouTube."
 
+msgid "O yt-dlp não foi encontrado. Verifique se as dependências do YouTube Music estão instaladas."
+msgstr "yt-dlp was not found. Make sure the YouTube Music dependencies are installed."
+
+msgid "O yt-dlp não gerou o arquivo de cookies esperado para {browser}. Verifique se você está logado em music.youtube.com nesse navegador."
+msgstr "yt-dlp did not generate the expected cookie file for {browser}. Make sure you are signed in at music.youtube.com in that browser."
+
 msgid "O yt-dlp não retornou dados válidos."
 msgstr "yt-dlp did not return valid data."
 
@@ -2498,6 +2667,9 @@ msgstr "Oceania"
 
 msgid "Onde encontrar ajuda"
 msgstr "Where to find help"
+
+msgid "Opera"
+msgstr "Opera"
 
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
 msgstr "The install buttons open the Windows Package Manager in a separate window. Depending on the system configuration, Windows may ask for confirmation."
@@ -2577,8 +2749,10 @@ msgstr "Folder opened in the browser: {name}."
 msgid "Pasta atual: {name}."
 msgstr "Current folder: {name}."
 
-msgid "Pasta carregada como playlist: {title}. {count} item(ns)."
-msgstr "Folder loaded as playlist: {title}. {count} item(s)."
+msgid "Pasta carregada como playlist: {title}. {count} item."
+msgid_plural "Pasta carregada como playlist: {title}. {count} itens."
+msgstr[0] "Folder loaded as a playlist: {title}. {count} item."
+msgstr[1] "Folder loaded as a playlist: {title}. {count} items."
 
 msgid "Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução."
 msgstr "Folders can open as a playlist or in the browser. Files, links and playlists can open for playback."
@@ -2639,11 +2813,15 @@ msgstr "M3U playlist"
 msgid "Playlist M3U8"
 msgstr "M3U8 playlist"
 
-msgid "Playlist carregada: {title}. {count} item(ns)."
-msgstr "Playlist loaded: {title}. {count} item(s)."
+msgid "Playlist carregada: {title}. {count} item."
+msgid_plural "Playlist carregada: {title}. {count} itens."
+msgstr[0] "Playlist loaded: {title}. {count} item."
+msgstr[1] "Playlist loaded: {title}. {count} items."
 
-msgid "Playlist do YouTube Music carregada: {title}. {count} item(ns)."
-msgstr "YouTube Music playlist loaded: {title}. {count} item(s)."
+msgid "Playlist do YouTube Music carregada: {title}. {count} item."
+msgid_plural "Playlist do YouTube Music carregada: {title}. {count} itens."
+msgstr[0] "YouTube Music playlist loaded: {title}. {count} item."
+msgstr[1] "YouTube Music playlist loaded: {title}. {count} items."
 
 msgid "Playlist salva em {path}"
 msgstr "Playlist saved to {path}"
@@ -2779,6 +2957,9 @@ msgstr "Ne&xt tab\tCtrl+Tab"
 
 msgid "Próxima Fai&xa\tCtrl+PageDown"
 msgstr "Next tra&ck\tCtrl+PageDown"
+
+msgid "Próximo &resultado\tF3"
+msgstr "Next &result\tF3"
 
 msgid "Pu&lar tutorial"
 msgstr "S&kip tutorial"
@@ -2941,6 +3122,9 @@ msgstr "Restore &normal speed (\\)"
 msgid "Restaurar sessão ao iniciar"
 msgstr "Restore session on startup"
 
+msgid "Resultado &anterior\tShift+F3"
+msgstr "Previous &result\tShift+F3"
+
 msgid "Resultados da busca do YouTube"
 msgstr "YouTube search results"
 
@@ -3061,8 +3245,14 @@ msgstr "Select at least one search result to save."
 msgid "Selecione apenas uma playlist por vez."
 msgstr "Select only one playlist at a time."
 
+msgid "Selecione o navegador instalado do qual os cookies do YouTube Music serão exportados. Certifique-se de estar logado em music.youtube.com nesse navegador."
+msgstr "Select the installed browser from which YouTube Music cookies will be exported. Make sure you are signed in at music.youtube.com in that browser."
+
 msgid "Selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
 msgstr "Select a valid browser.json, cookies JSON or cookies.txt file."
+
+msgid "Selecione um navegador na lista antes de conectar."
+msgstr "Select a browser from the list before connecting."
 
 msgid "Selecione uma playlist do YouTube Music para excluir."
 msgstr "Select a YouTube Music playlist to delete."
@@ -3148,6 +3338,9 @@ msgstr "Current time: {time}."
 msgid "Tempo da mídia"
 msgstr "Media time"
 
+msgid "Tempo personalizado (minutos)"
+msgstr "Custom time (minutes)"
+
 msgid "Tempo {current} de {total}. {percent}%."
 msgstr "Time {current} of {total}. {percent}%."
 
@@ -3157,8 +3350,48 @@ msgstr "Time: no media loaded."
 msgid "Tempo: {current} / duração desconhecida"
 msgstr "Time: {current} / unknown duration"
 
+msgid "Temporizador de desliga&mento"
+msgstr "Sleep ti&mer"
+
+msgid "Temporizador de desligamento"
+msgstr "Sleep timer"
+
+msgid "Temporizador de desligamento cancelado."
+msgstr "Sleep timer cancelled."
+
+msgid "Temporizador de desligamento concluído."
+msgstr "Sleep timer finished."
+
+msgid "Temporizador de desligamento concluído. Reprodução pausada."
+msgstr "Sleep timer finished. Playback paused."
+
+msgid "Temporizador de desligamento ligado: ao fim da faixa atual."
+msgstr "Sleep timer on: at the end of the current track."
+
+msgid "Temporizador de desligamento ligado: {minutes} minuto."
+msgid_plural "Temporizador de desligamento ligado: {minutes} minutos."
+msgstr[0] "Sleep timer on: {minutes} minute."
+msgstr[1] "Sleep timer on: {minutes} minutes."
+
+msgid "Temporizador de desligamento: ao fim da faixa atual."
+msgstr "Sleep timer: at the end of the current track."
+
+msgid "Temporizador de desligamento: falta {minutes} minuto."
+msgid_plural "Temporizador de desligamento: faltam {minutes} minutos."
+msgstr[0] "Sleep timer: {minutes} minute left."
+msgstr[1] "Sleep timer: {minutes} minutes left."
+
+msgid "Temporizador de desligamento: fim da faixa. Reprodução encerrada."
+msgstr "Sleep timer: end of track. Playback stopped."
+
+msgid "Temporizador de desligamento: tempo restante {remaining}."
+msgstr "Sleep timer: {remaining} remaining."
+
 msgid "Tenta trazer presença de palco e mais ambiência."
 msgstr "Tries to bring stage presence and more ambiance."
+
+msgid "Texto a localizar"
+msgstr "Text to find"
 
 msgid "Tocando: {name}"
 msgstr "Playing: {name}"
@@ -3199,14 +3432,14 @@ msgstr "Use the &nightly version of yt-dlp (recommended)"
 msgid "Usar versão nightly do yt-dlp"
 msgstr "Use the nightly version of yt-dlp"
 
+msgid "Use 'Carregar mais' ou desça até o final da lista para trazer mais."
+msgstr "Use 'Load more' or scroll to the end of the list to fetch more."
+
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr "Use Ctrl+Shift+W to close the current preview or Backspace to go up a folder."
 
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
 msgstr "Use a short, clear name. Example: Custom deep bass."
-
-msgid "Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music."
-msgstr "Validates the given file or text and connects your YouTube Music account."
 
 msgid "Validando integridade do pacote..."
 msgstr "Validating package integrity..."
@@ -3301,6 +3534,9 @@ msgstr "YouTube &Music per tab\tCtrl+Shift+Y"
 msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
 msgstr "YouTube &Music per tab (enable in Preferences)\tCtrl+Shift+Y"
 
+msgid "YouTube Music"
+msgstr "YouTube Music"
+
 msgid "YouTube Music conectado como {name}."
 msgstr "YouTube Music connected as {name}."
 
@@ -3357,9 +3593,6 @@ msgstr "tracks"
 
 msgid "formatos SABR sem URL direta"
 msgstr "SABR formats without a direct URL"
-
-msgid "indisponível"
-msgstr "unavailable"
 
 msgid "ligado"
 msgstr "on"
@@ -3442,11 +3675,15 @@ msgid_plural "{count} itens adicionados a {title}."
 msgstr[0] "{count} item added to {title}."
 msgstr[1] "{count} items added to {title}."
 
-msgid "{count} item(ns) adicionado(s) à playlist: {title}."
-msgstr "{count} item(s) added to the playlist: {title}."
+msgid "{count} item adicionado à playlist: {title}."
+msgid_plural "{count} itens adicionados à playlist: {title}."
+msgstr[0] "{count} item added to the playlist: {title}."
+msgstr[1] "{count} items added to the playlist: {title}."
 
-msgid "{count} item(ns) da seleção foram ignorados."
-msgstr "{count} item(s) from the selection were ignored."
+msgid "{count} item da seleção foi ignorado."
+msgid_plural "{count} itens da seleção foram ignorados."
+msgstr[0] "{count} item from the selection was skipped."
+msgstr[1] "{count} items from the selection were skipped."
 
 msgid "{count} itens adicionados à fila de reprodução."
 msgstr "{count} items added to the playback queue."
@@ -3457,14 +3694,40 @@ msgstr "{count} items copied."
 msgid "{count} itens removidos da fila de reprodução."
 msgstr "{count} items removed from the playback queue."
 
-msgid "{count} mix(es) personalizada(s) carregada(s)."
-msgstr "{count} custom mix(es) loaded."
+msgid "{count} mix personalizada adicionada."
+msgid_plural "{count} mixes personalizadas adicionadas."
+msgstr[0] "{count} custom mix added."
+msgstr[1] "{count} custom mixes added."
 
-msgid "{count} playlist(s) da busca foram expandidas."
-msgstr "{count} search playlist(s) were expanded."
+msgid "{count} mix personalizada carregada."
+msgid_plural "{count} mixes personalizadas carregadas."
+msgstr[0] "{count} custom mix loaded."
+msgstr[1] "{count} custom mixes loaded."
 
-msgid "{count} playlist(s) na biblioteca agora."
-msgstr "{count} playlist(s) in the library now."
+msgid "{count} mix personalizada."
+msgid_plural "{count} mixes personalizadas."
+msgstr[0] "{count} custom mix."
+msgstr[1] "{count} custom mixes."
+
+msgid "{count} mix."
+msgid_plural "{count} mixes."
+msgstr[0] "{count} mix."
+msgstr[1] "{count} mixes."
+
+msgid "{count} playlist da busca foi expandida."
+msgid_plural "{count} playlists da busca foram expandidas."
+msgstr[0] "{count} playlist from the search was expanded."
+msgstr[1] "{count} playlists from the search were expanded."
+
+msgid "{count} playlist na biblioteca agora."
+msgid_plural "{count} playlists na biblioteca agora."
+msgstr[0] "{count} playlist in the library now."
+msgstr[1] "{count} playlists in the library now."
+
+msgid "{count} resultado salvo no YouTube Music."
+msgid_plural "{count} resultados salvos no YouTube Music."
+msgstr[0] "{count} result saved to YouTube Music."
+msgstr[1] "{count} results saved to YouTube Music."
 
 msgid "{downloaded} baixados."
 msgstr "{downloaded} downloaded."
@@ -3489,6 +3752,15 @@ msgstr "{item} removed. The queue is empty."
 
 msgid "{label}:"
 msgstr "{label}:"
+
+msgid "{minutes} min"
+msgstr "{minutes} min"
+
+msgid "{minutes} min e {seconds} s"
+msgstr "{minutes} min and {seconds} s"
+
+msgid "{minutes} minutos"
+msgstr "{minutes} minutes"
 
 msgid "{name} (dB)"
 msgstr "{name} (dB)"
@@ -3520,14 +3792,19 @@ msgstr "{prefix}: {name}. {count} items in the playlist."
 msgid "{prefix}: {removed} itens removidos. {count} itens na playlist."
 msgstr "{prefix}: {removed} items removed. {count} items in the playlist."
 
+msgid "{seconds} s"
+msgstr "{seconds} s"
+
 msgid "{semitones:+d} semitons"
 msgstr "{semitones:+d} semitones"
 
 msgid "{title} — carregando"
 msgstr "{title} — loading"
 
-msgid "{title} — {count} item(ns)"
-msgstr "{title} — {count} item(s)"
+msgid "{title} — {count} item"
+msgid_plural "{title} — {count} itens"
+msgstr[0] "{title} — {count} item"
+msgstr[1] "{title} — {count} items"
 
 msgid "{title} — {path}"
 msgstr "{title} — {path}"
@@ -3558,105 +3835,3 @@ msgstr "Austria"
 
 msgid "Índia"
 msgstr "India"
-
-msgid "&Exportar do navegador instalado"
-msgstr "&Export from installed browser"
-
-msgid "&Informar manualmente (arquivo ou texto)"
-msgstr "Enter &manually (file or text)"
-
-msgid "A autenticação informada não contém cookies válidos do YouTube."
-msgstr "The provided authentication does not contain valid YouTube cookies."
-
-msgid "A exportação de cookies do {browser} demorou demais e foi cancelada."
-msgstr "Cookie export from {browser} took too long and was canceled."
-
-msgid "Arquivo de conexão:"
-msgstr "Connection file:"
-
-msgid "Brave"
-msgstr "Brave"
-
-msgid "Caminho de saída inválido para o arquivo de cookies."
-msgstr "Invalid output path for the cookie file."
-
-msgid "Conectando a conta do YouTube Music..."
-msgstr "Connecting the YouTube Music account..."
-
-msgid "Dados copiados do navegador (opcional):"
-msgstr "Data copied from the browser (optional):"
-
-msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
-msgstr "Unexpected error while exporting cookies from {browser}: {detail}"
-
-msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-msgstr "Choose how to connect your YouTube Music account.\n\nOption 1 — Installed browser: select the browser from the list and click \"Connect\". The player will import the cookies automatically.\n\nOption 2 — Manual: paste the browser data or choose a previously exported browser.json, cookie JSON, or cookies.txt file."
-
-msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
-msgstr "Choose whether to export cookies directly from an installed browser or provide the data manually using a file or text."
-
-msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
-msgstr "Exports cookies from the selected browser or validates the provided file or text and connects your YouTube Music account."
-
-msgid "Feche o {browser} completamente e tente exportar novamente."
-msgstr "Close {browser} completely and try exporting again."
-
-msgid "Firefox (recomendado)"
-msgstr "Firefox (recommended)"
-
-msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
-msgstr "Firefox is the most compatible option. On Windows, Chrome, Edge, and Brave may need to be completely closed or may prevent extraction; in that case, use Firefox or manual import."
-
-msgid "Google Chrome"
-msgstr "Google Chrome"
-
-msgid "Lista de navegadores disponíveis"
-msgstr "List of available browsers"
-
-msgid "Microsoft Edge"
-msgstr "Microsoft Edge"
-
-msgid "Modo de conexão"
-msgstr "Connection mode"
-
-msgid "Modo de conexão com o YouTube Music"
-msgstr "YouTube Music connection mode"
-
-msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
-msgstr "Unrecognized browser: {browser}. Choose one from the list or use manual import."
-
-msgid "Navegador para exportar cookies do YouTube Music"
-msgstr "Browser used to export YouTube Music cookies"
-
-msgid "Navegador:"
-msgstr "Browser:"
-
-msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
-msgstr "No valid YouTube cookies were found in {browser}. Make sure you are signed in at music.youtube.com."
-
-msgid "Não foi possível exportar cookies do {browser}."
-msgstr "Could not export cookies from {browser}."
-
-msgid "Não foi possível preparar a autenticação do YouTube Music."
-msgstr "Could not prepare YouTube Music authentication."
-
-msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
-msgstr "Windows could not decrypt the cookies from {browser}. Try using Firefox or manual import."
-
-msgid "O yt-dlp não foi encontrado. Verifique se as dependências do YouTube Music estão instaladas."
-msgstr "yt-dlp was not found. Make sure the YouTube Music dependencies are installed."
-
-msgid "O yt-dlp não gerou o arquivo de cookies esperado para {browser}. Verifique se você está logado em music.youtube.com nesse navegador."
-msgstr "yt-dlp did not generate the expected cookie file for {browser}. Make sure you are signed in at music.youtube.com in that browser."
-
-msgid "Opera"
-msgstr "Opera"
-
-msgid "Selecione o navegador instalado do qual os cookies do YouTube Music serão exportados. Certifique-se de estar logado em music.youtube.com nesse navegador."
-msgstr "Select the installed browser from which YouTube Music cookies will be exported. Make sure you are signed in at music.youtube.com in that browser."
-
-msgid "Selecione um navegador na lista antes de conectar."
-msgstr "Select a browser from the list before connecting."
-
-msgid "YouTube Music"
-msgstr "YouTube Music"

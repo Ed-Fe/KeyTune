@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-08-03
+
+### Adicionado
+- **Busca na playlist ou pasta atual**: `Ctrl+F` abre a caixa **Localizar item**, que procura o texto em qualquer parte do nome, ignorando acentos e maiúsculas. `F3` vai para o próximo resultado e `Shift+F3` para o anterior. Como a seleção salta para o item encontrado, quem lê o nome é o próprio leitor de tela; a posição na busca e o aviso de volta ao início da lista aparecem na barra de status. Também disponível em **Exibir > Localizar item**.
+- **Temporizador de desligamento**: `Ctrl+Shift+D` (ou **Reprodução > Temporizador de desligamento**) agenda a pausa automática da reprodução com durações prontas de 5 a 120 minutos, tempo personalizado ou ao fim da faixa atual. O menu traz ainda **Tempo restante** e **Cancelar temporizador**, há avisos falados faltando 5 minutos e 1 minuto, e o estado entra no anúncio de status (tecla `S`).
+- **Conexão com o YouTube Music pelo navegador**: extração direta dos cookies de uma sessão já autenticada no Chrome, Edge, Firefox, Brave ou Opera, com alternância entre os modos navegador e manual na caixa de conexão.
+
+### Corrigido
+- **Plurais nas mensagens**: contagens de itens, faixas, playlists, mixes, resultados, dispositivos e minutos passam a usar formas reais de singular e plural (“216 itens”, “1 minuto”) no lugar das abreviações “item(ns)” e “minuto(s)”, em português, inglês e espanhol.
+- **Resultados salvos no YouTube Music**: a mensagem de confirmação voltou a ser traduzível.
+
 ## [1.2.2] - 2026-07-30
 
 ### Corrigido

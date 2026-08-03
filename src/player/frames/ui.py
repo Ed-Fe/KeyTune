@@ -4,7 +4,7 @@ import sys
 import wx
 
 from ..accessibility import attach_named_accessible
-from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
+from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..welcome import WelcomeDialog
@@ -112,7 +112,8 @@ class FrameUIMixin:
     def _primary_shortcuts_hint_text(self):
         return _(
             "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
-            "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+            "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · "
+            "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
         )
 
     def _player_overlay_hint_text(self):
@@ -181,6 +182,7 @@ class FrameUIMixin:
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
             "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
+            "Ctrl+Shift+D — Temporizador de desligamento (durações prontas ou fim da faixa)\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
             "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
@@ -191,6 +193,8 @@ class FrameUIMixin:
             "Tab — Alternar entre a lista de itens e o player\n"
             "Ctrl+B — Alternar foco entre a lista de itens e o player\n"
             "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\n"
+            "Ctrl+F — Localizar item na playlist ou pasta atual\n"
+            "F3 / Shift+F3 — Próximo ou anterior resultado da busca\n"
             "Enter — Tocar ou abrir o item selecionado no navegador\n"
             "Delete — Remover item da playlist\n"
             "Backspace — Voltar de pasta no navegador\n"
@@ -404,6 +408,10 @@ class FrameUIMixin:
         self.menu_announce_volume_id = wx.NewIdRef()
         self.menu_announce_status_id = wx.NewIdRef()
         self.menu_refresh_audio_output_devices_id = wx.NewIdRef()
+        self.menu_sleep_timer_dialog_id = wx.NewIdRef()
+        self.menu_sleep_timer_end_of_track_id = wx.NewIdRef()
+        self.menu_sleep_timer_status_id = wx.NewIdRef()
+        self.menu_sleep_timer_cancel_id = wx.NewIdRef()
         self.audio_output_menu = wx.Menu()
         self._audio_output_menu_actions = {}
         self._audio_output_menu_ids = []
@@ -427,6 +435,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_decrease_pitch_id, _("Diminuir T&om (Shift+[)"))
         playback_menu.Append(self.menu_reset_pitch_id, _("Restaurar &Tom Original (Shift+\\)"))
         playback_menu.AppendSubMenu(self.audio_output_menu, _("Dispositivo de áu&dio"))
+        playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Temporizador de desliga&mento"))
         announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
         announce_menu.Append(self.menu_announce_volume_id, _("Anunciar &Volume (V)"))
         announce_menu.Append(self.menu_announce_status_id, _("Anunciar &Status (S)"))
@@ -438,6 +447,13 @@ class FrameUIMixin:
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("YouTube &Music por aba\tCtrl+Shift+Y"))
+        view_menu.AppendSeparator()
+        self.menu_find_item_id = wx.NewIdRef()
+        self.menu_find_next_item_id = wx.NewIdRef()
+        self.menu_find_previous_item_id = wx.NewIdRef()
+        view_menu.Append(self.menu_find_item_id, _("&Localizar item...\tCtrl+F"))
+        view_menu.Append(self.menu_find_next_item_id, _("Próximo &resultado\tF3"))
+        view_menu.Append(self.menu_find_previous_item_id, _("Resultado &anterior\tShift+F3"))
 
         tabs_menu = wx.Menu()
         self.menu_next_tab_id = wx.NewIdRef()
@@ -477,6 +493,31 @@ class FrameUIMixin:
         self.SetMenuBar(menu_bar)
         self._refresh_recent_menus()
         self._refresh_audio_output_menu()
+
+    def _build_sleep_timer_menu(self):
+        sleep_timer_menu = wx.Menu()
+        self.sleep_timer_menu = sleep_timer_menu
+        self._sleep_timer_menu_presets = {}
+
+        sleep_timer_menu.Append(
+            self.menu_sleep_timer_dialog_id,
+            _("&Configurar temporizador...\tCtrl+Shift+D"),
+        )
+        sleep_timer_menu.AppendSeparator()
+        for minutes in SLEEP_TIMER_PRESET_MINUTES:
+            item = sleep_timer_menu.Append(
+                wx.NewIdRef(),
+                _("{minutes} minutos").format(minutes=minutes),
+            )
+            item_id = item.GetId()
+            self._sleep_timer_menu_presets[item_id] = minutes
+            self.Bind(wx.EVT_MENU, self.on_sleep_timer_preset, id=item_id)
+        sleep_timer_menu.Append(self.menu_sleep_timer_end_of_track_id, _("Ao &fim da faixa atual"))
+        sleep_timer_menu.AppendSeparator()
+        sleep_timer_menu.Append(self.menu_sleep_timer_status_id, _("&Tempo restante"))
+        cancel_item = sleep_timer_menu.Append(self.menu_sleep_timer_cancel_id, _("Ca&ncelar temporizador"))
+        cancel_item.Enable(False)
+        return sleep_timer_menu
 
     def _refresh_audio_output_menu(self, announce=False):
         if not hasattr(self, "audio_output_menu"):
@@ -524,9 +565,11 @@ class FrameUIMixin:
         if announce:
             if devices:
                 self._announce(
-                    _("Lista de dispositivos de áudio atualizada. {count} dispositivo(s) disponível(is).").format(
-                        count=len(devices)
-                    )
+                    ngettext(
+                        "Lista de dispositivos de áudio atualizada. {count} dispositivo disponível.",
+                        "Lista de dispositivos de áudio atualizada. {count} dispositivos disponíveis.",
+                        len(devices),
+                    ).format(count=len(devices))
                 )
             else:
                 self._announce(_("Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."))
@@ -555,6 +598,8 @@ class FrameUIMixin:
         )
         self.progress_timer = wx.Timer(self)
         self.crossfade_timer = wx.Timer(self)
+        # Só corre enquanto uma contagem regressiva estiver armada.
+        self.sleep_timer = wx.Timer(self)
 
         progress_sizer = wx.BoxSizer(wx.VERTICAL)
         progress_sizer.Add(top_progress_sizer, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
@@ -666,6 +711,13 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_decrease_pitch, id=self.menu_decrease_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_reset_pitch, id=self.menu_reset_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_audio_output_devices, id=self.menu_refresh_audio_output_devices_id)
+        self.Bind(wx.EVT_MENU, self.on_open_sleep_timer, id=self.menu_sleep_timer_dialog_id)
+        self.Bind(wx.EVT_MENU, self.on_sleep_timer_end_of_track, id=self.menu_sleep_timer_end_of_track_id)
+        self.Bind(wx.EVT_MENU, self.on_sleep_timer_status, id=self.menu_sleep_timer_status_id)
+        self.Bind(wx.EVT_MENU, self.on_cancel_sleep_timer, id=self.menu_sleep_timer_cancel_id)
+        self.Bind(wx.EVT_MENU, self.on_find_item, id=self.menu_find_item_id)
+        self.Bind(wx.EVT_MENU, self.on_find_next_item, id=self.menu_find_next_item_id)
+        self.Bind(wx.EVT_MENU, self.on_find_previous_item, id=self.menu_find_previous_item_id)
         self.Bind(wx.EVT_MENU, self.on_announce_time, id=self.menu_announce_time_id)
         self.Bind(wx.EVT_MENU, self.on_announce_volume, id=self.menu_announce_volume_id)
         self.Bind(wx.EVT_MENU, self.on_announce_status, id=self.menu_announce_status_id)
@@ -686,6 +738,7 @@ class FrameUIMixin:
         self.progress_panel.Bind(wx.EVT_SIZE, self._on_progress_panel_size)
         self.Bind(wx.EVT_TIMER, self.on_progress_timer, self.progress_timer)
         self.Bind(wx.EVT_TIMER, self.on_crossfade_timer, self.crossfade_timer)
+        self.Bind(wx.EVT_TIMER, self.on_sleep_timer_tick, self.sleep_timer)
         self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.progress_timer.Start(PROGRESS_TIMER_INTERVAL_MS)
