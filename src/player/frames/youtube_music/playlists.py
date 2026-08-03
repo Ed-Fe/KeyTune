@@ -60,7 +60,9 @@ class PlaylistEditMixin:
             self._announce(normalized_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
-            if normalized_rating == "DISLIKE":
+            current_state = self._get_playlist_state()
+            current_media_path = str(getattr(current_state, "current_media_path", "") or "").strip()
+            if normalized_rating == "DISLIKE" and current_media_path == media_path:
                 self._play_adjacent_item(1)
 
         def on_error(exc):

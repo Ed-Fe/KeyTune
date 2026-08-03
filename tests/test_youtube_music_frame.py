@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.frames.youtube_music import FrameYouTubeMusicMixin
 import player.frames.youtube_music as youtube_music_frame_module
+from player.frames.youtube_music.auth import AuthMixin
 from player.playlists import PlaylistState, ScreenTabState
 from player.youtube_music.service import InvalidYouTubeMusicAuthError, TemporaryYouTubeMusicAuthError
 
@@ -83,6 +84,83 @@ class _DummyFrame(FrameYouTubeMusicMixin):
 
 
 class YouTubeMusicFrameTests(unittest.TestCase):
+    def test_connect_from_browser_runs_export_outside_the_ui_handler(self):
+        service = Mock()
+        service.save_browser_auth_from_browser.return_value = "C:/KeyTune/ytmusic_browser.json"
+        service.get_connected_account_name.return_value = "Conta teste"
+        frame = _DummyFrame(service)
+        captured_task = {}
+
+        class _FakeDialog:
+            def __init__(self, _parent):
+                pass
+
+            def ShowModal(self):
+                return youtube_music_frame_module.wx.ID_OK
+
+            def get_auth_mode(self):
+                return "browser"
+
+            def get_selected_browser(self):
+                return "firefox"
+
+            def get_headers_raw(self):
+                return ""
+
+            def get_browser_json_path(self):
+                return ""
+
+            def Destroy(self):
+                return None
+
+        def capture_background_task(worker, on_success, *, on_error=None, timeout_ms=None):
+            captured_task.update(
+                worker=worker,
+                on_success=on_success,
+                on_error=on_error,
+                timeout_ms=timeout_ms,
+            )
+            return True
+
+        frame._run_youtube_music_background_task = capture_background_task
+        with patch("player.frames.youtube_music.auth.YouTubeMusicBrowserAuthDialog", _FakeDialog):
+            started = AuthMixin.on_connect_youtube_music(frame, None)
+
+        self.assertTrue(started)
+        service.save_browser_auth_from_browser.assert_not_called()
+        self.assertEqual(captured_task["timeout_ms"], 90000)
+
+        result = captured_task["worker"]()
+
+        self.assertEqual(result, ("C:/KeyTune/ytmusic_browser.json", "Conta teste"))
+        service.save_browser_auth_from_browser.assert_called_once_with("firefox")
+
+    def test_dislike_does_not_skip_another_track_if_playback_already_advanced(self):
+        service = Mock()
+        service.has_saved_browser_auth.return_value = True
+        service.rate_media_feedback.return_value = "Mídia atual marcada como não gostei no YouTube Music."
+        frame = _DummyFrame(service)
+        state = PlaylistState(title="Teste")
+        state.items = ["https://music.youtube.com/watch?v=abc123DEF45"]
+        state.current_index = 0
+        state.current_media_path = state.items[0]
+        frame.playlists = [state]
+        frame._get_youtube_music_media_feedback_status = Mock(return_value="INDIFFERENT")
+        frame._play_adjacent_item = Mock()
+
+        def complete_after_advancing(worker, on_success, *, on_error=None):
+            result = worker()
+            state.current_media_path = "https://music.youtube.com/watch?v=next1234567"
+            on_success(result)
+            return True
+
+        frame._run_youtube_music_background_task = complete_after_advancing
+
+        started = frame._rate_current_youtube_music_media("DISLIKE")
+
+        self.assertTrue(started)
+        frame._play_adjacent_item.assert_not_called()
+
     def test_invalid_saved_auth_disconnects_and_clears_library_state(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True

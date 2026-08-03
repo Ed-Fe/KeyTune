@@ -11,12 +11,10 @@ AUTH_MODE_MANUAL = "manual"
 
 
 class YouTubeMusicBrowserAuthDialog(wx.Dialog):
-    """Diálogo de conexão do YouTube Music com dois modos acessíveis:
+    """Diálogo de conexão do YouTube Music com dois modos:
 
     - **Navegador**: seleciona na ListBox e exporta direto do perfil instalado.
     - **Manual**: cola texto ou seleciona arquivo (comportamento anterior).
-
-    Totalmente navegável por teclado e compatível com NVDA.
     """
 
     def __init__(self, parent):
@@ -46,7 +44,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             label=_(
                 "Escolha como deseja conectar sua conta do YouTube Music.\n\n"
                 "Opção 1 — Navegador instalado: selecione o navegador na lista e clique em "
-                "\"Exportar e Conectar\". O player importará os cookies automaticamente.\n\n"
+                "\"Conectar\". O player importará os cookies automaticamente.\n\n"
                 "Opção 2 — Manual: cole os dados do navegador ou escolha um arquivo "
                 "browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
             ),
@@ -99,8 +97,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         browser_hint = wx.StaticText(
             self._browser_panel,
             label=_(
-                "Dica: certifique-se de estar logado em music.youtube.com no navegador selecionado. "
-                "Feche outras janelas do navegador se a exportação falhar."
+                "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir "
+                "que o navegador seja completamente fechado ou impedir a extração; nesse caso, "
+                "use o Firefox ou a importação manual."
             ),
         )
         browser_hint.Wrap(700)
@@ -222,16 +221,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         self._auth_mode = mode
         is_browser = mode == AUTH_MODE_BROWSER
 
-        # Habilitamos/desabilitamos os painéis (não escondemos) para que o
-        # NVDA não perca o foco e a estrutura do DOM permaneça estável.
-        self._browser_panel.Enable(is_browser)
-        self._manual_panel.Enable(not is_browser)
-
-        # Foca o primeiro controle do painel ativo para facilitar a navegação
-        if is_browser:
-            self.browser_listbox.SetFocus()
-        else:
-            self.headers_value.SetFocus()
+        self._browser_panel.Show(is_browser)
+        self._manual_panel.Show(not is_browser)
+        self.Layout()
 
     # ------------------------------------------------------------------
     # Accessores públicos

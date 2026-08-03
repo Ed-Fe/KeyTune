@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -17,6 +18,77 @@ from player.youtube_music.streams import ResolvedStreamPlayback
 
 
 class YouTubeMusicServiceTests(unittest.TestCase):
+    def test_save_browser_auth_validates_staged_files_before_replacing_saved_auth(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"
+            cookie_path = pathlib.Path(temp_dir) / "ytmusic_cookies.txt"
+            auth_path.write_text("autenticação anterior", encoding="utf-8")
+            cookie_path.write_text("cookies anteriores", encoding="utf-8")
+
+            def fake_setup(*, filepath, headers_raw):
+                pathlib.Path(filepath).write_text(headers_raw, encoding="utf-8")
+
+            candidate_client = Mock()
+            candidate_client.get_account_info.side_effect = RuntimeError("conta inválida")
+            fake_module = SimpleNamespace(
+                setup=fake_setup,
+                YTMusic=Mock(return_value=candidate_client),
+            )
+            service = YouTubeMusicService()
+
+            with patch(
+                "player.youtube_music.service.get_browser_auth_file_path",
+                return_value=str(auth_path),
+            ), patch(
+                "player.youtube_music.service.get_browser_auth_cookie_file_path",
+                return_value=str(cookie_path),
+            ), patch(
+                "player.youtube_music.service.import_ytmusicapi_module",
+                return_value=fake_module,
+            ):
+                with self.assertRaisesRegex(RuntimeError, "conta inválida"):
+                    service.save_browser_auth(headers_raw="Cookie: SID=novo; SAPISID=segredo")
+
+            self.assertEqual(auth_path.read_text(encoding="utf-8"), "autenticação anterior")
+            self.assertEqual(cookie_path.read_text(encoding="utf-8"), "cookies anteriores")
+
+    def test_save_browser_auth_replaces_both_files_after_validation(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"
+            cookie_path = pathlib.Path(temp_dir) / "ytmusic_cookies.txt"
+
+            def fake_setup(*, filepath, headers_raw):
+                pathlib.Path(filepath).write_text(headers_raw, encoding="utf-8")
+
+            candidate_client = Mock()
+            candidate_client.get_account_info.return_value = {"accountName": "Conta nova"}
+            fake_module = SimpleNamespace(
+                setup=fake_setup,
+                YTMusic=Mock(return_value=candidate_client),
+            )
+            service = YouTubeMusicService()
+
+            with patch(
+                "player.youtube_music.service.get_browser_auth_file_path",
+                return_value=str(auth_path),
+            ), patch(
+                "player.youtube_music.service.get_browser_auth_cookie_file_path",
+                return_value=str(cookie_path),
+            ), patch(
+                "player.youtube_music.service.import_ytmusicapi_module",
+                return_value=fake_module,
+            ):
+                saved_path = service.save_browser_auth(
+                    headers_raw="Cookie: SID=novo; SAPISID=segredo\nUser-Agent: Teste"
+                )
+                account_name = service.get_connected_account_name()
+
+            self.assertEqual(saved_path, str(auth_path))
+            self.assertEqual(account_name, "Conta nova")
+            self.assertIn("SID=novo", auth_path.read_text(encoding="utf-8"))
+            self.assertIn("\tSID\tnovo", cookie_path.read_text(encoding="utf-8"))
+            fake_module.YTMusic.assert_called_once()
+
     def test_switches_stream_resolution_to_anonymous_mode_for_the_session(self):
         service = YouTubeMusicService()
         media_path = "https://www.youtube.com/watch?v=abc123DEF45"

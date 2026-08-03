@@ -320,8 +320,10 @@ Además de abrir y guardar playlists, KeyTune permite editar tus playlists direc
 
 ### Sesión de YouTube Music
 
-1. **Extraer del navegador instalado (Recomendado):** Selecciona tu navegador principal (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave o Opera) de la lista y haz clic en **Conectar**. KeyTune extraerá la sesión directamente del perfil del navegador mediante `yt-dlp`.
+1. **Extraer del navegador instalado:** Selecciona Firefox, Google Chrome, Microsoft Edge, Brave u Opera de la lista y haz clic en **Conectar**. KeyTune extraerá la sesión directamente del perfil mediante `yt-dlp`. Se recomienda Firefox porque ofrece mayor compatibilidad en Windows.
 2. **Importación de archivo o texto manual:** Para navegadores no listados o configuraciones personalizadas, puedes importar un archivo `cookies.txt` exportado o pegar los encabezados HTTP de la sesión.
+
+En Windows, Chrome, Edge y Brave pueden requerir que el navegador esté completamente cerrado y, en algunas versiones, la protección del propio navegador puede impedir la extracción. Si eso ocurre, usa Firefox o la importación manual.
 
 #### Qué son las cookies
 
@@ -372,7 +374,7 @@ El archivo `cookies.txt` exportado contiene información de autenticación de tu
 
 - Usa el archivo solo en tu propio equipo.
 - No compartas el archivo con otras personas.
-- Elimina el archivo después de importarlo en KeyTune si lo deseas (KeyTune mantiene una copia interna y segura).
+- Elimina el archivo después de importarlo en KeyTune si lo deseas. La copia interna contiene únicamente las cookies de YouTube necesarias para la conexión.
 - Si desconectas la cuenta en KeyTune, las cookies almacenadas se eliminarán.
 
 ### Atajos

@@ -71,42 +71,65 @@ class AuthMixin:
         finally:
             dialog.Destroy()
 
-        try:
+        if auth_mode == "browser" and not selected_browser:
+            wx.MessageBox(
+                _("Selecione um navegador na lista antes de conectar."),
+                _("YouTube Music"),
+                wx.OK | wx.ICON_INFORMATION,
+                self,
+            )
+            return False
+        if auth_mode != "browser" and not headers_raw and not browser_json_path:
+            wx.MessageBox(
+                _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
+                _("YouTube Music"),
+                wx.OK | wx.ICON_INFORMATION,
+                self,
+            )
+            return False
+
+        def worker():
             if auth_mode == "browser":
-                if not selected_browser:
-                    wx.MessageBox(
-                        _("Selecione um navegador na lista antes de conectar."),
-                        "YouTube Music",
-                        wx.OK | wx.ICON_INFORMATION,
-                        self,
-                    )
-                    return
                 saved_path = service.save_browser_auth_from_browser(selected_browser)
             else:
-                # Modo manual — comportamento original intacto
-                if not headers_raw and not browser_json_path:
-                    wx.MessageBox(
-                        _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
-                        "YouTube Music",
-                        wx.OK | wx.ICON_INFORMATION,
-                        self,
-                    )
-                    return
-                saved_path = service.save_browser_auth(headers_raw=headers_raw, source_file_path=browser_json_path)
+                saved_path = service.save_browser_auth(
+                    headers_raw=headers_raw,
+                    source_file_path=browser_json_path,
+                )
+            return saved_path, service.get_connected_account_name()
 
-            account_name = service.get_connected_account_name()
-        except Exception as exc:
-            service.clear_client_cache()
-            self._set_youtube_music_account_name("")
+        def on_success(connection_result):
+            saved_path, account_name = connection_result
+            self._complete_youtube_music_connection(saved_path, account_name)
+
+        def on_error(exc):
+            if not service.has_saved_browser_auth():
+                self._set_youtube_music_account_name("")
+            error_message = _("Não foi possível conectar a conta do YouTube Music.")
             wx.MessageBox(
-                _("Não foi possível conectar a conta do YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                error_message
+                + "\n\n"
+                + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
+                _("YouTube Music"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(error_message)
             self._refresh_youtube_music_menu_state()
-            return
 
+        connecting_message = _("Conectando a conta do YouTube Music...")
+        self._announce(connecting_message)
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(connecting_message)
+        return self._run_youtube_music_background_task(
+            worker,
+            on_success,
+            on_error=on_error,
+            timeout_ms=90000,
+        )
+
+    def _complete_youtube_music_connection(self, saved_path, account_name):
         self._set_youtube_music_account_name(account_name)
         self._youtube_music_library_status_message = _("Conta conectada: {name}.").format(name=account_name)
         self._clear_youtube_music_library_cache(loaded=False, status_message=self._youtube_music_status_message())
@@ -118,7 +141,7 @@ class AuthMixin:
         self.on_refresh_youtube_music_library(None, announce=False)
         wx.MessageBox(
             _("Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}").format(path=saved_path, name=account_name),
-            "YouTube Music",
+            _("YouTube Music"),
             wx.OK | wx.ICON_INFORMATION,
             self,
         )

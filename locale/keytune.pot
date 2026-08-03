@@ -240,6 +240,10 @@ msgstr ""
 msgid "A abertura externa aceita apenas uma playlist por vez."
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "A autenticação informada não contém cookies válidos do YouTube."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "A autenticação salva do YouTube Music foi removida."
 msgstr ""
@@ -1187,6 +1191,10 @@ msgstr ""
 msgid "Brasil"
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Brave"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Busca do YouTube Music e do YouTube"
 msgstr ""
@@ -1390,6 +1398,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Concluir"
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "Conectando a conta do YouTube Music..."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -1744,10 +1756,6 @@ msgstr ""
 msgid "Detalhes: {error}"
 msgstr ""
 
-#: src/player/youtube_music/dialog.py
-msgid "Dica: certifique-se de estar logado em music.youtube.com no navegador selecionado. Feche outras janelas do navegador se a exportação falhar."
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Dicas rápidas de atalhos"
 msgstr ""
@@ -1969,7 +1977,7 @@ msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Exportar e Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -2178,6 +2186,14 @@ msgstr ""
 msgid "Finlândia"
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Firefox (recomendado)"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "Foi tentada uma atualização avançada do yt-dlp."
 msgstr ""
@@ -2204,6 +2220,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Global"
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "Google Chrome"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -2585,6 +2605,10 @@ msgstr ""
 msgid "Mensagem da central do YouTube Music"
 msgstr ""
 
+#: src/player/youtube_music/auth.py
+msgid "Microsoft Edge"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Mistura equilíbrio com leve presença de voz e brilho."
 msgstr ""
@@ -2750,6 +2774,10 @@ msgstr ""
 
 #: src/player/frames/recents.py
 msgid "Nenhum arquivo recente."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3163,6 +3191,10 @@ msgstr ""
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "Não foi possível preparar a autenticação do YouTube Music."
+msgstr ""
+
 #: src/player/youtube_music/dependencies.py
 msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
 msgstr ""
@@ -3250,6 +3282,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
 msgstr ""
 
 #: src/player/frames/youtube_music/tasks.py
@@ -3422,6 +3458,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Onde encontrar ajuda"
+msgstr ""
+
+#: src/player/youtube_music/auth.py
+msgid "Opera"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -4509,6 +4549,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/state.py
 msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "YouTube Music"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py

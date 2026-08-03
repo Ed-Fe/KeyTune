@@ -88,15 +88,14 @@ class YouTubeMusicFeedbackManager:
         client.rate_song(video_id, like_status)
 
         # A API do YouTube Music propaga avaliações de forma assíncrona: o
-        # get_song() imediatamente após rate_song() freqüentemente retorna o
+        # get_song() imediatamente após rate_song() frequentemente retorna o
         # status anterior, gerando falso alarme.  Se rate_song() completou
-        # sem excessão, a avaliação foi aceita pelo servidor.
+        # sem exceção, a avaliação foi aceita pelo servidor.
         if like_status == LikeStatus.LIKE:
             return _("Mídia atual curtida no YouTube Music.")
         if like_status == LikeStatus.DISLIKE:
             return _("Mídia atual marcada como não gostei no YouTube Music.")
         return _("Avaliação da mídia atual removida no YouTube Music.")
-
 
     def report_playback_to_history(self, media_path):
         """Report a media item as played to the user's YouTube Music history."""

@@ -15,16 +15,17 @@ from ..i18n import _
 YTMUSIC_BROWSER_AUTH_FILE_NAME = "ytmusic_browser.json"
 YTMUSIC_BROWSER_AUTH_COOKIE_FILE_NAME = "ytmusic_cookies.txt"
 _REDACTED_VALUE = "[oculto]"
+_NETSCAPE_HTTP_ONLY_PREFIX = "#HttpOnly_"
 
 # Pares (nome_yt_dlp, rótulo exibido) para navegadores suportados nativamente
 # pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
-SUPPORTED_BROWSERS: list[tuple[str, str]] = [
-    ("edge", "Microsoft Edge"),
-    ("chrome", "Google Chrome"),
-    ("brave", "Brave"),
-    ("firefox", "Firefox"),
-    ("opera", "Opera / Opera GX"),
-]
+SUPPORTED_BROWSERS: tuple[tuple[str, str], ...] = (
+    ("firefox", _("Firefox (recomendado)")),
+    ("edge", _("Microsoft Edge")),
+    ("chrome", _("Google Chrome")),
+    ("brave", _("Brave")),
+    ("opera", _("Opera")),
+)
 
 
 @dataclass(slots=True)
@@ -164,80 +165,100 @@ def export_cookies_from_browser(browser_name: str, output_path: str) -> str:
 
     os.makedirs(os.path.dirname(normalized_output_path), exist_ok=True)
 
-    # Arquivo temporário na mesma pasta para escrita atômica
-    tmp_fd, tmp_path = tempfile.mkstemp(
-        suffix=".tmp",
-        prefix="ytmusic_cookies_export_",
+    # O yt-dlp exige que o caminho de saída ainda não exista. Ele também
+    # exporta cookies de todos os sites, então o arquivo bruto nunca deve ser
+    # movido para o armazenamento definitivo do KeyTune.
+    with tempfile.TemporaryDirectory(
+        prefix="ytmusic_cookie_export_",
         dir=os.path.dirname(normalized_output_path),
-    )
-    os.close(tmp_fd)
-
-    try:
-        result = subprocess.run(
-            [
-                str(yt_dlp_path),
-                "--ignore-config",
-                "--cookies-from-browser", normalized_browser,
-                "--cookies", tmp_path,
-                "--skip-download",
-                "--quiet",
-                "--no-warnings",
-                "https://music.youtube.com",
-            ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=60,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-
-        if result.returncode != 0:
-            error_detail = str(result.stderr or result.stdout or "").strip()
-            # Mensagem orientada ao caso mais comum: navegador com SQLite bloqueado
-            if "database is locked" in error_detail.lower() or "sqlite" in error_detail.lower():
-                raise RuntimeError(
-                    _("Feche o {browser} completamente e tente exportar novamente.").format(
-                        browser=browser_name
-                    )
-                )
-            raise RuntimeError(
-                _("Não foi possível exportar cookies do {browser}.").format(browser=browser_name)
-                + (f"\n\n{error_detail[:300]}" if error_detail else "")
+    ) as temp_dir:
+        temporary_cookie_path = os.path.join(temp_dir, "cookies.txt")
+        try:
+            result = subprocess.run(
+                [
+                    str(yt_dlp_path),
+                    "--ignore-config",
+                    "--cookies-from-browser", normalized_browser,
+                    "--cookies", temporary_cookie_path,
+                    "--skip-download",
+                    "--quiet",
+                    "--no-warnings",
+                    "https://music.youtube.com",
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=60,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
             )
 
-        if not os.path.isfile(tmp_path) or os.path.getsize(tmp_path) == 0:
+            if result.returncode != 0:
+                error_detail = str(result.stderr or result.stdout or "").strip()
+                normalized_error = error_detail.casefold()
+                if any(
+                    marker in normalized_error
+                    for marker in ("database is locked", "permission denied", "could not copy")
+                ):
+                    raise RuntimeError(
+                        _("Feche o {browser} completamente e tente exportar novamente.").format(
+                            browser=browser_name
+                        )
+                    )
+                if any(marker in normalized_error for marker in ("decrypt", "dpapi", "app-bound")):
+                    raise RuntimeError(
+                        _(
+                            "O Windows não permitiu descriptografar os cookies do {browser}. "
+                            "Tente usar o Firefox ou a importação manual."
+                        ).format(browser=browser_name)
+                    )
+                raise RuntimeError(
+                    _("Não foi possível exportar cookies do {browser}.").format(browser=browser_name)
+                    + (f"\n\n{error_detail[:300]}" if error_detail else "")
+                )
+
+            if not os.path.isfile(temporary_cookie_path) or os.path.getsize(temporary_cookie_path) == 0:
+                raise RuntimeError(
+                    _(
+                        "O yt-dlp não gerou o arquivo de cookies esperado para {browser}. "
+                        "Verifique se você está logado em music.youtube.com nesse navegador."
+                    ).format(browser=browser_name)
+                )
+
+            raw_cookie_content = read_auth_file_text(temporary_cookie_path)
+            filtered_cookie_content = _normalize_netscape_cookie_text(raw_cookie_content)
+            if not filtered_cookie_content:
+                raise RuntimeError(
+                    _(
+                        "Nenhum cookie válido do YouTube foi encontrado no {browser}. "
+                        "Verifique se você está logado em music.youtube.com."
+                    ).format(browser=browser_name)
+                )
+
+            newline = "\r\n" if os.name == "nt" else "\n"
+            filtered_cookie_content = filtered_cookie_content.replace("\r\n", "\n").replace("\r", "\n")
+            with open(temporary_cookie_path, "w", encoding="utf-8", newline="") as cookie_file:
+                cookie_file.write(filtered_cookie_content.replace("\n", newline))
+            harden_sensitive_file_permissions(temporary_cookie_path)
+
+            os.replace(temporary_cookie_path, normalized_output_path)
+            harden_sensitive_file_permissions(normalized_output_path)
+            return normalized_output_path
+
+        except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                _("O yt-dlp não gerou o arquivo de cookies esperado para {browser}. "
-                  "Verifique se você está logado em music.youtube.com nesse navegador.").format(
+                _("A exportação de cookies do {browser} demorou demais e foi cancelada.").format(
                     browser=browser_name
                 )
-            )
-
-        os.replace(tmp_path, normalized_output_path)
-        harden_sensitive_file_permissions(normalized_output_path)
-        return normalized_output_path
-
-    except subprocess.TimeoutExpired:
-        raise RuntimeError(
-            _("A exportação de cookies do {browser} demorou demais e foi cancelada.").format(
-                browser=browser_name
-            )
-        )
-    except RuntimeError:
-        raise
-    except Exception as exc:
-        raise RuntimeError(
-            _("Erro inesperado ao exportar cookies do {browser}: {detail}").format(
-                browser=browser_name, detail=str(exc)
-            )
-        ) from exc
-    finally:
-        try:
-            if os.path.exists(tmp_path):
-                os.remove(tmp_path)
-        except OSError:
-            pass
+            ) from exc
+        except RuntimeError:
+            raise
+        except Exception as exc:
+            raise RuntimeError(
+                _("Erro inesperado ao exportar cookies do {browser}: {detail}").format(
+                    browser=browser_name, detail=str(exc)
+                )
+            ) from exc
 
 
 def read_auth_file_text(file_path):
@@ -576,15 +597,11 @@ def _cookie_header_from_netscape_text(raw_text):
     seen_names = set()
 
     for raw_line in str(raw_text or "").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
+        parsed_line = _parse_netscape_cookie_line(raw_line)
+        if parsed_line is None:
             continue
-
-        parts = raw_line.split("\t")
-        if len(parts) < 7:
-            continue
-
-        domain, _include_subdomains, _path, _secure, expiry, name, value = parts[:7]
+        parts, _http_only = parsed_line
+        domain, _include_subdomains, _path, _secure, expiry, name, value = parts
         normalized_domain = str(domain or "").strip().lstrip(".").lower()
         normalized_name = str(name or "").strip()
         normalized_value = str(value or "").strip()
@@ -617,10 +634,7 @@ def _looks_like_netscape_cookie_text(raw_text):
         return True
 
     for raw_line in normalized_text.splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
-            continue
-        if len(raw_line.split("\t")) >= 7:
+        if _parse_netscape_cookie_line(raw_line) is not None:
             return True
 
     return False
@@ -632,15 +646,11 @@ def _normalize_netscape_cookie_text(raw_text):
 
     normalized_lines = ["# Netscape HTTP Cookie File"]
     for raw_line in str(raw_text or "").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
+        parsed_line = _parse_netscape_cookie_line(raw_line)
+        if parsed_line is None:
             continue
-
-        parts = raw_line.split("\t")
-        if len(parts) < 7:
-            continue
-
-        domain, include_subdomains, path, secure, expiry, name, value = parts[:7]
+        parts, http_only = parsed_line
+        domain, include_subdomains, path, secure, expiry, name, value = parts
         normalized_domain = str(domain or "").strip()
         if normalized_domain and not _cookie_entry_matches_music_youtube({"domain": normalized_domain}):
             continue
@@ -655,7 +665,11 @@ def _normalize_netscape_cookie_text(raw_text):
         normalized_lines.append(
             "\t".join(
                 [
-                    normalized_domain or ".youtube.com",
+                    (
+                        _NETSCAPE_HTTP_ONLY_PREFIX + (normalized_domain or ".youtube.com")
+                        if http_only
+                        else normalized_domain or ".youtube.com"
+                    ),
                     "TRUE" if str(include_subdomains or "").strip().upper() == "TRUE" or normalized_domain.startswith(".") else "FALSE",
                     str(path or "/").strip() or "/",
                     "TRUE" if str(secure or "").strip().upper() == "TRUE" else "FALSE",
@@ -669,6 +683,23 @@ def _normalize_netscape_cookie_text(raw_text):
     if len(normalized_lines) == 1:
         return ""
     return "\n".join(normalized_lines) + "\n"
+
+
+def _parse_netscape_cookie_line(raw_line):
+    line = str(raw_line or "").strip()
+    if not line:
+        return None
+
+    http_only = line.startswith(_NETSCAPE_HTTP_ONLY_PREFIX)
+    if line.startswith("#") and not http_only:
+        return None
+    if http_only:
+        line = line[len(_NETSCAPE_HTTP_ONLY_PREFIX):]
+
+    parts = line.split("\t")
+    if len(parts) < 7:
+        return None
+    return parts[:7], http_only
 
 
 def _netscape_cookie_file_from_cookie_header(cookie_header):

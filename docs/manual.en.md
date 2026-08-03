@@ -322,8 +322,10 @@ In addition to opening and saving playlists, KeyTune lets you edit your playlist
 
 To use your library features (saved playlists, history, likes, and ratings), you need to connect your YouTube Music account. KeyTune offers two connection modes in the **Connect account** dialog:
 
-1. **Extract from installed browser (Recommended):** Select your primary browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave, or Opera) from the list and click **Connect**. KeyTune extracts the session directly from the browser profile using `yt-dlp`.
+1. **Extract from installed browser:** Select Firefox, Google Chrome, Microsoft Edge, Brave, or Opera from the list and click **Connect**. KeyTune extracts the session directly from the browser profile using `yt-dlp`. Firefox is recommended because it offers better compatibility on Windows.
 2. **Import file or manual text:** For unlisted browsers or custom configurations, you can import an exported `cookies.txt` file or paste session HTTP headers.
+
+On Windows, Chrome, Edge, and Brave may need to be completely closed, and some browser versions may prevent extraction through their own security protections. If that happens, use Firefox or manual import.
 
 #### What cookies are
 
@@ -374,7 +376,7 @@ The exported `cookies.txt` file contains authentication information for your acc
 
 - Use the file only on your own computer.
 - Do not share the file with other people.
-- Delete the file after importing it into KeyTune if you want (KeyTune keeps an internal, secure copy).
+- Delete the file after importing it into KeyTune if you want. The internal copy contains only the YouTube cookies required for the connection.
 - If you disconnect the account in KeyTune, the stored cookies will be removed.
 
 ### Shortcuts

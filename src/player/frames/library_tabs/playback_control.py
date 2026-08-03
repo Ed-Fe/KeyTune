@@ -133,12 +133,11 @@ class PlaylistPlaybackMixin:
     def _update_title(self):
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
+            title_parts = [APP_TITLE, current_tab.title]
             active_state = self._get_active_playlist_state()
             if active_state and active_state.current_media_path:
-                media_name = self._media_label(active_state.current_media_path)
-                self.SetTitle(f"{APP_TITLE} — {media_name}")
-            else:
-                self.SetTitle(f"{APP_TITLE} — {current_tab.title}")
+                title_parts.append(self._media_label(active_state.current_media_path))
+            self.SetTitle(" — ".join(title_parts))
             return
 
         state = self._get_playlist_state()

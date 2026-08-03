@@ -480,9 +480,10 @@ footer {
 <h3 id="youtube-music-session">YouTube Music session</h3>
 <p>To use your library features (saved playlists, history, likes, and ratings), you need to connect your YouTube Music account. KeyTune offers two connection modes in the <strong>Connect account</strong> dialog:</p>
 <ol>
-<li><strong>Extract from installed browser (Recommended):</strong> Select your primary browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave, or Opera) from the list and click <strong>Connect</strong>. KeyTune extracts the session directly from the browser profile using <code>yt-dlp</code>.</li>
+<li><strong>Extract from installed browser:</strong> Select Firefox, Google Chrome, Microsoft Edge, Brave, or Opera from the list and click <strong>Connect</strong>. KeyTune extracts the session directly from the browser profile using <code>yt-dlp</code>. Firefox is recommended because it offers better compatibility on Windows.</li>
 <li><strong>Import file or manual text:</strong> For unlisted browsers or custom configurations, you can import an exported <code>cookies.txt</code> file or paste session HTTP headers.</li>
 </ol>
+<p>On Windows, Chrome, Edge, and Brave may need to be completely closed, and some browser versions may prevent extraction through their own security protections. If that happens, use Firefox or manual import.</p>
 <h4 id="what-cookies-are">What cookies are</h4>
 <p>Cookies are small text files that browsers store to remember your preferences and login information on websites. When you log in to YouTube Music, the browser saves cookies that contain your authentication. When connecting your account in KeyTune, the application uses this logged-in session information to access your library without asking for your password.</p>
 <h4 id="how-to-connect-via-direct-browser-extraction">How to connect via direct browser extraction</h4>
@@ -525,7 +526,7 @@ footer {
 <ul>
 <li>Use the file only on your own computer.</li>
 <li>Do not share the file with other people.</li>
-<li>Delete the file after importing it into KeyTune if you want (KeyTune keeps an internal, secure copy).</li>
+<li>Delete the file after importing it into KeyTune if you want. The internal copy contains only the YouTube cookies required for the connection.</li>
 <li>If you disconnect the account in KeyTune, the stored cookies will be removed.</li>
 </ul>
 <h3 id="shortcuts">Shortcuts</h3>

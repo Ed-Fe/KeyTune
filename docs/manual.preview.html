@@ -478,11 +478,12 @@ footer {
 <p><strong>Criar uma playlist.</strong> Use <strong>Nova playlist...</strong> na seção <em>Playlists e mixes</em> para criar uma playlist vazia, ou <strong>Criar nova playlist...</strong> no diálogo de adicionar faixas para criar já com a seleção. Nos dois casos o player abre um diálogo onde você informa o <strong>nome</strong> e escolhe a <strong>privacidade</strong>: <em>Privada</em> (só você vê), <em>Não listada</em> (visível para quem tiver o link) ou <em>Pública</em> (aparece no seu perfil e pode surgir em buscas). O padrão é Privada. Depois de criar, a biblioteca é atualizada para a nova playlist aparecer na lista.</p>
 <p><strong>Excluir uma playlist.</strong> Selecione a playlist na lista <em>Playlists e mixes</em> e use <strong>Excluir playlist...</strong>. Só dá para excluir playlists que você criou; o player confirma antes e atualiza a biblioteca em seguida.</p>
 <h3 id="sessao-do-youtube-music">Sessão do YouTube Music</h3>
-<p>Para utilizar os recursos da sua biblioteca (playlists salvas, historico, curtidas e avaliações), é necessário conectar sua conta do YouTube Music. O KeyTune oferece dois modos de conexão no diálogo <strong>Conectar conta</strong>:</p>
+<p>Para utilizar os recursos da sua biblioteca (playlists salvas, histórico, curtidas e avaliações), é necessário conectar sua conta do YouTube Music. O KeyTune oferece dois modos de conexão no diálogo <strong>Conectar conta</strong>:</p>
 <ol>
-<li><strong>Extrair do navegador instalado (Recomendado):</strong> Selecione o seu navegador principal (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave ou Opera) na lista e clique em <strong>Conectar</strong>. O KeyTune extrai a sessão diretamente do perfil do navegador utilizando o <code>yt-dlp</code>.</li>
+<li><strong>Extrair do navegador instalado:</strong> Selecione Firefox, Google Chrome, Microsoft Edge, Brave ou Opera na lista e clique em <strong>Conectar</strong>. O KeyTune extrai a sessão diretamente do perfil usando o <code>yt-dlp</code>. O Firefox é recomendado por oferecer maior compatibilidade no Windows.</li>
 <li><strong>Importação de arquivo ou texto manual:</strong> Para navegadores não listados ou configurações personalizadas, você pode importar um arquivo <code>cookies.txt</code> exportado ou colar os cabeçalhos HTTP da sessão.</li>
 </ol>
+<p>No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado e, em algumas versões, a proteção do próprio navegador pode impedir a extração. Se isso acontecer, use o Firefox ou a importação manual.</p>
 <h4 id="o-que-sao-cookies">O que são cookies</h4>
 <p>Cookies são pequenos arquivos de texto que navegadores armazenam para lembrar suas preferências e informações de login em sites. Quando você faz login no YouTube Music, o navegador salva cookies que contêm sua autenticação. Ao conectar sua conta no KeyTune, o aplicativo utiliza essa informação de sessão logada para acessar sua biblioteca sem pedir sua senha.</p>
 <h4 id="como-conectar-via-extracao-direta-do-navegador">Como conectar via extração direta do navegador</h4>
@@ -525,7 +526,7 @@ footer {
 <ul>
 <li>Use o arquivo apenas no seu próprio computador.</li>
 <li>Não compartilhe o arquivo com outras pessoas.</li>
-<li>Delete o arquivo após importá-lo no KeyTune se desejar (o KeyTune mantém uma cópia interna e segura).</li>
+<li>Exclua o arquivo após importá-lo no KeyTune se desejar. A cópia interna contém somente os cookies do YouTube necessários para a conexão.</li>
 <li>Se desconectar a conta no KeyTune, os cookies armazenados serão removidos.</li>
 </ul>
 <h3 id="atalhos">Atalhos</h3>

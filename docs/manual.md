@@ -320,10 +320,12 @@ Além de abrir e salvar playlists, o KeyTune permite editar suas playlists diret
 
 ### Sessão do YouTube Music
 
-Para utilizar os recursos da sua biblioteca (playlists salvas, historico, curtidas e avaliações), é necessário conectar sua conta do YouTube Music. O KeyTune oferece dois modos de conexão no diálogo **Conectar conta**:
+Para utilizar os recursos da sua biblioteca (playlists salvas, histórico, curtidas e avaliações), é necessário conectar sua conta do YouTube Music. O KeyTune oferece dois modos de conexão no diálogo **Conectar conta**:
 
-1. **Extrair do navegador instalado (Recomendado):** Selecione o seu navegador principal (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave ou Opera) na lista e clique em **Conectar**. O KeyTune extrai a sessão diretamente do perfil do navegador utilizando o `yt-dlp`.
+1. **Extrair do navegador instalado:** Selecione Firefox, Google Chrome, Microsoft Edge, Brave ou Opera na lista e clique em **Conectar**. O KeyTune extrai a sessão diretamente do perfil usando o `yt-dlp`. O Firefox é recomendado por oferecer maior compatibilidade no Windows.
 2. **Importação de arquivo ou texto manual:** Para navegadores não listados ou configurações personalizadas, você pode importar um arquivo `cookies.txt` exportado ou colar os cabeçalhos HTTP da sessão.
+
+No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado e, em algumas versões, a proteção do próprio navegador pode impedir a extração. Se isso acontecer, use o Firefox ou a importação manual.
 
 #### O que são cookies
 
@@ -374,7 +376,7 @@ O arquivo `cookies.txt` exportado contém informações de autenticação da sua
 
 - Use o arquivo apenas no seu próprio computador.
 - Não compartilhe o arquivo com outras pessoas.
-- Delete o arquivo após importá-lo no KeyTune se desejar (o KeyTune mantém uma cópia interna e segura).
+- Exclua o arquivo após importá-lo no KeyTune se desejar. A cópia interna contém somente os cookies do YouTube necessários para a conexão.
 - Se desconectar a conta no KeyTune, os cookies armazenados serão removidos.
 
 ### Atalhos
