@@ -219,14 +219,90 @@ class YouTubeMusicLibraryManager:
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists
 
-    def get_radio_content(self, video_id, fallback_title=None, *, limit=50):
-        if fallback_title is None:
-            fallback_title = _("Conteúdo relacionado")
+    def _fetch_watch_playlist(self, client, video_id, limit, *, playlist_id=None):
+        """Call ``get_watch_playlist`` for a radio or for an existing queue.
+
+        With *playlist_id* we ask YouTube Music to continue that queue instead
+        of starting a brand-new radio; without it we request a fresh radio.
+        """
+        if playlist_id:
+            return client.get_watch_playlist(videoId=video_id, playlistId=playlist_id, limit=limit)
+
+        try:
+            return client.get_watch_playlist(videoId=video_id, radio=True, limit=limit)
+        except TypeError:
+            # Older ytmusicapi builds may not accept the ``radio`` keyword; the
+            # plain watch playlist (autoplay queue) is radio-like already.
+            return client.get_watch_playlist(videoId=video_id, limit=limit)
+
+    def _build_radio_content(self, radio, seed_video_id, excluded_video_ids, fallback_title):
+        """Turn a watch-playlist payload into content, dropping repeated tracks.
+
+        A radio always contains the tracks that surround the seed, so the same
+        songs come back across fetches — and because the watch URL embeds the
+        radio's own playlistId, two fetches of one song produce two different
+        URLs that nothing downstream would recognize as the same track. Both the
+        in-batch duplicates and *excluded_video_ids* (what the playlist already
+        holds) are therefore filtered here, by videoId.
+        """
+        radio_playlist_id = str(radio.get("playlistId") or "").strip() if isinstance(radio, dict) else ""
+        tracks = radio.get("tracks") or [] if isinstance(radio, dict) else []
+
+        item_urls = []
+        item_labels = []
+        seen_video_ids = set()
+        skipped_count = 0
+        for track in tracks:
+            track_video_id = str(track.get("videoId") or "").strip()
+            if not track_video_id or track_video_id == seed_video_id:
+                continue
+            if track_video_id in excluded_video_ids or track_video_id in seen_video_ids:
+                skipped_count += 1
+                continue
+
+            seen_video_ids.add(track_video_id)
+            item_urls.append(self._build_watch_url(track_video_id, playlist_id=radio_playlist_id or None))
+            item_labels.append(track_display_label(track))
+
+        _logger.info(
+            "Radio for videoId=%s returned %d raw track(s), %d new after dropping %d duplicate(s) (playlistId=%s).",
+            seed_video_id,
+            len(tracks),
+            len(item_urls),
+            skipped_count,
+            radio_playlist_id or "(none)",
+        )
+
+        return YouTubeMusicPlaylistContent(
+            playlist_id=radio_playlist_id,
+            title=str(fallback_title or _("Conteúdo relacionado")).strip(),
+            item_urls=item_urls,
+            item_labels=item_labels,
+        )
+
+    def get_radio_content(
+        self,
+        video_id,
+        fallback_title=None,
+        *,
+        limit=50,
+        exclude_video_ids=None,
+        continue_playlist_id=None,
+    ):
         """Fetch tracks related to *video_id* (YouTube Music's radio/"Watch Next").
 
         Uses the public client so related tracks can be fetched even when the
         seed track was played without an authenticated session.
+
+        ytmusicapi offers no server-side way to exclude tracks (``radio=True``
+        builds a new queue every call), so *exclude_video_ids* is applied on our
+        side. When *continue_playlist_id* is given we first try to continue that
+        radio queue, which hands out fresh tracks instead of replaying the pool
+        around the seed; a new radio is requested when that yields nothing.
         """
+        if fallback_title is None:
+            fallback_title = _("Conteúdo relacionado")
+
         normalized_video_id = str(video_id or "").strip()
         if not normalized_video_id:
             return YouTubeMusicPlaylistContent(
@@ -238,38 +314,44 @@ class YouTubeMusicLibraryManager:
         except (TypeError, ValueError):
             normalized_limit = 50
 
+        excluded_video_ids = {
+            str(candidate or "").strip()
+            for candidate in (exclude_video_ids or ())
+            if str(candidate or "").strip()
+        }
+
+        normalized_continue_id = str(continue_playlist_id or "").strip()
+        attempt_playlist_ids = [normalized_continue_id] if normalized_continue_id else []
+        attempt_playlist_ids.append("")
+
         client = self._get_client(require_auth=False)
-        try:
-            radio = client.get_watch_playlist(videoId=normalized_video_id, radio=True, limit=normalized_limit)
-        except TypeError:
-            # Older ytmusicapi builds may not accept the ``radio`` keyword; the
-            # plain watch playlist (autoplay queue) is radio-like already.
-            radio = client.get_watch_playlist(videoId=normalized_video_id, limit=normalized_limit)
-
-        radio_playlist_id = str(radio.get("playlistId") or "").strip() if isinstance(radio, dict) else ""
-        tracks = radio.get("tracks") or [] if isinstance(radio, dict) else []
-        _logger.info(
-            "Radio for videoId=%s returned %d raw track(s) (playlistId=%s).",
-            normalized_video_id,
-            len(tracks),
-            radio_playlist_id or "(none)",
-        )
-
-        item_urls = []
-        item_labels = []
-        for track in tracks:
-            track_video_id = str(track.get("videoId") or "").strip()
-            if not track_video_id or track_video_id == normalized_video_id:
+        content = None
+        for playlist_id in attempt_playlist_ids:
+            try:
+                radio = self._fetch_watch_playlist(
+                    client, normalized_video_id, normalized_limit, playlist_id=playlist_id or None
+                )
+            except Exception as exc:
+                if not playlist_id:
+                    raise
+                # Continuing an existing queue is best-effort: fall through to a
+                # fresh radio rather than failing the whole autoplay.
+                _logger.warning(
+                    "Could not continue radio queue %s for videoId=%s: %s",
+                    playlist_id,
+                    normalized_video_id,
+                    exc,
+                )
                 continue
 
-            item_urls.append(self._build_watch_url(track_video_id, playlist_id=radio_playlist_id or None))
-            item_labels.append(track_display_label(track))
+            content = self._build_radio_content(
+                radio, normalized_video_id, excluded_video_ids, fallback_title
+            )
+            if content.item_urls:
+                return content
 
-        return YouTubeMusicPlaylistContent(
-            playlist_id=radio_playlist_id,
-            title=str(fallback_title or _("Conteúdo relacionado")).strip(),
-            item_urls=item_urls,
-            item_labels=item_labels,
+        return content or YouTubeMusicPlaylistContent(
+            playlist_id="", title=str(fallback_title or "").strip(), item_urls=[], item_labels=[]
         )
 
     def add_tracks_to_playlist(self, playlist_id, video_ids):

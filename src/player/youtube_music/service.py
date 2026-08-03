@@ -434,10 +434,24 @@ class YouTubeMusicService:
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
         return self._library.get_playlist_content(playlist_id, fallback_title, require_auth=require_auth)
 
-    def get_radio_content(self, video_id, fallback_title=None, *, limit=50):
+    def get_radio_content(
+        self,
+        video_id,
+        fallback_title=None,
+        *,
+        limit=50,
+        exclude_video_ids=None,
+        continue_playlist_id=None,
+    ):
         if fallback_title is None:
             fallback_title = _("Conteúdo relacionado")
-        return self._library.get_radio_content(video_id, fallback_title, limit=limit)
+        return self._library.get_radio_content(
+            video_id,
+            fallback_title,
+            limit=limit,
+            exclude_video_ids=exclude_video_ids,
+            continue_playlist_id=continue_playlist_id,
+        )
 
     # -- Feedback / history (delegated) ----------------------------------------
 

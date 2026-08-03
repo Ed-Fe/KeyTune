@@ -13,6 +13,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Conexão com o YouTube Music pelo navegador**: extração direta dos cookies de uma sessão já autenticada no Chrome, Edge, Firefox, Brave ou Opera, com alternância entre os modos navegador e manual na caixa de conexão.
 
 ### Corrigido
+- **Faixas repetidas no conteúdo relacionado**: a rádio do YouTube Music monta uma fila nova a cada consulta e devolve as faixas em volta da semente, então músicas já presentes na playlist voltavam a ser adicionadas — inclusive a que você mesmo tinha adicionado pela busca. Agora a comparação é por `videoId` (a URL da rádio embute um identificador de fila que muda a cada consulta, então não servia), o player tenta continuar a fila anterior em vez de abrir uma nova, e volta a semear a rádio a partir de uma faixa anterior quando a consulta traz só repetidas.
 - **Plurais nas mensagens**: contagens de itens, faixas, playlists, mixes, resultados, dispositivos e minutos passam a usar formas reais de singular e plural (“216 itens”, “1 minuto”) no lugar das abreviações “item(ns)” e “minuto(s)”, em português, inglês e espanhol.
 - **Resultados salvos no YouTube Music**: a mensagem de confirmação voltou a ser traduzível.
 

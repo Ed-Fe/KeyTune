@@ -41,6 +41,10 @@ YOUTUBE_MUSIC_RADIO_FETCH_LIMIT = 50
 # (radio) proactively, so the new items and their stream are ready in time for a
 # seamless transition instead of pausing on the last frame while we look them up.
 YOUTUBE_MUSIC_RADIO_PREFETCH_LEAD_MS = 30000
+# A radio seeded on the last track overlaps heavily with the radio that produced
+# it, so a fetch can come back with nothing but tracks the playlist already has.
+# When that happens we re-seed from an earlier track, up to this many seeds.
+YOUTUBE_MUSIC_RADIO_MAX_SEED_ATTEMPTS = 3
 MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 5
 MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 200
 MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 5
