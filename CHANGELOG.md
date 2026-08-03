@@ -9,7 +9,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 - **Busca na playlist ou pasta atual**: `Ctrl+F` abre a caixa **Localizar item**, que procura o texto em qualquer parte do nome, ignorando acentos e maiúsculas. `F3` vai para o próximo resultado e `Shift+F3` para o anterior, com a posição na busca e o aviso de volta ao início da lista na barra de status. Também disponível em **Exibir > Localizar item**.
-- **Temporizador de desligamento**: `Ctrl+Shift+D` (ou **Reprodução > Temporizador de desligamento**) agenda a pausa automática da reprodução com durações prontas de 5 a 120 minutos, tempo personalizado ou ao fim da faixa atual. O menu traz ainda **Tempo restante** e **Cancelar temporizador**, há avisos falados faltando 5 minutos e 1 minuto, e o estado entra no anúncio de status (tecla `S`).
+- **Temporizador**: `Ctrl+Shift+D` (ou **Reprodução > Temporizador**) agenda a pausa automática da reprodução com durações prontas de 5 a 120 minutos, tempo personalizado ou ao fim da faixa atual. O menu traz ainda **Tempo restante** e **Cancelar temporizador**, há avisos falados faltando 5 minutos e 1 minuto, e o estado entra no anúncio de status (tecla `S`).
 - **Conexão com o YouTube Music pelo navegador**: extração direta dos cookies de uma sessão já autenticada no Chrome, Edge, Firefox, Brave ou Opera, com alternância entre os modos navegador e manual na caixa de conexão.
 
 ### Corrigido

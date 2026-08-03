@@ -12,7 +12,7 @@ Este manual presenta las funciones principales de la aplicación y las acciones 
 - Playlists en pestañas
 - Una cola de reproducción para organizar lo que sonará después
 - Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado
-- Temporizador de apagado con duraciones predefinidas o pausa al final de la pista
+- Temporizador con duraciones predefinidas o pausa al final de la pista
 - Navegación por carpetas con vista previa
 - Ecualizador por pestaña con predefinidos y presets personalizados
 - Un panel de letras con búsqueda automática y copia del texto
@@ -90,11 +90,11 @@ Usa `Ctrl+Shift+F` o el menú **Reproducción > Agregar a la Cola de Reproducci�
 
 Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.
 
-### Temporizador de apagado
+### Temporizador
 
 El temporizador pausa la reproducción por sí solo después del tiempo acordado, útil para escuchar algo antes de dormir sin dejar el reproductor sonando toda la noche. **Pausa** en lugar de detener, así que la posición del archivo se conserva y basta con `Espacio` para continuar donde quedó.
 
-Usa `Ctrl+Shift+D` o el menú **Reproducción > Temporizador de apagado** para configurarlo. Las opciones son:
+Usa `Ctrl+Shift+D` o el menú **Reproducción > Temporizador** para configurarlo. Las opciones son:
 
 - **Duraciones predefinidas**: 5, 10, 15, 30, 45, 60, 90 o 120 minutos, disponibles directamente en el submenú.
 - **Tiempo personalizado**: cualquier valor de 1 a 720 minutos, en el cuadro de configuración.
@@ -126,7 +126,7 @@ Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos
 - `Ctrl+Alt+L`: alternar el panel de letras
 - `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
 - `Ctrl+Shift+Q`: administrar la cola de reproducción
-- `Ctrl+Shift+D`: configurar el temporizador de apagado
+- `Ctrl+Shift+D`: configurar el temporizador
 - `T`: anunciar el tiempo actual del medio
 - `V`: anunciar el volumen actual
 - `S`: anunciar el estado del reproductor

@@ -53,11 +53,11 @@ class FrameSleepTimerMixin:
         """Frase curta com o estado do temporizador (ou vazia quando desligado)."""
         mode = getattr(self, "_sleep_timer_mode", SLEEP_TIMER_MODE_OFF)
         if mode == SLEEP_TIMER_MODE_END_OF_TRACK:
-            return _("Temporizador de desligamento: ao fim da faixa atual.")
+            return _("Temporizador: ao fim da faixa atual.")
         if mode == SLEEP_TIMER_MODE_COUNTDOWN:
             remaining = self._sleep_timer_remaining_seconds()
             if remaining is not None:
-                return _("Temporizador de desligamento: tempo restante {remaining}.").format(
+                return _("Temporizador: tempo restante {remaining}.").format(
                     remaining=self._format_sleep_timer_remaining(remaining)
                 )
         return ""
@@ -76,11 +76,11 @@ class FrameSleepTimerMixin:
             return was_armed
 
         if was_armed:
-            self._announce(_("Temporizador de desligamento cancelado."))
+            self._announce(_("Temporizador cancelado."))
             if hasattr(self, "_set_status_message"):
-                self._set_status_message(_("Temporizador de desligamento cancelado."))
+                self._set_status_message(_("Temporizador cancelado."))
         else:
-            self._announce(_("Nenhum temporizador de desligamento ativo."))
+            self._announce(_("Nenhum temporizador ativo."))
         return was_armed
 
     def _arm_sleep_timer_countdown(self, minutes):
@@ -102,8 +102,8 @@ class FrameSleepTimerMixin:
             timer.Start(SLEEP_TIMER_TICK_INTERVAL_MS)
 
         message = ngettext(
-            "Temporizador de desligamento ligado: {minutes} minuto.",
-            "Temporizador de desligamento ligado: {minutes} minutos.",
+            "Temporizador ligado: {minutes} minuto.",
+            "Temporizador ligado: {minutes} minutos.",
             normalized_minutes,
         ).format(minutes=normalized_minutes)
         self._announce(message)
@@ -119,7 +119,7 @@ class FrameSleepTimerMixin:
         self._sleep_timer_total_minutes = None
         self._sleep_timer_last_warning_minutes = None
 
-        message = _("Temporizador de desligamento ligado: ao fim da faixa atual.")
+        message = _("Temporizador ligado: ao fim da faixa atual.")
         self._announce(message)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
@@ -136,7 +136,7 @@ class FrameSleepTimerMixin:
         return True
 
     def _announce_sleep_timer_status(self):
-        message = self._sleep_timer_status_sentence() or _("Nenhum temporizador de desligamento ativo.")
+        message = self._sleep_timer_status_sentence() or _("Nenhum temporizador ativo.")
         self._announce(message)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
@@ -176,9 +176,9 @@ class FrameSleepTimerMixin:
         # aviso do temporizador chegaria depois do "Pausado." se viesse depois.
         was_playing = getattr(self, "player", None) is not None and self.player.is_playing()
         message = (
-            _("Temporizador de desligamento concluído. Reprodução pausada.")
+            _("Temporizador concluído. Reprodução pausada.")
             if was_playing
-            else _("Temporizador de desligamento concluído.")
+            else _("Temporizador concluído.")
         )
         self._announce(message)
         if hasattr(self, "_set_status_message"):
@@ -192,7 +192,7 @@ class FrameSleepTimerMixin:
         """Encerra a sessão no fim da faixa em vez de avançar na playlist."""
         self._clear_sleep_timer()
         self._refresh_sleep_timer_menu_state()
-        message = _("Temporizador de desligamento: fim da faixa. Reprodução encerrada.")
+        message = _("Temporizador: fim da faixa. Reprodução encerrada.")
         self._announce(message)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message, auto_clear_ms=0)
@@ -207,8 +207,8 @@ class FrameSleepTimerMixin:
             self._sleep_timer_last_warning_minutes = warning_minutes
             self._announce(
                 ngettext(
-                    "Temporizador de desligamento: falta {minutes} minuto.",
-                    "Temporizador de desligamento: faltam {minutes} minutos.",
+                    "Temporizador: falta {minutes} minuto.",
+                    "Temporizador: faltam {minutes} minutos.",
                     warning_minutes,
                 ).format(minutes=warning_minutes)
             )

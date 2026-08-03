@@ -12,7 +12,7 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 - Playlists em abas
 - Fila de reprodução independente para organizar o que toca em seguida
 - Busca dentro da playlist ou pasta atual, com navegação entre os resultados por teclado
-- Temporizador de desligamento com durações prontas ou pausa ao fim da faixa
+- Temporizador com durações prontas ou pausa ao fim da faixa
 - Navegação por pastas com pré-visualização
 - Equalizador por aba com predefinições e presets personalizados
 - Painel de letras com busca automática e cópia do texto
@@ -90,11 +90,11 @@ Use `Ctrl+Shift+F` ou o menu **Reprodução > Adicionar à Fila de Reprodução*
 
 Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.
 
-### Temporizador de desligamento
+### Temporizador
 
 O temporizador pausa a reprodução sozinho depois de um tempo combinado — útil para ouvir algo antes de dormir sem deixar o player tocando a noite toda. Ele **pausa** em vez de parar, então a posição da mídia é preservada e basta `Espaço` para continuar de onde parou.
 
-Use `Ctrl+Shift+D` ou o menu **Reprodução > Temporizador de desligamento** para configurá-lo. As opções são:
+Use `Ctrl+Shift+D` ou o menu **Reprodução > Temporizador** para configurá-lo. As opções são:
 
 - **Durações prontas**: 5, 10, 15, 30, 45, 60, 90 ou 120 minutos, disponíveis direto no submenu.
 - **Tempo personalizado**: qualquer valor de 1 a 720 minutos, na caixa de configuração.
@@ -126,7 +126,7 @@ Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta
 - `Ctrl+Alt+L`: alternar o painel de letras
 - `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
 - `Ctrl+Shift+Q`: gerenciar a fila de reprodução
-- `Ctrl+Shift+D`: configurar o temporizador de desligamento
+- `Ctrl+Shift+D`: configurar o temporizador
 - `T`: anunciar o tempo atual da mídia
 - `V`: anunciar o volume atual
 - `S`: anunciar o status do player

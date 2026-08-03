@@ -126,7 +126,7 @@ While the countdown runs, the player warns you when 5 minutes and when 1 minute 
 - `Ctrl+Alt+L`: toggle the lyrics panel
 - `Ctrl+Shift+F`: add the selected item to the playback queue
 - `Ctrl+Shift+Q`: manage the playback queue
-- `Ctrl+Shift+D`: configure the sleep timer
+- `Ctrl+Shift+D`: configure the timer
 - `T`: announce the current media time
 - `V`: announce the current volume
 - `S`: announce the player status

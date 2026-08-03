@@ -557,8 +557,8 @@ msgstr "Ayuda rápida de &atajos\tF1"
 msgid "Ajuda rápida de atalhos"
 msgstr "Ayuda rápida de atajos"
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador de desligamento (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la ruta o el enlace del elemento seleccionado\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nMenú Reproducción > Dispositivo de audio — Cambiar la salida de sonido\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador de apagado (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la ruta o el enlace del elemento seleccionado\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nMenú Reproducción > Dispositivo de audio — Cambiar la salida de sonido\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
 
 msgid "Ajuda rápida de atalhos:"
 msgstr "Ayuda rápida de atajos:"
@@ -2194,8 +2194,8 @@ msgstr "Ningún preset seleccionado para eliminar."
 msgid "Nenhum preset selecionado."
 msgstr "Ningún preset seleccionado."
 
-msgid "Nenhum temporizador de desligamento ativo."
-msgstr "No hay ningún temporizador de apagado activo."
+msgid "Nenhum temporizador ativo."
+msgstr "No hay ningún temporizador activo."
 
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
 msgstr "Ninguna pestaña de medios activa para configurar el ecualizador."
@@ -3326,6 +3326,9 @@ msgstr "Suecia"
 msgid "Suíça"
 msgstr "Suiza"
 
+msgid "Te&mporizador"
+msgstr "Te&mporizador"
+
 msgid "Techno"
 msgstr "Techno"
 
@@ -3350,42 +3353,39 @@ msgstr "Tiempo: ningún medio cargado."
 msgid "Tempo: {current} / duração desconhecida"
 msgstr "Tiempo: {current} / duración desconocida"
 
-msgid "Temporizador de desliga&mento"
-msgstr "Temporizador de a&pagado"
+msgid "Temporizador"
+msgstr "Temporizador"
 
-msgid "Temporizador de desligamento"
-msgstr "Temporizador de apagado"
+msgid "Temporizador cancelado."
+msgstr "Temporizador cancelado."
 
-msgid "Temporizador de desligamento cancelado."
-msgstr "Temporizador de apagado cancelado."
+msgid "Temporizador concluído."
+msgstr "Temporizador finalizado."
 
-msgid "Temporizador de desligamento concluído."
-msgstr "Temporizador de apagado finalizado."
+msgid "Temporizador concluído. Reprodução pausada."
+msgstr "Temporizador finalizado. Reproducción pausada."
 
-msgid "Temporizador de desligamento concluído. Reprodução pausada."
-msgstr "Temporizador de apagado finalizado. Reproducción pausada."
+msgid "Temporizador ligado: ao fim da faixa atual."
+msgstr "Temporizador activado: al final de la pista actual."
 
-msgid "Temporizador de desligamento ligado: ao fim da faixa atual."
-msgstr "Temporizador de apagado activado: al final de la pista actual."
+msgid "Temporizador ligado: {minutes} minuto."
+msgid_plural "Temporizador ligado: {minutes} minutos."
+msgstr[0] "Temporizador activado: {minutes} minuto."
+msgstr[1] "Temporizador activado: {minutes} minutos."
 
-msgid "Temporizador de desligamento ligado: {minutes} minuto."
-msgid_plural "Temporizador de desligamento ligado: {minutes} minutos."
-msgstr[0] "Temporizador de apagado activado: {minutes} minuto."
-msgstr[1] "Temporizador de apagado activado: {minutes} minutos."
+msgid "Temporizador: ao fim da faixa atual."
+msgstr "Temporizador: al final de la pista actual."
 
-msgid "Temporizador de desligamento: ao fim da faixa atual."
-msgstr "Temporizador de apagado: al final de la pista actual."
+msgid "Temporizador: falta {minutes} minuto."
+msgid_plural "Temporizador: faltam {minutes} minutos."
+msgstr[0] "Temporizador: falta {minutes} minuto."
+msgstr[1] "Temporizador: faltan {minutes} minutos."
 
-msgid "Temporizador de desligamento: falta {minutes} minuto."
-msgid_plural "Temporizador de desligamento: faltam {minutes} minutos."
-msgstr[0] "Temporizador de apagado: falta {minutes} minuto."
-msgstr[1] "Temporizador de apagado: faltan {minutes} minutos."
+msgid "Temporizador: fim da faixa. Reprodução encerrada."
+msgstr "Temporizador: fin de la pista. Reproducción finalizada."
 
-msgid "Temporizador de desligamento: fim da faixa. Reprodução encerrada."
-msgstr "Temporizador de apagado: fin de la pista. Reproducción finalizada."
-
-msgid "Temporizador de desligamento: tempo restante {remaining}."
-msgstr "Temporizador de apagado: tiempo restante {remaining}."
+msgid "Temporizador: tempo restante {remaining}."
+msgstr "Temporizador: tiempo restante {remaining}."
 
 msgid "Tenta trazer presença de palco e mais ambiência."
 msgstr "Intenta aportar presencia de escenario y más ambiente."

@@ -182,7 +182,7 @@ class FrameUIMixin:
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
             "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
-            "Ctrl+Shift+D — Temporizador de desligamento (durações prontas ou fim da faixa)\n"
+            "Ctrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
             "A — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\n"
@@ -435,7 +435,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_decrease_pitch_id, _("Diminuir T&om (Shift+[)"))
         playback_menu.Append(self.menu_reset_pitch_id, _("Restaurar &Tom Original (Shift+\\)"))
         playback_menu.AppendSubMenu(self.audio_output_menu, _("Dispositivo de áu&dio"))
-        playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Temporizador de desliga&mento"))
+        playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Te&mporizador"))
         announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
         announce_menu.Append(self.menu_announce_volume_id, _("Anunciar &Volume (V)"))
         announce_menu.Append(self.menu_announce_status_id, _("Anunciar &Status (S)"))

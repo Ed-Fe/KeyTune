@@ -12,7 +12,7 @@ from ..constants import (
 from ..i18n import _
 
 
-SLEEP_TIMER_DIALOG_TITLE = _("Temporizador de desligamento")
+SLEEP_TIMER_DIALOG_TITLE = _("Temporizador")
 
 _CHOICE_END_OF_TRACK = "end_of_track"
 _CHOICE_CUSTOM = "custom"
