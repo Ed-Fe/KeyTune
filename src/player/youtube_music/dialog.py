@@ -3,22 +3,189 @@ import os
 import wx
 
 from ..i18n import _, ngettext
+from .auth import SUPPORTED_BROWSERS
+
+# Constantes de modo para o diálogo de autenticação
+AUTH_MODE_BROWSER = "browser"
+AUTH_MODE_MANUAL = "manual"
 
 
 class YouTubeMusicBrowserAuthDialog(wx.Dialog):
+    """Diálogo de conexão do YouTube Music com dois modos:
+
+    - **Navegador**: seleciona na ListBox e exporta direto do perfil instalado.
+    - **Manual**: cola texto ou seleciona arquivo (comportamento anterior).
+    """
+
     def __init__(self, parent):
         super().__init__(
             parent,
             title=_("Conectar ao YouTube Music"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
-
-        self.SetMinSize((640, 480))
+        self._auth_mode = AUTH_MODE_BROWSER
+        self.SetMinSize((640, 500))
         self._build_ui()
-        self.SetSize((780, 560))
+        self.SetSize((780, 600))
         self.Layout()
         self.SetEscapeId(wx.ID_CANCEL)
         self.CentreOnParent()
+
+    # ------------------------------------------------------------------
+    # Construção da UI
+    # ------------------------------------------------------------------
+
+    def _build_ui(self):
+        root_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        # Instrução geral no topo
+        instructions = wx.StaticText(
+            self,
+            label=_(
+                "Escolha como deseja conectar sua conta do YouTube Music.\n\n"
+                "Opção 1 — Navegador instalado: selecione o navegador na lista e clique em "
+                "\"Conectar\". O player importará os cookies automaticamente.\n\n"
+                "Opção 2 — Manual: cole os dados do navegador ou escolha um arquivo "
+                "browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+            ),
+        )
+        instructions.Wrap(720)
+        root_sizer.Add(instructions, 0, wx.ALL | wx.EXPAND, 12)
+
+        # RadioBox de seleção de modo — principal ponto de decisão para o NVDA
+        self.mode_radio = wx.RadioBox(
+            self,
+            label=_("Modo de conexão"),
+            choices=[
+                _("&Exportar do navegador instalado"),
+                _("&Informar manualmente (arquivo ou texto)"),
+            ],
+            majorDimension=1,
+            style=wx.RA_SPECIFY_COLS,
+        )
+        self.mode_radio.SetSelection(0)
+        self.mode_radio.SetName(_("Modo de conexão com o YouTube Music"))
+        self.mode_radio.SetToolTip(
+            _("Escolha se deseja exportar os cookies diretamente de um navegador instalado "
+              "ou informar os dados manualmente por arquivo ou texto.")
+        )
+        root_sizer.Add(self.mode_radio, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+
+        # ── Painel do modo "Navegador" ──────────────────────────────────
+        self._browser_panel = wx.Panel(self)
+        browser_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        browser_label = wx.StaticText(
+            self._browser_panel,
+            label=_("Navegador:"),
+        )
+        browser_label.SetName(_("Lista de navegadores disponíveis"))
+
+        browser_names = [label for _name, label in SUPPORTED_BROWSERS]
+        self.browser_listbox = wx.ListBox(
+            self._browser_panel,
+            choices=browser_names,
+            style=wx.LB_SINGLE,
+        )
+        self.browser_listbox.SetSelection(0)
+        self.browser_listbox.SetName(_("Navegador para exportar cookies do YouTube Music"))
+        self.browser_listbox.SetToolTip(
+            _("Selecione o navegador instalado do qual os cookies do YouTube Music serão exportados. "
+              "Certifique-se de estar logado em music.youtube.com nesse navegador.")
+        )
+
+        browser_hint = wx.StaticText(
+            self._browser_panel,
+            label=_(
+                "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir "
+                "que o navegador seja completamente fechado ou impedir a extração; nesse caso, "
+                "use o Firefox ou a importação manual."
+            ),
+        )
+        browser_hint.Wrap(700)
+
+        browser_sizer.Add(browser_label, 0, wx.BOTTOM, 4)
+        browser_sizer.Add(self.browser_listbox, 1, wx.EXPAND | wx.BOTTOM, 8)
+        browser_sizer.Add(browser_hint, 0, wx.EXPAND)
+        self._browser_panel.SetSizer(browser_sizer)
+
+        # ── Painel do modo "Manual" ─────────────────────────────────────
+        self._manual_panel = wx.Panel(self)
+        manual_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        headers_label = wx.StaticText(
+            self._manual_panel,
+            label=_("Dados copiados do navegador (opcional):"),
+        )
+        self.headers_value = wx.TextCtrl(
+            self._manual_panel,
+            style=wx.TE_MULTILINE,
+        )
+        self.headers_value.SetName(_("Dados de conexão do YouTube Music"))
+
+        file_row = wx.BoxSizer(wx.HORIZONTAL)
+        file_label = wx.StaticText(self._manual_panel, label=_("Arquivo de conexão:"))
+        self.browser_file_picker = wx.FilePickerCtrl(
+            self._manual_panel,
+            wildcard=(
+                _("Arquivos de autenticação (*.json;*.txt)") + "|*.json;*.txt|"
+                + _("Arquivos JSON (*.json)") + "|*.json|"
+                + _("Arquivos de texto (*.txt)") + "|*.txt|"
+                + _("Todos os arquivos") + "|*.*"
+            ),
+            style=wx.FLP_OPEN | wx.FLP_FILE_MUST_EXIST,
+        )
+        self._configure_file_picker_accessibility()
+        file_row.Add(file_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
+        file_row.Add(self.browser_file_picker, 1, wx.EXPAND)
+
+        rotation_warning = wx.StaticText(
+            self._manual_panel,
+            label=_(
+                "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você "
+                "continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como "
+                "desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela "
+                "anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir "
+                "o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
+            ),
+        )
+        rotation_warning.Wrap(700)
+        rotation_warning.SetName(_("Aviso sobre validade dos cookies do YouTube Music"))
+
+        manual_sizer.Add(headers_label, 0, wx.BOTTOM, 4)
+        manual_sizer.Add(self.headers_value, 1, wx.EXPAND | wx.BOTTOM, 8)
+        manual_sizer.Add(file_row, 0, wx.EXPAND | wx.BOTTOM, 8)
+        manual_sizer.Add(rotation_warning, 0, wx.EXPAND)
+        self._manual_panel.SetSizer(manual_sizer)
+
+        root_sizer.Add(self._browser_panel, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+        root_sizer.Add(self._manual_panel, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+
+        # Botões padrão
+        button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
+        # Use FindWindow (descendant-scoped) para não renomear botões de outros diálogos abertos.
+        ok_button = self.FindWindow(wx.ID_OK)
+        if ok_button is not None:
+            ok_button.SetLabel(_("&Conectar"))
+            ok_button.SetName(_("Conectar ao YouTube Music"))
+            ok_button.SetToolTip(
+                _("Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado "
+                  "e conecta sua conta do YouTube Music.")
+            )
+        cancel_button = self.FindWindow(wx.ID_CANCEL)
+        if cancel_button is not None:
+            cancel_button.SetLabel(_("&Cancelar"))
+
+        if button_sizer is not None:
+            root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
+
+        self.SetSizer(root_sizer)
+
+        # Estado inicial: painel de navegador ativo
+        self._apply_mode(AUTH_MODE_BROWSER)
+
+        # Ligação de eventos
+        self.mode_radio.Bind(wx.EVT_RADIOBOX, self._on_mode_changed)
 
     def _configure_file_picker_accessibility(self):
         picker_text_ctrl = None
@@ -41,93 +208,47 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             picker_button.SetName(_("Procurar arquivo de conexão"))
             picker_button.SetToolTip(_("Abre a janela para escolher um arquivo de conexão exportado do navegador."))
 
-    def _build_ui(self):
-        root_sizer = wx.BoxSizer(wx.VERTICAL)
+    # ------------------------------------------------------------------
+    # Lógica de alternância de modo
+    # ------------------------------------------------------------------
 
-        instructions = wx.StaticText(
-            self,
-            label=_(
-                "Conecte sua conta do YouTube Music usando uma destas opções:\n\n"
-                "1. Caminho mais simples: faça login em music.youtube.com no navegador e exporte os cookies da sessão para um arquivo.\n"
-                "2. Se você já tiver um browser.json, um JSON de cookies ou um cookies.txt, selecione esse arquivo abaixo.\n"
-                "3. O campo de texto é opcional e serve apenas para quem prefere colar manualmente os dados do navegador."
-            ),
-        )
-        instructions.Wrap(720)
+    def _on_mode_changed(self, _event):
+        selection = self.mode_radio.GetSelection()
+        mode = AUTH_MODE_BROWSER if selection == 0 else AUTH_MODE_MANUAL
+        self._apply_mode(mode)
 
-        headers_label = wx.StaticText(self, label=_("Dados copiados do navegador (opcional)"))
-        self.headers_value = wx.TextCtrl(
-            self,
-            style=wx.TE_MULTILINE,
-        )
-        self.headers_value.SetName(_("Dados de conexão do YouTube Music"))
+    def _apply_mode(self, mode: str):
+        self._auth_mode = mode
+        is_browser = mode == AUTH_MODE_BROWSER
 
-        file_row = wx.BoxSizer(wx.HORIZONTAL)
-        file_label = wx.StaticText(self, label=_("Arquivo de conexão"))
-        self.browser_file_picker = wx.FilePickerCtrl(
-            self,
-            wildcard=(
-                _("Arquivos de autenticação (*.json;*.txt)") + "|*.json;*.txt|"
-                + _("Arquivos JSON (*.json)") + "|*.json|"
-                + _("Arquivos de texto (*.txt)") + "|*.txt|"
-                + _("Todos os arquivos") + "|*.*"
-            ),
-            style=wx.FLP_OPEN | wx.FLP_FILE_MUST_EXIST,
-        )
-        self._configure_file_picker_accessibility()
-        file_row.Add(file_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
-        file_row.Add(self.browser_file_picker, 1, wx.EXPAND)
+        self._browser_panel.Show(is_browser)
+        self._manual_panel.Show(not is_browser)
+        self.Layout()
 
-        note = wx.StaticText(
-            self,
-            label=_(
-                "Dica: se quiser o caminho mais fácil, use uma extensão de exportar cookies no navegador para gerar "
-                "um arquivo JSON ou cookies.txt da sessão já conectada no YouTube Music."
-            ),
-        )
-        note.Wrap(720)
+    # ------------------------------------------------------------------
+    # Accessores públicos
+    # ------------------------------------------------------------------
 
-        rotation_warning = wx.StaticText(
-            self,
-            label=_(
-                "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você "
-                "continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como "
-                "desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela "
-                "anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir "
-                "o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
-            ),
-        )
-        rotation_warning.Wrap(720)
-        rotation_warning.SetName(_("Aviso sobre validade dos cookies do YouTube Music"))
+    def get_auth_mode(self) -> str:
+        """Retorna ``AUTH_MODE_BROWSER`` ou ``AUTH_MODE_MANUAL``."""
+        return self._auth_mode
 
-        button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
-        # Use FindWindow (descendant-scoped) instead of FindWindowById, which is
-        # static and searches all top-level windows globally and could rename
-        # buttons that share wx.ID_OK in other open dialogs.
-        ok_button = self.FindWindow(wx.ID_OK)
-        if ok_button is not None:
-            ok_button.SetLabel(_("&Conectar"))
-            ok_button.SetName(_("Conectar ao YouTube Music"))
-            ok_button.SetToolTip(_("Valida o arquivo ou o texto informado e conecta sua conta do YouTube Music."))
-        cancel_button = self.FindWindow(wx.ID_CANCEL)
-        if cancel_button is not None:
-            cancel_button.SetLabel(_("&Cancelar"))
+    def get_selected_browser(self) -> str:
+        """Retorna o identificador yt-dlp do navegador selecionado na ListBox.
 
-        root_sizer.Add(instructions, 0, wx.ALL | wx.EXPAND, 12)
-        root_sizer.Add(headers_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
-        root_sizer.Add(self.headers_value, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
-        root_sizer.Add(file_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
-        root_sizer.Add(note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
-        root_sizer.Add(rotation_warning, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
-        if button_sizer is not None:
-            root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
+        Retorna string vazia se nenhum navegador estiver selecionado.
+        """
+        index = self.browser_listbox.GetSelection()
+        if index == wx.NOT_FOUND or index < 0 or index >= len(SUPPORTED_BROWSERS):
+            return ""
+        return SUPPORTED_BROWSERS[index][0]
 
-        self.SetSizer(root_sizer)
-
-    def get_headers_raw(self):
+    def get_headers_raw(self) -> str:
+        """Retrocompatível: retorna o texto colado manualmente."""
         return self.headers_value.GetValue().strip()
 
-    def get_browser_json_path(self):
+    def get_browser_json_path(self) -> str:
+        """Retrocompatível: retorna o caminho do arquivo selecionado."""
         path = self.browser_file_picker.GetPath().strip()
         return path if path and os.path.isfile(path) else ""
 

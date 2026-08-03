@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -17,6 +18,77 @@ from player.youtube_music.streams import ResolvedStreamPlayback
 
 
 class YouTubeMusicServiceTests(unittest.TestCase):
+    def test_save_browser_auth_validates_staged_files_before_replacing_saved_auth(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"
+            cookie_path = pathlib.Path(temp_dir) / "ytmusic_cookies.txt"
+            auth_path.write_text("autenticação anterior", encoding="utf-8")
+            cookie_path.write_text("cookies anteriores", encoding="utf-8")
+
+            def fake_setup(*, filepath, headers_raw):
+                pathlib.Path(filepath).write_text(headers_raw, encoding="utf-8")
+
+            candidate_client = Mock()
+            candidate_client.get_account_info.side_effect = RuntimeError("conta inválida")
+            fake_module = SimpleNamespace(
+                setup=fake_setup,
+                YTMusic=Mock(return_value=candidate_client),
+            )
+            service = YouTubeMusicService()
+
+            with patch(
+                "player.youtube_music.service.get_browser_auth_file_path",
+                return_value=str(auth_path),
+            ), patch(
+                "player.youtube_music.service.get_browser_auth_cookie_file_path",
+                return_value=str(cookie_path),
+            ), patch(
+                "player.youtube_music.service.import_ytmusicapi_module",
+                return_value=fake_module,
+            ):
+                with self.assertRaisesRegex(RuntimeError, "conta inválida"):
+                    service.save_browser_auth(headers_raw="Cookie: SID=novo; SAPISID=segredo")
+
+            self.assertEqual(auth_path.read_text(encoding="utf-8"), "autenticação anterior")
+            self.assertEqual(cookie_path.read_text(encoding="utf-8"), "cookies anteriores")
+
+    def test_save_browser_auth_replaces_both_files_after_validation(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"
+            cookie_path = pathlib.Path(temp_dir) / "ytmusic_cookies.txt"
+
+            def fake_setup(*, filepath, headers_raw):
+                pathlib.Path(filepath).write_text(headers_raw, encoding="utf-8")
+
+            candidate_client = Mock()
+            candidate_client.get_account_info.return_value = {"accountName": "Conta nova"}
+            fake_module = SimpleNamespace(
+                setup=fake_setup,
+                YTMusic=Mock(return_value=candidate_client),
+            )
+            service = YouTubeMusicService()
+
+            with patch(
+                "player.youtube_music.service.get_browser_auth_file_path",
+                return_value=str(auth_path),
+            ), patch(
+                "player.youtube_music.service.get_browser_auth_cookie_file_path",
+                return_value=str(cookie_path),
+            ), patch(
+                "player.youtube_music.service.import_ytmusicapi_module",
+                return_value=fake_module,
+            ):
+                saved_path = service.save_browser_auth(
+                    headers_raw="Cookie: SID=novo; SAPISID=segredo\nUser-Agent: Teste"
+                )
+                account_name = service.get_connected_account_name()
+
+            self.assertEqual(saved_path, str(auth_path))
+            self.assertEqual(account_name, "Conta nova")
+            self.assertIn("SID=novo", auth_path.read_text(encoding="utf-8"))
+            self.assertIn("\tSID\tnovo", cookie_path.read_text(encoding="utf-8"))
+            fake_module.YTMusic.assert_called_once()
+
     def test_switches_stream_resolution_to_anonymous_mode_for_the_session(self):
         service = YouTubeMusicService()
         media_path = "https://www.youtube.com/watch?v=abc123DEF45"
@@ -391,7 +463,6 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
     def test_rate_media_feedback_calls_rate_song_for_like(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -406,11 +477,11 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         self.assertEqual(message, "Mídia atual curtida no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
     def test_rate_media_feedback_calls_rate_song_for_dislike(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "DISLIKE"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -425,7 +496,8 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         self.assertEqual(message, "Mídia atual marcada como não gostei no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "DISLIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
     def test_rate_media_feedback_rejects_invalid_rating_without_calling_api(self):
         authenticated_client = Mock()
@@ -444,9 +516,11 @@ class YouTubeMusicServiceTests(unittest.TestCase):
 
         authenticated_client.rate_song.assert_not_called()
 
-    def test_rate_media_feedback_reports_server_mismatch_after_write(self):
+    def test_rate_media_feedback_returns_success_regardless_of_server_propagation_delay(self):
+        # O YouTube Music propaga avaliações de forma assíncrona: o get_song()
+        # imediatamente após rate_song() pode retornar o status anterior.
+        # O player não deve fazer get_song() nem reportar falso alarme.
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "INDIFFERENT"}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(
             YTMusic=fake_ytmusic_cls,
@@ -459,12 +533,12 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         ):
             message = service.rate_media_feedback("https://music.youtube.com/watch?v=abc123DEF45", "LIKE")
 
-        self.assertEqual(
-            message,
-            "A avaliação foi enviada, mas o servidor ainda retornou likeStatus=INDIFFERENT.",
-        )
+        # Mesmo que o servidor ainda não reflita o novo status, a mensagem
+        # deve ser a de sucesso (a avaliação foi enviada sem exceção).
+        self.assertEqual(message, "Mídia atual curtida no YouTube Music.")
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_song.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

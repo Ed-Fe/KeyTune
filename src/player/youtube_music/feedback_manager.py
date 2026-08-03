@@ -87,17 +87,10 @@ class YouTubeMusicFeedbackManager:
         client = self._get_client(require_auth=True)
         client.rate_song(video_id, like_status)
 
-        confirmed_song = client.get_song(video_id)
-        confirmed_status = ""
-        if isinstance(confirmed_song, dict):
-            confirmed_status = str(confirmed_song.get("likeStatus") or "").strip().upper()
-
-        if confirmed_status != normalized_rating:
-            confirmed_label = confirmed_status or _("indisponível")
-            return (
-                _("A avaliação foi enviada, mas o servidor ainda retornou likeStatus={status}.").format(status=confirmed_label)
-            )
-
+        # A API do YouTube Music propaga avaliações de forma assíncrona: o
+        # get_song() imediatamente após rate_song() frequentemente retorna o
+        # status anterior, gerando falso alarme.  Se rate_song() completou
+        # sem exceção, a avaliação foi aceita pelo servidor.
         if like_status == LikeStatus.LIKE:
             return _("Mídia atual curtida no YouTube Music.")
         if like_status == LikeStatus.DISLIKE:

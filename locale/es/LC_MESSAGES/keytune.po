@@ -3558,3 +3558,105 @@ msgstr "Austria"
 
 msgid "Índia"
 msgstr "India"
+
+msgid "&Exportar do navegador instalado"
+msgstr "&Extraer del navegador instalado"
+
+msgid "&Informar manualmente (arquivo ou texto)"
+msgstr "&Introducir manualmente (archivo o texto)"
+
+msgid "A autenticação informada não contém cookies válidos do YouTube."
+msgstr "La autenticación proporcionada no contiene cookies válidas de YouTube."
+
+msgid "A exportação de cookies do {browser} demorou demais e foi cancelada."
+msgstr "La exportación de cookies de {browser} tardó demasiado y se canceló."
+
+msgid "Arquivo de conexão:"
+msgstr "Archivo de conexión:"
+
+msgid "Brave"
+msgstr "Brave"
+
+msgid "Caminho de saída inválido para o arquivo de cookies."
+msgstr "La ruta de salida del archivo de cookies no es válida."
+
+msgid "Conectando a conta do YouTube Music..."
+msgstr "Conectando la cuenta de YouTube Music..."
+
+msgid "Dados copiados do navegador (opcional):"
+msgstr "Datos copiados del navegador (opcional):"
+
+msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
+msgstr "Error inesperado al exportar cookies de {browser}: {detail}"
+
+msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgstr "Elige cómo conectar tu cuenta de YouTube Music.\n\nOpción 1 — Navegador instalado: selecciona el navegador en la lista y haz clic en \"Conectar\". El reproductor importará las cookies automáticamente.\n\nOpción 2 — Manual: pega los datos del navegador o elige un archivo browser.json, JSON de cookies o cookies.txt exportado anteriormente."
+
+msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
+msgstr "Elige si quieres extraer las cookies directamente de un navegador instalado o proporcionar los datos manualmente mediante un archivo o texto."
+
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
+msgstr "Extrae las cookies del navegador seleccionado o valida el archivo o texto proporcionado y conecta tu cuenta de YouTube Music."
+
+msgid "Feche o {browser} completamente e tente exportar novamente."
+msgstr "Cierra {browser} por completo e intenta realizar la extracción de nuevo."
+
+msgid "Firefox (recomendado)"
+msgstr "Firefox (recomendado)"
+
+msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
+msgstr "Firefox es la opción más compatible. En Windows, Chrome, Edge y Brave pueden requerir que el navegador esté completamente cerrado o impedir la extracción; en ese caso, usa Firefox o la importación manual."
+
+msgid "Google Chrome"
+msgstr "Google Chrome"
+
+msgid "Lista de navegadores disponíveis"
+msgstr "Lista de navegadores disponibles"
+
+msgid "Microsoft Edge"
+msgstr "Microsoft Edge"
+
+msgid "Modo de conexão"
+msgstr "Modo de conexión"
+
+msgid "Modo de conexão com o YouTube Music"
+msgstr "Modo de conexión con YouTube Music"
+
+msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
+msgstr "Navegador no reconocido: {browser}. Elige uno de la lista o usa la importación manual."
+
+msgid "Navegador para exportar cookies do YouTube Music"
+msgstr "Navegador para extraer las cookies de YouTube Music"
+
+msgid "Navegador:"
+msgstr "Navegador:"
+
+msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
+msgstr "No se encontraron cookies válidas de YouTube en {browser}. Asegúrate de haber iniciado sesión en music.youtube.com."
+
+msgid "Não foi possível exportar cookies do {browser}."
+msgstr "No se pudieron extraer las cookies de {browser}."
+
+msgid "Não foi possível preparar a autenticação do YouTube Music."
+msgstr "No se pudo preparar la autenticación de YouTube Music."
+
+msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
+msgstr "Windows no permitió descifrar las cookies de {browser}. Intenta usar Firefox o la importación manual."
+
+msgid "O yt-dlp não foi encontrado. Verifique se as dependências do YouTube Music estão instaladas."
+msgstr "No se encontró yt-dlp. Comprueba que las dependencias de YouTube Music estén instaladas."
+
+msgid "O yt-dlp não gerou o arquivo de cookies esperado para {browser}. Verifique se você está logado em music.youtube.com nesse navegador."
+msgstr "yt-dlp no generó el archivo de cookies esperado para {browser}. Comprueba que hayas iniciado sesión en music.youtube.com en ese navegador."
+
+msgid "Opera"
+msgstr "Opera"
+
+msgid "Selecione o navegador instalado do qual os cookies do YouTube Music serão exportados. Certifique-se de estar logado em music.youtube.com nesse navegador."
+msgstr "Selecciona el navegador instalado del que se extraerán las cookies de YouTube Music. Asegúrate de haber iniciado sesión en music.youtube.com en ese navegador."
+
+msgid "Selecione um navegador na lista antes de conectar."
+msgstr "Selecciona un navegador de la lista antes de conectar."
+
+msgid "YouTube Music"
+msgstr "YouTube Music"

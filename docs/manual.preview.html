@@ -107,16 +107,18 @@ footer {
     <section class="card">
       <h1>Manual do KeyTune</h1>
       <p>O KeyTune é um player de mídia feito para uso por teclado e com foco em acessibilidade. Ele foi pensado para funcionar bem com playlists, navegação por pastas e para manter o que você estava fazendo entre uma abertura e outra.</p>
-<p>Este projeto foi desenvolvido com assistência de IA, incluindo GitHub Copilot e Codex da OpenAI.</p>
+<p>Este projeto foi desenvolvido com assistência de IA, incluindo GitHub Copilot, Codex da OpenAI e Claude Code da Anthropic.</p>
 <p>Este manual apresenta os recursos principais do aplicativo e as ações mais comuns para começar a usar o player com rapidez.</p>
 
     <nav class="toc" aria-label="Índice do manual">
       <ol>
         <li class="toc-level-2"><a href="#o-que-o-keytune-oferece">O que o KeyTune oferece</a></li>
         <li class="toc-level-2"><a href="#primeiros-passos">Primeiros passos</a></li>
+        <li class="toc-level-2"><a href="#interface">Interface</a></li>
         <li class="toc-level-2"><a href="#como-abrir-midia">Como abrir mídia</a></li>
         <li class="toc-level-2"><a href="#playlist-pastas-e-abas">Playlist, pastas e abas</a></li>
-        <li class="toc-level-3"><a href="#atalhos-de-arquivos-e-abas">Atalhos de arquivos e abas</a></li>
+        <li class="toc-level-3"><a href="#atalhos-de-abas-e-itens">Atalhos de abas e itens</a></li>
+        <li class="toc-level-3"><a href="#fila-de-reproducao">Fila de reprodução</a></li>
         <li class="toc-level-3"><a href="#atalhos-de-reproducao">Atalhos de reprodução</a></li>
         <li class="toc-level-3"><a href="#navegador-de-itens">Navegador de itens</a></li>
         <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
@@ -138,10 +140,15 @@ footer {
         <li class="toc-level-2"><a href="#youtube-music">YouTube Music</a></li>
         <li class="toc-level-3"><a href="#conta-e-biblioteca">Conta e biblioteca</a></li>
         <li class="toc-level-3"><a href="#busca-no-catalogo-e-no-youtube">Busca no catálogo e no YouTube</a></li>
-        <li class="toc-level-3"><a href="#abrir-playlist-especifica">Abrir playlist específica</a></li>
+        <li class="toc-level-3"><a href="#abrir-playlist-ou-video">Abrir playlist ou vídeo</a></li>
+        <li class="toc-level-3"><a href="#gerenciar-playlists-do-youtube-music">Gerenciar playlists do YouTube Music</a></li>
         <li class="toc-level-3"><a href="#sessao-do-youtube-music">Sessão do YouTube Music</a></li>
+        <li class="toc-level-4"><a href="#o-que-sao-cookies">O que são cookies</a></li>
+        <li class="toc-level-4"><a href="#como-conectar-via-extracao-direta-do-navegador">Como conectar via extração direta do navegador</a></li>
+        <li class="toc-level-4"><a href="#passo-a-passo-alternativo-exportacao-manual-de-cookies-txt">Passo a passo alternativo: exportação manual de cookies.txt</a></li>
+        <li class="toc-level-4"><a href="#informacoes-de-seguranca">Informações de segurança</a></li>
         <li class="toc-level-3"><a href="#atalhos">Atalhos</a></li>
-        <li class="toc-level-2"><a href="#acessibilidade-2">Acessibilidade</a></li>
+        <li class="toc-level-2"><a href="#recursos-de-acessibilidade">Recursos de acessibilidade</a></li>
         <li class="toc-level-2"><a href="#atualizacoes">Atualizações</a></li>
         <li class="toc-level-2"><a href="#solucao-de-problemas">Solução de problemas</a></li>
         <li class="toc-level-2"><a href="#para-desenvolvedores">Para desenvolvedores</a></li>
@@ -151,8 +158,10 @@ footer {
 <ul>
 <li>Reprodução de mídia com controle por teclado</li>
 <li>Playlists em abas</li>
+<li>Fila de reprodução independente para organizar o que toca em seguida</li>
 <li>Navegação por pastas com pré-visualização</li>
 <li>Equalizador por aba com predefinições e presets personalizados</li>
+<li>Painel de letras com busca automática e cópia do texto</li>
 <li>Aba dedicada do YouTube Music, aberta com <code>Ctrl+Shift+Y</code></li>
 <li>Carregamento e gravação de playlists</li>
 <li>Restauração do que estava aberto na última sessão</li>
@@ -161,11 +170,25 @@ footer {
 </ul>
 <h2 id="primeiros-passos">Primeiros passos</h2>
 <ol>
-<li>Extraia os arquivos do aplicativo para uma pasta local.</li>
-<li>Execute o arquivo <code>KeyTune.exe</code>.</li>
-<li>Se houver uma atualização disponível, o aplicativo mostra um diálogo com as novidades e pede confirmação antes de instalar.</li>
+<li>Baixe o instalador <code>KeyTune-Setup.exe</code> mais recente na página de <a href="https://github.com/ed-fe/KeyTune/releases">releases</a>.</li>
+<li>Execute o instalador e siga as etapas. Na página de tarefas adicionais você pode marcar a criação de um atalho na área de trabalho e escolher quais formatos de áudio, vídeo e playlist deseja associar ao KeyTune — tudo opcional e desmarcado por padrão. Associar um formato registra o KeyTune como opção no menu <em>Abrir com</em>; para que ele abra automaticamente esses arquivos, ainda é preciso confirmar como padrão nas configurações do Windows.</li>
+<li>Ao final, o instalador oferece iniciar o KeyTune e abrir este manual.</li>
+<li>Em execuções futuras, quando houver uma atualização disponível, o próprio aplicativo mostra um diálogo com as novidades e pede confirmação antes de baixar e instalar (veja <a href="#atualizacoes">Atualizações</a>).</li>
 </ol>
-<p>O KeyTune depende do runtime do MPV para reproduzir mídia. O runtime precisa estar em uma pasta <code>mpv/</code> ao lado do executável, ou em um dos caminhos reconhecidos automaticamente (veja a seção <strong>Solução de problemas</strong>). Se o player abrir mas não reproduzir nada, esse é o primeiro ponto a verificar.</p>
+<p>O KeyTune depende do runtime do MPV para reproduzir mídia. O instalador já inclui esse runtime; se o player abrir mas não reproduzir nada, veja a seção <a href="#solucao-de-problemas">Solução de problemas</a>.</p>
+<h2 id="interface">Interface</h2>
+<p>Ao abrir o KeyTune pela primeira vez, a janela principal mostra uma única aba de playlist vazia, sem nada para reproduzir ainda. A janela é dividida em quatro áreas:</p>
+<ul>
+<li><strong>Barra de menus</strong>, no topo: <strong>Arquivo</strong> (abrir mídia/pasta/playlist, recentes, salvar), <strong>Reprodução</strong> (play/pause, faixa anterior/próxima, embaralhar, repetição, dispositivo de áudio, anúncios), <strong>Exibir</strong> (alternar foco, equalizador, YouTube Music), <strong>Abas</strong> (nova aba, navegação entre abas, fechar), <strong>Configurações</strong> (preferências) e <strong>Ajuda</strong> (manual, atalhos, verificar atualizações).</li>
+<li><strong>Área de abas</strong>, ocupando a maior parte da janela: cada aba representa uma playlist ou uma pasta aberta (veja <a href="#playlist-pastas-e-abas">Playlist, pastas e abas</a>). Dentro de cada aba, o espaço é dividido em duas partes lado a lado:<ul>
+<li>à <strong>esquerda</strong>, o navegador de itens — a lista da playlist ou o conteúdo da pasta atual;</li>
+<li>à <strong>direita</strong>, a área do player. Quando a mídia atual é um vídeo, essa área mostra o quadro de vídeo; para áudio, ou quando nada está carregado,  ela mostra um texto de apoio com os atalhos mais usados para começar.</li>
+</ul>
+</li>
+<li><strong>Painel de tempo</strong>, abaixo da área de abas: mostra o tempo decorrido e a duração da mídia atual, uma barra de progresso visual e um resumo dos atalhos principais.</li>
+<li><strong>Barra de status</strong>, na borda inferior da janela: exibe mensagens curtas e temporárias sobre a última ação realizada (por exemplo, ao abrir um arquivo ou salvar uma playlist).</li>
+</ul>
+<p>Use <code>Tab</code> ou <code>Ctrl+B</code> para mover o foco entre o navegador de itens e o player dentro da aba ativa, e <code>F1</code> em qualquer momento para abrir a ajuda rápida de atalhos.</p>
 <h2 id="como-abrir-midia">Como abrir mídia</h2>
 <p>Você pode abrir arquivos de mídia, uma playlist local, uma pasta ou um caminho e link compatível usando os atalhos ou o menu <strong>Arquivo</strong>:</p>
 <ul>
@@ -175,27 +198,31 @@ footer {
 <li><code>Ctrl+V</code> — cola um caminho ou link da área de transferência na playlist atual.</li>
 <li><code>Ctrl+Shift+V</code> — cola e abre em uma nova playlist.</li>
 </ul>
-<p>Formatos de mídia suportados diretamente: <code>.mp3</code>, <code>.wav</code>, <code>.flac</code>, <code>.aac</code>, <code>.ogg</code> (áudio) e <code>.mp4</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code> (vídeo).</p>
+<p>Formatos de mídia suportados diretamente:</p>
+<ul>
+<li>Áudio: <code>.mp3</code>, <code>.wav</code>, <code>.flac</code>, <code>.aac</code>, <code>.ogg</code>, <code>.oga</code>, <code>.m4a</code>, <code>.opus</code>, <code>.wma</code>, <code>.aiff</code>, <code>.aif</code>, <code>.ac3</code>, <code>.mka</code>, <code>.wv</code>, <code>.ape</code>.</li>
+<li>Vídeo: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
+</ul>
 <p>O menu <strong>Arquivo &gt; Recentes</strong> guarda separadamente os últimos <strong>Arquivos recentes</strong>, <strong>Pastas recentes</strong> e <strong>Playlists recentes</strong>, facilitando reabrir o que você usou antes sem precisar navegar de novo.</p>
 <h2 id="playlist-pastas-e-abas">Playlist, pastas e abas</h2>
 <p>Cada playlist fica em uma aba separada. Isso ajuda a separar contextos, como uma lista de músicas para ouvir agora, uma pasta com arquivos locais ou uma coleção que você quer deixar organizada.</p>
 <p>A aba ativa define o que está sendo reproduzido e o que aparece no navegador lateral. Você pode manter uma aba para uma playlist salva, outra para uma pasta inteira e outras para listas temporárias, sem misturar tudo no mesmo contexto. As abas podem ser abertas, alternadas e fechadas sem afetar as outras.</p>
-<h3 id="atalhos-de-arquivos-e-abas">Atalhos de arquivos e abas</h3>
+<h3 id="atalhos-de-abas-e-itens">Atalhos de abas e itens</h3>
+<p>Os atalhos para abrir mídia, pastas, playlists e links estão na seção <a href="#como-abrir-midia">Como abrir mídia</a>, acima. Os atalhos abaixo são específicos de abas e da playlist atual:</p>
 <ul>
 <li><code>Ctrl+T</code>: abrir uma nova aba de playlist</li>
-<li><code>Ctrl+W</code>: fechar a mídia atual ou uma aba vazia</li>
-<li><code>Ctrl+Shift+W</code>: fechar a aba ou playlist atual</li>
+<li><code>Ctrl+W</code>: fechar a aba ou playlist atual</li>
+<li><code>Ctrl+Shift+W</code>: fechar a mídia atual</li>
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: navegar para a próxima ou aba anterior</li>
 <li><code>Ctrl+Shift+E</code>: abrir o equalizador da aba ativa</li>
-<li><code>Ctrl+O</code>: abrir arquivos de mídia ou uma playlist local</li>
-<li><code>Ctrl+Shift+O</code>: abrir uma pasta diretamente no navegador de pastas</li>
-<li><code>Ctrl+Alt+O</code>: abrir mídia, playlist, pasta ou link remoto no diálogo unificado</li>
 <li><code>Ctrl+C</code>: copiar o caminho ou link do item selecionado</li>
-<li><code>Ctrl+V</code>: colar um caminho ou link e, quando possível, adicioná-lo à playlist atual</li>
-<li><code>Ctrl+Shift+V</code>: colar um caminho, playlist ou link e abrir em uma nova playlist</li>
 <li><code>Ctrl+Shift+S</code>: salvar a playlist atual</li>
 <li><code>Ctrl+B</code>: alternar foco entre o navegador de itens e o player</li>
 </ul>
+<h3 id="fila-de-reproducao">Fila de reprodução</h3>
+<p>A fila de reprodução organiza o que deve tocar depois da faixa atual, sem depender da ordem da playlist que você está navegando. Ela sempre pertence à playlist que está tocando no momento.</p>
+<p>Use <code>Ctrl+Shift+F</code> ou o menu <strong>Reprodução &gt; Adicionar à Fila de Reprodução</strong> para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use <code>Ctrl+Shift+Q</code> ou o menu <strong>Reprodução &gt; Gerenciar Fila de Reprodução</strong>.</p>
+<p>Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.</p>
 <h3 id="atalhos-de-reproducao">Atalhos de reprodução</h3>
 <ul>
 <li><code>Espaço</code>: reproduzir ou pausar</li>
@@ -205,15 +232,25 @@ footer {
 <li><code>Seta cima</code> / <code>Seta baixo</code>: aumentar ou diminuir o volume</li>
 <li><code>Ctrl+.</code>: parar a reprodução</li>
 <li><code>Ctrl+PageUp</code> / <code>Ctrl+PageDown</code>: faixa anterior ou próxima na playlist</li>
+<li><code>Alt+Seta esquerda</code> / <code>Alt+Seta direita</code>: faixa anterior ou próxima na playlist (alternativa a <code>Ctrl+PageUp</code>/<code>Ctrl+PageDown</code>)</li>
+<li><code>Alt+Seta cima</code> / <code>Alt+Seta baixo</code>: mover o item atual para cima ou para baixo na playlist</li>
+<li><code>Alt+Home</code> / <code>Alt+End</code>: ir para o primeiro ou para o último item da playlist</li>
 <li><code>E</code>: alternar modo aleatório</li>
 <li><code>R</code>: alternar modo de repetição</li>
+<li><code>A</code>: alternar a reprodução de conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)</li>
+<li><code>]</code> / <code>[</code>: aumentar ou diminuir a velocidade de reprodução</li>
+<li><code>Shift+]</code> / <code>Shift+[</code>: aumentar ou diminuir o tom da reprodução em semitons</li>
+<li><code>Shift+\</code>: restaurar o tom original</li>
+<li><code>Ctrl+Alt+L</code>: alternar o painel de letras</li>
+<li><code>Ctrl+Shift+F</code>: adicionar o item selecionado à fila de reprodução</li>
+<li><code>Ctrl+Shift+Q</code>: gerenciar a fila de reprodução</li>
 <li><code>T</code>: anunciar o tempo atual da mídia</li>
 <li><code>V</code>: anunciar o volume atual</li>
 <li><code>S</code>: anunciar o status do player</li>
 <li><code>Ctrl+L</code>: curtir a mídia atual no YouTube Music</li>
-<li><code>Ctrl+Shift+L</code>: marcar a mídia atual como não gostei no YouTube Music</li>
+<li><code>Ctrl+Shift+L</code>: marcar a mídia atual como não gostei no YouTube Music (e pular para a próxima faixa)</li>
 </ul>
-<p>Quando uma aba está vazia, <code>Ctrl+W</code> fecha essa aba; quando há mídia carregada, o mesmo atalho remove só o item atual ou encerra a reprodução da aba ativa.</p>
+<p>O atalho <code>Ctrl+W</code> fecha a aba ativa diretamente; o atalho <code>Ctrl+Shift+W</code> fecha ou descarrega a mídia atual na aba ativa.</p>
 <h3 id="navegador-de-itens">Navegador de itens</h3>
 <p>O navegador fica à esquerda da janela e opera em dois modos distintos dependendo do que está na aba ativa: <strong>modo playlist</strong> e <strong>modo pasta</strong>. Use <code>Tab</code> ou <code>Ctrl+B</code> para alternar o foco entre o navegador e o player.</p>
 <h4 id="modo-playlist">Modo playlist</h4>
@@ -221,7 +258,7 @@ footer {
 <ul>
 <li><code>Enter</code>: toca o item selecionado imediatamente.</li>
 <li><code>Delete</code>: remove o item selecionado da playlist.</li>
-<li><code>Shift+F10</code>: abre o menu contextual com ações adicionais sobre o item.</li>
+<li><code>Shift+F10</code>: abre o menu contextual com ações adicionais sobre o item ou sobre toda a seleção (a lista aceita seleção múltipla). Além de copiar, colar e remover, o menu traz as ações do YouTube Music quando a seleção contém faixas dessa origem: <strong>Curtir</strong>/<strong>Não gostei</strong>, <strong>Adicionar à playlist do YouTube Music...</strong> e, quando a aba atual é uma playlist sua do YouTube Music, <strong>Remover da playlist do YouTube Music</strong>. Veja <a href="#gerenciar-playlists-do-youtube-music">Gerenciar playlists do YouTube Music</a>.</li>
 <li><code>Tab</code> / <code>Esc</code>: volta o foco para o player.</li>
 </ul>
 <h4 id="modo-pasta">Modo pasta</h4>
@@ -267,7 +304,7 @@ footer {
 <li><strong>Desativar saída de vídeo (tocar só o áudio)</strong>: mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar janelas externas de vídeo.</li>
 </ul>
 <h3 id="acessibilidade">Acessibilidade</h3>
-<p>A aba <strong>Acessibilidade</strong> tem uma única opção: <strong>Ativar anúncios de acessibilidade</strong>. Quando ligada, o player anuncia mudanças de tempo, volume, troca de abas e status ao leitor de tela. Quando desligada, esses anúncios são suprimidos. Os atalhos de anúncio sob demanda (<code>T</code>, <code>V</code>, <code>S</code>) continuam funcionando independentemente dessa configuração — veja a seção <strong>Acessibilidade</strong> para detalhes.</p>
+<p>A aba <strong>Acessibilidade</strong> tem uma única opção: <strong>Ativar anúncios de acessibilidade</strong>. Quando ligada, o player anuncia mudanças de tempo, volume, troca de abas e status ao leitor de tela. Quando desligada, esses anúncios são suprimidos. Os atalhos de anúncio sob demanda (<code>T</code>, <code>V</code>, <code>S</code>) continuam funcionando independentemente dessa configuração — veja <a href="#recursos-de-acessibilidade">Recursos de acessibilidade</a> para detalhes.</p>
 <h3 id="recursos-adicionais">Recursos adicionais</h3>
 <p>A aba <strong>Recursos adicionais</strong> concentra as integrações opcionais. Hoje ela reúne os controles do YouTube Music e do YouTube em duas seções.</p>
 <h4 id="integracao-com-youtube-music-e-youtube">Integração com YouTube Music e YouTube</h4>
@@ -282,6 +319,8 @@ footer {
 <ul>
 <li><strong>Playlists carregadas por vez</strong>: quantas playlists da biblioteca são trazidas em cada carregamento (5–200). Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais.</li>
 <li><strong>Mixes personalizadas para descobrir</strong>: limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas (5–200). Valores menores deixam a sincronização mais rápida.</li>
+<li><strong>Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)</strong>: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla <code>A</code> durante a reprodução.</li>
+<li><strong>Salvar músicas escutadas no histórico do YouTube Music</strong>: ligada por padrão. Ao escutar uma faixa do YouTube Music por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player marca essa faixa como assistida no histórico da sua conta do YouTube Music. Desative para tocar faixas do YouTube Music sem registrar nada no histórico.</li>
 </ul>
 <h2 id="equalizador">Equalizador</h2>
 <p>O equalizador é aberto por aba com <code>Ctrl+Shift+E</code>, então cada playlist pode ter um ajuste próprio.</p>
@@ -402,7 +441,13 @@ footer {
 <li><strong>Desconectar conta</strong>: remove a autenticação salva desta instalação.</li>
 <li><strong>Atualizar biblioteca</strong>: busca novamente as playlists e mixes disponíveis na conta conectada.</li>
 </ul>
-<p>Abaixo da seção de conta fica a lista <strong>Playlists e mixes</strong> com todas as playlists e mixes da biblioteca. Use o campo <strong>Filtro</strong> para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Quando há mais playlists para carregar, o botão <strong>Carregar mais playlists</strong> fica disponível; você também pode pressionar <code>Page Down</code> estando no fim da lista para carregar o próximo lote.</p>
+<p>Abaixo da seção de conta fica a lista <strong>Playlists e mixes</strong> com todas as playlists e mixes da biblioteca. Use o campo <strong>Filtro</strong> para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Abaixo da lista ficam as ações:</p>
+<ul>
+<li><strong>Abrir seleção</strong>: abre a playlist ou mix selecionada em uma nova aba (<code>Enter</code> na lista faz o mesmo).</li>
+<li><strong>Nova playlist...</strong>: cria uma playlist nova na sua conta. O player pede o nome e a privacidade (Privada, Não listada ou Pública). Veja <a href="#gerenciar-playlists-do-youtube-music">Gerenciar playlists do YouTube Music</a>.</li>
+<li><strong>Excluir playlist...</strong>: exclui a playlist selecionada da sua conta, com confirmação. Só funciona em playlists que você criou — mixes, paradas e playlists de terceiros não podem ser excluídos.</li>
+<li><strong>Carregar mais playlists</strong>: traz o próximo lote quando há mais playlists para carregar. Você também pode pressionar <code>Page Down</code> estando no fim da lista.</li>
+</ul>
 <h3 id="busca-no-catalogo-e-no-youtube">Busca no catálogo e no YouTube</h3>
 <p>A seção <strong>Busca no catálogo e no YouTube</strong> fica recolhida por padrão. Expanda-a para pesquisar. Ela tem:</p>
 <ul>
@@ -414,62 +459,117 @@ footer {
 <li><em>YouTube — vídeos</em>: vídeos do YouTube em geral, sem exigir conta.</li>
 </ul>
 </li>
-<li><strong>Lista de resultados</strong>: mostra os itens encontrados. <code>Enter</code> adiciona a seleção à playlist atual; duplo clique abre em nova playlist; <code>Shift+F10</code> ou o botão <strong>Ações...</strong> abre o menu contextual com opções adicionais.</li>
+<li><strong>Explorar</strong>: quatro botões trazem mais conteúdo para a mesma lista de resultados:<ul>
+<li><strong>Em alta...</strong>: abre um menu com <em>Global</em> no topo e os demais países agrupados em submenus por continente. Ao escolher um país, as paradas e os destaques em alta do YouTube Music aparecem na lista, como playlists que você pode abrir ou salvar na biblioteca. Não exige conta conectada.</li>
+<li><strong>Moods e gêneros...</strong>: abre um menu com as categorias de climas e gêneros do YouTube Music (por exemplo <em>Foco</em>, <em>Treino</em>, <em>Pop</em>, <em>Rock</em>). Ao escolher uma categoria, as playlists dela aparecem na lista. Não exige conta conectada.</li>
+<li><strong>Curtidas</strong>: carrega as faixas curtidas (a playlist <em>Curtidas/Liked Music</em> da sua conta). Exige conta conectada.</li>
+<li><strong>Histórico</strong>: carrega seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.</li>
+</ul>
+</li>
+<li><strong>Lista de resultados</strong>: mostra os itens encontrados (da busca, das paradas em alta, de moods e gêneros, das curtidas ou do histórico). A lista permite <strong>seleção múltipla</strong>: use <code>Ctrl+Setas</code> para mover o foco sem alterar a seleção, <code>Ctrl+Espaço</code> para marcar ou desmarcar o item em foco e <code>Shift+Setas</code> para selecionar um intervalo. <code>Enter</code> adiciona a seleção à playlist atual; <code>Ctrl+Enter</code> abre a seleção em nova playlist; <code>Shift+F10</code> ou o botão <strong>Ações...</strong> abre o menu contextual com opções adicionais.</li>
 <li><strong>Salvar no Music</strong>: salva a seleção na biblioteca do YouTube Music quando o resultado for compatível (playlists ou faixas).</li>
 </ul>
-<h3 id="abrir-playlist-especifica">Abrir playlist específica</h3>
-<p>A seção <strong>Abrir playlist específica</strong> também fica recolhida por padrão. Expanda-a para colar um link completo do YouTube Music ou do YouTube, ou informar diretamente o ID de uma playlist ou mix. Clique em <strong>Abrir pelo link ou ID</strong> ou pressione <code>Enter</code> no campo para abrir.</p>
+<h3 id="abrir-playlist-ou-video">Abrir playlist ou vídeo</h3>
+<p>A seção <strong>Abrir playlist ou vídeo</strong> também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em <strong>Abrir link</strong> ou pressione <code>Enter</code> no campo para abrir.</p>
+<h3 id="gerenciar-playlists-do-youtube-music">Gerenciar playlists do YouTube Music</h3>
+<p>Além de abrir e salvar playlists, o KeyTune permite editar suas playlists diretamente na conta conectada. Todas essas ações exigem conta conectada e alteram a playlist <strong>na sua conta do YouTube Music</strong> — o que envolve excluir é confirmado antes e não pode ser desfeito pelo player.</p>
+<p><strong>Adicionar faixas a uma playlist.</strong> Selecione uma ou mais faixas do YouTube Music (na playlist atual ou na lista de resultados da busca) e use <strong>Adicionar à playlist do YouTube Music...</strong> no menu de contexto (<code>Shift+F10</code>), ou pressione <code>Ctrl+Shift+A</code> para adicionar a faixa que está tocando. Aparece uma lista das suas playlists editáveis; mixes e rádios personalizadas não entram nessa lista porque não aceitam edição. No topo da lista há a opção <strong>Criar nova playlist...</strong>, que cria uma playlist nova já com a seleção atual (mesmo comportamento do app do YouTube Music).</p>
+<p><strong>Remover faixas de uma playlist.</strong> Com uma playlist sua do YouTube Music aberta na aba atual, selecione as faixas e use <strong>Remover da playlist do YouTube Music</strong> no menu de contexto. O player pede confirmação e, ao concluir, remove as faixas também da aba aberta para que a lista continue espelhando a conta. A remoção só é oferecida em playlists que você criou ou onde é colaborador.</p>
+<p><strong>Criar uma playlist.</strong> Use <strong>Nova playlist...</strong> na seção <em>Playlists e mixes</em> para criar uma playlist vazia, ou <strong>Criar nova playlist...</strong> no diálogo de adicionar faixas para criar já com a seleção. Nos dois casos o player abre um diálogo onde você informa o <strong>nome</strong> e escolhe a <strong>privacidade</strong>: <em>Privada</em> (só você vê), <em>Não listada</em> (visível para quem tiver o link) ou <em>Pública</em> (aparece no seu perfil e pode surgir em buscas). O padrão é Privada. Depois de criar, a biblioteca é atualizada para a nova playlist aparecer na lista.</p>
+<p><strong>Excluir uma playlist.</strong> Selecione a playlist na lista <em>Playlists e mixes</em> e use <strong>Excluir playlist...</strong>. Só dá para excluir playlists que você criou; o player confirma antes e atualiza a biblioteca em seguida.</p>
 <h3 id="sessao-do-youtube-music">Sessão do YouTube Music</h3>
-<p>Na maioria das vezes o KeyTune vai pedir essa sessão para funcionar corretamente com o YouTube Music, especialmente na primeira vez ou quando a autenticação expirar. Se isso acontecer, exporte os cookies da conta que já está logada no navegador.</p>
+<p>Para utilizar os recursos da sua biblioteca (playlists salvas, histórico, curtidas e avaliações), é necessário conectar sua conta do YouTube Music. O KeyTune oferece dois modos de conexão no diálogo <strong>Conectar conta</strong>:</p>
 <ol>
-<li>Instale a extensão <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a>.</li>
-<li>Abra o <a href="https://music.youtube.com/">YouTube Music</a> no mesmo navegador e faça login na sua conta.</li>
-<li>Clique na extensão e exporte os cookies no formato <code>cookies.txt</code>.</li>
-<li>No KeyTune, use a opção de importar ou carregar a sessão do YouTube Music quando ela for exibida.</li>
+<li><strong>Extrair do navegador instalado:</strong> Selecione Firefox, Google Chrome, Microsoft Edge, Brave ou Opera na lista e clique em <strong>Conectar</strong>. O KeyTune extrai a sessão diretamente do perfil usando o <code>yt-dlp</code>. O Firefox é recomendado por oferecer maior compatibilidade no Windows.</li>
+<li><strong>Importação de arquivo ou texto manual:</strong> Para navegadores não listados ou configurações personalizadas, você pode importar um arquivo <code>cookies.txt</code> exportado ou colar os cabeçalhos HTTP da sessão.</li>
 </ol>
-<p>O arquivo exportado contém informações de acesso da sua conta. Use apenas no seu computador e só com a conta que você quer conectar ao aplicativo.</p>
+<p>No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado e, em algumas versões, a proteção do próprio navegador pode impedir a extração. Se isso acontecer, use o Firefox ou a importação manual.</p>
+<h4 id="o-que-sao-cookies">O que são cookies</h4>
+<p>Cookies são pequenos arquivos de texto que navegadores armazenam para lembrar suas preferências e informações de login em sites. Quando você faz login no YouTube Music, o navegador salva cookies que contêm sua autenticação. Ao conectar sua conta no KeyTune, o aplicativo utiliza essa informação de sessão logada para acessar sua biblioteca sem pedir sua senha.</p>
+<h4 id="como-conectar-via-extracao-direta-do-navegador">Como conectar via extração direta do navegador</h4>
+<ol>
+<li>Certifique-se de que está logado na sua conta no <a href="https://music.youtube.com/">YouTube Music</a> em seu navegador (Chrome, Edge, Firefox, Brave ou Opera).</li>
+<li>No KeyTune, abra a aba do YouTube Music (<code>Ctrl+Shift+Y</code>).</li>
+<li>Na seção <strong>Conta e biblioteca</strong>, clique em <strong>Conectar conta...</strong>.</li>
+<li>No diálogo que abre, selecione a opção <strong>Extrair do navegador instalado</strong>.</li>
+<li>Escolha o seu navegador na lista e clique no botão <strong>Conectar</strong>.</li>
+</ol>
+<h4 id="passo-a-passo-alternativo-exportacao-manual-de-cookies-txt">Passo a passo alternativo: exportação manual de cookies.txt</h4>
+<p>Se você optar pelo modo manual ou usar um navegador não suportado diretamente:</p>
+<p><strong>Pré-requisito:</strong> instale a extensão <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> em seu navegador.</p>
+<p><strong>1. Ativar a extensão em abas anônimas</strong></p>
+<p>Usar uma aba anônima/privada evita que o Google renove os cookies frequentemente durante o uso normal do navegador.</p>
+<ol>
+<li>Pressione <code>Ctrl+L</code> para focar a barra de endereços.</li>
+<li>Pressione <code>Escape</code> para sair da caixa de edição da barra de endereços.</li>
+<li>Pressione <code>Alt+F</code> para abrir o menu do navegador.</li>
+<li>Navegue com as setas até <strong>Extensões</strong>, expanda o submenu pressionando <code>Enter</code> e escolha <strong>Gerenciar extensões</strong>.</li>
+<li>Localize <strong>Get cookies.txt LOCALLY</strong> e clique em <strong>Detalhes</strong> (ou "Saiba mais").</li>
+<li>Na página de detalhes, localize a opção <strong>Permitir em abas privadas</strong> ou <strong>Permitir em navegação anônima</strong> e ative-a.</li>
+<li>Feche a página e retorne ao seu navegador.</li>
+</ol>
+<p><strong>2. Fazer login e exportar cookies</strong></p>
+<ol>
+<li>Abra uma nova aba anônima/privada (<code>Ctrl+Shift+N</code> ou <code>Ctrl+Shift+P</code>).</li>
+<li>Navegue para <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
+<li>Faça login com sua conta Google.</li>
+<li>Abra a extensão <strong>Get cookies.txt LOCALLY</strong> e clique em <strong>Exportar</strong> ou <strong>Download</strong> para salvar o arquivo <code>cookies.txt</code>.</li>
+<li>Feche a aba anônima sem navegar para outros sites.</li>
+</ol>
+<p><strong>3. Importar no KeyTune</strong></p>
+<ol>
+<li>No diálogo <strong>Conectar conta...</strong> do KeyTune, selecione <strong>Importar arquivo ou texto manual</strong>.</li>
+<li>Selecione o arquivo <code>cookies.txt</code> baixado (ou cole o texto dos cabeçalhos) e clique em <strong>Conectar</strong>.</li>
+</ol>
+<h4 id="informacoes-de-seguranca">Informações de segurança</h4>
+<p>O arquivo <code>cookies.txt</code> exportado contém informações de autenticação da sua conta. Por segurança:</p>
+<ul>
+<li>Use o arquivo apenas no seu próprio computador.</li>
+<li>Não compartilhe o arquivo com outras pessoas.</li>
+<li>Exclua o arquivo após importá-lo no KeyTune se desejar. A cópia interna contém somente os cookies do YouTube necessários para a conexão.</li>
+<li>Se desconectar a conta no KeyTune, os cookies armazenados serão removidos.</li>
+</ul>
 <h3 id="atalhos">Atalhos</h3>
 <ul>
 <li><code>Ctrl+Shift+Y</code>: abrir a aba do YouTube Music</li>
+<li><code>Ctrl+Shift+A</code>: adicionar a mídia atual a uma playlist do YouTube Music</li>
 <li><code>Enter</code> no campo de busca: executar a pesquisa</li>
 <li><code>Enter</code> na lista de resultados: adicionar o item à playlist atual</li>
-<li>duplo clique na lista de resultados: abrir o item em nova playlist</li>
+<li><code>Ctrl+Enter</code> na lista de resultados: abrir o item em nova playlist</li>
+<li><code>Ctrl+Espaço</code> na lista de resultados: marcar ou desmarcar o item em foco (seleção múltipla)</li>
+<li><code>Ctrl+Setas</code> na lista de resultados: mover o foco sem alterar a seleção</li>
+<li><code>Shift+Setas</code> na lista de resultados: selecionar um intervalo de itens</li>
 <li><code>Shift+F10</code> na lista de resultados: abrir o menu de ações</li>
 <li><code>Enter</code> na lista de playlists da biblioteca: abrir a seleção</li>
 <li><code>Page Down</code> no fim da lista de playlists: carregar mais playlists</li>
 <li><code>Esc</code>: fechar a aba quando ela estiver em foco</li>
 </ul>
-<h2 id="acessibilidade-2">Acessibilidade</h2>
+<h2 id="recursos-de-acessibilidade">Recursos de acessibilidade</h2>
 <p>O aplicativo foi projetado para leitores de tela e uso por teclado. Em geral:</p>
 <ul>
 <li>o foco evita saltos desnecessários para a área nativa de vídeo;</li>
 <li>anúncios de estado e de navegação são feitos quando o suporte de acessibilidade está disponível;</li>
 <li>campos, botões e listas têm nomes e descrições legíveis por leitores de tela.</li>
 </ul>
-<p>Se você usa leitor de tela, use os atalhos de anúncio sob demanda para se localizar sem depender dos eventos automáticos:</p>
-<ul>
-<li><code>T</code>: anuncia o tempo atual da mídia em reprodução.</li>
-<li><code>V</code>: anuncia o volume atual.</li>
-<li><code>S</code>: anuncia o status geral do player (reproduzindo, pausado, parado).</li>
-<li><code>F1</code>: abre a ajuda rápida de atalhos.</li>
-</ul>
+<p>Se você usa leitor de tela, os atalhos de anúncio sob demanda <code>T</code>, <code>V</code> e <code>S</code> (descritos em <a href="#atalhos-de-reproducao">Atalhos de reprodução</a>) e a ajuda rápida <code>F1</code> ajudam a se localizar sem depender dos eventos automáticos.</p>
 <p>Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em <code>Ctrl+,</code> &gt; <strong>Acessibilidade</strong>.</p>
+<p>O painel de letras também foi pensado para esse uso: <code>Ctrl+Alt+L</code> ou a caixa <strong>Letras</strong> na área de tempo mostram ou ocultam o painel, e o texto pode ser lido, navegado com as setas e copiado pelo botão <strong>Copiar letra completa</strong>. Ao trocar de faixa, o player tenta buscar a letra automaticamente primeiro no LRCLIB e depois no YouTube Music.</p>
 <h2 id="atualizacoes">Atualizações</h2>
 <p>Ao iniciar, o KeyTune pode verificar atualizações automaticamente. Para verificar manualmente a qualquer momento, use o menu <strong>Ajuda &gt; Verificar atualizações</strong>.</p>
 <p>Quando houver uma versão nova, o aplicativo mostra um diálogo com as notas da release, o nome do arquivo e o tamanho do download antes de pedir confirmação. Se você aceitar, o aplicativo baixa o pacote, mostra o andamento do download e pede permissão para instalar depois que o arquivo estiver pronto. Se você cancelar ou fechar o diálogo, nada é instalado e o player continua funcionando normalmente.</p>
 <h2 id="solucao-de-problemas">Solução de problemas</h2>
-<p>Se o aplicativo não abrir corretamente, confira primeiro se os arquivos foram extraídos para uma pasta local e se o sistema tem permissão para acessar os arquivos ou pastas que você tentou abrir.</p>
+<p>Se o aplicativo não abrir corretamente, confira primeiro se a instalação foi concluída sem erros (reinstalar com o instalador mais recente resolve a maioria dos casos) e se o sistema tem permissão para acessar os arquivos ou pastas que você tentou abrir.</p>
 <p>Se o player não encontrar o runtime do MPV, verifique se ele está em um destes caminhos: uma pasta <code>mpv/</code> ao lado do executável, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, o cache salvo da execução anterior ou uma instalação do Chocolatey compatível.</p>
 <p>Se uma mídia não abrir, teste outro arquivo local para separar problema de caminho inválido, permissão ou tipo de arquivo incompatível.</p>
-<p>Se a associação de arquivos não funcionar como esperado, registre a opção nas preferências do Windows e confirme também o app como padrão para os formatos compatíveis.</p>
+<p>Se a associação de arquivos não funcionar como esperado, há dois passos separados a confirmar: primeiro, que o KeyTune foi registrado como opção (durante a instalação ou depois em <strong>Configurações &gt; Geral &gt; Registrar como player padrão</strong>); segundo, que ele foi escolhido como aplicativo padrão para esses formatos nas configurações de apps padrão do Windows — o registro por si só não torna o KeyTune o padrão automaticamente.</p>
 <p>Se a restauração de sessão falhar, abra o app uma vez sem depender da sessão anterior e verifique se a configuração de janela e pasta estão sendo salvas normalmente.</p>
 <p>Se a aba do YouTube Music não carregar ou exibir erros de dependência, abra <code>Ctrl+,</code> &gt; <strong>Recursos adicionais</strong> e confirme que a opção <strong>Ativar recursos adicionais para YouTube Music e YouTube</strong> está marcada. O download inicial pode levar alguns minutos e exige internet. Se as dependências já estiverem instaladas mas a busca ou o carregamento falharem, use a versão nightly do <code>yt-dlp</code> nas mesmas preferências — ela costuma receber correções antes do canal estável.</p>
-<p>Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção <strong>Sessão do YouTube Music</strong> e reconecte a conta.</p>
+<p>Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção <a href="#sessao-do-youtube-music">Sessão do YouTube Music</a> e reconecte a conta.</p>
 <p>Para investigar outros problemas, ative o registro de logs em <code>Ctrl+,</code> &gt; <strong>Geral</strong> &gt; <strong>Registro de logs</strong>. Com <strong>Registrar logs de diagnóstico</strong> ligado e o nível ajustado para <em>Depuração</em>, o player grava informações detalhadas em <code>keytune.log</code> na pasta de dados. Use <strong>Abrir pasta de logs</strong> para localizar o arquivo e, se precisar reportar um problema, anexe-o à issue.</p>
 <h2 id="para-desenvolvedores">Para desenvolvedores</h2>
 <p>O KeyTune é um projeto de código aberto. O repositório, issues, pull requests e releases estão em <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. O fonte deste manual está em <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Gerado em 05/06/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver fonte no GitHub</a>
+        Gerado em 03/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver fonte no GitHub</a>
       </footer>
     </section>
   </main>

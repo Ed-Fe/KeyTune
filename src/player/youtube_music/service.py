@@ -1,7 +1,9 @@
 import os
+import tempfile
 
 from .auth import (
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
+    export_cookies_from_browser,
     get_browser_auth_file_path,
     get_browser_auth_cookie_file_path,
     harden_sensitive_file_permissions,
@@ -290,20 +292,70 @@ class YouTubeMusicService:
                 _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt.")
             )
 
+        target_dir = os.path.dirname(target_path)
+        os.makedirs(target_dir, exist_ok=True)
         ytmusicapi = import_ytmusicapi_module()
-        ytmusicapi.setup(filepath=target_path, headers_raw=normalized_headers_raw)
-        harden_sensitive_file_permissions(target_path)
-        write_browser_auth_cookie_file(
-            raw_auth_input,
-            target_cookie_file_path,
-            source_name=source_name,
-            fallback_headers_raw=normalized_headers_raw,
-        )
-        harden_sensitive_file_permissions(target_cookie_file_path)
+        with tempfile.TemporaryDirectory(prefix="ytmusic_auth_", dir=target_dir) as staging_dir:
+            staged_auth_path = os.path.join(staging_dir, YTMUSIC_BROWSER_AUTH_FILE_NAME)
+            staged_cookie_path = os.path.join(staging_dir, "ytmusic_cookies.txt")
+
+            ytmusicapi.setup(filepath=staged_auth_path, headers_raw=normalized_headers_raw)
+            if not os.path.isfile(staged_auth_path) or os.path.getsize(staged_auth_path) == 0:
+                raise RuntimeError(_("Não foi possível preparar a autenticação do YouTube Music."))
+
+            written_cookie_path = write_browser_auth_cookie_file(
+                raw_auth_input,
+                staged_cookie_path,
+                source_name=source_name,
+                fallback_headers_raw=normalized_headers_raw,
+            )
+            if not written_cookie_path:
+                raise RuntimeError(_("A autenticação informada não contém cookies válidos do YouTube."))
+
+            candidate_client = ytmusicapi.YTMusic(staged_auth_path)
+            account_info = candidate_client.get_account_info()
+            if not isinstance(account_info, dict):
+                raise RuntimeError(_("A resposta da conta do YouTube Music veio em formato inválido."))
+
+            harden_sensitive_file_permissions(staged_auth_path)
+            harden_sensitive_file_permissions(staged_cookie_path)
+            os.replace(staged_auth_path, target_path)
+            os.replace(staged_cookie_path, target_cookie_file_path)
+
         self.clear_client_cache()
+        self._account_info = account_info
         self._reset_stream_playback_mode()
         _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
+
+    def save_browser_auth_from_browser(self, browser_name: str) -> str:
+        """Exporta cookies diretamente do navegador instalado e salva a autenticação.
+
+        Para qualquer navegador não reconhecido, o chamador deve usar
+        :meth:`save_browser_auth` com arquivo ou texto manual.
+
+        Args:
+            browser_name: Identificador do navegador (chave yt-dlp).
+
+        Returns:
+            Caminho do arquivo ``ytmusic_browser.json`` gerado.
+
+        Raises:
+            RuntimeError: Se o navegador não for suportado, o yt-dlp não
+                          estiver disponível, ou a exportação falhar.
+        """
+        _logger.info("YouTube Music browser auth export requested (browser=%s)", browser_name)
+        with tempfile.TemporaryDirectory(prefix="keytune_browser_auth_") as temp_dir:
+            exported_cookie_path = os.path.join(temp_dir, "cookies.txt")
+            export_cookies_from_browser(browser_name, exported_cookie_path)
+            raw_cookie_content = read_auth_file_text(exported_cookie_path)
+            saved_path = self.save_browser_auth(headers_raw=raw_cookie_content)
+        _logger.info(
+            "YouTube Music browser auth from browser saved (browser=%s, path=%s)",
+            browser_name,
+            saved_path,
+        )
+        return saved_path
 
     # -- Account info ----------------------------------------------------------
 

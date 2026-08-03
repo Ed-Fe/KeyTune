@@ -4,6 +4,8 @@ import pathlib
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -14,13 +16,83 @@ if str(SRC_ROOT) not in sys.path:
 from player.youtube_music.auth import (
     build_browser_auth_cookie_file_content,
     create_temporary_browser_auth_cookie_file,
+    export_cookies_from_browser,
     load_saved_playback_auth,
+    prepare_browser_auth_input,
     sanitize_sensitive_text,
     write_browser_auth_cookie_file,
 )
 
 
 class YouTubeMusicAuthTests(unittest.TestCase):
+    def test_export_cookies_filters_other_sites_and_keeps_http_only_cookies(self):
+        cookie_lines = "\n".join(
+            [
+                "# Netscape HTTP Cookie File",
+                "#HttpOnly_.youtube.com\tTRUE\t/\tTRUE\t0\tSID\tyoutube-secret",
+                ".youtube.com\tTRUE\t/\tTRUE\t0\tSAPISID\tsapisid-secret",
+                ".example.com\tTRUE\t/\tTRUE\t0\tSESSION\tother-site-secret",
+                "",
+            ]
+        )
+
+        def fake_run(command, **_kwargs):
+            cookie_path = pathlib.Path(command[command.index("--cookies") + 1])
+            self.assertFalse(cookie_path.exists())
+            cookie_path.write_text(cookie_lines, encoding="utf-8")
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = pathlib.Path(temp_dir) / "youtube-cookies.txt"
+            with patch(
+                "player.youtube_music.yt_dlp_runtime.find_yt_dlp_executable_path",
+                return_value="C:/KeyTune/yt-dlp.exe",
+            ), patch("player.youtube_music.auth.subprocess.run", side_effect=fake_run):
+                exported_path = export_cookies_from_browser("firefox", str(output_path))
+
+            self.assertEqual(exported_path, str(output_path))
+            exported_content = output_path.read_text(encoding="utf-8")
+            self.assertIn("#HttpOnly_.youtube.com", exported_content)
+            self.assertIn("youtube-secret", exported_content)
+            self.assertIn("sapisid-secret", exported_content)
+            self.assertNotIn("example.com", exported_content)
+            self.assertNotIn("other-site-secret", exported_content)
+            prepared_auth = prepare_browser_auth_input(exported_content)
+            self.assertIn("SID=youtube-secret", prepared_auth)
+            self.assertIn("SAPISID=sapisid-secret", prepared_auth)
+            self.assertEqual(
+                [path.name for path in pathlib.Path(temp_dir).iterdir()],
+                ["youtube-cookies.txt"],
+            )
+
+    def test_export_cookies_preserves_existing_output_when_yt_dlp_fails(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = pathlib.Path(temp_dir) / "youtube-cookies.txt"
+            output_path.write_text("autenticação anterior", encoding="utf-8")
+            failed_result = SimpleNamespace(
+                returncode=1,
+                stdout="",
+                stderr="ERROR: Could not copy Chrome cookie database: Permission denied",
+            )
+
+            with patch(
+                "player.youtube_music.yt_dlp_runtime.find_yt_dlp_executable_path",
+                return_value="C:/KeyTune/yt-dlp.exe",
+            ), patch("player.youtube_music.auth.subprocess.run", return_value=failed_result):
+                with self.assertRaisesRegex(RuntimeError, "Feche o chrome completamente"):
+                    export_cookies_from_browser("chrome", str(output_path))
+
+            self.assertEqual(output_path.read_text(encoding="utf-8"), "autenticação anterior")
+
+    def test_export_cookies_rejects_unknown_browser_without_running_yt_dlp(self):
+        with tempfile.TemporaryDirectory() as temp_dir, patch(
+            "player.youtube_music.auth.subprocess.run"
+        ) as run_process:
+            with self.assertRaisesRegex(RuntimeError, "Navegador não reconhecido"):
+                export_cookies_from_browser("desconhecido", str(pathlib.Path(temp_dir) / "cookies.txt"))
+
+        run_process.assert_not_called()
+
     def test_build_browser_auth_cookie_file_content_from_headers(self):
         raw_headers = "\n".join(
             [

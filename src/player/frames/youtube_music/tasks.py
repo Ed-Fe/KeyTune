@@ -105,7 +105,7 @@ class BackgroundTaskMixin:
             wx.EndBusyCursor()
         self._set_youtube_music_operation_state(False)
 
-    def _run_youtube_music_background_task(self, worker, on_success, *, on_error=None):
+    def _run_youtube_music_background_task(self, worker, on_success, *, on_error=None, timeout_ms=None):
         if getattr(self, "_youtube_music_operation_in_progress", False):
             self._announce(_("O YouTube Music já está processando uma solicitação. Aguarde um momento."))
             return False
@@ -115,8 +115,13 @@ class BackgroundTaskMixin:
         self._youtube_music_task_sequence = task_id
         self._youtube_music_active_task_id = task_id
         self._cancel_youtube_music_task_watchdog()
+        effective_timeout_ms = (
+            self._YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS
+            if timeout_ms is None
+            else max(1000, int(timeout_ms))
+        )
         self._youtube_music_task_watchdog = wx.CallLater(
-            self._YOUTUBE_MUSIC_BACKGROUND_TASK_TIMEOUT_MS,
+            effective_timeout_ms,
             self._handle_youtube_music_background_task_timeout,
             task_id,
         )
