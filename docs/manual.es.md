@@ -11,6 +11,8 @@ Este manual presenta las funciones principales de la aplicación y las acciones 
 - Reproducción multimedia con control por teclado
 - Playlists en pestañas
 - Una cola de reproducción para organizar lo que sonará después
+- Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado
+- Temporizador con duraciones predefinidas o pausa al final de la pista
 - Navegación por carpetas con vista previa
 - Ecualizador por pestaña con predefinidos y presets personalizados
 - Un panel de letras con búsqueda automática y copia del texto
@@ -77,6 +79,8 @@ Los atajos para abrir medios, carpetas, playlists y enlaces están en la secció
 - `Ctrl+C`: copiar la ruta o enlace del elemento seleccionado
 - `Ctrl+Shift+S`: guardar la playlist actual
 - `Ctrl+B`: alternar foco entre el navegador de elementos y el reproductor
+- `Ctrl+F`: localizar un elemento en la playlist o carpeta actual
+- `F3` / `Shift+F3`: siguiente o anterior resultado de la búsqueda
 
 ### Cola de reproducción
 
@@ -85,6 +89,21 @@ La cola de reproducción organiza lo que debe sonar después de la pista actual,
 Usa `Ctrl+Shift+F` o el menú **Reproducción > Agregar a la Cola de Reproducción** para agregar o quitar elementos de la cola. Para ver, quitar, reordenar o vaciar toda la cola, usa `Ctrl+Shift+Q` o el menú **Reproducción > Administrar la Cola de Reproducción**.
 
 Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.
+
+### Temporizador
+
+El temporizador pausa la reproducción por sí solo después del tiempo acordado, útil para escuchar algo antes de dormir sin dejar el reproductor sonando toda la noche. **Pausa** en lugar de detener, así que la posición del archivo se conserva y basta con `Espacio` para continuar donde quedó.
+
+Usa `Ctrl+Shift+D` o el menú **Reproducción > Temporizador** para configurarlo. Las opciones son:
+
+- **Duraciones predefinidas**: 5, 10, 15, 30, 45, 60, 90 o 120 minutos, disponibles directamente en el submenú.
+- **Tiempo personalizado**: cualquier valor de 1 a 720 minutos, en el cuadro de configuración.
+- **Al final de la pista actual**: la reproducción termina cuando acabe la pista, sin avanzar a la siguiente, sin repetir y sin traer contenido relacionado.
+- **No usar temporizador**: cancela la programación.
+
+El submenú también incluye **Tiempo restante**, que anuncia cuánto falta, y **Cancelar temporizador**, activo solo cuando hay un temporizador programado.
+
+Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos y cuando falta 1 minuto. El estado del temporizador también entra en el anuncio de estado de la tecla `S`.
 
 ### Atajos de reproducción
 
@@ -107,6 +126,7 @@ Si la cola está vacía, el administrador te lo indica y te pide que primero agr
 - `Ctrl+Alt+L`: alternar el panel de letras
 - `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
 - `Ctrl+Shift+Q`: administrar la cola de reproducción
+- `Ctrl+Shift+D`: configurar el temporizador
 - `T`: anunciar el tiempo actual del medio
 - `V`: anunciar el volumen actual
 - `S`: anunciar el estado del reproductor
@@ -140,6 +160,25 @@ Cuando la pestaña proviene de una carpeta abierta con `Ctrl+Shift+O`, el navega
 #### Localización rápida por escritura
 
 En ambos modos, escribir letras o números mueve la selección al primer elemento cuyo nombre comienza con los caracteres escritos. La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas. Después de un segundo sin escribir, el acumulador de caracteres se reinicia y la siguiente letra inicia una nueva búsqueda.
+
+#### Búsqueda en la playlist o carpeta actual
+
+Para buscar en listas grandes, usa la búsqueda completa en lugar de la escritura rápida. Encuentra el texto en **cualquier parte** del nombre del elemento, no solo al comienzo.
+
+- `Ctrl+F`: abre el cuadro **Localizar elemento**. Escribe el texto y confirma con `Enter` o con el botón **Localizar**.
+- `F3`: va al siguiente resultado.
+- `Shift+F3`: vuelve al resultado anterior.
+
+La búsqueda también se abre desde el menú **Ver > Localizar elemento**, que igualmente ofrece **Siguiente resultado** y **Resultado anterior**.
+
+Detalles útiles:
+
+- La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas, igual que la escritura rápida.
+- Recorre los elementos mostrados en la pestaña activa, así que funciona tanto en playlists locales como en carpetas y en listas provenientes de YouTube Music.
+- La primera búsqueda considera el elemento ya seleccionado; a partir de ahí, `F3` y `Shift+F3` avanzan o retroceden.
+- El lector de pantalla lee el nombre del elemento encontrado. La posición en la búsqueda aparece en la barra de estado, como en «Búsqueda "rock": resultado 2 de 7.», junto con un aviso cuando la búsqueda da la vuelta a la lista.
+- El texto buscado se guarda durante la sesión: `F3` repite la última búsqueda sin reabrir el cuadro. Si aún no hay texto, `F3` abre el cuadro de búsqueda.
+- Si nada coincide, se mantiene la selección actual y el reproductor informa que no hay elementos correspondientes.
 
 Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.
 
@@ -201,7 +240,7 @@ Esta sección solo aparece cuando la integración está activada.
 
 - **Playlists cargadas por vez**: cuántas playlists de la biblioteca se traen en cada carga (5-200). Valores menores aceleran la apertura; al llegar al final de la lista el reproductor ofrece cargar más.
 - **Mixes personalizadas para descubrir**: límite máximo de elementos recorridos en la página inicial de YouTube Music para encontrar mixes personalizadas (5-200). Valores menores hacen que la sincronización sea más rápida.
-- **Reproducir contenido relacionado al final de la playlist (radio automática)**: cuando la última pista de YouTube Music termina naturalmente - o cuando pides la siguiente pista estando en la última -, el reproductor busca pistas relacionadas (la radio de YouTube Music) y continúa reproduciendo automáticamente. Para una transición continua, la búsqueda empieza poco antes del final de la última pista y el enlace de la siguiente ya se resuelve con anticipación, evitando una pausa mientras se descubre el contenido. También se puede activar o desactivar con la tecla `A` durante la reproducción.
+- **Reproducir contenido relacionado al final de la playlist (radio automática)**: cuando la última pista de YouTube Music termina naturalmente - o cuando pides la siguiente pista estando en la última -, el reproductor busca pistas relacionadas (la radio de YouTube Music) y continúa reproduciendo automáticamente. Para una transición continua, la búsqueda empieza poco antes del final de la última pista y el enlace de la siguiente ya se resuelve con anticipación, evitando una pausa mientras se descubre el contenido. También se puede activar o desactivar con la tecla `A` durante la reproducción. Las pistas que ya están en la playlist no se agregan de nuevo, y cuando la radio devuelve solo repetidas el reproductor busca a partir de una pista anterior antes de terminar.
 - **Guardar canciones escuchadas en el historial de YouTube Music**: activada de forma predeterminada. Al escuchar una pista de YouTube Music durante el tiempo suficiente (cerca del 30% de la duración, entre 15 y 30 segundos), el reproductor marca esa pista como vista en el historial de tu cuenta de YouTube Music. Desactívala para reproducir pistas de YouTube Music sin registrar nada en el historial.
 
 ## Ecualizador
@@ -403,6 +442,8 @@ La aplicación fue diseñada para lectores de pantalla y uso por teclado. En gen
 Si usas lector de pantalla, los atajos de anuncio bajo demanda `T`, `V` y `S` (descritos en [Atajos de reproducción](#atajos-de-reproducción)) y la ayuda rápida `F1` ayudan a orientarte sin depender de los eventos automáticos.
 
 Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en `Ctrl+,` > **Accesibilidad**.
+
+La búsqueda de elementos evita anuncios redundantes: como `Ctrl+F`, `F3` y `Shift+F3` mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla `S`.
 
 El panel de letras también está pensado para ese uso: `Ctrl+Alt+L` o la casilla **Letras** en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón **Copiar letra completa**. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.
 

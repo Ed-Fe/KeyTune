@@ -66,6 +66,9 @@ class PlaylistState:
     folder_entries_revision: int = 0
     browser_item_labels: list[str] = field(default_factory=list)
     items_revision: int = 0
+    # Radio queue that produced the last related-autoplay batch, so the next
+    # fetch can continue it instead of opening a new radio around the seed.
+    radio_queue_playlist_id: str | None = None
     equalizer_enabled: bool = False
     equalizer_preset_id: str = DEFAULT_EQUALIZER_PRESET_ID
 

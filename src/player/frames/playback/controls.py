@@ -269,6 +269,14 @@ class PlaybackControlsMixin:
     def _announce_current_volume(self):
         self._announce(_("Volume atual: {volume}%.").format(volume=self.current_volume))
 
+    def _append_sleep_timer_status(self, status_parts):
+        sleep_timer_sentence = getattr(self, "_sleep_timer_status_sentence", None)
+        if not callable(sleep_timer_sentence):
+            return
+        sentence = sleep_timer_sentence()
+        if sentence:
+            status_parts.append(sentence)
+
     def _announce_player_status(self):
         current_tab = self._get_tab_state()
         state = self._get_playlist_state()
@@ -296,6 +304,7 @@ class PlaybackControlsMixin:
                 shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
                 status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
                 status_parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
+            self._append_sleep_timer_status(status_parts)
             self._announce(" ".join(status_parts))
             return
 
@@ -327,4 +336,5 @@ class PlaybackControlsMixin:
             status_parts.append(_("Tempo atual: {time}.").format(time=self._format_time_ms(current_time)))
 
         status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
+        self._append_sleep_timer_status(status_parts)
         self._announce(" ".join(status_parts))

@@ -175,7 +175,7 @@ class KeyNavigationMixin:
         if (
             not event.ControlDown()
             and not event.AltDown()
-            and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1, wx.WXK_TAB)
+            and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1, wx.WXK_F3, wx.WXK_TAB)
             and not self._focused_window_drives_playback()
         ):
             event.Skip()
@@ -183,6 +183,21 @@ class KeyNavigationMixin:
 
         if key_code == wx.WXK_F1:
             self.on_show_keyboard_help(None)
+            return
+
+        # Busca na playlist/pasta ativa. Fica antes do desvio que devolve as
+        # teclas para a lista de itens, senão Ctrl+F e F3 nunca chegariam aqui
+        # com o foco no navegador — que é justamente onde eles são mais usados.
+        if event.ControlDown() and not event.AltDown() and not event.ShiftDown() and key_code in (ord("F"), ord("f")):
+            self._open_item_search_dialog()
+            return
+
+        if key_code == wx.WXK_F3 and not event.ControlDown() and not event.AltDown():
+            self._repeat_item_search(-1 if event.ShiftDown() else 1)
+            return
+
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("D"), ord("d")):
+            self._open_sleep_timer_dialog()
             return
 
         # Ctrl+Alt+L toggles the lyrics panel. Plain Ctrl+L stays reserved for

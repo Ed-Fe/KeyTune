@@ -11,6 +11,8 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 - Reprodução de mídia com controle por teclado
 - Playlists em abas
 - Fila de reprodução independente para organizar o que toca em seguida
+- Busca dentro da playlist ou pasta atual, com navegação entre os resultados por teclado
+- Temporizador com durações prontas ou pausa ao fim da faixa
 - Navegação por pastas com pré-visualização
 - Equalizador por aba com predefinições e presets personalizados
 - Painel de letras com busca automática e cópia do texto
@@ -77,6 +79,8 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+C`: copiar o caminho ou link do item selecionado
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
+- `Ctrl+F`: localizar um item na playlist ou pasta atual
+- `F3` / `Shift+F3`: próximo ou anterior resultado da busca
 
 ### Fila de reprodução
 
@@ -85,6 +89,21 @@ A fila de reprodução organiza o que deve tocar depois da faixa atual, sem depe
 Use `Ctrl+Shift+F` ou o menu **Reprodução > Adicionar à Fila de Reprodução** para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use `Ctrl+Shift+Q` ou o menu **Reprodução > Gerenciar Fila de Reprodução**.
 
 Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.
+
+### Temporizador
+
+O temporizador pausa a reprodução sozinho depois de um tempo combinado — útil para ouvir algo antes de dormir sem deixar o player tocando a noite toda. Ele **pausa** em vez de parar, então a posição da mídia é preservada e basta `Espaço` para continuar de onde parou.
+
+Use `Ctrl+Shift+D` ou o menu **Reprodução > Temporizador** para configurá-lo. As opções são:
+
+- **Durações prontas**: 5, 10, 15, 30, 45, 60, 90 ou 120 minutos, disponíveis direto no submenu.
+- **Tempo personalizado**: qualquer valor de 1 a 720 minutos, na caixa de configuração.
+- **Ao fim da faixa atual**: a reprodução termina quando a faixa acabar, sem avançar para a próxima, sem repetir e sem puxar conteúdo relacionado.
+- **Não usar temporizador**: cancela o agendamento.
+
+O submenu ainda traz **Tempo restante**, que anuncia quanto falta, e **Cancelar temporizador**, ativo apenas quando há um temporizador agendado.
+
+Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta 1 minuto. O estado do temporizador também entra no anúncio de status da tecla `S`.
 
 ### Atalhos de reprodução
 
@@ -107,6 +126,7 @@ Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens 
 - `Ctrl+Alt+L`: alternar o painel de letras
 - `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
 - `Ctrl+Shift+Q`: gerenciar a fila de reprodução
+- `Ctrl+Shift+D`: configurar o temporizador
 - `T`: anunciar o tempo atual da mídia
 - `V`: anunciar o volume atual
 - `S`: anunciar o status do player
@@ -140,6 +160,25 @@ Quando a aba veio de uma pasta aberta com `Ctrl+Shift+O`, o navegador exibe o co
 #### Localização rápida por digitação
 
 Nos dois modos, digitar letras ou números move a seleção para o primeiro item cujo nome começa com os caracteres digitados. A busca ignora acentos e diferenças entre maiúsculas e minúsculas. Após um segundo sem digitar, o acumulador de caracteres é resetado e a próxima letra inicia uma nova busca.
+
+#### Busca na playlist ou pasta atual
+
+Para procurar em listas grandes, use a busca completa em vez da digitação rápida. Ela encontra o texto em **qualquer parte** do nome do item, não apenas no início.
+
+- `Ctrl+F`: abre a caixa **Localizar item**. Digite o texto e confirme com `Enter` ou com o botão **Localizar**.
+- `F3`: vai para o próximo resultado.
+- `Shift+F3`: volta para o resultado anterior.
+
+Também é possível abrir a busca pelo menu **Exibir > Localizar item**, que traz igualmente **Próximo resultado** e **Resultado anterior**.
+
+Detalhes úteis:
+
+- A busca ignora acentos e diferenças entre maiúsculas e minúsculas, do mesmo jeito que a digitação rápida.
+- Ela percorre os itens exibidos na aba ativa, então funciona tanto em playlists locais quanto em pastas e em listas vindas do YouTube Music.
+- A primeira busca considera o item já selecionado; a partir daí, `F3` e `Shift+F3` avançam ou voltam.
+- O leitor de tela lê o nome do item encontrado. A posição na busca aparece na barra de status, como em “Busca “rock”: resultado 2 de 7.”, junto com um aviso quando a busca dá a volta na lista.
+- O texto procurado fica guardado durante a sessão: `F3` repete a última busca sem reabrir a caixa. Se ainda não houver um texto, `F3` abre a caixa de busca.
+- Se nada corresponder, a seleção atual é mantida e o player informa que não há itens correspondentes.
 
 Para tarefas de organização, vale pensar nas abas como espaços de trabalho independentes: uma aba para tocar algo agora, outra para revisar a biblioteca e outra para testes ou coleções temporárias.
 
@@ -201,7 +240,7 @@ Essa seção só aparece quando a integração está ativada.
 
 - **Playlists carregadas por vez**: quantas playlists da biblioteca são trazidas em cada carregamento (5–200). Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais.
 - **Mixes personalizadas para descobrir**: limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas (5–200). Valores menores deixam a sincronização mais rápida.
-- **Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução.
+- **Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução. Faixas que já estão na playlist não são adicionadas de novo, e quando a rádio devolve só repetidas o player busca a partir de uma faixa anterior antes de encerrar.
 - **Salvar músicas escutadas no histórico do YouTube Music**: ligada por padrão. Ao escutar uma faixa do YouTube Music por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player marca essa faixa como assistida no histórico da sua conta do YouTube Music. Desative para tocar faixas do YouTube Music sem registrar nada no histórico.
 
 ## Equalizador
@@ -405,6 +444,8 @@ O aplicativo foi projetado para leitores de tela e uso por teclado. Em geral:
 Se você usa leitor de tela, os atalhos de anúncio sob demanda `T`, `V` e `S` (descritos em [Atalhos de reprodução](#atalhos-de-reproducao)) e a ajuda rápida `F1` ajudam a se localizar sem depender dos eventos automáticos.
 
 Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em `Ctrl+,` > **Acessibilidade**.
+
+A busca de itens evita anúncios redundantes: como `Ctrl+F`, `F3` e `Shift+F3` movem a seleção para o item encontrado, quem lê a faixa é o próprio leitor de tela, e a posição na busca fica só na barra de status. O temporizador, por sua vez, avisa ao ser agendado, faltando 5 minutos, faltando 1 minuto e ao pausar a reprodução; seu estado também aparece no anúncio da tecla `S`.
 
 O painel de letras também foi pensado para esse uso: `Ctrl+Alt+L` ou a caixa **Letras** na área de tempo mostram ou ocultam o painel, e o texto pode ser lido, navegado com as setas e copiado pelo botão **Copiar letra completa**. Ao trocar de faixa, o player tenta buscar a letra automaticamente primeiro no LRCLIB e depois no YouTube Music.
 

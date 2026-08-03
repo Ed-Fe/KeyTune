@@ -12,6 +12,8 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Session restore for tabs, playback position, volume, and the current item
 - Persistent preferences stored in `settings.json`
 - Recent files, folders, and playlists
+- Item search inside the active playlist or folder (`Ctrl+F`, `F3`, `Shift+F3`)
+- Sleep timer with preset durations, a custom duration, or an end-of-track stop (`Ctrl+Shift+D`)
 - Built-in equalizer presets plus custom presets
 - YouTube Music integration for search, link-based open flows, and library refresh
 - Optional YouTube Music related-content autoplay (radio) when a playlist ends
@@ -111,6 +113,10 @@ For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 - `src/player/library/media_scan.py` — supported media checks and folder scanning helpers
 - `src/player/library/playlist_io.py` — `.m3u` / `.m3u8` load and save helpers
 - `src/player/library/browser.py` — side panel for playlist and folder navigation
+- `src/player/library/search_dialog.py` — item search dialog (`Ctrl+F`)
+- `src/player/frames/item_search.py` — item search coordination and result navigation
+- `src/player/frames/sleep_timer.py` — sleep timer scheduling and countdown handling
+- `src/player/sleep_timer/dialog.py` — sleep timer configuration dialog
 - `src/player/preferences/dialog.py` — preferences UI
 - `src/player/preferences/models.py` — persistent user settings model
 - `src/player/preferences/storage.py` — persistent user settings storage

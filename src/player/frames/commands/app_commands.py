@@ -176,6 +176,8 @@ class AppCommandsMixin:
             self.progress_timer.Stop()
         if hasattr(self, "crossfade_timer") and self.crossfade_timer.IsRunning():
             self.crossfade_timer.Stop()
+        if hasattr(self, "sleep_timer") and self.sleep_timer.IsRunning():
+            self.sleep_timer.Stop()
         self._dispose_equalizer_ui_cache()
 
         # Signal every background worker to stop up front so their shutdown

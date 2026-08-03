@@ -6,6 +6,7 @@ from ...constants import (
     REPEAT_ALL,
     REPEAT_ONE,
     YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+    YOUTUBE_MUSIC_RADIO_MAX_SEED_ATTEMPTS,
     YOUTUBE_MUSIC_RADIO_PREFETCH_LEAD_MS,
 )
 from ...i18n import _
@@ -133,26 +134,50 @@ class RelatedAutoplayMixin:
 
     def _begin_related_youtube_music_fetch(self, seed_media_path, *, advance_when_ready):
         video_id = extract_video_id_from_text(seed_media_path)
-        youtube_music_service = self._youtube_music_service_for_playback()
-        if not video_id or youtube_music_service is None:
+        if not video_id or self._youtube_music_service_for_playback() is None:
             return
 
         self._related_autoplay = {
             "seed": seed_media_path,
             "status": "pending",
             "advance_when_ready": bool(advance_when_ready),
+            "tried_video_ids": [video_id],
         }
+        self._dispatch_related_youtube_music_fetch(seed_media_path, video_id)
+
+    def _related_autoplay_known_video_ids(self, state):
+        """videoIds the playlist already holds, so the radio cannot repeat them."""
+        known_video_ids = []
+        for item in getattr(state, "items", None) or ():
+            video_id = extract_video_id_from_text(item)
+            if video_id:
+                known_video_ids.append(video_id)
+        return known_video_ids
+
+    def _dispatch_related_youtube_music_fetch(self, seed_media_path, radio_video_id):
+        youtube_music_service = self._youtube_music_service_for_playback()
+        if youtube_music_service is None:
+            return
+
+        state = self._active_state_awaiting_related(seed_media_path)
+        exclude_video_ids = self._related_autoplay_known_video_ids(state) if state is not None else []
+        continue_playlist_id = getattr(state, "radio_queue_playlist_id", None) if state is not None else None
 
         def worker():
             radio_content = None
             error_message = ""
             try:
                 radio_content = youtube_music_service.get_radio_content(
-                    video_id, limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT
+                    radio_video_id,
+                    limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+                    exclude_video_ids=exclude_video_ids,
+                    continue_playlist_id=continue_playlist_id,
                 )
             except Exception as exc:
                 error_message = str(exc) or exc.__class__.__name__
-                _logger.warning("Related content fetch failed for videoId=%s: %s", video_id, exc, exc_info=True)
+                _logger.warning(
+                    "Related content fetch failed for videoId=%s: %s", radio_video_id, exc, exc_info=True
+                )
 
             wx.CallAfter(
                 self._finish_related_youtube_music_fetch,
@@ -162,6 +187,39 @@ class RelatedAutoplayMixin:
             )
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def _next_related_autoplay_seed(self, state, tried_video_ids):
+        """Pick an earlier track of the playlist to seed a different radio."""
+        already_tried = set(tried_video_ids or ())
+        for item in reversed(getattr(state, "items", None) or ()):
+            video_id = extract_video_id_from_text(item)
+            if video_id and video_id not in already_tried:
+                return video_id
+        return None
+
+    def _retry_related_youtube_music_with_new_seed(self, request, state, seed_media_path):
+        """Re-seed the radio when a fetch brought back only known tracks.
+
+        The last track's radio revolves around the very tracks that produced it,
+        so once they are all filtered out an earlier item is a better seed than
+        giving up and ending the playlist.
+        """
+        tried_video_ids = request.setdefault("tried_video_ids", [])
+        if len(tried_video_ids) >= YOUTUBE_MUSIC_RADIO_MAX_SEED_ATTEMPTS:
+            return False
+
+        next_video_id = self._next_related_autoplay_seed(state, tried_video_ids)
+        if not next_video_id:
+            return False
+
+        tried_video_ids.append(next_video_id)
+        request["status"] = "pending"
+        # The remembered queue had nothing new either, so stop trying to continue
+        # it and let the new seed open a fresh radio.
+        state.radio_queue_playlist_id = None
+        _logger.info("Related content had no new tracks; retrying the radio with an earlier seed track.")
+        self._dispatch_related_youtube_music_fetch(seed_media_path, next_video_id)
+        return True
 
     def _active_state_awaiting_related(self, seed_media_path):
         """Return the active playlist state if it is still sitting on *seed*."""
@@ -198,6 +256,8 @@ class RelatedAutoplayMixin:
 
         item_urls = list(getattr(radio_content, "item_urls", None) or [])
         if not item_urls:
+            if self._retry_related_youtube_music_with_new_seed(request, state, seed_media_path):
+                return
             _logger.info("Related content fetch returned no usable tracks for the seed track.")
             request["status"] = "failed"
             if advance_when_ready:
@@ -207,6 +267,9 @@ class RelatedAutoplayMixin:
 
         if request.get("status") != "appended":
             _logger.info("Related content added %d track(s) to playlist %r.", len(item_urls), state.title)
+            # Remember the queue so the next fetch continues it instead of
+            # opening a new radio around the same pool of tracks.
+            state.radio_queue_playlist_id = str(getattr(radio_content, "playlist_id", "") or "").strip() or None
             state.append_items(item_urls, getattr(radio_content, "item_labels", None))
             request["status"] = "appended"
             self._refresh_playlist_browser()

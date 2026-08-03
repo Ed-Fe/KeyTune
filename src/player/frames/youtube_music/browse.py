@@ -1,4 +1,4 @@
-from ...i18n import _
+from ...i18n import _, ngettext
 import threading
 
 import wx
@@ -67,7 +67,11 @@ class BrowseMixin:
                 search_summary = _("Em alta em {country}: nenhum destaque disponível.").format(country=country_label)
             else:
                 search_summary = (
-                    _("Em alta em {country}: {count} lista(s) de destaque.").format(country=country_label, count=result_count)
+                    ngettext(
+                        "Em alta em {country}: {count} lista de destaque.",
+                        "Em alta em {country}: {count} listas de destaque.",
+                        result_count,
+                    ).format(country=country_label, count=result_count)
                 )
             self._set_youtube_music_search_results(
                 chart_results,
@@ -152,7 +156,11 @@ class BrowseMixin:
                 search_summary = _("Moods e gêneros — {category}: nenhuma playlist disponível.").format(category=category_title)
             else:
                 search_summary = (
-                    _("Moods e gêneros — {category}: {count} playlist(s).").format(category=category_title, count=result_count)
+                    ngettext(
+                        "Moods e gêneros — {category}: {count} playlist.",
+                        "Moods e gêneros — {category}: {count} playlists.",
+                        result_count,
+                    ).format(category=category_title, count=result_count)
                 )
             self._set_youtube_music_search_results(
                 results,
@@ -188,7 +196,11 @@ class BrowseMixin:
             if result_count == 0:
                 search_summary = _("Curtidas: nenhuma faixa curtida encontrada.")
             else:
-                search_summary = _("Curtidas: {count} faixa(s).").format(count=result_count)
+                search_summary = ngettext(
+                    "Curtidas: {count} faixa.",
+                    "Curtidas: {count} faixas.",
+                    result_count,
+                ).format(count=result_count)
             self._set_youtube_music_search_results(
                 results,
                 search_summary=search_summary,
@@ -223,7 +235,11 @@ class BrowseMixin:
             if result_count == 0:
                 search_summary = _("Histórico: nenhuma faixa recente encontrada.")
             else:
-                search_summary = _("Histórico: {count} faixa(s) recentes.").format(count=result_count)
+                search_summary = ngettext(
+                    "Histórico: {count} faixa recente.",
+                    "Histórico: {count} faixas recentes.",
+                    result_count,
+                ).format(count=result_count)
             self._set_youtube_music_search_results(
                 results,
                 search_summary=search_summary,
@@ -328,16 +344,36 @@ class BrowseMixin:
 
             playlist_count = len(playlists)
             if has_more:
-                summary_message = _(
-                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)"
-                    " e {mixes} mix(es) personalizada(s)."
-                    " Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-                ).format(playlists=playlist_count, mixes=mix_added)
+                summary_message = " ".join(
+                    (
+                        ngettext(
+                            "Biblioteca do YouTube Music: {count} playlist carregada.",
+                            "Biblioteca do YouTube Music: {count} playlists carregadas.",
+                            playlist_count,
+                        ).format(count=playlist_count),
+                        ngettext(
+                            "{count} mix personalizada.",
+                            "{count} mixes personalizadas.",
+                            mix_added,
+                        ).format(count=mix_added),
+                        _("Use 'Carregar mais' ou desça até o final da lista para trazer mais."),
+                    )
+                )
             else:
-                summary_message = _(
-                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)"
-                    " e {mixes} mix(es) personalizada(s)."
-                ).format(playlists=playlist_count, mixes=mix_added)
+                summary_message = " ".join(
+                    (
+                        ngettext(
+                            "Biblioteca do YouTube Music: {count} playlist carregada.",
+                            "Biblioteca do YouTube Music: {count} playlists carregadas.",
+                            playlist_count,
+                        ).format(count=playlist_count),
+                        ngettext(
+                            "{count} mix personalizada.",
+                            "{count} mixes personalizadas.",
+                            mix_added,
+                        ).format(count=mix_added),
+                    )
+                )
             self._set_youtube_music_library_cache(
                 merged,
                 status_message=summary_message,
@@ -346,8 +382,20 @@ class BrowseMixin:
             self._refresh_youtube_music_menu_state()
             if announce:
                 self._announce(
-                    _("Biblioteca do YouTube Music atualizada: {playlists} playlist(s)"
-                      " e {mixes} mix(es).").format(playlists=playlist_count, mixes=mix_added)
+                    " ".join(
+                        (
+                            ngettext(
+                                "Biblioteca do YouTube Music atualizada: {count} playlist.",
+                                "Biblioteca do YouTube Music atualizada: {count} playlists.",
+                                playlist_count,
+                            ).format(count=playlist_count),
+                            ngettext(
+                                "{count} mix.",
+                                "{count} mixes.",
+                                mix_added,
+                            ).format(count=mix_added),
+                        )
+                    )
                 )
 
         def on_error(exc):
@@ -415,21 +463,35 @@ class BrowseMixin:
 
             self._youtube_music_library_limit = next_limit
             if has_more:
-                summary_message = _(
-                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s)."
-                    " Há mais para carregar."
-                ).format(playlists=playlist_count)
+                summary_message = " ".join(
+                    (
+                        ngettext(
+                            "Biblioteca do YouTube Music: {count} playlist carregada.",
+                            "Biblioteca do YouTube Music: {count} playlists carregadas.",
+                            playlist_count,
+                        ).format(count=playlist_count),
+                        _("Há mais para carregar."),
+                    )
+                )
             else:
-                summary_message = _(
-                    "Biblioteca do YouTube Music: {playlists} playlist(s) carregada(s) (todas)."
-                ).format(playlists=playlist_count)
+                summary_message = ngettext(
+                    "Biblioteca do YouTube Music: {count} playlist carregada (todas).",
+                    "Biblioteca do YouTube Music: {count} playlists carregadas (todas).",
+                    playlist_count,
+                ).format(count=playlist_count)
             self._set_youtube_music_library_cache(
                 merged,
                 status_message=summary_message,
                 has_more_playlists=has_more,
             )
             self._refresh_youtube_music_menu_state()
-            self._announce(_("{count} playlist(s) na biblioteca agora.").format(count=playlist_count))
+            self._announce(
+                ngettext(
+                    "{count} playlist na biblioteca agora.",
+                    "{count} playlists na biblioteca agora.",
+                    playlist_count,
+                ).format(count=playlist_count)
+            )
 
         def on_error(exc):
             wx.MessageBox(
@@ -460,21 +522,43 @@ class BrowseMixin:
                 existing_ids.add(mix.playlist_id)
                 added += 1
             merged.sort(key=lambda playlist: playlist.title.casefold())
-            summary_message = _(
-                "Biblioteca do YouTube Music: {items} item(ns) "
-                "({mixes} mix(es) personalizada(s) adicionada(s))."
-            ).format(items=len(merged), mixes=added)
+            summary_message = " ".join(
+                (
+                    ngettext(
+                        "Biblioteca do YouTube Music: {count} item.",
+                        "Biblioteca do YouTube Music: {count} itens.",
+                        len(merged),
+                    ).format(count=len(merged)),
+                    ngettext(
+                        "{count} mix personalizada adicionada.",
+                        "{count} mixes personalizadas adicionadas.",
+                        added,
+                    ).format(count=added),
+                )
+            )
             self._set_youtube_music_library_cache(merged, status_message=summary_message)
             self._refresh_youtube_music_menu_state()
             if announce and added:
-                self._announce(_("{count} mix(es) personalizada(s) carregada(s).").format(count=added))
+                self._announce(
+                    ngettext(
+                        "{count} mix personalizada carregada.",
+                        "{count} mixes personalizadas carregadas.",
+                        added,
+                    ).format(count=added)
+                )
 
         def on_error(_exc):
             existing_playlists = self._youtube_music_library_cache()
-            summary_message = _(
-                "Biblioteca do YouTube Music: {items} item(ns)."
-                " Não foi possível carregar mixes personalizadas."
-            ).format(items=len(existing_playlists))
+            summary_message = " ".join(
+                (
+                    ngettext(
+                        "Biblioteca do YouTube Music: {count} item.",
+                        "Biblioteca do YouTube Music: {count} itens.",
+                        len(existing_playlists),
+                    ).format(count=len(existing_playlists)),
+                    _("Não foi possível carregar mixes personalizadas."),
+                )
+            )
             self._youtube_music_library_status_message = summary_message
             self._refresh_youtube_music_screen_later()
             self._refresh_youtube_music_menu_state()

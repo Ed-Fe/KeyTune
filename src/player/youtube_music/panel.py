@@ -2,7 +2,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..library.browser import VirtualItemsListCtrl
-from ..i18n import _
+from ..i18n import _, ngettext
 from .models import YOUTUBE_SEARCH_SCOPE_OPTIONS
 
 
@@ -581,7 +581,11 @@ class YouTubeMusicTabPanel(wx.Panel):
 				else:
 					summary_suffix = _(" Há mais para carregar.") if self._has_more_playlists else ""
 					self.library_summary_label.SetLabel(
-						_("Biblioteca: {count} playlist(s) e mix(es) disponíveis.").format(count=len(self._all_playlists)) + summary_suffix
+						ngettext(
+							"Biblioteca: {count} playlist ou mix disponível.",
+							"Biblioteca: {count} playlists e mixes disponíveis.",
+							len(self._all_playlists),
+						).format(count=len(self._all_playlists)) + summary_suffix
 					)
 			else:
 				self.library_summary_label.SetLabel(_("Biblioteca: conecte uma conta para listar playlists e mixes."))

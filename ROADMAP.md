@@ -3,12 +3,12 @@
 This roadmap outlines the planned direction for KeyTune. Priorities may change
 as features are tested and feedback is collected.
 
-## Version 1.3.0 — Playback Experience
+## Version 1.3.0 — Playback Experience (delivered)
 
-- Connect to YouTube Music directly through a supported browser session
-- Search within the active playlist or folder, with accessible result navigation
-- Add a sleep timer with preset durations and an end-of-track option
-- Refresh the user manuals and release documentation
+- [x] Connect to YouTube Music directly through a supported browser session
+- [x] Search within the active playlist or folder, with accessible result navigation
+- [x] Add a sleep timer with preset durations and an end-of-track option
+- [x] Refresh the user manuals and release documentation
 
 ## Version 1.4.0 — Smart Library
 

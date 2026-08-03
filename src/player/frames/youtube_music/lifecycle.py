@@ -1,4 +1,4 @@
-from ...i18n import _
+from ...i18n import _, ngettext
 import os
 import threading
 
@@ -405,7 +405,11 @@ class LifecycleMixin:
                 playlist_content.title,
                 browser_item_labels=playlist_content.item_labels,
                 source_path=service.build_playlist_source(normalized_playlist_id),
-                announce_message=_("Playlist do YouTube Music carregada: {title}. {count} item(ns).").format(title=playlist_content.title, count=len(playlist_content.item_urls)),
+                announce_message=ngettext(
+                    "Playlist do YouTube Music carregada: {title}. {count} item.",
+                    "Playlist do YouTube Music carregada: {title}. {count} itens.",
+                    len(playlist_content.item_urls),
+                ).format(title=playlist_content.title, count=len(playlist_content.item_urls)),
             )
 
         def on_error(exc):

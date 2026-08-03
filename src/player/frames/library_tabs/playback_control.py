@@ -301,6 +301,19 @@ class PlaylistPlaybackMixin:
         self._save_settings()
 
     def _handle_media_end(self):
+        # O temporizador "fim da faixa" tem prioridade sobre repetição, fila e
+        # avanço automático: a sessão termina aqui, com a posição preservada.
+        if self._sleep_timer_should_stop_at_media_end():
+            _logger.debug("Media end: sleep timer armed for end of track; stopping playback.")
+            end_state = self._get_playlist_state()
+            if end_state:
+                end_state.was_playing = False
+                end_state.last_position_ms = 0
+            self._handle_sleep_timer_media_end()
+            self._update_time_bar()
+            self._refresh_playlist_browser()
+            return
+
         state = self._get_playlist_state()
         if not state:
             _logger.debug("Media end: no active playlist state.")

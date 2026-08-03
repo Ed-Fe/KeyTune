@@ -6,11 +6,13 @@ from ..log import setup_logging
 from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
 from .equalizer import FrameEqualizerMixin
+from .item_search import FrameItemSearchMixin
 from .library import FrameLibraryMixin
 from .lyrics_panel import LyricsPanel
 from .playback import FramePlaybackMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
+from .sleep_timer import FrameSleepTimerMixin
 from .smtc import FrameSmtcMixin
 from .ui import FrameUIMixin
 from .update import FrameUpdateMixin
@@ -23,6 +25,8 @@ class MediaPlayerFrame(
     FrameSessionMixin,
     FrameRecentsMixin,
     FrameEqualizerMixin,
+    FrameItemSearchMixin,
+    FrameSleepTimerMixin,
     FrameLibraryMixin,
     FramePlaybackMixin,
     FrameSmtcMixin,
@@ -52,6 +56,8 @@ class MediaPlayerFrame(
         self._startup_initialization_started = False
         self._startup_ready = False
         self._suppress_next_auto_advance = False
+        self._item_search_query = ""
+        self._initialize_sleep_timer_state()
 
         self._build_menu_bar()
         self._build_ui()
