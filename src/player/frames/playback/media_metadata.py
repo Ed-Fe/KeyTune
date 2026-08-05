@@ -122,7 +122,12 @@ class MediaMetadataMixin:
                 state.refresh_browser_item_labels()
                 updated = True
 
-            if len(state.items) == 1 and not state.source_path and state.title != item_label:
+            if (
+                len(state.items) == 1
+                and not state.source_path
+                and not is_youtube_music_media(normalized_media_path)
+                and state.title != item_label
+            ):
                 state.title = item_label
                 state_index = self._resolve_playlist_state_index(state)
                 if state_index != wx.NOT_FOUND:

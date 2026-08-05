@@ -9,13 +9,15 @@ background listener is started so future launches can forward here.
 
 import threading
 from multiprocessing.connection import Client, Listener
+import os
 
 from .constants import APP_TITLE
 from .log import get_logger
 
 logger = get_logger(__name__)
 
-_PIPE_ADDRESS = rf"\\.\pipe\{APP_TITLE}_SingleInstance"
+_pipe_suffix = "_Dev" if os.environ.get("KEYTUNE_DEV_MODE") else ""
+_PIPE_ADDRESS = rf"\\.\pipe\{APP_TITLE}_SingleInstance{_pipe_suffix}"
 _PIPE_AUTH_KEY = b"keytune-single-instance"
 
 ACTION_OPEN = "open"

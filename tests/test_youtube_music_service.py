@@ -445,9 +445,9 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         authenticated_client.get_playlist.assert_not_called()
         authenticated_client.delete_playlist.assert_not_called()
 
-    def test_get_media_feedback_status_reads_like_status_from_song(self):
+    def test_get_media_feedback_status_reads_like_status_from_video_details(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "LIKE"}
+        authenticated_client.get_song.return_value = {"videoDetails": {"likeStatus": "LIKE"}}
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
         service = YouTubeMusicService()
@@ -460,6 +460,23 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         self.assertEqual(status, "LIKE")
         authenticated_client.get_song.assert_called_once_with("abc123DEF45")
         fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
+
+    def test_get_media_feedback_status_falls_back_to_root_like_status(self):
+        # Fallback defensivo: se a API retornar likeStatus na raiz (formato legado),
+        # o status ainda deve ser lido corretamente.
+        authenticated_client = Mock()
+        authenticated_client.get_song.return_value = {"likeStatus": "INDIFFERENT"}
+        fake_ytmusic_cls = Mock(return_value=authenticated_client)
+        fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(status, "INDIFFERENT")
+        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
 
     def test_rate_media_feedback_calls_rate_song_for_like(self):
         authenticated_client = Mock()

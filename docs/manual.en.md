@@ -77,6 +77,7 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: move to the next or previous tab
 - `Ctrl+Shift+E`: open the equalizer for the active tab
 - `Ctrl+C`: copy the path or link of the selected item
+- `Ctrl+Shift+C`: copy the link or path of the currently playing media
 - `Ctrl+Shift+S`: save the current playlist
 - `Ctrl+B`: switch focus between the item browser and the player
 - `Ctrl+F`: find an item in the current playlist or folder

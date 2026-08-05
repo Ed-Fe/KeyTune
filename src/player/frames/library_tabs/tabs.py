@@ -295,6 +295,10 @@ class TabManagementMixin:
 
         state, target_index = self._resolve_target_playlist_tab()
 
+        title_str = str(title or "").strip()
+        if title_str.casefold().startswith("watch?v=") or "music.youtube.com/watch" in title_str.casefold() or "youtube.com/watch" in title_str.casefold():
+            title = _("Seleção do YouTube Music")
+
         state.finish_library_load()
         state.clear_folder_location()
         state.title = title

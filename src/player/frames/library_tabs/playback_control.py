@@ -133,11 +133,12 @@ class PlaylistPlaybackMixin:
     def _update_title(self):
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
-            title_parts = [APP_TITLE, current_tab.title]
             active_state = self._get_active_playlist_state()
             if active_state and active_state.current_media_path:
-                title_parts.append(self._media_label(active_state.current_media_path))
-            self.SetTitle(" — ".join(title_parts))
+                media_name = self._media_label(active_state.current_media_path)
+                self.SetTitle(f"{APP_TITLE} — {media_name}")
+            else:
+                self.SetTitle(f"{APP_TITLE} — {current_tab.title}")
             return
 
         state = self._get_playlist_state()
@@ -158,7 +159,7 @@ class PlaylistPlaybackMixin:
             return
 
         media_name = self._media_label(state.current_media_path)
-        self.SetTitle(f"{APP_TITLE} — {state.title} — {media_name}")
+        self.SetTitle(f"{APP_TITLE} — {media_name}")
         refresh_smtc = getattr(self, "_refresh_smtc_state", None)
         if callable(refresh_smtc):
             refresh_smtc()

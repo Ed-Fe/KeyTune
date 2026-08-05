@@ -229,7 +229,10 @@ class KeyNavigationMixin:
             return
 
         if event.ControlDown() and not event.AltDown() and key_code in (ord("C"), ord("c")):
-            if not event.ShiftDown():
+            if event.ShiftDown():
+                self.on_copy_playing_media_path(None)
+                return
+            else:
                 self.on_copy_current_item_path(None)
                 return
 

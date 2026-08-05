@@ -50,7 +50,7 @@ class LibraryStateMixin:
             self._youtube_music_service = service
         return service
 
-    def _get_youtube_music_media_feedback_status(self, media_path):
+    def _get_youtube_music_media_feedback_status(self, media_path, force_refresh=False):
         normalized_media_path = str(media_path or "").strip()
         if not normalized_media_path or not is_youtube_music_media(normalized_media_path):
             return None
@@ -60,7 +60,7 @@ class LibraryStateMixin:
             return None
 
         try:
-            return service.get_media_feedback_status(normalized_media_path)
+            return service.get_media_feedback_status(normalized_media_path, force_refresh=force_refresh)
         except Exception:
             return None
 

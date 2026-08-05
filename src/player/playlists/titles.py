@@ -9,6 +9,9 @@ def default_playlist_title(number):
 
 def build_playlist_title(items, explicit_title=None):
     if explicit_title:
+        title_str = str(explicit_title).strip()
+        if title_str.casefold().startswith("watch?v=") or "music.youtube.com/watch" in title_str.casefold() or "youtube.com/watch" in title_str.casefold():
+            return _("Seleção do YouTube Music")
         return explicit_title
 
     normalized_items = list(items)
@@ -16,7 +19,13 @@ def build_playlist_title(items, explicit_title=None):
         return default_playlist_title(1)
 
     if len(normalized_items) == 1:
-        return os.path.splitext(os.path.basename(normalized_items[0]))[0]
+        item = str(normalized_items[0]).strip()
+        if "watch?v=" in item.casefold() or "music.youtube.com" in item.casefold() or "youtube.com" in item.casefold():
+            return _("Seleção do YouTube Music")
+        basename = os.path.basename(item)
+        if basename.casefold().startswith("watch?v="):
+            return _("Seleção do YouTube Music")
+        return os.path.splitext(basename)[0]
 
     parent_directories = {os.path.dirname(path) for path in normalized_items}
     if len(parent_directories) == 1:

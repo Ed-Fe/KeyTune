@@ -50,6 +50,8 @@ def _default_remote_media_label(media_path):
     if not normalized_path:
         return ""
     media_name = os.path.basename(normalized_path)
+    if media_name.casefold().startswith("watch?v="):
+        return _("Mídia do YouTube Music")
     return media_name or normalized_path
 
 

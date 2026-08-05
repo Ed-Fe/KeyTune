@@ -587,11 +587,11 @@ class YouTubeMusicLibraryManager:
 
         if is_watch_playlist_id(normalized_playlist_id):
             playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=200)
-            playlist_title = str(fallback_title or "Mix do YouTube Music").strip()
+            playlist_title = _("Seleção do YouTube Music")
             tracks = playlist.get("tracks") or []
         else:
             playlist = client.get_playlist(normalized_playlist_id, limit=None)
-            playlist_title = str(playlist.get("title") or fallback_title or "Playlist do YouTube Music").strip()
+            playlist_title = str(playlist.get("title") or fallback_title or _("Playlist do YouTube Music")).strip()
             tracks = playlist.get("tracks") or []
 
         item_urls = []

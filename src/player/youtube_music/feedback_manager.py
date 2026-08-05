@@ -10,6 +10,47 @@ from ..i18n import _
 _logger = get_logger(__name__)
 
 
+def _extract_like_status_from_song_dict(song):
+    if not isinstance(song, dict):
+        return None
+
+    candidates = []
+
+    video_details = song.get("videoDetails")
+    if isinstance(video_details, dict):
+        candidates.extend([
+            video_details.get("likeStatus"),
+            video_details.get("likeState"),
+            video_details.get("rating"),
+        ])
+
+    candidates.extend([
+        song.get("likeStatus"),
+        song.get("likeState"),
+        song.get("rating"),
+    ])
+
+    user_detail = song.get("musicItemUserDetail")
+    if isinstance(user_detail, dict):
+        candidates.extend([
+            user_detail.get("likeStatus"),
+            user_detail.get("likeState"),
+        ])
+
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        normalized = str(candidate).strip().upper()
+        if normalized in {"LIKE", "DISLIKE", "INDIFFERENT"}:
+            return normalized
+        if normalized in {"LIKED", "FAVORITE"}:
+            return "LIKE"
+        if normalized in {"DISLIKED"}:
+            return "DISLIKE"
+
+    return None
+
+
 class YouTubeMusicFeedbackManager:
     """Handles like/dislike ratings, history reporting, and search-result saving.
 
@@ -21,6 +62,10 @@ class YouTubeMusicFeedbackManager:
     def __init__(self, get_client_fn, import_module_fn):
         self._get_client = get_client_fn
         self._import_module = import_module_fn
+        self._feedback_cache = {}
+
+    def clear_cache(self):
+        self._feedback_cache.clear()
 
     def save_search_result(self, search_result):
         """Save a search result (song or playlist) to the user's library."""
@@ -47,22 +92,28 @@ class YouTubeMusicFeedbackManager:
 
         raise RuntimeError(_("O resultado selecionado não pode ser salvo no YouTube Music."))
 
-    def get_media_feedback_status(self, media_path):
+    def get_media_feedback_status(self, media_path, force_refresh=False):
         """Return the like status (``LIKE``, ``DISLIKE``, ``INDIFFERENT``) of a media item, or ``None``."""
         normalized_media_path = normalize_media_path(media_path)
         video_id = extract_video_id_from_text(normalized_media_path)
         if not video_id:
             return None
 
-        client = self._get_client(require_auth=True)
-        song = client.get_song(video_id)
-        if not isinstance(song, dict):
-            return None
+        if not force_refresh and video_id in self._feedback_cache:
+            return self._feedback_cache[video_id]
 
-        like_status = str(song.get("likeStatus") or "").strip().upper()
-        if like_status in {"LIKE", "DISLIKE", "INDIFFERENT"}:
+        client = self._get_client(require_auth=True)
+        try:
+            song = client.get_song(video_id)
+        except Exception:
+            return self._feedback_cache.get(video_id)
+
+        like_status = _extract_like_status_from_song_dict(song)
+        if like_status:
+            self._feedback_cache[video_id] = like_status
             return like_status
-        return None
+
+        return self._feedback_cache.get(video_id)
 
     def rate_media_feedback(self, media_path, rating):
         """Send a like/dislike/indifferent rating for a media item."""
@@ -86,11 +137,8 @@ class YouTubeMusicFeedbackManager:
 
         client = self._get_client(require_auth=True)
         client.rate_song(video_id, like_status)
+        self._feedback_cache[video_id] = normalized_rating
 
-        # A API do YouTube Music propaga avaliações de forma assíncrona: o
-        # get_song() imediatamente após rate_song() frequentemente retorna o
-        # status anterior, gerando falso alarme.  Se rate_song() completou
-        # sem exceção, a avaliação foi aceita pelo servidor.
         if like_status == LikeStatus.LIKE:
             return _("Mídia atual curtida no YouTube Music.")
         if like_status == LikeStatus.DISLIKE:

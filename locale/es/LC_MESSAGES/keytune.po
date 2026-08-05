@@ -3835,3 +3835,18 @@ msgstr "Austria"
 
 msgid "Índia"
 msgstr "India"
+
+msgid "Caminho da mídia atual copiado."
+msgstr "Ruta del elemento actual copiada."
+
+msgid "Link da mídia atual copiado."
+msgstr "Enlace del elemento actual copiado."
+
+msgid "Mídia do YouTube Music"
+msgstr "Elemento de YouTube Music"
+
+msgid "Nenhuma mídia está sendo reproduzida no momento."
+msgstr "Ningún elemento se está reproduciendo en este momento."
+
+msgid "Seleção do YouTube Music"
+msgstr "Selección de YouTube Music"
