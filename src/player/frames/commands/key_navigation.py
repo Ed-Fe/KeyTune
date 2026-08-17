@@ -225,13 +225,23 @@ class KeyNavigationMixin:
             self._cycle_tabs(-1 if event.ShiftDown() else 1)
             return
 
+        # A mídia em execução pertence à playlist ativa, mesmo quando uma tela
+        # auxiliar está aberta. Trate o atalho antes do roteamento dessas telas.
+        if (
+            event.ControlDown()
+            and event.ShiftDown()
+            and not event.AltDown()
+            and key_code in (ord("C"), ord("c"))
+        ):
+            self.on_copy_playing_media_path(None)
+            return
+
         if self._handle_screen_tab_key_down(event, current_tab):
             return
 
-        if event.ControlDown() and not event.AltDown() and key_code in (ord("C"), ord("c")):
-            if not event.ShiftDown():
-                self.on_copy_current_item_path(None)
-                return
+        if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("C"), ord("c")):
+            self.on_copy_current_item_path(None)
+            return
 
         if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
             self.on_paste_open_from_clipboard(None)

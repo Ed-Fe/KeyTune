@@ -36,7 +36,7 @@ class PlaylistEditMixin:
         if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
             return False
 
-        current_status = self._get_youtube_music_media_feedback_status(media_path)
+        current_status = self._get_youtube_music_media_feedback_status(media_path, force_refresh=True)
         normalized_rating = str(rating or "").strip().upper()
         if current_status == normalized_rating:
             if normalized_rating == "DISLIKE":

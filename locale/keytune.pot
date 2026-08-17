@@ -1301,6 +1301,10 @@ msgstr ""
 msgid "Caminho copiado."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Caminho da mídia atual copiado."
+msgstr ""
+
 #: src/player/youtube_music/auth.py
 msgid "Caminho de saída inválido para o arquivo de cookies."
 msgstr ""
@@ -2629,6 +2633,10 @@ msgstr ""
 msgid "Link copiado."
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Link da mídia atual copiado."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Link da playlist, mix ou vídeo do YouTube Music"
 msgstr ""
@@ -2829,6 +2837,10 @@ msgstr ""
 msgid "Mídia atual marcada como não gostei no YouTube Music."
 msgstr ""
 
+#: src/player/frames/playback/helpers.py
+msgid "Mídia do YouTube Music"
+msgstr ""
+
 #: src/player/frames/library_tabs/item_removal.py
 msgid "Mídia fechada"
 msgstr ""
@@ -2976,6 +2988,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "Nenhuma mídia está carregada para avaliar."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Nenhuma mídia está sendo reproduzida no momento."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -3782,6 +3798,10 @@ msgid_plural "Playlist carregada: {title}. {count} itens."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/youtube_music/library_manager.py
+msgid "Playlist do YouTube Music"
+msgstr ""
+
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Playlist do YouTube Music carregada: {title}. {count} item."
 msgid_plural "Playlist do YouTube Music carregada: {title}. {count} itens."
@@ -4388,7 +4408,10 @@ msgstr ""
 msgid "Seleção aberta em nova playlist: {title}."
 msgstr ""
 
+#: src/player/frames/library_tabs/tabs.py
 #: src/player/frames/youtube_music/search.py
+#: src/player/playlists/titles.py
+#: src/player/youtube_music/library_manager.py
 msgid "Seleção do YouTube Music"
 msgstr ""
 

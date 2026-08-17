@@ -99,7 +99,7 @@ class SearchMixin:
         for search_result in search_results:
             playlist_id = str(getattr(search_result, "playlist_id", "") or "").strip()
             if playlist_id:
-                playlist_content = service.get_playlist_content(playlist_id, fallback_title=search_result.title)
+                playlist_content = service.get_playlist_content(playlist_id, fallback_title=_("Seleção do YouTube Music"))
                 if not playlist_content.item_urls:
                     skipped_count += 1
                     continue
@@ -121,10 +121,6 @@ class SearchMixin:
         return prepared_items, prepared_labels, playlist_result_count, skipped_count
 
     def _youtube_music_search_results_playlist_title(self, search_results):
-        if len(search_results) == 1:
-            title = str(getattr(search_results[0], "title", "") or "").strip()
-            if title:
-                return title
         return _("Seleção do YouTube Music")
 
     def _announce_youtube_music_playlist_addition(self, added_count, target_title, playlist_result_count, skipped_count):

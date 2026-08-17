@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 import main
+from player.single_instance import build_pipe_address
 
 
 class MainArgumentFilteringTests(unittest.TestCase):
@@ -33,6 +34,10 @@ class MainArgumentFilteringTests(unittest.TestCase):
             initial_paths,
             [r"C:\midia\track.mp3", r"C:\playlists\favoritas.m3u8"],
         )
+
+    def test_development_instance_uses_a_separate_pipe(self):
+        self.assertEqual(build_pipe_address(dev_mode=False), r"\\.\pipe\KeyTune_SingleInstance")
+        self.assertEqual(build_pipe_address(dev_mode=True), r"\\.\pipe\KeyTune_SingleInstance_Dev")
 
     @patch("player.smtc.SmtcService")
     def test_smtc_smoke_test_starts_and_stops_service(self, service_class):

@@ -77,6 +77,7 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar para a próxima ou aba anterior
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
 - `Ctrl+C`: copiar o caminho ou link do item selecionado
+- `Ctrl+Shift+C`: copiar o link ou caminho da mídia atual em execução
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 - `Ctrl+F`: localizar um item na playlist ou pasta atual

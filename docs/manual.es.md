@@ -77,6 +77,7 @@ Los atajos para abrir medios, carpetas, playlists y enlaces están en la secció
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar a la pestaña siguiente o anterior
 - `Ctrl+Shift+E`: abrir el ecualizador de la pestaña activa
 - `Ctrl+C`: copiar la ruta o enlace del elemento seleccionado
+- `Ctrl+Shift+C`: copiar el enlace o ruta del elemento actualmente en reproducción
 - `Ctrl+Shift+S`: guardar la playlist actual
 - `Ctrl+B`: alternar foco entre el navegador de elementos y el reproductor
 - `Ctrl+F`: localizar un elemento en la playlist o carpeta actual

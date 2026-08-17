@@ -175,6 +175,7 @@ class YouTubeMusicService:
 
     def clear_client_cache(self):
         self._client_provider.clear_cache()
+        self._feedback.clear_cache()
         self._account_info = None
         self._stream_cache_manager.clear()
 
@@ -458,8 +459,8 @@ class YouTubeMusicService:
     def save_search_result(self, search_result):
         return self._feedback.save_search_result(search_result)
 
-    def get_media_feedback_status(self, media_path):
-        return self._feedback.get_media_feedback_status(media_path)
+    def get_media_feedback_status(self, media_path, force_refresh=False):
+        return self._feedback.get_media_feedback_status(media_path, force_refresh=force_refresh)
 
     def rate_media_feedback(self, media_path, rating):
         return self._feedback.rate_media_feedback(media_path, rating)

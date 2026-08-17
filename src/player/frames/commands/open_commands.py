@@ -92,6 +92,23 @@ class OpenCommandsMixin:
         else:
             self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
 
+    def on_copy_playing_media_path(self, _event=None):
+        state = self._get_active_playlist_state()
+        media_path = str(getattr(state, "current_media_path", "") or "").strip() if state else ""
+        if not media_path:
+            self._announce(_("Nenhuma mídia está sendo reproduzida no momento."))
+            return False
+
+        if not self._copy_text_to_clipboard(media_path):
+            self._announce(_("Não foi possível acessar a área de transferência."))
+            return False
+
+        if is_remote_media_path(media_path):
+            self._announce(_("Link da mídia atual copiado."))
+        else:
+            self._announce(_("Caminho da mídia atual copiado."))
+        return True
+
     def on_paste_open_from_clipboard(self, _event):
         if isinstance(self._get_tab_state(), ScreenTabState):
             return

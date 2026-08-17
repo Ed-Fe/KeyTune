@@ -4,7 +4,12 @@ import wx
 
 from ...i18n import _
 from ...library import folder_display_name
-from ...playlists import PlaylistState, ScreenTabState, default_playlist_title
+from ...playlists import (
+    PlaylistState,
+    ScreenTabState,
+    default_playlist_title,
+    is_youtube_watch_reference,
+)
 
 
 class TabManagementMixin:
@@ -294,6 +299,9 @@ class TabManagementMixin:
             normalized_browser_labels = [os.path.basename(path) or path for path in normalized_items]
 
         state, target_index = self._resolve_target_playlist_tab()
+
+        if is_youtube_watch_reference(title):
+            title = _("Seleção do YouTube Music")
 
         state.finish_library_load()
         state.clear_folder_location()
