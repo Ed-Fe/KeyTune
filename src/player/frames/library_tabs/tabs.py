@@ -4,7 +4,12 @@ import wx
 
 from ...i18n import _
 from ...library import folder_display_name
-from ...playlists import PlaylistState, ScreenTabState, default_playlist_title
+from ...playlists import (
+    PlaylistState,
+    ScreenTabState,
+    default_playlist_title,
+    is_youtube_watch_reference,
+)
 
 
 class TabManagementMixin:
@@ -295,8 +300,7 @@ class TabManagementMixin:
 
         state, target_index = self._resolve_target_playlist_tab()
 
-        title_str = str(title or "").strip()
-        if title_str.casefold().startswith("watch?v=") or "music.youtube.com/watch" in title_str.casefold() or "youtube.com/watch" in title_str.casefold():
+        if is_youtube_watch_reference(title):
             title = _("Seleção do YouTube Music")
 
         state.finish_library_load()

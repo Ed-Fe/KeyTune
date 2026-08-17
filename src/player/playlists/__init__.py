@@ -5,7 +5,7 @@ from .models import (
     PlaylistState,
     ScreenTabState,
 )
-from .titles import build_folder_tab_title, build_playlist_title, default_playlist_title
+from .titles import build_folder_tab_title, build_playlist_title, default_playlist_title, is_youtube_watch_reference
 
 __all__ = [
     "TAB_TYPE_FOLDER",
@@ -16,4 +16,5 @@ __all__ = [
     "build_folder_tab_title",
     "build_playlist_title",
     "default_playlist_title",
+    "is_youtube_watch_reference",
 ]

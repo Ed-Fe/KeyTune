@@ -1,6 +1,9 @@
 import os
 from urllib.parse import urlparse
 
+from ...i18n import _
+from ...playlists import is_youtube_watch_reference
+
 
 def is_music_youtube_url(media_path):
     from ...youtube_music.playlists import is_music_youtube_url as classifier
@@ -49,9 +52,9 @@ def _default_remote_media_label(media_path):
     normalized_path = str(media_path or "").strip().rstrip("\\/")
     if not normalized_path:
         return ""
-    media_name = os.path.basename(normalized_path)
-    if media_name.casefold().startswith("watch?v="):
+    if is_youtube_watch_reference(normalized_path):
         return _("Mídia do YouTube Music")
+    media_name = os.path.basename(normalized_path)
     return media_name or normalized_path
 
 

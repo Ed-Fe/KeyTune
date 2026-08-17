@@ -8,10 +8,10 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Adicionado
-- **Atalho para copiar o link da mídia em execução**: `Ctrl+Shift+C` copia diretamente o link ou caminho da mídia atual para a área de transferência a qualquer momento, com anúncio via leitor de tela.
+- **Atalho para copiar o link da mídia em execução**: `Ctrl+Shift+C` copia diretamente o link ou caminho da mídia atual para a área de transferência em qualquer aba, com anúncio via leitor de tela.
 
 ### Corrigido
-- **Consulta em tempo real de curtidas no YouTube Music**: a checagem de status ao curtir/descurtir (`Ctrl+L`) realiza consulta ao vivo à API do YouTube Music com extrator abrangente e cache em memória, identificando corretamente faixas que já haviam sido curtidas na conta do usuário.
+- **Consulta em tempo real de curtidas no YouTube Music**: a checagem de status ao curtir/descurtir (`Ctrl+L`) consulta ao vivo a fila da API do YouTube Music e usa cache em memória, identificando corretamente faixas que já haviam sido curtidas na conta do usuário.
 - **Formatação limpa do título da janela**: o título da janela durante a reprodução exibe diretamente `KeyTune — [Nome da Música]`, omitindo rótulos genéricos de aba ou URLs brutas do YouTube (`watch?v=...`).
 
 ## [1.3.0] - 2026-08-03

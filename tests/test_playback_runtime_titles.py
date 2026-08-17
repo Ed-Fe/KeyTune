@@ -11,6 +11,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.frames.playback import (
+    _default_remote_media_label,
     _looks_like_stream_artifact_title,
     _should_apply_runtime_stream_title,
 )
@@ -48,6 +49,12 @@ class PlaybackRuntimeTitleTests(unittest.TestCase):
                 "master.m3u8",
                 "Rádio Cultura FM",
             )
+        )
+
+    def test_youtube_watch_url_uses_translated_generic_fallback(self):
+        self.assertEqual(
+            _default_remote_media_label("https://music.youtube.com/watch?v=abc123DEF45"),
+            "Mídia do YouTube Music",
         )
 
 

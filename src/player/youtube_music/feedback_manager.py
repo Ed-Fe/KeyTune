@@ -10,43 +10,39 @@ from ..i18n import _
 _logger = get_logger(__name__)
 
 
-def _extract_like_status_from_song_dict(song):
-    if not isinstance(song, dict):
+def _normalize_like_status(value):
+    if value is None:
         return None
 
-    candidates = []
+    normalized = str(value).strip().upper()
+    if normalized in {"LIKE", "DISLIKE", "INDIFFERENT"}:
+        return normalized
+    if normalized in {"LIKED", "FAVORITE"}:
+        return "LIKE"
+    if normalized == "DISLIKED":
+        return "DISLIKE"
 
-    video_details = song.get("videoDetails")
-    if isinstance(video_details, dict):
-        candidates.extend([
-            video_details.get("likeStatus"),
-            video_details.get("likeState"),
-            video_details.get("rating"),
-        ])
+    return None
 
-    candidates.extend([
-        song.get("likeStatus"),
-        song.get("likeState"),
-        song.get("rating"),
-    ])
 
-    user_detail = song.get("musicItemUserDetail")
-    if isinstance(user_detail, dict):
-        candidates.extend([
-            user_detail.get("likeStatus"),
-            user_detail.get("likeState"),
-        ])
+def _extract_like_status_from_watch_playlist(watch_playlist, video_id):
+    if not isinstance(watch_playlist, dict):
+        return None
 
-    for candidate in candidates:
-        if candidate is None:
+    normalized_video_id = str(video_id or "").strip()
+    for track in watch_playlist.get("tracks") or []:
+        if not isinstance(track, dict):
             continue
-        normalized = str(candidate).strip().upper()
-        if normalized in {"LIKE", "DISLIKE", "INDIFFERENT"}:
-            return normalized
-        if normalized in {"LIKED", "FAVORITE"}:
-            return "LIKE"
-        if normalized in {"DISLIKED"}:
-            return "DISLIKE"
+
+        candidates = [track]
+        counterpart = track.get("counterpart")
+        if isinstance(counterpart, dict):
+            candidates.append(counterpart)
+
+        for candidate in candidates:
+            if str(candidate.get("videoId") or "").strip() != normalized_video_id:
+                continue
+            return _normalize_like_status(candidate.get("likeStatus"))
 
     return None
 
@@ -104,11 +100,11 @@ class YouTubeMusicFeedbackManager:
 
         client = self._get_client(require_auth=True)
         try:
-            song = client.get_song(video_id)
+            watch_playlist = client.get_watch_playlist(videoId=video_id, limit=1)
         except Exception:
             return self._feedback_cache.get(video_id)
 
-        like_status = _extract_like_status_from_song_dict(song)
+        like_status = _extract_like_status_from_watch_playlist(watch_playlist, video_id)
         if like_status:
             self._feedback_cache[video_id] = like_status
             return like_status

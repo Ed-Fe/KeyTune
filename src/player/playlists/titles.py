@@ -1,6 +1,26 @@
 import os
+from urllib.parse import parse_qs, urlparse
 
 from ..i18n import _
+
+
+_YOUTUBE_HOSTS = {"music.youtube.com", "www.youtube.com", "youtube.com", "m.youtube.com"}
+
+
+def is_youtube_watch_reference(value):
+    normalized_value = str(value or "").strip()
+    if not normalized_value:
+        return False
+    if normalized_value.casefold().startswith("watch?v="):
+        return True
+
+    parsed_value = urlparse(normalized_value)
+    host = str(parsed_value.hostname or "").casefold().rstrip(".")
+    return (
+        host in _YOUTUBE_HOSTS
+        and str(parsed_value.path or "").rstrip("/").casefold() == "/watch"
+        and bool(parse_qs(parsed_value.query).get("v"))
+    )
 
 
 def default_playlist_title(number):
@@ -9,8 +29,7 @@ def default_playlist_title(number):
 
 def build_playlist_title(items, explicit_title=None):
     if explicit_title:
-        title_str = str(explicit_title).strip()
-        if title_str.casefold().startswith("watch?v=") or "music.youtube.com/watch" in title_str.casefold() or "youtube.com/watch" in title_str.casefold():
+        if is_youtube_watch_reference(explicit_title):
             return _("Seleção do YouTube Music")
         return explicit_title
 
@@ -20,11 +39,9 @@ def build_playlist_title(items, explicit_title=None):
 
     if len(normalized_items) == 1:
         item = str(normalized_items[0]).strip()
-        if "watch?v=" in item.casefold() or "music.youtube.com" in item.casefold() or "youtube.com" in item.casefold():
+        if is_youtube_watch_reference(item):
             return _("Seleção do YouTube Music")
         basename = os.path.basename(item)
-        if basename.casefold().startswith("watch?v="):
-            return _("Seleção do YouTube Music")
         return os.path.splitext(basename)[0]
 
     parent_directories = {os.path.dirname(path) for path in normalized_items}

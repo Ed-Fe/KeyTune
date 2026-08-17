@@ -445,9 +445,14 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         authenticated_client.get_playlist.assert_not_called()
         authenticated_client.delete_playlist.assert_not_called()
 
-    def test_get_media_feedback_status_reads_like_status_from_video_details(self):
+    def test_get_media_feedback_status_reads_current_track_from_watch_playlist(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"videoDetails": {"likeStatus": "LIKE"}}
+        authenticated_client.get_watch_playlist.return_value = {
+            "tracks": [
+                {"videoId": "other123456", "likeStatus": "INDIFFERENT"},
+                {"videoId": "abc123DEF45", "likeStatus": "LIKE"},
+            ]
+        }
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
         service = YouTubeMusicService()
@@ -458,14 +463,20 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
 
         self.assertEqual(status, "LIKE")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        authenticated_client.get_watch_playlist.assert_called_once_with(videoId="abc123DEF45", limit=1)
         fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
 
-    def test_get_media_feedback_status_falls_back_to_root_like_status(self):
-        # Fallback defensivo: se a API retornar likeStatus na raiz (formato legado),
-        # o status ainda deve ser lido corretamente.
+    def test_get_media_feedback_status_reads_matching_counterpart(self):
         authenticated_client = Mock()
-        authenticated_client.get_song.return_value = {"likeStatus": "INDIFFERENT"}
+        authenticated_client.get_watch_playlist.return_value = {
+            "tracks": [
+                {
+                    "videoId": "song1234567",
+                    "likeStatus": "INDIFFERENT",
+                    "counterpart": {"videoId": "abc123DEF45", "likeStatus": "LIKE"},
+                }
+            ]
+        }
         fake_ytmusic_cls = Mock(return_value=authenticated_client)
         fake_module = SimpleNamespace(YTMusic=fake_ytmusic_cls)
         service = YouTubeMusicService()
@@ -475,8 +486,29 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         ):
             status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
 
-        self.assertEqual(status, "INDIFFERENT")
-        authenticated_client.get_song.assert_called_once_with("abc123DEF45")
+        self.assertEqual(status, "LIKE")
+        authenticated_client.get_watch_playlist.assert_called_once_with(videoId="abc123DEF45", limit=1)
+
+    def test_get_media_feedback_status_uses_cache_until_forced_refresh(self):
+        authenticated_client = Mock()
+        authenticated_client.get_watch_playlist.side_effect = [
+            {"tracks": [{"videoId": "abc123DEF45", "likeStatus": "LIKE"}]},
+            {"tracks": [{"videoId": "abc123DEF45", "likeStatus": "INDIFFERENT"}]},
+        ]
+        fake_module = SimpleNamespace(YTMusic=Mock(return_value=authenticated_client))
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "has_saved_browser_auth", return_value=True
+        ):
+            first_status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
+            cached_status = service.get_media_feedback_status("https://music.youtube.com/watch?v=abc123DEF45")
+            refreshed_status = service.get_media_feedback_status(
+                "https://music.youtube.com/watch?v=abc123DEF45", force_refresh=True
+            )
+
+        self.assertEqual((first_status, cached_status, refreshed_status), ("LIKE", "LIKE", "INDIFFERENT"))
+        self.assertEqual(authenticated_client.get_watch_playlist.call_count, 2)
 
     def test_rate_media_feedback_calls_rate_song_for_like(self):
         authenticated_client = Mock()

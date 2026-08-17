@@ -7,17 +7,25 @@ exits.  A launch carrying file paths (e.g. from Explorer) is delivered as an
 background listener is started so future launches can forward here.
 """
 
+import os
 import threading
 from multiprocessing.connection import Client, Listener
-import os
 
 from .constants import APP_TITLE
 from .log import get_logger
 
 logger = get_logger(__name__)
 
-_pipe_suffix = "_Dev" if os.environ.get("KEYTUNE_DEV_MODE") else ""
-_PIPE_ADDRESS = rf"\\.\pipe\{APP_TITLE}_SingleInstance{_pipe_suffix}"
+
+def build_pipe_address(*, dev_mode=None):
+    """Return the production or opt-in development named-pipe address."""
+    if dev_mode is None:
+        dev_mode = bool(os.environ.get("KEYTUNE_DEV_MODE"))
+    pipe_suffix = "_Dev" if dev_mode else ""
+    return rf"\\.\pipe\{APP_TITLE}_SingleInstance{pipe_suffix}"
+
+
+_PIPE_ADDRESS = build_pipe_address()
 _PIPE_AUTH_KEY = b"keytune-single-instance"
 
 ACTION_OPEN = "open"

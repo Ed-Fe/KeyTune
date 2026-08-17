@@ -12,7 +12,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.frames.library_tabs.tabs import TabManagementMixin
-from player.playlists import PlaylistState
+from player.playlists import PlaylistState, build_playlist_title, is_youtube_watch_reference
 
 
 class PreparedPlaylistTests(unittest.TestCase):
@@ -44,6 +44,20 @@ class PreparedPlaylistTests(unittest.TestCase):
             index=2,
             announce_message="Playlist carregada.",
         )
+
+
+class PlaylistTitleTests(unittest.TestCase):
+    def test_youtube_watch_url_uses_generic_playlist_title(self):
+        media_path = "https://music.youtube.com/watch?v=abc123DEF45"
+
+        self.assertTrue(is_youtube_watch_reference(media_path))
+        self.assertEqual(build_playlist_title([media_path]), "Seleção do YouTube Music")
+
+    def test_local_file_with_youtube_text_keeps_its_file_name(self):
+        media_path = r"C:\Músicas\youtube.com tutorial.mp3"
+
+        self.assertFalse(is_youtube_watch_reference(media_path))
+        self.assertEqual(build_playlist_title([media_path]), "youtube.com tutorial")
 
 
 if __name__ == "__main__":
