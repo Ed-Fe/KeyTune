@@ -3,6 +3,7 @@ from .browse import (
     normalize_mood_categories,
     normalize_mood_playlists,
     normalize_track_items,
+    tolerant_library_playlist_parsing,
 )
 from .charts import normalize_chart_results
 from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
@@ -150,16 +151,14 @@ class YouTubeMusicLibraryManager:
             except (TypeError, ValueError):
                 normalized_limit = None
 
-        try:
-            raw_playlists = client.get_library_playlists(limit=normalized_limit)
-        except TypeError:
-            raw_playlists = client.get_library_playlists()
-
+        raw_playlists = self._fetch_library_playlists(client, normalized_limit)
         raw_playlist_count = len(raw_playlists or [])
 
         playlists = []
         seen_playlist_ids = set()
         for item in raw_playlists or []:
+            if not isinstance(item, dict):
+                continue
             playlist_id = str(item.get("playlistId") or item.get("browseId") or "").strip()
             title = str(item.get("title") or "").strip()
             if not playlist_id or not title:
@@ -180,6 +179,60 @@ class YouTubeMusicLibraryManager:
         has_more = bool(normalized_limit) and raw_playlist_count >= normalized_limit
         playlists.sort(key=lambda playlist: playlist.title.casefold())
         return playlists, has_more
+
+    def _fetch_library_playlists(self, client, limit):
+        """Fetch the raw library playlist items, surviving ytmusicapi crashes.
+
+        ytmusicapi parses every tile of the library grid with ``parse_playlist``
+        and no per-item guard, so one malformed tile aborts the whole listing —
+        in practice a playlist YouTube Music serves without cover art, which
+        makes the unguarded thumbnail lookup raise ``KeyError: 'thumbnails'``.
+
+        Two fallbacks keep the tab usable, worst case degrading to an incomplete
+        list instead of an error:
+
+        1. retry with a tolerant ``parse_playlist`` so only the offending tile
+           loses detail; continuations still work, so large libraries page on;
+        2. if the failure is outside that parser, walk the raw
+           ``FEmusic_liked_playlists`` browse response, which depends on no
+           ytmusicapi parser at all but only sees the first page.
+        """
+        try:
+            return self._call_library_playlists(client, limit)
+        except Exception as exc:
+            _logger.warning(
+                "ytmusicapi could not parse the library playlists (%s); retrying tolerantly.", exc
+            )
+
+        try:
+            with tolerant_library_playlist_parsing():
+                return self._call_library_playlists(client, limit)
+        except Exception as exc:
+            _logger.warning(
+                "Tolerant parse of the library playlists failed too (%s); using the raw browse response.",
+                exc,
+            )
+
+        return self._fetch_library_playlists_fallback(client)
+
+    @staticmethod
+    def _call_library_playlists(client, limit):
+        try:
+            return client.get_library_playlists(limit=limit)
+        except TypeError:
+            # Older ytmusicapi builds may not accept the ``limit`` keyword.
+            return client.get_library_playlists()
+
+    @staticmethod
+    def _fetch_library_playlists_fallback(client):
+        send_request = getattr(client, "_send_request", None)
+        if not callable(send_request):
+            return []
+        try:
+            response = send_request("browse", {"browseId": "FEmusic_liked_playlists"})
+        except Exception:
+            return []
+        return extract_browse_playlists_from_response(response)
 
     def get_personalized_mixes(self, *, limit=None):
         """Return personalized mixes discovered from the user's home feed."""

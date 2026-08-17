@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+from contextlib import contextmanager
 from dataclasses import dataclass, replace
 
 from ..i18n import _
@@ -132,11 +134,7 @@ def _collect_two_row_items(node, tiles):
 
 
 def _playlist_from_two_row_item(tile):
-    browse_endpoint = (
-        ((tile.get("navigationEndpoint") or {}).get("browseEndpoint") or {})
-        if isinstance(tile, dict)
-        else {}
-    )
+    browse_endpoint = _browse_endpoint_from_two_row_item(tile)
     browse_id = str(browse_endpoint.get("browseId") or "").strip()
     page_type = str(
         (
@@ -163,7 +161,81 @@ def _playlist_from_two_row_item(tile):
     subtitle_runs = (tile.get("subtitle") or {}).get("runs") or []
     description = "".join(str(run.get("text") or "") for run in subtitle_runs).strip()
 
-    return {"playlistId": playlist_id, "title": title, "description": description}
+    playlist = {"playlistId": playlist_id, "title": title, "description": description}
+
+    # Mirror how ytmusicapi reads the track count out of a "<author> • Playlist
+    # • <n> músicas" subtitle, so callers see the same shape either way.
+    if len(subtitle_runs) == 3:
+        count_text = str(subtitle_runs[2].get("text") or "").strip()
+        if re.search(r"\d+ ", count_text):
+            playlist["count"] = count_text.split(" ")[0]
+
+    return playlist
+
+
+def _browse_endpoint_from_two_row_item(tile):
+    """Return the tile's ``browseEndpoint``, checking both places it appears.
+
+    Most tiles carry it at the top level, but ytmusicapi reads it off the first
+    title run instead — and library playlist tiles are not always consistent.
+    Trying both keeps this parser usable as a fallback for either shape.
+    """
+    if not isinstance(tile, dict):
+        return {}
+
+    candidates = [tile.get("navigationEndpoint")]
+    title_runs = (tile.get("title") or {}).get("runs") or []
+    if title_runs and isinstance(title_runs[0], dict):
+        candidates.append(title_runs[0].get("navigationEndpoint"))
+
+    for candidate in candidates:
+        browse_endpoint = (candidate or {}).get("browseEndpoint") or {}
+        if browse_endpoint.get("browseId"):
+            return browse_endpoint
+    return {}
+
+
+@contextmanager
+def tolerant_library_playlist_parsing():
+    """Temporarily make ytmusicapi's library playlist parser skip bad tiles.
+
+    ``ytmusicapi.parsers.browsing.parse_playlist`` navigates to the tile
+    thumbnail *without* ``none_if_absent``, so a single library tile served
+    without cover art (``thumbnail: {}``) raises ``KeyError`` and aborts the
+    whole listing.  Still unguarded as of ytmusicapi 1.12.1.
+
+    ``ytmusicapi.mixins.library`` imports that function into its own namespace
+    and both the first page and the continuations resolve it there, so swapping
+    that one name covers the entire fetch — unlike parsing the raw response,
+    which would stop at the first page.  Tiles the original parser chokes on are
+    rebuilt by :func:`_playlist_from_two_row_item` (the thumbnail is dropped,
+    which no caller here uses).
+
+    Falls through as a no-op when the module layout no longer matches, leaving
+    the caller with ytmusicapi's own behavior rather than a new failure.
+    """
+    try:
+        from ytmusicapi.mixins import library as library_mixin
+    except Exception:
+        yield
+        return
+
+    original_parse_playlist = getattr(library_mixin, "parse_playlist", None)
+    if not callable(original_parse_playlist):
+        yield
+        return
+
+    def parse_playlist_tolerantly(tile):
+        try:
+            return original_parse_playlist(tile)
+        except (KeyError, IndexError, TypeError, AttributeError):
+            return _playlist_from_two_row_item(tile) or {}
+
+    library_mixin.parse_playlist = parse_playlist_tolerantly
+    try:
+        yield
+    finally:
+        library_mixin.parse_playlist = original_parse_playlist
 
 
 def normalize_track_items(raw_items, *, badge):
