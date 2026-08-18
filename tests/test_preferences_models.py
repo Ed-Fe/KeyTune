@@ -63,6 +63,63 @@ class AppSettingsTests(unittest.TestCase):
         self.assertEqual(restored_settings.youtube_music_dependency_update_interval_hours, 1)
         self.assertEqual(restored_settings.youtube_music_dependency_last_auto_update_epoch, 0)
 
+    def test_smart_library_settings_round_trip(self):
+        settings = AppSettings(
+            smart_library_enabled=False,
+            smart_library_index_opened_folders=False,
+            smart_library_history_enabled=False,
+            smart_library_history_limit=1200,
+            smart_library_resume_enabled=False,
+            smart_library_resume_minimum_minutes=25,
+            smart_library_resume_edge_seconds=45,
+            smart_library_cache_limit=9000,
+            smart_library_indexed_folders=["C:\\Musica", "  ", "D:\\Podcasts"],
+        )
+
+        restored_settings = AppSettings.from_dict(settings.to_dict())
+
+        self.assertFalse(restored_settings.smart_library_enabled)
+        self.assertFalse(restored_settings.smart_library_index_opened_folders)
+        self.assertFalse(restored_settings.smart_library_history_enabled)
+        self.assertEqual(restored_settings.smart_library_history_limit, 1200)
+        self.assertFalse(restored_settings.smart_library_resume_enabled)
+        self.assertEqual(restored_settings.smart_library_resume_minimum_minutes, 25)
+        self.assertEqual(restored_settings.smart_library_resume_edge_seconds, 45)
+        self.assertEqual(restored_settings.smart_library_cache_limit, 9000)
+        self.assertEqual(restored_settings.smart_library_indexed_folders, ["C:\\Musica", "D:\\Podcasts"])
+
+    def test_smart_library_numbers_are_clamped(self):
+        restored_settings = AppSettings.from_dict(
+            {
+                "smart_library_history_limit": 3,
+                "smart_library_resume_minimum_minutes": 0,
+                "smart_library_resume_edge_seconds": 9000,
+                "smart_library_cache_limit": 1,
+            }
+        )
+
+        self.assertEqual(restored_settings.smart_library_history_limit, 50)
+        self.assertEqual(restored_settings.smart_library_resume_minimum_minutes, 1)
+        self.assertEqual(restored_settings.smart_library_resume_edge_seconds, 300)
+        self.assertEqual(restored_settings.smart_library_cache_limit, 100)
+
+    def test_smart_library_resume_windows_are_exposed_in_milliseconds(self):
+        settings = AppSettings(
+            smart_library_resume_minimum_minutes=10,
+            smart_library_resume_edge_seconds=30,
+        )
+
+        self.assertEqual(settings.smart_library_resume_minimum_ms, 600000)
+        self.assertEqual(settings.smart_library_resume_edge_ms, 30000)
+
+    def test_smart_library_defaults_survive_an_old_settings_file(self):
+        restored_settings = AppSettings.from_dict({"default_volume": 70})
+
+        self.assertTrue(restored_settings.smart_library_enabled)
+        self.assertTrue(restored_settings.smart_library_history_enabled)
+        self.assertTrue(restored_settings.smart_library_resume_enabled)
+        self.assertEqual(restored_settings.smart_library_indexed_folders, [])
+
 
 if __name__ == "__main__":
     unittest.main()

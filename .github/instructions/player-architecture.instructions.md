@@ -16,6 +16,12 @@ applyTo:
   - `youtube_music/playlists.py` for playlist and mix normalization plus source helpers
   - `youtube_music/streams.py` for `yt-dlp` stream resolution
   - `youtube_music/models.py` for small shared data containers
+- For smart-library changes (busca global, favoritos, avaliações, histórico, retomada, cache):
+  - `frames/smart_library/` for window behavior, split by concern (lifecycle, indexing, search, ratings, history, resume, playback tracking)
+  - `smart_library/service.py` for the facade the frame talks to — reads are synchronous, writes and folder scans go to its worker thread
+  - `smart_library/database.py` for the SQLite connection and schema; one access module per table alongside it
+  - `smart_library/*_dialog.py` for the wx dialogs; everything else in the package must stay free of wxPython so it can be tested headless
+  - The service must degrade to a no-op when the database cannot be opened; playback never depends on it.
 - Preserve public method names unless the refactor requires a coordinated call-site update.
 - Prefer small helper functions and composition over adding another long conditional block to an already-large module.
 - After structural Python refactors, run `python -m compileall src`.

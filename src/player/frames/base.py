@@ -13,6 +13,7 @@ from .playback import FramePlaybackMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
 from .sleep_timer import FrameSleepTimerMixin
+from .smart_library import FrameSmartLibraryMixin
 from .smtc import FrameSmtcMixin
 from .ui import FrameUIMixin
 from .update import FrameUpdateMixin
@@ -26,6 +27,7 @@ class MediaPlayerFrame(
     FrameRecentsMixin,
     FrameEqualizerMixin,
     FrameItemSearchMixin,
+    FrameSmartLibraryMixin,
     FrameSleepTimerMixin,
     FrameLibraryMixin,
     FramePlaybackMixin,
@@ -58,6 +60,7 @@ class MediaPlayerFrame(
         self._suppress_next_auto_advance = False
         self._item_search_query = ""
         self._initialize_sleep_timer_state()
+        self._initialize_smart_library_state()
 
         self._build_menu_bar()
         self._build_ui()
@@ -85,6 +88,7 @@ class MediaPlayerFrame(
         self._startup_initialization_started = True
         self._create_player_backend()
         self._create_library_loader()
+        self._create_smart_library_service()
         self._initialize_smtc_service()
         self._startup_ready = True
 

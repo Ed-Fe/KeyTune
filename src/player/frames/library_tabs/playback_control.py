@@ -58,6 +58,12 @@ class PlaylistPlaybackMixin:
             invalidate_requests=bool(crossfade_state),
         )
 
+        # A faixa que estava tocando ainda tem a posição na memória do backend;
+        # grava-a antes de o player ser reaproveitado pela nova mídia.
+        flush_library_state = getattr(self, "_flush_smart_library_playback_state", None)
+        if callable(flush_library_state):
+            flush_library_state()
+
         state.was_playing = True
         state.last_position_ms = 0
         target_index = self._get_active_playlist_index() if index is None else index
@@ -69,6 +75,15 @@ class PlaylistPlaybackMixin:
             ):
                 return
 
+        # Mídias longas (podcasts, audiolivros, vídeos) voltam de onde pararam.
+        resume_position_ms = 0
+        library_resume_position = getattr(self, "_library_resume_position_ms", None)
+        if callable(library_resume_position):
+            resume_position_ms = library_resume_position(state.current_media_path)
+            if resume_position_ms > 0:
+                state.last_position_ms = resume_position_ms
+                self._announce_resume_position(state.current_media_path, resume_position_ms)
+
         self._update_title()
         self._update_time_bar()
         self._refresh_playlist_browser()
@@ -77,6 +92,7 @@ class PlaylistPlaybackMixin:
             state.current_media_path,
             tab_index=target_index,
             announce_message=announce_message,
+            restore_position_ms=resume_position_ms,
         )
 
     def _maybe_start_automatic_crossfade(self):
@@ -320,6 +336,11 @@ class PlaylistPlaybackMixin:
             _logger.debug("Media end: no active playlist state.")
             self._announce(_("Mídia finalizada."))
             return
+
+        # Chegou ao fim: a marca de retomada dessa mídia deixa de fazer sentido.
+        forget_resume_position = getattr(self, "_forget_resume_position", None)
+        if callable(forget_resume_position) and state.current_media_path:
+            forget_resume_position(state.current_media_path)
 
         state.was_playing = False
         state.last_position_ms = 0

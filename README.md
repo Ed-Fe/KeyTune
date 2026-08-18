@@ -13,6 +13,12 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Persistent preferences stored in `settings.json`
 - Recent files, folders, and playlists
 - Item search inside the active playlist or folder (`Ctrl+F`, `F3`, `Shift+F3`)
+- Smart library: FTS5-backed global search across indexed playlists and folders (`Ctrl+G`)
+- Favorites (`Ctrl+D`) and star ratings (`Ctrl+0`–`Ctrl+5`) for local media, shown inline in the item list
+- Local playback history with all-plays, grouped, and most-played views (`Ctrl+Shift+H`)
+- Per-file resume for podcasts, audiobooks, and other long-form media, plus a "continue listening" list (`Ctrl+Shift+R`)
+- Smart playlists: saved rules (favorites, rating, folder, staleness, play count) rebuilt on every open
+- Reusable metadata and audio-analysis cache shared by future features
 - Sleep timer with preset durations, a custom duration, or an end-of-track stop (`Ctrl+Shift+D`)
 - Built-in equalizer presets plus custom presets
 - YouTube Music integration for search, link-based open flows, and library refresh
@@ -115,6 +121,12 @@ For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 - `src/player/library/browser.py` — side panel for playlist and folder navigation
 - `src/player/library/search_dialog.py` — item search dialog (`Ctrl+F`)
 - `src/player/frames/item_search.py` — item search coordination and result navigation
+- `src/player/smart_library/` — smart library storage (SQLite index, favorites, ratings, history, resume, metadata cache)
+- `src/player/smart_library/search_dialog.py` — global library search dialog (`Ctrl+G`)
+- `src/player/smart_library/history_dialog.py` — playback history dialog (`Ctrl+Shift+H`)
+- `src/player/smart_library/smart_playlists.py` — smart playlist rules and their query builder
+- `src/player/smart_library/smart_playlist_dialog.py` — smart playlist manager and rule editor
+- `src/player/frames/smart_library/` — window behavior for the smart library
 - `src/player/frames/sleep_timer.py` — sleep timer scheduling and countdown handling
 - `src/player/sleep_timer/dialog.py` — sleep timer configuration dialog
 - `src/player/preferences/dialog.py` — preferences UI

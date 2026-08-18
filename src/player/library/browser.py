@@ -1,23 +1,13 @@
 import os
 import time
-import unicodedata
 
 import wx
 
 from ..i18n import _, ngettext
+from .text import normalize_search_text
 
 
 TYPEAHEAD_RESET_SECONDS = 1.0
-
-
-def normalize_search_text(text):
-    """Fold accents and case so buscas comparem texto de forma tolerante."""
-    if not text:
-        return ""
-
-    normalized = unicodedata.normalize("NFKD", text)
-    without_accents = "".join(character for character in normalized if not unicodedata.combining(character))
-    return without_accents.casefold().strip()
 
 
 class VirtualItemsListCtrl(wx.ListCtrl):
@@ -75,6 +65,10 @@ class PlaylistBrowserPanel(wx.Panel):
         self._folder_current_media_key = None
         self._folder_index_by_key = {}
         self._base_labels = []
+        # Sufixos de favorito/avaliação por caminho, alimentados pelo frame a
+        # partir da biblioteca inteligente. Ficam só na exibição: a busca
+        # (Ctrl+F) e a sessão continuam vendo o rótulo puro.
+        self._library_marks = {}
         self._has_placeholder = False
         self._placeholder_label = ""
         self._typeahead_query = ""
@@ -342,6 +336,28 @@ class PlaylistBrowserPanel(wx.Panel):
                 selected_paths.append(item_path)
         return selected_paths
 
+    def set_library_marks(self, marks_by_path):
+        """Define os marcadores exibidos ao lado de cada item.
+
+        Recebe um dicionário caminho -> texto já formatado (por exemplo
+        "favorito, 4 estrelas"). Um dicionário vazio remove os marcadores.
+        """
+        normalized_marks = dict(marks_by_path or {})
+        if normalized_marks == self._library_marks:
+            return False
+
+        self._library_marks = normalized_marks
+        # A lista é virtual: basta repintar para os rótulos serem relidos.
+        self.items_list.Refresh()
+        return True
+
+    def _library_mark_suffix(self, media_path):
+        if not self._library_marks or not media_path:
+            return ""
+
+        marks = self._library_marks.get(media_path)
+        return f" — {marks}" if marks else ""
+
     def _get_display_label(self, index):
         if self._has_placeholder:
             return self._placeholder_label if index == 0 else ""
@@ -352,13 +368,18 @@ class PlaylistBrowserPanel(wx.Panel):
         if self._mode == "playlist":
             if not 0 <= index < len(self._base_labels):
                 return ""
-            return self._format_label(index, self._base_labels[index], self._playlist_current_index)
+            return self._format_label(
+                index,
+                self._base_labels[index],
+                self._playlist_current_index,
+                self._library_mark_suffix(self._items[index]),
+            )
 
         return self._format_folder_label(self._items[index], self._current_folder_media_path())
 
-    def _format_label(self, index, item_label, current_index):
+    def _format_label(self, index, item_label, current_index, mark_suffix=""):
         prefix = "▶ " if index == current_index else "   "
-        return f"{prefix}{index + 1}. {item_label}"
+        return f"{prefix}{index + 1}. {item_label}{mark_suffix}"
 
     def _format_folder_label(self, entry, current_media_path):
         if getattr(entry, "is_parent", False):
@@ -367,7 +388,7 @@ class PlaylistBrowserPanel(wx.Panel):
         if getattr(entry, "is_directory", False):
             return entry.label
 
-        return entry.label
+        return f"{entry.label}{self._library_mark_suffix(getattr(entry, 'path', ''))}"
 
     def _find_selection(self, selected_path, current_media_key):
         target_key = self._normalize_path_key(selected_path) or current_media_key

@@ -212,6 +212,10 @@ class FrameLibraryNavigationMixin:
         if not state:
             return None
 
+        auto_index_folder = getattr(self, "_auto_index_opened_folder", None)
+        if callable(auto_index_folder):
+            auto_index_folder(normalized_folder_path)
+
         self._begin_folder_load(state, normalized_folder_path, root_path=normalized_folder_path)
         self._queue_library_request(
             {
@@ -438,6 +442,10 @@ class FrameLibraryNavigationMixin:
         current_state = self._get_playlist_state()
         if not current_state:
             return
+
+        refresh_library_marks = getattr(self, "_refresh_library_marks", None)
+        if callable(refresh_library_marks):
+            refresh_library_marks(browser, current_state)
 
         if current_state.is_folder_tab and current_state.folder_current_path:
             browser.update_folder(

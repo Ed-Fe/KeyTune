@@ -57,6 +57,10 @@ class AppCommandsMixin:
         if callable(handle_youtube_music_preferences_change):
             handle_youtube_music_preferences_change(previous_settings)
 
+        handle_smart_library_preferences_change = getattr(self, "_handle_smart_library_preferences_change", None)
+        if callable(handle_smart_library_preferences_change):
+            handle_smart_library_preferences_change(previous_settings)
+
         if audio_output_updated:
             self._announce(_("Preferências salvas."))
         else:
@@ -183,14 +187,20 @@ class AppCommandsMixin:
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then
         # runs while those workers wind down, and the joins happen afterwards.
+        # A posição de retomada precisa ser gravada antes de a fila da
+        # biblioteca ser fechada, senão a última faixa perde o ponto de parada.
+        self._flush_smart_library_playback_state()
+
         self._begin_library_loader_shutdown()
         self._begin_player_backend_shutdown()
+        self._begin_smart_library_shutdown()
         self.announcer.request_close()
 
         self._save_session()
 
         self._finish_library_loader_shutdown()
         self._finish_player_backend_shutdown()
+        self._finish_smart_library_shutdown()
         self._shutdown_smtc_service()
         self.announcer.close()
         self.Destroy()

@@ -248,6 +248,10 @@ class CrossfadeMixin:
         self._set_active_player(player_key)
         self._bind_player_to_window()
         self._prepare_youtube_music_history_tracking(media_path)
+        # Same reason as the YouTube Music tracking above: the incoming track's
+        # _finish_media_start took the crossfade branch and returned before
+        # arming the smart-library tracking, so arm it here instead.
+        self._prepare_smart_library_tracking(media_path)
         self._update_title()
         self._update_time_bar()
         self._refresh_playlist_browser()

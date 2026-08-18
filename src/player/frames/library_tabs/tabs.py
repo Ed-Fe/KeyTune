@@ -272,6 +272,11 @@ class TabManagementMixin:
         state.title = title
         state.set_items(items, start_index=0)
         state.source_path = source_path
+
+        register_in_library = getattr(self, "_register_media_paths_in_library", None)
+        if callable(register_in_library):
+            register_in_library(state.items, state.browser_item_labels)
+
         self.notebook.SetPageText(target_index, title)
         self._select_tab(target_index, announce=False)
         self._refresh_playlist_browser()
@@ -285,6 +290,7 @@ class TabManagementMixin:
         browser_item_labels=None,
         source_path=None,
         announce_message=None,
+        start_index=0,
     ):
         normalized_items = list(items or [])
         if not normalized_items:
@@ -315,8 +321,12 @@ class TabManagementMixin:
             normalized_items,
             {item: index for index, item in enumerate(normalized_items)},
             normalized_browser_labels,
-            start_index=0,
+            start_index=max(0, min(int(start_index or 0), len(normalized_items) - 1)),
         )
+
+        register_in_library = getattr(self, "_register_media_paths_in_library", None)
+        if callable(register_in_library):
+            register_in_library(normalized_items, normalized_browser_labels)
 
         self._refresh_playlist_browser()
         self._play_media(index=target_index, announce_message=announce_message)

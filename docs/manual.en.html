@@ -126,10 +126,23 @@ footer {
         <li class="toc-level-4"><a href="#folder-mode">Folder mode</a></li>
         <li class="toc-level-4"><a href="#quick-location-by-typing">Quick location by typing</a></li>
         <li class="toc-level-4"><a href="#search-within-the-current-playlist-or-folder">Search within the current playlist or folder</a></li>
+        <li class="toc-level-2"><a href="#smart-library">Smart library</a></li>
+        <li class="toc-level-3"><a href="#what-goes-into-the-index">What goes into the index</a></li>
+        <li class="toc-level-3"><a href="#global-search">Global search</a></li>
+        <li class="toc-level-3"><a href="#favorites-and-ratings">Favorites and ratings</a></li>
+        <li class="toc-level-3"><a href="#playback-history">Playback history</a></li>
+        <li class="toc-level-3"><a href="#resume-where-you-stopped">Resume where you stopped</a></li>
+        <li class="toc-level-3"><a href="#smart-playlists">Smart playlists</a></li>
+        <li class="toc-level-3"><a href="#metadata-and-analysis-cache">Metadata and analysis cache</a></li>
         <li class="toc-level-2"><a href="#settings">Settings</a></li>
         <li class="toc-level-3"><a href="#general">General</a></li>
         <li class="toc-level-3"><a href="#playback">Playback</a></li>
         <li class="toc-level-3"><a href="#accessibility">Accessibility</a></li>
+        <li class="toc-level-3"><a href="#library">Library</a></li>
+        <li class="toc-level-4"><a href="#library-index">Library index</a></li>
+        <li class="toc-level-4"><a href="#playback-history-2">Playback history</a></li>
+        <li class="toc-level-4"><a href="#resume-where-you-stopped-2">Resume where you stopped</a></li>
+        <li class="toc-level-4"><a href="#metadata-and-analysis-cache-2">Metadata and analysis cache</a></li>
         <li class="toc-level-3"><a href="#additional-features">Additional features</a></li>
         <li class="toc-level-4"><a href="#youtube-music-and-youtube-integration">YouTube Music and YouTube integration</a></li>
         <li class="toc-level-4"><a href="#youtube-music-library">YouTube Music library</a></li>
@@ -162,6 +175,7 @@ footer {
 <li>Tabbed playlists</li>
 <li>A playback queue to organize what plays next</li>
 <li>Search within the current playlist or folder, with keyboard navigation between results</li>
+<li>Smart library with global search, favorites, ratings, history, and per-file resume</li>
 <li>Sleep timer with preset durations or a pause at the end of the current track</li>
 <li>Folder navigation with preview</li>
 <li>Per-tab equalizer with built-in profiles and custom presets</li>
@@ -220,9 +234,15 @@ footer {
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: move to the next or previous tab</li>
 <li><code>Ctrl+Shift+E</code>: open the equalizer for the active tab</li>
 <li><code>Ctrl+C</code>: copy the path or link of the selected item</li>
+<li><code>Ctrl+Shift+C</code>: copy the link or path of the currently playing media</li>
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
 <li><code>Ctrl+B</code>: switch focus between the item browser and the player</li>
 <li><code>Ctrl+F</code>: find an item in the current playlist or folder</li>
+<li><code>Ctrl+G</code>: search the whole library (playlists, folders, and history)</li>
+<li><code>Ctrl+D</code>: add the selection to favorites or remove it</li>
+<li><code>Ctrl+0</code> to <code>Ctrl+5</code>: rate the selection from zero to five stars</li>
+<li><code>Ctrl+Shift+H</code>: open the playback history</li>
+<li><code>Ctrl+Shift+R</code>: continue listening to what was left half finished</li>
 <li><code>F3</code> / <code>Shift+F3</code>: next or previous search result</li>
 </ul>
 <h3 id="playback-queue">Playback queue</h3>
@@ -307,8 +327,79 @@ footer {
 <li>If nothing matches, the current selection is kept and the player reports that there are no matching items.</li>
 </ul>
 <p>For organization tasks, it is useful to think of tabs as independent workspaces: one tab to play something now, another to review the library, and another for tests or temporary collections.</p>
+<h2 id="smart-library">Smart library</h2>
+<p>While <code>Ctrl+F</code> searches the list that is currently open, the <strong>smart library</strong> remembers what you have already opened and listened to, and makes all of it searchable at once. It also keeps favorites, ratings, the playback history, and the point where each long media stopped.</p>
+<p>Everything lives in a local database (<code>smart_library.db</code>) in the same data folder as the preferences. Nothing leaves your computer, and the whole feature can be turned off in <code>Ctrl+,</code> &gt; <strong>Library</strong>.</p>
+<p>The <strong>Library</strong> menu gathers every command.</p>
+<h3 id="what-goes-into-the-index">What goes into the index</h3>
+<ul>
+<li>The media of any playlist or folder you open enters the index in the background.</li>
+<li><strong>Library &gt; Index a folder into the library...</strong> picks a folder and walks its subfolders too, without stalling playback. The player speaks when it is done.</li>
+<li><strong>Library &gt; Refresh indexed folders</strong> rescans the folders already indexed and drops files that no longer exist.</li>
+<li><strong>Library &gt; Library summary</strong> announces how much media, how many folders, favorites, and plays are stored.</li>
+<li><strong>Library &gt; Clear the library...</strong> erases everything (index, favorites, ratings, history, and resume points), with a confirmation.</li>
+</ul>
+<p>If you would rather index only the folders you pick yourself, turn off <strong>Automatically index folders opened in the browser</strong> in the preferences.</p>
+<h3 id="global-search">Global search</h3>
+<ul>
+<li><code>Ctrl+G</code> opens the <strong>Search the library</strong> box.</li>
+<li>Type the text and confirm with <code>Enter</code> or the <strong>Search</strong> button. The search ignores accents and case, and every word you type must appear somewhere in the item or folder name.</li>
+<li>The <strong>Filter</strong> field narrows the search to <strong>Everything in the library</strong>, <strong>Favorites only</strong>, <strong>Rated only</strong>, or <strong>Already played only</strong>. The last three work even with an empty text field.</li>
+<li>Results appear in a list with item, rating, and folder columns, so the screen reader reads all three while you move with the arrow keys. Focus goes to the list as soon as the search finishes.</li>
+<li>The search is served by a full-text index, so it stays instant even with tens of thousands of files. It matches the start of each word ("estrad" finds "Estrada"); when nothing matches that way, the player still runs a scan that finds fragments inside a word ("onita" finds "Bonita").</li>
+<li><code>Enter</code> (or the <strong>Play</strong> button) opens <strong>all</strong> results in a new playlist and starts on the selected track - so a search becomes a usable list, not a lone track.</li>
+<li><strong>Add to queue</strong> queues only the selected item in the playlist that is playing.</li>
+</ul>
+<h3 id="favorites-and-ratings">Favorites and ratings</h3>
+<p>Both commands act on whatever is selected in the item list; with nothing selected, they act on the media that is playing.</p>
+<ul>
+<li><code>Ctrl+D</code>: add to or remove from favorites. With several items selected, it adds all of them.</li>
+<li><code>Ctrl+0</code> to <code>Ctrl+5</code>: give zero to five stars.</li>
+<li><strong>Library &gt; Announce the selection's marks</strong>: reads the item's favorite state, rating, and play count.</li>
+<li><strong>Library &gt; Open favorites in a new playlist</strong>: builds a playlist with everything you marked.</li>
+</ul>
+<p>The same commands are in the item list context menu (<code>Shift+F10</code>).</p>
+<p>Favorites and ratings appear next to the name in the item list itself - for example <code>2. Estrada - favorite, 5 stars</code> - in playlists and in the folder browser alike. The screen reader announces the mark together with the item, with no command needed. The suffix is display only: <code>Ctrl+F</code> search, tab names, and the saved session all keep using the plain name.</p>
+<h3 id="playback-history">Playback history</h3>
+<ul>
+<li><code>Ctrl+Shift+H</code> opens the <strong>Playback history</strong>.</li>
+<li>The <strong>View</strong> field picks between three views, and the columns change with it:</li>
+<li><strong>All plays</strong>: one row per time the media played, with when it played, where it stopped, and its source (local playlist, folder, remote media, or YouTube Music).</li>
+<li><strong>Grouped by media</strong>: one row per media, with how many times it played, the last time, and its marks. Playing the same track forty times stops flooding the list.</li>
+<li><strong>Most played</strong>: the same grouping, from the most played to the least played.</li>
+<li>The <strong>Filter by text</strong> field narrows the list; <code>Enter</code> (or <strong>Play</strong>) plays it again and <strong>Add to queue</strong> queues it.</li>
+<li><strong>Remove entry</strong> drops one play from the list without removing the media from the index. In the grouped views the button becomes <strong>Remove from history</strong> and drops every play of that media. <strong>Clear history</strong> erases everything, with a confirmation.</li>
+<li>A track only enters the history after playing long enough to count as listened to (about 25% of its duration, at most 20 seconds).</li>
+<li>The history is trimmed to the limit set in the preferences, discarding the oldest entries.</li>
+</ul>
+<p>This history is local and independent from <strong>Save listened tracks to the YouTube Music history</strong>, which records into your YouTube Music account.</p>
+<h3 id="resume-where-you-stopped">Resume where you stopped</h3>
+<p>Podcasts, audiobooks, and long videos start again from where they stopped, and the status bar shows "Resuming ... at ...". The rule is deliberately conservative:</p>
+<ul>
+<li>it applies only to local files - streams have no stable timeline across sessions;</li>
+<li>only to media above the configured <strong>minimum duration</strong> (10 minutes by default);</li>
+<li>stopping inside the configured <strong>margin</strong> (30 seconds by default) at the start or the end creates no resume point;</li>
+<li>reaching the end of the track clears the mark, so next time it starts over.</li>
+</ul>
+<p><strong>Library &gt; Continue listening</strong> (<code>Ctrl+Shift+R</code>) opens a playlist with everything that is half finished, newest first, each item showing where it stopped - that is how you find the podcast you left in the middle without having to remember where it was.</p>
+<p><strong>Library &gt; Clear resume positions</strong> wipes them all at once.</p>
+<h3 id="smart-playlists">Smart playlists</h3>
+<p>A smart playlist is a saved rule, not a fixed list: it is built every time you open it, so it follows your rating and history changes. "Five stars I have not played in 30 days" is still correct a month later, on its own.</p>
+<p><strong>Library &gt; Smart playlists</strong> lists the saved rules so you can open one with a single command, and <strong>Manage smart playlists...</strong> creates, edits, and removes them.</p>
+<p>In the editor everything is a keyboard field - no visual rule builder:</p>
+<ul>
+<li><strong>Favorites only</strong> and <strong>Minimum rating</strong> filter by your marks.</li>
+<li><strong>Not played for at least (days)</strong> finds what has gone stale; <strong>Include media never played</strong> decides whether things you never played come along.</li>
+<li><strong>Minimum plays</strong> goes the other way: only what you have already listened to a lot.</li>
+<li><strong>Limit to folder</strong> restricts to one folder and everything under it.</li>
+<li><strong>Include remote media</strong> also brings in YouTube Music links and radios, which are left out by default.</li>
+<li><strong>Sort by</strong> and <strong>Maximum number of items</strong> decide what comes out and in what order.</li>
+</ul>
+<p>Every change updates the <strong>Rule summary</strong> at the bottom of the box, in one sentence - for screen reader users it is the fastest way to check what the rule will gather before saving. Rules with a repeated name get an automatic numeric suffix, and changes are saved even if you close the box with <code>Esc</code>.</p>
+<h3 id="metadata-and-analysis-cache">Metadata and analysis cache</h3>
+<p>The library also keeps metadata it has already resolved and audio analyses, so expensive work is not repeated on every open. An entry is discarded automatically when the file changes size or date, and the number of stored entries is adjustable in the preferences.</p>
 <h2 id="settings">Settings</h2>
-<p>Preferences are under <code>Ctrl+,</code> and are divided into four tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, and <strong>Additional features</strong>.</p>
+<p>Preferences are under <code>Ctrl+,</code> and are divided into five tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, and <strong>Additional features</strong>.</p>
 <h3 id="general">General</h3>
 <p>The <strong>General</strong> tab brings together the options that control how KeyTune resumes on the next launch:</p>
 <ul>
@@ -340,6 +431,28 @@ footer {
 </ul>
 <h3 id="accessibility">Accessibility</h3>
 <p>The <strong>Accessibility</strong> tab has a single option: <strong>Enable accessibility announcements</strong>. When enabled, the player announces changes in time, volume, tab switching, and status to the screen reader. When disabled, those announcements are suppressed. On-demand announcement shortcuts (<code>T</code>, <code>V</code>, <code>S</code>) keep working regardless of this setting - see <a href="#accessibility-features">Accessibility features</a> for details.</p>
+<h3 id="library">Library</h3>
+<p>The <strong>Library</strong> tab controls the <a href="#smart-library">smart library</a>. Turning off the first option disables the whole feature and greys out the rest.</p>
+<h4 id="library-index">Library index</h4>
+<ul>
+<li><strong>Enable the smart library</strong>: turns on the global search (<code>Ctrl+G</code>), favorites, ratings, history, and per-file resume.</li>
+<li><strong>Automatically index folders opened in the browser</strong>: when you open a folder, its media enters the index in the background.</li>
+</ul>
+<h4 id="playback-history-2">Playback history</h4>
+<ul>
+<li><strong>Keep a local playback history</strong>: records every track that plays long enough to count as listened to.</li>
+<li><strong>Plays kept in the history</strong>: how many entries the history holds (50-20000). Past that, the oldest are discarded.</li>
+</ul>
+<h4 id="resume-where-you-stopped-2">Resume where you stopped</h4>
+<ul>
+<li><strong>Remember the position of long media</strong>: turns on per-file resume.</li>
+<li><strong>Minimum duration to remember the position (minutes)</strong>: media shorter than this always starts over (1-240 min).</li>
+<li><strong>Margin ignored at the start and at the end (seconds)</strong>: stopping inside that margin creates no resume point (5-300 s).</li>
+</ul>
+<h4 id="metadata-and-analysis-cache-2">Metadata and analysis cache</h4>
+<ul>
+<li><strong>Entries kept in the cache</strong>: how many resolved metadata records and audio analyses are stored (100-100000). The oldest entries are dropped once the limit is reached.</li>
+</ul>
 <h3 id="additional-features">Additional features</h3>
 <p>The <strong>Additional features</strong> tab contains optional integrations. Today it brings together the YouTube Music and YouTube controls in two sections.</p>
 <h4 id="youtube-music-and-youtube-integration">YouTube Music and YouTube integration</h4>
@@ -588,7 +701,7 @@ footer {
 </ul>
 <p>If you use a screen reader, the on-demand announcement shortcuts <code>T</code>, <code>V</code>, and <code>S</code> (described in <a href="#playback-shortcuts">Playback shortcuts</a>) and the <code>F1</code> quick help help you orient yourself without depending on automatic events.</p>
 <p>Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in <code>Ctrl+,</code> &gt; <strong>Accessibility</strong>.</p>
-<p>Item search avoids redundant announcements: since <code>Ctrl+F</code>, <code>F3</code>, and <code>Shift+F3</code> move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the <code>S</code> key announcement.</p>
+<p>Item search avoids redundant announcements: since <code>Ctrl+F</code>, <code>F3</code>, and <code>Shift+F3</code> move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The smart library follows the same idea: the result and history lists have named columns, focus moves to the list as soon as a search finishes, and favorites and ratings - which never show up in the item label - are always spoken when they change. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the <code>S</code> key announcement.</p>
 <p>The lyrics panel is also designed for this use: <code>Ctrl+Alt+L</code> or the <strong>Lyrics</strong> checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the <strong>Copy full lyrics</strong> button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.</p>
 <h2 id="updates">Updates</h2>
 <p>On startup, KeyTune can check for updates automatically. To check manually at any time, use the <strong>Help &gt; Check for updates</strong> menu.</p>
@@ -605,7 +718,7 @@ footer {
 <h2 id="for-developers">For developers</h2>
 <p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generated on 03/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">view source on GitHub</a>
+        Generated on 17/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

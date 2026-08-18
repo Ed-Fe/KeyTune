@@ -254,6 +254,7 @@ class PlaybackEngineMixin:
         self._set_active_player(player_key)
         self._apply_equalizer_state()
         self._prepare_youtube_music_history_tracking(media_path)
+        self._prepare_smart_library_tracking(media_path)
         self._last_runtime_stream_title = ""
         self._next_runtime_stream_title_refresh = 0.0
 
@@ -340,9 +341,11 @@ class PlaybackEngineMixin:
 
     def _unload_player(self):
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
+        self._flush_smart_library_playback_state()
         self._stop_all_players(unload=False)
         self._clear_youtube_music_history_tracking()
-        
+        self._clear_smart_library_tracking()
+
         # Limpa o painel de letras quando o player parar totalmente
         if hasattr(self, 'lyrics_panel'):
             self.lyrics_panel.reset_loaded_track()

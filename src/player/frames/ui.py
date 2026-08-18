@@ -113,6 +113,7 @@ class FrameUIMixin:
         return _(
             "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
             "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · "
+            "Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · "
             "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
         )
 
@@ -195,6 +196,12 @@ class FrameUIMixin:
             "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\n"
             "Ctrl+F — Localizar item na playlist ou pasta atual\n"
             "F3 / Shift+F3 — Próximo ou anterior resultado da busca\n"
+            "Ctrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\n"
+            "Ctrl+D — Favoritar ou desfavoritar a seleção\n"
+            "Ctrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\n"
+            "Ctrl+Shift+H — Histórico de reprodução\n"
+            "Ctrl+Shift+R — Continuar ouvindo o que ficou pela metade\n"
+            "Menu Biblioteca > Playlists inteligentes — Abrir uma regra salva\n"
             "Enter — Tocar ou abrir o item selecionado no navegador\n"
             "Delete — Remover item da playlist\n"
             "Backspace — Voltar de pasta no navegador\n"
@@ -455,6 +462,8 @@ class FrameUIMixin:
         view_menu.Append(self.menu_find_next_item_id, _("Próximo &resultado\tF3"))
         view_menu.Append(self.menu_find_previous_item_id, _("Resultado &anterior\tShift+F3"))
 
+        library_menu = self._build_library_menu()
+
         tabs_menu = wx.Menu()
         self.menu_next_tab_id = wx.NewIdRef()
         self.menu_previous_tab_id = wx.NewIdRef()
@@ -487,12 +496,76 @@ class FrameUIMixin:
         menu_bar.Append(file_menu, _("&Arquivo"))
         menu_bar.Append(playback_menu, _("&Reprodução"))
         menu_bar.Append(view_menu, _("&Exibir"))
+        menu_bar.Append(library_menu, _("&Biblioteca"))
         menu_bar.Append(tabs_menu, _("A&bas"))
         menu_bar.Append(settings_menu, _("Con&figurações"))
         menu_bar.Append(help_menu, _("A&juda"))
         self.SetMenuBar(menu_bar)
         self._refresh_recent_menus()
         self._refresh_audio_output_menu()
+
+    def _build_library_menu(self):
+        """Menu Biblioteca: busca global, favoritos, histórico e índice."""
+        library_menu = wx.Menu()
+        self.library_menu = library_menu
+
+        self.menu_search_library_id = wx.NewIdRef()
+        self.menu_open_favorites_id = wx.NewIdRef()
+        self.menu_toggle_favorite_id = wx.NewIdRef()
+        self.menu_announce_library_marks_id = wx.NewIdRef()
+        self.menu_continue_listening_id = wx.NewIdRef()
+        self.menu_manage_smart_playlists_id = wx.NewIdRef()
+        self.menu_playback_history_id = wx.NewIdRef()
+        self.menu_clear_playback_history_id = wx.NewIdRef()
+        self.menu_index_library_folder_id = wx.NewIdRef()
+        self.menu_refresh_library_index_id = wx.NewIdRef()
+        self.menu_clear_resume_positions_id = wx.NewIdRef()
+        self.menu_clear_library_index_id = wx.NewIdRef()
+        self.menu_library_statistics_id = wx.NewIdRef()
+
+        self.smart_playlist_menu = wx.Menu()
+
+        library_menu.Append(self.menu_search_library_id, _("&Buscar na biblioteca...\tCtrl+G"))
+        library_menu.Append(self.menu_continue_listening_id, _("&Continuar ouvindo\tCtrl+Shift+R"))
+        library_menu.Append(self.menu_open_favorites_id, _("Abrir &favoritos em nova playlist"))
+        library_menu.AppendSubMenu(self.smart_playlist_menu, _("Playlists &inteligentes"))
+        library_menu.AppendSeparator()
+        library_menu.Append(self.menu_toggle_favorite_id, _("&Favoritar ou desfavoritar seleção\tCtrl+D"))
+        library_menu.AppendSubMenu(self._build_rating_menu(), _("&Avaliação"))
+        library_menu.Append(self.menu_announce_library_marks_id, _("Anunciar &marcadores da seleção"))
+        library_menu.AppendSeparator()
+        library_menu.Append(self.menu_playback_history_id, _("&Histórico de reprodução...\tCtrl+Shift+H"))
+        library_menu.Append(self.menu_clear_playback_history_id, _("&Limpar histórico de reprodução"))
+        library_menu.AppendSeparator()
+        library_menu.Append(self.menu_index_library_folder_id, _("&Indexar pasta na biblioteca..."))
+        library_menu.Append(self.menu_refresh_library_index_id, _("A&tualizar pastas indexadas"))
+        library_menu.Append(self.menu_clear_resume_positions_id, _("Apagar &posições de retomada"))
+        library_menu.Append(self.menu_clear_library_index_id, _("Limpar &biblioteca..."))
+        library_menu.AppendSeparator()
+        library_menu.Append(self.menu_library_statistics_id, _("&Resumo da biblioteca"))
+        self._refresh_smart_playlist_menu()
+        return library_menu
+
+    def _build_rating_menu(self):
+        rating_menu = wx.Menu()
+        self.rating_menu = rating_menu
+        self._rating_menu_actions = {}
+
+        rating_labels = (
+            (0, _("&Sem avaliação\tCtrl+0")),
+            (1, _("&1 estrela\tCtrl+1")),
+            (2, _("&2 estrelas\tCtrl+2")),
+            (3, _("&3 estrelas\tCtrl+3")),
+            (4, _("&4 estrelas\tCtrl+4")),
+            (5, _("&5 estrelas\tCtrl+5")),
+        )
+        for rating, label in rating_labels:
+            item = rating_menu.Append(wx.NewIdRef(), label)
+            item_id = item.GetId()
+            self._rating_menu_actions[item_id] = rating
+            self.Bind(wx.EVT_MENU, self.on_rate_media, id=item_id)
+
+        return rating_menu
 
     def _build_sleep_timer_menu(self):
         sleep_timer_menu = wx.Menu()
@@ -718,6 +791,19 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_find_item, id=self.menu_find_item_id)
         self.Bind(wx.EVT_MENU, self.on_find_next_item, id=self.menu_find_next_item_id)
         self.Bind(wx.EVT_MENU, self.on_find_previous_item, id=self.menu_find_previous_item_id)
+        self.Bind(wx.EVT_MENU, self.on_search_library, id=self.menu_search_library_id)
+        self.Bind(wx.EVT_MENU, self.on_continue_listening, id=self.menu_continue_listening_id)
+        self.Bind(wx.EVT_MENU, self.on_open_favorites, id=self.menu_open_favorites_id)
+        self.Bind(wx.EVT_MENU, self.on_manage_smart_playlists, id=self.menu_manage_smart_playlists_id)
+        self.Bind(wx.EVT_MENU, self.on_toggle_favorite, id=self.menu_toggle_favorite_id)
+        self.Bind(wx.EVT_MENU, self.on_announce_library_marks, id=self.menu_announce_library_marks_id)
+        self.Bind(wx.EVT_MENU, self.on_open_playback_history, id=self.menu_playback_history_id)
+        self.Bind(wx.EVT_MENU, self.on_clear_playback_history, id=self.menu_clear_playback_history_id)
+        self.Bind(wx.EVT_MENU, self.on_index_library_folder, id=self.menu_index_library_folder_id)
+        self.Bind(wx.EVT_MENU, self.on_refresh_library_index, id=self.menu_refresh_library_index_id)
+        self.Bind(wx.EVT_MENU, self.on_clear_resume_positions, id=self.menu_clear_resume_positions_id)
+        self.Bind(wx.EVT_MENU, self.on_clear_library_index, id=self.menu_clear_library_index_id)
+        self.Bind(wx.EVT_MENU, self.on_library_statistics, id=self.menu_library_statistics_id)
         self.Bind(wx.EVT_MENU, self.on_announce_time, id=self.menu_announce_time_id)
         self.Bind(wx.EVT_MENU, self.on_announce_volume, id=self.menu_announce_volume_id)
         self.Bind(wx.EVT_MENU, self.on_announce_status, id=self.menu_announce_status_id)

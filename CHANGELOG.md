@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2026-08-17
 
 ### Adicionado
+- **Biblioteca inteligente local**: novo menu **Biblioteca** com busca global (`Ctrl+G`), indexação de pastas e filtros por favoritos, avaliações e reproduções. Os dados ficam somente no computador e o recurso pode ser desligado nas preferências.
+- **Favoritos e avaliações**: `Ctrl+D` alterna favoritos e `Ctrl+0` a `Ctrl+5` define a avaliação, com marcadores visíveis e anúncios acessíveis na lista de itens.
+- **Histórico de reprodução**: `Ctrl+Shift+H` abre o histórico pesquisável, com visualizações por reprodução, mídia ou mais tocadas.
+- **Retomada e Continuar ouvindo**: mídias longas podem voltar do ponto salvo; `Ctrl+Shift+R` reúne o conteúdo que ficou pela metade.
+- **Playlists inteligentes**: regras combinam pasta, favoritos, avaliação, histórico e ordenação para montar listas atualizadas automaticamente.
 - **Atalho para copiar o link da mídia em execução**: `Ctrl+Shift+C` copia diretamente o link ou caminho da mídia atual para a área de transferência em qualquer aba, com anúncio via leitor de tela.
 
 ### Corrigido

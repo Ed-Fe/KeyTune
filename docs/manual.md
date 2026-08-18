@@ -12,6 +12,7 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 - Playlists em abas
 - Fila de reprodução independente para organizar o que toca em seguida
 - Busca dentro da playlist ou pasta atual, com navegação entre os resultados por teclado
+- Biblioteca inteligente com busca global, favoritos, avaliações, histórico e retomada por arquivo
 - Temporizador com durações prontas ou pausa ao fim da faixa
 - Navegação por pastas com pré-visualização
 - Equalizador por aba com predefinições e presets personalizados
@@ -81,6 +82,11 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 - `Ctrl+F`: localizar um item na playlist ou pasta atual
+- `Ctrl+G`: buscar na biblioteca inteira (playlists, pastas e histórico)
+- `Ctrl+D`: favoritar ou desfavoritar a seleção
+- `Ctrl+0` a `Ctrl+5`: avaliar a seleção de zero a cinco estrelas
+- `Ctrl+Shift+H`: abrir o histórico de reprodução
+- `Ctrl+Shift+R`: continuar ouvindo o que ficou pela metade
 - `F3` / `Shift+F3`: próximo ou anterior resultado da busca
 
 ### Fila de reprodução
@@ -183,9 +189,98 @@ Detalhes úteis:
 
 Para tarefas de organização, vale pensar nas abas como espaços de trabalho independentes: uma aba para tocar algo agora, outra para revisar a biblioteca e outra para testes ou coleções temporárias.
 
+## Biblioteca inteligente
+
+Enquanto o `Ctrl+F` procura na lista que está aberta, a **biblioteca inteligente** lembra do que você já abriu e ouviu, e deixa tudo isso pesquisável de uma vez. Ela também guarda favoritos, avaliações, o histórico de reprodução e o ponto onde cada mídia longa parou.
+
+Tudo fica em um banco local (`smart_library.db`) na mesma pasta de dados das preferências. Nada é enviado para fora do computador, e o recurso inteiro pode ser desligado em `Ctrl+,` > **Biblioteca**.
+
+O menu **Biblioteca** reúne todos os comandos.
+
+### O que entra no índice
+
+- As mídias de qualquer playlist ou pasta que você abre entram no índice em segundo plano.
+- **Biblioteca > Indexar pasta na biblioteca...** escolhe uma pasta e varre também as subpastas, sem travar a reprodução. O player avisa quando termina.
+- **Biblioteca > Atualizar pastas indexadas** revarre as pastas já indexadas e descarta do índice os arquivos que não existem mais.
+- **Biblioteca > Resumo da biblioteca** anuncia quantas mídias, pastas, favoritos e reproduções estão guardados.
+- **Biblioteca > Limpar biblioteca...** apaga tudo (índice, favoritos, avaliações, histórico e retomada), com confirmação.
+
+Se preferir que só as pastas escolhidas por você entrem no índice, desligue **Indexar automaticamente as pastas abertas no navegador** nas preferências.
+
+### Busca global
+
+- `Ctrl+G` abre a caixa **Buscar na biblioteca**.
+- Digite o texto e confirme com `Enter` ou com o botão **Procurar**. A busca ignora acentos e maiúsculas, e cada palavra digitada precisa aparecer em algum lugar do nome do item ou da pasta.
+- O campo **Filtrar** restringe a busca a **Tudo na biblioteca**, **Somente favoritos**, **Somente avaliados** ou **Somente já reproduzidos**. Os três últimos funcionam mesmo com o campo de texto vazio.
+- Os resultados aparecem em uma lista com colunas de item, avaliação e pasta, então o leitor de tela lê as três informações ao percorrer com as setas. O foco vai para a lista assim que a busca termina.
+- A busca é atendida por um índice de texto completo, então continua instantânea mesmo com dezenas de milhares de arquivos. Ela casa o começo de cada palavra ("estrad" encontra "Estrada"); quando nada é encontrado assim, o player ainda faz uma varredura que acha trechos no meio da palavra ("onita" encontra "Bonita").
+- `Enter` (ou o botão **Reproduzir**) abre **todos** os resultados em uma nova playlist e começa pela faixa selecionada — assim uma busca vira uma lista utilizável, não uma faixa solta.
+- **Adicionar à fila** enfileira apenas o item selecionado na playlist que está tocando.
+
+### Favoritos e avaliações
+
+Os dois comandos agem sobre o que estiver selecionado na lista de itens; sem seleção, agem sobre a mídia que está tocando.
+
+- `Ctrl+D`: marca ou desmarca como favorito. Com vários itens selecionados, favorita todos.
+- `Ctrl+0` a `Ctrl+5`: dá de zero a cinco estrelas.
+- **Biblioteca > Anunciar marcadores da seleção**: lê favorito, avaliação e número de reproduções do item.
+- **Biblioteca > Abrir favoritos em nova playlist**: monta uma playlist com tudo que você favoritou.
+
+Os mesmos comandos estão no menu de contexto da lista de itens (`Shift+F10`).
+
+Favorito e avaliação aparecem ao lado do nome na própria lista de itens — por exemplo `2. Estrada — favorito, 5 estrelas` —, tanto em playlists quanto no navegador de pastas. Assim o leitor de tela anuncia o marcador junto com o item, sem precisar de comando nenhum. O sufixo é só exibição: a busca `Ctrl+F`, os nomes das abas e a sessão salva continuam usando o nome puro.
+
+### Histórico de reprodução
+
+- `Ctrl+Shift+H` abre o **Histórico de reprodução**.
+- O campo **Ver** escolhe entre três visões, e as colunas mudam junto:
+  - **Todas as reproduções**: uma linha por vez que a mídia tocou, com quando tocou, em que ponto parou e a origem (playlist local, pasta, mídia remota ou YouTube Music).
+  - **Agrupado por mídia**: uma linha por mídia, com quantas vezes tocou, a última vez e os marcadores. Ouvir a mesma faixa quarenta vezes deixa de encher a lista.
+  - **Mais tocadas**: o mesmo agrupamento, da mais tocada para a menos tocada.
+- O campo **Filtrar por texto** reduz a lista; `Enter` (ou **Reproduzir**) toca de novo e **Adicionar à fila** enfileira.
+- **Remover entrada** tira uma reprodução da lista sem apagar a mídia do índice. Nas visões agrupadas o botão vira **Remover do histórico** e apaga todas as reproduções daquela mídia. **Limpar histórico** apaga tudo, com confirmação.
+- Uma faixa só entra no histórico depois de tocar o suficiente para contar como ouvida (cerca de 25% da duração, no máximo 20 segundos).
+- O histórico é aparado ao limite configurado nas preferências, descartando as entradas mais antigas.
+
+Este histórico é local e independente do **Salvar músicas escutadas no histórico do YouTube Music**, que registra na sua conta do YouTube Music.
+
+### Retomar de onde parou
+
+Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam, e a barra de status mostra “Retomando … em …”. A regra é conservadora de propósito:
+
+- vale só para arquivos locais — streams não têm uma linha do tempo estável entre sessões;
+- só para mídias acima da **duração mínima** configurada (10 minutos por padrão);
+- parar dentro da **margem** configurada (30 segundos por padrão) no início ou no fim não cria ponto de retomada;
+- chegar ao fim da faixa apaga a marca, então da próxima vez ela recomeça do início.
+
+**Biblioteca > Continuar ouvindo** (`Ctrl+Shift+R`) abre uma playlist com tudo que está pela metade, do mais recente para o mais antigo, e cada item mostra onde parou — é assim que você reencontra o podcast que largou no meio sem precisar lembrar onde ele estava.
+
+**Biblioteca > Apagar posições de retomada** limpa todas de uma vez.
+
+### Playlists inteligentes
+
+Uma playlist inteligente é uma regra salva, não uma lista fixa: ela é montada toda vez que você a abre, então acompanha as mudanças de avaliação e de histórico. "Cinco estrelas que não toco há 30 dias" continua correta um mês depois, sozinha.
+
+**Biblioteca > Playlists inteligentes** lista as regras salvas para abrir com um comando só, e **Gerenciar playlists inteligentes...** cria, edita e remove.
+
+No editor, tudo é campo de teclado — nada de construtor visual:
+
+- **Somente favoritos** e **Avaliação mínima** filtram pelos seus marcadores.
+- **Sem tocar há pelo menos (dias)** encontra o que anda esquecido; **Incluir mídias nunca tocadas** decide se o que nunca tocou entra junto.
+- **Reproduções mínimas** vai pelo outro lado: só o que você já ouviu bastante.
+- **Limitar à pasta** restringe a uma pasta e tudo abaixo dela.
+- **Incluir mídias remotas** traz também links do YouTube Music e rádios, que por padrão ficam de fora.
+- **Ordenar por** e **Número máximo de itens** definem o que sai e em que ordem.
+
+Cada mudança atualiza o **Resumo da regra** no fim da caixa, em uma frase — para quem usa leitor de tela, é a forma mais rápida de conferir o que a regra vai reunir antes de salvar. Regras com nome repetido ganham um sufixo numérico automático, e as alterações são salvas mesmo se você fechar a caixa com `Esc`.
+
+### Cache de metadados e análises
+
+A biblioteca guarda também metadados já resolvidos e análises de áudio, para não repetir trabalho caro a cada abertura. Uma entrada é descartada automaticamente quando o arquivo muda de tamanho ou de data, e o número de entradas guardadas é ajustável nas preferências.
+
 ## Configurações
 
-As preferências ficam em `Ctrl+,` e são divididas em quatro abas: **Geral**, **Reprodução**, **Acessibilidade** e **Recursos adicionais**.
+As preferências ficam em `Ctrl+,` e são divididas em cinco abas: **Geral**, **Reprodução**, **Acessibilidade**, **Biblioteca** e **Recursos adicionais**.
 
 ### Geral
 
@@ -223,6 +318,30 @@ A aba **Reprodução** controla o comportamento de áudio e o estado inicial de 
 ### Acessibilidade
 
 A aba **Acessibilidade** tem uma única opção: **Ativar anúncios de acessibilidade**. Quando ligada, o player anuncia mudanças de tempo, volume, troca de abas e status ao leitor de tela. Quando desligada, esses anúncios são suprimidos. Os atalhos de anúncio sob demanda (`T`, `V`, `S`) continuam funcionando independentemente dessa configuração — veja [Recursos de acessibilidade](#recursos-de-acessibilidade) para detalhes.
+
+### Biblioteca
+
+A aba **Biblioteca** controla a [biblioteca inteligente](#biblioteca-inteligente). Desligar a primeira opção desativa o recurso inteiro e desabilita as demais.
+
+#### Índice da biblioteca
+
+- **Ativar a biblioteca inteligente**: liga a busca global (`Ctrl+G`), os favoritos, as avaliações, o histórico e a retomada por arquivo.
+- **Indexar automaticamente as pastas abertas no navegador**: ao abrir uma pasta, suas mídias entram no índice em segundo plano.
+
+#### Histórico de reprodução
+
+- **Guardar um histórico local de reprodução**: registra cada faixa que tocar tempo suficiente para contar como ouvida.
+- **Reproduções guardadas no histórico**: quantas entradas o histórico mantém (50–20000). Passando disso, as mais antigas são descartadas.
+
+#### Retomar de onde parou
+
+- **Lembrar a posição de mídias longas**: liga a retomada por arquivo.
+- **Duração mínima para lembrar a posição (minutos)**: mídias mais curtas que isso sempre recomeçam do início (1–240 min).
+- **Margem ignorada no início e no fim (segundos)**: parar dentro dessa margem não cria ponto de retomada (5–300 s).
+
+#### Cache de metadados e análises
+
+- **Entradas guardadas no cache**: quantos metadados e análises de áudio ficam guardados (100–100000). As entradas mais antigas saem quando o limite é atingido.
 
 ### Recursos adicionais
 
@@ -446,7 +565,7 @@ Se você usa leitor de tela, os atalhos de anúncio sob demanda `T`, `V` e `S` (
 
 Os anúncios automáticos — como troca de faixa, mudança de aba e alteração de volume — podem ser ligados ou desligados em `Ctrl+,` > **Acessibilidade**.
 
-A busca de itens evita anúncios redundantes: como `Ctrl+F`, `F3` e `Shift+F3` movem a seleção para o item encontrado, quem lê a faixa é o próprio leitor de tela, e a posição na busca fica só na barra de status. O temporizador, por sua vez, avisa ao ser agendado, faltando 5 minutos, faltando 1 minuto e ao pausar a reprodução; seu estado também aparece no anúncio da tecla `S`.
+A busca de itens evita anúncios redundantes: como `Ctrl+F`, `F3` e `Shift+F3` movem a seleção para o item encontrado, quem lê a faixa é o próprio leitor de tela, e a posição na busca fica só na barra de status. A biblioteca inteligente segue a mesma ideia: as listas de resultados e do histórico têm colunas nomeadas, o foco vai para a lista assim que a busca termina, e favoritos e avaliações — que não aparecem no rótulo do item — são sempre falados ao mudar. O temporizador, por sua vez, avisa ao ser agendado, faltando 5 minutos, faltando 1 minuto e ao pausar a reprodução; seu estado também aparece no anúncio da tecla `S`.
 
 O painel de letras também foi pensado para esse uso: `Ctrl+Alt+L` ou a caixa **Letras** na área de tempo mostram ou ocultam o painel, e o texto pode ser lido, navegado com as setas e copiado pelo botão **Copiar letra completa**. Ao trocar de faixa, o player tenta buscar a letra automaticamente primeiro no LRCLIB e depois no YouTube Music.
 

@@ -13,6 +13,14 @@ from ..constants import (
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
     DEFAULT_RESTORE_SESSION_ON_STARTUP,
+    DEFAULT_SMART_LIBRARY_CACHE_LIMIT,
+    DEFAULT_SMART_LIBRARY_ENABLED,
+    DEFAULT_SMART_LIBRARY_HISTORY_ENABLED,
+    DEFAULT_SMART_LIBRARY_HISTORY_LIMIT,
+    DEFAULT_SMART_LIBRARY_INDEX_OPENED_FOLDERS,
+    DEFAULT_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+    DEFAULT_SMART_LIBRARY_RESUME_ENABLED,
+    DEFAULT_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     DEFAULT_VOLUME,
     DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES,
     DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED,
@@ -25,7 +33,15 @@ from ..constants import (
     LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+    MAX_SMART_LIBRARY_CACHE_LIMIT,
+    MAX_SMART_LIBRARY_HISTORY_LIMIT,
+    MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+    MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+    MIN_SMART_LIBRARY_CACHE_LIMIT,
+    MIN_SMART_LIBRARY_HISTORY_LIMIT,
+    MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+    MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     REPEAT_MODES,
@@ -63,6 +79,17 @@ class AppSettings:
     youtube_music_dependency_last_auto_update_epoch: int = 0
     youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
     youtube_music_home_discovery_limit: int = DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT
+    smart_library_enabled: bool = DEFAULT_SMART_LIBRARY_ENABLED
+    smart_library_index_opened_folders: bool = DEFAULT_SMART_LIBRARY_INDEX_OPENED_FOLDERS
+    smart_library_history_enabled: bool = DEFAULT_SMART_LIBRARY_HISTORY_ENABLED
+    smart_library_history_limit: int = DEFAULT_SMART_LIBRARY_HISTORY_LIMIT
+    smart_library_resume_enabled: bool = DEFAULT_SMART_LIBRARY_RESUME_ENABLED
+    smart_library_resume_minimum_minutes: int = DEFAULT_SMART_LIBRARY_RESUME_MINIMUM_MINUTES
+    smart_library_resume_edge_seconds: int = DEFAULT_SMART_LIBRARY_RESUME_EDGE_SECONDS
+    smart_library_cache_limit: int = DEFAULT_SMART_LIBRARY_CACHE_LIMIT
+    smart_library_indexed_folders: list[str] = field(default_factory=list)
+    # Regras das playlists inteligentes, na ordem em que aparecem no menu.
+    smart_library_smart_playlists: list[dict] = field(default_factory=list)
     last_open_dir: str = ""
     recent_media_files: list[str] = field(default_factory=list)
     recent_folders: list[str] = field(default_factory=list)
@@ -75,6 +102,14 @@ class AppSettings:
     @property
     def seek_step_ms(self):
         return self.seek_step_seconds * 1000
+
+    @property
+    def smart_library_resume_minimum_ms(self):
+        return self.smart_library_resume_minimum_minutes * 60 * 1000
+
+    @property
+    def smart_library_resume_edge_ms(self):
+        return self.smart_library_resume_edge_seconds * 1000
 
     def to_dict(self):
         return {
@@ -104,6 +139,16 @@ class AppSettings:
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "youtube_music_library_page_size": self.youtube_music_library_page_size,
             "youtube_music_home_discovery_limit": self.youtube_music_home_discovery_limit,
+            "smart_library_enabled": self.smart_library_enabled,
+            "smart_library_index_opened_folders": self.smart_library_index_opened_folders,
+            "smart_library_history_enabled": self.smart_library_history_enabled,
+            "smart_library_history_limit": self.smart_library_history_limit,
+            "smart_library_resume_enabled": self.smart_library_resume_enabled,
+            "smart_library_resume_minimum_minutes": self.smart_library_resume_minimum_minutes,
+            "smart_library_resume_edge_seconds": self.smart_library_resume_edge_seconds,
+            "smart_library_cache_limit": self.smart_library_cache_limit,
+            "smart_library_indexed_folders": list(self.smart_library_indexed_folders),
+            "smart_library_smart_playlists": _smart_playlist_list(self.smart_library_smart_playlists),
             "last_open_dir": self.last_open_dir if self.remember_last_folder else "",
             "recent_media_files": list(self.recent_media_files),
             "recent_folders": list(self.recent_folders),
@@ -195,6 +240,45 @@ class AppSettings:
             fallback=settings.youtube_music_home_discovery_limit,
         )
 
+        settings.smart_library_enabled = bool(data.get("smart_library_enabled", settings.smart_library_enabled))
+        settings.smart_library_index_opened_folders = bool(
+            data.get("smart_library_index_opened_folders", settings.smart_library_index_opened_folders)
+        )
+        settings.smart_library_history_enabled = bool(
+            data.get("smart_library_history_enabled", settings.smart_library_history_enabled)
+        )
+        settings.smart_library_history_limit = _clamp_int(
+            data.get("smart_library_history_limit", settings.smart_library_history_limit),
+            minimum=MIN_SMART_LIBRARY_HISTORY_LIMIT,
+            maximum=MAX_SMART_LIBRARY_HISTORY_LIMIT,
+            fallback=settings.smart_library_history_limit,
+        )
+        settings.smart_library_resume_enabled = bool(
+            data.get("smart_library_resume_enabled", settings.smart_library_resume_enabled)
+        )
+        settings.smart_library_resume_minimum_minutes = _clamp_int(
+            data.get("smart_library_resume_minimum_minutes", settings.smart_library_resume_minimum_minutes),
+            minimum=MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
+            maximum=MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
+            fallback=settings.smart_library_resume_minimum_minutes,
+        )
+        settings.smart_library_resume_edge_seconds = _clamp_int(
+            data.get("smart_library_resume_edge_seconds", settings.smart_library_resume_edge_seconds),
+            minimum=MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+            maximum=MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+            fallback=settings.smart_library_resume_edge_seconds,
+        )
+        settings.smart_library_cache_limit = _clamp_int(
+            data.get("smart_library_cache_limit", settings.smart_library_cache_limit),
+            minimum=MIN_SMART_LIBRARY_CACHE_LIMIT,
+            maximum=MAX_SMART_LIBRARY_CACHE_LIMIT,
+            fallback=settings.smart_library_cache_limit,
+        )
+        settings.smart_library_indexed_folders = _string_list(data.get("smart_library_indexed_folders"))
+        settings.smart_library_smart_playlists = _smart_playlist_list(
+            data.get("smart_library_smart_playlists")
+        )
+
         last_open_dir = str(data.get("last_open_dir") or "").strip()
         settings.last_open_dir = last_open_dir if settings.remember_last_folder else ""
         settings.recent_media_files = _string_list(data.get("recent_media_files"))
@@ -242,6 +326,25 @@ def _string_list(value):
             normalized_items.append(normalized_item)
 
     return normalized_items
+
+
+def _smart_playlist_list(value):
+    # Normaliza pela própria regra, para que um arquivo de configurações
+    # editado à mão nunca entre com campos fora de faixa ou sem nome.
+    if not isinstance(value, list):
+        return []
+
+    from ..smart_library.smart_playlists import SmartPlaylistRule
+
+    rules = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        rule = SmartPlaylistRule.from_dict(item)
+        if rule.name:
+            rules.append(rule.to_dict())
+
+    return rules
 
 
 def _equalizer_preset_list(value):

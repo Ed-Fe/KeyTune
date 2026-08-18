@@ -12,6 +12,7 @@ Este manual presenta las funciones principales de la aplicación y las acciones 
 - Playlists en pestañas
 - Una cola de reproducción para organizar lo que sonará después
 - Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado
+- Biblioteca inteligente con búsqueda global, favoritos, valoraciones, historial y reanudación por archivo
 - Temporizador con duraciones predefinidas o pausa al final de la pista
 - Navegación por carpetas con vista previa
 - Ecualizador por pestaña con predefinidos y presets personalizados
@@ -81,6 +82,11 @@ Los atajos para abrir medios, carpetas, playlists y enlaces están en la secció
 - `Ctrl+Shift+S`: guardar la playlist actual
 - `Ctrl+B`: alternar foco entre el navegador de elementos y el reproductor
 - `Ctrl+F`: localizar un elemento en la playlist o carpeta actual
+- `Ctrl+G`: buscar en toda la biblioteca (listas, carpetas e historial)
+- `Ctrl+D`: marcar o desmarcar la selección como favorita
+- `Ctrl+0` a `Ctrl+5`: valorar la selección de cero a cinco estrellas
+- `Ctrl+Shift+H`: abrir el historial de reproducción
+- `Ctrl+Shift+R`: continuar escuchando lo que quedó a medias
 - `F3` / `Shift+F3`: siguiente o anterior resultado de la búsqueda
 
 ### Cola de reproducción
@@ -183,9 +189,98 @@ Detalles útiles:
 
 Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.
 
+## Biblioteca inteligente
+
+Mientras `Ctrl+F` busca en la lista que está abierta, la **biblioteca inteligente** recuerda lo que ya abriste y escuchaste, y lo deja todo consultable de una vez. También guarda favoritos, valoraciones, el historial de reproducción y el punto donde se detuvo cada medio largo.
+
+Todo vive en una base de datos local (`smart_library.db`) en la misma carpeta de datos que las preferencias. Nada sale de tu equipo, y la función entera se puede desactivar en `Ctrl+,` > **Biblioteca**.
+
+El menú **Biblioteca** reúne todos los comandos.
+
+### Qué entra en el índice
+
+- Los medios de cualquier playlist o carpeta que abras entran en el índice en segundo plano.
+- **Biblioteca > Indexar una carpeta en la biblioteca...** elige una carpeta y recorre también sus subcarpetas, sin frenar la reproducción. El reproductor avisa al terminar.
+- **Biblioteca > Actualizar las carpetas indexadas** vuelve a recorrer las carpetas ya indexadas y descarta los archivos que ya no existen.
+- **Biblioteca > Resumen de la biblioteca** anuncia cuántos medios, carpetas, favoritos y reproducciones hay guardados.
+- **Biblioteca > Vaciar la biblioteca...** borra todo (índice, favoritos, valoraciones, historial y puntos de reanudación), con confirmación.
+
+Si prefieres que solo entren las carpetas que elijas tú, desactiva **Indexar automáticamente las carpetas abiertas en el navegador** en las preferencias.
+
+### Búsqueda global
+
+- `Ctrl+G` abre el cuadro **Buscar en la biblioteca**.
+- Escribe el texto y confirma con `Intro` o con el botón **Buscar**. La búsqueda ignora acentos y mayúsculas, y cada palabra que escribas debe aparecer en algún lugar del nombre del elemento o de la carpeta.
+- El campo **Filtrar** restringe la búsqueda a **Todo en la biblioteca**, **Solo favoritos**, **Solo valorados** o **Solo ya reproducidos**. Los tres últimos funcionan incluso con el campo de texto vacío.
+- Los resultados aparecen en una lista con columnas de elemento, valoración y carpeta, así que el lector de pantalla lee las tres al recorrerla con las flechas. El foco pasa a la lista en cuanto termina la búsqueda.
+- La búsqueda se resuelve con un índice de texto completo, así que sigue siendo instantánea incluso con decenas de miles de archivos. Casa el principio de cada palabra («estrad» encuentra «Estrada»); cuando así no aparece nada, el reproductor todavía hace un recorrido que encuentra fragmentos en medio de la palabra («onita» encuentra «Bonita»).
+- `Intro` (o el botón **Reproducir**) abre **todos** los resultados en una lista nueva y empieza por la pista seleccionada: así una búsqueda se convierte en una lista utilizable, no en una pista suelta.
+- **Añadir a la cola** encola solo el elemento seleccionado en la lista que está sonando.
+
+### Favoritos y valoraciones
+
+Los dos comandos actúan sobre lo que esté seleccionado en la lista de elementos; sin selección, actúan sobre el medio que está sonando.
+
+- `Ctrl+D`: marca o desmarca como favorito. Con varios elementos seleccionados, los marca todos.
+- `Ctrl+0` a `Ctrl+5`: da de cero a cinco estrellas.
+- **Biblioteca > Anunciar las marcas de la selección**: lee si el elemento es favorito, su valoración y cuántas veces se reprodujo.
+- **Biblioteca > Abrir favoritos en una lista nueva**: arma una lista con todo lo que marcaste.
+
+Los mismos comandos están en el menú contextual de la lista de elementos (`Shift+F10`).
+
+Los favoritos y las valoraciones aparecen junto al nombre en la propia lista de elementos —por ejemplo `2. Estrada — favorito, 5 estrellas`—, tanto en las listas como en el navegador de carpetas. Así el lector de pantalla anuncia la marca junto con el elemento, sin necesidad de ningún comando. El sufijo es solo visual: la búsqueda `Ctrl+F`, los nombres de las pestañas y la sesión guardada siguen usando el nombre puro.
+
+### Historial de reproducción
+
+- `Ctrl+Shift+H` abre el **Historial de reproducción**.
+- El campo **Ver** elige entre tres vistas, y las columnas cambian con ella:
+  - **Todas las reproducciones**: una fila por cada vez que el medio sonó, con cuándo sonó, en qué punto se detuvo y su origen (lista local, carpeta, medio remoto o YouTube Music).
+  - **Agrupado por medio**: una fila por medio, con cuántas veces sonó, la última vez y sus marcas. Escuchar la misma pista cuarenta veces deja de llenar la lista.
+  - **Más reproducidas**: la misma agrupación, de la más reproducida a la menos reproducida.
+- El campo **Filtrar por texto** reduce la lista; `Intro` (o **Reproducir**) la reproduce de nuevo y **Añadir a la cola** la encola.
+- **Quitar la entrada** saca una reproducción de la lista sin borrar el medio del índice. En las vistas agrupadas el botón pasa a ser **Quitar del historial** y borra todas las reproducciones de ese medio. **Vaciar el historial** lo borra todo, con confirmación.
+- Una pista solo entra en el historial después de sonar lo suficiente para contar como escuchada (alrededor del 25% de su duración, como máximo 20 segundos).
+- El historial se recorta al límite fijado en las preferencias, descartando las entradas más antiguas.
+
+Este historial es local e independiente de **Guardar las canciones escuchadas en el historial de YouTube Music**, que registra en tu cuenta de YouTube Music.
+
+### Reanudar donde lo dejaste
+
+Los pódcast, audiolibros y vídeos largos vuelven a sonar desde donde se detuvieron, y la barra de estado muestra «Reanudando … en …». La regla es conservadora a propósito:
+
+- vale solo para archivos locales: los streams no tienen una línea de tiempo estable entre sesiones;
+- solo para medios por encima de la **duración mínima** configurada (10 minutos por defecto);
+- detenerse dentro del **margen** configurado (30 segundos por defecto) al principio o al final no crea punto de reanudación;
+- llegar al final de la pista borra la marca, así que la próxima vez empieza desde el principio.
+
+**Biblioteca > Continuar escuchando** (`Ctrl+Shift+R`) abre una lista con todo lo que está a medias, de lo más reciente a lo más antiguo, y cada elemento muestra dónde se detuvo: así reencuentras el pódcast que dejaste por la mitad sin tener que recordar dónde estaba.
+
+**Biblioteca > Borrar las posiciones de reanudación** las limpia todas de una vez.
+
+### Listas inteligentes
+
+Una lista inteligente es una regla guardada, no una lista fija: se arma cada vez que la abres, así que sigue tus cambios de valoración y de historial. «Cinco estrellas que no suenan desde hace 30 días» sigue siendo correcta un mes después, sola.
+
+**Biblioteca > Listas inteligentes** enumera las reglas guardadas para abrirlas con un solo comando, y **Gestionar listas inteligentes...** crea, edita y quita.
+
+En el editor todo son campos de teclado, sin constructor visual de reglas:
+
+- **Solo favoritos** y **Valoración mínima** filtran por tus marcas.
+- **Sin sonar desde hace al menos (días)** encuentra lo que quedó olvidado; **Incluir medios nunca reproducidos** decide si lo que nunca sonó entra también.
+- **Reproducciones mínimas** va por el otro lado: solo lo que ya escuchaste bastante.
+- **Limitar a la carpeta** restringe a una carpeta y a todo lo que hay debajo.
+- **Incluir medios remotos** trae también enlaces de YouTube Music y radios, que por defecto quedan fuera.
+- **Ordenar por** y **Número máximo de elementos** deciden qué sale y en qué orden.
+
+Cada cambio actualiza el **Resumen de la regla** al final del cuadro, en una frase: para quien usa lector de pantalla es la forma más rápida de comprobar qué reunirá la regla antes de guardar. Las reglas con nombre repetido reciben un sufijo numérico automático, y los cambios se guardan aunque cierres el cuadro con `Esc`.
+
+### Caché de metadatos y análisis
+
+La biblioteca guarda también los metadatos ya resueltos y los análisis de audio, para no repetir trabajo costoso en cada apertura. Una entrada se descarta automáticamente cuando el archivo cambia de tamaño o de fecha, y el número de entradas guardadas se ajusta en las preferencias.
+
 ## Configuración
 
-Las preferencias están en `Ctrl+,` y se dividen en cuatro pestañas: **General**, **Reproducción**, **Accesibilidad** y **Recursos adicionales**.
+Las preferencias están en `Ctrl+,` y se dividen en cinco pestañas: **General**, **Reproducción**, **Accesibilidad**, **Biblioteca** y **Recursos adicionales**.
 
 ### General
 
@@ -223,6 +318,30 @@ La pestaña **Reproducción** controla el comportamiento de audio y el estado in
 ### Accesibilidad
 
 La pestaña **Accesibilidad** tiene una sola opción: **Activar anuncios de accesibilidad**. Cuando está activada, el reproductor anuncia cambios de tiempo, volumen, cambio de pestañas y estado al lector de pantalla. Cuando está desactivada, esos anuncios se suprimen. Los atajos de anuncio bajo demanda (`T`, `V`, `S`) siguen funcionando independientemente de esta configuración; consulta [Recursos de accesibilidad](#recursos-de-accesibilidad) para ver detalles.
+
+### Biblioteca
+
+La pestaña **Biblioteca** controla la [biblioteca inteligente](#biblioteca-inteligente). Desactivar la primera opción desactiva la función entera y deshabilita las demás.
+
+#### Índice de la biblioteca
+
+- **Activar la biblioteca inteligente**: activa la búsqueda global (`Ctrl+G`), los favoritos, las valoraciones, el historial y la reanudación por archivo.
+- **Indexar automáticamente las carpetas abiertas en el navegador**: al abrir una carpeta, sus medios entran en el índice en segundo plano.
+
+#### Historial de reproducción
+
+- **Guardar un historial local de reproducción**: registra cada pista que suene lo suficiente para contar como escuchada.
+- **Reproducciones guardadas en el historial**: cuántas entradas mantiene el historial (50-20000). Al superarlo, se descartan las más antiguas.
+
+#### Reanudar donde lo dejaste
+
+- **Recordar la posición de los medios largos**: activa la reanudación por archivo.
+- **Duración mínima para recordar la posición (minutos)**: los medios más cortos que eso siempre empiezan desde el principio (1-240 min).
+- **Margen ignorado al principio y al final (segundos)**: detenerse dentro de ese margen no crea punto de reanudación (5-300 s).
+
+#### Caché de metadatos y análisis
+
+- **Entradas guardadas en la caché**: cuántos metadatos resueltos y análisis de audio se guardan (100-100000). Las entradas más antiguas se descartan al alcanzar el límite.
 
 ### Recursos adicionales
 
@@ -444,7 +563,7 @@ Si usas lector de pantalla, los atajos de anuncio bajo demanda `T`, `V` y `S` (d
 
 Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en `Ctrl+,` > **Accesibilidad**.
 
-La búsqueda de elementos evita anuncios redundantes: como `Ctrl+F`, `F3` y `Shift+F3` mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla `S`.
+La búsqueda de elementos evita anuncios redundantes: como `Ctrl+F`, `F3` y `Shift+F3` mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. La biblioteca inteligente sigue la misma idea: las listas de resultados y del historial tienen columnas con nombre, el foco pasa a la lista en cuanto termina la búsqueda, y los favoritos y las valoraciones, que nunca aparecen en la etiqueta del elemento, siempre se anuncian al cambiar. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla `S`.
 
 El panel de letras también está pensado para ese uso: `Ctrl+Alt+L` o la casilla **Letras** en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón **Copiar letra completa**. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.
 

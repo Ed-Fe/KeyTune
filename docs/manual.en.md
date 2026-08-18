@@ -12,6 +12,7 @@ This manual presents the application's main features and the most common actions
 - Tabbed playlists
 - A playback queue to organize what plays next
 - Search within the current playlist or folder, with keyboard navigation between results
+- Smart library with global search, favorites, ratings, history, and per-file resume
 - Sleep timer with preset durations or a pause at the end of the current track
 - Folder navigation with preview
 - Per-tab equalizer with built-in profiles and custom presets
@@ -81,6 +82,11 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `Ctrl+Shift+S`: save the current playlist
 - `Ctrl+B`: switch focus between the item browser and the player
 - `Ctrl+F`: find an item in the current playlist or folder
+- `Ctrl+G`: search the whole library (playlists, folders, and history)
+- `Ctrl+D`: add the selection to favorites or remove it
+- `Ctrl+0` to `Ctrl+5`: rate the selection from zero to five stars
+- `Ctrl+Shift+H`: open the playback history
+- `Ctrl+Shift+R`: continue listening to what was left half finished
 - `F3` / `Shift+F3`: next or previous search result
 
 ### Playback queue
@@ -183,9 +189,98 @@ Useful details:
 
 For organization tasks, it is useful to think of tabs as independent workspaces: one tab to play something now, another to review the library, and another for tests or temporary collections.
 
+## Smart library
+
+While `Ctrl+F` searches the list that is currently open, the **smart library** remembers what you have already opened and listened to, and makes all of it searchable at once. It also keeps favorites, ratings, the playback history, and the point where each long media stopped.
+
+Everything lives in a local database (`smart_library.db`) in the same data folder as the preferences. Nothing leaves your computer, and the whole feature can be turned off in `Ctrl+,` > **Library**.
+
+The **Library** menu gathers every command.
+
+### What goes into the index
+
+- The media of any playlist or folder you open enters the index in the background.
+- **Library > Index a folder into the library...** picks a folder and walks its subfolders too, without stalling playback. The player speaks when it is done.
+- **Library > Refresh indexed folders** rescans the folders already indexed and drops files that no longer exist.
+- **Library > Library summary** announces how much media, how many folders, favorites, and plays are stored.
+- **Library > Clear the library...** erases everything (index, favorites, ratings, history, and resume points), with a confirmation.
+
+If you would rather index only the folders you pick yourself, turn off **Automatically index folders opened in the browser** in the preferences.
+
+### Global search
+
+- `Ctrl+G` opens the **Search the library** box.
+- Type the text and confirm with `Enter` or the **Search** button. The search ignores accents and case, and every word you type must appear somewhere in the item or folder name.
+- The **Filter** field narrows the search to **Everything in the library**, **Favorites only**, **Rated only**, or **Already played only**. The last three work even with an empty text field.
+- Results appear in a list with item, rating, and folder columns, so the screen reader reads all three while you move with the arrow keys. Focus goes to the list as soon as the search finishes.
+- The search is served by a full-text index, so it stays instant even with tens of thousands of files. It matches the start of each word ("estrad" finds "Estrada"); when nothing matches that way, the player still runs a scan that finds fragments inside a word ("onita" finds "Bonita").
+- `Enter` (or the **Play** button) opens **all** results in a new playlist and starts on the selected track - so a search becomes a usable list, not a lone track.
+- **Add to queue** queues only the selected item in the playlist that is playing.
+
+### Favorites and ratings
+
+Both commands act on whatever is selected in the item list; with nothing selected, they act on the media that is playing.
+
+- `Ctrl+D`: add to or remove from favorites. With several items selected, it adds all of them.
+- `Ctrl+0` to `Ctrl+5`: give zero to five stars.
+- **Library > Announce the selection's marks**: reads the item's favorite state, rating, and play count.
+- **Library > Open favorites in a new playlist**: builds a playlist with everything you marked.
+
+The same commands are in the item list context menu (`Shift+F10`).
+
+Favorites and ratings appear next to the name in the item list itself - for example `2. Estrada - favorite, 5 stars` - in playlists and in the folder browser alike. The screen reader announces the mark together with the item, with no command needed. The suffix is display only: `Ctrl+F` search, tab names, and the saved session all keep using the plain name.
+
+### Playback history
+
+- `Ctrl+Shift+H` opens the **Playback history**.
+- The **View** field picks between three views, and the columns change with it:
+  - **All plays**: one row per time the media played, with when it played, where it stopped, and its source (local playlist, folder, remote media, or YouTube Music).
+  - **Grouped by media**: one row per media, with how many times it played, the last time, and its marks. Playing the same track forty times stops flooding the list.
+  - **Most played**: the same grouping, from the most played to the least played.
+- The **Filter by text** field narrows the list; `Enter` (or **Play**) plays it again and **Add to queue** queues it.
+- **Remove entry** drops one play from the list without removing the media from the index. In the grouped views the button becomes **Remove from history** and drops every play of that media. **Clear history** erases everything, with a confirmation.
+- A track only enters the history after playing long enough to count as listened to (about 25% of its duration, at most 20 seconds).
+- The history is trimmed to the limit set in the preferences, discarding the oldest entries.
+
+This history is local and independent from **Save listened tracks to the YouTube Music history**, which records into your YouTube Music account.
+
+### Resume where you stopped
+
+Podcasts, audiobooks, and long videos start again from where they stopped, and the status bar shows "Resuming ... at ...". The rule is deliberately conservative:
+
+- it applies only to local files - streams have no stable timeline across sessions;
+- only to media above the configured **minimum duration** (10 minutes by default);
+- stopping inside the configured **margin** (30 seconds by default) at the start or the end creates no resume point;
+- reaching the end of the track clears the mark, so next time it starts over.
+
+**Library > Continue listening** (`Ctrl+Shift+R`) opens a playlist with everything that is half finished, newest first, each item showing where it stopped - that is how you find the podcast you left in the middle without having to remember where it was.
+
+**Library > Clear resume positions** wipes them all at once.
+
+### Smart playlists
+
+A smart playlist is a saved rule, not a fixed list: it is built every time you open it, so it follows your rating and history changes. "Five stars I have not played in 30 days" is still correct a month later, on its own.
+
+**Library > Smart playlists** lists the saved rules so you can open one with a single command, and **Manage smart playlists...** creates, edits, and removes them.
+
+In the editor everything is a keyboard field - no visual rule builder:
+
+- **Favorites only** and **Minimum rating** filter by your marks.
+- **Not played for at least (days)** finds what has gone stale; **Include media never played** decides whether things you never played come along.
+- **Minimum plays** goes the other way: only what you have already listened to a lot.
+- **Limit to folder** restricts to one folder and everything under it.
+- **Include remote media** also brings in YouTube Music links and radios, which are left out by default.
+- **Sort by** and **Maximum number of items** decide what comes out and in what order.
+
+Every change updates the **Rule summary** at the bottom of the box, in one sentence - for screen reader users it is the fastest way to check what the rule will gather before saving. Rules with a repeated name get an automatic numeric suffix, and changes are saved even if you close the box with `Esc`.
+
+### Metadata and analysis cache
+
+The library also keeps metadata it has already resolved and audio analyses, so expensive work is not repeated on every open. An entry is discarded automatically when the file changes size or date, and the number of stored entries is adjustable in the preferences.
+
 ## Settings
 
-Preferences are under `Ctrl+,` and are divided into four tabs: **General**, **Playback**, **Accessibility**, and **Additional features**.
+Preferences are under `Ctrl+,` and are divided into five tabs: **General**, **Playback**, **Accessibility**, **Library**, and **Additional features**.
 
 ### General
 
@@ -223,6 +318,30 @@ The **Playback** tab controls audio behavior and the initial state of new playli
 ### Accessibility
 
 The **Accessibility** tab has a single option: **Enable accessibility announcements**. When enabled, the player announces changes in time, volume, tab switching, and status to the screen reader. When disabled, those announcements are suppressed. On-demand announcement shortcuts (`T`, `V`, `S`) keep working regardless of this setting - see [Accessibility features](#accessibility-features) for details.
+
+### Library
+
+The **Library** tab controls the [smart library](#smart-library). Turning off the first option disables the whole feature and greys out the rest.
+
+#### Library index
+
+- **Enable the smart library**: turns on the global search (`Ctrl+G`), favorites, ratings, history, and per-file resume.
+- **Automatically index folders opened in the browser**: when you open a folder, its media enters the index in the background.
+
+#### Playback history
+
+- **Keep a local playback history**: records every track that plays long enough to count as listened to.
+- **Plays kept in the history**: how many entries the history holds (50-20000). Past that, the oldest are discarded.
+
+#### Resume where you stopped
+
+- **Remember the position of long media**: turns on per-file resume.
+- **Minimum duration to remember the position (minutes)**: media shorter than this always starts over (1-240 min).
+- **Margin ignored at the start and at the end (seconds)**: stopping inside that margin creates no resume point (5-300 s).
+
+#### Metadata and analysis cache
+
+- **Entries kept in the cache**: how many resolved metadata records and audio analyses are stored (100-100000). The oldest entries are dropped once the limit is reached.
 
 ### Additional features
 
@@ -446,7 +565,7 @@ If you use a screen reader, the on-demand announcement shortcuts `T`, `V`, and `
 
 Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in `Ctrl+,` > **Accessibility**.
 
-Item search avoids redundant announcements: since `Ctrl+F`, `F3`, and `Shift+F3` move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the `S` key announcement.
+Item search avoids redundant announcements: since `Ctrl+F`, `F3`, and `Shift+F3` move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The smart library follows the same idea: the result and history lists have named columns, focus moves to the list as soon as a search finishes, and favorites and ratings - which never show up in the item label - are always spoken when they change. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the `S` key announcement.
 
 The lyrics panel is also designed for this use: `Ctrl+Alt+L` or the **Lyrics** checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the **Copy full lyrics** button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.
 

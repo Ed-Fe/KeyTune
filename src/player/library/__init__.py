@@ -1,4 +1,5 @@
-from .browser import PlaylistBrowserPanel, VirtualItemsListCtrl, normalize_search_text
+from .browser import PlaylistBrowserPanel, VirtualItemsListCtrl
+from .text import normalize_search_text
 from .media_scan import (
     discover_folder_entries,
     discover_media_files,

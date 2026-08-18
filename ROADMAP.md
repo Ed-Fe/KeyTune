@@ -10,13 +10,13 @@ as features are tested and feedback is collected.
 - [x] Add a sleep timer with preset durations and an end-of-track option
 - [x] Refresh the user manuals and release documentation
 
-## Version 1.4.0 — Smart Library
+## Version 1.4.0 — Smart Library (delivered)
 
-- Add global search across local playlists and folders
-- Support favorites and ratings for local media
-- Keep a local playback history
-- Remember playback positions per file for podcasts, audiobooks, and other long-form media
-- Introduce a reusable metadata and audio-analysis cache
+- [x] Add global search across local playlists and folders
+- [x] Support favorites and ratings for local media
+- [x] Keep a local playback history
+- [x] Remember playback positions per file for podcasts, audiobooks, and other long-form media
+- [x] Introduce a reusable metadata and audio-analysis cache
 
 ## Version 1.5.0 — AutoDJ Beta
 

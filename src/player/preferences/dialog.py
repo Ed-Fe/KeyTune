@@ -10,8 +10,16 @@ from ..constants import (
     LOGGING_LEVEL_LABELS,
     LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
+    MAX_SMART_LIBRARY_CACHE_LIMIT,
+    MAX_SMART_LIBRARY_HISTORY_LIMIT,
+    MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+    MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+    MIN_SMART_LIBRARY_CACHE_LIMIT,
+    MIN_SMART_LIBRARY_HISTORY_LIMIT,
+    MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+    MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
     MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     REPEAT_MODE_LABELS,
@@ -53,6 +61,7 @@ class PreferencesDialog(wx.Dialog):
         self._build_general_tab()
         self._build_playback_tab()
         self._build_accessibility_tab()
+        self._build_smart_library_tab()
         self._build_additional_resources_tab()
 
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -364,6 +373,172 @@ class PreferencesDialog(wx.Dialog):
         page_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, _("Acessibilidade"))
+
+    def _build_smart_library_tab(self):
+        page, page_sizer = self._create_tab_page(_("Biblioteca"))
+        self._smart_library_page = page
+
+        info_label = wx.StaticText(
+            page,
+            label=_(
+                "A biblioteca inteligente guarda, no seu computador, um índice das mídias que você abre, "
+                "os favoritos, as avaliações, o histórico de reprodução e o ponto onde cada mídia longa parou. "
+                "Nada é enviado para fora do computador."
+            ),
+        )
+        info_label.Wrap(520)
+
+        self.smart_library_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Índice da biblioteca")), wx.VERTICAL)
+        self.smart_library_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a &biblioteca inteligente"))
+        self.smart_library_index_opened_folders_checkbox = wx.CheckBox(
+            page,
+            label=_("Indexar automaticamente as &pastas abertas no navegador"),
+        )
+        self._configure_checkbox(
+            self.smart_library_enabled_checkbox,
+            _("Ativar a biblioteca inteligente"),
+            _("Liga a busca global (Ctrl+G), os favoritos, as avaliações, o histórico e a retomada por arquivo."),
+        )
+        self._configure_checkbox(
+            self.smart_library_index_opened_folders_checkbox,
+            _("Indexar automaticamente as pastas abertas"),
+            _("Ao abrir uma pasta no navegador, suas mídias entram no índice em segundo plano."),
+        )
+        self.smart_library_box.Add(self.smart_library_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        self.smart_library_box.Add(
+            self.smart_library_index_opened_folders_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
+
+        self.smart_library_history_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label=_("Histórico de reprodução")),
+            wx.VERTICAL,
+        )
+        self.smart_library_history_enabled_checkbox = wx.CheckBox(
+            page,
+            label=_("Guardar um &histórico local de reprodução"),
+        )
+        self._configure_checkbox(
+            self.smart_library_history_enabled_checkbox,
+            _("Guardar um histórico local de reprodução"),
+            _("Registra cada faixa que tocar tempo suficiente para contar como ouvida."),
+        )
+        self.smart_library_history_limit_group, self.smart_library_history_limit_ctrl = self._build_spin_control_group(
+            page,
+            label_text=_("Reproduções guardadas no histórico"),
+            help_text=_("Quando o histórico passa desse número, as entradas mais antigas são descartadas."),
+            min_value=MIN_SMART_LIBRARY_HISTORY_LIMIT,
+            max_value=MAX_SMART_LIBRARY_HISTORY_LIMIT,
+        )
+        self.smart_library_history_box.Add(
+            self.smart_library_history_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6
+        )
+        self.smart_library_history_box.Add(
+            self.smart_library_history_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
+
+        self.smart_library_resume_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label=_("Retomar de onde parou")),
+            wx.VERTICAL,
+        )
+        self.smart_library_resume_enabled_checkbox = wx.CheckBox(
+            page,
+            label=_("&Lembrar a posição de mídias longas"),
+        )
+        self._configure_checkbox(
+            self.smart_library_resume_enabled_checkbox,
+            _("Lembrar a posição de mídias longas"),
+            _("Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam."),
+        )
+        self.smart_library_resume_minimum_group, self.smart_library_resume_minimum_ctrl = self._build_spin_control_group(
+            page,
+            label_text=_("Duração mínima para lembrar a posição (minutos)"),
+            help_text=_("Mídias mais curtas que isso sempre recomeçam do início."),
+            min_value=MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
+            max_value=MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
+        )
+        self.smart_library_resume_edge_group, self.smart_library_resume_edge_ctrl = self._build_spin_control_group(
+            page,
+            label_text=_("Margem ignorada no início e no fim (segundos)"),
+            help_text=_(
+                "Parar dentro dessa margem não cria ponto de retomada: no início a mídia mal começou, "
+                "no fim ela já terminou."
+            ),
+            min_value=MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+            max_value=MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+        )
+        self.smart_library_resume_box.Add(self.smart_library_resume_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        self.smart_library_resume_box.Add(
+            self.smart_library_resume_minimum_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
+        self.smart_library_resume_box.Add(
+            self.smart_library_resume_edge_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        )
+
+        self.smart_library_cache_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label=_("Cache de metadados e análises")),
+            wx.VERTICAL,
+        )
+        self.smart_library_cache_limit_group, self.smart_library_cache_limit_ctrl = self._build_spin_control_group(
+            page,
+            label_text=_("Entradas guardadas no cache"),
+            help_text=_(
+                "Guarda metadados já resolvidos e análises de áudio para não repetir trabalho caro. "
+                "As entradas mais antigas saem quando o limite é atingido."
+            ),
+            min_value=MIN_SMART_LIBRARY_CACHE_LIMIT,
+            max_value=MAX_SMART_LIBRARY_CACHE_LIMIT,
+        )
+        self.smart_library_cache_box.Add(
+            self.smart_library_cache_limit_group, 0, wx.ALL | wx.EXPAND, 6
+        )
+
+        management_label = wx.StaticText(
+            page,
+            label=_(
+                "Use o menu Biblioteca para indexar pastas, consultar o histórico, apagar as posições de "
+                "retomada ou limpar tudo."
+            ),
+        )
+        management_label.Wrap(520)
+
+        self.smart_library_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_enabled)
+        self.smart_library_history_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_history)
+        self.smart_library_resume_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_resume)
+
+        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(self.smart_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.smart_library_history_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.smart_library_resume_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.smart_library_cache_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(management_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+
+        self.notebook.AddPage(page, _("Biblioteca"))
+
+    def _on_toggle_smart_library_enabled(self, _event):
+        self._refresh_smart_library_controls()
+        if self.smart_library_enabled_checkbox.GetValue():
+            self._announce_from_parent(_("Biblioteca inteligente ativada. Opções disponíveis."))
+        else:
+            self._announce_from_parent(_("Biblioteca inteligente desativada. Opções indisponíveis."))
+
+    def _on_toggle_smart_library_history(self, _event):
+        self._refresh_smart_library_controls()
+
+    def _on_toggle_smart_library_resume(self, _event):
+        self._refresh_smart_library_controls()
+
+    def _refresh_smart_library_controls(self):
+        library_enabled = self.smart_library_enabled_checkbox.GetValue()
+        history_enabled = library_enabled and self.smart_library_history_enabled_checkbox.GetValue()
+        resume_enabled = library_enabled and self.smart_library_resume_enabled_checkbox.GetValue()
+
+        self.smart_library_index_opened_folders_checkbox.Enable(library_enabled)
+        self.smart_library_history_enabled_checkbox.Enable(library_enabled)
+        self.smart_library_history_limit_ctrl.Enable(history_enabled)
+        self.smart_library_resume_enabled_checkbox.Enable(library_enabled)
+        self.smart_library_resume_minimum_ctrl.Enable(resume_enabled)
+        self.smart_library_resume_edge_ctrl.Enable(resume_enabled)
+        self.smart_library_cache_limit_ctrl.Enable(library_enabled)
 
     def _build_additional_resources_tab(self):
         page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
@@ -719,6 +894,17 @@ class PreferencesDialog(wx.Dialog):
         except ValueError:
             audio_output_index = 0
         self.audio_output_choice.SetSelection(audio_output_index)
+
+        self.smart_library_enabled_checkbox.SetValue(settings.smart_library_enabled)
+        self.smart_library_index_opened_folders_checkbox.SetValue(settings.smart_library_index_opened_folders)
+        self.smart_library_history_enabled_checkbox.SetValue(settings.smart_library_history_enabled)
+        self.smart_library_history_limit_ctrl.SetValue(settings.smart_library_history_limit)
+        self.smart_library_resume_enabled_checkbox.SetValue(settings.smart_library_resume_enabled)
+        self.smart_library_resume_minimum_ctrl.SetValue(settings.smart_library_resume_minimum_minutes)
+        self.smart_library_resume_edge_ctrl.SetValue(settings.smart_library_resume_edge_seconds)
+        self.smart_library_cache_limit_ctrl.SetValue(settings.smart_library_cache_limit)
+        self._refresh_smart_library_controls()
+
         self._refresh_additional_resources_controls()
 
     def get_settings(self):
@@ -759,6 +945,15 @@ class PreferencesDialog(wx.Dialog):
 
         if not settings.remember_last_folder:
             settings.last_open_dir = ""
+
+        settings.smart_library_enabled = self.smart_library_enabled_checkbox.GetValue()
+        settings.smart_library_index_opened_folders = self.smart_library_index_opened_folders_checkbox.GetValue()
+        settings.smart_library_history_enabled = self.smart_library_history_enabled_checkbox.GetValue()
+        settings.smart_library_history_limit = int(self.smart_library_history_limit_ctrl.GetValue())
+        settings.smart_library_resume_enabled = self.smart_library_resume_enabled_checkbox.GetValue()
+        settings.smart_library_resume_minimum_minutes = int(self.smart_library_resume_minimum_ctrl.GetValue())
+        settings.smart_library_resume_edge_seconds = int(self.smart_library_resume_edge_ctrl.GetValue())
+        settings.smart_library_cache_limit = int(self.smart_library_cache_limit_ctrl.GetValue())
 
         settings.logging_enabled = self.logging_enabled_checkbox.GetValue()
         selected_level_index = self.logging_level_choice.GetSelection()

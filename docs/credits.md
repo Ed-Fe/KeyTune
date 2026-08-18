@@ -17,3 +17,4 @@
 - [Ed-Fe](https://github.com/Ed-Fe)
 - [claude](https://github.com/claude)
 - [viniciusSiqueira195](https://github.com/viniciusSiqueira195)
+- [paulosantesso1](https://github.com/paulosantesso1)

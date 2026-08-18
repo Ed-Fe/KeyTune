@@ -58,6 +58,21 @@ class BrowserCommandsMixin:
         menu.AppendSeparator()
         remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
         menu.AppendSeparator()
+        favorite_item = menu.Append(wx.ID_ANY, _("Favoritar ou desfavoritar (Ctrl+D)"))
+        rating_menu = wx.Menu()
+        rating_items = [
+            (rating, rating_menu.Append(wx.ID_ANY, label))
+            for rating, label in (
+                (0, _("Sem avaliação")),
+                (1, _("1 estrela")),
+                (2, _("2 estrelas")),
+                (3, _("3 estrelas")),
+                (4, _("4 estrelas")),
+                (5, _("5 estrelas")),
+            )
+        ]
+        menu.AppendSubMenu(rating_menu, _("Avaliação"))
+        menu.AppendSeparator()
         like_item = menu.Append(wx.ID_ANY, _("Curtir no YouTube Music"))
         dislike_item = menu.Append(wx.ID_ANY, _("Não gostei no YouTube Music"))
         add_to_playlist_item = menu.Append(wx.ID_ANY, _("Adicionar à playlist do YouTube Music..."))
@@ -98,6 +113,23 @@ class BrowserCommandsMixin:
             lambda _event: self._remove_items_from_current_playlist(browser_panel.get_selected_indexes()),
             id=remove_item.GetId(),
         )
+        smart_library_ready = bool(selected_count) and getattr(self, "_smart_library", lambda: None)() is not None
+        favorite_item.Enable(smart_library_ready)
+        for _rating, rating_item in rating_items:
+            rating_item.Enable(smart_library_ready)
+
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._toggle_favorite_for_selection(),
+            id=favorite_item.GetId(),
+        )
+        for rating, rating_item in rating_items:
+            menu.Bind(
+                wx.EVT_MENU,
+                lambda _event, value=rating: self._rate_selection(value),
+                id=rating_item.GetId(),
+            )
+
         rate_selected = getattr(self, "_rate_selected_playlist_items", None)
         if callable(rate_selected):
             menu.Bind(

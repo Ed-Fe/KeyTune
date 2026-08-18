@@ -126,10 +126,23 @@ footer {
         <li class="toc-level-4"><a href="#modo-carpeta">Modo carpeta</a></li>
         <li class="toc-level-4"><a href="#localizacion-rapida-por-escritura">Localización rápida por escritura</a></li>
         <li class="toc-level-4"><a href="#busqueda-en-la-playlist-o-carpeta-actual">Búsqueda en la playlist o carpeta actual</a></li>
+        <li class="toc-level-2"><a href="#biblioteca-inteligente">Biblioteca inteligente</a></li>
+        <li class="toc-level-3"><a href="#que-entra-en-el-indice">Qué entra en el índice</a></li>
+        <li class="toc-level-3"><a href="#busqueda-global">Búsqueda global</a></li>
+        <li class="toc-level-3"><a href="#favoritos-y-valoraciones">Favoritos y valoraciones</a></li>
+        <li class="toc-level-3"><a href="#historial-de-reproduccion">Historial de reproducción</a></li>
+        <li class="toc-level-3"><a href="#reanudar-donde-lo-dejaste">Reanudar donde lo dejaste</a></li>
+        <li class="toc-level-3"><a href="#listas-inteligentes">Listas inteligentes</a></li>
+        <li class="toc-level-3"><a href="#cache-de-metadatos-y-analisis">Caché de metadatos y análisis</a></li>
         <li class="toc-level-2"><a href="#configuracion">Configuración</a></li>
         <li class="toc-level-3"><a href="#general">General</a></li>
         <li class="toc-level-3"><a href="#reproduccion">Reproducción</a></li>
         <li class="toc-level-3"><a href="#accesibilidad">Accesibilidad</a></li>
+        <li class="toc-level-3"><a href="#biblioteca">Biblioteca</a></li>
+        <li class="toc-level-4"><a href="#indice-de-la-biblioteca">Índice de la biblioteca</a></li>
+        <li class="toc-level-4"><a href="#historial-de-reproduccion-2">Historial de reproducción</a></li>
+        <li class="toc-level-4"><a href="#reanudar-donde-lo-dejaste-2">Reanudar donde lo dejaste</a></li>
+        <li class="toc-level-4"><a href="#cache-de-metadatos-y-analisis-2">Caché de metadatos y análisis</a></li>
         <li class="toc-level-3"><a href="#recursos-adicionales">Recursos adicionales</a></li>
         <li class="toc-level-4"><a href="#integracion-con-youtube-music-y-youtube">Integración con YouTube Music y YouTube</a></li>
         <li class="toc-level-4"><a href="#biblioteca-de-youtube-music">Biblioteca de YouTube Music</a></li>
@@ -162,6 +175,7 @@ footer {
 <li>Playlists en pestañas</li>
 <li>Una cola de reproducción para organizar lo que sonará después</li>
 <li>Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado</li>
+<li>Biblioteca inteligente con búsqueda global, favoritos, valoraciones, historial y reanudación por archivo</li>
 <li>Temporizador con duraciones predefinidas o pausa al final de la pista</li>
 <li>Navegación por carpetas con vista previa</li>
 <li>Ecualizador por pestaña con predefinidos y presets personalizados</li>
@@ -220,9 +234,15 @@ footer {
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: navegar a la pestaña siguiente o anterior</li>
 <li><code>Ctrl+Shift+E</code>: abrir el ecualizador de la pestaña activa</li>
 <li><code>Ctrl+C</code>: copiar la ruta o enlace del elemento seleccionado</li>
+<li><code>Ctrl+Shift+C</code>: copiar el enlace o ruta del elemento actualmente en reproducción</li>
 <li><code>Ctrl+Shift+S</code>: guardar la playlist actual</li>
 <li><code>Ctrl+B</code>: alternar foco entre el navegador de elementos y el reproductor</li>
 <li><code>Ctrl+F</code>: localizar un elemento en la playlist o carpeta actual</li>
+<li><code>Ctrl+G</code>: buscar en toda la biblioteca (listas, carpetas e historial)</li>
+<li><code>Ctrl+D</code>: marcar o desmarcar la selección como favorita</li>
+<li><code>Ctrl+0</code> a <code>Ctrl+5</code>: valorar la selección de cero a cinco estrellas</li>
+<li><code>Ctrl+Shift+H</code>: abrir el historial de reproducción</li>
+<li><code>Ctrl+Shift+R</code>: continuar escuchando lo que quedó a medias</li>
 <li><code>F3</code> / <code>Shift+F3</code>: siguiente o anterior resultado de la búsqueda</li>
 </ul>
 <h3 id="cola-de-reproduccion">Cola de reproducción</h3>
@@ -307,8 +327,79 @@ footer {
 <li>Si nada coincide, se mantiene la selección actual y el reproductor informa que no hay elementos correspondientes.</li>
 </ul>
 <p>Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.</p>
+<h2 id="biblioteca-inteligente">Biblioteca inteligente</h2>
+<p>Mientras <code>Ctrl+F</code> busca en la lista que está abierta, la <strong>biblioteca inteligente</strong> recuerda lo que ya abriste y escuchaste, y lo deja todo consultable de una vez. También guarda favoritos, valoraciones, el historial de reproducción y el punto donde se detuvo cada medio largo.</p>
+<p>Todo vive en una base de datos local (<code>smart_library.db</code>) en la misma carpeta de datos que las preferencias. Nada sale de tu equipo, y la función entera se puede desactivar en <code>Ctrl+,</code> &gt; <strong>Biblioteca</strong>.</p>
+<p>El menú <strong>Biblioteca</strong> reúne todos los comandos.</p>
+<h3 id="que-entra-en-el-indice">Qué entra en el índice</h3>
+<ul>
+<li>Los medios de cualquier playlist o carpeta que abras entran en el índice en segundo plano.</li>
+<li><strong>Biblioteca &gt; Indexar una carpeta en la biblioteca...</strong> elige una carpeta y recorre también sus subcarpetas, sin frenar la reproducción. El reproductor avisa al terminar.</li>
+<li><strong>Biblioteca &gt; Actualizar las carpetas indexadas</strong> vuelve a recorrer las carpetas ya indexadas y descarta los archivos que ya no existen.</li>
+<li><strong>Biblioteca &gt; Resumen de la biblioteca</strong> anuncia cuántos medios, carpetas, favoritos y reproducciones hay guardados.</li>
+<li><strong>Biblioteca &gt; Vaciar la biblioteca...</strong> borra todo (índice, favoritos, valoraciones, historial y puntos de reanudación), con confirmación.</li>
+</ul>
+<p>Si prefieres que solo entren las carpetas que elijas tú, desactiva <strong>Indexar automáticamente las carpetas abiertas en el navegador</strong> en las preferencias.</p>
+<h3 id="busqueda-global">Búsqueda global</h3>
+<ul>
+<li><code>Ctrl+G</code> abre el cuadro <strong>Buscar en la biblioteca</strong>.</li>
+<li>Escribe el texto y confirma con <code>Intro</code> o con el botón <strong>Buscar</strong>. La búsqueda ignora acentos y mayúsculas, y cada palabra que escribas debe aparecer en algún lugar del nombre del elemento o de la carpeta.</li>
+<li>El campo <strong>Filtrar</strong> restringe la búsqueda a <strong>Todo en la biblioteca</strong>, <strong>Solo favoritos</strong>, <strong>Solo valorados</strong> o <strong>Solo ya reproducidos</strong>. Los tres últimos funcionan incluso con el campo de texto vacío.</li>
+<li>Los resultados aparecen en una lista con columnas de elemento, valoración y carpeta, así que el lector de pantalla lee las tres al recorrerla con las flechas. El foco pasa a la lista en cuanto termina la búsqueda.</li>
+<li>La búsqueda se resuelve con un índice de texto completo, así que sigue siendo instantánea incluso con decenas de miles de archivos. Casa el principio de cada palabra («estrad» encuentra «Estrada»); cuando así no aparece nada, el reproductor todavía hace un recorrido que encuentra fragmentos en medio de la palabra («onita» encuentra «Bonita»).</li>
+<li><code>Intro</code> (o el botón <strong>Reproducir</strong>) abre <strong>todos</strong> los resultados en una lista nueva y empieza por la pista seleccionada: así una búsqueda se convierte en una lista utilizable, no en una pista suelta.</li>
+<li><strong>Añadir a la cola</strong> encola solo el elemento seleccionado en la lista que está sonando.</li>
+</ul>
+<h3 id="favoritos-y-valoraciones">Favoritos y valoraciones</h3>
+<p>Los dos comandos actúan sobre lo que esté seleccionado en la lista de elementos; sin selección, actúan sobre el medio que está sonando.</p>
+<ul>
+<li><code>Ctrl+D</code>: marca o desmarca como favorito. Con varios elementos seleccionados, los marca todos.</li>
+<li><code>Ctrl+0</code> a <code>Ctrl+5</code>: da de cero a cinco estrellas.</li>
+<li><strong>Biblioteca &gt; Anunciar las marcas de la selección</strong>: lee si el elemento es favorito, su valoración y cuántas veces se reprodujo.</li>
+<li><strong>Biblioteca &gt; Abrir favoritos en una lista nueva</strong>: arma una lista con todo lo que marcaste.</li>
+</ul>
+<p>Los mismos comandos están en el menú contextual de la lista de elementos (<code>Shift+F10</code>).</p>
+<p>Los favoritos y las valoraciones aparecen junto al nombre en la propia lista de elementos —por ejemplo <code>2. Estrada — favorito, 5 estrellas</code>—, tanto en las listas como en el navegador de carpetas. Así el lector de pantalla anuncia la marca junto con el elemento, sin necesidad de ningún comando. El sufijo es solo visual: la búsqueda <code>Ctrl+F</code>, los nombres de las pestañas y la sesión guardada siguen usando el nombre puro.</p>
+<h3 id="historial-de-reproduccion">Historial de reproducción</h3>
+<ul>
+<li><code>Ctrl+Shift+H</code> abre el <strong>Historial de reproducción</strong>.</li>
+<li>El campo <strong>Ver</strong> elige entre tres vistas, y las columnas cambian con ella:</li>
+<li><strong>Todas las reproducciones</strong>: una fila por cada vez que el medio sonó, con cuándo sonó, en qué punto se detuvo y su origen (lista local, carpeta, medio remoto o YouTube Music).</li>
+<li><strong>Agrupado por medio</strong>: una fila por medio, con cuántas veces sonó, la última vez y sus marcas. Escuchar la misma pista cuarenta veces deja de llenar la lista.</li>
+<li><strong>Más reproducidas</strong>: la misma agrupación, de la más reproducida a la menos reproducida.</li>
+<li>El campo <strong>Filtrar por texto</strong> reduce la lista; <code>Intro</code> (o <strong>Reproducir</strong>) la reproduce de nuevo y <strong>Añadir a la cola</strong> la encola.</li>
+<li><strong>Quitar la entrada</strong> saca una reproducción de la lista sin borrar el medio del índice. En las vistas agrupadas el botón pasa a ser <strong>Quitar del historial</strong> y borra todas las reproducciones de ese medio. <strong>Vaciar el historial</strong> lo borra todo, con confirmación.</li>
+<li>Una pista solo entra en el historial después de sonar lo suficiente para contar como escuchada (alrededor del 25% de su duración, como máximo 20 segundos).</li>
+<li>El historial se recorta al límite fijado en las preferencias, descartando las entradas más antiguas.</li>
+</ul>
+<p>Este historial es local e independiente de <strong>Guardar las canciones escuchadas en el historial de YouTube Music</strong>, que registra en tu cuenta de YouTube Music.</p>
+<h3 id="reanudar-donde-lo-dejaste">Reanudar donde lo dejaste</h3>
+<p>Los pódcast, audiolibros y vídeos largos vuelven a sonar desde donde se detuvieron, y la barra de estado muestra «Reanudando … en …». La regla es conservadora a propósito:</p>
+<ul>
+<li>vale solo para archivos locales: los streams no tienen una línea de tiempo estable entre sesiones;</li>
+<li>solo para medios por encima de la <strong>duración mínima</strong> configurada (10 minutos por defecto);</li>
+<li>detenerse dentro del <strong>margen</strong> configurado (30 segundos por defecto) al principio o al final no crea punto de reanudación;</li>
+<li>llegar al final de la pista borra la marca, así que la próxima vez empieza desde el principio.</li>
+</ul>
+<p><strong>Biblioteca &gt; Continuar escuchando</strong> (<code>Ctrl+Shift+R</code>) abre una lista con todo lo que está a medias, de lo más reciente a lo más antiguo, y cada elemento muestra dónde se detuvo: así reencuentras el pódcast que dejaste por la mitad sin tener que recordar dónde estaba.</p>
+<p><strong>Biblioteca &gt; Borrar las posiciones de reanudación</strong> las limpia todas de una vez.</p>
+<h3 id="listas-inteligentes">Listas inteligentes</h3>
+<p>Una lista inteligente es una regla guardada, no una lista fija: se arma cada vez que la abres, así que sigue tus cambios de valoración y de historial. «Cinco estrellas que no suenan desde hace 30 días» sigue siendo correcta un mes después, sola.</p>
+<p><strong>Biblioteca &gt; Listas inteligentes</strong> enumera las reglas guardadas para abrirlas con un solo comando, y <strong>Gestionar listas inteligentes...</strong> crea, edita y quita.</p>
+<p>En el editor todo son campos de teclado, sin constructor visual de reglas:</p>
+<ul>
+<li><strong>Solo favoritos</strong> y <strong>Valoración mínima</strong> filtran por tus marcas.</li>
+<li><strong>Sin sonar desde hace al menos (días)</strong> encuentra lo que quedó olvidado; <strong>Incluir medios nunca reproducidos</strong> decide si lo que nunca sonó entra también.</li>
+<li><strong>Reproducciones mínimas</strong> va por el otro lado: solo lo que ya escuchaste bastante.</li>
+<li><strong>Limitar a la carpeta</strong> restringe a una carpeta y a todo lo que hay debajo.</li>
+<li><strong>Incluir medios remotos</strong> trae también enlaces de YouTube Music y radios, que por defecto quedan fuera.</li>
+<li><strong>Ordenar por</strong> y <strong>Número máximo de elementos</strong> deciden qué sale y en qué orden.</li>
+</ul>
+<p>Cada cambio actualiza el <strong>Resumen de la regla</strong> al final del cuadro, en una frase: para quien usa lector de pantalla es la forma más rápida de comprobar qué reunirá la regla antes de guardar. Las reglas con nombre repetido reciben un sufijo numérico automático, y los cambios se guardan aunque cierres el cuadro con <code>Esc</code>.</p>
+<h3 id="cache-de-metadatos-y-analisis">Caché de metadatos y análisis</h3>
+<p>La biblioteca guarda también los metadatos ya resueltos y los análisis de audio, para no repetir trabajo costoso en cada apertura. Una entrada se descarta automáticamente cuando el archivo cambia de tamaño o de fecha, y el número de entradas guardadas se ajusta en las preferencias.</p>
 <h2 id="configuracion">Configuración</h2>
-<p>Las preferencias están en <code>Ctrl+,</code> y se dividen en cuatro pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong> y <strong>Recursos adicionales</strong>.</p>
+<p>Las preferencias están en <code>Ctrl+,</code> y se dividen en cinco pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong>, <strong>Biblioteca</strong> y <strong>Recursos adicionales</strong>.</p>
 <h3 id="general">General</h3>
 <p>La pestaña <strong>General</strong> reúne las opciones que controlan cómo KeyTune vuelve a funcionar en la próxima apertura:</p>
 <ul>
@@ -340,6 +431,28 @@ footer {
 </ul>
 <h3 id="accesibilidad">Accesibilidad</h3>
 <p>La pestaña <strong>Accesibilidad</strong> tiene una sola opción: <strong>Activar anuncios de accesibilidad</strong>. Cuando está activada, el reproductor anuncia cambios de tiempo, volumen, cambio de pestañas y estado al lector de pantalla. Cuando está desactivada, esos anuncios se suprimen. Los atajos de anuncio bajo demanda (<code>T</code>, <code>V</code>, <code>S</code>) siguen funcionando independientemente de esta configuración; consulta <a href="#recursos-de-accesibilidad">Recursos de accesibilidad</a> para ver detalles.</p>
+<h3 id="biblioteca">Biblioteca</h3>
+<p>La pestaña <strong>Biblioteca</strong> controla la <a href="#biblioteca-inteligente">biblioteca inteligente</a>. Desactivar la primera opción desactiva la función entera y deshabilita las demás.</p>
+<h4 id="indice-de-la-biblioteca">Índice de la biblioteca</h4>
+<ul>
+<li><strong>Activar la biblioteca inteligente</strong>: activa la búsqueda global (<code>Ctrl+G</code>), los favoritos, las valoraciones, el historial y la reanudación por archivo.</li>
+<li><strong>Indexar automáticamente las carpetas abiertas en el navegador</strong>: al abrir una carpeta, sus medios entran en el índice en segundo plano.</li>
+</ul>
+<h4 id="historial-de-reproduccion-2">Historial de reproducción</h4>
+<ul>
+<li><strong>Guardar un historial local de reproducción</strong>: registra cada pista que suene lo suficiente para contar como escuchada.</li>
+<li><strong>Reproducciones guardadas en el historial</strong>: cuántas entradas mantiene el historial (50-20000). Al superarlo, se descartan las más antiguas.</li>
+</ul>
+<h4 id="reanudar-donde-lo-dejaste-2">Reanudar donde lo dejaste</h4>
+<ul>
+<li><strong>Recordar la posición de los medios largos</strong>: activa la reanudación por archivo.</li>
+<li><strong>Duración mínima para recordar la posición (minutos)</strong>: los medios más cortos que eso siempre empiezan desde el principio (1-240 min).</li>
+<li><strong>Margen ignorado al principio y al final (segundos)</strong>: detenerse dentro de ese margen no crea punto de reanudación (5-300 s).</li>
+</ul>
+<h4 id="cache-de-metadatos-y-analisis-2">Caché de metadatos y análisis</h4>
+<ul>
+<li><strong>Entradas guardadas en la caché</strong>: cuántos metadatos resueltos y análisis de audio se guardan (100-100000). Las entradas más antiguas se descartan al alcanzar el límite.</li>
+</ul>
 <h3 id="recursos-adicionales">Recursos adicionales</h3>
 <p>La pestaña <strong>Recursos adicionales</strong> concentra las integraciones opcionales. Actualmente reúne los controles de YouTube Music y YouTube en dos secciones.</p>
 <h4 id="integracion-con-youtube-music-y-youtube">Integración con YouTube Music y YouTube</h4>
@@ -587,7 +700,7 @@ footer {
 </ul>
 <p>Si usas lector de pantalla, los atajos de anuncio bajo demanda <code>T</code>, <code>V</code> y <code>S</code> (descritos en <a href="#atajos-de-reproducción">Atajos de reproducción</a>) y la ayuda rápida <code>F1</code> ayudan a orientarte sin depender de los eventos automáticos.</p>
 <p>Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en <code>Ctrl+,</code> &gt; <strong>Accesibilidad</strong>.</p>
-<p>La búsqueda de elementos evita anuncios redundantes: como <code>Ctrl+F</code>, <code>F3</code> y <code>Shift+F3</code> mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla <code>S</code>.</p>
+<p>La búsqueda de elementos evita anuncios redundantes: como <code>Ctrl+F</code>, <code>F3</code> y <code>Shift+F3</code> mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. La biblioteca inteligente sigue la misma idea: las listas de resultados y del historial tienen columnas con nombre, el foco pasa a la lista en cuanto termina la búsqueda, y los favoritos y las valoraciones, que nunca aparecen en la etiqueta del elemento, siempre se anuncian al cambiar. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla <code>S</code>.</p>
 <p>El panel de letras también está pensado para ese uso: <code>Ctrl+Alt+L</code> o la casilla <strong>Letras</strong> en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón <strong>Copiar letra completa</strong>. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.</p>
 <h2 id="actualizaciones">Actualizaciones</h2>
 <p>Al iniciar, KeyTune puede verificar actualizaciones automáticamente. Para verificar manualmente en cualquier momento, usa el menú <strong>Ayuda &gt; Buscar actualizaciones</strong>.</p>
@@ -604,7 +717,7 @@ footer {
 <h2 id="para-desarrolladores">Para desarrolladores</h2>
 <p>KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generado el 03/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver código fuente en GitHub</a>
+        Generado el 17/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>
