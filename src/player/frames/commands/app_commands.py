@@ -95,6 +95,7 @@ class AppCommandsMixin:
         new_index = event.GetSelection()
         if new_index != wx.NOT_FOUND:
             self._activate_tab(new_index, announce=True)
+            self._emit_plugin_event("tab.changed", {"index": new_index})
 
         event.Skip()
 
@@ -183,6 +184,9 @@ class AppCommandsMixin:
         if hasattr(self, "sleep_timer") and self.sleep_timer.IsRunning():
             self.sleep_timer.Stop()
         self._dispose_equalizer_ui_cache()
+        if hasattr(self, "plugin_service"):
+            self.plugin_service.stop_all()
+        self._shutdown_autodj_service()
 
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then

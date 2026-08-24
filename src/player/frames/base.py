@@ -5,11 +5,13 @@ from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
 from ..log import setup_logging
 from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
+from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
 from .item_search import FrameItemSearchMixin
 from .library import FrameLibraryMixin
 from .lyrics_panel import LyricsPanel
 from .playback import FramePlaybackMixin
+from .plugins import FramePluginMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
 from .sleep_timer import FrameSleepTimerMixin
@@ -31,6 +33,8 @@ class MediaPlayerFrame(
     FrameSleepTimerMixin,
     FrameLibraryMixin,
     FramePlaybackMixin,
+    FrameAutoDJMixin,
+    FramePluginMixin,
     FrameSmtcMixin,
     FrameUpdateMixin,
     FrameUIMixin,
@@ -52,6 +56,7 @@ class MediaPlayerFrame(
         self._suppress_tab_change_event = False
         self._recent_menu_actions = {}
         self._recent_menu_ids = []
+        self._plugin_submenus = {}
         self._startup_update_check_scheduled = False
         self._update_check_in_progress = False
         self._update_restart_pending = False
@@ -90,9 +95,13 @@ class MediaPlayerFrame(
         self._create_library_loader()
         self._create_smart_library_service()
         self._initialize_smtc_service()
+        self._initialize_autodj_service()
         self._startup_ready = True
 
         self._initialize_player_state()
+        # Plugins start only after session restore, so on_start can inspect the
+        # playlists and active media that are actually visible to the user.
+        self._initialize_plugin_service()
         self._open_initial_paths()
         self._initialize_youtube_music_startup_state()
         self._schedule_startup_update_check()

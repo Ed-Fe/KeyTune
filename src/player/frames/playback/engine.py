@@ -272,6 +272,15 @@ class PlaybackEngineMixin:
         resolved_display_title = str(request.get("resolved_display_title", "") or "").strip()
         resolved_display_artist = str(request.get("resolved_display_artist", "") or "").strip()
         self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
+        self._emit_plugin_event(
+            "playback.media_changed",
+            {
+                "media_path": media_path,
+                "title": resolved_display_title,
+                "artist": resolved_display_artist,
+                "playlist_index": tab_index,
+            },
+        )
         
         # Busca a letra da faixa que acabou de entrar. O caminho de crossfade
         # (_begin_pending_crossfade) chama o mesmo helper, já que ele retorna

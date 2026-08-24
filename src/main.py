@@ -5,6 +5,7 @@ from player.mpv_runtime import bootstrap_mpv_runtime
 
 
 _SMTC_SMOKE_TEST_ARGUMENT = "--smtc-smoke-test"
+_PLUGIN_WORKER_ARGUMENT = "--plugin-worker"
 
 
 def _normalize_launch_path(path):
@@ -75,6 +76,11 @@ def _run_smtc_smoke_test():
 
 
 def main():
+    if _PLUGIN_WORKER_ARGUMENT in sys.argv[1:]:
+        from player.plugins.worker import main as worker_main
+
+        worker_main()
+        return 0
     if _SMTC_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
         return _run_smtc_smoke_test()
 

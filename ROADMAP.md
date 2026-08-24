@@ -20,39 +20,39 @@ as features are tested and feedback is collected.
 
 ## Version 1.5.0 — AutoDJ Beta
 
-- Analyze BPM and beat positions for local audio in the background
-- Cache analysis results to avoid repeating expensive work
-- Align transitions to beats while preserving the original pitch
-- Offer 8-, 16-, and 32-beat transitions
-- Limit tempo adjustment and fall back to the regular crossfade when confidence is low
+- [x] Analyze BPM and beat positions for local audio in the background
+- [x] Cache analysis results to avoid repeating expensive work
+- [x] Align transitions to beats while preserving the original pitch
+- [x] Offer 8-, 16-, and 32-beat transitions
+- [x] Limit tempo adjustment and fall back to the regular crossfade when confidence is low
 - Allow AutoDJ to be enabled independently for each playlist
 - Keep all controls and transition status accessible to screen-reader users
 
 ## Version 1.6.0 — Advanced AutoDJ
 
-- Improve transition selection using musical phrases, energy, and key compatibility
+- [x] Improve transition selection using musical phrases, energy, and key compatibility
 - Add editable entry and exit points
-- Provide transition profiles such as Smooth, Party, and Electronic
-- Add rules to avoid repeating artists or recently played tracks
+- [x] Provide transition profiles such as Smooth, Party, and Electronic
+- [x] Add rules to avoid repeating artists or recently played tracks
 - Evaluate AutoDJ support for YouTube Music and other remote streams
 
 ## Version 1.7.0 — Plugin System Beta
 
-- Discover local plugins through manifests
-- Introduce a versioned plugin API with compatibility requirements
-- Expose controlled playback, metadata, menu-action, and lifecycle events
-- Provide an accessible plugin manager for enabling and disabling plugins
-- Isolate plugin failures and keep separate diagnostic logs
-- Clearly communicate that in-process Python plugins have the same system access as KeyTune
+- [x] Discover local plugins through manifests
+- [x] Introduce a versioned plugin API with compatibility requirements
+- [x] Expose controlled playback, metadata, menu-action, and lifecycle events
+- [x] Provide an accessible plugin manager for enabling and disabling plugins
+- [x] Isolate plugin failures and keep separate diagnostic logs
+- [x] Clearly communicate that in-process Python plugins have the same system access as KeyTune
 - Use first-party plugins to validate the API before declaring it stable
 
 ## Version 2.0.0 — Extensible Platform
 
-- Stabilize the public plugin API
-- Add process isolation for plugins that require stronger safety boundaries
-- Provide a supported plugin distribution and update workflow
+- [x] Stabilize the public plugin API
+- [x] Add process isolation for plugins that require stronger safety boundaries
+- [x] Provide a supported plugin distribution and update workflow
 - Complete the stable AutoDJ experience based on beta feedback
-- Document compatibility and migration guarantees for plugin developers
+- [x] Document compatibility and migration guarantees for plugin developers
 
 ## Additional Ideas
 

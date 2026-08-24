@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-08-23
+
+### Adicionado
+- **Plataforma de plugins**: manifesto estrito, API 2.0 baseada em permissões, eventos de ciclo de vida, contribuições de menus, abas e telas, dados privados e compatibilidade versionada.
+- **Segurança e confiabilidade**: plugins são desativados por padrão, permissões aparecem antes da ativação, pacotes passam por SHA-256 e instalação transacional, falhas recebem logs separados e o modo padrão executa em processo isolado.
+- **Gerenciador e marketplace acessíveis**: gerenciamento completo por teclado, instalação de pacotes locais e catálogo remoto mantido por pull requests no GitHub, com downloads HTTPS e limites contra pacotes maliciosos.
+- **AutoDJ**: análise local de BPM, batidas, energia e pontos de entrada/saída, cache SQLite, transições de 8/16/32 batidas, limite de ajuste de tempo, fallback seguro, perfis Smooth/Party/Electronic e seleção que evita artistas recentes.
+- **Documentação pública**: contrato da API, modelo de manifesto, catálogo JSON Schema, processo de publicação, garantias de migração e alertas claros sobre os limites do isolamento.
+- **API 2.0 de plugins**: acesso controlado às playlists abertas, Biblioteca inteligente, conta/biblioteca do YouTube Music, extração e downloads pelo yt-dlp e análise AutoDJ, sem expor cookies ou objetos internos do player.
+- **AutoDJ para faixas online**: resolução pelo serviço de reprodução, download temporário limitado, análise com librosa e cache remoto com validade de sete dias.
+
 ## [1.4.0] - 2026-08-17
 
 ### Adicionado
