@@ -11,6 +11,7 @@ from ...i18n import _
 from ...library import folder_display_name
 from ...log import get_logger
 from ...playlists import ScreenTabState
+from ...youtube_music.playlists import is_youtube_music_media
 
 
 _logger = get_logger(__name__)
@@ -50,6 +51,17 @@ class PlaylistPlaybackMixin:
 
         if not state.current_media_path:
             return
+
+        if self._youtube_music_media_is_disliked(state.current_media_path):
+            skipped_media_name = self._media_label(state.current_media_path)
+            if not self._select_next_allowed_youtube_music_media(state):
+                state.was_playing = False
+                self._announce(_("Nenhuma faixa disponível: as músicas restantes estão marcadas como não gostei."))
+                self._refresh_playlist_browser()
+                return
+            self._announce(
+                _("Faixa marcada como não gostei ignorada: {name}.").format(name=skipped_media_name)
+            )
 
         crossfade_state = getattr(self, "_crossfade_state", None)
         self._cancel_crossfade_transition(
@@ -94,6 +106,31 @@ class PlaylistPlaybackMixin:
             announce_message=announce_message,
             restore_position_ms=resume_position_ms,
         )
+
+    def _youtube_music_media_is_disliked(self, media_path):
+        if not is_youtube_music_media(media_path):
+            return False
+
+        youtube_music_service = self._youtube_music_service_for_playback()
+        if youtube_music_service is None:
+            return False
+        if not getattr(youtube_music_service, "has_saved_browser_auth", lambda: False)():
+            return False
+
+        try:
+            return bool(youtube_music_service.is_media_disliked(media_path))
+        except Exception:
+            return False
+
+    def _select_next_allowed_youtube_music_media(self, state):
+        should_wrap = state.repeat_mode == REPEAT_ALL
+        for _attempt in range(max(0, state.item_count - 1)):
+            target = state.move_in_playback_order(1, wrap=should_wrap)
+            if not target:
+                return False
+            if not self._youtube_music_media_is_disliked(target):
+                return True
+        return False
 
     def _maybe_start_automatic_crossfade(self):
         if getattr(self, "_crossfade_state", None) is not None:

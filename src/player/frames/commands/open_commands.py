@@ -92,6 +92,30 @@ class OpenCommandsMixin:
         else:
             self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
 
+    def on_copy_current_item(self, _event=None):
+        state = self._get_tab_state()
+        if isinstance(state, ScreenTabState):
+            return
+
+        if not getattr(state, "is_folder_tab", False):
+            self.on_copy_current_item_path(_event)
+            return
+
+        browser = self._get_browser_panel()
+        selected_items = browser.get_selected_item_paths() if browser else []
+        if not selected_items:
+            self._announce(_("Nenhum item selecionado para copiar."))
+            return
+
+        if not self._copy_files_to_clipboard(selected_items):
+            self._announce(_("Não foi possível acessar a área de transferência."))
+            return
+
+        if len(selected_items) == 1:
+            self._announce(_("Item copiado."))
+        else:
+            self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
+
     def on_copy_playing_media_path(self, _event=None):
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state else ""
@@ -139,6 +163,23 @@ class OpenCommandsMixin:
         finally:
             wx.TheClipboard.Close()
         return True
+
+    def _copy_files_to_clipboard(self, paths):
+        normalized_paths = [str(path or "").strip() for path in paths]
+        normalized_paths = [path for path in normalized_paths if path]
+        if not normalized_paths:
+            return False
+
+        data = wx.FileDataObject()
+        for path in normalized_paths:
+            data.AddFile(path)
+
+        if not wx.TheClipboard.Open():
+            return False
+        try:
+            return bool(wx.TheClipboard.SetData(data))
+        finally:
+            wx.TheClipboard.Close()
 
     def _read_text_from_clipboard(self):
         if not wx.TheClipboard.Open():

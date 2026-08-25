@@ -30,6 +30,10 @@ class FrameSessionMixin:
         if not isinstance(playlist_payloads, list) or not playlist_payloads:
             return False
 
+        restore_radio_recent = getattr(self, "_restore_youtube_music_radio_recent", None)
+        if callable(restore_radio_recent):
+            restore_radio_recent(session_payload.get("youtube_music_radio_recent_video_ids", []))
+
         self._reset_playlist_tabs()
 
         restored_states = []
@@ -129,6 +133,9 @@ class FrameSessionMixin:
             "pitch_semitones": self.current_pitch_semitones,
             "playlists": playlist_states,
         }
+        radio_recent_for_session = getattr(self, "_youtube_music_radio_recent_for_session", None)
+        if callable(radio_recent_for_session):
+            payload["youtube_music_radio_recent_video_ids"] = radio_recent_for_session()
 
         if self.settings.remember_window_size:
             payload["window_size"] = list(self.GetSize())

@@ -225,22 +225,47 @@ class KeyNavigationMixin:
             self._cycle_tabs(-1 if event.ShiftDown() else 1)
             return
 
-        # A mídia em execução pertence à playlist ativa, mesmo quando uma tela
-        # auxiliar está aberta. Trate o atalho antes do roteamento dessas telas.
+        if (
+            event.ControlDown()
+            and not event.ShiftDown()
+            and not event.AltDown()
+            and key_code == wx.WXK_SPACE
+            and getattr(current_tab, "is_folder_tab", False)
+            and browser is not None
+            and browser.is_item_navigation_active()
+        ):
+            self.on_show_folder_sort_menu(browser, browser.items_list)
+            return
+
+        # Em abas de pasta, Ctrl+Shift+C copia o caminho textual da seleção.
+        # Nas demais abas, a mídia em execução pertence à playlist ativa mesmo
+        # quando uma tela auxiliar está aberta, então o atalho continua global.
         if (
             event.ControlDown()
             and event.ShiftDown()
             and not event.AltDown()
             and key_code in (ord("C"), ord("c"))
         ):
-            self.on_copy_playing_media_path(None)
+            if getattr(current_tab, "is_folder_tab", False):
+                self.on_copy_current_item_path(None)
+            else:
+                self.on_copy_playing_media_path(None)
+            return
+
+        if (
+            event.ControlDown()
+            and not event.ShiftDown()
+            and not event.AltDown()
+            and key_code in (ord("R"), ord("r"))
+        ):
+            self.on_start_radio_from_current(None)
             return
 
         if self._handle_screen_tab_key_down(event, current_tab):
             return
 
         if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("C"), ord("c")):
-            self.on_copy_current_item_path(None)
+            self.on_copy_current_item(None)
             return
 
         if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):

@@ -1,4 +1,12 @@
 from .browser import PlaylistBrowserPanel, VirtualItemsListCtrl
+from ..folder_sort import (
+    FOLDER_SORT_CREATED,
+    FOLDER_SORT_MODIFIED,
+    FOLDER_SORT_NAME,
+    FOLDER_SORT_OPTIONS,
+    FOLDER_SORT_SIZE,
+    FOLDER_SORT_TYPE,
+)
 from .text import normalize_search_text
 from .media_scan import (
     discover_folder_entries,
@@ -8,8 +16,14 @@ from .media_scan import (
     is_audio_only_media,
     is_supported_media,
     scan_folder_contents,
+    sort_folder_entries,
 )
-from .models import FOLDER_ENTRY_DIRECTORY, FOLDER_ENTRY_FILE, FOLDER_ENTRY_PARENT, FolderBrowserEntry
+from .models import (
+    FOLDER_ENTRY_DIRECTORY,
+    FOLDER_ENTRY_FILE,
+    FOLDER_ENTRY_PARENT,
+    FolderBrowserEntry,
+)
 from .open_dialog import (
     OPEN_MODE_FOLDER_BROWSER,
     OPEN_MODE_PLAYLIST,
@@ -49,8 +63,15 @@ __all__ = [
     "playlist_display_name",
     "save_playlist",
     "scan_folder_contents",
+    "sort_folder_entries",
     "FolderBrowserEntry",
     "FOLDER_ENTRY_DIRECTORY",
     "FOLDER_ENTRY_FILE",
     "FOLDER_ENTRY_PARENT",
+    "FOLDER_SORT_CREATED",
+    "FOLDER_SORT_MODIFIED",
+    "FOLDER_SORT_NAME",
+    "FOLDER_SORT_OPTIONS",
+    "FOLDER_SORT_SIZE",
+    "FOLDER_SORT_TYPE",
 ]

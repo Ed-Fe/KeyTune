@@ -81,6 +81,17 @@ class RadioContentTests(unittest.TestCase):
 
         self.assertEqual(content.item_urls, ["https://music.youtube.com/watch?v=bbb&list=RDAMVMseed"])
 
+    def test_tracks_disliked_on_the_account_are_dropped(self):
+        disliked = _track("aaa")
+        disliked["likeStatus"] = "DISLIKE"
+        client = _FakeClient(
+            [{"playlistId": "RDAMVMseed", "tracks": [disliked, _track("bbb")]}]
+        )
+
+        content = _manager(client).get_radio_content("seed", require_auth=True)
+
+        self.assertEqual(content.item_urls, ["https://music.youtube.com/watch?v=bbb&list=RDAMVMseed"])
+
     def test_blank_and_missing_video_ids_are_ignored(self):
         client = _FakeClient(
             [{"playlistId": "RDAMVMseed", "tracks": [{"title": "sem id"}, _track("  "), _track("aaa")]}]

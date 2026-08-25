@@ -12,6 +12,7 @@ and the ``library.py`` composition stay unchanged.
 from .item_removal import PlaylistItemRemovalMixin
 from .playback_control import PlaylistPlaybackMixin
 from .related_autoplay import RelatedAutoplayMixin
+from .station_radio import StationRadioMixin
 from .tabs import TabManagementMixin
 
 
@@ -20,6 +21,7 @@ class FrameLibraryTabsMixin(
     PlaylistPlaybackMixin,
     PlaylistItemRemovalMixin,
     RelatedAutoplayMixin,
+    StationRadioMixin,
 ):
     """Aggregate library-tab mixin composed from focused sub-mixins."""
 

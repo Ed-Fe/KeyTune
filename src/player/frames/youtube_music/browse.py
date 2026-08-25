@@ -282,8 +282,8 @@ class BrowseMixin:
         home_limit = self._youtube_music_home_discovery_limit()
 
         def worker():
-            # Run the three independent network calls in parallel: account
-            # name, library playlists, and personalized mixes (home rows).
+            # Run the independent network calls in parallel: account name,
+            # library playlists, personalized mixes, and account feedback.
             # ytmusicapi reuses a single requests.Session under the hood and
             # the cached visitor id, so concurrent calls share TLS/cookies.
             results = {}
@@ -307,10 +307,17 @@ class BrowseMixin:
                 except Exception as exc:
                     results["mixes_error"] = exc
 
+            def run_feedback():
+                try:
+                    results["feedback_count"] = service.sync_account_feedback(force=True)
+                except Exception as exc:
+                    results["feedback_error"] = exc
+
             threads = [
                 threading.Thread(target=run_account, daemon=True),
                 threading.Thread(target=run_playlists, daemon=True),
                 threading.Thread(target=run_mixes, daemon=True),
+                threading.Thread(target=run_feedback, daemon=True),
             ]
             for thread in threads:
                 thread.start()

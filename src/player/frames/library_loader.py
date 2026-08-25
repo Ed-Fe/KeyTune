@@ -92,7 +92,11 @@ class FrameLibraryLoaderMixin:
 
         if kind == "folder":
             try:
-                folder_entries, media_files = scan_folder_contents(request["folder_path"])
+                folder_entries, media_files = scan_folder_contents(
+                    request["folder_path"],
+                    sort_by=request.get("sort_by", "name"),
+                    descending=bool(request.get("sort_descending", False)),
+                )
                 media_item_index_map = {path: index for index, path in enumerate(media_files)}
                 media_browser_labels = [os.path.basename(path) or path for path in media_files]
                 folder_entry_index_map = {
@@ -401,7 +405,11 @@ class FrameLibraryLoaderMixin:
             return state.folder_entries
 
         try:
-            entries = discover_folder_entries(state.folder_current_path)
+            entries = discover_folder_entries(
+                state.folder_current_path,
+                sort_by=state.folder_sort_by,
+                descending=state.folder_sort_descending,
+            )
         except OSError:
             entries = []
 

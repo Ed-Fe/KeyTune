@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 
 from ..constants import REPEAT_MODES, REPEAT_OFF
 from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID
+from ..folder_sort import FOLDER_SORT_NAME, FOLDER_SORT_OPTIONS
 from .titles import build_playlist_title
 
 
@@ -64,6 +65,8 @@ class PlaylistState:
     folder_entry_index_map: dict[str, int] = field(default_factory=dict)
     folder_entries_loaded: bool = False
     folder_entries_revision: int = 0
+    folder_sort_by: str = FOLDER_SORT_NAME
+    folder_sort_descending: bool = False
     browser_item_labels: list[str] = field(default_factory=list)
     items_revision: int = 0
     # Radio queue that produced the last related-autoplay batch, so the next
@@ -312,6 +315,41 @@ class PlaylistState:
         self.folder_entries_loaded = True
         self.folder_entries_revision += 1
 
+    def reorder_items(self, items, browser_item_labels=None):
+        """Reorder items without changing the current media or queued paths."""
+        old_items = list(self.items)
+        old_playback_paths = [
+            old_items[index]
+            for index in self.playback_order
+            if 0 <= index < len(old_items)
+        ]
+        current_media_path = self.current_media_path
+        normalized_items = list(items)
+        self._apply_prepared_items(
+            normalized_items,
+            {item: index for index, item in enumerate(normalized_items)},
+            list(browser_item_labels or []),
+        )
+        self.current_index = self.item_index_map.get(current_media_path, -1)
+        if self.current_index < 0:
+            self.current_media_path = None
+
+        if self.shuffle_enabled:
+            self.playback_order = [
+                self.item_index_map[path]
+                for path in old_playback_paths
+                if path in self.item_index_map
+            ]
+            missing_indices = [index for index in range(len(self.items)) if index not in self.playback_order]
+            self.playback_order.extend(missing_indices)
+        else:
+            self.playback_order = list(range(len(self.items)))
+        self.playback_order_position = (
+            self.playback_order.index(self.current_index)
+            if self.current_index in self.playback_order
+            else 0
+        )
+
     def set_current_media_path(self, media_path):
         media_index = self.index_of_item(media_path)
         if not self.items or media_index is None:
@@ -496,6 +534,8 @@ class PlaylistState:
             "folder_root_path": self.folder_root_path,
             "folder_current_path": self.folder_current_path,
             "folder_selected_path": self.folder_selected_path,
+            "folder_sort_by": self.folder_sort_by,
+            "folder_sort_descending": self.folder_sort_descending,
             "equalizer_enabled": self.equalizer_enabled,
             "equalizer_preset_id": self.equalizer_preset_id,
         }
@@ -522,6 +562,9 @@ class PlaylistState:
         state.folder_root_path = data.get("folder_root_path") or None
         state.folder_current_path = data.get("folder_current_path") or None
         state.folder_selected_path = data.get("folder_selected_path") or None
+        folder_sort_by = str(data.get("folder_sort_by") or FOLDER_SORT_NAME)
+        state.folder_sort_by = folder_sort_by if folder_sort_by in FOLDER_SORT_OPTIONS else FOLDER_SORT_NAME
+        state.folder_sort_descending = bool(data.get("folder_sort_descending", False))
         state.equalizer_enabled = bool(data.get("equalizer_enabled", False))
         state.equalizer_preset_id = str(data.get("equalizer_preset_id") or DEFAULT_EQUALIZER_PRESET_ID)
 

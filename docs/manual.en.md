@@ -77,8 +77,9 @@ The shortcuts for opening media, folders, playlists, and links are in the [How t
 - `Ctrl+Shift+W`: close the current media
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: move to the next or previous tab
 - `Ctrl+Shift+E`: open the equalizer for the active tab
-- `Ctrl+C`: copy the path or link of the selected item
-- `Ctrl+Shift+C`: copy the link or path of the currently playing media
+- `Ctrl+C`: copy the selection; in the folder browser, copies files or folders so they can be pasted into Windows File Explorer
+- `Ctrl+Shift+C`: copy the selected path in the folder browser or the link/path of the currently playing media in other tabs
+- `Ctrl+Space`: open the sorting menu in the folder browser
 - `Ctrl+Shift+S`: save the current playlist
 - `Ctrl+B`: switch focus between the item browser and the player
 - `Ctrl+F`: find an item in the current playlist or folder
@@ -126,6 +127,7 @@ While the countdown runs, the player warns you when 5 minutes and when 1 minute 
 - `Alt+Home` / `Alt+End`: go to the first or last item in the playlist
 - `E`: toggle shuffle mode
 - `R`: toggle repeat mode
+- `Ctrl+R`: start a new YouTube Music radio from the current track
 - `A`: toggle playback of related YouTube Music content (automatic radio at the end of the playlist)
 - `]` / `[`: increase or decrease playback speed
 - `Shift+]` / `Shift+[`: increase or decrease playback pitch by semitones
@@ -161,6 +163,9 @@ When the tab came from a folder opened with `Ctrl+Shift+O`, the browser displays
 
 - `Enter`: enters the selected subfolder or plays the media file.
 - `Backspace`: goes back to the parent folder (equivalent to selecting `..`).
+- `Ctrl+C`: copies the selected files or folders so they can be pasted into Windows File Explorer.
+- `Ctrl+Shift+C`: copies the paths of the selected items as text.
+- `Ctrl+Space`: opens the sorting menu. Items can be sorted by name, modification date, creation date, type, or size, in ascending or descending order. The parent folder remains at the top and folders stay grouped before files. The choice is remembered for this tab when the session is restored.
 - `Shift+F10`: opens the context menu.
 - `Tab` / `Esc`: returns focus to the player.
 
@@ -434,7 +439,9 @@ The **Account and library** section shows the connected account status, the load
 
 - **Connect account...**: opens the dialog to connect a YouTube Music account or renew the saved authentication.
 - **Disconnect account**: removes the saved authentication from this installation.
-- **Refresh library**: fetches the playlists and mixes available in the connected account again.
+- **Refresh library**: fetches the playlists and mixes available in the connected account again and refreshes feedback for songs visible in the account.
+
+The **Like** and **Dislike** actions are sent to the connected account, so they also appear in YouTube Music on mobile and other devices. KeyTune keeps a persistent, per-account cache of disliked tracks and updates it from history, liked songs, and lists returned by YouTube Music. Those tracks are removed from playlists and radios loaded through the account and skipped if they reappear in a restored queue. Because YouTube Music does not provide a complete list of disliked songs, a rating made outside KeyTune can only be imported when that track appears again in one of those account responses; **Refresh library** forces this check.
 
 Below the account section is the **Playlists and mixes** list with all playlists and mixes in the library. Use the **Filter** field to find items by name. The counter above the list shows how many items are visible after filtering. Below the list are the actions:
 
@@ -464,6 +471,12 @@ The **Search in the catalog and on YouTube** section is collapsed by default. Ex
 ### Open playlist or video
 
 The **Open playlist or video** section is also collapsed by default. Expand it to paste a YouTube Music or YouTube playlist, mix, or video link. Click **Open link** or press `Enter` in the field to open it.
+
+### Radio from the current track
+
+Press `Ctrl+R` or use **Playback > Start radio from this track** while a YouTube Music song is playing. KeyTune opens a new tab, preserves the playback position, and places the current track at item 1 without continuing the previous radio queue.
+
+To reduce repeats between radios, the player excludes tracks already traversed in the source playlist and keeps a history of the 200 most recently played YouTube Music songs, restored with the session. KeyTune may make up to three requests and only adds previously unseen IDs. Because YouTube Music chooses the candidates, different songs cannot be guaranteed; if no new tracks are available, the new tab remains with only the seed track.
 
 ### Managing YouTube Music playlists
 
@@ -541,6 +554,7 @@ The exported `cookies.txt` file contains authentication information for your acc
 ### Shortcuts
 
 - `Ctrl+Shift+Y`: open the YouTube Music tab
+- `Ctrl+R`: start a new radio from the current track
 - `Ctrl+Shift+A`: add the current media to a YouTube Music playlist
 - `Enter` in the search field: run the search
 - `Enter` in the results list: add the item to the current playlist

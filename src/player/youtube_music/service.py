@@ -18,6 +18,7 @@ from .library_manager import YouTubeMusicLibraryManager
 from .playlists import (
     build_playlist_source as build_playlist_source_fn,
     build_watch_url as build_watch_url_fn,
+    extract_video_id_from_text,
     is_youtube_music_media as is_youtube_music_media_fn,
 )
 from .stream_cache import YouTubeMusicStreamCache, normalize_media_path
@@ -94,7 +95,7 @@ class YouTubeMusicService:
     _STREAM_CACHE_EXPIRY_SAFETY_MARGIN_SECONDS = 30
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
 
-    def __init__(self):
+    def __init__(self, feedback_store=None):
         self._client_provider = YouTubeMusicClientProvider()
         self._stream_cache_manager = YouTubeMusicStreamCache()
         self._anonymous_stream_playback_enabled = False
@@ -104,13 +105,15 @@ class YouTubeMusicService:
         # Library and feedback managers use late-binding lambdas so that
         # unittest.mock.patch on *this* module's names (e.g. get_client,
         # import_ytmusicapi_module) is picked up at call time.
-        self._library = YouTubeMusicLibraryManager(
-            get_client_fn=lambda **kw: self.get_client(**kw),
-            build_watch_url_fn=lambda video_id, playlist_id=None: self.build_watch_url(video_id, playlist_id=playlist_id),
-        )
         self._feedback = YouTubeMusicFeedbackManager(
             get_client_fn=lambda **kw: self.get_client(**kw),
             import_module_fn=lambda **kw: import_ytmusicapi_module(**kw),
+            feedback_store=feedback_store,
+        )
+        self._library = YouTubeMusicLibraryManager(
+            get_client_fn=lambda **kw: self.get_client(**kw),
+            build_watch_url_fn=lambda video_id, playlist_id=None: self.build_watch_url(video_id, playlist_id=playlist_id),
+            feedback_items_fn=lambda items: self._feedback.observe_feedback_items(items),
         )
 
     # -- Compatibility property ------------------------------------------------
@@ -252,6 +255,7 @@ class YouTubeMusicService:
 
     def disconnect(self):
         self.clear_client_cache()
+        self._feedback.clear_active_account()
         self._reset_stream_playback_mode()
         removed = False
         try:
@@ -325,6 +329,7 @@ class YouTubeMusicService:
 
         self.clear_client_cache()
         self._account_info = account_info
+        self._feedback.set_active_account(account_info)
         self._reset_stream_playback_mode()
         _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
@@ -433,7 +438,15 @@ class YouTubeMusicService:
         return self._library.get_library_playlists()
 
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
-        return self._library.get_playlist_content(playlist_id, fallback_title, require_auth=require_auth)
+        if require_auth and self.has_saved_browser_auth():
+            try:
+                self.sync_account_feedback()
+            except Exception as exc:
+                _logger.debug("YouTube Music feedback sync before playlist load failed: %s", exc)
+        content = self._library.get_playlist_content(playlist_id, fallback_title, require_auth=require_auth)
+        if require_auth and self.has_saved_browser_auth():
+            return self._filter_disliked_playlist_content(content)
+        return content
 
     def get_radio_content(
         self,
@@ -446,12 +459,68 @@ class YouTubeMusicService:
     ):
         if fallback_title is None:
             fallback_title = _("Conteúdo relacionado")
-        return self._library.get_radio_content(
-            video_id,
-            fallback_title,
-            limit=limit,
-            exclude_video_ids=exclude_video_ids,
-            continue_playlist_id=continue_playlist_id,
+        has_saved_auth = self.has_saved_browser_auth()
+        if has_saved_auth:
+            try:
+                self.sync_account_feedback()
+            except Exception as exc:
+                _logger.debug("YouTube Music feedback sync before radio load failed: %s", exc)
+
+        combined_exclusions = {
+            str(candidate or "").strip()
+            for candidate in (exclude_video_ids or ())
+            if str(candidate or "").strip()
+        }
+        if has_saved_auth:
+            combined_exclusions.update(self._feedback.disliked_video_ids())
+
+        try:
+            content = self._library.get_radio_content(
+                video_id,
+                fallback_title,
+                limit=limit,
+                exclude_video_ids=combined_exclusions,
+                continue_playlist_id=continue_playlist_id,
+                require_auth=has_saved_auth,
+            )
+        except Exception:
+            if not has_saved_auth:
+                raise
+            _logger.warning("Authenticated YouTube Music radio failed; retrying with the public client.")
+            content = self._library.get_radio_content(
+                video_id,
+                fallback_title,
+                limit=limit,
+                exclude_video_ids=combined_exclusions,
+                continue_playlist_id=continue_playlist_id,
+                require_auth=False,
+            )
+        if has_saved_auth:
+            return self._filter_disliked_playlist_content(content)
+        return content
+
+    def _filter_disliked_playlist_content(self, content):
+        if content is None:
+            return content
+
+        kept_urls = []
+        kept_labels = []
+        labels = list(getattr(content, "item_labels", None) or [])
+        for index, item_url in enumerate(getattr(content, "item_urls", None) or []):
+            video_id = extract_video_id_from_text(item_url)
+            if video_id and self._feedback.is_media_disliked(item_url):
+                continue
+            kept_urls.append(item_url)
+            kept_labels.append(labels[index] if index < len(labels) else "")
+
+        if len(kept_urls) == len(getattr(content, "item_urls", None) or []):
+            return content
+
+        return type(content)(
+            playlist_id=content.playlist_id,
+            title=content.title,
+            item_urls=kept_urls,
+            item_labels=kept_labels,
         )
 
     # -- Feedback / history (delegated) ----------------------------------------
@@ -461,6 +530,15 @@ class YouTubeMusicService:
 
     def get_media_feedback_status(self, media_path, force_refresh=False):
         return self._feedback.get_media_feedback_status(media_path, force_refresh=force_refresh)
+
+    def sync_account_feedback(self, force=False):
+        return self._feedback.sync_account_feedback(force=force)
+
+    def is_media_disliked(self, media_path):
+        return self._feedback.is_media_disliked(media_path)
+
+    def observe_feedback_items(self, items):
+        self._feedback.observe_feedback_items(items)
 
     def rate_media_feedback(self, media_path, rating):
         return self._feedback.rate_media_feedback(media_path, rating)

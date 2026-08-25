@@ -5,12 +5,15 @@ FOLDER_ENTRY_PARENT = "parent"
 FOLDER_ENTRY_DIRECTORY = "directory"
 FOLDER_ENTRY_FILE = "file"
 
-
 @dataclass(frozen=True)
 class FolderBrowserEntry:
     path: str
     label: str
     entry_type: str
+    modified_time: float = 0.0
+    created_time: float = 0.0
+    size: int = 0
+    extension: str = ""
 
     @property
     def is_parent(self):

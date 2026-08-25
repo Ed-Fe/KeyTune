@@ -155,7 +155,8 @@ class FrameUIMixin:
             "Ctrl+Alt+O — Abrir mídia, playlist ou pasta\n"
             "Ctrl+O — Abrir arquivos de mídia ou uma playlist local\n"
             "Ctrl+Shift+O — Abrir pasta no navegador\n"
-            "Ctrl+C — Copiar caminho ou link do item selecionado\n"
+            "Ctrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\n"
+            "Ctrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\n"
             "Ctrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\n"
             "Ctrl+Shift+V — Colar e abrir em uma nova playlist\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
@@ -375,7 +376,7 @@ class FrameUIMixin:
         file_menu.Append(self.menu_open_file_id, _("Abrir &Arquivos ou Playlist...\tCtrl+O"))
         file_menu.Append(self.menu_open_folder_id, _("Abrir &Pasta...\tCtrl+Shift+O"))
         file_menu.AppendSeparator()
-        file_menu.Append(self.menu_copy_current_item_path_id, _("&Copiar caminho do item (Ctrl+C)"))
+        file_menu.Append(self.menu_copy_current_item_path_id, _("&Copiar seleção (Ctrl+C)"))
         file_menu.Append(self.menu_paste_open_from_clipboard_id, _("Co&lar na playlist atual / abrir... (Ctrl+V)"))
         file_menu.Append(
             self.menu_paste_open_from_clipboard_new_playlist_id,
@@ -398,6 +399,7 @@ class FrameUIMixin:
         self.menu_play_pause_id = wx.NewIdRef()
         self.menu_stop_id = wx.NewIdRef()
         self.menu_next_track_id = wx.NewIdRef()
+        self.menu_start_radio_id = wx.NewIdRef()
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
@@ -428,6 +430,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_stop_id, _("P&arar\tCtrl+."))
         playback_menu.Append(self.menu_next_track_id, _("Próxima Fai&xa\tCtrl+PageDown"))
         playback_menu.AppendSeparator()
+        playback_menu.Append(self.menu_start_radio_id, _("Iniciar &rádio desta faixa\tCtrl+R"))
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
@@ -754,7 +757,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open, id=self.menu_open_file_id)
         self.Bind(wx.EVT_MENU, self.on_open_folder, id=self.menu_open_folder_id)
         self.Bind(wx.EVT_MENU, self.on_open_source, id=self.menu_open_source_id)
-        self.Bind(wx.EVT_MENU, self.on_copy_current_item_path, id=self.menu_copy_current_item_path_id)
+        self.Bind(wx.EVT_MENU, self.on_copy_current_item, id=self.menu_copy_current_item_path_id)
         self.Bind(wx.EVT_MENU, self.on_paste_open_from_clipboard, id=self.menu_paste_open_from_clipboard_id)
         self.Bind(
             wx.EVT_MENU,
@@ -770,6 +773,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_play_pause, id=self.menu_play_pause_id)
         self.Bind(wx.EVT_MENU, self.on_stop, id=self.menu_stop_id)
         self.Bind(wx.EVT_MENU, self.on_next_track, id=self.menu_next_track_id)
+        self.Bind(wx.EVT_MENU, self.on_start_radio_from_current, id=self.menu_start_radio_id)
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)

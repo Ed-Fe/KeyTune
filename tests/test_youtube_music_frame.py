@@ -161,6 +161,24 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertTrue(started)
         frame._play_adjacent_item.assert_not_called()
 
+    def test_dislike_skips_when_account_already_has_the_rating(self):
+        service = Mock()
+        service.has_saved_browser_auth.return_value = True
+        frame = _DummyFrame(service)
+        state = PlaylistState(title="Teste")
+        state.items = ["https://music.youtube.com/watch?v=abc123DEF45"]
+        state.current_index = 0
+        state.current_media_path = state.items[0]
+        frame.playlists = [state]
+        frame._get_youtube_music_media_feedback_status = Mock(return_value="DISLIKE")
+        frame._play_adjacent_item = Mock()
+
+        started = frame._rate_current_youtube_music_media("DISLIKE")
+
+        self.assertFalse(started)
+        frame._play_adjacent_item.assert_called_once_with(1)
+        service.rate_media_feedback.assert_not_called()
+
     def test_invalid_saved_auth_disconnects_and_clears_library_state(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
