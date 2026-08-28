@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from urllib.parse import urlparse
 from dataclasses import dataclass
 
@@ -24,7 +25,9 @@ from ..i18n import _
 _logger = get_logger(__name__)
 
 
-YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS = 10
+YTDLP_STREAM_SOCKET_TIMEOUT_SECONDS = 20
+YTDLP_STREAM_NETWORK_ATTEMPTS = 2
+YTDLP_STREAM_NETWORK_RETRY_DELAY_SECONDS = 0.5
 _ALLOWED_PLAYBACK_HEADER_NAMES = {
     "accept",
     "accept-language",
@@ -52,6 +55,20 @@ _PRERELEASE_SELF_HEAL_ATTEMPTED = False
 _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS = (
     "runtime javascript",
     "yt-dlp",
+)
+_TRANSIENT_NETWORK_ERROR_MARKERS = (
+    "connection aborted",
+    "connection reset",
+    "demorou demais",
+    "failed to resolve",
+    "getaddrinfo failed",
+    "name resolution",
+    "network is unreachable",
+    "remote end closed connection",
+    "temporarily unavailable",
+    "timed out",
+    "timeout",
+    "winerror 10054",
 )
 
 
@@ -141,27 +158,15 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
 
     has_account_cookies = bool(cookie_header) or bool(cookie_file_path)
 
-    # Per yt-dlp PO Token guide (https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide):
-    # - "tv" does NOT require PO Token; with account cookies it returns playable formats.
-    # - "visionos" currently exposes high-quality audio without account cookies.
-    # - "tv_simply" avoids PO Token and does not accept account cookies, so it is
-    #   kept as the final anonymous fallback.
-    # Keep this list short: each profile is a full extractor round-trip and they are slow.
-    if has_account_cookies:
-        extractor_profiles = [
-            {"extractor_args": {"youtube": {"player_client": ["tv"]}}},
-        ]
-    else:
-        normalized_anonymous_player_client = str(anonymous_player_client or "").strip()
-        anonymous_player_clients = (
-            [normalized_anonymous_player_client]
-            if normalized_anonymous_player_client
-            else ["visionos", "tv_simply"]
-        )
-        extractor_profiles = [
-            {"extractor_args": {"youtube": {"player_client": [player_client]}}}
-            for player_client in anonymous_player_clients
-        ]
+    # Keep one explicitly selected profile per resolution. Profile fallback is
+    # coordinated by YouTubeMusicService only after the returned URL itself is
+    # rejected, avoiding repeated extractor calls for global DNS/time-out errors.
+    normalized_player_client = str(anonymous_player_client or "").strip()
+    if not normalized_player_client:
+        normalized_player_client = "web_safari" if has_account_cookies else "visionos"
+    extractor_profiles = [
+        {"extractor_args": {"youtube": {"player_client": [normalized_player_client]}}},
+    ]
 
     format_selectors = ["bestaudio/best"]
 
@@ -173,24 +178,36 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
         for format_selector in format_selectors:
             for profile in extractor_profiles:
                 local_attempted_profiles += 1
-                try:
-                    response = extract_yt_dlp_info(
-                        normalized_media_path,
-                        format_selector=format_selector,
-                        cookie_file_path=base_options.get("cookiefile", ""),
-                        http_headers=base_options.get("http_headers"),
-                        extractor_args=profile.get("extractor_args"),
-                        js_runtimes=base_options.get("js_runtimes"),
-                        socket_timeout_seconds=base_options.get("socket_timeout", 0),
-                        noplaylist=bool(base_options.get("noplaylist")),
-                        extract_flat=base_options.get("extract_flat"),
-                        ignore_no_formats_error=bool(base_options.get("ignore_no_formats_error")),
-                    )
-                    info = response.data
-                    warning_messages.extend(_warning_messages_from_stderr(response.stderr_text))
-                except Exception as exc:
-                    local_last_error = _clean_external_tool_error(exc)
+                response = None
+                for network_attempt in range(YTDLP_STREAM_NETWORK_ATTEMPTS):
+                    try:
+                        response = extract_yt_dlp_info(
+                            normalized_media_path,
+                            format_selector=format_selector,
+                            cookie_file_path=base_options.get("cookiefile", ""),
+                            http_headers=base_options.get("http_headers"),
+                            extractor_args=profile.get("extractor_args"),
+                            js_runtimes=base_options.get("js_runtimes"),
+                            socket_timeout_seconds=base_options.get("socket_timeout", 0),
+                            noplaylist=bool(base_options.get("noplaylist")),
+                            extract_flat=base_options.get("extract_flat"),
+                            ignore_no_formats_error=bool(base_options.get("ignore_no_formats_error")),
+                        )
+                        break
+                    except Exception as exc:
+                        local_last_error = _clean_external_tool_error(exc)
+                        if (
+                            network_attempt + 1 >= YTDLP_STREAM_NETWORK_ATTEMPTS
+                            or not _is_transient_network_error(local_last_error)
+                        ):
+                            break
+                        _logger.warning("Transient yt-dlp network failure; retrying the same profile")
+                        time.sleep(YTDLP_STREAM_NETWORK_RETRY_DELAY_SECONDS)
+
+                if response is None:
                     continue
+                info = response.data
+                warning_messages.extend(_warning_messages_from_stderr(response.stderr_text))
 
                 if not info:
                     local_last_error = _("O yt-dlp não conseguiu abrir a faixa do YouTube Music.")
@@ -237,7 +254,7 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
             try:
                 install_or_update_youtube_dependencies(force=True, include_prerelease=True)
                 resolved_playback, retry_last_error, retry_attempted_profiles = _attempt_resolution()
-                attempted_profiles += retry_attempted_profiles
+                attempted_profiles = max(attempted_profiles, retry_attempted_profiles)
                 if retry_last_error:
                     last_error = retry_last_error
                 if resolved_playback is not None:
@@ -606,6 +623,11 @@ def _clean_external_tool_error(error):
     return sanitize_sensitive_text(message)
 
 
+def _is_transient_network_error(error_message):
+    normalized_error_message = str(error_message or "").casefold()
+    return any(marker in normalized_error_message for marker in _TRANSIENT_NETWORK_ERROR_MARKERS)
+
+
 def _warning_messages_from_stderr(stderr_text):
     messages = []
     for line in str(stderr_text or "").splitlines():
@@ -719,7 +741,8 @@ def _build_stream_resolution_error_message(
     guidance_parts = []
     if "auth_blocked" in normalized_diagnostic_signals:
         guidance_parts.append(
-            _("Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente.")
+            _("Atualize os recursos adicionais do YouTube Music e tente novamente. "
+              "Faixas que exigem uma conta podem não estar disponíveis nos perfis de reprodução compatíveis.")
         )
 
     if "js_challenge" in normalized_diagnostic_signals:
@@ -730,17 +753,15 @@ def _build_stream_resolution_error_message(
 
     if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:
         guidance_parts.append(
-            _("O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. "
-              "Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de "
-              "uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. "
-              "Se já estiver autenticado, refaça o login com cookies recém-exportados.")
+            _("O YouTube não forneceu um stream de áudio direto para esta faixa. "
+              "Atualize os recursos adicionais e tente novamente; o conteúdo pode exigir um PO Token "
+              "que não está disponível no perfil atual.")
         )
 
     if "po_token" in normalized_diagnostic_signals:
         guidance_parts.append(
             _("Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. "
-              "Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", "
-              "que dispensa PO Token quando há cookies de conta válidos.")
+              "Atualize os recursos adicionais e tente novamente mais tarde.")
         )
 
     if guidance_parts:

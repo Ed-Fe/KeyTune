@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-08-23
+
+### Adicionado
+- **Plataforma de plugins**: manifesto estrito, API 2.0 baseada em permissões, eventos de ciclo de vida, contribuições de menus, abas e telas, dados privados e compatibilidade versionada.
+- **Segurança e confiabilidade**: a confirmação de instalação mostra dados, permissões e isolamento do pacote antes de instalar e ativar; pacotes passam por SHA-256 e instalação transacional, falhas recebem logs separados e o worker padrão isola falhas sem herdar variáveis de ambiente sensíveis.
+- **Gerenciador e marketplace acessíveis**: gerenciamento completo por teclado, instalação de pacotes locais e catálogo remoto mantido por pull requests no GitHub, com downloads HTTPS e limites contra pacotes maliciosos.
+- **AutoDJ**: ativação pelo menu e pelas preferências, análise em segundo plano de BPM, batidas, downbeat, frases de quatro compassos, mudanças de seção, energia local, loudness e tonalidade maior/menor; seleção real entre até seis próximas faixas mesmo sem cache, sincronização temporária com correção de fase, troca progressiva de graves/EQ e corte da faixa anterior na batida final planejada; inclui fallback seguro e perfis Smooth/Party/Electronic realmente distintos.
+- **Sessões AutoDJ**: uma playlist pode iniciar em uma aba dinâmica própria, mantendo a origem intacta e até cinco faixas planejadas à frente; fonte, histórico e fila restante sobrevivem à restauração da sessão, a fila manual continua prioritária e o encerramento preserva a sequência preparada como playlist comum.
+- **Controles da sessão AutoDJ**: a aba agora mostra atividade, contagens, estado de cada faixa e detalhes da próxima transição, com ações acessíveis para trocar a próxima música, recalcular a sequência, adicionar arquivos e pausar ou retomar a preparação.
+- **Diagnóstico acessível do AutoDJ**: as informações ficam em um campo somente leitura alcançável por `Tab`, com BPM, confiança rítmica, ajuste de tempo e motivo de fallback; a confiança mínima também foi recalibrada para a escala observada nas análises reais do librosa.
+- **Transições adaptativas**: o planejamento de várias faixas considera provável sobreposição vocal, encurta a mistura quando necessário e aplica compensação conservadora de loudness à faixa de entrada.
+- **Documentação pública**: contrato da API, modelo de manifesto, catálogo JSON Schema, processo de publicação, garantias de migração e alertas claros sobre os limites do isolamento.
+- **API 2.0 de plugins**: acesso controlado às playlists abertas, Biblioteca inteligente, conta/biblioteca do YouTube Music, arquivos de texto, área de transferência, extração e downloads pelo yt-dlp e análise AutoDJ, sem expor cookies ou objetos internos do player; yt-dlp e AutoDJ online usam modo anônimo por padrão.
+- **AutoDJ para faixas online**: resolução pelo serviço de reprodução, download temporário limitado, análise com librosa e cache remoto com validade de sete dias.
+
+### Corrigido
+- **Colagem e início de playlists do YouTube Music**: `Ctrl+V` reconhece links com `list=` mesmo em abas de tela, abre a playlist completa e solicita explicitamente a reprodução da primeira faixa.
+- **Áudio picotando durante o AutoDJ**: a troca de graves e médios agora altera os ganhos dos filtros já instalados por comandos nativos do MPV, sem reconstruir a cadeia de áudio em cada etapa da transição.
+
 ## [1.4.0] - 2026-08-17
 
 ### Adicionado

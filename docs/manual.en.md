@@ -52,7 +52,7 @@ You can open media files, a local playlist, a folder, or a compatible path and l
 - `Ctrl+Alt+O` - unified dialog that accepts any type: file, folder, playlist, link, or YouTube Music ID.
 - `Ctrl+O` - opens media files or an `.m3u`/`.m3u8` playlist.
 - `Ctrl+Shift+O` - opens a folder directly in the folder browser.
-- `Ctrl+V` - pastes a path or link from the clipboard into the current playlist.
+- `Ctrl+V` - pastes a path or link from the clipboard into the current playlist; YouTube Music playlist links are recognized by their `list=` parameter and opened as a complete playlist.
 - `Ctrl+Shift+V` - pastes and opens in a new playlist.
 
 Directly supported media formats:
@@ -308,6 +308,10 @@ The **Playback** tab controls audio behavior and the initial state of new playli
 - **Default volume**: volume when starting the player (0-100).
 - **Volume step**: how much each press of `Up Arrow`/`Down Arrow` increases or decreases the volume (1-25).
 - **Crossfade (seconds)**: audio overlap between tracks during automatic transition (0-12 s). Use 0 to disable it. Crossfade is applied only between audio files.
+- **Enable AutoDJ**: analyzes the current track and up to six upcoming options in the background, including in new playlists, avoids recently played artists, and chooses by local transition energy, major/minor key, perceived loudness difference, and tempo compatibility. When the beat grid is reliable, it estimates the downbeat and section changes, aligns four-bar phrases, synchronizes both tracks, and corrects small phase drift during the overlap. The entry point can skip a silent or weak intro; the progressive bass and midrange swap ends by cutting the outgoing track on the planned beat. It can also be toggled from **Playback > Enable AutoDJ**. The manual queue always takes priority. If analysis is late, fails, or has insufficient confidence, the player uses the configured regular crossfade or advances normally.
+- **Play playlist with AutoDJ**: creates a separate dynamic tab without changing the source playlist, starts the current track immediately, and keeps up to five tracks prepared ahead. A read-only field available through normal NVDA focus shows the source, prepared and remaining counts, analysis activity, and next-transition details. It reports BPM, rhythmic confidence, tempo adjustment, and the reason when a regular transition is required; each item is also marked as played, playing, next, or prepared. Its controls can replace the next track, recalculate the future sequence, add files, pause or resume preparation, and end the session while preserving the prepared portion. `Tab` moves through the player, list, AutoDJ information, and controls; `Shift+Tab` follows the reverse path. The same actions are available with `Shift+F10` on the list. The sequence considers multiple transitions, avoids likely vocal clashes, shortens the overlap when necessary, and gradually attenuates a louder incoming track. The session, source, history, paused state, and unplanned tracks are restored with the player.
+- **AutoDJ profile**: *Smooth* uses a long, balanced blend; *Party* concentrates the bass swap around the center and gradually raises energy; *Electronic* applies stronger cuts and a faster swap for pronounced beats.
+- **AutoDJ transition length**: sets an overlap of 8, 16, or 32 beats. This is independent of the regular crossfade duration.
 - **Seek step (seconds)**: how much each press of `Left Arrow`/`Right Arrow` moves forward or backward in the media (1-120 s).
 - **Default repeat**: repeat mode automatically applied to new playlists. The options are *Repeat off*, *Repeat current track*, and *Repeat playlist*.
 - **Audio device**: sound output used for playback. *System default* follows the main Windows device.

@@ -4,6 +4,7 @@ import pathlib
 import sys
 import tempfile
 import unittest
+from subprocess import CompletedProcess
 from unittest.mock import patch
 
 
@@ -95,6 +96,45 @@ class YouTubeMusicYtDlpRuntimeTests(unittest.TestCase):
                 discovered_path = yt_dlp_runtime._find_javascript_runtime_executable("node")
 
         self.assertEqual(pathlib.Path(discovered_path), runtime_path)
+
+    def test_download_media_uses_managed_runtime_and_returns_safe_paths(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            destination = pathlib.Path(temporary_dir) / "downloads"
+            executable = pathlib.Path(temporary_dir) / yt_dlp_runtime.YTDLP_EXECUTABLE_NAME
+            executable.touch()
+
+            def run(command, **_kwargs):
+                downloaded = destination / "video.mp4"
+                downloaded.parent.mkdir(parents=True, exist_ok=True)
+                downloaded.write_bytes(b"video")
+                self.assertIn("--ignore-config", command)
+                self.assertIn("--no-playlist", command)
+                self.assertIn("best[ext=mp4]/best", command)
+                self.assertEqual(command[-1], "https://youtu.be/example")
+                return CompletedProcess(command, 0, stdout=str(downloaded), stderr="")
+
+            with patch(
+                "player.youtube_music.yt_dlp_runtime.find_yt_dlp_executable_path",
+                return_value=executable,
+            ), patch("player.youtube_music.yt_dlp_runtime.subprocess.run", side_effect=run):
+                result = yt_dlp_runtime.download_media(
+                    "https://youtu.be/example",
+                    destination_directory=str(destination),
+                )
+
+        self.assertEqual(result, [str(destination / "video.mp4")])
+
+    def test_download_media_rejects_paths_in_filename_template(self):
+        with tempfile.TemporaryDirectory() as temporary_dir, patch(
+            "player.youtube_music.yt_dlp_runtime.find_yt_dlp_executable_path",
+            return_value=pathlib.Path(temporary_dir) / "yt-dlp",
+        ):
+            with self.assertRaises(RuntimeError):
+                yt_dlp_runtime.download_media(
+                    "https://youtu.be/example",
+                    destination_directory=temporary_dir,
+                    filename_template="../escape.%(ext)s",
+                )
 
 
 if __name__ == "__main__":

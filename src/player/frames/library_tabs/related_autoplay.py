@@ -30,7 +30,7 @@ class RelatedAutoplayMixin:
         if not getattr(self.settings, "youtube_music_autoplay_related", False):
             return "", ""
 
-        if not isinstance(state, PlaylistState) or state.is_folder_tab:
+        if not isinstance(state, PlaylistState) or state.is_folder_tab or state.autodj_session:
             return "", ""
 
         # Repeat-one replays forever and repeat-all wraps back to the start, so
@@ -227,6 +227,7 @@ class RelatedAutoplayMixin:
         if (
             isinstance(state, PlaylistState)
             and not state.is_folder_tab
+            and not state.autodj_session
             and str(state.current_media_path or "").strip() == seed_media_path
         ):
             return state

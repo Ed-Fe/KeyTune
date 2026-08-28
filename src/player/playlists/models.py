@@ -56,6 +56,15 @@ class PlaylistState:
     repeat_mode: str = REPEAT_OFF
     playback_order: list[int] = field(default_factory=list)
     playback_order_position: int = 0
+    autodj_next_path: str | None = None
+    autodj_session: bool = False
+    autodj_source_title: str | None = None
+    autodj_source_items: list[str] = field(default_factory=list)
+    autodj_source_labels: list[str] = field(default_factory=list)
+    autodj_remaining_items: list[str] = field(default_factory=list)
+    autodj_history: list[str] = field(default_factory=list)
+    autodj_preparation_paused: bool = False
+    autodj_waiting_for_next: bool = False
     tab_type: str = TAB_TYPE_PLAYLIST
     folder_root_path: str | None = None
     folder_current_path: str | None = None
@@ -71,6 +80,7 @@ class PlaylistState:
     radio_queue_playlist_id: str | None = None
     equalizer_enabled: bool = False
     equalizer_preset_id: str = DEFAULT_EQUALIZER_PRESET_ID
+    playback_gain_db: float = 0.0
 
     @property
     def is_empty(self):
@@ -102,6 +112,16 @@ class PlaylistState:
         self.was_playing = False
         self.playback_order = []
         self.playback_order_position = 0
+        self.autodj_next_path = None
+        self.autodj_session = False
+        self.autodj_source_title = None
+        self.autodj_source_items = []
+        self.autodj_source_labels = []
+        self.autodj_remaining_items = []
+        self.autodj_history = []
+        self.autodj_preparation_paused = False
+        self.autodj_waiting_for_next = False
+        self.playback_gain_db = 0.0
 
     def _fallback_browser_item_label(self, item):
         normalized_item = str(item or "")
@@ -164,6 +184,7 @@ class PlaylistState:
             self.playback_order = []
             self.playback_order_position = 0
             self.custom_queue = []
+            self.autodj_next_path = None
             return
 
         if auto_select:
@@ -271,6 +292,7 @@ class PlaylistState:
             self.playback_order = []
             self.playback_order_position = 0
             self.custom_queue = []
+            self.autodj_next_path = None
             return
 
         if auto_select:
@@ -329,12 +351,17 @@ class PlaylistState:
             self.clear()
             return None
 
+        previous_media_path = self.current_media_path
         bounded_index = max(0, min(index, len(self.items) - 1))
         self.current_index = bounded_index
         self.current_media_path = self.items[bounded_index]
         self.last_position_ms = 0
+        if self.autodj_session and previous_media_path and previous_media_path != self.current_media_path:
+            self.autodj_history.append(previous_media_path)
+            self.autodj_history = self.autodj_history[-50:]
 
         if reset_playback_order:
+            self.autodj_next_path = None
             self.reset_playback_order(preferred_index=bounded_index)
         else:
             self.sync_playback_order()
@@ -368,6 +395,8 @@ class PlaylistState:
             for queued_path in self.custom_queue:
                 if queued_path in self.item_index_map:
                     return queued_path
+            if self.autodj_next_path in self.item_index_map:
+                return self.autodj_next_path
 
         if not self.shuffle_enabled:
             target_index = self.current_index + direction
@@ -449,7 +478,13 @@ class PlaylistState:
                 queued_path = self.custom_queue.pop(0)
                 target_index = self.item_index_map.get(queued_path)
                 if target_index is not None and 0 <= target_index < len(self.items):
+                    self.autodj_next_path = None
                     return self.select_index(target_index, reset_playback_order=False)
+            autodj_path = self.autodj_next_path
+            self.autodj_next_path = None
+            target_index = self.item_index_map.get(autodj_path)
+            if target_index is not None and 0 <= target_index < len(self.items):
+                return self.select_index(target_index, reset_playback_order=False)
 
         if not self.shuffle_enabled:
             target_index = self.current_index + direction
@@ -479,6 +514,13 @@ class PlaylistState:
         self.playback_order_position = 0
         return self.select_index(self.playback_order[0], reset_playback_order=False)
 
+    def set_autodj_next(self, media_path):
+        normalized_path = str(media_path or "")
+        if self.custom_queue or normalized_path not in self.item_index_map:
+            return False
+        self.autodj_next_path = normalized_path
+        return True
+
     def to_dict(self):
         return {
             "title": self.title,
@@ -498,6 +540,14 @@ class PlaylistState:
             "folder_selected_path": self.folder_selected_path,
             "equalizer_enabled": self.equalizer_enabled,
             "equalizer_preset_id": self.equalizer_preset_id,
+            "playback_gain_db": self.playback_gain_db,
+            "autodj_session": self.autodj_session,
+            "autodj_source_title": self.autodj_source_title,
+            "autodj_source_items": list(self.autodj_source_items),
+            "autodj_source_labels": list(self.autodj_source_labels),
+            "autodj_remaining_items": list(self.autodj_remaining_items),
+            "autodj_history": list(self.autodj_history),
+            "autodj_preparation_paused": self.autodj_preparation_paused,
         }
 
     @classmethod
@@ -524,6 +574,22 @@ class PlaylistState:
         state.folder_selected_path = data.get("folder_selected_path") or None
         state.equalizer_enabled = bool(data.get("equalizer_enabled", False))
         state.equalizer_preset_id = str(data.get("equalizer_preset_id") or DEFAULT_EQUALIZER_PRESET_ID)
+        try:
+            state.playback_gain_db = max(-6.0, min(0.0, float(data.get("playback_gain_db", 0.0))))
+        except (TypeError, ValueError):
+            state.playback_gain_db = 0.0
+        state.autodj_session = bool(data.get("autodj_session", False))
+        state.autodj_source_title = str(data.get("autodj_source_title") or "").strip() or None
+        state.autodj_source_items = [str(item) for item in data.get("autodj_source_items", []) if item]
+        state.autodj_source_labels = [str(label or "") for label in data.get("autodj_source_labels", [])]
+        remaining_source = set(state.autodj_source_items)
+        state.autodj_remaining_items = [
+            str(item)
+            for item in data.get("autodj_remaining_items", [])
+            if item and str(item) in remaining_source
+        ]
+        state.autodj_history = [str(item) for item in data.get("autodj_history", []) if item]
+        state.autodj_preparation_paused = bool(data.get("autodj_preparation_paused", False))
 
         repeat_mode = data.get("repeat_mode", REPEAT_OFF)
         state.repeat_mode = repeat_mode if repeat_mode in REPEAT_MODES else REPEAT_OFF

@@ -8,6 +8,9 @@ class BrowserCommandsMixin:
     def on_toggle_playlist_browser(self, _event=None):
         self._toggle_navigation_mode()
 
+    def on_playlist_browser_tab(self, *, backward=False):
+        return self._focus_autodj_controls_from_list(backward=backward)
+
     def on_playlist_browser_activate_item(self, item_index):
         state = self._get_playlist_state()
         if not state:
@@ -55,6 +58,7 @@ class BrowserCommandsMixin:
         paste_new_item = menu.Append(wx.ID_ANY, _("Colar em nova playlist"))
         menu.AppendSeparator()
         enqueue_item = menu.Append(wx.ID_ANY, _("Adicionar à &Fila\tCtrl+Shift+F"))
+        start_autodj_item = menu.Append(wx.ID_ANY, _("Reproduzir playlist com AutoDJ"))
         menu.AppendSeparator()
         remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
         menu.AppendSeparator()
@@ -88,6 +92,7 @@ class BrowserCommandsMixin:
 
         copy_item.Enable(selected_count > 0)
         enqueue_item.Enable(selected_count > 0)
+        start_autodj_item.Enable(bool(current_state and len(current_state.items) > 1 and not current_state.autodj_session))
         remove_item.Enable(selected_count > 0 and can_edit_playlist)
         like_item.Enable(has_youtube_items and bool(like_rateable_paths))
         dislike_item.Enable(has_youtube_items and bool(dislike_rateable_paths))
@@ -95,6 +100,36 @@ class BrowserCommandsMixin:
         remove_from_youtube_playlist_item.Enable(
             bool(youtube_music_video_ids) and on_editable_youtube_playlist
         )
+
+        if current_state and current_state.autodj_session:
+            menu.AppendSeparator()
+            autodj_menu = wx.Menu()
+            replace_next_item = autodj_menu.Append(wx.ID_ANY, _("Trocar próxima faixa"))
+            recalculate_item = autodj_menu.Append(wx.ID_ANY, _("Recalcular sequência"))
+            add_media_item = autodj_menu.Append(wx.ID_ANY, _("Adicionar músicas à sessão"))
+            toggle_preparation_label = (
+                _("Retomar preparação")
+                if current_state.autodj_preparation_paused
+                else _("Pausar preparação")
+            )
+            toggle_preparation_item = autodj_menu.Append(wx.ID_ANY, toggle_preparation_label)
+            stop_autodj_item = autodj_menu.Append(wx.ID_ANY, _("Encerrar AutoDJ e manter sequência"))
+            menu.AppendSubMenu(autodj_menu, _("Ações do AutoDJ"))
+            next_path = current_state.peek_in_playback_order(1, wrap=False)
+            replace_next_item.Enable(
+                bool(next_path and any(path != next_path for path in current_state.autodj_remaining_items))
+            )
+            recalculate_item.Enable(
+                bool(
+                    current_state.autodj_remaining_items
+                    or current_state.current_index + 1 < len(current_state.items)
+                )
+            )
+            menu.Bind(wx.EVT_MENU, self.on_replace_autodj_next, id=replace_next_item.GetId())
+            menu.Bind(wx.EVT_MENU, self.on_recalculate_autodj_session, id=recalculate_item.GetId())
+            menu.Bind(wx.EVT_MENU, self.on_add_media_to_autodj_session, id=add_media_item.GetId())
+            menu.Bind(wx.EVT_MENU, self.on_toggle_autodj_preparation, id=toggle_preparation_item.GetId())
+            menu.Bind(wx.EVT_MENU, self.on_stop_autodj_session, id=stop_autodj_item.GetId())
 
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_copy_current_item_path(None), id=copy_item.GetId())
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_paste_open_from_clipboard(None), id=paste_item.GetId())
@@ -108,6 +143,7 @@ class BrowserCommandsMixin:
             lambda _event: self._enqueue_selected_item(),
             id=enqueue_item.GetId(),
         )
+        menu.Bind(wx.EVT_MENU, self.on_start_autodj_session, id=start_autodj_item.GetId())
         menu.Bind(
             wx.EVT_MENU,
             lambda _event: self._remove_items_from_current_playlist(browser_panel.get_selected_indexes()),

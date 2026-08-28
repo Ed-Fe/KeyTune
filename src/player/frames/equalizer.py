@@ -82,12 +82,8 @@ class FrameEqualizerMixin:
             return state
         return self._get_playlist_state()
 
-    def _apply_equalizer_state_to_player(self, player, state=None):
-        if player is None:
-            return False
-
+    def _equalizer_filter_chain_for_state(self, state=None):
         state = state or self._get_equalizer_target_state()
-
         equalizer_chain = ""
         if self._equalizer_supported() and state and state.equalizer_enabled:
             preset = self._get_equalizer_preset(state.equalizer_preset_id)
@@ -96,10 +92,40 @@ class FrameEqualizerMixin:
                     preset,
                     band_frequencies_hz=self._equalizer_band_frequencies(),
                 )
+        return equalizer_chain
+
+    def _apply_equalizer_state_to_player(self, player, state=None):
+        if player is None:
+            return False
+
+        extra_filters = ()
+        if bool(getattr(self.settings, "autodj_enabled", False)):
+            from ..autodj import build_mix_lavfi_filters
+
+            extra_filters = build_mix_lavfi_filters(0.0, 0.0)
 
         # Delegates the actual `af` write so the equalizer chain is combined
         # with any active pitch shift instead of one overwriting the other.
-        return self._apply_audio_filter_chain_to_player(player, equalizer_chain)
+        return self._apply_audio_filter_chain_to_player(
+            player,
+            self._equalizer_filter_chain_for_state(state),
+            extra_filters,
+        )
+
+    @staticmethod
+    def _update_autodj_mix_filter_on_player(player, bass_gain_db, mid_gain_db):
+        command_filter = getattr(player, "command_audio_filter", None)
+        if not callable(command_filter):
+            return False
+        updates = (
+            ("equalizer@autodj_bass_80", bass_gain_db),
+            ("equalizer@autodj_bass_180", bass_gain_db * 0.7),
+            ("equalizer@autodj_mid", mid_gain_db),
+        )
+        return all(
+            command_filter("autodj_mix", "gain", f"{gain_db:.2f}", target)
+            for target, gain_db in updates
+        )
 
     def _apply_equalizer_state(self, state=None):
         if not hasattr(self, "player"):

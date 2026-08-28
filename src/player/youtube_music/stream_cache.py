@@ -60,6 +60,13 @@ class YouTubeMusicStreamCache:
                 display_artist=str(cache_entry.get("display_artist") or "").strip(),
             )
 
+    def invalidate(self, media_path):
+        cache_key = normalize_media_path(media_path)
+        if not cache_key:
+            return False
+        with self._lock:
+            return self._cache.pop(cache_key, None) is not None
+
     def cache_stream_playback(self, media_path, resolved_playback):
         """Store *resolved_playback* in the cache and return a normalized copy."""
         cache_key = normalize_media_path(media_path)

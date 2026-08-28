@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+from types import SimpleNamespace
 import unittest
 
 
@@ -34,6 +35,7 @@ class _RelatedAutoplayFrame(RelatedAutoplayMixin):
 
     def __init__(self, state):
         self._state = state
+        self.settings = SimpleNamespace(youtube_music_autoplay_related=True)
         self.dispatched = []
         self.announcements = []
         self.status_messages = []
@@ -142,6 +144,35 @@ class SeedRetryTests(unittest.TestCase):
 
 
 class FinishFetchTests(unittest.TestCase):
+    def test_autodj_session_never_qualifies_for_related_radio(self):
+        state = _playlist(["aaa"])
+        state.set_current_media_path(state.items[0])
+        state.autodj_session = True
+        frame = _RelatedAutoplayFrame(state)
+
+        self.assertEqual(frame._related_autoplay_seed_video_id(state), ("", ""))
+        self.assertFalse(frame._try_autoplay_related_youtube_music(state))
+        self.assertEqual(frame.dispatched, [])
+
+    def test_in_flight_radio_result_is_discarded_after_entering_autodj_session(self):
+        state = _playlist(["aaa"])
+        state.set_current_media_path(state.items[0])
+        frame = _RelatedAutoplayFrame(state)
+        frame._related_autoplay = {
+            "seed": state.items[0],
+            "status": "pending",
+            "advance_when_ready": False,
+            "tried_video_ids": ["aaa"],
+        }
+        state.autodj_session = True
+
+        frame._finish_related_youtube_music_fetch(
+            state.items[0], _RadioContent([_watch_url("bbb")])
+        )
+
+        self.assertEqual(state.items, [_watch_url("aaa")])
+        self.assertIsNone(frame._related_autoplay)
+
     def test_an_empty_result_retries_with_an_earlier_seed_instead_of_ending(self):
         state = _playlist(["aaa", "bbb"])
         frame = _RelatedAutoplayFrame(state)

@@ -266,6 +266,13 @@ class TabManagementMixin:
 
         return getattr(page, "browser_panel", None)
 
+    def _get_autodj_panel(self, index=None):
+        if index is None:
+            index = self.notebook.GetSelection()
+        if index == wx.NOT_FOUND or index is None or not 0 <= index < self.notebook.GetPageCount():
+            return None
+        return getattr(self.notebook.GetPage(index), "autodj_panel", None)
+
     def _prepare_playlist_tab(self, items, title, source_path=None):
         state, target_index = self._resolve_target_playlist_tab()
 
@@ -329,7 +336,11 @@ class TabManagementMixin:
             register_in_library(normalized_items, normalized_browser_labels)
 
         self._refresh_playlist_browser()
-        self._play_media(index=target_index, announce_message=announce_message)
+        self._play_media(
+            media_path=normalized_items[max(0, min(int(start_index or 0), len(normalized_items) - 1))],
+            index=target_index,
+            announce_message=announce_message,
+        )
         return target_index
 
     def _activate_tab(self, index, announce=True):
@@ -358,6 +369,9 @@ class TabManagementMixin:
 
         previous_active_playlist_index = self._get_active_playlist_index()
         self.active_playlist_index = index
+        refresh_autodj_menu = getattr(self, "_refresh_autodj_menu_state", None)
+        if callable(refresh_autodj_menu):
+            refresh_autodj_menu()
         self._apply_equalizer_state(state)
 
         if state.is_loading:
@@ -445,6 +459,10 @@ class TabManagementMixin:
         try:
             if isinstance(current_state, ScreenTabState) and callable(current_state.on_close):
                 current_state.on_close()
+            if isinstance(current_state, PlaylistState) and current_state.autodj_session:
+                cancel_autodj_session = getattr(self, "_cancel_autodj_session", None)
+                if callable(cancel_autodj_session):
+                    cancel_autodj_session(current_state)
 
             self.playlists.pop(current_index)
             self.notebook.DeletePage(current_index)

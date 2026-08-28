@@ -371,6 +371,112 @@ def extract_info(
     raise RuntimeError(error_message)
 
 
+def download_media(
+    media_path: str,
+    *,
+    destination_directory: str,
+    format_selector: str = "best[ext=mp4]/best",
+    filename_template: str = "%(title).200B [%(id)s].%(ext)s",
+    playlist: bool = False,
+    playlist_limit: int = 100,
+    cookie_file_path: str = "",
+    http_headers: dict[str, str] | None = None,
+    js_runtimes: dict[str, str] | None = None,
+    timeout_seconds: int = 60 * 60,
+) -> list[str]:
+    """Download media with the same managed yt-dlp runtime used by KeyTune.
+
+    This intentionally exposes a small, stable option set instead of arbitrary
+    command-line arguments.  Plugins cannot smuggle output paths through the
+    filename template and receive only the final paths printed by yt-dlp.
+    """
+    executable_path = find_yt_dlp_executable_path()
+    if executable_path is None:
+        raise RuntimeError(_("O executável yt-dlp não está disponível."))
+
+    normalized_media_path = str(media_path or "").strip()
+    if not normalized_media_path:
+        raise RuntimeError(_("Nenhuma mídia válida foi informada ao yt-dlp."))
+
+    raw_destination_directory = str(destination_directory or "").strip()
+    if not raw_destination_directory:
+        raise RuntimeError(_("Escolha uma pasta de destino para o download."))
+    output_directory = Path(raw_destination_directory).expanduser()
+    output_directory.mkdir(parents=True, exist_ok=True)
+    output_directory = output_directory.resolve()
+
+    normalized_template = str(filename_template or "").strip() or "%(title).200B [%(id)s].%(ext)s"
+    if (
+        Path(normalized_template).name != normalized_template
+        or ".." in normalized_template
+        or "/" in normalized_template
+        or "\\" in normalized_template
+    ):
+        raise RuntimeError(_("O modelo do nome do arquivo não pode conter pastas."))
+
+    command = [
+        str(executable_path),
+        "--ignore-config",
+        "--encoding", "utf-8",
+        "--no-call-home",
+        "--newline",
+        "--print", "after_move:filepath",
+        "--paths", str(output_directory),
+        "--output", normalized_template,
+        "--format", str(format_selector or "best[ext=mp4]/best").strip(),
+        "--playlist-end", str(max(1, min(500, int(playlist_limit)))),
+    ]
+    command.append("--yes-playlist" if playlist else "--no-playlist")
+
+    normalized_cookie_file_path = str(cookie_file_path or "").strip()
+    if normalized_cookie_file_path:
+        command.extend(("--cookies", normalized_cookie_file_path))
+    for header_name, header_value in sorted((http_headers or {}).items()):
+        if str(header_name).strip() and str(header_value).strip():
+            command.extend(("--add-header", f"{str(header_name).strip()}:{str(header_value).strip()}"))
+    for runtime_name, runtime_path in sorted((js_runtimes or {}).items()):
+        runtime_argument = str(runtime_name).strip()
+        if runtime_argument:
+            if str(runtime_path).strip():
+                runtime_argument += f":{str(runtime_path).strip()}"
+            command.extend(("--js-runtimes", runtime_argument))
+    command.extend(("--", normalized_media_path))
+
+    try:
+        completed_process = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=max(30, int(timeout_seconds)),
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(_("O download pelo yt-dlp excedeu o tempo limite.")) from exc
+    except OSError as exc:
+        raise RuntimeError(_("Não foi possível iniciar o download pelo yt-dlp.")) from exc
+
+    if completed_process.returncode != 0:
+        detail = str(completed_process.stderr or completed_process.stdout or "").strip()
+        raise RuntimeError(detail or _("O yt-dlp não conseguiu baixar a mídia."))
+
+    downloaded_paths = []
+    for line in str(completed_process.stdout or "").splitlines():
+        candidate = Path(line.strip())
+        if not candidate.is_absolute():
+            candidate = output_directory / candidate
+        try:
+            resolved_candidate = candidate.resolve()
+            resolved_candidate.relative_to(output_directory)
+        except (OSError, ValueError):
+            continue
+        if resolved_candidate.is_file():
+            downloaded_paths.append(str(resolved_candidate))
+    return downloaded_paths
+
+
 def _build_yt_dlp_command(
     *,
     executable_path: Path,

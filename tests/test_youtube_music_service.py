@@ -104,7 +104,7 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             next_mode = service.advance_stream_playback_after_http_403()
             service.resolve_stream_playback(media_path)
 
-        self.assertEqual(next_mode, "visionos")
+        self.assertEqual(next_mode, "web_embedded")
         self.assertEqual(
             [
                 (
@@ -113,15 +113,14 @@ class YouTubeMusicServiceTests(unittest.TestCase):
                 )
                 for call in resolve_stream.call_args_list
             ],
-            [(True, ""), (False, "")],
+            [(False, "visionos"), (False, "web_embedded")],
         )
 
     def test_http_403_advances_stream_profiles_once_per_session(self):
         service = YouTubeMusicService()
 
         with patch.object(service, "has_saved_browser_auth", return_value=True):
-            self.assertEqual(service.advance_stream_playback_after_http_403(), "visionos")
-            self.assertEqual(service.advance_stream_playback_after_http_403(), "tv_simply")
+            self.assertEqual(service.advance_stream_playback_after_http_403(), "web_embedded")
             self.assertEqual(service.advance_stream_playback_after_http_403(), "")
 
         with patch(
@@ -131,7 +130,7 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             service.resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
 
         self.assertFalse(resolve_stream.call_args.kwargs["use_account_cookies"])
-        self.assertEqual(resolve_stream.call_args.kwargs["anonymous_player_client"], "tv_simply")
+        self.assertEqual(resolve_stream.call_args.kwargs["anonymous_player_client"], "web_embedded")
 
     def test_cache_ttl_respects_expiring_signed_urls(self):
         service = YouTubeMusicService()
@@ -172,6 +171,18 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         self.assertEqual(returned_playback.display_title, "Vídeo de teste")
         self.assertEqual(returned_playback.display_artist, "Canal de teste")
         self.assertNotIn(media_path, service._stream_cache)
+
+    def test_cached_stream_can_be_invalidated_for_retry(self):
+        service = YouTubeMusicService()
+        media_path = "https://www.youtube.com/watch?v=abc123DEF45"
+        resolved_playback = ResolvedStreamPlayback(
+            stream_url="https://rr1---sn.example.googlevideo.com/audio.webm",
+        )
+        service._cache_stream_playback(media_path, resolved_playback)
+
+        self.assertTrue(service.invalidate_cached_stream(media_path))
+        self.assertIsNone(service.get_cached_stream_playback(media_path))
+        self.assertFalse(service.invalidate_cached_stream(media_path))
 
 
     def test_search_uses_public_client_for_youtube_music_catalog(self):

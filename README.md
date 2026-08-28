@@ -2,6 +2,11 @@
 
 KeyTune is a media player built with Python, wxPython, and MPV.
 
+KeyTune 2 also includes a permission-based plugin platform, process-isolated
+plugin lifecycle, accessible plugin manager, verified package installer, and a
+GitHub-friendly marketplace workflow. See [the plugin developer and marketplace
+guide](docs/plugins.md).
+
 It focuses on playlist management, folder browsing, session restore, and persistent user preferences.
 
 ## Features
@@ -18,7 +23,7 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Local playback history with all-plays, grouped, and most-played views (`Ctrl+Shift+H`)
 - Per-file resume for podcasts, audiobooks, and other long-form media, plus a "continue listening" list (`Ctrl+Shift+R`)
 - Smart playlists: saved rules (favorites, rating, folder, staleness, play count) rebuilt on every open
-- Reusable metadata and audio-analysis cache shared by future features
+- AutoDJ sessions with a visible rolling queue, per-track state, preparation controls, multi-track planning, downbeat/section/key/vocal analysis, loudness-aware selection, phrase alignment, tempo matching, and profile-specific bass/EQ mixing
 - Sleep timer with preset durations, a custom duration, or an end-of-track stop (`Ctrl+Shift+D`)
 - Built-in equalizer presets plus custom presets
 - YouTube Music integration for search, link-based open flows, and library refresh

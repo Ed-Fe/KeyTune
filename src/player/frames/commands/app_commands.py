@@ -61,6 +61,10 @@ class AppCommandsMixin:
         if callable(handle_smart_library_preferences_change):
             handle_smart_library_preferences_change(previous_settings)
 
+        handle_autodj_preferences_change = getattr(self, "_handle_autodj_preferences_change", None)
+        if callable(handle_autodj_preferences_change):
+            handle_autodj_preferences_change(previous_settings)
+
         if audio_output_updated:
             self._announce(_("Preferências salvas."))
         else:
@@ -95,6 +99,7 @@ class AppCommandsMixin:
         new_index = event.GetSelection()
         if new_index != wx.NOT_FOUND:
             self._activate_tab(new_index, announce=True)
+            self._emit_plugin_event("tab.changed", {"index": new_index})
 
         event.Skip()
 
@@ -115,6 +120,9 @@ class AppCommandsMixin:
         maybe_keepalive_smtc = getattr(self, "_maybe_keepalive_smtc", None)
         if callable(maybe_keepalive_smtc):
             maybe_keepalive_smtc()
+        maybe_prepare_autodj = getattr(self, "_maybe_prepare_autodj_transition", None)
+        if callable(maybe_prepare_autodj):
+            maybe_prepare_autodj()
         # Poll for the automatic crossfade start window here, on the slower
         # progress timer, instead of on the high-frequency crossfade timer.
         # The crossfade window already includes startup headroom, so 500 ms
@@ -183,6 +191,9 @@ class AppCommandsMixin:
         if hasattr(self, "sleep_timer") and self.sleep_timer.IsRunning():
             self.sleep_timer.Stop()
         self._dispose_equalizer_ui_cache()
+        if hasattr(self, "plugin_service"):
+            self.plugin_service.stop_all()
+        self._shutdown_autodj_service()
 
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then

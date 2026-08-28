@@ -595,6 +595,19 @@ class MPVPlayer:
         except Exception:
             pass
 
+    def command_audio_filter(self, label, command, argument, target="all"):
+        try:
+            self._player.command(
+                "af-command",
+                str(label),
+                str(command),
+                str(argument),
+                str(target),
+            )
+            return True
+        except Exception:
+            return False
+
 
 class MPVInstance:
     def __init__(self, *, video_output_enabled: bool = True, audio_output_device_id: str = ""):

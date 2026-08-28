@@ -116,7 +116,7 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self.assertEqual(kwargs["format_selector"], "bestaudio/best")
         self.assertEqual(kwargs["cookie_file_path"], "C:/tmp/ytmusic_runtime_cookies.txt")
         self.assertEqual(kwargs["http_headers"], {"User-Agent": "Mozilla/5.0 Teste"})
-        self.assertEqual(kwargs["extractor_args"], {"youtube": {"player_client": ["tv"]}})
+        self.assertEqual(kwargs["extractor_args"], {"youtube": {"player_client": ["web_safari"]}})
         create_temp_cookie_file.assert_called_once_with("SID=abc; HSID=def")
         remove_file.assert_called_once_with("C:/tmp/ytmusic_runtime_cookies.txt")
 
@@ -166,7 +166,7 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
             {"User-Agent": "yt-test/1.0", "Referer": "https://music.youtube.com/"},
         )
 
-    def test_resolve_stream_playback_retries_next_profile_when_first_is_unplayable(self):
+    def test_resolve_stream_playback_uses_only_the_selected_profile(self):
         responses = [
             _response(
                 {
@@ -182,20 +182,6 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
                     "http_headers": {"User-Agent": "yt-test/1.0"},
                 }
             ),
-            _response(
-                {
-                    "formats": [
-                        {
-                            "url": "https://media.example.invalid/audio-fallback.webm",
-                            "vcodec": "none",
-                            "acodec": "opus",
-                            "protocol": "https",
-                            "abr": 128,
-                        }
-                    ],
-                    "http_headers": {"User-Agent": "yt-test/1.0"},
-                }
-            ),
         ]
         captured_profiles = []
 
@@ -205,16 +191,41 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
 
         with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=YouTubeMusicPlaybackAuth()):
             with patch("player.youtube_music.streams.extract_yt_dlp_info", side_effect=fake_extract):
-                resolved_playback = resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
+                with self.assertRaisesRegex(RuntimeError, "stream de áudio compatível"):
+                    resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
 
-        self.assertEqual(resolved_playback.stream_url, "https://media.example.invalid/audio-fallback.webm")
         self.assertEqual(
             captured_profiles,
             [
                 {"youtube": {"player_client": ["visionos"]}},
-                {"youtube": {"player_client": ["tv_simply"]}},
             ],
         )
+
+    def test_resolve_stream_playback_retries_transient_network_error_on_same_profile(self):
+        playable_response = _response(
+            {
+                "formats": [
+                    {
+                        "url": "https://media.example.invalid/audio.webm",
+                        "vcodec": "none",
+                        "acodec": "opus",
+                        "protocol": "https",
+                    }
+                ]
+            }
+        )
+        with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=YouTubeMusicPlaybackAuth()), patch(
+            "player.youtube_music.streams.extract_yt_dlp_info",
+            side_effect=[RuntimeError("Failed to resolve www.youtube.com"), playable_response],
+        ) as extract_info, patch("player.youtube_music.streams.time.sleep"):
+            resolved_playback = resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(resolved_playback.stream_url, "https://media.example.invalid/audio.webm")
+        self.assertEqual(extract_info.call_count, 2)
+        self.assertTrue(all(
+            call.kwargs["extractor_args"] == {"youtube": {"player_client": ["visionos"]}}
+            for call in extract_info.call_args_list
+        ))
 
     def test_resolve_stream_playback_can_ignore_saved_account_cookies(self):
         playback_auth = YouTubeMusicPlaybackAuth(
@@ -497,21 +508,6 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
                     "WARNING: [youtube] abc123DEF45: n challenge solving failed: Some formats may be missing.\n"
                     "WARNING: Only images are available for download."
                 ),
-            ),
-            _response(
-                {
-                    "url": "https://www.youtube.com/watch?v=abc123DEF45",
-                    "formats": [
-                        {
-                            "format_id": "137",
-                            "url": "https://media.example.invalid/video-only.mp4",
-                            "acodec": "none",
-                            "vcodec": "avc1",
-                            "protocol": "https",
-                        }
-                    ],
-                    "http_headers": {"User-Agent": "yt-test/1.0"},
-                }
             ),
             _response(
                 {

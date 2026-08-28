@@ -86,16 +86,19 @@ class PlaybackEngineMixin:
                     except Exception:
                         pass
                     play_kwargs = {}
-                    if not request.get("crossfade"):
-                        raw_restore_position_ms = request.get("restore_position_ms", 0) or 0
-                        try:
-                            normalized_restore_position_ms = int(raw_restore_position_ms)
-                        except (TypeError, ValueError):
-                            normalized_restore_position_ms = 0
-                        if normalized_restore_position_ms > 0:
-                            play_kwargs["start_seconds"] = normalized_restore_position_ms / 1000.0
-                        if request.get("pause_after_start"):
-                            play_kwargs["pause_on_start"] = True
+                    raw_start_position_ms = (
+                        request.get("start_position_ms", 0)
+                        if request.get("crossfade")
+                        else request.get("restore_position_ms", 0)
+                    ) or 0
+                    try:
+                        normalized_start_position_ms = int(raw_start_position_ms)
+                    except (TypeError, ValueError):
+                        normalized_start_position_ms = 0
+                    if normalized_start_position_ms > 0:
+                        play_kwargs["start_seconds"] = normalized_start_position_ms / 1000.0
+                    if request.get("pause_after_start"):
+                        play_kwargs["pause_on_start"] = True
                     player.play(**play_kwargs)
                     if request.get("crossfade"):
                         try:
@@ -126,6 +129,7 @@ class PlaybackEngineMixin:
         player_key=None,
         initial_volume=None,
         crossfade=False,
+        start_position_ms=0,
     ):
         target_player_key = player_key or self._active_player_key
         target_player = self._managed_player(target_player_key)
@@ -156,6 +160,7 @@ class PlaybackEngineMixin:
             "player_key": target_player_key,
             "initial_volume": self.current_volume if initial_volume is None else initial_volume,
             "crossfade": bool(crossfade),
+            "start_position_ms": start_position_ms,
         }
         if (
             not crossfade
@@ -243,7 +248,12 @@ class PlaybackEngineMixin:
             else:
                 self._apply_equalizer_state_to_player(self._managed_player(player_key), state)
                 self._apply_volume_to_player(player_key, 0)
-                self._apply_playback_rate_to_player(player_key, getattr(self, "current_playback_rate", 1.0))
+                tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)
+                self._apply_playback_rate_to_player(
+                    player_key,
+                    max(0.25, min(4.0, getattr(self, "current_playback_rate", 1.0) * tempo_ratio)),
+                )
+                crossfade_state["incoming_ready"] = True
                 # Carry the resolved title/artist to the crossfade completion so
                 # it can refresh the display metadata and lyrics for the incoming
                 # track (this early return skips that work below).
@@ -252,6 +262,7 @@ class PlaybackEngineMixin:
             return
 
         self._set_active_player(player_key)
+        self._current_track_gain_db = float(getattr(state, "playback_gain_db", 0.0) or 0.0)
         self._apply_equalizer_state()
         self._prepare_youtube_music_history_tracking(media_path)
         self._prepare_smart_library_tracking(media_path)
@@ -272,6 +283,15 @@ class PlaybackEngineMixin:
         resolved_display_title = str(request.get("resolved_display_title", "") or "").strip()
         resolved_display_artist = str(request.get("resolved_display_artist", "") or "").strip()
         self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
+        self._emit_plugin_event(
+            "playback.media_changed",
+            {
+                "media_path": media_path,
+                "title": resolved_display_title,
+                "artist": resolved_display_artist,
+                "playlist_index": tab_index,
+            },
+        )
         
         # Busca a letra da faixa que acabou de entrar. O caminho de crossfade
         # (_begin_pending_crossfade) chama o mesmo helper, já que ele retorna

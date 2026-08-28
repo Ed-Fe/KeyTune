@@ -35,11 +35,19 @@ class PlaylistPlaybackMixin:
 
         return _("Item atual: {name}. Item {current} de {total}.").format(name=media_name, current=state.current_index + 1, total=state.item_count)
 
-    def _play_media(self, media_path=None, index=None, announce_message=None, allow_crossfade=False):
+    def _play_media(
+        self,
+        media_path=None,
+        index=None,
+        announce_message=None,
+        allow_crossfade=False,
+        autodj_transition=None,
+    ):
         self._suppress_next_auto_advance = False
         state = self._get_playlist_state(index)
         if not state:
             return
+        state.autodj_waiting_for_next = False
 
         if media_path is not None and state.current_media_path != media_path:
             media_index = state.index_of_item(media_path)
@@ -66,12 +74,23 @@ class PlaylistPlaybackMixin:
 
         state.was_playing = True
         state.last_position_ms = 0
+        if autodj_transition is None:
+            state.playback_gain_db = 0.0
         target_index = self._get_active_playlist_index() if index is None else index
-        if allow_crossfade and self._can_crossfade_to_media(state.current_media_path):
+        transition_duration_ms = (
+            self._autodj_transition_duration_ms(autodj_transition)
+            if autodj_transition is not None
+            else None
+        )
+        if allow_crossfade and self._can_crossfade_to_media(
+            state.current_media_path,
+            duration_override_ms=transition_duration_ms,
+        ):
             if self._start_crossfade(
                 state.current_media_path,
                 tab_index=target_index,
                 announce_message=announce_message,
+                autodj_transition=autodj_transition,
             ):
                 return
 
@@ -99,10 +118,6 @@ class PlaylistPlaybackMixin:
         if getattr(self, "_crossfade_state", None) is not None:
             return False
 
-        configured_crossfade_ms = self._crossfade_duration_ms()
-        if configured_crossfade_ms <= 0:
-            return False
-
         state = self._get_playlist_state()
         if not state or state.is_folder_tab or not state.current_media_path or state.repeat_mode == REPEAT_ONE:
             return False
@@ -115,15 +130,41 @@ class PlaylistPlaybackMixin:
         if current_time is None or current_time < 0 or total_time is None or total_time <= 0:
             return False
 
-        startup_headroom_ms = self._crossfade_startup_headroom_ms()
-        crossfade_window_ms = configured_crossfade_ms + startup_headroom_ms
+        prepared_autodj = getattr(self, "_prepared_autodj_transition", lambda _state: None)(state)
+        if prepared_autodj is not None:
+            plan = prepared_autodj["plan"]
+            transition_start_ms = plan.outgoing_start_ms
+            preload_lead_ms = self._autodj_preload_lead_ms(prepared_autodj["pair"][1])
+            if transition_start_ms is None or current_time < max(0, transition_start_ms - preload_lead_ms):
+                return False
+            crossfade_window_ms = self._autodj_transition_duration_ms(prepared_autodj)
+        else:
+            configured_crossfade_ms = self._crossfade_duration_ms()
+            if configured_crossfade_ms <= 0:
+                return False
+            startup_headroom_ms = self._crossfade_startup_headroom_ms()
+            crossfade_window_ms = configured_crossfade_ms + startup_headroom_ms
+
         remaining_time = total_time - max(0, current_time)
-        if remaining_time > crossfade_window_ms or remaining_time <= 0:
+        if prepared_autodj is None and remaining_time > crossfade_window_ms:
+            return False
+        if remaining_time <= 0:
             return False
 
         should_wrap = state.repeat_mode == REPEAT_ALL
         next_media_path = state.peek_in_playback_order(1, wrap=should_wrap)
-        if not next_media_path or not self._can_crossfade_to_media(next_media_path):
+        expected_autodj_path = prepared_autodj["pair"][1] if prepared_autodj is not None else None
+        if expected_autodj_path is not None and next_media_path != expected_autodj_path:
+            return False
+        transition_duration_ms = (
+            self._autodj_transition_duration_ms(prepared_autodj)
+            if prepared_autodj is not None
+            else None
+        )
+        if not next_media_path or not self._can_crossfade_to_media(
+            next_media_path,
+            duration_override_ms=transition_duration_ms,
+        ):
             return False
 
         wrapped_cycle = False
@@ -143,6 +184,7 @@ class PlaylistPlaybackMixin:
             index=self._get_active_playlist_index(),
             announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
             allow_crossfade=True,
+            autodj_transition=prepared_autodj,
         )
         return True
 
@@ -200,6 +242,9 @@ class PlaylistPlaybackMixin:
         should_wrap = state.repeat_mode == REPEAT_ALL
         target = state.move_in_playback_order(-1 if direction < 0 else 1, wrap=should_wrap)
         if not target:
+            defer_autodj_advance = getattr(self, "_defer_autodj_advance", None)
+            if direction > 0 and callable(defer_autodj_advance) and defer_autodj_advance(state):
+                return
             if direction > 0 and self._try_autoplay_related_youtube_music(state):
                 return
             boundary_message = _("Você já está no primeiro item.") if direction < 0 else _("Você já está no último item.")
@@ -383,6 +428,10 @@ class PlaylistPlaybackMixin:
                 index=self._get_active_playlist_index(),
                 announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
             )
+            return
+
+        defer_autodj_advance = getattr(self, "_defer_autodj_advance", None)
+        if callable(defer_autodj_advance) and defer_autodj_advance(state):
             return
 
         _logger.debug("Media end: no next track; attempting related autoplay.")

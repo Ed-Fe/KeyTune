@@ -27,6 +27,7 @@ class TransportCommandsMixin:
             if state:
                 state.was_playing = False
                 state.last_position_ms = 0
+                state.autodj_waiting_for_next = False
             self._update_time_bar()
             self._announce(_("Parado."))
             if hasattr(self, "_set_status_message"):

@@ -45,6 +45,7 @@ class PlaylistBrowserPanel(wx.Panel):
         on_preview_item=None,
         on_go_back=None,
         on_toggle_navigation_mode=None,
+        on_tab=None,
         on_show_context_menu=None,
     ):
         super().__init__(parent)
@@ -54,6 +55,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self._on_preview_item = on_preview_item
         self._on_go_back = on_go_back
         self._on_toggle_navigation_mode = on_toggle_navigation_mode
+        self._on_tab = on_tab
         self._on_show_context_menu = on_show_context_menu
         self._items = []
         self._mode = "playlist"
@@ -65,6 +67,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self._folder_current_media_key = None
         self._folder_index_by_key = {}
         self._base_labels = []
+        self._item_statuses = {}
         # Sufixos de favorito/avaliação por caminho, alimentados pelo frame a
         # partir da biblioteca inteligente. Ficam só na exibição: a busca
         # (Ctrl+F) e a sessão continuam vendo o rótulo puro.
@@ -351,6 +354,18 @@ class PlaylistBrowserPanel(wx.Panel):
         self.items_list.Refresh()
         return True
 
+    def set_item_statuses(self, statuses_by_path):
+        normalized_statuses = dict(statuses_by_path or {})
+        if normalized_statuses == getattr(self, "_item_statuses", {}):
+            return False
+        self._item_statuses = normalized_statuses
+        self.items_list.Refresh()
+        return True
+
+    def _item_status_suffix(self, media_path):
+        status = getattr(self, "_item_statuses", {}).get(media_path)
+        return f" — {status}" if status else ""
+
     def _library_mark_suffix(self, media_path):
         if not self._library_marks or not media_path:
             return ""
@@ -372,7 +387,7 @@ class PlaylistBrowserPanel(wx.Panel):
                 index,
                 self._base_labels[index],
                 self._playlist_current_index,
-                self._library_mark_suffix(self._items[index]),
+                self._item_status_suffix(self._items[index]) + self._library_mark_suffix(self._items[index]),
             )
 
         return self._format_folder_label(self._items[index], self._current_folder_media_path())
@@ -612,6 +627,8 @@ class PlaylistBrowserPanel(wx.Panel):
             return
 
         if key_code == wx.WXK_TAB:
+            if self._on_tab and self._on_tab(backward=event.ShiftDown()):
+                return
             if self._on_toggle_navigation_mode:
                 self._on_toggle_navigation_mode()
             return

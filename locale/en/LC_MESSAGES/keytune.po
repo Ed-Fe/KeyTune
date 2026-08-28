@@ -4589,3 +4589,264 @@ msgstr "Library index"
 
 msgid "Última vez"
 msgstr "Last time"
+
+msgid "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. Se a análise não for confiável, a reprodução continua normalmente."
+msgstr "Analyzes the current and next track in the background to align beats and perform an automatic transition. If the analysis is not reliable, playback continues normally."
+
+msgid "Ativar &AutoDJ"
+msgstr "Enable &AutoDJ"
+
+msgid "Ativar Auto&DJ"
+msgstr "Enable Auto&DJ"
+
+msgid "Ativar AutoDJ"
+msgstr "Enable AutoDJ"
+
+msgid "AutoDJ {status}."
+msgstr "AutoDJ {status}."
+
+msgid "AutoDJ: {status}."
+msgstr "AutoDJ: {status}."
+
+msgid "Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."
+msgstr "Defines the behavior AutoDJ uses when planning the sequence and transitions."
+
+msgid "Duração da transição do AutoDJ"
+msgstr "AutoDJ transition length"
+
+msgid "Eletrônica"
+msgstr "Electronic"
+
+msgid "Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."
+msgstr "Selects how many beats are used for the overlap between two tracks."
+
+msgid "Perfil do AutoDJ"
+msgstr "AutoDJ profile"
+
+msgid "{count} batidas"
+msgstr "{count} beats"
+
+msgid "AutoDJ analisando a faixa atual e a próxima..."
+msgstr "AutoDJ is analyzing the current and next track..."
+
+msgid "AutoDJ analisando a faixa atual e as próximas opções..."
+msgstr "AutoDJ is analyzing the current track and the upcoming options..."
+
+msgid "AutoDJ preparado: transição de {count} batidas."
+msgstr "AutoDJ ready: {count}-beat transition."
+
+msgid "O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."
+msgstr "AutoDJ could not analyze these tracks. It will retry automatically."
+
+msgid "O AutoDJ não encontrou batidas compatíveis. Será usada a transição normal."
+msgstr "AutoDJ did not find compatible beats. The regular transition will be used."
+
+msgid "Abra uma playlist comum para iniciar uma sessão AutoDJ."
+msgstr "Open a regular playlist to start an AutoDJ session."
+
+msgid "A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."
+msgstr "The playlist must contain at least two tracks to start AutoDJ."
+
+msgid "AutoDJ — {title}"
+msgstr "AutoDJ — {title}"
+
+msgid "Sessão AutoDJ iniciada. A sequência será preparada em segundo plano."
+msgstr "AutoDJ session started. The sequence will be prepared in the background."
+
+msgid "Nenhuma sessão AutoDJ está ativa nesta aba."
+msgstr "No AutoDJ session is active in this tab."
+
+msgid "Sequência AutoDJ — {title}"
+msgstr "AutoDJ sequence — {title}"
+
+msgid "Sessão AutoDJ encerrada. A sequência preparada foi preservada como playlist."
+msgstr "AutoDJ session ended. The prepared sequence was preserved as a playlist."
+
+msgid "AutoDJ preparando as próximas faixas da sessão..."
+msgstr "AutoDJ is preparing the next tracks in the session..."
+
+msgid "O AutoDJ não conseguiu completar a fila agora; tentará novamente."
+msgstr "AutoDJ could not complete the queue now; it will retry."
+
+msgid "AutoDJ preparou {count} próximas faixas."
+msgstr "AutoDJ prepared the next {count} tracks."
+
+msgid "Reproduzir playlist com AutoDJ"
+msgstr "Play playlist with AutoDJ"
+
+msgid "Encerrar sessão AutoDJ"
+msgstr "End AutoDJ session"
+
+msgid "Resumo da sessão AutoDJ"
+msgstr "AutoDJ session summary"
+
+msgid "Detalhes da próxima transição"
+msgstr "Next transition details"
+
+msgid "Trocar pró&xima"
+msgstr "Replace ne&xt"
+
+msgid "&Recalcular sequência"
+msgstr "&Recalculate sequence"
+
+msgid "&Adicionar músicas"
+msgstr "&Add music"
+
+msgid "&Pausar preparação"
+msgstr "&Pause preparation"
+
+msgid "&Retomar preparação"
+msgstr "&Resume preparation"
+
+msgid "&Encerrar AutoDJ"
+msgstr "&End AutoDJ"
+
+msgid "Trocar próxima faixa do AutoDJ"
+msgstr "Replace the next AutoDJ track"
+
+msgid "Recalcular sequência do AutoDJ"
+msgstr "Recalculate the AutoDJ sequence"
+
+msgid "Adicionar músicas à sessão AutoDJ"
+msgstr "Add music to the AutoDJ session"
+
+msgid "Pausar preparação do AutoDJ"
+msgstr "Pause AutoDJ preparation"
+
+msgid "Retomar preparação do AutoDJ"
+msgstr "Resume AutoDJ preparation"
+
+msgid "Encerrar AutoDJ e manter sequência"
+msgstr "End AutoDJ and keep sequence"
+
+msgid "Não há outra faixa disponível para substituir a próxima."
+msgstr "No other track is available to replace the next one."
+
+msgid "Escolhendo outra próxima faixa."
+msgstr "Choosing another next track."
+
+msgid "Não há faixas restantes para recalcular a sequência."
+msgstr "There are no remaining tracks to recalculate the sequence."
+
+msgid "Recalculando a sequência AutoDJ."
+msgstr "Recalculating the AutoDJ sequence."
+
+msgid "Nenhuma música nova foi adicionada à sessão AutoDJ."
+msgstr "No new music was added to the AutoDJ session."
+
+msgid "{count} músicas adicionadas à sessão AutoDJ."
+msgstr "{count} tracks added to the AutoDJ session."
+
+msgid "Preparação da sessão AutoDJ pausada."
+msgstr "AutoDJ session preparation paused."
+
+msgid "Preparação da sessão AutoDJ retomada."
+msgstr "AutoDJ session preparation resumed."
+
+msgid "Preparação pausada."
+msgstr "Preparation paused."
+
+msgid "Analisando próximas faixas."
+msgstr "Analyzing upcoming tracks."
+
+msgid "Sessão ativa."
+msgstr "Session active."
+
+msgid "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+msgstr "{activity} Source: {source}. Prepared: {prepared}. Remaining: {remaining}."
+
+msgid "playlist original"
+msgstr "original playlist"
+
+msgid "Tocada"
+msgstr "Played"
+
+msgid "Tocando"
+msgstr "Playing"
+
+msgid "Preparada"
+msgstr "Prepared"
+
+msgid "Próxima transição: aguardando uma faixa preparada."
+msgstr "Next transition: waiting for a prepared track."
+
+msgid "Próxima transição: analisando."
+msgstr "Next transition: analyzing."
+
+msgid "Próxima, analisando transição"
+msgstr "Next, analyzing transition"
+
+msgid "Próxima transição: aguardando nova tentativa."
+msgstr "Next transition: waiting to retry."
+
+msgid "Próxima, análise pendente"
+msgstr "Next, analysis pending"
+
+msgid "Próxima transição: transição comum."
+msgstr "Next transition: regular transition."
+
+msgid "Próxima, transição comum"
+msgstr "Next, regular transition"
+
+msgid "Próxima transição: {count} batidas."
+msgstr "Next transition: {count} beats."
+
+msgid "Próxima, transição de {count} batidas"
+msgstr "Next, {count}-beat transition"
+
+msgid "Vocais protegidos."
+msgstr "Vocals protected."
+
+msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
+msgstr "Next track volume adjusted by {gain:.1f} dB."
+
+msgid "Trocar próxima faixa"
+msgstr "Replace next track"
+
+msgid "Recalcular sequência"
+msgstr "Recalculate sequence"
+
+msgid "Adicionar músicas à sessão"
+msgstr "Add music to session"
+
+msgid "Pausar preparação"
+msgstr "Pause preparation"
+
+msgid "Retomar preparação"
+msgstr "Resume preparation"
+
+msgid "Ações do AutoDJ"
+msgstr "AutoDJ actions"
+
+msgid "Informações da sessão AutoDJ"
+msgstr "AutoDJ session information"
+
+msgid "falha ao analisar as faixas"
+msgstr "track analysis failed"
+
+msgid "Próxima transição: aguardando nova tentativa. Motivo: {reason}."
+msgstr "Next transition: waiting to retry. Reason: {reason}."
+
+msgid "Próxima transição: comum. Motivo: {reason}."
+msgstr "Next transition: regular. Reason: {reason}."
+
+msgid "Ajuste de tempo: {adjustment:+.1%}."
+msgstr "Tempo adjustment: {adjustment:+.1%}."
+
+msgid "confiança rítmica insuficiente"
+msgstr "insufficient rhythmic confidence"
+
+msgid "diferença de BPM acima do limite seguro"
+msgstr "BPM difference above the safe limit"
+
+msgid "poucas batidas utilizáveis na faixa atual"
+msgstr "too few usable beats in the current track"
+
+msgid "nenhum ponto de entrada adequado na próxima faixa"
+msgstr "no suitable entry point in the next track"
+
+msgid "análise incompatível"
+msgstr "incompatible analysis"
+
+msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
+msgstr "Rhythmic analysis: current track {outgoing_bpm:.1f} BPM, {outgoing_confidence:.0%} confidence; next track {incoming_bpm:.1f} BPM, {incoming_confidence:.0%} confidence."

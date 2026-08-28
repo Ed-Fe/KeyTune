@@ -137,6 +137,46 @@ class KeyNavigationMixin:
             return True
         return False
 
+    def _autodj_navigation_panel(self):
+        get_panel = getattr(self, "_get_autodj_panel", None)
+        get_state = getattr(self, "_get_playlist_state", None)
+        if not callable(get_panel) or not callable(get_state):
+            return None
+        state = get_state()
+        panel = get_panel()
+        if state is None or not getattr(state, "autodj_session", False) or panel is None:
+            return None
+        is_shown = getattr(panel, "IsShown", None)
+        if callable(is_shown) and not is_shown():
+            return None
+        return panel
+
+    def _focus_autodj_controls_from_list(self, *, backward=False):
+        if backward:
+            return False
+        panel = self._autodj_navigation_panel()
+        focus_first = getattr(panel, "focus_first_control", None) if panel is not None else None
+        return bool(callable(focus_first) and focus_first())
+
+    def _focus_autodj_controls_from_player(self, *, backward=False):
+        if not backward:
+            return False
+        panel = self._autodj_navigation_panel()
+        focus_last = getattr(panel, "focus_last_control", None) if panel is not None else None
+        return bool(callable(focus_last) and focus_last())
+
+    def _navigate_autodj_controls(self, *, backward=False):
+        panel = self._autodj_navigation_panel()
+        if panel is None or not panel.contains_focus():
+            return False
+        if panel.focus_adjacent_control(backward=backward):
+            return True
+        if backward:
+            self._focus_item_navigation(announce=False)
+        else:
+            self._focus_player_controls(announce=False)
+        return True
+
     def _lyrics_text_is_focused(self):
         lyrics_panel = getattr(self, "lyrics_panel", None)
         if lyrics_panel is None or not lyrics_panel.IsShown():
@@ -163,9 +203,17 @@ class KeyNavigationMixin:
         # copy media path, etc.). Only Esc and F1 stay global (close panel/tab,
         # help). This covers the lyrics reader and every edit field (Filtro,
         # busca, link).
-        if isinstance(wx.Window.FindFocus(), wx.TextEntry) and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1):
-            event.Skip()
-            return
+        focused_window = wx.Window.FindFocus()
+        if isinstance(focused_window, wx.TextEntry) and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1):
+            autodj_panel = self._autodj_navigation_panel()
+            is_autodj_info_tab = bool(
+                key_code == wx.WXK_TAB
+                and autodj_panel is not None
+                and focused_window is getattr(autodj_panel, "info_ctrl", None)
+            )
+            if not is_autodj_info_tab:
+                event.Skip()
+                return
 
         # Bare keys (no Ctrl/Alt) drive playback only while focus is on the
         # player surface — the frame or the playlist list. On any other control
@@ -236,6 +284,13 @@ class KeyNavigationMixin:
             self.on_copy_playing_media_path(None)
             return
 
+        if event.ControlDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
+            if event.ShiftDown():
+                self.on_paste_open_from_clipboard_new_playlist(None)
+            else:
+                self.on_paste_open_from_clipboard(None)
+            return
+
         if self._handle_screen_tab_key_down(event, current_tab):
             return
 
@@ -243,17 +298,14 @@ class KeyNavigationMixin:
             self.on_copy_current_item_path(None)
             return
 
-        if event.ControlDown() and not event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
-            self.on_paste_open_from_clipboard(None)
-            return
-
-        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
-            self.on_paste_open_from_clipboard_new_playlist(None)
-            return
+        if key_code == wx.WXK_TAB and not event.ControlDown() and not event.AltDown():
+            if self._navigate_autodj_controls(backward=event.ShiftDown()):
+                return
 
         if browser and browser.is_item_navigation_active():
             if key_code == wx.WXK_TAB and not event.ControlDown() and not event.AltDown():
-                self._toggle_navigation_mode()
+                if not self._focus_autodj_controls_from_list(backward=event.ShiftDown()):
+                    self._toggle_navigation_mode()
                 return
             event.Skip()
             return
@@ -353,6 +405,8 @@ class KeyNavigationMixin:
             return
 
         if key_code == wx.WXK_TAB:
+            if self._focus_autodj_controls_from_player(backward=event.ShiftDown()):
+                return
             self._toggle_navigation_mode()
             return
 

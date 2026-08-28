@@ -1,4 +1,5 @@
 import contextlib
+import math
 import queue
 import sys
 import threading
@@ -29,6 +30,7 @@ class PlayerBackendMixin:
         self._players = {}
         self._player_event_managers = {}
         self._player_loaded_media_paths = {}
+        self._current_track_gain_db = 0.0
         for player_key in self._player_keys:
             instance = self._build_player_instance()
             self._player_instances[player_key] = instance
@@ -268,8 +270,6 @@ class PlayerBackendMixin:
             if next_playback_mode:
                 if hasattr(self, "_set_status_message"):
                     retry_message = _("O YouTube recusou a reprodução. Tentando outro perfil...")
-                    if next_playback_mode == "visionos":
-                        retry_message = _("A reprodução autenticada foi recusada. Tentando sem a conta...")
                     self._set_status_message(
                         retry_message,
                         auto_clear_ms=0,
@@ -330,7 +330,9 @@ class PlayerBackendMixin:
         if self._crossfade_state and self._crossfade_state.get("phase") == "running":
             return self._apply_crossfade_volumes()
 
-        return self._apply_volume_to_player(self._active_player_key, self.current_volume)
+        gain_db = float(getattr(self, "_current_track_gain_db", 0.0) or 0.0)
+        adjusted_volume = self.current_volume * math.pow(10.0, gain_db / 20.0)
+        return self._apply_volume_to_player(self._active_player_key, adjusted_volume)
 
     def _apply_playback_rate_to_player(self, player_key, rate):
         player = self._managed_player(player_key)
@@ -361,11 +363,17 @@ class PlayerBackendMixin:
         pitch_scale = 2.0 ** (semitones / 12.0)
         return f"rubberband=pitch-scale={pitch_scale:.6f}"
 
-    def _apply_audio_filter_chain_to_player(self, player, equalizer_chain=""):
+    def _apply_audio_filter_chain_to_player(self, player, equalizer_chain="", extra_lavfi_filters=()):
         if player is None:
             return False
 
-        filter_parts = [part for part in (equalizer_chain, self._pitch_shift_filter_segment()) if part]
+        filter_parts = [equalizer_chain] if equalizer_chain else []
+        autodj_filters = [str(part) for part in extra_lavfi_filters if part]
+        if autodj_filters:
+            filter_parts.append(f"@autodj_mix:lavfi=[{','.join(autodj_filters)}]")
+        pitch_filter = self._pitch_shift_filter_segment()
+        if pitch_filter:
+            filter_parts.append(pitch_filter)
 
         try:
             player.set_audio_filters(",".join(filter_parts))

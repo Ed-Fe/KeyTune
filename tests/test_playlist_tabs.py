@@ -41,6 +41,7 @@ class PreparedPlaylistTests(unittest.TestCase):
         self.assertEqual(result, 2)
         self.assertEqual(state.current_media_path, "https://music.youtube.com/watch?v=track1")
         frame._play_media.assert_called_once_with(
+            media_path="https://music.youtube.com/watch?v=track1",
             index=2,
             announce_message="Playlist carregada.",
         )

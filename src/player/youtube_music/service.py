@@ -97,8 +97,7 @@ class YouTubeMusicService:
     def __init__(self):
         self._client_provider = YouTubeMusicClientProvider()
         self._stream_cache_manager = YouTubeMusicStreamCache()
-        self._anonymous_stream_playback_enabled = False
-        self._anonymous_stream_fallback_enabled = False
+        self._stream_playback_profile = "visionos"
         self._account_info = None
 
         # Library and feedback managers use late-binding lambdas so that
@@ -190,6 +189,9 @@ class YouTubeMusicService:
     def get_cached_stream_playback(self, media_path):
         return self._stream_cache_manager.get_cached_stream_playback(media_path)
 
+    def invalidate_cached_stream(self, media_path):
+        return self._stream_cache_manager.invalidate(media_path)
+
     def _cache_stream_playback(self, media_path, resolved_playback):
         return self._stream_cache_manager.cache_stream_playback(media_path, resolved_playback)
 
@@ -214,38 +216,23 @@ class YouTubeMusicService:
     def _resolve_stream_playback_uncached(self, media_path):
         return resolve_music_stream_playback(
             media_path,
-            use_account_cookies=not self._anonymous_stream_playback_enabled,
-            anonymous_player_client=(
-                "tv_simply"
-                if self._anonymous_stream_fallback_enabled
-                else ""
-            ),
+            use_account_cookies=False,
+            anonymous_player_client=self._stream_playback_profile,
         )
 
     def advance_stream_playback_after_http_403(self):
-        if not self._anonymous_stream_playback_enabled:
-            self._anonymous_stream_playback_enabled = True
-            self._anonymous_stream_fallback_enabled = not self.has_saved_browser_auth()
+        if self._stream_playback_profile == "visionos":
+            self._stream_playback_profile = "web_embedded"
             # Replace the manager so a prefetch from the previous profile cannot
             # repopulate the cache after the session changes profile.
             self._stream_cache_manager = YouTubeMusicStreamCache()
-            if self._anonymous_stream_fallback_enabled:
-                _logger.warning("YouTube Music stream playback switched to tv_simply for this session")
-                return "tv_simply"
-            _logger.warning("YouTube Music stream playback switched to visionos for this session")
-            return "visionos"
-
-        if not self._anonymous_stream_fallback_enabled:
-            self._anonymous_stream_fallback_enabled = True
-            self._stream_cache_manager = YouTubeMusicStreamCache()
-            _logger.warning("YouTube Music stream playback switched to tv_simply for this session")
-            return "tv_simply"
+            _logger.warning("YouTube Music stream playback switched to web_embedded for this session")
+            return "web_embedded"
 
         return ""
 
     def _reset_stream_playback_mode(self):
-        self._anonymous_stream_playback_enabled = False
-        self._anonymous_stream_fallback_enabled = False
+        self._stream_playback_profile = "visionos"
         self._stream_cache_manager = YouTubeMusicStreamCache()
 
     # -- Disconnect / connect --------------------------------------------------

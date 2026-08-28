@@ -7,6 +7,8 @@
 - [accessible-output2](https://pypi.org/project/accessible-output2/) (>=0.17)
 - [Markdown](https://pypi.org/project/Markdown/) (>=3.8)
 - [ytmusicapi](https://pypi.org/project/ytmusicapi/) (>=1.12.0)
+- [librosa](https://pypi.org/project/librosa/) (>=0.11.0)
+- [av](https://pypi.org/project/av/) (>=14.0.0)
 - [winrt-Windows.Media](https://pypi.org/project/winrt-Windows.Media/) (>=3.2.1)
 - [winrt-Windows.Media.Playback](https://pypi.org/project/winrt-Windows.Media.Playback/) (>=3.2.1)
 - [winrt-Windows.Foundation](https://pypi.org/project/winrt-Windows.Foundation/) (>=3.2.1)

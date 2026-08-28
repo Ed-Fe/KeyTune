@@ -8,6 +8,7 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..welcome import WelcomeDialog
+from .autodj_panel import AutoDJSessionPanel
 
 
 class FrameUIMixin:
@@ -404,6 +405,9 @@ class FrameUIMixin:
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
+        self.menu_toggle_autodj_id = wx.NewIdRef()
+        self.menu_start_autodj_session_id = wx.NewIdRef()
+        self.menu_stop_autodj_session_id = wx.NewIdRef()
         self.menu_toggle_related_autoplay_id = wx.NewIdRef()
         self.menu_increase_playback_rate_id = wx.NewIdRef()
         self.menu_decrease_playback_rate_id = wx.NewIdRef()
@@ -434,6 +438,10 @@ class FrameUIMixin:
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
+        autodj_item = playback_menu.AppendCheckItem(self.menu_toggle_autodj_id, _("Ativar Auto&DJ"))
+        autodj_item.Check(bool(getattr(self.settings, "autodj_enabled", False)))
+        playback_menu.Append(self.menu_start_autodj_session_id, _("Reproduzir playlist com AutoDJ"))
+        playback_menu.Append(self.menu_stop_autodj_session_id, _("Encerrar sessão AutoDJ"))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
         playback_menu.Append(self.menu_increase_playback_rate_id, _("Aumentar &Velocidade (])"))
         playback_menu.Append(self.menu_decrease_playback_rate_id, _("Diminuir Ve&locidade ([)"))
@@ -477,7 +485,12 @@ class FrameUIMixin:
         settings_menu = wx.Menu()
         self.menu_check_updates_id = wx.NewIdRef()
         self.menu_preferences_id = wx.NewIdRef()
+        self.menu_manage_plugins_id = wx.NewIdRef()
         settings_menu.Append(self.menu_preferences_id, _("&Preferências\tCtrl+,"))
+        settings_menu.AppendSeparator()
+        settings_menu.Append(self.menu_manage_plugins_id, _("Gerenciar &plugins..."))
+        self.plugins_extensions_menu = wx.Menu()
+        settings_menu.AppendSubMenu(self.plugins_extensions_menu, _("Ações de p&lugins"))
 
         help_menu = wx.Menu()
         self.menu_open_manual_id = wx.NewIdRef()
@@ -776,6 +789,9 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
+        self.Bind(wx.EVT_MENU, self.on_toggle_autodj, id=self.menu_toggle_autodj_id)
+        self.Bind(wx.EVT_MENU, self.on_start_autodj_session, id=self.menu_start_autodj_session_id)
+        self.Bind(wx.EVT_MENU, self.on_stop_autodj_session, id=self.menu_stop_autodj_session_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_related_autoplay, id=self.menu_toggle_related_autoplay_id)
         self.Bind(wx.EVT_MENU, self.on_increase_playback_rate, id=self.menu_increase_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_decrease_playback_rate, id=self.menu_decrease_playback_rate_id)
@@ -814,6 +830,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_previous_tab, id=self.menu_previous_tab_id)
         self.Bind(wx.EVT_MENU, self.on_check_for_updates, id=self.menu_check_updates_id)
         self.Bind(wx.EVT_MENU, self.on_open_preferences, id=self.menu_preferences_id)
+        self.Bind(wx.EVT_MENU, self.on_manage_plugins, id=self.menu_manage_plugins_id)
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
@@ -836,6 +853,15 @@ class FrameUIMixin:
         page = wx.Panel(self.notebook)
         root_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
+        autodj_panel = AutoDJSessionPanel(
+            page,
+            on_replace_next=self.on_replace_autodj_next,
+            on_recalculate=self.on_recalculate_autodj_session,
+            on_add_media=self.on_add_media_to_autodj_session,
+            on_toggle_preparation=self.on_toggle_autodj_preparation,
+            on_stop=self.on_stop_autodj_session,
+        )
+
         browser_panel = PlaylistBrowserPanel(
             page,
             on_activate_item=self.on_playlist_browser_activate_item,
@@ -843,6 +869,7 @@ class FrameUIMixin:
             on_preview_item=self.on_playlist_browser_preview_item,
             on_go_back=self.on_playlist_browser_go_back,
             on_toggle_navigation_mode=self.on_toggle_playlist_browser,
+            on_tab=self.on_playlist_browser_tab,
             on_show_context_menu=self.on_playlist_browser_show_context_menu,
         )
 
@@ -891,9 +918,13 @@ class FrameUIMixin:
         video_panel_sizer.Add(video_surface, 1, wx.EXPAND)
         video_panel.SetSizer(video_panel_sizer)
 
-        root_sizer.Add(browser_panel, 0, wx.EXPAND | wx.ALL, 4)
+        navigation_sizer = wx.BoxSizer(wx.VERTICAL)
+        navigation_sizer.Add(autodj_panel, 0, wx.EXPAND | wx.BOTTOM, 6)
+        navigation_sizer.Add(browser_panel, 1, wx.EXPAND)
+        root_sizer.Add(navigation_sizer, 0, wx.EXPAND | wx.ALL, 4)
         root_sizer.Add(video_panel, 1, wx.EXPAND | wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
         page.SetSizer(root_sizer)
+        page.autodj_panel = autodj_panel
         page.browser_panel = browser_panel
         page.video_panel = video_panel
         page.video_surface = video_surface

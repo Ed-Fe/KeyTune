@@ -4589,3 +4589,264 @@ msgstr "Índice de la biblioteca"
 
 msgid "Última vez"
 msgstr "Última vez"
+
+msgid "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. Se a análise não for confiável, a reprodução continua normalmente."
+msgstr "Analiza la pista actual y la siguiente en segundo plano para alinear los ritmos y realizar una transición automática. Si el análisis no es fiable, la reproducción continúa normalmente."
+
+msgid "Ativar &AutoDJ"
+msgstr "Activar &AutoDJ"
+
+msgid "Ativar Auto&DJ"
+msgstr "Activar Auto&DJ"
+
+msgid "Ativar AutoDJ"
+msgstr "Activar AutoDJ"
+
+msgid "AutoDJ {status}."
+msgstr "AutoDJ {status}."
+
+msgid "AutoDJ: {status}."
+msgstr "AutoDJ: {status}."
+
+msgid "Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."
+msgstr "Define el comportamiento que usa AutoDJ al planificar la secuencia y las transiciones."
+
+msgid "Duração da transição do AutoDJ"
+msgstr "Duración de la transición de AutoDJ"
+
+msgid "Eletrônica"
+msgstr "Electrónica"
+
+msgid "Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."
+msgstr "Selecciona cuántos pulsos se usarán en la superposición entre dos pistas."
+
+msgid "Perfil do AutoDJ"
+msgstr "Perfil de AutoDJ"
+
+msgid "{count} batidas"
+msgstr "{count} pulsos"
+
+msgid "AutoDJ analisando a faixa atual e a próxima..."
+msgstr "AutoDJ está analizando la pista actual y la siguiente..."
+
+msgid "AutoDJ analisando a faixa atual e as próximas opções..."
+msgstr "AutoDJ está analizando la pista actual y las próximas opciones..."
+
+msgid "AutoDJ preparado: transição de {count} batidas."
+msgstr "AutoDJ preparado: transición de {count} pulsos."
+
+msgid "O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."
+msgstr "AutoDJ no pudo analizar estas pistas. Se volverá a intentar automáticamente."
+
+msgid "O AutoDJ não encontrou batidas compatíveis. Será usada a transição normal."
+msgstr "AutoDJ no encontró pulsos compatibles. Se usará la transición normal."
+
+msgid "Abra uma playlist comum para iniciar uma sessão AutoDJ."
+msgstr "Abre una playlist normal para iniciar una sesión AutoDJ."
+
+msgid "A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."
+msgstr "La playlist debe contener al menos dos pistas para iniciar AutoDJ."
+
+msgid "AutoDJ — {title}"
+msgstr "AutoDJ — {title}"
+
+msgid "Sessão AutoDJ iniciada. A sequência será preparada em segundo plano."
+msgstr "Sesión AutoDJ iniciada. La secuencia se preparará en segundo plano."
+
+msgid "Nenhuma sessão AutoDJ está ativa nesta aba."
+msgstr "No hay ninguna sesión AutoDJ activa en esta pestaña."
+
+msgid "Sequência AutoDJ — {title}"
+msgstr "Secuencia AutoDJ — {title}"
+
+msgid "Sessão AutoDJ encerrada. A sequência preparada foi preservada como playlist."
+msgstr "Sesión AutoDJ finalizada. La secuencia preparada se conservó como playlist."
+
+msgid "AutoDJ preparando as próximas faixas da sessão..."
+msgstr "AutoDJ está preparando las próximas pistas de la sesión..."
+
+msgid "O AutoDJ não conseguiu completar a fila agora; tentará novamente."
+msgstr "AutoDJ no pudo completar la cola ahora; lo intentará de nuevo."
+
+msgid "AutoDJ preparou {count} próximas faixas."
+msgstr "AutoDJ preparó las próximas {count} pistas."
+
+msgid "Reproduzir playlist com AutoDJ"
+msgstr "Reproducir playlist con AutoDJ"
+
+msgid "Encerrar sessão AutoDJ"
+msgstr "Finalizar sesión AutoDJ"
+
+msgid "Resumo da sessão AutoDJ"
+msgstr "Resumen de la sesión AutoDJ"
+
+msgid "Detalhes da próxima transição"
+msgstr "Detalles de la próxima transición"
+
+msgid "Trocar pró&xima"
+msgstr "Cambiar pró&xima"
+
+msgid "&Recalcular sequência"
+msgstr "&Recalcular secuencia"
+
+msgid "&Adicionar músicas"
+msgstr "&Añadir música"
+
+msgid "&Pausar preparação"
+msgstr "&Pausar preparación"
+
+msgid "&Retomar preparação"
+msgstr "&Reanudar preparación"
+
+msgid "&Encerrar AutoDJ"
+msgstr "&Finalizar AutoDJ"
+
+msgid "Trocar próxima faixa do AutoDJ"
+msgstr "Cambiar la próxima pista de AutoDJ"
+
+msgid "Recalcular sequência do AutoDJ"
+msgstr "Recalcular la secuencia de AutoDJ"
+
+msgid "Adicionar músicas à sessão AutoDJ"
+msgstr "Añadir música a la sesión AutoDJ"
+
+msgid "Pausar preparação do AutoDJ"
+msgstr "Pausar la preparación de AutoDJ"
+
+msgid "Retomar preparação do AutoDJ"
+msgstr "Reanudar la preparación de AutoDJ"
+
+msgid "Encerrar AutoDJ e manter sequência"
+msgstr "Finalizar AutoDJ y conservar la secuencia"
+
+msgid "Não há outra faixa disponível para substituir a próxima."
+msgstr "No hay otra pista disponible para sustituir la próxima."
+
+msgid "Escolhendo outra próxima faixa."
+msgstr "Eligiendo otra próxima pista."
+
+msgid "Não há faixas restantes para recalcular a sequência."
+msgstr "No quedan pistas para recalcular la secuencia."
+
+msgid "Recalculando a sequência AutoDJ."
+msgstr "Recalculando la secuencia AutoDJ."
+
+msgid "Nenhuma música nova foi adicionada à sessão AutoDJ."
+msgstr "No se añadió música nueva a la sesión AutoDJ."
+
+msgid "{count} músicas adicionadas à sessão AutoDJ."
+msgstr "{count} pistas añadidas a la sesión AutoDJ."
+
+msgid "Preparação da sessão AutoDJ pausada."
+msgstr "Preparación de la sesión AutoDJ pausada."
+
+msgid "Preparação da sessão AutoDJ retomada."
+msgstr "Preparación de la sesión AutoDJ reanudada."
+
+msgid "Preparação pausada."
+msgstr "Preparación pausada."
+
+msgid "Analisando próximas faixas."
+msgstr "Analizando próximas pistas."
+
+msgid "Sessão ativa."
+msgstr "Sesión activa."
+
+msgid "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+msgstr "{activity} Fuente: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+
+msgid "playlist original"
+msgstr "playlist original"
+
+msgid "Tocada"
+msgstr "Reproducida"
+
+msgid "Tocando"
+msgstr "En reproducción"
+
+msgid "Preparada"
+msgstr "Preparada"
+
+msgid "Próxima transição: aguardando uma faixa preparada."
+msgstr "Próxima transición: esperando una pista preparada."
+
+msgid "Próxima transição: analisando."
+msgstr "Próxima transición: analizando."
+
+msgid "Próxima, analisando transição"
+msgstr "Próxima, analizando transición"
+
+msgid "Próxima transição: aguardando nova tentativa."
+msgstr "Próxima transición: esperando un nuevo intento."
+
+msgid "Próxima, análise pendente"
+msgstr "Próxima, análisis pendiente"
+
+msgid "Próxima transição: transição comum."
+msgstr "Próxima transición: transición normal."
+
+msgid "Próxima, transição comum"
+msgstr "Próxima, transición normal"
+
+msgid "Próxima transição: {count} batidas."
+msgstr "Próxima transición: {count} beats."
+
+msgid "Próxima, transição de {count} batidas"
+msgstr "Próxima, transición de {count} beats"
+
+msgid "Vocais protegidos."
+msgstr "Voces protegidas."
+
+msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
+msgstr "Volumen de la próxima pista ajustado en {gain:.1f} dB."
+
+msgid "Trocar próxima faixa"
+msgstr "Cambiar próxima pista"
+
+msgid "Recalcular sequência"
+msgstr "Recalcular secuencia"
+
+msgid "Adicionar músicas à sessão"
+msgstr "Añadir música a la sesión"
+
+msgid "Pausar preparação"
+msgstr "Pausar preparación"
+
+msgid "Retomar preparação"
+msgstr "Reanudar preparación"
+
+msgid "Ações do AutoDJ"
+msgstr "Acciones de AutoDJ"
+
+msgid "Informações da sessão AutoDJ"
+msgstr "Información de la sesión AutoDJ"
+
+msgid "falha ao analisar as faixas"
+msgstr "falló el análisis de las pistas"
+
+msgid "Próxima transição: aguardando nova tentativa. Motivo: {reason}."
+msgstr "Próxima transición: esperando un nuevo intento. Motivo: {reason}."
+
+msgid "Próxima transição: comum. Motivo: {reason}."
+msgstr "Próxima transición: normal. Motivo: {reason}."
+
+msgid "Ajuste de tempo: {adjustment:+.1%}."
+msgstr "Ajuste de tempo: {adjustment:+.1%}."
+
+msgid "confiança rítmica insuficiente"
+msgstr "confianza rítmica insuficiente"
+
+msgid "diferença de BPM acima do limite seguro"
+msgstr "diferencia de BPM por encima del límite seguro"
+
+msgid "poucas batidas utilizáveis na faixa atual"
+msgstr "muy pocos beats utilizables en la pista actual"
+
+msgid "nenhum ponto de entrada adequado na próxima faixa"
+msgstr "ningún punto de entrada adecuado en la próxima pista"
+
+msgid "análise incompatível"
+msgstr "análisis incompatible"
+
+msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
+msgstr "Análisis rítmico: pista actual {outgoing_bpm:.1f} BPM, confianza {outgoing_confidence:.0%}; próxima pista {incoming_bpm:.1f} BPM, confianza {incoming_confidence:.0%}."

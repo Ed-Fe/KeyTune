@@ -58,7 +58,7 @@ class _DummyFrame(PlayerBackendMixin):
 
 class PlayerBackendYouTubeMusicFallbackTests(unittest.TestCase):
     def test_http_403_switches_session_to_anonymous_and_retries_once(self):
-        service = _FakeYouTubeMusicService(next_playback_mode="visionos")
+        service = _FakeYouTubeMusicService(next_playback_mode="web_embedded")
         frame = _DummyFrame(service=service)
 
         frame._handle_player_error("primary", "HTTP 403")

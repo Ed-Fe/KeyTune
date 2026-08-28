@@ -446,6 +446,9 @@ class FrameLibraryNavigationMixin:
         refresh_library_marks = getattr(self, "_refresh_library_marks", None)
         if callable(refresh_library_marks):
             refresh_library_marks(browser, current_state)
+        refresh_autodj_ui = getattr(self, "_refresh_autodj_session_ui", None)
+        if callable(refresh_autodj_ui):
+            refresh_autodj_ui(current_state)
 
         if current_state.is_folder_tab and current_state.folder_current_path:
             browser.update_folder(

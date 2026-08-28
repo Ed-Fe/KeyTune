@@ -1,20 +1,20 @@
-# KeyTune 1.0.0
+# KeyTune 2.0.0 — Plataforma extensível
 
-Primeira versão oficial estável (Release) do **KeyTune**. Este lançamento consolida os recursos principais desenvolvidos, trazendo um player de mídia acessível, moderno e focado em controle total via teclado.
+O KeyTune 2 transforma o player acessível em uma plataforma extensível. Esta versão adiciona um sistema completo de plugins com API pública 2.0, permissões explícitas, gerenciador acessível, isolamento de falhas, instalação verificada e um marketplace mantido pela comunidade por pull requests no GitHub.
 
-## Recursos Principais
+## Destaques
 
-- **Acessibilidade Completa**: Otimizado para uso por teclado e leitores de tela (NVDA, JAWS, Narrador). Foco inteligente, mnemônicos e anúncios sonoros automáticos ou sob demanda (tempo de reprodução com `T`, volume com `V` e status com `S`).
-- **Navegador Lateral e Visualização de Pastas**: Navegação rápida estilo Explorer por arquivos e subpastas de mídia. Inclui pré-visualização instantânea (toca o arquivo automaticamente ao focar com teclado).
-- **Playlists em Abas**: Abra e organize múltiplas abas de playlist de forma assíncrona. Suporte completo para carregar, ordenar e salvar playlists locais nos formatos `.m3u` e `.m3u8`.
-- **Restauração de Sessão**: Retome o player do ponto exato onde parou: abas abertas, faixa ativa, tempo de reprodução atual, volume e tamanho da janela.
-- **Equalizador por Aba**: Ajuste de graves, médios e agudos independente para cada aba de playlist. Possui 18 presets integrados (Club, Rock, graves profundos, etc.), editor de presets customizados e sincronização rápida em todas as abas.
-- **Integração com YouTube Music**: Aba dedicada (`Ctrl+Shift+Y`) com busca no catálogo, mixes e playlists da biblioteca integrados (via importação de cookies). Reprodução fluida por streaming e cache inteligente de URLs de áudio usando `yt-dlp`.
-- **Associação de Arquivos no Windows**: Associe e desassocie o KeyTune nas preferências para abrir arquivos diretamente pelo menu do sistema Windows.
-- **Logs de Diagnóstico**: Sistema para registro de logs com rotação automática para depuração, com controle de nível de detalhe nas preferências.
-- **Atualização Automática no Windows**: Diálogos com notas de release, barra de progresso visual de download e aplicação de pacotes ZIP com atualizador autônomo.
+- Manifestos estritos e compatibilidade versionada.
+- Confirmação de instalação com dados do plugin, permissões e modo de isolamento antes de instalar e ativar.
+- API para reprodução, biblioteca, rede, arquivos de texto, área de transferência, configurações, notificações, menus, abas e telas; autenticação da conta é opcional e exige permissão própria.
+- Processo separado por padrão, ambiente sem segredos, timeout de inicialização e logs de diagnóstico, preservando acesso normal às bibliotecas Python.
+- Pacotes `.ktplugin` verificados por SHA-256, com instalação transacional e proteção contra caminhos inseguros.
+- Marketplace remoto em JSON, downloads HTTPS e fluxo de revisão comunitária.
+- AutoDJ ativável pelo menu e pelas preferências, com seleção entre até seis opções mesmo em playlists novas, análise de downbeat, frases de quatro compassos, mudanças de seção, energia local, loudness e tonalidade maior/menor, além de sincronização com correção de fase, troca progressiva de graves/EQ e corte na batida planejada.
+- Sessões AutoDJ em uma aba dinâmica separada, com planejamento de várias faixas, cinco músicas preparadas à frente, restauração da fila, prevenção de provável choque vocal e compensação conservadora de loudness.
+- A aba AutoDJ agora informa o que está sendo analisado, marca o estado das faixas e oferece controles para trocar ou recalcular a sequência, adicionar músicas e pausar a preparação.
+- As informações do AutoDJ agora são lidas pelo NVDA no foco normal e explicam BPM, confiança, ajuste de tempo e o motivo de qualquer transição comum.
+- `Ctrl+V` abre links de playlist do YouTube Music diretamente, a primeira faixa inicia de forma explícita e a automação de EQ do AutoDJ não reconstrói mais os filtros durante a transição.
+- Guia público para autores e mantenedores do catálogo.
 
-## Ajustes Recentes e Estabilidade
-- **Novos Atalhos**: Atalho `Ctrl+W` redefinido para fechar a aba ativa e `Ctrl+Shift+W` para descarregar a mídia ativa, alinhando com a convenção de navegadores.
-- **Busca Melhorada**: Lista de resultados do YouTube Music agora virtualizada para permitir rolagem e seleção múltipla por teclado (`Ctrl+Arrow` e `Ctrl+Space`).
-- **Mais Estabilidade**: Refatoração estrutural modular no serviço do YouTube Music e correções importantes para atualização automática de dependências em segundo plano.
+> O processo separado evita que uma falha comum derrube o player, mas o plugin continua tendo acesso normal ao computador e não fica em uma sandbox de segurança. Instale somente plugins de autores em quem você confia.

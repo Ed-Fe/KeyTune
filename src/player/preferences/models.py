@@ -2,6 +2,11 @@ from dataclasses import dataclass, field
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 from ..constants import (
+    AUTODJ_BEAT_COUNTS,
+    AUTODJ_PROFILES,
+    DEFAULT_AUTODJ_BEATS,
+    DEFAULT_AUTODJ_ENABLED,
+    DEFAULT_AUTODJ_PROFILE,
     DEFAULT_ANNOUNCEMENTS_ENABLED,
     DEFAULT_CONFIRM_ON_EXIT,
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
@@ -66,6 +71,9 @@ class AppSettings:
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
     crossfade_on_manual_track_change: bool = DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE
+    autodj_enabled: bool = DEFAULT_AUTODJ_ENABLED
+    autodj_profile: str = DEFAULT_AUTODJ_PROFILE
+    autodj_beats: int = DEFAULT_AUTODJ_BEATS
     volume_step: int = VOLUME_STEP
     seek_step_seconds: int = SEEK_STEP_MS // 1000
     shuffle_new_playlists: bool = DEFAULT_NEW_PLAYLIST_SHUFFLE
@@ -126,6 +134,9 @@ class AppSettings:
             "default_volume": self.default_volume,
             "crossfade_seconds": self.crossfade_seconds,
             "crossfade_on_manual_track_change": self.crossfade_on_manual_track_change,
+            "autodj_enabled": self.autodj_enabled,
+            "autodj_profile": self.autodj_profile,
+            "autodj_beats": self.autodj_beats,
             "volume_step": self.volume_step,
             "seek_step_seconds": self.seek_step_seconds,
             "shuffle_new_playlists": self.shuffle_new_playlists,
@@ -182,6 +193,14 @@ class AppSettings:
         )
         settings.crossfade_on_manual_track_change = bool(
             data.get("crossfade_on_manual_track_change", settings.crossfade_on_manual_track_change)
+        )
+        settings.autodj_enabled = bool(data.get("autodj_enabled", settings.autodj_enabled))
+        raw_autodj_profile = str(data.get("autodj_profile") or "").strip().lower()
+        settings.autodj_profile = (
+            raw_autodj_profile if raw_autodj_profile in AUTODJ_PROFILES else settings.autodj_profile
+        )
+        settings.autodj_beats = _choice_int(
+            data.get("autodj_beats"), AUTODJ_BEAT_COUNTS, settings.autodj_beats
         )
         settings.volume_step = _clamp_int(data.get("volume_step"), minimum=1, maximum=25, fallback=settings.volume_step)
         settings.seek_step_seconds = _clamp_int(
@@ -313,6 +332,14 @@ def _clamp_int(value, minimum, maximum, fallback):
         return fallback
 
     return max(minimum, min(maximum, numeric_value))
+
+
+def _choice_int(value, choices, fallback):
+    try:
+        numeric_value = int(value)
+    except (TypeError, ValueError):
+        return fallback
+    return numeric_value if numeric_value in choices else fallback
 
 
 def _string_list(value):

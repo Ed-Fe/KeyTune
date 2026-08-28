@@ -17,6 +17,7 @@ from ...library import (
 )
 from ...i18n import _
 from ...playlists import ScreenTabState
+from ...youtube_music import extract_playlist_id_from_text
 
 
 class OpenCommandsMixin:
@@ -110,9 +111,6 @@ class OpenCommandsMixin:
         return True
 
     def on_paste_open_from_clipboard(self, _event):
-        if isinstance(self._get_tab_state(), ScreenTabState):
-            return
-
         text = self._read_text_from_clipboard()
         if not text:
             self._announce(_("A área de transferência está vazia."))
@@ -121,9 +119,6 @@ class OpenCommandsMixin:
         self._open_from_clipboard_text(text, force_new_playlist=False)
 
     def on_paste_open_from_clipboard_new_playlist(self, _event):
-        if isinstance(self._get_tab_state(), ScreenTabState):
-            return
-
         text = self._read_text_from_clipboard()
         if not text:
             self._announce(_("A área de transferência está vazia."))
@@ -190,6 +185,14 @@ class OpenCommandsMixin:
         normalized_source = normalized_sources[0]
 
         if is_remote_media_path(normalized_source):
+            youtube_music_playlist_id = extract_playlist_id_from_text(normalized_source)
+            open_youtube_music_playlist = getattr(self, "_load_youtube_music_playlist_by_id", None)
+            if youtube_music_playlist_id and callable(open_youtube_music_playlist):
+                open_youtube_music_playlist(
+                    youtube_music_playlist_id,
+                    fallback_title=_("Playlist do YouTube Music"),
+                )
+                return
             if is_playlist_source(normalized_source):
                 if not self._open_playlist_source(normalized_source):
                     self._announce(_("Não foi possível abrir a playlist da área de transferência."))

@@ -4,6 +4,7 @@ import time
 
 import wx
 
+from ...autodj import TransitionProfile, mix_values
 from ...constants import CROSSFADE_TIMER_INTERVAL_MS, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ...library import is_audio_playback_media
 from .helpers import is_youtube_music_media
@@ -40,14 +41,19 @@ class CrossfadeMixin:
 
         return max(300, min(1200, duration_ms // 2))
 
+    @staticmethod
+    def _autodj_preload_lead_ms(media_path):
+        return 3000 if is_youtube_music_media(media_path) else 1200
+
     def _crossfade_pending_timeout_seconds(self, media_path=None, *, outgoing_ended=False):
         if is_youtube_music_media(media_path):
             return 20.0 if outgoing_ended else 15.0
 
         return 5.0
 
-    def _can_crossfade_to_media(self, media_path):
-        if self._crossfade_duration_ms() <= 0 or self._crossfade_state is not None:
+    def _can_crossfade_to_media(self, media_path, *, duration_override_ms=None):
+        duration_ms = self._crossfade_duration_ms() if duration_override_ms is None else int(duration_override_ms or 0)
+        if duration_ms <= 0 or self._crossfade_state is not None:
             return False
 
         current_media_path = self._player_loaded_media_path()
@@ -69,10 +75,16 @@ class CrossfadeMixin:
         media_length = self.player.get_length()
         return media_length is not None and media_length > 0
 
-    def _start_crossfade(self, media_path, *, tab_index, announce_message=None):
-        duration_ms = self._crossfade_duration_ms()
+    def _start_crossfade(self, media_path, *, tab_index, announce_message=None, autodj_transition=None):
+        duration_ms = (
+            self._autodj_transition_duration_ms(autodj_transition)
+            if autodj_transition is not None
+            else self._crossfade_duration_ms()
+        )
         if duration_ms <= 0 or self._crossfade_state is not None:
             return False
+
+        autodj_plan = autodj_transition.get("plan") if autodj_transition is not None else None
 
         outgoing_key = self._active_player_key
         incoming_key = self._inactive_player_key()
@@ -80,7 +92,11 @@ class CrossfadeMixin:
             return False
 
         self._stop_player(incoming_key, unload=True)
-        self._apply_volume_to_player(outgoing_key, self.current_volume)
+        outgoing_gain_db = float(getattr(self, "_current_track_gain_db", 0.0) or 0.0)
+        self._apply_volume_to_player(
+            outgoing_key,
+            self.current_volume * math.pow(10.0, outgoing_gain_db / 20.0),
+        )
         request = self._queue_media_start(
             media_path,
             tab_index=tab_index,
@@ -88,6 +104,8 @@ class CrossfadeMixin:
             player_key=incoming_key,
             initial_volume=0,
             crossfade=True,
+            start_position_ms=getattr(autodj_plan, "incoming_start_ms", 0) or 0,
+            pause_after_start=autodj_transition is not None,
         )
         self._crossfade_state = {
             "phase": "pending",
@@ -102,6 +120,23 @@ class CrossfadeMixin:
             "started_at": None,
             "outgoing_ended": False,
             "pending_timeout_seconds": self._crossfade_pending_timeout_seconds(media_path),
+            "autodj": autodj_transition is not None,
+            "autodj_profile": (
+                autodj_transition.get("profile", TransitionProfile.SMOOTH.value)
+                if autodj_transition is not None
+                else None
+            ),
+            "autodj_filter_step": None,
+            "tempo_ratio": float(getattr(autodj_plan, "tempo_ratio", 1.0) or 1.0),
+            "incoming_beat_ms": float(getattr(autodj_plan, "incoming_beat_ms", 0.0) or 0.0),
+            "incoming_start_ms": getattr(autodj_plan, "incoming_start_ms", None),
+            "scheduled_outgoing_start_ms": getattr(autodj_plan, "outgoing_start_ms", None),
+            "scheduled_outgoing_end_ms": getattr(autodj_plan, "outgoing_end_ms", None),
+            "incoming_ready": False,
+            "next_phase_correction_at": 0.0,
+            "phase_rate": None,
+            "outgoing_gain_db": outgoing_gain_db,
+            "incoming_gain_db": float(getattr(autodj_plan, "incoming_gain_db", 0.0) or 0.0),
         }
         self._ensure_crossfade_timer_running()
         return True
@@ -137,9 +172,11 @@ class CrossfadeMixin:
         if stop_outgoing and outgoing_key:
             self._stop_player(outgoing_key, unload=True)
 
+        self._restore_autodj_mix_filters(crossfade_state)
         self._crossfade_state = None
         self._stop_crossfade_timer()
         self._apply_current_volume()
+        self._apply_current_playback_rate()
 
     def _apply_crossfade_volumes(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
@@ -153,8 +190,36 @@ class CrossfadeMixin:
 
         elapsed_ms = max(0, int(round((time.monotonic() - started_at) * 1000)))
         progress = max(0.0, min(1.0, elapsed_ms / duration_ms))
-        incoming_volume = int(round(self.current_volume * math.sin((math.pi / 2.0) * progress)))
-        outgoing_volume = int(round(self.current_volume * math.cos((math.pi / 2.0) * progress)))
+        if crossfade_state.get("autodj"):
+            outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
+            outgoing_time = outgoing_player.get_time() if outgoing_player is not None else None
+            scheduled_start_ms = crossfade_state.get("scheduled_outgoing_start_ms")
+            scheduled_end_ms = crossfade_state.get("scheduled_outgoing_end_ms")
+            if (
+                outgoing_time is not None
+                and scheduled_start_ms is not None
+                and scheduled_end_ms is not None
+                and scheduled_end_ms > scheduled_start_ms
+            ):
+                progress = max(
+                    0.0,
+                    min(1.0, (outgoing_time - scheduled_start_ms) / (scheduled_end_ms - scheduled_start_ms)),
+                )
+            values = mix_values(
+                progress,
+                crossfade_state.get("autodj_profile") or TransitionProfile.SMOOTH,
+            )
+            incoming_volume = int(round(self.current_volume * values.incoming_volume))
+            outgoing_volume = int(round(self.current_volume * values.outgoing_volume))
+            self._apply_autodj_mix_filters(crossfade_state, progress, values)
+            self._correct_autodj_phase(crossfade_state, outgoing_time)
+        else:
+            incoming_volume = int(round(self.current_volume * math.sin((math.pi / 2.0) * progress)))
+            outgoing_volume = int(round(self.current_volume * math.cos((math.pi / 2.0) * progress)))
+        incoming_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        outgoing_gain_db = float(crossfade_state.get("outgoing_gain_db", 0.0) or 0.0)
+        incoming_volume = int(round(incoming_volume * math.pow(10.0, incoming_gain_db / 20.0)))
+        outgoing_volume = int(round(outgoing_volume * math.pow(10.0, outgoing_gain_db / 20.0)))
 
         if crossfade_state.get("outgoing_ended"):
             outgoing_volume = 0
@@ -177,9 +242,15 @@ class CrossfadeMixin:
             self._apply_volume_to_player(outgoing_key, 0)
             self._stop_player(outgoing_key, unload=True)
 
+        self._restore_autodj_mix_filters(crossfade_state)
+        self._current_track_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        state = self._get_active_playlist_state()
+        if state is not None:
+            state.playback_gain_db = self._current_track_gain_db
         self._crossfade_state = None
         self._stop_crossfade_timer()
         self._apply_current_volume()
+        self._apply_current_playback_rate()
 
     def _tick_crossfade(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
@@ -219,6 +290,14 @@ class CrossfadeMixin:
                     )
                 return
             incoming_player = self._managed_player(crossfade_state.get("incoming_key"))
+            if crossfade_state.get("autodj"):
+                if not self._autodj_transition_due(crossfade_state):
+                    return
+                if incoming_player is not None and crossfade_state.get("incoming_ready"):
+                    incoming_player.play()
+                    if incoming_player.is_playing():
+                        self._begin_pending_crossfade()
+                return
             if incoming_player is not None and incoming_player.is_playing():
                 self._begin_pending_crossfade()
             return
@@ -226,9 +305,21 @@ class CrossfadeMixin:
         if crossfade_state.get("phase") == "running":
             self._apply_crossfade_volumes()
 
+    def _autodj_transition_due(self, crossfade_state):
+        if not crossfade_state.get("autodj") or crossfade_state.get("outgoing_ended"):
+            return True
+        scheduled_start_ms = crossfade_state.get("scheduled_outgoing_start_ms")
+        outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
+        if scheduled_start_ms is None or outgoing_player is None:
+            return True
+        outgoing_time = outgoing_player.get_time()
+        return outgoing_time is not None and outgoing_time >= scheduled_start_ms
+
     def _begin_pending_crossfade(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
         if not crossfade_state or crossfade_state.get("phase") != "pending":
+            return False
+        if not self._autodj_transition_due(crossfade_state):
             return False
 
         tab_index = crossfade_state.get("tab_index")
@@ -246,6 +337,8 @@ class CrossfadeMixin:
 
         self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
+        self._current_track_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        state.playback_gain_db = self._current_track_gain_db
         self._bind_player_to_window()
         self._prepare_youtube_music_history_tracking(media_path)
         # Same reason as the YouTube Music tracking above: the incoming track's
@@ -272,6 +365,11 @@ class CrossfadeMixin:
             self._announce(self._describe_playlist_position(state))
 
         self._apply_volume_to_player(player_key, 0)
+        tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)
+        self._apply_playback_rate_to_player(
+            player_key,
+            max(0.25, min(4.0, getattr(self, "current_playback_rate", 1.0) * tempo_ratio)),
+        )
 
         outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
         if crossfade_state.get("outgoing_ended") or outgoing_player is None or not outgoing_player.is_playing():
@@ -285,7 +383,13 @@ class CrossfadeMixin:
                 and outgoing_length is not None
                 and outgoing_length > 0
             ):
-                actual_remaining = max(0, outgoing_length - outgoing_time)
+                scheduled_end_ms = crossfade_state.get("scheduled_outgoing_end_ms")
+                actual_remaining = max(
+                    0,
+                    (scheduled_end_ms - outgoing_time)
+                    if scheduled_end_ms is not None
+                    else (outgoing_length - outgoing_time),
+                )
                 crossfade_state["duration_ms"] = max(
                     500, min(crossfade_state["duration_ms"], actual_remaining),
                 )
@@ -295,6 +399,62 @@ class CrossfadeMixin:
         self._apply_crossfade_volumes()
         self._prefetch_upcoming_media_stream(state)
         return True
+
+    def _correct_autodj_phase(self, crossfade_state, outgoing_time):
+        if outgoing_time is None or time.monotonic() < float(crossfade_state.get("next_phase_correction_at", 0.0)):
+            return
+        crossfade_state["next_phase_correction_at"] = time.monotonic() + 0.1
+        incoming_player = self._managed_player(crossfade_state.get("incoming_key"))
+        get_incoming_time = getattr(incoming_player, "get_time", None)
+        if not callable(get_incoming_time):
+            return
+        incoming_time = get_incoming_time()
+        outgoing_start_ms = crossfade_state.get("scheduled_outgoing_start_ms")
+        incoming_start_ms = crossfade_state.get("incoming_start_ms")
+        beat_ms = float(crossfade_state.get("incoming_beat_ms", 0.0) or 0.0)
+        tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)
+        if incoming_time is None or outgoing_start_ms is None or incoming_start_ms is None or beat_ms <= 0:
+            return
+        expected_incoming_time = incoming_start_ms + max(0.0, outgoing_time - outgoing_start_ms) * tempo_ratio
+        phase_error_ms = expected_incoming_time - incoming_time
+        correction = max(-0.012, min(0.012, (phase_error_ms / beat_ms) * 0.04))
+        base_rate = max(0.25, min(4.0, getattr(self, "current_playback_rate", 1.0) * tempo_ratio))
+        target_rate = max(0.25, min(4.0, base_rate * (1.0 + correction)))
+        previous_rate = crossfade_state.get("phase_rate")
+        if previous_rate is not None and abs(previous_rate - target_rate) < 0.0005:
+            return
+        crossfade_state["phase_rate"] = target_rate
+        self._apply_playback_rate_to_player(crossfade_state.get("incoming_key"), target_rate)
+
+    def _apply_autodj_mix_filters(self, crossfade_state, progress, values):
+        update_filter = getattr(self, "_update_autodj_mix_filter_on_player", None)
+        if not callable(update_filter):
+            return
+        filter_step = min(20, int(progress * 20))
+        if crossfade_state.get("autodj_filter_step") == filter_step:
+            return
+        crossfade_state["autodj_filter_step"] = filter_step
+        update_filter(
+            self._managed_player(crossfade_state.get("incoming_key")),
+            values.incoming_bass_db,
+            values.incoming_mid_db,
+        )
+        update_filter(
+            self._managed_player(crossfade_state.get("outgoing_key")),
+            values.outgoing_bass_db,
+            values.outgoing_mid_db,
+        )
+
+    def _restore_autodj_mix_filters(self, crossfade_state):
+        if not crossfade_state or not crossfade_state.get("autodj"):
+            return
+        update_filter = getattr(self, "_update_autodj_mix_filter_on_player", None)
+        if not callable(update_filter):
+            return
+        for player_key in (crossfade_state.get("incoming_key"), crossfade_state.get("outgoing_key")):
+            player = self._managed_player(player_key)
+            if player is not None:
+                update_filter(player, 0.0, 0.0)
 
     def _fallback_pending_crossfade_to_regular_playback(self):
         crossfade_state = getattr(self, "_crossfade_state", None)
@@ -313,6 +473,7 @@ class CrossfadeMixin:
             stop_outgoing=False,
             invalidate_requests=True,
         )
+        state.playback_gain_db = 0.0
         self._queue_media_start(
             media_path,
             tab_index=tab_index,

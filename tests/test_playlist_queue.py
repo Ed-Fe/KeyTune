@@ -77,6 +77,26 @@ class PlaylistQueueTests(unittest.TestCase):
         restored = PlaylistState.from_dict(payload)
         self.assertEqual(restored.custom_queue, ["C"])
 
+    def test_autodj_session_round_trip_preserves_source_and_dynamic_queue(self):
+        state = _state(["A", "C"])
+        state.autodj_session = True
+        state.autodj_source_title = "Origem"
+        state.autodj_source_items = ["A", "B", "C", "D"]
+        state.autodj_source_labels = ["Artista A — A", "Artista B — B", "Artista C — C", "Artista D — D"]
+        state.autodj_remaining_items = ["B", "D"]
+        state.autodj_history = ["A"]
+        state.autodj_preparation_paused = True
+        state.playback_gain_db = -3.5
+
+        restored = PlaylistState.from_dict(state.to_dict())
+
+        self.assertTrue(restored.autodj_session)
+        self.assertEqual(restored.autodj_source_title, "Origem")
+        self.assertEqual(restored.autodj_remaining_items, ["B", "D"])
+        self.assertEqual(restored.autodj_history, ["A"])
+        self.assertTrue(restored.autodj_preparation_paused)
+        self.assertEqual(restored.playback_gain_db, -3.5)
+
     def test_queue_paths_prunes_stale_entries(self):
         state = _state(["A", "B", "C"])
         state.enqueue_item("B")

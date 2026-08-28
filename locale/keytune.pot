@@ -17,6 +17,14 @@ msgstr ""
 msgid " visualizações"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid " — atualização de {version}"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid " — instalado"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&1 estrela\tCtrl+1"
 msgstr ""
@@ -46,6 +54,10 @@ msgstr ""
 msgid "&Abrir link"
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "&Adicionar músicas"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Anunciar"
 msgstr ""
@@ -56,6 +68,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Arquivo"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Ativar ou desativar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -85,6 +101,7 @@ msgstr ""
 #: src/player/equalizer/dialog.py
 #: src/player/library/open_dialog.py
 #: src/player/library/search_dialog.py
+#: src/player/plugins/dialog.py
 #: src/player/preferences/dialog.py
 #: src/player/sleep_timer/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -146,6 +163,10 @@ msgstr ""
 msgid "&Editar..."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "&Encerrar AutoDJ"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Escolher pasta..."
 msgstr ""
@@ -199,6 +220,14 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "&Informar manualmente (arquivo ou texto)"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Instalar e ativar"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Instalar pacote..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -265,6 +294,10 @@ msgstr ""
 msgid "&Pasta..."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "&Pausar preparação"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "&Pesquisar"
 msgstr ""
@@ -285,6 +318,10 @@ msgstr ""
 msgid "&Procurar..."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "&Recalcular sequência"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Recentes"
 msgstr ""
@@ -294,6 +331,7 @@ msgid "&Registrar como player padrão"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
+#: src/player/plugins/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Remover"
 msgstr ""
@@ -321,6 +359,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Resumo da biblioteca"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "&Retomar preparação"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -411,6 +453,10 @@ msgstr ""
 
 #: src/player/frames/commands/open_commands.py
 msgid "A abertura externa aceita apenas uma playlist por vez."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "A alteração foi aplicada."
 msgstr ""
 
 #: src/player/youtube_music/service.py
@@ -547,6 +593,10 @@ msgstr ""
 msgid "A playlist precisa de pelo menos dois itens para reordenar."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."
+msgstr ""
+
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "A playlist selecionada não está mais disponível na lista atual."
 msgstr ""
@@ -573,10 +623,6 @@ msgstr ""
 
 #: src/player/youtube_music/dependencies.py
 msgid "A release mais recente da ytmusicapi não publicou um wheel utilizável."
-msgstr ""
-
-#: src/player/frames/playback/backend.py
-msgid "A reprodução autenticada foi recusada. Tentando sem a conta..."
 msgstr ""
 
 #: src/player/youtube_music/dependencies.py
@@ -719,6 +765,10 @@ msgstr ""
 msgid "Abra sua central do YouTube Music em uma aba dedicada. Conecte ou atualize o acesso da conta, atualize a biblioteca, pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube para tocar sem sair do player."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Abra uma playlist comum para iniciar uma sessão AutoDJ."
+msgstr ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "Abra uma playlist do YouTube Music para remover faixas dela."
 msgstr ""
@@ -782,6 +832,10 @@ msgstr ""
 #: src/player/frames/ui.py
 #: src/player/welcome/dialog.py
 msgid "Abrir &manual do usuário"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Abrir &marketplace"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -852,6 +906,10 @@ msgstr ""
 msgid "Abrir site do &Node.js"
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "Acessar a internet e outros serviços de rede"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Acessibilidade"
 msgstr ""
@@ -860,8 +918,29 @@ msgstr ""
 msgid "Adicionando {count} {label} à playlist {title}..."
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "Adicionar abas ao player"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Adicionar ações e submenus"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Adicionar músicas à sessão"
+msgstr ""
+
+#: src/player/frames/autodj.py
+#: src/player/frames/autodj_panel.py
+msgid "Adicionar músicas à sessão AutoDJ"
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Adicionar seleção..."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Adicionar telas ou painéis"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -965,6 +1044,10 @@ msgstr ""
 msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Ajuste de tempo: {adjustment:+.1%}."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
 msgstr ""
@@ -983,6 +1066,14 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Alemanha"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Alterar biblioteca, playlists, favoritos e avaliações"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Alterar playlists e avaliações do YouTube Music"
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -1005,6 +1096,18 @@ msgstr ""
 msgid "América do Sul"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. Se a análise não for confiável, a reprodução continua normalmente."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Analisando próximas faixas."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Anunciar &Status (S)"
 msgstr ""
@@ -1019,6 +1122,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Anunciar &marcadores da seleção"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1075,6 +1182,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Argentina"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Armazenar configurações próprias"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1178,7 +1289,12 @@ msgid "Ativa ou desativa a exibição das letras da música."
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/plugins/dialog.py
 msgid "Ativado"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Ativar &AutoDJ"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -1187,6 +1303,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ativar Auto&DJ"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Ativar AutoDJ"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1311,6 +1435,10 @@ msgstr ""
 msgid "Atualize os recursos adicionais do YouTube Music e refaça a autenticação do navegador antes de tentar novamente."
 msgstr ""
 
+#: src/player/youtube_music/streams.py
+msgid "Atualize os recursos adicionais do YouTube Music e tente novamente. Faixas que exigem uma conta podem não estar disponíveis nos perfis de reprodução compatíveis."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Aumentar &Tom (Shift+])"
 msgstr ""
@@ -1327,8 +1455,40 @@ msgstr ""
 msgid "Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "AutoDJ analisando a faixa atual e as próximas opções..."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ preparado: transição de {count} batidas."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ preparando as próximas faixas da sessão..."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ preparou {count} próximas faixas."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ {status}."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ — {title}"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ: {status}."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Automático (seguir o sistema)"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Autor: {author}"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -1370,6 +1530,14 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Ações da seleção de resultados do YouTube"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ações de p&lugins"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Ações do AutoDJ"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1769,8 +1937,20 @@ msgstr ""
 msgid "Confirmar ao sair"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Confirmar instalação do plugin"
+msgstr ""
+
 #: src/player/frames/commands/app_commands.py
 msgid "Confirmar saída"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Consultar a biblioteca carregada, playlists e metadados"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Consultar a conta e a biblioteca do YouTube Music"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -1853,6 +2033,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Controla quanta informação é registrada. \"Apenas erros\" é o mais silencioso; \"Depuração\" é o mais detalhado e pode gerar arquivos grandes."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Controlar reprodução, volume, fila e troca de faixa"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -1985,12 +2169,20 @@ msgstr ""
 msgid "Dados de conexão do YouTube Music"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Dados e permissões do plugin"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Dance"
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python quando a aba YouTube Music é aberta."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2018,6 +2210,7 @@ msgid "Depuração (DEBUG)"
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/plugins/dialog.py
 msgid "Desativado"
 msgstr ""
 
@@ -2055,6 +2248,10 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Descrição do preset:"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Descrição: {description}"
 msgstr ""
 
 #: src/player/frames/smart_library/history.py
@@ -2201,6 +2398,10 @@ msgid "Duplicar preset: {name}"
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Duração da transição do AutoDJ"
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Duração mínima para lembrar a posição (minutos)"
 msgstr ""
 
@@ -2248,6 +2449,10 @@ msgstr ""
 msgid "El Salvador"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Eletrônica"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Em &alta..."
 msgstr ""
@@ -2290,8 +2495,17 @@ msgstr ""
 msgid "Empurra graves e agudos para uma escuta mais animada."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+#: src/player/frames/commands/browser_commands.py
+msgid "Encerrar AutoDJ e manter sequência"
+msgstr ""
+
 #: src/player/sleep_timer/dialog.py
 msgid "Encerrar a reprodução"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Encerrar sessão AutoDJ"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -2398,12 +2612,20 @@ msgstr ""
 msgid "Escolha um país no menu para carregar o que está em alta."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Escolha um plugin. Pacotes são verificados por SHA-256 antes da instalação."
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Escolha uma categoria de moods e gêneros no menu para carregar as playlists."
 msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Escolha uma pasta"
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "Escolha uma pasta de destino para o download."
 msgstr ""
 
 #: src/player/frames/smart_library/indexing.py
@@ -2416,6 +2638,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Escolhe a saída de áudio usada na reprodução. Use Padrão do sistema para seguir o dispositivo principal do Windows."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Escolhendo outra próxima faixa."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -2438,16 +2668,24 @@ msgstr ""
 msgid "Esta pasta pode abrir como playlist estática ou no navegador de pastas."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Estado"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Estados Unidos"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", que dispensa PO Token quando há cookies de conta válidos."
+msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Atualize os recursos adicionais e tente novamente mais tarde."
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
 msgid "Este item já está na fila de reprodução."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Este plugin será executado dentro do processo do KeyTune e terá o mesmo acesso do aplicativo ao computador. Ative somente código de um autor em quem você confia plenamente."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2530,6 +2768,10 @@ msgstr ""
 msgid "Falha desconhecida."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Falhou"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Favorece voz, brilho e graves limpos para pop moderno."
 msgstr ""
@@ -2566,11 +2808,16 @@ msgstr ""
 msgid "Fechar Mí&dia\tCtrl+Shift+W"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Feche as abas ou telas abertas por este plugin antes de desativá-lo, atualizá-lo ou removê-lo."
+msgstr ""
+
 #: src/player/youtube_music/auth.py
 msgid "Feche o {browser} completamente e tente exportar novamente."
 msgstr ""
 
 #: src/player/equalizer/models.py
+#: src/player/preferences/dialog.py
 msgid "Festa"
 msgstr ""
 
@@ -2632,6 +2879,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Geral"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Gerenciador de plugins"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Gerenciar &plugins..."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -2792,6 +3047,10 @@ msgstr ""
 msgid "Informações da faixa incompletas para buscar a letra."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "Informações da sessão AutoDJ"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Informe o nome e a privacidade da nova playlist."
 msgstr ""
@@ -2818,6 +3077,10 @@ msgstr ""
 msgid "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Inicializando"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Inicialização e sessão"
 msgstr ""
@@ -2828,6 +3091,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Instalar &Node.js"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Instalar pacote de plugin"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
@@ -2880,6 +3147,14 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Islândia"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Isolamento"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Isolamento: {mode}"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2995,6 +3270,14 @@ msgstr ""
 msgid "Lembrar última pasta usada"
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "Ler a faixa, a posição e o estado de reprodução"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Ler ou alterar a área de transferência"
+msgstr ""
+
 #: src/player/frames/lyrics_panel.py
 msgid "Letra completa copiada."
 msgstr ""
@@ -3030,6 +3313,10 @@ msgstr ""
 
 #: src/player/about/dialog.py
 msgid "Licença do aplicativo"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Licença: {license}"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3119,6 +3406,10 @@ msgstr ""
 msgid "Lista de playlists do YouTube Music"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Lista de plugins instalados"
+msgstr ""
+
 #: src/player/frames/item_search.py
 #: src/player/library/search_dialog.py
 msgid "Localiza itens da lista ativa."
@@ -3163,6 +3454,18 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Margem ignorada no início e no fim (segundos)"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Marketplace de plugins"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Marketplace não verificado"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Marketplace verificado"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -3276,6 +3579,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Mostrando {visible} de {total} playlists e mixes."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Mostrar avisos e fazer anúncios pelo leitor de telas"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3505,6 +3812,10 @@ msgstr ""
 msgid "Nenhuma mídia válida foi informada ao yt-dlp."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Nenhuma música nova foi adicionada à sessão AutoDJ."
+msgstr ""
+
 #: src/player/frames/smart_library/indexing.py
 msgid "Nenhuma pasta indexada ainda. Use Biblioteca, Indexar pasta."
 msgstr ""
@@ -3515,6 +3826,10 @@ msgstr ""
 
 #: src/player/frames/recents.py
 msgid "Nenhuma pasta recente."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Nenhuma permissão especial."
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
@@ -3543,12 +3858,20 @@ msgstr ""
 msgid "Nenhuma playlist recente."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Nenhuma sessão AutoDJ está ativa nesta aba."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Nicarágua"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Nigéria"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "No processo do player"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -3573,6 +3896,10 @@ msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Nome obrigatório"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Nome: {name}"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3757,6 +4084,10 @@ msgstr ""
 msgid "Não foi possível carregar mixes personalizadas."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Não foi possível carregar o marketplace: {error}"
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Não foi possível carregar seu histórico agora."
 msgstr ""
@@ -3822,11 +4153,19 @@ msgid "Não foi possível iniciar a próxima faixa para o crossfade."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
+msgid "Não foi possível iniciar o download pelo yt-dlp."
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
 msgid "Não foi possível iniciar o executável yt-dlp."
 msgstr ""
 
 #: src/player/mpv_backend.py
 msgid "Não foi possível iniciar uma instância do MPV."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Não foi possível instalar o plugin: {error}"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3902,6 +4241,10 @@ msgstr ""
 msgid "Não foi possível remover esta entrada do histórico."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Não foi possível remover o plugin: {error}"
+msgstr ""
+
 #: src/player/frames/playback/backend.py
 msgid "Não foi possível reproduzir a mídia."
 msgstr ""
@@ -3943,6 +4286,10 @@ msgstr ""
 msgid "Não gostei no YouTube Music"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Não há faixas restantes para recalcular a sequência."
+msgstr ""
+
 #: src/player/frames/item_search.py
 msgid "Não há itens para localizar nesta aba."
 msgstr ""
@@ -3953,6 +4300,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
 msgid "Não há mais playlists para carregar."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Não há outra faixa disponível para substituir a próxima."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -3981,6 +4332,18 @@ msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Número máximo de itens"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "O AutoDJ não conseguiu completar a fila agora; tentará novamente."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "O AutoDJ não encontrou batidas compatíveis. Será usada a transição normal."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -4016,11 +4379,11 @@ msgid "O YouTube Music não removeu as faixas (status: {status})."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. Se já estiver autenticado, refaça o login com cookies recém-exportados."
+msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
+msgid "O YouTube não forneceu um stream de áudio direto para esta faixa. Atualize os recursos adicionais e tente novamente; o conteúdo pode exigir um PO Token que não está disponível no perfil atual."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -4043,6 +4406,10 @@ msgstr ""
 msgid "O arquivo selecionado não pertence à pasta atual."
 msgstr ""
 
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O download pelo yt-dlp excedeu o tempo limite."
+msgstr ""
+
 #: src/player/frames/equalizer.py
 msgid "O equalizador não está disponível nesta instalação."
 msgstr ""
@@ -4057,6 +4424,10 @@ msgstr ""
 
 #: src/player/youtube_music/dependencies.py
 msgid "O executável yt-dlp foi baixado, mas não pôde ser preparado nesta execução."
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O executável yt-dlp não está disponível."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -4095,6 +4466,38 @@ msgstr ""
 msgid "O item recente selecionado não está mais disponível."
 msgstr ""
 
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O modelo do nome do arquivo não pode conter pastas."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O pacote não corresponde ao plugin selecionado no marketplace."
+msgstr ""
+
+#: src/player/frames/plugins.py
+msgid "O player não respondeu ao plugin em 30 segundos."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O plugin foi ativado."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O plugin não concluiu a inicialização em 30 segundos."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O processo separado evita que falhas comuns derrubem o player e não recebe variáveis de ambiente sensíveis. As permissões acima controlam a API do KeyTune, mas o plugin ainda pode usar Python normalmente e acessar o computador; este modo não é uma sandbox de segurança."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "O processo terminou durante a inicialização."
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "O que mudou nesta versão:"
 msgstr ""
@@ -4129,6 +4532,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
+msgstr ""
+
+#: src/player/youtube_music/yt_dlp_runtime.py
+msgid "O yt-dlp não conseguiu baixar a mídia."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -4187,6 +4594,10 @@ msgstr ""
 msgid "Origem"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Origem: {source}"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
 msgstr ""
@@ -4229,6 +4640,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "PO Token ausente"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Pacote local selecionado"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -4339,12 +4754,32 @@ msgstr ""
 msgid "Pausado: {name}"
 msgstr ""
 
+#: src/player/frames/commands/browser_commands.py
+msgid "Pausar preparação"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Pausar preparação do AutoDJ"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Pede confirmação antes de fechar o player."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Perfil do AutoDJ"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "Perfis testados: {count}."
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Permissões do plugin"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Permissões solicitadas e aviso de segurança"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -4404,6 +4839,7 @@ msgid_plural "Playlist carregada: {title}. {count} itens."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/frames/commands/open_commands.py
 #: src/player/youtube_music/library_manager.py
 msgid "Playlist do YouTube Music"
 msgstr ""
@@ -4487,6 +4923,26 @@ msgstr ""
 msgid "Playlists recentes limpas."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Plugin"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Plugin do KeyTune (*.ktplugin)|*.ktplugin|Todos os arquivos|*.*"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Plugin em uso"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Plugins"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Plugins instalados:"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam."
 msgstr ""
@@ -4519,8 +4975,24 @@ msgstr ""
 msgid "Preferências salvas."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Preparada"
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "Preparando o download da versão {version}..."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Preparação da sessão AutoDJ pausada."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Preparação da sessão AutoDJ retomada."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Preparação pausada."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -4597,6 +5069,10 @@ msgstr ""
 msgid "Privada: só você vê. Não listada: visível para quem tiver o link. Pública: aparece no seu perfil e pode surgir em buscas."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Processo separado"
+msgstr ""
+
 #: src/player/smart_library/search_dialog.py
 msgid "Procura em tudo que já foi indexado na biblioteca."
 msgstr ""
@@ -4633,6 +5109,42 @@ msgstr ""
 msgid "Próxima Fai&xa\tCtrl+PageDown"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Próxima transição: aguardando nova tentativa. Motivo: {reason}."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima transição: aguardando uma faixa preparada."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima transição: analisando."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima transição: comum. Motivo: {reason}."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima transição: {count} batidas."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima, analisando transição"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima, análise pendente"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima, transição comum"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima, transição de {count} batidas"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Próximo &resultado\tF3"
 msgstr ""
@@ -4647,6 +5159,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Página {current} de {total}: {title}"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Página: {homepage}"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -4691,6 +5207,18 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Realça definição e brilho sem exagerar nos graves."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Recalculando a sequência AutoDJ."
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Recalcular sequência"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Recalcular sequência do AutoDJ"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4790,8 +5318,16 @@ msgstr ""
 msgid "Remover da playlist do YouTube Music"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Remover o plugin {name}? Os dados e ajustes privados serão preservados."
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Remover playlist inteligente"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Remover plugin"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -4846,6 +5382,11 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Reproduzir conteúdo relacionado ao fim da playlist"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/ui.py
+msgid "Reproduzir playlist com AutoDJ"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4962,6 +5503,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Retomar de onde parou"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Retomar preparação"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Retomar preparação do AutoDJ"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -5150,8 +5699,24 @@ msgstr ""
 msgid "Sem tocar há pelo menos (&dias, 0 ignora)"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Sequência AutoDJ — {title}"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Sessão AutoDJ encerrada. A sequência preparada foi preservada como playlist."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Sessão AutoDJ iniciada. A sequência será preparada em segundo plano."
+msgstr ""
+
 #: src/player/frames/session.py
 msgid "Sessão anterior restaurada com {count} abas."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Sessão ativa."
 msgstr ""
 
 #: src/player/frames/session.py
@@ -5228,6 +5793,7 @@ msgid "Status do download"
 msgstr ""
 
 #: src/player/equalizer/models.py
+#: src/player/preferences/dialog.py
 msgid "Suave"
 msgstr ""
 
@@ -5249,6 +5815,10 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Techno"
+msgstr ""
+
+#: src/player/frames/plugins.py
+msgid "Tela do plugin {name} aberta."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -5336,8 +5906,16 @@ msgstr ""
 msgid "Texto a procurar"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Tocada"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Tocadas mais recentemente"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Tocando"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -5371,6 +5949,18 @@ msgstr ""
 msgid "Trecho da letra copiado."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "Trocar pró&xima"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Trocar próxima faixa"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Trocar próxima faixa do AutoDJ"
+msgstr ""
+
 #: src/player/smart_library/search_dialog.py
 msgid "Tudo na biblioteca"
 msgstr ""
@@ -5401,6 +5991,18 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Usar a API do KeyTune para criar ou alterar arquivos externos"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Usar a API do KeyTune para ler arquivos externos"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "Usar o resolvedor de mídia yt-dlp"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5475,6 +6077,10 @@ msgstr ""
 msgid "Ver &créditos completos"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Ver &permissões"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Ver ajuda rápida de atalhos"
 msgstr ""
@@ -5511,6 +6117,18 @@ msgstr ""
 msgid "Verificar &atualizações"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Versão"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Versão: {version}"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Vocais protegidos."
+msgstr ""
+
 #: src/player/frames/update.py
 msgid "Você está na versão mais recente."
 msgstr ""
@@ -5545,6 +6163,10 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "Volume atual: {volume}%."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5610,12 +6232,21 @@ msgstr ""
 msgid "[{source}: {title} - {artist}]"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "análise incompatível"
+msgstr ""
+
+#: src/player/frames/autodj.py
 #: src/player/frames/library_tabs/playback_control.py
 msgid "ativado"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "autenticação/bloqueio do YouTube"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "confiança rítmica insuficiente"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -5626,6 +6257,7 @@ msgstr ""
 msgid "desafio JavaScript (EJS)"
 msgstr ""
 
+#: src/player/frames/autodj.py
 #: src/player/frames/library_tabs/playback_control.py
 msgid "desativado"
 msgstr ""
@@ -5638,6 +6270,10 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "desligado"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "diferença de BPM acima do limite seguro"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
@@ -5655,6 +6291,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "faixas"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "falha ao analisar as faixas"
 msgstr ""
 
 #: src/player/frames/smart_library/marks.py
@@ -5685,6 +6325,10 @@ msgstr ""
 msgid "na pasta {folder}"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "nenhum ponto de entrada adequado na próxima faixa"
+msgstr ""
+
 #: src/player/frames/equalizer.py
 msgid "nenhuma aba de mídia"
 msgstr ""
@@ -5695,6 +6339,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "não listada"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "não verificado"
 msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
@@ -5721,6 +6369,14 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "playlist local"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "playlist original"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "poucas batidas utilizáveis na faixa atual"
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -5801,6 +6457,10 @@ msgstr ""
 msgid "tom original"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "verificado"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "versão desconhecida"
 msgstr ""
@@ -5813,12 +6473,20 @@ msgstr ""
 msgid "vídeo"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+msgstr ""
+
 #: src/player/frames/commands/app_commands.py
 msgid "{added} itens adicionados e {removed} removidos da fila de reprodução."
 msgstr ""
 
 #: src/player/about/dialog.py
 msgid "{app} versão {version}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "{count} batidas"
 msgstr ""
 
 #: src/player/frames/smart_library/marks.py
@@ -5931,6 +6599,10 @@ msgid_plural "{count} mídias para continuar ouvindo."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/frames/autodj.py
+msgid "{count} músicas adicionadas à sessão AutoDJ."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "{count} playlist da busca foi expandida."
 msgid_plural "{count} playlists da busca foram expandidas."
@@ -5973,6 +6645,10 @@ msgstr[1] ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "{criteria}; {sort}; até {limit} itens"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -6057,8 +6733,16 @@ msgstr ""
 msgid "{name} (dB)"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "{name} foi instalado e ativado."
+msgstr ""
+
 #: src/player/frames/equalizer.py
 msgid "{name} personalizado"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
 msgstr ""
 
 #: src/player/welcome/dialog.py

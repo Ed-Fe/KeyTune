@@ -7,6 +7,8 @@ import subprocess
 import sys
 
 from ..constants import (
+    AUTODJ_BEAT_COUNTS,
+    AUTODJ_PROFILES,
     LOGGING_LEVEL_LABELS,
     LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
@@ -27,6 +29,13 @@ from ..constants import (
 )
 from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
+
+
+AUTODJ_PROFILE_LABELS = {
+    "smooth": _("Suave"),
+    "party": _("Festa"),
+    "electronic": _("Eletrônica"),
+}
 
 
 class PreferencesDialog(wx.Dialog):
@@ -302,6 +311,27 @@ class PreferencesDialog(wx.Dialog):
                 "Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
             ),
         )
+        self.autodj_enabled_checkbox = wx.CheckBox(page, label=_("Ativar &AutoDJ"))
+        self._configure_checkbox(
+            self.autodj_enabled_checkbox,
+            _("Ativar AutoDJ"),
+            _(
+                "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. "
+                "Se a análise não for confiável, a reprodução continua normalmente."
+            ),
+        )
+        autodj_profile_group, self.autodj_profile_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Perfil do AutoDJ"),
+            help_text=_("Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."),
+            choices=[AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
+        )
+        autodj_beats_group, self.autodj_beats_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Duração da transição do AutoDJ"),
+            help_text=_("Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."),
+            choices=[_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
+        )
         seek_step_group, self.seek_step_ctrl = self._build_spin_control_group(
             page,
             label_text=_("Passo de busca (segundos)"),
@@ -329,6 +359,8 @@ class PreferencesDialog(wx.Dialog):
             volume_group,
             volume_step_group,
             crossfade_group,
+            autodj_profile_group,
+            autodj_beats_group,
             seek_step_group,
             repeat_group,
             audio_output_group,
@@ -337,6 +369,7 @@ class PreferencesDialog(wx.Dialog):
 
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        playback_box.Add(self.autodj_enabled_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
@@ -864,6 +897,9 @@ class PreferencesDialog(wx.Dialog):
         self.default_volume_ctrl.SetValue(settings.default_volume)
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
         self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
+        self.autodj_enabled_checkbox.SetValue(settings.autodj_enabled)
+        self.autodj_profile_choice.SetSelection(AUTODJ_PROFILES.index(settings.autodj_profile))
+        self.autodj_beats_choice.SetSelection(AUTODJ_BEAT_COUNTS.index(settings.autodj_beats))
         self.volume_step_ctrl.SetValue(settings.volume_step)
         self.seek_step_ctrl.SetValue(settings.seek_step_seconds)
         self.shuffle_new_playlists_checkbox.SetValue(settings.shuffle_new_playlists)
@@ -923,6 +959,9 @@ class PreferencesDialog(wx.Dialog):
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
+        settings.autodj_enabled = self.autodj_enabled_checkbox.GetValue()
+        settings.autodj_profile = AUTODJ_PROFILES[self.autodj_profile_choice.GetSelection()]
+        settings.autodj_beats = AUTODJ_BEAT_COUNTS[self.autodj_beats_choice.GetSelection()]
         settings.volume_step = int(self.volume_step_ctrl.GetValue())
         settings.seek_step_seconds = int(self.seek_step_ctrl.GetValue())
         settings.shuffle_new_playlists = self.shuffle_new_playlists_checkbox.GetValue()
