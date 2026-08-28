@@ -222,6 +222,8 @@ class FrameLibraryNavigationMixin:
                 "kind": "folder",
                 "state": state,
                 "folder_path": normalized_folder_path,
+                "sort_by": state.folder_sort_by,
+                "sort_descending": state.folder_sort_descending,
                 "recent_path": normalized_folder_path,
                 "focus_items": True,
                 "completion_announcement": _("Pasta aberta no navegador: {name}.").format(name=folder_display_name(normalized_folder_path)),
@@ -250,6 +252,8 @@ class FrameLibraryNavigationMixin:
                 "kind": "folder",
                 "state": state,
                 "folder_path": normalized_folder_path,
+                "sort_by": state.folder_sort_by,
+                "sort_descending": state.folder_sort_descending,
                 "focus_items": True,
                 "completion_announcement": (
                     f"Pasta atual: {folder_display_name(normalized_folder_path)}."
@@ -291,7 +295,11 @@ class FrameLibraryNavigationMixin:
 
         if not state.contains_item(normalized_media_path):
             try:
-                folder_entries, media_files = scan_folder_contents(state.folder_current_path)
+                folder_entries, media_files = scan_folder_contents(
+                    state.folder_current_path,
+                    sort_by=state.folder_sort_by,
+                    descending=state.folder_sort_descending,
+                )
             except OSError:
                 folder_entries = []
                 media_files = []

@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.youtube_music.service import YouTubeMusicService
+from player.youtube_music.feedback_store import YouTubeMusicFeedbackStore
 from player.youtube_music.streams import ResolvedStreamPlayback
 
 
@@ -235,6 +236,52 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         self.assertEqual(playlist.title, "Playlist autenticada")
         authenticated_client.get_playlist.assert_called_once_with("PL1234567890", limit=None)
         fake_ytmusic_cls.assert_called_once_with(service.browser_auth_file_path)
+
+    def test_authenticated_playlist_filters_dislikes_persisted_for_the_account(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            store = YouTubeMusicFeedbackStore(pathlib.Path(temp_dir) / "feedback.json")
+            store.set_active_account({"channelHandle": "@ouvinte"})
+            store.record("disliked123", "DISLIKE")
+            service = YouTubeMusicService(feedback_store=store)
+            service.sync_account_feedback = Mock(return_value=0)
+            service._library.get_playlist_content = Mock(
+                return_value=SimpleNamespace(
+                    playlist_id="PL123",
+                    title="Conta",
+                    item_urls=[
+                        "https://music.youtube.com/watch?v=disliked123",
+                        "https://music.youtube.com/watch?v=allowed456",
+                    ],
+                    item_labels=["Não gostei", "Permitida"],
+                )
+            )
+
+            with patch.object(service, "has_saved_browser_auth", return_value=True):
+                content = service.get_playlist_content("PL123", require_auth=True)
+
+            self.assertEqual(
+                content.item_urls,
+                ["https://music.youtube.com/watch?v=allowed456"],
+            )
+            self.assertEqual(content.item_labels, ["Permitida"])
+
+    def test_public_playlist_does_not_apply_the_last_accounts_persistent_cache(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            store = YouTubeMusicFeedbackStore(pathlib.Path(temp_dir) / "feedback.json")
+            store.set_active_account({"channelHandle": "@ouvinte"})
+            store.record("disliked123", "DISLIKE")
+            service = YouTubeMusicService(feedback_store=store)
+            content = SimpleNamespace(
+                playlist_id="PL123",
+                title="Pública",
+                item_urls=["https://music.youtube.com/watch?v=disliked123"],
+                item_labels=["Faixa"],
+            )
+            service._library.get_playlist_content = Mock(return_value=content)
+
+            returned = service.get_playlist_content("PL123", require_auth=False)
+
+            self.assertIs(returned, content)
 
     def test_add_tracks_to_playlist_returns_added_count_on_success(self):
         authenticated_client = Mock()

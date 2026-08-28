@@ -77,8 +77,9 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+Shift+W`: fechar a mídia atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar para a próxima ou aba anterior
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
-- `Ctrl+C`: copiar o caminho ou link do item selecionado
-- `Ctrl+Shift+C`: copiar o link ou caminho da mídia atual em execução
+- `Ctrl+C`: copiar a seleção; no navegador de pastas, copia os arquivos ou pastas para que possam ser colados no Explorador do Windows
+- `Ctrl+Shift+C`: copiar o caminho da seleção no navegador de pastas ou o link/caminho da mídia atual nas demais abas
+- `Ctrl+Espaço`: abrir o menu de classificação no navegador de pastas
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 - `Ctrl+F`: localizar um item na playlist ou pasta atual
@@ -126,6 +127,7 @@ Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta
 - `Alt+Home` / `Alt+End`: ir para o primeiro ou para o último item da playlist
 - `E`: alternar modo aleatório
 - `R`: alternar modo de repetição
+- `Ctrl+R`: iniciar uma nova rádio do YouTube Music a partir da faixa atual
 - `A`: alternar a reprodução de conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)
 - `]` / `[`: aumentar ou diminuir a velocidade de reprodução
 - `Shift+]` / `Shift+[`: aumentar ou diminuir o tom da reprodução em semitons
@@ -161,6 +163,9 @@ Quando a aba veio de uma pasta aberta com `Ctrl+Shift+O`, o navegador exibe o co
 
 - `Enter`: entra na subpasta selecionada ou toca o arquivo de mídia.
 - `Backspace`: volta para a pasta superior (equivale a selecionar `..`).
+- `Ctrl+C`: copia os arquivos ou pastas selecionados, permitindo colá-los no Explorador do Windows.
+- `Ctrl+Shift+C`: copia os caminhos dos itens selecionados como texto.
+- `Ctrl+Espaço`: abre o menu de classificação. É possível ordenar por nome, data de modificação, data de criação, tipo ou tamanho, em ordem crescente ou decrescente. A pasta acima permanece no topo e as pastas continuam agrupadas antes dos arquivos. A escolha é lembrada para essa aba ao restaurar a sessão.
 - `Shift+F10`: abre o menu contextual.
 - `Tab` / `Esc`: volta o foco para o player.
 
@@ -438,7 +443,9 @@ A seção **Conta e biblioteca** mostra o status da conta conectada, o resumo da
 
 - **Conectar conta...**: abre o diálogo para conectar uma conta do YouTube Music ou renovar a autenticação salva.
 - **Desconectar conta**: remove a autenticação salva desta instalação.
-- **Atualizar biblioteca**: busca novamente as playlists e mixes disponíveis na conta conectada.
+- **Atualizar biblioteca**: busca novamente as playlists e mixes disponíveis na conta conectada e atualiza os feedbacks de músicas visíveis na conta.
+
+As ações **Curtir** e **Não gostei** são enviadas à conta conectada, portanto também aparecem no YouTube Music do celular e de outros dispositivos. O KeyTune mantém, por conta, um cache persistente das faixas marcadas como não gostei e o atualiza com o histórico, as músicas curtidas e as listas retornadas pelo YouTube Music. Essas faixas são removidas de playlists e rádios carregadas pela conta e são ignoradas caso reapareçam em uma fila restaurada. Como o YouTube Music não oferece uma lista completa de músicas marcadas como não gostei, uma avaliação feita fora do KeyTune só pode ser importada quando a faixa volta a aparecer em uma dessas respostas da conta; **Atualizar biblioteca** força essa verificação.
 
 Abaixo da seção de conta fica a lista **Playlists e mixes** com todas as playlists e mixes da biblioteca. Use o campo **Filtro** para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Abaixo da lista ficam as ações:
 
@@ -468,6 +475,12 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
 ### Abrir playlist ou vídeo
 
 A seção **Abrir playlist ou vídeo** também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em **Abrir link** ou pressione `Enter` no campo para abrir.
+
+### Rádio a partir da faixa atual
+
+Pressione `Ctrl+R` ou use **Reprodução > Iniciar rádio desta faixa** enquanto uma música do YouTube Music estiver tocando. O KeyTune abre uma nova aba, mantém a posição da reprodução e coloca a faixa atual como item 1, sem continuar a fila da rádio anterior.
+
+Para reduzir repetições entre rádios, o player exclui as faixas já percorridas na playlist de origem e mantém um histórico das 200 músicas mais recentes do YouTube Music, restaurado junto com a sessão. O KeyTune pode fazer até três buscas e só acrescenta IDs inéditos. Como os candidatos são escolhidos pelo YouTube Music, não é possível garantir músicas diferentes; se não houver novidades, a nova aba permanece apenas com a faixa inicial.
 
 ### Gerenciar playlists do YouTube Music
 
@@ -545,6 +558,7 @@ O arquivo `cookies.txt` exportado contém informações de autenticação da sua
 ### Atalhos
 
 - `Ctrl+Shift+Y`: abrir a aba do YouTube Music
+- `Ctrl+R`: iniciar uma nova rádio a partir da faixa atual
 - `Ctrl+Shift+A`: adicionar a mídia atual a uma playlist do YouTube Music
 - `Enter` no campo de busca: executar a pesquisa
 - `Enter` na lista de resultados: adicionar o item à playlist atual

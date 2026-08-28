@@ -1,3 +1,7 @@
+import threading
+import time
+
+from .feedback_store import YouTubeMusicFeedbackStore
 from .playlists import (
     extract_video_id_from_text,
     is_music_youtube_url,
@@ -55,13 +59,91 @@ class YouTubeMusicFeedbackManager:
     and test-time patching.
     """
 
-    def __init__(self, get_client_fn, import_module_fn):
+    _ACCOUNT_SYNC_TTL_SECONDS = 300
+
+    def __init__(self, get_client_fn, import_module_fn, feedback_store=None):
         self._get_client = get_client_fn
         self._import_module = import_module_fn
         self._feedback_cache = {}
+        self._feedback_store = feedback_store or YouTubeMusicFeedbackStore()
+        self._last_account_sync_at = 0.0
+        self._account_sync_lock = threading.Lock()
 
     def clear_cache(self):
         self._feedback_cache.clear()
+
+    def clear_active_account(self):
+        self._feedback_store.clear_active_account()
+        self._last_account_sync_at = 0.0
+
+    def set_active_account(self, account_info):
+        return self._feedback_store.set_active_account(account_info)
+
+    def _remember_client_account(self, client):
+        try:
+            account_info = client.get_account_info()
+        except Exception:
+            return False
+        return self._feedback_store.set_active_account(account_info)
+
+    def sync_account_feedback(self, force=False):
+        """Merge remotely visible account ratings into the persistent cache.
+
+        YouTube Music does not expose a bulk "disliked songs" collection. Its
+        authenticated history and liked-songs responses do carry ``likeStatus``
+        for recently visible tracks, so they are used as an incremental account
+        synchronization source.
+        """
+        with self._account_sync_lock:
+            now = time.monotonic()
+            if not force and now - self._last_account_sync_at < self._ACCOUNT_SYNC_TTL_SECONDS:
+                return 0
+
+            client = self._get_client(require_auth=True)
+            self._remember_client_account(client)
+
+            observed_items = []
+            errors = []
+            try:
+                history = client.get_history()
+            except Exception as exc:
+                errors.append(exc)
+            else:
+                if isinstance(history, list):
+                    observed_items.extend(history)
+
+            try:
+                liked = client.get_liked_songs(limit=500)
+            except Exception as exc:
+                errors.append(exc)
+            else:
+                liked_tracks = liked.get("tracks") if isinstance(liked, dict) else liked
+                if isinstance(liked_tracks, list):
+                    observed_items.extend(liked_tracks)
+
+            if not observed_items and errors:
+                raise errors[0]
+
+            self.observe_feedback_items(observed_items)
+            self._last_account_sync_at = now
+            return len(observed_items)
+
+    def is_media_disliked(self, media_path):
+        video_id = extract_video_id_from_text(normalize_media_path(media_path))
+        return bool(video_id and self._feedback_store.is_disliked(video_id))
+
+    def disliked_video_ids(self):
+        return self._feedback_store.disliked_video_ids()
+
+    def observe_feedback_items(self, items):
+        self._feedback_store.ingest_items(items)
+        for item in items or []:
+            if not isinstance(item, dict):
+                continue
+            video_id = str(item.get("videoId") or "").strip()
+            status = _normalize_like_status(item.get("likeStatus"))
+            if video_id and status:
+                self._feedback_cache[video_id] = status
 
     def save_search_result(self, search_result):
         """Save a search result (song or playlist) to the user's library."""
@@ -107,6 +189,8 @@ class YouTubeMusicFeedbackManager:
         like_status = _extract_like_status_from_watch_playlist(watch_playlist, video_id)
         if like_status:
             self._feedback_cache[video_id] = like_status
+            if like_status in {"LIKE", "DISLIKE"}:
+                self._feedback_store.record(video_id, like_status)
             return like_status
 
         return self._feedback_cache.get(video_id)
@@ -132,8 +216,10 @@ class YouTubeMusicFeedbackManager:
             raise RuntimeError(_("A avaliação solicitada para a mídia atual é inválida."))
 
         client = self._get_client(require_auth=True)
+        self._remember_client_account(client)
         client.rate_song(video_id, like_status)
         self._feedback_cache[video_id] = normalized_rating
+        self._feedback_store.record(video_id, normalized_rating)
 
         if like_status == LikeStatus.LIKE:
             return _("Mídia atual curtida no YouTube Music.")

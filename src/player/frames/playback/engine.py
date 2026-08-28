@@ -266,6 +266,9 @@ class PlaybackEngineMixin:
         self._apply_equalizer_state()
         self._prepare_youtube_music_history_tracking(media_path)
         self._prepare_smart_library_tracking(media_path)
+        remember_radio_playback = getattr(self, "_remember_youtube_music_radio_playback", None)
+        if callable(remember_radio_playback):
+            remember_radio_playback(media_path)
         self._last_runtime_stream_title = ""
         self._next_runtime_stream_title_refresh = 0.0
 

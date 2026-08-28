@@ -31,9 +31,10 @@ class YouTubeMusicLibraryManager:
 
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
 
-    def __init__(self, get_client_fn, build_watch_url_fn):
+    def __init__(self, get_client_fn, build_watch_url_fn, feedback_items_fn=None):
         self._get_client = get_client_fn
         self._build_watch_url = build_watch_url_fn
+        self._feedback_items = feedback_items_fn or (lambda _items: None)
 
     def search(self, query, *, search_scope):
         """Search YouTube Music or YouTube and return normalized results."""
@@ -300,6 +301,7 @@ class YouTubeMusicLibraryManager:
         """
         radio_playlist_id = str(radio.get("playlistId") or "").strip() if isinstance(radio, dict) else ""
         tracks = radio.get("tracks") or [] if isinstance(radio, dict) else []
+        self._feedback_items(tracks)
 
         item_urls = []
         item_labels = []
@@ -308,6 +310,9 @@ class YouTubeMusicLibraryManager:
         for track in tracks:
             track_video_id = str(track.get("videoId") or "").strip()
             if not track_video_id or track_video_id == seed_video_id:
+                continue
+            if str(track.get("likeStatus") or "").strip().upper() == "DISLIKE":
+                skipped_count += 1
                 continue
             if track_video_id in excluded_video_ids or track_video_id in seen_video_ids:
                 skipped_count += 1
@@ -341,6 +346,7 @@ class YouTubeMusicLibraryManager:
         limit=50,
         exclude_video_ids=None,
         continue_playlist_id=None,
+        require_auth=False,
     ):
         """Fetch tracks related to *video_id* (YouTube Music's radio/"Watch Next").
 
@@ -377,7 +383,7 @@ class YouTubeMusicLibraryManager:
         attempt_playlist_ids = [normalized_continue_id] if normalized_continue_id else []
         attempt_playlist_ids.append("")
 
-        client = self._get_client(require_auth=False)
+        client = self._get_client(require_auth=bool(require_auth))
         content = None
         for playlist_id in attempt_playlist_ids:
             try:
@@ -647,12 +653,16 @@ class YouTubeMusicLibraryManager:
             playlist_title = str(playlist.get("title") or fallback_title or _("Playlist do YouTube Music")).strip()
             tracks = playlist.get("tracks") or []
 
+        self._feedback_items(tracks)
+
         item_urls = []
         item_labels = []
 
         for track in tracks:
             video_id = str(track.get("videoId") or "").strip()
             if not video_id:
+                continue
+            if str(track.get("likeStatus") or "").strip().upper() == "DISLIKE":
                 continue
 
             item_urls.append(self._build_watch_url(video_id, playlist_id=normalized_playlist_id))

@@ -345,6 +345,9 @@ class CrossfadeMixin:
         # _finish_media_start took the crossfade branch and returned before
         # arming the smart-library tracking, so arm it here instead.
         self._prepare_smart_library_tracking(media_path)
+        remember_radio_playback = getattr(self, "_remember_youtube_music_radio_playback", None)
+        if callable(remember_radio_playback):
+            remember_radio_playback(media_path)
         self._update_title()
         self._update_time_bar()
         self._refresh_playlist_browser()

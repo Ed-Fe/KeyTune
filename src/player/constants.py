@@ -42,6 +42,8 @@ DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
 DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED = False
 DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY = True
 YOUTUBE_MUSIC_RADIO_FETCH_LIMIT = 50
+YOUTUBE_MUSIC_RADIO_RECENT_LIMIT = 200
+YOUTUBE_MUSIC_RADIO_NEW_STATION_ATTEMPTS = 3
 # How long before the end of the last track we start fetching related content
 # (radio) proactively, so the new items and their stream are ready in time for a
 # seamless transition instead of pausing on the last frame while we look them up.

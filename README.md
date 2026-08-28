@@ -26,8 +26,9 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - AutoDJ sessions with a visible rolling queue, per-track state, preparation controls, multi-track planning, downbeat/section/key/vocal analysis, loudness-aware selection, phrase alignment, tempo matching, and profile-specific bass/EQ mixing
 - Sleep timer with preset durations, a custom duration, or an end-of-track stop (`Ctrl+Shift+D`)
 - Built-in equalizer presets plus custom presets
-- YouTube Music integration for search, link-based open flows, and library refresh
+- YouTube Music integration for search, link-based open flows, library refresh, and account-synced likes/dislikes
 - Optional YouTube Music related-content autoplay (radio) when a playlist ends
+- Fresh per-track YouTube Music radio (`Ctrl+R`) with recent-playback repeat suppression
 
 ## Requirements
 

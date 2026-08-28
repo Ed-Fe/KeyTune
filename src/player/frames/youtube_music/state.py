@@ -121,6 +121,9 @@ class LibraryStateMixin:
 
     def _set_youtube_music_search_results(self, search_results, *, search_summary=None, status_message=None):
         self._youtube_music_search_results_cache = list(search_results or [])
+        service = getattr(self, "_youtube_music_service", None)
+        if service is not None:
+            service.observe_feedback_items(self._youtube_music_search_results_cache)
         if search_summary is not None:
             self._youtube_music_search_summary_message = str(search_summary or "").strip()
         if status_message is not None:
@@ -290,6 +293,7 @@ class LibraryStateMixin:
                 getattr(self, "menu_next_track_id", None),
                 getattr(self, "menu_toggle_shuffle_id", None),
                 getattr(self, "menu_cycle_repeat_id", None),
+                getattr(self, "menu_start_radio_id", None),
                 getattr(self, "menu_add_to_youtube_playlist_id", None),
             ):
                 if item_id is None:

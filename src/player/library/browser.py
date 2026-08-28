@@ -238,7 +238,7 @@ class PlaylistBrowserPanel(wx.Panel):
 
         self.header_label.SetLabel(_("{title} — {path}").format(title=title, path=current_path))
         self.hint_label.SetLabel(
-            _("Enter entra na pasta ou toca o arquivo. Backspace volta. Digite letras para localizar. Tab volta ao player.")
+            _("Enter entra na pasta ou toca o arquivo. Backspace volta. Ctrl+Espaço classifica. Digite letras para localizar. Tab volta ao player.")
         )
         self.hint_label.Wrap(260)
         self._render_mode = "folder"
@@ -338,6 +338,29 @@ class PlaylistBrowserPanel(wx.Panel):
             if item_path:
                 selected_paths.append(item_path)
         return selected_paths
+
+    def restore_selected_item_paths(self, paths):
+        """Restore multi-selection after folder entries have been reordered."""
+        if self._mode != "folder" or self._has_placeholder:
+            return False
+
+        indexes = []
+        for path in paths or ():
+            index = self._folder_index_by_key.get(self._normalize_path_key(path))
+            if index is not None:
+                indexes.append(index)
+        if not indexes:
+            return False
+
+        self._suppress_selection_event = True
+        try:
+            for index in indexes:
+                self.items_list.Select(index, True)
+            self.items_list.Focus(indexes[0])
+            self.items_list.EnsureVisible(indexes[0])
+        finally:
+            self._suppress_selection_event = False
+        return True
 
     def set_library_marks(self, marks_by_path):
         """Define os marcadores exibidos ao lado de cada item.
