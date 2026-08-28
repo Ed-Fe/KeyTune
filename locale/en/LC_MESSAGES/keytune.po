@@ -4851,6 +4851,15 @@ msgstr "incompatible analysis"
 msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
 msgstr "Rhythmic analysis: current track {outgoing_bpm:.1f} BPM, {outgoing_confidence:.0%} confidence; next track {incoming_bpm:.1f} BPM, {incoming_confidence:.0%} confidence."
 
+msgid "Tocar efeitos de &DJ nas transições"
+msgstr "Play &DJ effects during transitions"
+
+msgid "Tocar efeitos de DJ nas transições"
+msgstr "Play DJ effects during transitions"
+
+msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
+msgstr "Plays a short effect alongside the start of each synchronized AutoDJ transition. The effect uses the same audio device selected for playback."
+
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr "&Copy selection (Ctrl+C)"
 
@@ -4934,3 +4943,83 @@ msgstr "The YouTube Music service is not available to start the radio."
 
 msgid "Rádio: {name}"
 msgstr "Radio: {name}"
+msgid "Resume o estado da sessão e informa como será a próxima transição."
+msgstr "Summarizes the session status and describes the next transition."
+
+msgid "Escolhe outra faixa preparada para a próxima transição."
+msgstr "Chooses another prepared track for the next transition."
+
+msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução."
+msgstr "Discards the prepared sequence and calculates a new playback order."
+
+msgid "Adiciona outras músicas candidatas à sessão AutoDJ atual."
+msgstr "Adds more candidate songs to the current AutoDJ session."
+
+msgid "Interrompe temporariamente a análise e preparação de novas faixas."
+msgstr "Temporarily stops the analysis and preparation of new tracks."
+
+msgid "Encerra o AutoDJ sem remover as músicas que já foram preparadas."
+msgstr "Ends AutoDJ without removing songs that have already been prepared."
+
+msgid "Sessão AutoDJ"
+msgstr "AutoDJ session"
+
+msgid "Retoma a análise e preparação de novas faixas."
+msgstr "Resumes the analysis and preparation of new tracks."
+
+msgid "&Copiar letra completa"
+msgstr "&Copy full lyrics"
+
+msgid "Copia toda a letra exibida para a área de transferência."
+msgstr "Copies all displayed lyrics to the clipboard."
+
+msgid "Título da playlist"
+msgstr "Playlist title"
+
+msgid "Identifica a playlist ou pasta exibida na lista."
+msgstr "Identifies the playlist or folder displayed in the list."
+
+msgid "Enter ativa. Delete remove. Shift+F10 abre as ações do item."
+msgstr "Enter activates. Delete removes. Shift+F10 opens item actions."
+
+msgid "Ajuda da lista de itens"
+msgstr "Item list help"
+
+msgid "Resume os comandos disponíveis na lista de itens."
+msgstr "Summarizes the commands available in the item list."
+
+msgid "Informe um caminho local ou cole um link de mídia ou playlist."
+msgstr "Enter a local path or paste a media or playlist link."
+
+msgid "Procurar arquivo"
+msgstr "Browse for file"
+
+msgid "Abre a janela para escolher um arquivo de mídia ou playlist."
+msgstr "Opens the window to choose a media or playlist file."
+
+msgid "Procurar pasta"
+msgstr "Browse for folder"
+
+msgid "Abre a janela para escolher uma pasta de mídias."
+msgstr "Opens the window to choose a media folder."
+
+msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
+msgstr "Choose between opening the content as a playlist or browsing the folder."
+
+msgid "Resultado da origem informada"
+msgstr "Entered source result"
+
+msgid "Informa como o arquivo, pasta ou link será aberto."
+msgstr "Indicates how the file, folder, or link will be opened."
+
+msgid "Abrir origem informada"
+msgstr "Open entered source"
+
+msgid "Abre o arquivo, pasta ou link informado."
+msgstr "Opens the entered file, folder, or link."
+
+msgid "Cancelar abertura"
+msgstr "Cancel opening"
+
+msgid "Fecha esta janela sem abrir uma origem."
+msgstr "Closes this window without opening a source."

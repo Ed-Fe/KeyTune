@@ -247,6 +247,14 @@ class AudioOutputMixin:
                 pass
             applied_to_any_player = True
 
+        sound_player = getattr(self, "_autodj_sound_player", None)
+        if sound_player is not None:
+            sound_player.set_audio_output_device(normalized_device_id)
+            try:
+                sound_player.reload_audio_output()
+            except Exception:
+                pass
+
         if playback_snapshot is not None and active_player is not None:
             self._schedule_audio_output_state_restore(active_player, playback_snapshot)
 

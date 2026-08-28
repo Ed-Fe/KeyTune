@@ -41,7 +41,9 @@ class LyricsPanel(wx.Panel):
 
         root_sizer.Add(self.lyrics_text_ctrl, 1, wx.EXPAND | wx.ALL, 10)
 
-        self.copy_button = wx.Button(self, label=_("Copiar letra completa"))
+        self.copy_button = wx.Button(self, label=_("&Copiar letra completa"))
+        self.copy_button.SetName(_("Copiar letra completa"))
+        self.copy_button.SetToolTip(_("Copia toda a letra exibida para a área de transferência."))
         self.copy_button.Bind(wx.EVT_BUTTON, self._on_copy_button_click)
         self.copy_button.Bind(wx.EVT_CHAR_HOOK, self._on_button_char_hook)
         root_sizer.Add(self.copy_button, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)

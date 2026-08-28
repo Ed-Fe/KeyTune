@@ -15,6 +15,7 @@ from player.audio_output import (
     is_selectable_audio_output_device_id,
     normalize_audio_output_device_id,
 )
+from player.frames.playback.audio_output import AudioOutputMixin
 
 
 class AudioOutputHelperTests(unittest.TestCase):
@@ -46,6 +47,33 @@ class AudioOutputHelperTests(unittest.TestCase):
                 }
             )
         )
+
+    def test_device_change_is_applied_to_the_autodj_sound_player(self):
+        class SoundPlayer:
+            def __init__(self):
+                self.device_id = None
+                self.reload_calls = 0
+
+            def set_audio_output_device(self, device_id):
+                self.device_id = device_id
+
+            def reload_audio_output(self):
+                self.reload_calls += 1
+
+        class Frame(AudioOutputMixin):
+            player = None
+            _player_keys = ()
+
+            def _best_playback_snapshot_for_audio_swap(self, _active_player):
+                return None
+
+        frame = Frame()
+        frame._autodj_sound_player = SoundPlayer()
+
+        frame._apply_audio_output_device_to_players("wasapi/{device-1}")
+
+        self.assertEqual(frame._autodj_sound_player.device_id, "wasapi/{device-1}")
+        self.assertEqual(frame._autodj_sound_player.reload_calls, 1)
 
 
 if __name__ == "__main__":

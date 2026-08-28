@@ -334,6 +334,8 @@ class CrossfadeMixin:
         if incoming_player is None:
             self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
             return False
+        if crossfade_state.get("autodj") and not incoming_player.is_playing():
+            return False
 
         self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
@@ -399,6 +401,10 @@ class CrossfadeMixin:
 
         crossfade_state["phase"] = "running"
         crossfade_state["started_at"] = time.monotonic()
+        if crossfade_state.get("autodj") and bool(
+            getattr(self.settings, "autodj_transition_sounds_enabled", False)
+        ):
+            self._play_autodj_transition_sound(crossfade_state.get("autodj_profile"))
         self._apply_crossfade_volumes()
         self._prefetch_upcoming_media_stream(state)
         return True

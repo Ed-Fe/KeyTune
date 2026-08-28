@@ -68,7 +68,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Step "Gerando executável principal"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }

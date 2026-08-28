@@ -4,6 +4,7 @@ import pathlib
 import sys
 import unittest
 from types import SimpleNamespace
+from unittest.mock import patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -77,6 +78,74 @@ class PlayerBackendYouTubeMusicFallbackTests(unittest.TestCase):
 
         self.assertEqual(frame.queued_starts, [])
         self.assertEqual(frame.announcements, ["Não foi possível reproduzir a mídia: HTTP 403."])
+
+
+class PlayerBackendAutoDJSoundTests(unittest.TestCase):
+    def test_transition_sound_uses_the_preinitialized_mpv_on_the_selected_device(self):
+        class FakePlayer:
+            def __init__(self):
+                self.calls = []
+
+            def stop(self): self.calls.append(("stop",))
+            def set_media(self, media): self.calls.append(("set_media", media))
+            def audio_set_volume(self, volume): self.calls.append(("volume", volume))
+            def play(self): self.calls.append(("play",))
+
+        class FakeInstance:
+            def __init__(self): self.player = FakePlayer()
+            def media_player_new(self): return self.player
+            def media_new(self, path): return path
+
+        class Frame(PlayerBackendMixin):
+            current_volume = 63
+            _autodj_sound_instance = None
+            _autodj_sound_player = None
+
+            def _current_audio_output_device_id(self):
+                return "wasapi/{device-1}"
+
+        instance = FakeInstance()
+        with patch("player.frames.playback.backend.create_player_instance", return_value=instance) as create:
+            frame = Frame()
+            self.assertTrue(frame._create_autodj_sound_player())
+            self.assertTrue(frame._play_autodj_transition_sound("party"))
+
+        create.assert_called_once_with(
+            video_output_enabled=False,
+            audio_output_device_id="wasapi/{device-1}",
+        )
+        self.assertEqual(instance.player.calls[0], ("stop",))
+        self.assertEqual(instance.player.calls[-2:], [("volume", 63), ("play",)])
+
+    def test_delayed_file_loaded_event_does_not_promote_a_paused_autodj_track(self):
+        class Player:
+            def is_playing(self):
+                return False
+
+        class Frame(PlayerBackendMixin):
+            _active_player_key = "primary"
+
+            def __init__(self):
+                self._crossfade_state = {
+                    "phase": "pending",
+                    "autodj": True,
+                    "incoming_key": "secondary",
+                }
+                self.begin_calls = 0
+
+            def _managed_player(self, _player_key=None):
+                return Player()
+
+            def _begin_pending_crossfade(self):
+                self.begin_calls += 1
+
+            def _refresh_active_runtime_stream_title(self, **_kwargs):
+                pass
+
+        frame = Frame()
+        frame._handle_player_started("secondary")
+
+        self.assertEqual(frame.begin_calls, 0)
 
 
 if __name__ == "__main__":

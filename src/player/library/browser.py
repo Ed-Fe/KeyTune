@@ -3,6 +3,7 @@ import time
 
 import wx
 
+from ..accessibility import attach_named_accessible
 from ..i18n import _, ngettext
 from .text import normalize_search_text
 
@@ -80,13 +81,28 @@ class PlaylistBrowserPanel(wx.Panel):
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.header_label = wx.StaticText(self, label=_("Playlist"))
+        self.header_label.SetName(_("Título da playlist"))
+        attach_named_accessible(
+            self.header_label,
+            name=_("Título da playlist"),
+            description=_("Identifica a playlist ou pasta exibida na lista."),
+            value_provider=lambda: self.header_label.GetLabel(),
+        )
         self.items_list = VirtualItemsListCtrl(self, self._get_display_label)
         self.items_list.SetName(_("Lista de itens"))
+        self.items_list.SetToolTip(_("Enter ativa. Delete remove. Shift+F10 abre as ações do item."))
         self.hint_label = wx.StaticText(
             self,
             label=_("Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."),
         )
         self.hint_label.Wrap(260)
+        self.hint_label.SetName(_("Ajuda da lista de itens"))
+        attach_named_accessible(
+            self.hint_label,
+            name=_("Ajuda da lista de itens"),
+            description=_("Resume os comandos disponíveis na lista de itens."),
+            value_provider=lambda: self.hint_label.GetLabel(),
+        )
 
         root_sizer.Add(self.header_label, 0, wx.ALL | wx.EXPAND, 10)
         root_sizer.Add(self.items_list, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)

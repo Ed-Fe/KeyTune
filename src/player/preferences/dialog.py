@@ -320,6 +320,15 @@ class PreferencesDialog(wx.Dialog):
                 "Se a análise não for confiável, a reprodução continua normalmente."
             ),
         )
+        self.autodj_transition_sounds_checkbox = wx.CheckBox(page, label=_("Tocar efeitos de &DJ nas transições"))
+        self._configure_checkbox(
+            self.autodj_transition_sounds_checkbox,
+            _("Tocar efeitos de DJ nas transições"),
+            _(
+                "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. "
+                "O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
+            ),
+        )
         autodj_profile_group, self.autodj_profile_choice = self._build_choice_control_group(
             page,
             label_text=_("Perfil do AutoDJ"),
@@ -370,6 +379,7 @@ class PreferencesDialog(wx.Dialog):
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.autodj_enabled_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        playback_box.Add(self.autodj_transition_sounds_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
@@ -898,6 +908,7 @@ class PreferencesDialog(wx.Dialog):
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
         self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
         self.autodj_enabled_checkbox.SetValue(settings.autodj_enabled)
+        self.autodj_transition_sounds_checkbox.SetValue(settings.autodj_transition_sounds_enabled)
         self.autodj_profile_choice.SetSelection(AUTODJ_PROFILES.index(settings.autodj_profile))
         self.autodj_beats_choice.SetSelection(AUTODJ_BEAT_COUNTS.index(settings.autodj_beats))
         self.volume_step_ctrl.SetValue(settings.volume_step)
@@ -960,6 +971,7 @@ class PreferencesDialog(wx.Dialog):
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
         settings.autodj_enabled = self.autodj_enabled_checkbox.GetValue()
+        settings.autodj_transition_sounds_enabled = self.autodj_transition_sounds_checkbox.GetValue()
         settings.autodj_profile = AUTODJ_PROFILES[self.autodj_profile_choice.GetSelection()]
         settings.autodj_beats = AUTODJ_BEAT_COUNTS[self.autodj_beats_choice.GetSelection()]
         settings.volume_step = int(self.volume_step_ctrl.GetValue())

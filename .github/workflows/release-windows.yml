@@ -32,7 +32,7 @@ jobs:
 
       - name: Build application (PyInstaller)
         run: |
-          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation src/main.py
+          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 
       - name: Validate system media controls in packaged application
         shell: powershell

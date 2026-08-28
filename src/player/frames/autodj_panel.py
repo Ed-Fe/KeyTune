@@ -2,6 +2,7 @@
 
 import wx
 
+from ..accessibility import attach_named_accessible
 from ..i18n import _
 
 
@@ -24,6 +25,13 @@ class AutoDJSessionPanel(wx.Panel):
             style=wx.TE_READONLY | wx.TE_MULTILINE,
         )
         self.info_ctrl.SetName(_("Informações da sessão AutoDJ"))
+        self.info_ctrl.SetToolTip(_("Resume o estado da sessão e informa como será a próxima transição."))
+        attach_named_accessible(
+            self.info_ctrl,
+            name=_("Informações da sessão AutoDJ"),
+            description=_("Resume o estado da sessão e informa como será a próxima transição."),
+            value_provider=lambda: self.info_ctrl.GetValue(),
+        )
         self.info_ctrl.SetMinSize((-1, 88))
 
         self.replace_next_button = wx.Button(self, label=_("Trocar pró&xima"))
@@ -32,11 +40,15 @@ class AutoDJSessionPanel(wx.Panel):
         self.toggle_preparation_button = wx.Button(self, label=_("&Pausar preparação"))
         self.stop_button = wx.Button(self, label=_("&Encerrar AutoDJ"))
 
-        self.replace_next_button.SetName(_("Trocar próxima faixa do AutoDJ"))
-        self.recalculate_button.SetName(_("Recalcular sequência do AutoDJ"))
-        self.add_media_button.SetName(_("Adicionar músicas à sessão AutoDJ"))
-        self.toggle_preparation_button.SetName(_("Pausar preparação do AutoDJ"))
-        self.stop_button.SetName(_("Encerrar AutoDJ e manter sequência"))
+        for button, name, description in (
+            (self.replace_next_button, _("Trocar próxima faixa do AutoDJ"), _("Escolhe outra faixa preparada para a próxima transição.")),
+            (self.recalculate_button, _("Recalcular sequência do AutoDJ"), _("Descarta a sequência preparada e calcula uma nova ordem de reprodução.")),
+            (self.add_media_button, _("Adicionar músicas à sessão AutoDJ"), _("Adiciona outras músicas candidatas à sessão AutoDJ atual.")),
+            (self.toggle_preparation_button, _("Pausar preparação do AutoDJ"), _("Interrompe temporariamente a análise e preparação de novas faixas.")),
+            (self.stop_button, _("Encerrar AutoDJ e manter sequência"), _("Encerra o AutoDJ sem remover as músicas que já foram preparadas.")),
+        ):
+            button.SetName(name)
+            button.SetToolTip(description)
 
         self.replace_next_button.Bind(wx.EVT_BUTTON, on_replace_next)
         self.recalculate_button.Bind(wx.EVT_BUTTON, on_recalculate)
@@ -48,9 +60,9 @@ class AutoDJSessionPanel(wx.Panel):
         for button in self.action_controls():
             controls.Add(button, 0, wx.EXPAND)
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.info_ctrl, 0, wx.BOTTOM | wx.EXPAND, 6)
-        sizer.Add(controls, 0, wx.EXPAND)
+        sizer = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Sessão AutoDJ")), wx.VERTICAL)
+        sizer.Add(self.info_ctrl, 0, wx.ALL | wx.EXPAND, 6)
+        sizer.Add(controls, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.SetSizer(sizer)
         self.Hide()
 
@@ -74,9 +86,11 @@ class AutoDJSessionPanel(wx.Panel):
         if preparation_paused:
             self.toggle_preparation_button.SetLabel(_("&Retomar preparação"))
             self.toggle_preparation_button.SetName(_("Retomar preparação do AutoDJ"))
+            self.toggle_preparation_button.SetToolTip(_("Retoma a análise e preparação de novas faixas."))
         else:
             self.toggle_preparation_button.SetLabel(_("&Pausar preparação"))
             self.toggle_preparation_button.SetName(_("Pausar preparação do AutoDJ"))
+            self.toggle_preparation_button.SetToolTip(_("Interrompe temporariamente a análise e preparação de novas faixas."))
         changed = self.IsShown() != bool(visible)
         self.Show(bool(visible))
         self.Layout()

@@ -25,6 +25,7 @@ from player.autodj import (
     mix_values,
 )
 from player.autodj.service import AutoDJService
+from player.autodj.sound_effects import transition_sound_path
 from player.autodj.librosa_analyzer import LibrosaAnalyzer
 from player.frames.autodj import FrameAutoDJMixin
 from player.frames.library_tabs.playback_control import PlaylistPlaybackMixin
@@ -34,6 +35,11 @@ from player.playlists.models import PlaylistState
 
 
 class AutoDJTests(unittest.TestCase):
+    def test_transition_sound_uses_the_profile_effect(self):
+        path = transition_sound_path("party")
+        self.assertIsNotNone(path)
+        self.assertEqual(path.name, "dj_record_swipe.wav")
+
     def test_planner_aligns_beats_and_falls_back(self):
         outgoing = AudioAnalysis(120, tuple(range(0, 20000, 500)), .9, .5)
         incoming = AudioAnalysis(122, tuple(range(100, 20000, 492)), .8, .55)

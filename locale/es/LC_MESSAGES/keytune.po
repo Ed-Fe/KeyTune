@@ -4851,6 +4851,15 @@ msgstr "análisis incompatible"
 msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
 msgstr "Análisis rítmico: pista actual {outgoing_bpm:.1f} BPM, confianza {outgoing_confidence:.0%}; próxima pista {incoming_bpm:.1f} BPM, confianza {incoming_confidence:.0%}."
 
+msgid "Tocar efeitos de &DJ nas transições"
+msgstr "Reproducir efectos de &DJ durante las transiciones"
+
+msgid "Tocar efeitos de DJ nas transições"
+msgstr "Reproducir efectos de DJ durante las transiciones"
+
+msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
+msgstr "Reproduce un efecto breve al iniciar cada transición sincronizada del AutoDJ. El efecto usa el mismo dispositivo de audio seleccionado para la reproducción."
+
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr "&Copiar selección (Ctrl+C)"
 
@@ -4934,3 +4943,83 @@ msgstr "El servicio de YouTube Music no está disponible para iniciar la radio."
 
 msgid "Rádio: {name}"
 msgstr "Radio: {name}"
+msgid "Resume o estado da sessão e informa como será a próxima transição."
+msgstr "Resume el estado de la sesión e indica cómo será la próxima transición."
+
+msgid "Escolhe outra faixa preparada para a próxima transição."
+msgstr "Elige otra pista preparada para la próxima transición."
+
+msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução."
+msgstr "Descarta la secuencia preparada y calcula un nuevo orden de reproducción."
+
+msgid "Adiciona outras músicas candidatas à sessão AutoDJ atual."
+msgstr "Añade más canciones candidatas a la sesión AutoDJ actual."
+
+msgid "Interrompe temporariamente a análise e preparação de novas faixas."
+msgstr "Detiene temporalmente el análisis y la preparación de nuevas pistas."
+
+msgid "Encerra o AutoDJ sem remover as músicas que já foram preparadas."
+msgstr "Finaliza AutoDJ sin eliminar las canciones que ya fueron preparadas."
+
+msgid "Sessão AutoDJ"
+msgstr "Sesión AutoDJ"
+
+msgid "Retoma a análise e preparação de novas faixas."
+msgstr "Reanuda el análisis y la preparación de nuevas pistas."
+
+msgid "&Copiar letra completa"
+msgstr "&Copiar letra completa"
+
+msgid "Copia toda a letra exibida para a área de transferência."
+msgstr "Copia toda la letra mostrada al portapapeles."
+
+msgid "Título da playlist"
+msgstr "Título de la playlist"
+
+msgid "Identifica a playlist ou pasta exibida na lista."
+msgstr "Identifica la playlist o carpeta mostrada en la lista."
+
+msgid "Enter ativa. Delete remove. Shift+F10 abre as ações do item."
+msgstr "Enter activa. Delete elimina. Shift+F10 abre las acciones del elemento."
+
+msgid "Ajuda da lista de itens"
+msgstr "Ayuda de la lista de elementos"
+
+msgid "Resume os comandos disponíveis na lista de itens."
+msgstr "Resume los comandos disponibles en la lista de elementos."
+
+msgid "Informe um caminho local ou cole um link de mídia ou playlist."
+msgstr "Introduzca una ruta local o pegue un enlace de contenido o playlist."
+
+msgid "Procurar arquivo"
+msgstr "Buscar archivo"
+
+msgid "Abre a janela para escolher um arquivo de mídia ou playlist."
+msgstr "Abre la ventana para elegir un archivo multimedia o una playlist."
+
+msgid "Procurar pasta"
+msgstr "Buscar carpeta"
+
+msgid "Abre a janela para escolher uma pasta de mídias."
+msgstr "Abre la ventana para elegir una carpeta multimedia."
+
+msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
+msgstr "Elija entre abrir el contenido como playlist o explorar la carpeta."
+
+msgid "Resultado da origem informada"
+msgstr "Resultado del origen introducido"
+
+msgid "Informa como o arquivo, pasta ou link será aberto."
+msgstr "Indica cómo se abrirá el archivo, la carpeta o el enlace."
+
+msgid "Abrir origem informada"
+msgstr "Abrir origen introducido"
+
+msgid "Abre o arquivo, pasta ou link informado."
+msgstr "Abre el archivo, la carpeta o el enlace introducido."
+
+msgid "Cancelar abertura"
+msgstr "Cancelar apertura"
+
+msgid "Fecha esta janela sem abrir uma origem."
+msgstr "Cierra esta ventana sin abrir un origen."

@@ -8,6 +8,7 @@ import threading
 from ...i18n import _
 import wx
 
+from ...autodj.sound_effects import transition_sound_path
 from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
 from .helpers import is_youtube_music_media
@@ -30,6 +31,8 @@ class PlayerBackendMixin:
         self._players = {}
         self._player_event_managers = {}
         self._player_loaded_media_paths = {}
+        self._autodj_sound_instance = None
+        self._autodj_sound_player = None
         self._current_track_gain_db = 0.0
         for player_key in self._player_keys:
             instance = self._build_player_instance()
@@ -42,6 +45,7 @@ class PlayerBackendMixin:
         self._active_player_key = self._player_keys[0]
         self.instance = self._player_instances[self._active_player_key]
         self.player = self._players[self._active_player_key]
+        self._create_autodj_sound_player()
         self._crossfade_state = None
         # Cache of the last window binding applied by `_bind_player_to_window`.
         # Keyed by (handle, players_generation) so we skip redundant native
@@ -74,6 +78,51 @@ class PlayerBackendMixin:
             video_output_enabled=self._video_output_enabled(),
             audio_output_device_id=self._selected_audio_output_device_id(),
         )
+
+    def _create_autodj_sound_player(self):
+        try:
+            self._autodj_sound_instance = create_player_instance(
+                video_output_enabled=False,
+                audio_output_device_id=self._current_audio_output_device_id(),
+            )
+            self._autodj_sound_player = self._autodj_sound_instance.media_player_new()
+            return True
+        except Exception as exc:
+            self._release_autodj_sound_player()
+            _logger.warning("AutoDJ sound player could not be initialized: %s", exc)
+            return False
+
+    def _play_autodj_transition_sound(self, profile):
+        path = transition_sound_path(profile)
+        if path is None or self._autodj_sound_player is None:
+            return False
+
+        try:
+            media = self._autodj_sound_instance.media_new(str(path))
+            self._autodj_sound_player.stop()
+            self._autodj_sound_player.set_media(media)
+            self._autodj_sound_player.audio_set_volume(self.current_volume)
+            self._autodj_sound_player.play()
+            return True
+        except Exception as exc:
+            _logger.debug("AutoDJ transition sound could not be played: %s", exc)
+            return False
+
+    def _release_autodj_sound_player(self):
+        player = getattr(self, "_autodj_sound_player", None)
+        if player is not None:
+            try:
+                player.release()
+            except Exception:
+                pass
+        instance = getattr(self, "_autodj_sound_instance", None)
+        if instance is not None:
+            try:
+                instance.release()
+            except Exception:
+                pass
+        self._autodj_sound_player = None
+        self._autodj_sound_instance = None
 
     def _instance_for_player(self, player_key=None):
         if player_key is None:
@@ -249,6 +298,11 @@ class PlayerBackendMixin:
         if crossfade_state.get("incoming_key") != player_key:
             return
 
+        if crossfade_state.get("autodj"):
+            incoming_player = self._managed_player(player_key)
+            if incoming_player is None or not incoming_player.is_playing():
+                return
+
         self._begin_pending_crossfade()
 
     def _handle_player_error(self, player_key, error_detail=""):
@@ -413,6 +467,7 @@ class PlayerBackendMixin:
             except Exception:
                 pass
 
+        self._release_autodj_sound_player()
         self._player_instances = {}
 
     def _stop_player(self, player_key, *, unload=False):
@@ -469,6 +524,7 @@ class PlayerBackendMixin:
 
     def _reset_player(self):
         active_player_key = getattr(self, "_active_player_key", self._player_keys[0])
+        self._release_autodj_sound_player()
         lock = getattr(self, "_playback_backend_lock", None)
         with lock if lock is not None else contextlib.nullcontext():
             for player_key in getattr(self, "_player_keys", ()):
@@ -504,6 +560,7 @@ class PlayerBackendMixin:
         if callable(stop_crossfade_timer):
             stop_crossfade_timer()
         self._set_active_player(active_player_key if active_player_key in self._players else self._player_keys[0])
+        self._create_autodj_sound_player()
         self._bind_player_to_window()
         self._apply_equalizer_state()
         self._apply_current_volume()

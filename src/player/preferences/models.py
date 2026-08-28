@@ -7,6 +7,7 @@ from ..constants import (
     DEFAULT_AUTODJ_BEATS,
     DEFAULT_AUTODJ_ENABLED,
     DEFAULT_AUTODJ_PROFILE,
+    DEFAULT_AUTODJ_TRANSITION_SOUNDS_ENABLED,
     DEFAULT_ANNOUNCEMENTS_ENABLED,
     DEFAULT_CONFIRM_ON_EXIT,
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
@@ -72,6 +73,7 @@ class AppSettings:
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
     crossfade_on_manual_track_change: bool = DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE
     autodj_enabled: bool = DEFAULT_AUTODJ_ENABLED
+    autodj_transition_sounds_enabled: bool = DEFAULT_AUTODJ_TRANSITION_SOUNDS_ENABLED
     autodj_profile: str = DEFAULT_AUTODJ_PROFILE
     autodj_beats: int = DEFAULT_AUTODJ_BEATS
     volume_step: int = VOLUME_STEP
@@ -135,6 +137,7 @@ class AppSettings:
             "crossfade_seconds": self.crossfade_seconds,
             "crossfade_on_manual_track_change": self.crossfade_on_manual_track_change,
             "autodj_enabled": self.autodj_enabled,
+            "autodj_transition_sounds_enabled": self.autodj_transition_sounds_enabled,
             "autodj_profile": self.autodj_profile,
             "autodj_beats": self.autodj_beats,
             "volume_step": self.volume_step,
@@ -195,6 +198,9 @@ class AppSettings:
             data.get("crossfade_on_manual_track_change", settings.crossfade_on_manual_track_change)
         )
         settings.autodj_enabled = bool(data.get("autodj_enabled", settings.autodj_enabled))
+        settings.autodj_transition_sounds_enabled = bool(
+            data.get("autodj_transition_sounds_enabled", settings.autodj_transition_sounds_enabled)
+        )
         raw_autodj_profile = str(data.get("autodj_profile") or "").strip().lower()
         settings.autodj_profile = (
             raw_autodj_profile if raw_autodj_profile in AUTODJ_PROFILES else settings.autodj_profile

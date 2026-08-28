@@ -134,6 +134,10 @@ msgstr ""
 msgid "&Continuar ouvindo\tCtrl+Shift+R"
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "&Copiar letra completa"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr ""
@@ -793,12 +797,24 @@ msgstr ""
 msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador."
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Abre a janela para escolher um arquivo de mídia ou playlist."
+msgstr ""
+
+#: src/player/library/open_dialog.py
+msgid "Abre a janela para escolher uma pasta de mídias."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Abre a playlist, mix ou vídeo informado no campo acima."
+msgstr ""
+
+#: src/player/library/open_dialog.py
+msgid "Abre o arquivo, pasta ou link informado."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -878,6 +894,10 @@ msgstr ""
 msgid "Abrir no {app}"
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Abrir origem informada"
+msgstr ""
+
 #: src/player/frames/library_loader.py
 msgid "Abrir pasta como playlist"
 msgstr ""
@@ -924,6 +944,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Acessibilidade"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Adiciona outras músicas candidatas à sessão AutoDJ atual."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -1022,6 +1046,10 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Agudos realçados"
+msgstr ""
+
+#: src/player/library/browser.py
+msgid "Ajuda da lista de itens"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1780,6 +1808,10 @@ msgstr ""
 msgid "Cancelando..."
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Cancelar abertura"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Cancelar edição do preset do equalizador"
 msgstr ""
@@ -2083,6 +2115,10 @@ msgstr ""
 msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
 msgstr ""
 
+#: src/player/frames/lyrics_panel.py
+msgid "Copia toda a letra exibida para a área de transferência."
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Copiar caminho da seleção"
 msgstr ""
@@ -2264,6 +2300,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Desativar saída de vídeo"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -2540,6 +2580,10 @@ msgid "Empurra graves e agudos para uma escuta mais animada."
 msgstr ""
 
 #: src/player/frames/autodj_panel.py
+msgid "Encerra o AutoDJ sem remover as músicas que já foram preparadas."
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
 #: src/player/frames/commands/browser_commands.py
 msgid "Encerrar AutoDJ e manter sequência"
 msgstr ""
@@ -2558,6 +2602,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Enter abre a seleção atual. Esc fecha a aba. Tab volta para a navegação padrão entre controles da tela. Page Down no fim da lista carrega mais playlists."
+msgstr ""
+
+#: src/player/library/browser.py
+msgid "Enter ativa. Delete remove. Shift+F10 abre as ações do item."
 msgstr ""
 
 #: src/player/library/browser.py
@@ -2628,6 +2676,10 @@ msgstr ""
 msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Escolha o preset que será usado na aba de mídia ativa."
 msgstr ""
@@ -2682,6 +2734,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Escolhe a saída de áudio usada na reprodução. Use Padrão do sistema para seguir o dispositivo principal do Windows."
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Escolhe outra faixa preparada para a próxima transição."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2842,6 +2898,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Fecha esta janela sem abrir instaladores nem sites."
+msgstr ""
+
+#: src/player/library/open_dialog.py
+msgid "Fecha esta janela sem abrir uma origem."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -3013,6 +3073,10 @@ msgstr ""
 msgid "Há mais para carregar."
 msgstr ""
 
+#: src/player/library/browser.py
+msgid "Identifica a playlist ou pasta exibida na lista."
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Identificação do preset"
 msgstr ""
@@ -3067,6 +3131,10 @@ msgstr[1] ""
 msgid "Indonésia"
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Informa como o arquivo, pasta ou link será aberto."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Informa qual aba de mídia receberá os ajustes do equalizador."
 msgstr ""
@@ -3105,6 +3173,10 @@ msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. Pastas podem abrir como playlist ou no navegador."
+msgstr ""
+
+#: src/player/library/open_dialog.py
+msgid "Informe um caminho local ou cole um link de mídia ou playlist."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3179,6 +3251,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Interface"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Interrompe temporariamente a análise e preparação de novas faixas."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5162,8 +5238,16 @@ msgstr ""
 msgid "Procura em tudo que já foi indexado na biblioteca."
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Procurar arquivo"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Procurar arquivo de conexão"
+msgstr ""
+
+#: src/player/library/open_dialog.py
+msgid "Procurar pasta"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -5534,6 +5618,10 @@ msgstr ""
 msgid "Resultado &anterior\tShift+F3"
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Resultado da origem informada"
+msgstr ""
+
 #: src/player/frames/smart_library/search.py
 msgid "Resultados da biblioteca"
 msgstr ""
@@ -5550,8 +5638,16 @@ msgstr ""
 msgid "Resultados da busca: nenhum ainda."
 msgstr ""
 
+#: src/player/frames/autodj_panel.py
+msgid "Resume o estado da sessão e informa como será a próxima transição."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Resume os atalhos mais usados para controlar o player."
+msgstr ""
+
+#: src/player/library/browser.py
+msgid "Resume os comandos disponíveis na lista de itens."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -5580,6 +5676,10 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Resumo do preset"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Retoma a análise e preparação de novas faixas."
 msgstr ""
 
 #: src/player/frames/smart_library/resume.py
@@ -5790,6 +5890,10 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Sequência AutoDJ — {title}"
+msgstr ""
+
+#: src/player/frames/autodj_panel.py
+msgid "Sessão AutoDJ"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -6003,6 +6107,10 @@ msgstr ""
 msgid "Tipo"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Tocada"
 msgstr ""
@@ -6018,6 +6126,14 @@ msgstr ""
 #: src/player/frames/playback/controls.py
 #: src/player/frames/playback/engine.py
 msgid "Tocando: {name}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Tocar efeitos de &DJ nas transições"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Tocar efeitos de DJ nas transições"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -6064,6 +6180,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Turquia"
+msgstr ""
+
+#: src/player/library/browser.py
+msgid "Título da playlist"
 msgstr ""
 
 #: src/player/update/dialog.py

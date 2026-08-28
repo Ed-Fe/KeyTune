@@ -64,11 +64,17 @@ class AppSettingsTests(unittest.TestCase):
         self.assertEqual(restored_settings.youtube_music_dependency_last_auto_update_epoch, 0)
 
     def test_autodj_settings_round_trip_and_reject_invalid_choices(self):
-        settings = AppSettings(autodj_enabled=True, autodj_profile="electronic", autodj_beats=32)
+        settings = AppSettings(
+            autodj_enabled=True,
+            autodj_transition_sounds_enabled=True,
+            autodj_profile="electronic",
+            autodj_beats=32,
+        )
 
         restored_settings = AppSettings.from_dict(settings.to_dict())
 
         self.assertTrue(restored_settings.autodj_enabled)
+        self.assertTrue(restored_settings.autodj_transition_sounds_enabled)
         self.assertEqual(restored_settings.autodj_profile, "electronic")
         self.assertEqual(restored_settings.autodj_beats, 32)
 

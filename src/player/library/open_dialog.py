@@ -2,6 +2,7 @@ import os
 
 import wx
 
+from ..accessibility import attach_named_accessible
 from ..constants import PLAYLIST_WILDCARD, SUPPORTED_MEDIA_EXTENSIONS
 from ..i18n import _
 from .playlist_io import is_playlist_source, is_remote_media_path
@@ -60,16 +61,22 @@ class OpenSourceDialog(wx.Dialog):
         source_label = wx.StaticText(self, label=_("Arquivo, pasta ou &link"))
         self.source_text = wx.TextCtrl(self, value=str(initial_source or ""), style=wx.TE_PROCESS_ENTER)
         self.source_text.SetName(_("Arquivo, pasta ou link"))
+        self.source_text.SetToolTip(_("Informe um caminho local ou cole um link de mídia ou playlist."))
 
         browse_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.browse_file_button = wx.Button(self, label=_("Ar&quivo..."))
         self.browse_folder_button = wx.Button(self, label=_("&Pasta..."))
+        self.browse_file_button.SetName(_("Procurar arquivo"))
+        self.browse_file_button.SetToolTip(_("Abre a janela para escolher um arquivo de mídia ou playlist."))
+        self.browse_folder_button.SetName(_("Procurar pasta"))
+        self.browse_folder_button.SetToolTip(_("Abre a janela para escolher uma pasta de mídias."))
         browse_sizer.Add(self.browse_file_button, 0, wx.RIGHT, 8)
         browse_sizer.Add(self.browse_folder_button, 0)
 
         mode_label = wx.StaticText(self, label=_("Abrir co&mo"))
         self.mode_choice = wx.Choice(self, choices=[label for label, _value in self._mode_options])
         self.mode_choice.SetName(_("Abrir como"))
+        self.mode_choice.SetToolTip(_("Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."))
 
         mode_index = 0
         for index, (_label, value) in enumerate(self._mode_options):
@@ -81,15 +88,25 @@ class OpenSourceDialog(wx.Dialog):
         self.status_label = wx.StaticText(self, label="")
         self.status_label.Wrap(420)
         self.status_label.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+        attach_named_accessible(
+            self.status_label,
+            name=_("Resultado da origem informada"),
+            description=_("Informa como o arquivo, pasta ou link será aberto."),
+            value_provider=lambda: self.status_label.GetLabel(),
+        )
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         if button_sizer is not None:
             ok_button = self.FindWindow(wx.ID_OK)
             if ok_button is not None:
                 ok_button.SetLabel(_("&Abrir"))
+                ok_button.SetName(_("Abrir origem informada"))
+                ok_button.SetToolTip(_("Abre o arquivo, pasta ou link informado."))
             cancel_button = self.FindWindow(wx.ID_CANCEL)
             if cancel_button is not None:
                 cancel_button.SetLabel(_("&Cancelar"))
+                cancel_button.SetName(_("Cancelar abertura"))
+                cancel_button.SetToolTip(_("Fecha esta janela sem abrir uma origem."))
 
         root_sizer.Add(description, 0, wx.ALL | wx.EXPAND, 12)
         root_sizer.Add(source_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
