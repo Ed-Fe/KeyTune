@@ -26,6 +26,9 @@ class PlaybackEngineMixin:
         self._playback_request_serial += 1
         return self._playback_request_serial
 
+    def _media_start_is_pending(self):
+        return getattr(self, "_pending_playback_request_serial", None) == self._playback_request_serial
+
     def _playback_worker_loop(self):
         while True:
             request = self._playback_queue.get()
@@ -162,6 +165,7 @@ class PlaybackEngineMixin:
             "crossfade": bool(crossfade),
             "start_position_ms": start_position_ms,
         }
+        self._pending_playback_request_serial = request["serial"]
         if (
             not crossfade
             and is_youtube_music_media(media_path)
@@ -200,6 +204,8 @@ class PlaybackEngineMixin:
         self._update_time_bar()
 
     def _finish_media_start(self, request, success, error_message):
+        if request.get("serial") == getattr(self, "_pending_playback_request_serial", None):
+            self._pending_playback_request_serial = None
         player_key = request.get("player_key", self._active_player_key)
         if request.get("serial") != self._playback_request_serial:
             # The request was invalidated (e.g. the tab was closed while we

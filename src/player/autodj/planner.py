@@ -76,9 +76,15 @@ class AutoDJPlanner:
 
     @staticmethod
     def _incoming_gain_db(outgoing, incoming):
-        if outgoing.loudness_db is None or incoming.loudness_db is None:
+        if outgoing.exit_energy is not None and incoming.entry_energy is not None:
+            outgoing_loudness = outgoing.exit_energy * 30.0 - 35.0
+            incoming_loudness = incoming.entry_energy * 30.0 - 35.0
+        else:
+            outgoing_loudness = outgoing.loudness_db
+            incoming_loudness = incoming.loudness_db
+        if outgoing_loudness is None or incoming_loudness is None:
             return 0.0
-        return round(max(-6.0, min(0.0, outgoing.loudness_db - incoming.loudness_db)), 2)
+        return round(max(-6.0, min(0.0, outgoing_loudness - incoming_loudness)), 2)
 
     @staticmethod
     def _value_at_or_before(values, position):

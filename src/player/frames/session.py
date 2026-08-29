@@ -39,6 +39,7 @@ class FrameSessionMixin:
         restored_states = []
         for payload in playlist_payloads:
             state = PlaylistState.from_dict(payload)
+            state.playback_gain_db = 0.0
             restored_states.append(state)
 
         remember_restored_youtube_music_states = getattr(self, "_remember_restored_youtube_music_states", None)
@@ -97,6 +98,9 @@ class FrameSessionMixin:
             self._select_tab(selected_tab, announce=False)
 
         current_state = self._get_playlist_state(selected_tab)
+        refresh_autodj_ui = getattr(self, "_refresh_autodj_session_ui", None)
+        if callable(refresh_autodj_ui):
+            refresh_autodj_ui(current_state)
         if current_state and current_state.current_media_path:
             self._announce(
                 _("Sessão restaurada com {count} abas. {title}. {position}").format(count=len(self.playlists), title=current_state.title, position=self._describe_playlist_position(current_state))

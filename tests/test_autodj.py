@@ -222,6 +222,19 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(plan.incoming_gain_db, -6)
         self.assertEqual(plan.vocal_overlap, .7)
 
+    def test_planner_matches_loudness_at_the_transition_points(self):
+        beats = tuple(range(0, 40500, 500))
+        outgoing = AudioAnalysis(
+            120, beats, .9, .5, loudness_db=-14, exit_energy=.8833,
+        )
+        incoming = AudioAnalysis(
+            120, beats, .9, .5, loudness_db=-6, entry_energy=.91,
+        )
+
+        plan = AutoDJPlanner().plan(outgoing, incoming)
+
+        self.assertEqual(plan.incoming_gain_db, -0.8)
+
     def test_queue_planner_builds_multiple_compatible_steps(self):
         beats = tuple(range(0, 40500, 500))
         current = AudioAnalysis(120, beats, .9, .5, "C", musical_mode="major", exit_energy=.5)

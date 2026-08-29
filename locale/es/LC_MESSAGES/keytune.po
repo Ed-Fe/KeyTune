@@ -5023,3 +5023,6 @@ msgstr "Cancelar apertura"
 
 msgid "Fecha esta janela sem abrir uma origem."
 msgstr "Cierra esta ventana sin abrir un origen."
+
+msgid "A mídia ainda está carregando."
+msgstr "El contenido multimedia todavía se está cargando."

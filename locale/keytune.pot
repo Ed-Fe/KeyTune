@@ -551,6 +551,10 @@ msgstr ""
 msgid "A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "A mídia ainda está carregando."
+msgstr ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "A mídia atual já está curtida no YouTube Music."
 msgstr ""

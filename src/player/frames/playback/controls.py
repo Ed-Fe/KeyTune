@@ -196,6 +196,10 @@ class PlaybackControlsMixin:
     def _toggle_play_pause(self):
         state = self._get_playlist_state()
         if not self.player.get_media():
+            media_start_is_pending = getattr(self, "_media_start_is_pending", None)
+            if callable(media_start_is_pending) and media_start_is_pending():
+                self._announce(_("A mídia ainda está carregando."))
+                return
             self.on_open(None)
             return
 

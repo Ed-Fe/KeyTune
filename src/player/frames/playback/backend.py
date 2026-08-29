@@ -23,6 +23,7 @@ class PlayerBackendMixin:
 
     def _create_player_backend(self):
         self._playback_request_serial = 0
+        self._pending_playback_request_serial = None
         self._playback_backend_lock = threading.Lock()
         self._playback_queue = queue.Queue()
         self._playback_worker = threading.Thread(target=self._playback_worker_loop, daemon=True)
