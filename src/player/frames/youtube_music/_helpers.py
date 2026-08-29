@@ -55,7 +55,9 @@ def _youtube_dependencies_available():
 
 def _create_youtube_music_service():
     from player.youtube_music.service import YouTubeMusicService
+    from player.youtube_music.youtubejs_runtime import warm_up
 
+    warm_up()
     return YouTubeMusicService()
 
 

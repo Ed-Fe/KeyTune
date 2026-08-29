@@ -36,8 +36,45 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self._js_runtime_patch.start()
         self.addCleanup(self._js_runtime_patch.stop)
         self._ensure_patch = patch("player.youtube_music.streams.ensure_yt_dlp_executable_available")
-        self._ensure_patch.start()
+        self._ensure_mock = self._ensure_patch.start()
         self.addCleanup(self._ensure_patch.stop)
+        self._youtubejs_patch = patch(
+            "player.youtube_music.streams.resolve_youtubejs_stream",
+            side_effect=RuntimeError("YouTube.js indisponível no teste"),
+        )
+        self._youtubejs_patch.start()
+        self.addCleanup(self._youtubejs_patch.stop)
+
+    def test_resolve_stream_playback_prefers_youtubejs_and_preserves_metadata(self):
+        playback_auth = YouTubeMusicPlaybackAuth(
+            cookie_header="SID=abc",
+            user_agent="Mozilla/5.0 Teste",
+        )
+        youtubejs_result = SimpleNamespace(
+            stream_url="https://rr1---sn.example.googlevideo.com/audio.m4a",
+            display_title="Faixa pelo YouTube.js",
+            display_artist="Artista pelo YouTube.js",
+        )
+
+        with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=playback_auth), patch(
+            "player.youtube_music.streams.resolve_youtubejs_stream",
+            return_value=youtubejs_result,
+        ) as youtubejs_resolver:
+            resolved_playback = resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(resolved_playback.stream_url, youtubejs_result.stream_url)
+        self.assertEqual(resolved_playback.display_title, "Faixa pelo YouTube.js")
+        self.assertEqual(resolved_playback.display_artist, "Artista pelo YouTube.js")
+        self.assertEqual(
+            resolved_playback.http_headers,
+            {"Cookie": "SID=abc", "User-Agent": "Mozilla/5.0 Teste"},
+        )
+        youtubejs_resolver.assert_called_once_with(
+            "https://www.youtube.com/watch?v=abc123DEF45",
+            cookie_header="",
+            user_agent="Mozilla/5.0 Teste",
+        )
+        self._ensure_mock.assert_not_called()
 
     def test_missing_javascript_runtime_error_message_matches_expected_text(self):
         self.assertTrue(

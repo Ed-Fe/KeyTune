@@ -18,6 +18,7 @@ from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from .yt_dlp_runtime import find_incompatible_javascript_runtimes
+from .youtubejs_runtime import resolve_stream as resolve_youtubejs_stream
 from ..log import get_logger
 from ..i18n import _
 
@@ -102,6 +103,40 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
         return ResolvedStreamPlayback(stream_url=normalized_media_path, http_headers={})
 
     _logger.info("Resolving stream for: %s", sanitize_sensitive_text(normalized_media_path))
+    playback_auth = load_saved_playback_auth()
+    use_saved_auth = bool(use_account_cookies)
+    cookie_header = playback_auth.cookie_header if use_saved_auth else ""
+    cookie_file_path = playback_auth.cookie_file_path if use_saved_auth else ""
+    yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
+    playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
+
+    youtubejs_started_at = time.monotonic()
+    try:
+        youtubejs_stream = resolve_youtubejs_stream(
+            normalized_media_path,
+            cookie_header="",
+            user_agent=playback_auth.user_agent if use_saved_auth else "",
+        )
+        _logger.info(
+            "YouTube.js resolved the stream in %.2f second(s)",
+            time.monotonic() - youtubejs_started_at,
+        )
+        return ResolvedStreamPlayback(
+            stream_url=youtubejs_stream.stream_url,
+            http_headers=_merge_playback_http_headers(
+                playback_http_headers,
+                target_stream_url=youtubejs_stream.stream_url,
+            ),
+            display_title=youtubejs_stream.display_title,
+            display_artist=youtubejs_stream.display_artist,
+        )
+    except Exception as exc:
+        _logger.warning(
+            "YouTube.js stream resolution failed after %.2f second(s); falling back to yt-dlp: %s",
+            time.monotonic() - youtubejs_started_at,
+            sanitize_sensitive_text(exc),
+        )
+
     ensure_yt_dlp_executable_available()
 
     available_js_runtimes = find_all_available_javascript_runtimes()
@@ -124,13 +159,6 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
               "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
               "Instale um desses runtimes e tente novamente.")
         )
-
-    playback_auth = load_saved_playback_auth()
-    use_saved_auth = bool(use_account_cookies)
-    cookie_header = playback_auth.cookie_header if use_saved_auth else ""
-    cookie_file_path = playback_auth.cookie_file_path if use_saved_auth else ""
-    yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
-    playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
 
     base_options = {
         "quiet": True,
