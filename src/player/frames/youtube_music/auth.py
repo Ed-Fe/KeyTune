@@ -7,10 +7,7 @@ from player.youtube_music.dialog import YouTubeMusicBrowserAuthDialog
 class AuthMixin:
     def _handle_invalid_youtube_music_auth(self, service, *, announce=True):
         message = _("Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente.")
-        try:
-            service.disconnect()
-        except Exception:
-            service.clear_client_cache()
+        service.clear_client_cache()
 
         self._set_youtube_music_account_name("")
         self._clear_youtube_music_library_cache(

@@ -231,6 +231,9 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
     def get_auth_mode(self) -> str:
         """Retorna ``AUTH_MODE_BROWSER`` ou ``AUTH_MODE_MANUAL``."""
+        selection = self.mode_radio.GetSelection()
+        if selection != wx.NOT_FOUND:
+            return AUTH_MODE_BROWSER if selection == 0 else AUTH_MODE_MANUAL
         return self._auth_mode
 
     def get_selected_browser(self) -> str:
@@ -250,6 +253,11 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     def get_browser_json_path(self) -> str:
         """Retrocompatível: retorna o caminho do arquivo selecionado."""
         path = self.browser_file_picker.GetPath().strip()
+        if not path:
+            try:
+                path = self.browser_file_picker.GetTextCtrl().GetValue().strip()
+            except Exception:
+                path = ""
         return path if path and os.path.isfile(path) else ""
 
 

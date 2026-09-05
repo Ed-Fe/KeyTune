@@ -135,6 +135,51 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertEqual(result, ("C:/KeyTune/ytmusic_browser.json", "Conta teste"))
         service.save_browser_auth_from_browser.assert_called_once_with("firefox")
 
+    def test_connect_uses_manual_input_when_the_dialog_reports_manual_mode(self):
+        service = Mock()
+        service.save_browser_auth.return_value = "C:/KeyTune/ytmusic_browser.json"
+        service.get_connected_account_name.return_value = "Conta teste"
+        frame = _DummyFrame(service)
+        captured_task = {}
+
+        class _FakeDialog:
+            def __init__(self, _parent):
+                pass
+
+            def ShowModal(self):
+                return youtube_music_frame_module.wx.ID_OK
+
+            def get_auth_mode(self):
+                return "manual"
+
+            def get_selected_browser(self):
+                return "firefox"
+
+            def get_headers_raw(self):
+                return "Cookie: SID=teste"
+
+            def get_browser_json_path(self):
+                return ""
+
+            def Destroy(self):
+                return None
+
+        def capture_background_task(worker, on_success, *, on_error=None, timeout_ms=None):
+            captured_task["worker"] = worker
+            return True
+
+        frame._run_youtube_music_background_task = capture_background_task
+        with patch("player.frames.youtube_music.auth.YouTubeMusicBrowserAuthDialog", _FakeDialog):
+            started = AuthMixin.on_connect_youtube_music(frame, None)
+
+        self.assertTrue(started)
+        captured_task["worker"]()
+        service.save_browser_auth.assert_called_once_with(
+            headers_raw="Cookie: SID=teste",
+            source_file_path="",
+        )
+        service.save_browser_auth_from_browser.assert_not_called()
+
     def test_dislike_does_not_skip_another_track_if_playback_already_advanced(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
@@ -179,7 +224,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         frame._play_adjacent_item.assert_called_once_with(1)
         service.rate_media_feedback.assert_not_called()
 
-    def test_invalid_saved_auth_disconnects_and_clears_library_state(self):
+    def test_invalid_saved_auth_preserves_saved_files_and_clears_library_state(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
         service.validate_saved_authentication.side_effect = InvalidYouTubeMusicAuthError()
@@ -189,7 +234,8 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         authenticated = frame._ensure_youtube_music_authenticated()
 
         self.assertFalse(authenticated)
-        service.disconnect.assert_called_once_with()
+        service.disconnect.assert_not_called()
+        service.clear_client_cache.assert_called_once_with()
         self.assertEqual(frame._youtube_music_account_name(), "")
         self.assertEqual(frame._youtube_music_library_cache(), [])
         self.assertFalse(frame._youtube_music_library_has_loaded())
@@ -224,7 +270,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertEqual(frame.announcements, [])
         self.assertEqual(frame.connect_calls, 0)
 
-    def test_refresh_library_stops_immediately_after_invalid_auth_disconnect(self):
+    def test_refresh_library_stops_immediately_after_invalid_auth_validation(self):
         service = Mock()
         service.has_saved_browser_auth.return_value = True
         service.validate_saved_authentication.side_effect = InvalidYouTubeMusicAuthError()
@@ -234,7 +280,8 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         refreshed = frame.on_refresh_youtube_music_library(announce=True)
 
         self.assertFalse(refreshed)
-        service.disconnect.assert_called_once_with()
+        service.disconnect.assert_not_called()
+        service.clear_client_cache.assert_called_once_with()
         service.get_connected_account_name.assert_not_called()
         service.get_user_library_playlists.assert_not_called()
         service.get_personalized_mixes.assert_not_called()
