@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-09-05
+
+### Corrigido
+
+- **Recursos ausentes na versão 2.0.0**: esta atualização entrega a integração com YouTube.js e a instalação de recursos adicionais, anunciadas nas notas da versão 2.0.0, mas que não foram incluídas no pacote publicado.
+- **Recursos adicionais**: as bibliotecas do YouTube, o YouTube.js, o Node.js portátil e o analisador AutoDJ passam a ser distribuídos separadamente do instalador principal. Em **Preferências > Recursos adicionais**, os componentes necessários são apresentados antes do download e têm sua integridade verificada.
+- **Reprodução com YouTube.js**: o player passa a oferecer a resolução de mídia pelo YouTube.js, compartilhando o Node.js com o yt-dlp e recorrendo ao yt-dlp quando necessário.
+- **AutoDJ e reprodução**: integra correções de continuidade da reprodução e das transições entre faixas.
+- **Plugins e documentação**: integra ajustes nos diálogos do marketplace e de instalação, além dos guias de plugins em português, inglês e espanhol para consulta offline.
+
 ## [2.0.1] - 2026-09-05
 
 ### Corrigido
