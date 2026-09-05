@@ -845,17 +845,10 @@ class AutoDJTests(unittest.TestCase):
             "plan": SimpleNamespace(outgoing_start_ms=12000),
         }
 
-        class State:
-            is_folder_tab = False
-            current_media_path = "outgoing.mp3"
-            repeat_mode = "off"
-
-            def peek_in_playback_order(self, _direction, wrap=False):
-                return "incoming.mp3"
-
-            def move_in_playback_order(self, _direction, wrap=False):
-                self.current_media_path = "incoming.mp3"
-                return self.current_media_path
+        class State(PlaylistState):
+            def __init__(self):
+                super().__init__(title="AutoDJ")
+                self.set_items(["outgoing.mp3", "incoming.mp3"])
 
         class Player:
             def __init__(self, current_time):

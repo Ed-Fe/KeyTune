@@ -13,7 +13,6 @@ class AutoDJSessionPanel(wx.Panel):
         *,
         on_replace_next,
         on_recalculate,
-        on_add_media,
         on_toggle_preparation,
         on_stop,
     ):
@@ -36,14 +35,12 @@ class AutoDJSessionPanel(wx.Panel):
 
         self.replace_next_button = wx.Button(self, label=_("Trocar pró&xima"))
         self.recalculate_button = wx.Button(self, label=_("&Recalcular sequência"))
-        self.add_media_button = wx.Button(self, label=_("&Adicionar músicas"))
         self.toggle_preparation_button = wx.Button(self, label=_("&Pausar preparação"))
         self.stop_button = wx.Button(self, label=_("&Encerrar AutoDJ"))
 
         for button, name, description in (
             (self.replace_next_button, _("Trocar próxima faixa do AutoDJ"), _("Escolhe outra faixa preparada para a próxima transição.")),
             (self.recalculate_button, _("Recalcular sequência do AutoDJ"), _("Descarta a sequência preparada e calcula uma nova ordem de reprodução.")),
-            (self.add_media_button, _("Adicionar músicas à sessão AutoDJ"), _("Adiciona outras músicas candidatas à sessão AutoDJ atual.")),
             (self.toggle_preparation_button, _("Pausar preparação do AutoDJ"), _("Interrompe temporariamente a análise e preparação de novas faixas.")),
             (self.stop_button, _("Encerrar AutoDJ e manter sequência"), _("Encerra o AutoDJ sem remover as músicas que já foram preparadas.")),
         ):
@@ -52,7 +49,6 @@ class AutoDJSessionPanel(wx.Panel):
 
         self.replace_next_button.Bind(wx.EVT_BUTTON, on_replace_next)
         self.recalculate_button.Bind(wx.EVT_BUTTON, on_recalculate)
-        self.add_media_button.Bind(wx.EVT_BUTTON, on_add_media)
         self.toggle_preparation_button.Bind(wx.EVT_BUTTON, on_toggle_preparation)
         self.stop_button.Bind(wx.EVT_BUTTON, on_stop)
 
@@ -101,7 +97,6 @@ class AutoDJSessionPanel(wx.Panel):
         return [
             self.replace_next_button,
             self.recalculate_button,
-            self.add_media_button,
             self.toggle_preparation_button,
             self.stop_button,
         ]

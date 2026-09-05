@@ -63,6 +63,8 @@ class PlaybackEngineMixin:
                 )
                 lock = getattr(self, "_playback_backend_lock", None)
                 with lock if lock is not None else contextlib.nullcontext():
+                    if request_serial != self._playback_request_serial:
+                        continue
                     # Re-fetch the player/instance now that we hold the lock: a
                     # concurrent `_reset_player()` on the UI thread may have torn
                     # down and rebuilt the backend while we were resolving the
@@ -73,6 +75,9 @@ class PlaybackEngineMixin:
                         raise RuntimeError(_("Instância do backend de reprodução indisponível."))
                     if player is None:
                         raise RuntimeError(_("Player de reprodução indisponível."))
+                    if not hasattr(self, "_player_playback_request_serials"):
+                        self._player_playback_request_serials = {}
+                    self._player_playback_request_serials[player_key] = request_serial
                     media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
                     player.stop()
                     player.set_media(media)
@@ -208,12 +213,12 @@ class PlaybackEngineMixin:
             self._pending_playback_request_serial = None
         player_key = request.get("player_key", self._active_player_key)
         if request.get("serial") != self._playback_request_serial:
-            # The request was invalidated (e.g. the tab was closed while we
-            # were still resolving the stream URL on the worker thread). The
-            # worker may have started the player after `_unload_player` ran,
-            # so make sure the player tied to this stale request is stopped.
-            if success:
-                self._stop_player(player_key, unload=True)
+            # Only stop the stale load if this slot still belongs to it.
+            lock = getattr(self, "_playback_backend_lock", None)
+            with lock if lock is not None else contextlib.nullcontext():
+                owner = getattr(self, "_player_playback_request_serials", {}).get(player_key)
+                if success and owner == request.get("serial"):
+                    self._stop_player(player_key, unload=True)
             return
 
         tab_index = request.get("tab_index")

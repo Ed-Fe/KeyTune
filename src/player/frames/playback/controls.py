@@ -105,7 +105,9 @@ class PlaybackControlsMixin:
             if self._crossfade_state.get("phase") == "running":
                 self._finish_crossfade()
             else:
-                self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=True)
+                self._cancel_crossfade_transition(
+                    stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
+                )
 
         if self.player.get_media() is None:
             return
@@ -165,7 +167,9 @@ class PlaybackControlsMixin:
             if self._crossfade_state.get("phase") == "running":
                 self._finish_crossfade()
             else:
-                self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=True)
+                self._cancel_crossfade_transition(
+                    stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
+                )
 
         if self.player.get_media() is None:
             return
@@ -179,7 +183,9 @@ class PlaybackControlsMixin:
             if self._crossfade_state.get("phase") == "running":
                 self._finish_crossfade()
             else:
-                self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=True)
+                self._cancel_crossfade_transition(
+                    stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
+                )
 
         if self.player.get_media() is None:
             return
@@ -207,7 +213,9 @@ class PlaybackControlsMixin:
             if self._crossfade_state.get("phase") == "running":
                 self._finish_crossfade()
             else:
-                self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=True)
+                self._cancel_crossfade_transition(
+                    stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
+                )
 
         if self.player.is_playing():
             active_player_key = self._active_player_key

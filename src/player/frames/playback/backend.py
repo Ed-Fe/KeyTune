@@ -32,6 +32,7 @@ class PlayerBackendMixin:
         self._players = {}
         self._player_event_managers = {}
         self._player_loaded_media_paths = {}
+        self._player_playback_request_serials = {}
         self._autodj_sound_instance = None
         self._autodj_sound_player = None
         self._current_track_gain_db = 0.0
@@ -231,6 +232,7 @@ class PlayerBackendMixin:
             self._players[player_key] = player
             self._player_event_managers[player_key] = event_manager
             self._set_player_loaded_media_path(player_key, None)
+            getattr(self, "_player_playback_request_serials", {}).pop(player_key, None)
             self._players_generation += 1
 
             if player_key == getattr(self, "_active_player_key", None):
@@ -547,6 +549,7 @@ class PlayerBackendMixin:
             self._players = {}
             self._player_event_managers = {}
             self._player_loaded_media_paths = {}
+            self._player_playback_request_serials = {}
             for player_key in self._player_keys:
                 instance = self._build_player_instance()
                 self._player_instances[player_key] = instance

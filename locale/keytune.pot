@@ -54,10 +54,6 @@ msgstr ""
 msgid "&Abrir link"
 msgstr ""
 
-#: src/player/frames/autodj_panel.py
-msgid "&Adicionar músicas"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "&Anunciar"
 msgstr ""
@@ -934,10 +930,6 @@ msgstr ""
 msgid "Acessibilidade"
 msgstr ""
 
-#: src/player/frames/autodj_panel.py
-msgid "Adiciona outras músicas candidatas à sessão AutoDJ atual."
-msgstr ""
-
 #: src/player/frames/youtube_music/playlists.py
 msgid "Adicionando {count} {label} à playlist {title}..."
 msgstr ""
@@ -955,7 +947,6 @@ msgid "Adicionar músicas à sessão"
 msgstr ""
 
 #: src/player/frames/autodj.py
-#: src/player/frames/autodj_panel.py
 msgid "Adicionar músicas à sessão AutoDJ"
 msgstr ""
 

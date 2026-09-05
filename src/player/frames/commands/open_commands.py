@@ -218,8 +218,7 @@ class OpenCommandsMixin:
                 self._announce(_("A área de transferência contém itens não suportados para colagem em lote."))
                 return
 
-            open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
-            if not open_media(media_sources):
+            if not self._paste_media_paths(media_sources, force_new_playlist=force_new_playlist):
                 self._announce(_("Não foi possível abrir a mídia da área de transferência."))
             return
 
@@ -239,8 +238,7 @@ class OpenCommandsMixin:
                     self._announce(_("Não foi possível abrir a playlist da área de transferência."))
                 return
 
-            open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
-            if not open_media([normalized_source]):
+            if not self._paste_media_paths([normalized_source], force_new_playlist=force_new_playlist):
                 self._announce(_("Não foi possível abrir a mídia da área de transferência."))
             return
 
@@ -257,12 +255,20 @@ class OpenCommandsMixin:
                         self._announce(_("Não foi possível abrir a playlist da área de transferência."))
                     return
 
-                open_media = self._open_media_paths if force_new_playlist else self._open_external_media_paths
-                if not open_media([normalized_local]):
+                if not self._paste_media_paths([normalized_local], force_new_playlist=force_new_playlist):
                     self._announce(_("Não foi possível abrir a mídia da área de transferência."))
                 return
 
         self._announce(_("Conteúdo da área de transferência não suportado."))
+
+    def _paste_media_paths(self, paths, *, force_new_playlist=False):
+        if force_new_playlist:
+            return self._open_media_paths(paths)
+        state = self._get_playlist_state()
+        if state is not None and getattr(state, "autodj_session", False):
+            self._add_media_to_autodj_session(paths)
+            return True
+        return self._open_external_media_paths(paths)
 
     def _show_open_source_dialog(self, initial_source="", initial_mode=OPEN_MODE_PLAYLIST):
         source_value = initial_source

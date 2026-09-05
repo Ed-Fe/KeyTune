@@ -1,3 +1,4 @@
+import contextlib
 import math
 import threading
 import time
@@ -147,6 +148,7 @@ class CrossfadeMixin:
         stop_incoming=True,
         stop_outgoing=False,
         invalidate_requests=False,
+        restore_selection=False,
     ):
         crossfade_state = getattr(self, "_crossfade_state", None)
         if invalidate_requests:
@@ -163,6 +165,15 @@ class CrossfadeMixin:
         incoming_key = crossfade_state.get("incoming_key")
         outgoing_key = crossfade_state.get("outgoing_key")
         phase = crossfade_state.get("phase")
+
+        if restore_selection and phase == "pending":
+            state = self._get_playlist_state(crossfade_state.get("tab_index"))
+            snapshot = crossfade_state.get("playlist_before_transition")
+            if state is not None and snapshot and state.current_media_path == crossfade_state.get("media_path"):
+                for name, value in snapshot.items():
+                    setattr(state, name, value)
+                self._update_title()
+                self._refresh_playlist_browser()
 
         if stop_incoming and incoming_key:
             should_stop_incoming = phase == "pending" or incoming_key != self._active_player_key
@@ -500,11 +511,23 @@ class CrossfadeMixin:
         `on_complete` immediately when the player is missing or already silent.
         """
 
-        def finish():
-            if on_complete is not None:
-                on_complete()
-
+        request_serial = getattr(self, "_playback_request_serial", None)
         player = self._managed_player(player_key)
+        media = player.get_media() if player is not None else None
+
+        def is_current():
+            return (
+                request_serial == getattr(self, "_playback_request_serial", None)
+                and player is self._managed_player(player_key)
+                and (player is None or player.get_media() is media)
+            )
+
+        def finish():
+            lock = getattr(self, "_playback_backend_lock", None)
+            with lock if lock is not None else contextlib.nullcontext():
+                if is_current() and on_complete is not None:
+                    on_complete()
+
         if player is None:
             finish()
             return
@@ -523,8 +546,12 @@ class CrossfadeMixin:
 
         def worker():
             for step in range(1, steps + 1):
-                fade_volume = int(round(start_volume * (1.0 - step / steps)))
-                self._apply_volume_to_player(player_key, fade_volume)
+                lock = getattr(self, "_playback_backend_lock", None)
+                with lock if lock is not None else contextlib.nullcontext():
+                    if not is_current():
+                        return
+                    fade_volume = int(round(start_volume * (1.0 - step / steps)))
+                    self._apply_volume_to_player(player_key, fade_volume)
                 if step < steps:
                     time.sleep(step_delay_seconds)
             wx.CallAfter(finish)
