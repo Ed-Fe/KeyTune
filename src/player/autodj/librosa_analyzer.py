@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
+import os
 from pathlib import Path
+import subprocess
 
 from .analyzer import AudioAnalysis
 
@@ -10,6 +13,8 @@ KEY_NAMES = ("C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯
 MAJOR_PROFILE = (6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
 MINOR_PROFILE = (6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
 PHRASE_BEATS = 16
+_WORKER_RESULT_PREFIX = "KEYTUNE_AUTODJ_RESULT="
+_WORKER_TIMEOUT_SECONDS = 15 * 60
 
 
 class LibrosaAnalyzer:
@@ -26,6 +31,49 @@ class LibrosaAnalyzer:
         self.maximum_duration_seconds = maximum_duration_seconds
 
     def analyze(self, path: str | Path) -> AudioAnalysis:
+        from .dependencies import get_autodj_analyzer_executable_path
+
+        worker_path = get_autodj_analyzer_executable_path()
+        if not os.environ.get("KEYTUNE_AUTODJ_ANALYZER_WORKER") and worker_path.is_file():
+            return self._analyze_with_worker(worker_path, path)
+        return self._analyze_in_process(path)
+
+    def _analyze_with_worker(self, worker_path, path):
+        creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        completed = subprocess.run(
+            [
+                str(worker_path),
+                str(path),
+                str(self.sample_rate),
+                str(self.maximum_duration_seconds),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=_WORKER_TIMEOUT_SECONDS,
+            creationflags=creation_flags,
+        )
+        result_line = next(
+            (line for line in reversed(completed.stdout.splitlines()) if line.startswith(_WORKER_RESULT_PREFIX)),
+            "",
+        )
+        if completed.returncode != 0 or not result_line:
+            detail = completed.stderr.strip() or "O analisador opcional do AutoDJ não retornou um resultado."
+            raise RuntimeError(detail)
+        try:
+            payload = json.loads(result_line[len(_WORKER_RESULT_PREFIX):])
+        except (json.JSONDecodeError, TypeError) as exc:
+            raise RuntimeError("O analisador opcional do AutoDJ retornou um resultado inválido.") from exc
+        for field_name in ("beats_ms", "phrase_boundaries_ms", "section_boundaries_ms"):
+            payload[field_name] = tuple(payload.get(field_name) or ())
+        return AudioAnalysis(**payload)
+
+    def _analyze_in_process(self, path: str | Path) -> AudioAnalysis:
+        from .dependencies import activate_autodj_dependencies
+
+        activate_autodj_dependencies()
         try:
             import librosa
             import numpy as np

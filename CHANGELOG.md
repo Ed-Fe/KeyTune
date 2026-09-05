@@ -8,6 +8,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [2.0.0] - 2026-08-23
 
 ### Adicionado
+- **Recursos opcionais sob demanda**: Node.js, bibliotecas Python do YouTube, YouTube.js e o analisador AutoDJ são publicados separadamente do instalador, com SHA-256 e manifesto vinculado à versão do KeyTune. A ativação em Preferências, Recursos adicionais, confirma os componentes necessários antes do download; o AutoDJ executa a análise em um processo separado.
+- **Atualização dos recursos**: pacotes válidos da versão instalada são reutilizados nas verificações periódicas; o yt-dlp continua recebendo atualizações do canal selecionado.
 - **Plataforma de plugins**: manifesto estrito, API 2.0 baseada em permissões, eventos de ciclo de vida, contribuições de menus, abas e telas, dados privados e compatibilidade versionada.
 - **Segurança e confiabilidade**: a confirmação de instalação mostra dados, permissões e isolamento do pacote antes de instalar e ativar; pacotes passam por SHA-256 e instalação transacional, falhas recebem logs separados e o worker padrão isola falhas sem herdar variáveis de ambiente sensíveis.
 - **Gerenciador e marketplace acessíveis**: gerenciamento completo por teclado, instalação de pacotes locais e catálogo remoto mantido por pull requests no GitHub, com downloads HTTPS e limites contra pacotes maliciosos.

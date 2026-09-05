@@ -125,6 +125,10 @@ def _find_javascript_runtime_executable(executable_name: str) -> str:
         candidate_names.insert(0, f"{executable_name}.exe")
 
     candidates: list[Path] = []
+    if executable_name == "node":
+        from ..optional_resources import get_optional_resource_dir
+
+        candidates.extend(get_optional_resource_dir("node") / candidate_name for candidate_name in candidate_names)
     path_match = shutil.which(executable_name)
     if path_match:
         candidates.append(Path(path_match))

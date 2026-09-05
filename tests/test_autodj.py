@@ -1,3 +1,4 @@
+import json
 import math
 from pathlib import Path
 import struct
@@ -35,6 +36,34 @@ from player.playlists.models import PlaylistState
 
 
 class AutoDJTests(unittest.TestCase):
+    def test_librosa_analyzer_uses_optional_worker_and_restores_tuple_fields(self):
+        payload = {
+            "bpm": 120.0,
+            "beats_ms": [0, 500],
+            "confidence": 0.8,
+            "energy": 0.6,
+            "phrase_boundaries_ms": [0],
+            "section_boundaries_ms": [500],
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            worker_path = Path(temporary) / "autodj-analyzer.exe"
+            worker_path.touch()
+            completed = SimpleNamespace(
+                returncode=0,
+                stdout="KEYTUNE_AUTODJ_RESULT=" + json.dumps(payload),
+                stderr="",
+            )
+            with patch(
+                "player.autodj.dependencies.get_autodj_analyzer_executable_path",
+                return_value=worker_path,
+            ), patch("player.autodj.librosa_analyzer.subprocess.run", return_value=completed) as run_worker:
+                result = LibrosaAnalyzer().analyze("track.mp3")
+
+        self.assertEqual(result.beats_ms, (0, 500))
+        self.assertEqual(result.phrase_boundaries_ms, (0,))
+        self.assertEqual(result.section_boundaries_ms, (500,))
+        run_worker.assert_called_once()
+
     def test_transition_sound_uses_the_profile_effect(self):
         path = transition_sound_path("party")
         self.assertIsNotNone(path)

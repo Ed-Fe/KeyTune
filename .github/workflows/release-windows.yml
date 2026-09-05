@@ -24,15 +24,30 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Setup Node.js for optional resources
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build application (PyInstaller)
+      - name: Build optional resource packages
+        shell: powershell
         run: |
-          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+          $appVersion = python -c "import sys; sys.path.insert(0, 'src'); from player.constants import APP_VERSION; print(APP_VERSION)"
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao determinar a versão dos recursos opcionais." }
+          python scripts/build_optional_resources.py --output-dir dist/optional-resources --app-version $appVersion --node-executable ((Get-Command node).Source)
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao gerar os pacotes de recursos opcionais." }
+
+      - name: Build application (PyInstaller)
+        shell: powershell
+        run: |
+          $pythonStableAbiDll = python -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
+          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$pythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 
       - name: Validate system media controls in packaged application
         shell: powershell
@@ -45,6 +60,21 @@ jobs:
             -WindowStyle Hidden
           if ($process.ExitCode -ne 0) {
             throw "O executável não conseguiu inicializar os controles de mídia do sistema."
+          }
+
+      - name: Validate optional YouTube dependencies in packaged application
+        shell: powershell
+        run: |
+          $testAppData = Join-Path (Resolve-Path "build") "youtube-resource-smoke"
+          $resourceDir = Join-Path $testAppData "KeyTune\resources\youtube_music\youtube"
+          Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-YouTubePython-win-x64.zip" -DestinationPath $resourceDir
+          $savedAppData = $env:APPDATA
+          try {
+            $env:APPDATA = $testAppData
+            $process = Start-Process -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") -ArgumentList "--youtube-dependencies-smoke-test" -Wait -PassThru -WindowStyle Hidden
+            if ($process.ExitCode -ne 0) { throw "As dependências opcionais do YouTube não puderam ser importadas." }
+          } finally {
+            $env:APPDATA = $savedAppData
           }
 
       - name: Download MPV runtime
@@ -145,6 +175,8 @@ jobs:
           path: |
             dist\KeyTune-Setup.exe
             dist\KeyTune-Setup.exe.sha256
+            dist\optional-resources\*.zip
+            dist\optional-resources\*.sha256
 
   publish-release:
     needs: build-release
@@ -179,4 +211,6 @@ jobs:
           files: |
             artifacts/KeyTune-Setup.exe
             artifacts/KeyTune-Setup.exe.sha256
+            artifacts/optional-resources/*.zip
+            artifacts/optional-resources/*.sha256
           body_path: artifacts/release-body.md

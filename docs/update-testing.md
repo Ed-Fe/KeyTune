@@ -34,7 +34,11 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1
 ```
 
-Por padrão, o build script agora baixa e descompacta automaticamente o runtime do MPV por meio de `scripts/download_mpv_runtime.py`, e depois baixa o `yt-dlp.exe` oficial do canal estável e o embute ao lado do `KeyTune.exe`.
+Por padrão, o build script baixa e descompacta o runtime do MPV, baixa o `yt-dlp.exe` oficial e gera separadamente os pacotes opcionais de Node.js, dependências Python do YouTube, YouTube.js e AutoDJ. Esses quatro pacotes não entram no instalador principal; a release os publica com checksums para download sob demanda.
+
+O build também exige Node.js com npm no PATH. Os manifestos dos pacotes devem usar a mesma versão de `APP_VERSION` em `src/player/constants.py` e da tag publicada.
+
+Antes de publicar, valide em uma pasta de dados limpa: ativação e confirmação pelo teclado em Recursos adicionais, download dos quatro pacotes com seus checksums, reprodução pelo YouTube.js e análise de uma faixa pelo executável opcional do AutoDJ. Repita a atualização de dependências: pacotes válidos da mesma versão não devem ser baixados novamente, enquanto o yt-dlp continua consultando o canal selecionado. Confira também os anúncios de progresso com leitor de tela.
 
 Se quiser fixar o runtime do MPV a uma pasta local ou a um arquivo `.7z`, passe `-MpvSource` ou `-MpvRuntimeArchive` para o build script. Para testar uma release local já com o canal nightly do yt-dlp, use:
 
@@ -46,6 +50,10 @@ Ao final, você terá (o instalador exige `ISCC.exe` do Inno Setup 6 no PATH pad
 
 - `dist\KeyTune-Setup.exe`
 - `dist\KeyTune-Setup.exe.sha256`
+- `dist\optional-resources\KeyTune-NodeJS-win-x64.zip` + `.sha256`
+- `dist\optional-resources\KeyTune-YouTubePython-win-x64.zip` + `.sha256`
+- `dist\optional-resources\KeyTune-YouTubeJS-win-x64.zip` + `.sha256`
+- `dist\optional-resources\KeyTune-AutoDJ-win-x64.zip` + `.sha256`
 - `KeyTune-windows.zip` + `.sha256` (build em pasta, usado para gerar o instalador)
 
 Para fixar a versão exibida no instalador e em "Aplicativos e recursos", passe `-AppVersion`:

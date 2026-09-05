@@ -5026,3 +5026,154 @@ msgstr "Closes this window without opening a source."
 
 msgid "A mídia ainda está carregando."
 msgstr "The media is still loading."
+
+msgid "A release do KeyTune não informou seus recursos adicionais."
+msgstr "The KeyTune release did not list its additional resources."
+
+msgid "A release instalada do KeyTune não publicou o pacote opcional {name}."
+msgstr "The installed KeyTune release did not publish the optional package {name}."
+
+msgid "A resposta dos recursos adicionais veio em formato inválido."
+msgstr "The additional resources response has an invalid format."
+
+msgid "Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."
+msgstr "Enable AutoDJ under Preferences, Additional resources, and wait for installation to finish."
+
+msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
+msgstr "Enable AutoDJ under Preferences, Additional resources, to review and install the required libraries."
+
+msgid "AutoDJ avançado"
+msgstr "Advanced AutoDJ"
+
+msgid "AutoDJ desativado."
+msgstr "AutoDJ disabled."
+
+msgid "AutoDJ selecionado. As bibliotecas serão baixadas após a confirmação."
+msgstr "AutoDJ selected. The libraries will be downloaded after confirmation."
+
+msgid "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
+msgstr "Downloads audio analysis libraries to detect BPM, beats, key, and transition points."
+
+msgid "Baixando {name}..."
+msgstr "Downloading {name}..."
+
+msgid "Baixar recursos e ativar &AutoDJ"
+msgstr "Download resources and enable &AutoDJ"
+
+msgid "Baixar recursos e ativar AutoDJ"
+msgstr "Download resources and enable AutoDJ"
+
+msgid "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
+msgstr "Installs YouTube.js and, when needed, a portable Node.js also used by the yt-dlp resolver."
+
+msgid "Instalando {name}..."
+msgstr "Installing {name}..."
+
+msgid "Não foi possível baixar um recurso adicional do KeyTune."
+msgstr "An additional KeyTune resource could not be downloaded."
+
+msgid "Não foi possível consultar os recursos adicionais do KeyTune."
+msgstr "The additional KeyTune resources could not be checked."
+
+msgid "Não foi possível instalar as bibliotecas opcionais do AutoDJ: {error}"
+msgstr "The optional AutoDJ libraries could not be installed: {error}"
+
+msgid "Não foi possível ler o checksum do recurso adicional."
+msgstr "The additional resource checksum could not be read."
+
+msgid "Não há espaço livre suficiente para instalar o recurso {name}."
+msgstr "There is not enough free space to install the {name} resource."
+
+msgid "O checksum do recurso adicional é inválido."
+msgstr "The additional resource checksum is invalid."
+
+msgid "O endereço de download do recurso adicional está vazio."
+msgstr "The additional resource download address is empty."
+
+msgid "O manifesto do recurso adicional está incompleto."
+msgstr "The additional resource manifest is incomplete."
+
+msgid "O pacote baixado não corresponde ao recurso solicitado."
+msgstr "The downloaded package does not match the requested resource."
+
+msgid "O pacote baixado não é compatível com esta versão do KeyTune."
+msgstr "The downloaded package is not compatible with this version of KeyTune."
+
+msgid "O pacote do recurso adicional contém caminhos inválidos."
+msgstr "The additional resource package contains invalid paths."
+
+msgid "O pacote do recurso adicional está corrompido."
+msgstr "The additional resource package is corrupted."
+
+msgid "O pacote do recurso adicional está incompleto."
+msgstr "The additional resource package is incomplete."
+
+msgid "O pacote do recurso adicional não possui um manifesto válido."
+msgstr "The additional resource package does not have a valid manifest."
+
+msgid "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
+msgstr "The package includes librosa, NumPy, SciPy, Numba, and PyAV. It is not part of the main installer and will only be downloaded after your confirmation."
+
+msgid "O pacote {name} não passou na validação de integridade."
+msgstr "The {name} package failed integrity validation."
+
+msgid "Node.js portátil (se não houver um compatível)"
+msgstr "Portable Node.js (if no compatible version is available)"
+
+msgid "AutoDJ: librosa, NumPy, SciPy, Numba e PyAV"
+msgstr "AutoDJ: librosa, NumPy, SciPy, Numba and PyAV"
+
+msgid ""
+"Para melhorar a reprodução e habilitar os recursos selecionados, o KeyTune instalará:\n"
+"\n"
+"{components}\n"
+"\n"
+"Os arquivos ficarão apenas na pasta de recursos do KeyTune. Deseja instalar e ativar agora?"
+msgstr ""
+"To improve playback and enable the selected features, KeyTune will install:\n"
+"\n"
+"{components}\n"
+"\n"
+"The files will remain only in the KeyTune resources folder. Do you want to install and enable them now?"
+
+msgid "Preparando Node.js e YouTube.js..."
+msgstr "Preparing Node.js and YouTube.js..."
+
+msgid "Preparando as bibliotecas opcionais do AutoDJ..."
+msgstr "Preparing the optional AutoDJ libraries..."
+
+msgid "Preparar recursos adicionais"
+msgstr "Prepare additional resources"
+
+msgid "Recursos do AutoDJ instalados e prontos para uso."
+msgstr "AutoDJ resources installed and ready to use."
+
+msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."
+msgstr "Plays a short effect at the start of each synchronized AutoDJ transition."
+
+msgid "Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"
+msgstr "Use &YouTube.js to improve resolution and playback (recommended)"
+
+msgid "Usar YouTube.js"
+msgstr "Use YouTube.js"
+
+msgid "Baixando yt-dlp..."
+msgstr "Downloading yt-dlp..."
+
+msgid "Instalando ytmusicapi..."
+msgstr "Installing ytmusicapi..."
+
+msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"
+msgstr "Enable &additional resources for YouTube Music and YouTube (yt-dlp, ytmusicapi, and Node.js)"
+
+msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nRecomendamos o Node.js 24+, utilizado pelo yt-dlp e pelo YouTube.js. O KeyTune pode manter uma cópia portátil automaticamente quando os recursos adicionais do YouTube Music estão ativados.\n\n"
+msgstr "To open YouTube music and videos more reliably, the player needs a JavaScript runtime.\n\nWithout it, YouTube may block audio or video preparation and playback will not start.\n\nWe recommend Node.js 24+, which is used by both yt-dlp and YouTube.js. KeyTune can automatically maintain a portable copy when the YouTube Music additional resources are enabled.\n\n"
+
+msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Ative ou atualize os recursos adicionais para instalar o Node.js 24+."
+msgstr "yt-dlp found an installed JavaScript runtime, but none of the versions are compatible: {runtimes}. Enable or update the additional resources to install Node.js 24+."
+
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema ou nos recursos adicionais do KeyTune. Recomendamos o Node.js 24+, que também é utilizado pelo YouTube.js. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Ative ou atualize os recursos adicionais e tente novamente."
+msgstr "To play from YouTube Music, yt-dlp needs a JavaScript runtime installed on the system or in KeyTune's additional resources. We recommend Node.js 24+, which is also used by YouTube.js. Without a compatible runtime, yt-dlp cannot resolve YouTube audio/video signatures and no client returns playable formats. Enable or update the additional resources and try again."
+
+msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
+msgstr "YouTube required JavaScript validation. Enable or update the additional resources to install Node.js 24+, then try again."

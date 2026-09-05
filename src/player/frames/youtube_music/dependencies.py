@@ -19,10 +19,8 @@ from ._helpers import (
 
 
 class DependencyMixin:
-    _YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL = "https://deno.com/"
     _YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL = "https://nodejs.org/"
     _YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL = "https://github.com/yt-dlp/yt-dlp/wiki/EJS"
-    _YOUTUBE_MUSIC_JS_RUNTIME_DENO_WINGET_ID = "DenoLand.Deno"
     _YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID = "OpenJS.NodeJS.LTS"
 
     def _open_external_url(self, url, *, failure_message):
@@ -96,17 +94,12 @@ class DependencyMixin:
             dialog.Destroy()
 
         install_actions = {
-            "install-deno": (
-                self._YOUTUBE_MUSIC_JS_RUNTIME_DENO_WINGET_ID,
-                "Deno",
-            ),
             "install-node": (
                 self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_WINGET_ID,
                 "Node.js",
             ),
         }
         url_actions = {
-            "open-deno": self._YOUTUBE_MUSIC_JS_RUNTIME_DENO_URL,
             "open-node": self._YOUTUBE_MUSIC_JS_RUNTIME_NODE_URL,
             "open-guide": self._YOUTUBE_MUSIC_JS_RUNTIME_GUIDE_URL,
         }
@@ -136,13 +129,24 @@ class DependencyMixin:
     def _handle_youtube_javascript_runtime_error(self, error_message):
         if not is_missing_javascript_runtime_error_message(error_message):
             return False
-        return bool(self._show_youtube_javascript_runtime_dialog())
+        if not bool(getattr(self.settings, "youtube_music_manage_dependencies", False)):
+            return False
+        return self._start_youtube_music_dependency_update(
+            force_update=False,
+            manual=True,
+            announce_start=True,
+        )
 
     def _configure_youtube_music_dependency_management(self):
+        managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
         _configure_youtube_dependency_management(
-            managed_install_enabled=bool(getattr(self.settings, "youtube_music_manage_dependencies", False)),
+            managed_install_enabled=managed_dependencies,
             auto_update_enabled=bool(getattr(self.settings, "youtube_music_auto_update_dependencies", True)),
             prefer_nightly_yt_dlp=bool(getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)),
+            youtubejs_enabled=(
+                managed_dependencies
+                and bool(getattr(self.settings, "youtube_music_use_youtubejs", True))
+            ),
         )
 
     def _youtube_music_dependency_update_interval_hours(self):
@@ -225,12 +229,16 @@ class DependencyMixin:
                 )
 
         def runner():
+            def report_progress(message):
+                wx.CallAfter(self._report_youtube_music_dependency_progress, message)
+
             try:
                 result = _install_or_update_youtube_dependencies(
                     force=force_update,
                     include_prerelease=bool(
                         getattr(self.settings, "youtube_music_use_nightly_yt_dlp", False)
                     ),
+                    progress_callback=report_progress,
                 )
             except Exception as exc:
                 wx.CallAfter(self._finish_youtube_music_dependency_update, on_success, on_error, None, exc)
@@ -239,6 +247,16 @@ class DependencyMixin:
 
         threading.Thread(target=runner, daemon=True, name="ytmusic-dep-update").start()
         return True
+
+    def _report_youtube_music_dependency_progress(self, message):
+        normalized_message = str(message or "").strip()
+        if not normalized_message:
+            return
+        self._youtube_music_library_status_message = normalized_message
+        self._refresh_youtube_music_screen_later()
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(normalized_message, auto_clear_ms=0)
+        self._announce(normalized_message)
 
     def _finish_youtube_music_dependency_update(self, on_success, on_error, result, error):
         self._youtube_music_dependency_update_in_progress = False
@@ -279,11 +297,23 @@ class DependencyMixin:
         had_managed_dependencies = bool(getattr(previous_settings, "youtube_music_manage_dependencies", False))
         has_managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
         if has_managed_dependencies and not had_managed_dependencies:
-            self._prompt_for_missing_youtube_javascript_runtime()
             self._youtube_music_library_status_message = _("Recursos adicionais do YouTube Music ativados. Preparando dependências...")
             self._refresh_youtube_music_screen_later()
             self._start_youtube_music_dependency_update(force_update=False, manual=True)
             return
+
+
+        had_youtubejs = bool(getattr(previous_settings, "youtube_music_use_youtubejs", True))
+        has_youtubejs = bool(getattr(self.settings, "youtube_music_use_youtubejs", True))
+        if has_managed_dependencies and has_youtubejs and not had_youtubejs:
+            self._youtube_music_library_status_message = _("Preparando Node.js e YouTube.js...")
+            self._refresh_youtube_music_screen_later()
+            self._start_youtube_music_dependency_update(force_update=False, manual=True, announce_start=True)
+            return
+        if had_youtubejs and not has_youtubejs:
+            from player.youtube_music.youtubejs_runtime import _stop_worker
+
+            _stop_worker()
 
         if has_managed_dependencies:
             # If the user toggled the nightly/stable channel, force a fresh

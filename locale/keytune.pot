@@ -439,18 +439,6 @@ msgstr ""
 msgid "5 estrelas"
 msgstr ""
 
-#: src/player/youtube_music/dependencies.py
-msgid "A PyPI não informou a versão mais recente da ytmusicapi."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "A PyPI não publicou a lista de releases da ytmusicapi."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "A PyPI não publicou arquivos para a versão mais recente da ytmusicapi."
-msgstr ""
-
 #: src/player/frames/youtube_music/playlists.py
 msgid "A aba atual não é uma playlist editável do YouTube Music."
 msgstr ""
@@ -625,6 +613,10 @@ msgstr ""
 msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
 msgstr ""
 
+#: src/player/optional_resources.py
+msgid "A release do KeyTune não informou seus recursos adicionais."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "A release do yt-dlp não publicou todos os arquivos necessários."
 msgstr ""
@@ -633,16 +625,8 @@ msgstr ""
 msgid "A release do yt-dlp veio com metadados incompletos."
 msgstr ""
 
-#: src/player/youtube_music/dependencies.py
-msgid "A release mais recente da ytmusicapi não publicou um wheel utilizável."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "A resposta da PyPI para ytmusicapi veio em formato inválido."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "A resposta da PyPI veio em formato inválido."
+#: src/player/optional_resources.py
+msgid "A release instalada do KeyTune não publicou o pacote opcional {name}."
 msgstr ""
 
 #: src/player/youtube_music/service.py
@@ -651,6 +635,10 @@ msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "A resposta da release do yt-dlp veio em formato inválido."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "A resposta dos recursos adicionais veio em formato inválido."
 msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
@@ -935,10 +923,6 @@ msgid "Abrir seleção em nova playlist"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Abrir site do &Deno"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
 msgid "Abrir site do &Node.js"
 msgstr ""
 
@@ -1140,10 +1124,6 @@ msgstr ""
 msgid "América do Sul"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. Se a análise não for confiável, a reprodução continua normalmente."
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "Analisando próximas faixas."
 msgstr ""
@@ -1337,24 +1317,16 @@ msgstr ""
 msgid "Ativado"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Ativar &AutoDJ"
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Ativar &equalizador nesta aba"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)"
+msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"
 msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Ativar Auto&DJ"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ativar AutoDJ"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1395,6 +1367,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/state.py
 msgid "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1503,6 +1483,14 @@ msgstr ""
 msgid "AutoDJ analisando a faixa atual e as próximas opções..."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "AutoDJ avançado"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "AutoDJ desativado."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "AutoDJ preparado: transição de {count} batidas."
 msgstr ""
@@ -1519,12 +1507,20 @@ msgstr ""
 msgid "AutoDJ preparou {count} próximas faixas."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "AutoDJ selecionado. As bibliotecas serão baixadas após a confirmação."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "AutoDJ {status}."
 msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "AutoDJ — {title}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "AutoDJ: librosa, NumPy, SciPy, Numba e PyAV"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -1593,6 +1589,10 @@ msgid "Ações..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram extractors com frequência e o nightly costuma receber correções antes do canal estável."
 msgstr ""
 
@@ -1606,6 +1606,22 @@ msgstr ""
 
 #: src/player/update/service.py
 msgid "Baixando atualização..."
+msgstr ""
+
+#: src/player/youtube_music/dependencies.py
+msgid "Baixando yt-dlp..."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "Baixando {name}..."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Baixar recursos e ativar &AutoDJ"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Baixar recursos e ativar AutoDJ"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -3213,8 +3229,16 @@ msgstr ""
 msgid "Iniciar &rádio desta faixa\tCtrl+R"
 msgstr ""
 
-#: src/player/youtube_music/dialog.py
-msgid "Instalar &Deno"
+#: src/player/preferences/dialog.py
+msgid "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
+msgstr ""
+
+#: src/player/youtube_music/dependencies.py
+msgid "Instalando ytmusicapi..."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "Instalando {name}..."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -4018,6 +4042,10 @@ msgstr ""
 msgid "No processo do player"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Node.js portátil (se não houver um compatível)"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Nome"
@@ -4201,12 +4229,12 @@ msgstr ""
 msgid "Não foi possível baixar a atualização."
 msgstr ""
 
-#: src/player/youtube_music/dependencies.py
-msgid "Não foi possível baixar o wheel oficial da ytmusicapi."
-msgstr ""
-
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "Não foi possível baixar os arquivos oficiais do yt-dlp."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "Não foi possível baixar um recurso adicional do KeyTune."
 msgstr ""
 
 #: src/player/frames/library_loader.py
@@ -4257,12 +4285,12 @@ msgstr ""
 msgid "Não foi possível conectar a conta do YouTube Music."
 msgstr ""
 
-#: src/player/youtube_music/dependencies.py
-msgid "Não foi possível consultar a release mais recente da ytmusicapi."
-msgstr ""
-
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "Não foi possível consultar a release mais recente do yt-dlp."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "Não foi possível consultar os recursos adicionais do KeyTune."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -4283,10 +4311,6 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "Não foi possível exportar cookies do {browser}."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "Não foi possível extrair o wheel da ytmusicapi."
 msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
@@ -4317,6 +4341,10 @@ msgstr ""
 msgid "Não foi possível iniciar uma instância do MPV."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Não foi possível instalar as bibliotecas opcionais do AutoDJ: {error}"
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Não foi possível instalar o plugin: {error}"
 msgstr ""
@@ -4331,6 +4359,10 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "Não foi possível ler o arquivo de autenticação selecionado."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "Não foi possível ler o checksum do recurso adicional."
 msgstr ""
 
 #: src/player/update/service.py
@@ -4439,6 +4471,10 @@ msgstr ""
 msgid "Não gostei no YouTube Music"
 msgstr ""
 
+#: src/player/optional_resources.py
+msgid "Não há espaço livre suficiente para instalar o recurso {name}."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Não há faixas restantes para recalcular a sequência."
 msgstr ""
@@ -4532,7 +4568,7 @@ msgid "O YouTube Music não removeu as faixas (status: {status})."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
+msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -4559,8 +4595,16 @@ msgstr ""
 msgid "O arquivo selecionado não pertence à pasta atual."
 msgstr ""
 
+#: src/player/optional_resources.py
+msgid "O checksum do recurso adicional é inválido."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O download pelo yt-dlp excedeu o tempo limite."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O endereço de download do recurso adicional está vazio."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -4619,12 +4663,48 @@ msgstr ""
 msgid "O item recente selecionado não está mais disponível."
 msgstr ""
 
+#: src/player/optional_resources.py
+msgid "O manifesto do recurso adicional está incompleto."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O modelo do nome do arquivo não pode conter pastas."
 msgstr ""
 
+#: src/player/optional_resources.py
+msgid "O pacote baixado não corresponde ao recurso solicitado."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote baixado não é compatível com esta versão do KeyTune."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote do recurso adicional contém caminhos inválidos."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote do recurso adicional está corrompido."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote do recurso adicional está incompleto."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote do recurso adicional não possui um manifesto válido."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "O pacote não corresponde ao plugin selecionado no marketplace."
+msgstr ""
+
+#: src/player/optional_resources.py
+msgid "O pacote {name} não passou na validação de integridade."
 msgstr ""
 
 #: src/player/frames/plugins.py
@@ -4667,24 +4747,12 @@ msgstr ""
 msgid "O vídeo do YouTube não tem videoId válido."
 msgstr ""
 
-#: src/player/youtube_music/dependencies.py
-msgid "O wheel da ytmusicapi baixado está corrompido."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "O wheel da ytmusicapi baixado não passou na validação de integridade."
-msgstr ""
-
-#: src/player/youtube_music/dependencies.py
-msgid "O wheel da ytmusicapi contém caminhos inválidos."
-msgstr ""
-
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O yt-dlp demorou demais para responder e foi interrompido."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
-msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS 2023-12-9+ e Bun de 1.2.11 até 1.3.14."
+msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Ative ou atualize os recursos adicionais para instalar o Node.js 24+."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -4829,7 +4897,7 @@ msgid "Panamá"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nInstale uma destas opções:\n1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n2. Node.js 22+\n\nPara usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece sua instalação automática.\n\n"
+msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nRecomendamos o Node.js 24+, utilizado pelo yt-dlp e pelo YouTube.js. O KeyTune pode manter uma cópia portátil automaticamente quando os recursos adicionais do YouTube Music estão ativados.\n\n"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -4840,8 +4908,12 @@ msgstr ""
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Para melhorar a reprodução e habilitar os recursos selecionados, o KeyTune instalará:\n\n{components}\n\nOs arquivos ficarão apenas na pasta de recursos do KeyTune. Deseja instalar e ativar agora?"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
-msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
+msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema ou nos recursos adicionais do KeyTune. Recomendamos o Node.js 24+, que também é utilizado pelo YouTube.js. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Ative ou atualize os recursos adicionais e tente novamente."
 msgstr ""
 
 #: src/player/frames/commands/transport_commands.py
@@ -5144,8 +5216,20 @@ msgstr ""
 msgid "Preparada"
 msgstr ""
 
+#: src/player/frames/youtube_music/dependencies.py
+msgid "Preparando Node.js e YouTube.js..."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Preparando as bibliotecas opcionais do AutoDJ..."
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "Preparando o download da versão {version}..."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Preparar recursos adicionais"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -5408,6 +5492,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
 msgid "Recursos adicionais do YouTube Music prontos ({versions})."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Recursos do AutoDJ instalados e prontos para uso."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -6112,7 +6200,7 @@ msgid "Tipo"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
+msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -6212,6 +6300,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Usar YouTube.js"
 msgstr ""
 
 #: src/player/plugins/manifest.py

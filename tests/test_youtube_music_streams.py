@@ -80,7 +80,8 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self.assertTrue(
             is_missing_javascript_runtime_error_message(
                 "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-                "(Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível."
+                "ou nos recursos adicionais do KeyTune. Recomendamos o Node.js 24+, que também "
+                "é utilizado pelo YouTube.js."
             )
         )
 

@@ -303,6 +303,19 @@ class LifecycleMixin:
         # playlist tabs that need their item labels refreshed are still
         # handled here, since their refresh cannot wait for user action.
         self._refresh_youtube_music_menu_state()
+        if (
+            bool(getattr(self.settings, "youtube_music_manage_dependencies", False))
+            and bool(getattr(self.settings, "youtube_music_use_youtubejs", True))
+        ):
+            from player.youtube_music.youtubejs_runtime import youtubejs_dependencies_available
+
+            if not youtubejs_dependencies_available():
+                if self._start_youtube_music_dependency_update(
+                    force_update=False,
+                    manual=False,
+                    announce_start=True,
+                ):
+                    return
         if not _youtube_music_has_saved_auth():
             return
         service = self._get_youtube_music_service()

@@ -6,6 +6,7 @@ from ..constants import (
     AUTODJ_PROFILES,
     DEFAULT_AUTODJ_BEATS,
     DEFAULT_AUTODJ_ENABLED,
+    DEFAULT_AUTODJ_OPTIONAL_RESOURCES_CONFIRMED,
     DEFAULT_AUTODJ_PROFILE,
     DEFAULT_AUTODJ_TRANSITION_SOUNDS_ENABLED,
     DEFAULT_ANNOUNCEMENTS_ENABLED,
@@ -36,6 +37,7 @@ from ..constants import (
     DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES,
     DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY,
     DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP,
+    DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS,
     LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
@@ -73,6 +75,7 @@ class AppSettings:
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
     crossfade_on_manual_track_change: bool = DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE
     autodj_enabled: bool = DEFAULT_AUTODJ_ENABLED
+    autodj_optional_resources_confirmed: bool = DEFAULT_AUTODJ_OPTIONAL_RESOURCES_CONFIRMED
     autodj_transition_sounds_enabled: bool = DEFAULT_AUTODJ_TRANSITION_SOUNDS_ENABLED
     autodj_profile: str = DEFAULT_AUTODJ_PROFILE
     autodj_beats: int = DEFAULT_AUTODJ_BEATS
@@ -83,6 +86,7 @@ class AppSettings:
     youtube_music_manage_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES
     youtube_music_auto_update_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES
     youtube_music_use_nightly_yt_dlp: bool = DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP
+    youtube_music_use_youtubejs: bool = DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS
     youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_save_history: bool = DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
@@ -137,6 +141,7 @@ class AppSettings:
             "crossfade_seconds": self.crossfade_seconds,
             "crossfade_on_manual_track_change": self.crossfade_on_manual_track_change,
             "autodj_enabled": self.autodj_enabled,
+            "autodj_optional_resources_confirmed": self.autodj_optional_resources_confirmed,
             "autodj_transition_sounds_enabled": self.autodj_transition_sounds_enabled,
             "autodj_profile": self.autodj_profile,
             "autodj_beats": self.autodj_beats,
@@ -147,6 +152,7 @@ class AppSettings:
             "youtube_music_manage_dependencies": self.youtube_music_manage_dependencies,
             "youtube_music_auto_update_dependencies": self.youtube_music_auto_update_dependencies,
             "youtube_music_use_nightly_yt_dlp": self.youtube_music_use_nightly_yt_dlp,
+            "youtube_music_use_youtubejs": self.youtube_music_use_youtubejs,
             "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_save_history": self.youtube_music_save_history,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
@@ -198,6 +204,11 @@ class AppSettings:
             data.get("crossfade_on_manual_track_change", settings.crossfade_on_manual_track_change)
         )
         settings.autodj_enabled = bool(data.get("autodj_enabled", settings.autodj_enabled))
+        settings.autodj_optional_resources_confirmed = bool(
+            data.get("autodj_optional_resources_confirmed", settings.autodj_optional_resources_confirmed)
+        )
+        if settings.autodj_enabled and not settings.autodj_optional_resources_confirmed:
+            settings.autodj_enabled = False
         settings.autodj_transition_sounds_enabled = bool(
             data.get("autodj_transition_sounds_enabled", settings.autodj_transition_sounds_enabled)
         )
@@ -227,6 +238,9 @@ class AppSettings:
         )
         settings.youtube_music_use_nightly_yt_dlp = bool(
             data.get("youtube_music_use_nightly_yt_dlp", settings.youtube_music_use_nightly_yt_dlp)
+        )
+        settings.youtube_music_use_youtubejs = bool(
+            data.get("youtube_music_use_youtubejs", False)
         )
         settings.youtube_music_autoplay_related = bool(
             data.get("youtube_music_autoplay_related", settings.youtube_music_autoplay_related)

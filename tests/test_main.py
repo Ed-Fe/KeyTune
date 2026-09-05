@@ -62,6 +62,13 @@ class MainArgumentFilteringTests(unittest.TestCase):
         self.assertEqual(result, 1)
         service.stop.assert_not_called()
 
+    @patch("player.youtube_music.dependencies.import_ytmusicapi_module")
+    def test_youtube_dependencies_smoke_test_imports_optional_package(self, import_ytmusicapi):
+        result = main._run_youtube_dependencies_smoke_test()
+
+        self.assertEqual(result, 0)
+        import_ytmusicapi.assert_called_once_with()
+
 
 if __name__ == "__main__":
     unittest.main()

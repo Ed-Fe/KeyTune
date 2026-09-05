@@ -6,10 +6,17 @@ import os
 import queue
 import subprocess
 import threading
+from pathlib import Path
 from dataclasses import dataclass
 
 from .auth import sanitize_sensitive_text
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
+from ..optional_resources import (
+    get_optional_resource_dir,
+    install_optional_resource,
+    optional_resource_installed,
+    read_optional_resource_manifest,
+)
 
 
 YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS = 10
@@ -34,6 +41,44 @@ def warm_up():
             pass
 
     threading.Thread(target=start_worker, daemon=True).start()
+
+
+def youtubejs_dependencies_available():
+    resolver_dir = _youtubejs_resolver_dir()
+    source_dir = Path(__file__).resolve().parent / "youtubejs"
+    package_available = (resolver_dir / "node_modules" / "youtubei.js").is_dir()
+    if resolver_dir != source_dir and not optional_resource_installed("youtubejs"):
+        package_available = False
+    return bool(find_all_available_javascript_runtimes().get("node")) and package_available
+
+
+def install_nodejs_dependency(*, force=False, progress_callback=None):
+    node_path = find_all_available_javascript_runtimes().get("node")
+    managed_node_path = get_optional_resource_dir("node") / "node.exe"
+    if not node_path or (Path(node_path) == managed_node_path and not optional_resource_installed("node")):
+        _stop_worker()
+        install_optional_resource("node", progress_callback=progress_callback)
+    return youtubejs_dependency_versions()
+
+
+def install_youtubejs_dependencies(*, force=False, progress_callback=None):
+    install_nodejs_dependency(force=force, progress_callback=progress_callback)
+    if not optional_resource_installed("youtubejs"):
+        _stop_worker()
+        install_optional_resource("youtubejs", progress_callback=progress_callback)
+    if not youtubejs_dependencies_available():
+        raise RuntimeError("O Node.js ou o pacote YouTube.js não pôde ser preparado.")
+    return youtubejs_dependency_versions()
+
+
+def youtubejs_dependency_versions():
+    versions = {}
+    for resource_name in ("node", "youtubejs"):
+        manifest = read_optional_resource_manifest(resource_name)
+        resource_versions = manifest.get("versions") if isinstance(manifest, dict) else None
+        if isinstance(resource_versions, dict):
+            versions.update(resource_versions)
+    return versions
 
 
 def resolve_stream(media_url, *, cookie_header="", user_agent=""):
@@ -80,22 +125,22 @@ def _ensure_worker():
         return _worker_process
 
     node_executable = find_all_available_javascript_runtimes().get("node", "")
-    resolver_dir = os.path.join(os.path.dirname(__file__), "youtubejs")
-    resolver_script = os.path.join(resolver_dir, "resolve.mjs")
-    youtubejs_package = os.path.join(resolver_dir, "node_modules", "youtubei.js")
+    resolver_dir = _youtubejs_resolver_dir()
+    resolver_script = resolver_dir / "resolve.mjs"
+    youtubejs_package = _youtubejs_package_dir()
     if not node_executable or not os.path.isfile(resolver_script) or not os.path.isdir(youtubejs_package):
         raise RuntimeError("O resolvedor experimental YouTube.js não está instalado.")
 
     creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
     _worker_process = subprocess.Popen(
-        [node_executable, resolver_script, _youtubejs_cache_dir()],
+        [node_executable, str(resolver_script), _youtubejs_cache_dir()],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         text=True,
         encoding="utf-8",
         errors="replace",
-        cwd=resolver_dir,
+        cwd=str(resolver_dir),
         creationflags=creation_flags,
     )
     return _worker_process
@@ -163,6 +208,23 @@ def _youtubejs_cache_dir():
     cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
     os.makedirs(cache_dir, exist_ok=True)
     return cache_dir
+
+
+def _youtubejs_resolver_dir() -> Path:
+    source_dir = Path(__file__).resolve().parent / "youtubejs"
+    if os.path.isdir(source_dir / "node_modules" / "youtubei.js"):
+        return source_dir
+    try:
+        managed_dir = get_optional_resource_dir("youtubejs")
+    except OSError:
+        return source_dir
+    if os.path.isfile(managed_dir / "resolve.mjs"):
+        return managed_dir
+    return source_dir
+
+
+def _youtubejs_package_dir() -> Path:
+    return _youtubejs_resolver_dir() / "node_modules" / "youtubei.js"
 
 
 atexit.register(_stop_worker)

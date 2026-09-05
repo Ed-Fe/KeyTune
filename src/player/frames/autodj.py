@@ -14,6 +14,7 @@ from ..autodj import (
     QueueCandidate,
     TransitionProfile,
 )
+from ..autodj.dependencies import autodj_dependencies_available, install_autodj_dependencies
 from ..i18n import _
 from ..library import build_supported_media_wildcard, is_audio_playback_media
 from ..log import get_logger
@@ -36,6 +37,59 @@ class FrameAutoDJMixin:
         self._autodj_session_results = {}
         self._autodj_session_retry_at = {}
         self._refresh_autodj_menu_state()
+        if (
+            bool(getattr(self.settings, "autodj_enabled", False))
+            and bool(getattr(self.settings, "autodj_optional_resources_confirmed", False))
+            and not autodj_dependencies_available()
+        ):
+            self._start_autodj_dependency_install()
+
+    def _start_autodj_dependency_install(self):
+        if autodj_dependencies_available():
+            return False
+        if getattr(self, "_autodj_dependency_install_in_progress", False):
+            return False
+        self._autodj_dependency_install_in_progress = True
+        start_message = _("Preparando as bibliotecas opcionais do AutoDJ...")
+        self._announce(start_message)
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(start_message, auto_clear_ms=0)
+
+        def progress(message):
+            wx.CallAfter(self._report_autodj_dependency_progress, message)
+
+        def runner():
+            try:
+                install_autodj_dependencies(progress_callback=progress)
+            except Exception as exc:
+                wx.CallAfter(self._finish_autodj_dependency_install, exc)
+                return
+            wx.CallAfter(self._finish_autodj_dependency_install, None)
+
+        threading.Thread(target=runner, daemon=True, name="autodj-dep-install").start()
+        return True
+
+    def _report_autodj_dependency_progress(self, message):
+        normalized_message = str(message or "").strip()
+        if not normalized_message:
+            return
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(normalized_message, auto_clear_ms=0)
+        self._announce(normalized_message)
+
+    def _finish_autodj_dependency_install(self, error):
+        self._autodj_dependency_install_in_progress = False
+        self._refresh_autodj_menu_state()
+        if error is not None:
+            message = _("Não foi possível instalar as bibliotecas opcionais do AutoDJ: {error}").format(error=error)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+            self._announce(message)
+            return
+        message = _("Recursos do AutoDJ instalados e prontos para uso.")
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(message)
+        self._announce(message)
 
     def _handle_autodj_remote_download_retry(self, media_path, error):
         service = self._get_youtube_music_service()
@@ -53,6 +107,9 @@ class FrameAutoDJMixin:
         self.autodj_service = None
 
     def on_start_autodj_session(self, _event):
+        if not autodj_dependencies_available():
+            self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."))
+            return False
         source = self._get_playlist_state()
         if source is None or source.is_folder_tab or source.is_loading or source.autodj_session:
             self._announce(_("Abra uma playlist comum para iniciar uma sessão AutoDJ."))
@@ -562,7 +619,11 @@ class FrameAutoDJMixin:
         return self._autodj_artist_from_label(self._autodj_source_label(state, media_path))
 
     def on_toggle_autodj(self, _event):
-        self.settings.autodj_enabled = not bool(getattr(self.settings, "autodj_enabled", False))
+        enabling = not bool(getattr(self.settings, "autodj_enabled", False))
+        if enabling and not autodj_dependencies_available():
+            self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."))
+            return False
+        self.settings.autodj_enabled = enabling
         self._autodj_transition_requests = {}
         self._refresh_autodj_menu_state()
         apply_filters = getattr(self, "_apply_equalizer_state_to_current_playback", None)
@@ -590,6 +651,15 @@ class FrameAutoDJMixin:
             apply_filters = getattr(self, "_apply_equalizer_state_to_current_playback", None)
             if callable(apply_filters):
                 apply_filters()
+        if (
+            self.settings.autodj_enabled
+            and bool(getattr(self.settings, "autodj_optional_resources_confirmed", False))
+            and (
+                not getattr(previous_settings, "autodj_enabled", False)
+                or not getattr(previous_settings, "autodj_optional_resources_confirmed", False)
+            )
+        ):
+            self._start_autodj_dependency_install()
         self._refresh_autodj_menu_state()
 
     def _refresh_autodj_menu_state(self):
@@ -604,7 +674,14 @@ class FrameAutoDJMixin:
         start_item = menu.FindItemById(getattr(self, "menu_start_autodj_session_id", -1))
         stop_item = menu.FindItemById(getattr(self, "menu_stop_autodj_session_id", -1))
         if start_item is not None:
-            start_item.Enable(bool(state and not state.is_folder_tab and not state.is_loading and not state.autodj_session and len(state.items) > 1))
+            start_item.Enable(bool(
+                autodj_dependencies_available()
+                and state
+                and not state.is_folder_tab
+                and not state.is_loading
+                and not state.autodj_session
+                and len(state.items) > 1
+            ))
         if stop_item is not None:
             stop_item.Enable(bool(state and state.autodj_session))
 

@@ -47,6 +47,9 @@ class PreferencesDialog(wx.Dialog):
         )
 
         self._settings = settings
+        self._autodj_optional_resources_confirmed = bool(
+            getattr(settings, "autodj_optional_resources_confirmed", False)
+        )
         self._audio_output_devices = list(audio_output_devices or [])
         self._audio_output_choice_ids = []
 
@@ -79,6 +82,7 @@ class PreferencesDialog(wx.Dialog):
         self.save_button = wx.Button(panel, wx.ID_OK, _("&Salvar"))
         self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
         self.save_button.SetDefault()
+        self.save_button.Bind(wx.EVT_BUTTON, self._on_save_preferences)
         button_sizer.AddButton(self.save_button)
         button_sizer.AddButton(self.cancel_button)
         button_sizer.Realize()
@@ -311,36 +315,6 @@ class PreferencesDialog(wx.Dialog):
                 "Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
             ),
         )
-        self.autodj_enabled_checkbox = wx.CheckBox(page, label=_("Ativar &AutoDJ"))
-        self._configure_checkbox(
-            self.autodj_enabled_checkbox,
-            _("Ativar AutoDJ"),
-            _(
-                "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. "
-                "Se a análise não for confiável, a reprodução continua normalmente."
-            ),
-        )
-        self.autodj_transition_sounds_checkbox = wx.CheckBox(page, label=_("Tocar efeitos de &DJ nas transições"))
-        self._configure_checkbox(
-            self.autodj_transition_sounds_checkbox,
-            _("Tocar efeitos de DJ nas transições"),
-            _(
-                "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. "
-                "O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
-            ),
-        )
-        autodj_profile_group, self.autodj_profile_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Perfil do AutoDJ"),
-            help_text=_("Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."),
-            choices=[AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
-        )
-        autodj_beats_group, self.autodj_beats_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Duração da transição do AutoDJ"),
-            help_text=_("Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."),
-            choices=[_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
-        )
         seek_step_group, self.seek_step_ctrl = self._build_spin_control_group(
             page,
             label_text=_("Passo de busca (segundos)"),
@@ -368,8 +342,6 @@ class PreferencesDialog(wx.Dialog):
             volume_group,
             volume_step_group,
             crossfade_group,
-            autodj_profile_group,
-            autodj_beats_group,
             seek_step_group,
             repeat_group,
             audio_output_group,
@@ -378,8 +350,6 @@ class PreferencesDialog(wx.Dialog):
 
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.autodj_enabled_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.autodj_transition_sounds_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
@@ -602,7 +572,7 @@ class PreferencesDialog(wx.Dialog):
         )
         self.youtube_music_manage_dependencies_checkbox = wx.CheckBox(
             page,
-            label=_("Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)"),
+            label=_("Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"),
         )
         self.youtube_music_auto_update_dependencies_checkbox = wx.CheckBox(
             page,
@@ -611,6 +581,10 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_use_nightly_yt_dlp_checkbox = wx.CheckBox(
             page,
             label=_("Usar versão &nightly do yt-dlp (recomendado)"),
+        )
+        self.youtube_music_use_youtubejs_checkbox = wx.CheckBox(
+            page,
+            label=_("Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"),
         )
 
         self._configure_checkbox(
@@ -634,6 +608,13 @@ class PreferencesDialog(wx.Dialog):
                 "extractors com frequência e o nightly costuma receber correções antes do canal estável."
             ),
         )
+        self._configure_checkbox(
+            self.youtube_music_use_youtubejs_checkbox,
+            _("Usar YouTube.js"),
+            _(
+                "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
+            ),
+        )
 
         self.youtube_music_dependency_interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
             page,
@@ -649,6 +630,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
         self.youtube_music_resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.youtube_music_resources_box.Add(self.youtube_music_use_nightly_yt_dlp_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_resources_box.Add(self.youtube_music_use_youtubejs_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.youtube_music_resources_box.Add(self.youtube_music_dependency_interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_dependencies_note_label = wx.StaticText(
@@ -661,6 +643,50 @@ class PreferencesDialog(wx.Dialog):
         )
         self.youtube_music_dependencies_note_label.Wrap(520)
         self.youtube_music_resources_box.Add(self.youtube_music_dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+
+        self.autodj_resources_box = wx.StaticBoxSizer(
+            wx.StaticBox(page, label=_("AutoDJ avançado")),
+            wx.VERTICAL,
+        )
+        self.autodj_enabled_checkbox = wx.CheckBox(page, label=_("Baixar recursos e ativar &AutoDJ"))
+        self._configure_checkbox(
+            self.autodj_enabled_checkbox,
+            _("Baixar recursos e ativar AutoDJ"),
+            _(
+                "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
+            ),
+        )
+        self.autodj_transition_sounds_checkbox = wx.CheckBox(page, label=_("Tocar efeitos de &DJ nas transições"))
+        self._configure_checkbox(
+            self.autodj_transition_sounds_checkbox,
+            _("Tocar efeitos de DJ nas transições"),
+            _("Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."),
+        )
+        self.autodj_profile_group, self.autodj_profile_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Perfil do AutoDJ"),
+            help_text=_("Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."),
+            choices=[AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
+        )
+        self.autodj_beats_group, self.autodj_beats_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Duração da transição do AutoDJ"),
+            help_text=_("Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."),
+            choices=[_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
+        )
+        self.autodj_resources_note_label = wx.StaticText(
+            page,
+            label=_(
+                "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
+            ),
+        )
+        self.autodj_resources_note_label.Wrap(520)
+        self.autodj_resources_box.Add(self.autodj_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+        self.autodj_resources_box.Add(self.autodj_transition_sounds_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.autodj_resources_box.Add(self.autodj_profile_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.autodj_resources_box.Add(self.autodj_beats_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.autodj_resources_box.Add(self.autodj_resources_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.autodj_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_autodj_resource)
 
         self.youtube_music_library_box = wx.StaticBoxSizer(
             wx.StaticBox(page, label=_("Biblioteca do YouTube Music")),
@@ -737,6 +763,7 @@ class PreferencesDialog(wx.Dialog):
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(self.youtube_music_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(self.autodj_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         page_sizer.Add(self.youtube_music_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, _("Recursos adicionais"))
@@ -821,6 +848,13 @@ class PreferencesDialog(wx.Dialog):
         else:
             self._announce_from_parent(_("Integração com YouTube Music desativada. Opções adicionais ocultadas."))
 
+    def _on_toggle_autodj_resource(self, _event):
+        self._refresh_additional_resources_controls()
+        if self.autodj_enabled_checkbox.GetValue():
+            self._announce_from_parent(_("AutoDJ selecionado. As bibliotecas serão baixadas após a confirmação."))
+        else:
+            self._announce_from_parent(_("AutoDJ desativado."))
+
     def _on_toggle_youtube_music_auto_update_dependencies(self, _event):
         self._refresh_additional_resources_controls()
         if self.youtube_music_auto_update_dependencies_checkbox.GetValue():
@@ -833,6 +867,7 @@ class PreferencesDialog(wx.Dialog):
         auto_update_enabled = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
         self.youtube_music_auto_update_dependencies_checkbox.Enable(managed_dependencies_enabled)
         self.youtube_music_use_nightly_yt_dlp_checkbox.Enable(managed_dependencies_enabled)
+        self.youtube_music_use_youtubejs_checkbox.Enable(managed_dependencies_enabled)
         self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
         self._set_additional_resources_item_visibility(
             self.youtube_music_resources_box,
@@ -842,6 +877,11 @@ class PreferencesDialog(wx.Dialog):
         self._set_additional_resources_item_visibility(
             self.youtube_music_resources_box,
             self.youtube_music_use_nightly_yt_dlp_checkbox,
+            managed_dependencies_enabled,
+        )
+        self._set_additional_resources_item_visibility(
+            self.youtube_music_resources_box,
+            self.youtube_music_use_youtubejs_checkbox,
             managed_dependencies_enabled,
         )
         self._set_additional_resources_item_visibility(
@@ -862,6 +902,11 @@ class PreferencesDialog(wx.Dialog):
         self._additional_resources_page.Layout()
         self.notebook.Layout()
         self.Layout()
+
+        autodj_enabled = self.autodj_enabled_checkbox.GetValue()
+        self.autodj_transition_sounds_checkbox.Enable(autodj_enabled)
+        self.autodj_profile_choice.Enable(autodj_enabled)
+        self.autodj_beats_choice.Enable(autodj_enabled)
 
     def _set_additional_resources_item_visibility(self, sizer, item, visible):
         try:
@@ -917,6 +962,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_manage_dependencies_checkbox.SetValue(settings.youtube_music_manage_dependencies)
         self.youtube_music_auto_update_dependencies_checkbox.SetValue(settings.youtube_music_auto_update_dependencies)
         self.youtube_music_use_nightly_yt_dlp_checkbox.SetValue(settings.youtube_music_use_nightly_yt_dlp)
+        self.youtube_music_use_youtubejs_checkbox.SetValue(settings.youtube_music_use_youtubejs)
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
@@ -971,6 +1017,7 @@ class PreferencesDialog(wx.Dialog):
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
         settings.autodj_enabled = self.autodj_enabled_checkbox.GetValue()
+        settings.autodj_optional_resources_confirmed = self._autodj_optional_resources_confirmed
         settings.autodj_transition_sounds_enabled = self.autodj_transition_sounds_checkbox.GetValue()
         settings.autodj_profile = AUTODJ_PROFILES[self.autodj_profile_choice.GetSelection()]
         settings.autodj_beats = AUTODJ_BEAT_COUNTS[self.autodj_beats_choice.GetSelection()]
@@ -981,6 +1028,7 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_manage_dependencies = self.youtube_music_manage_dependencies_checkbox.GetValue()
         settings.youtube_music_auto_update_dependencies = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
         settings.youtube_music_use_nightly_yt_dlp = self.youtube_music_use_nightly_yt_dlp_checkbox.GetValue()
+        settings.youtube_music_use_youtubejs = self.youtube_music_use_youtubejs_checkbox.GetValue()
         settings.youtube_music_dependency_update_interval_hours = int(
             self.youtube_music_dependency_update_interval_ctrl.GetValue()
         )
@@ -1012,6 +1060,51 @@ class PreferencesDialog(wx.Dialog):
             settings.logging_level = LOGGING_LEVELS[selected_level_index]
 
         return settings
+
+    def _on_save_preferences(self, _event):
+        proposed_settings = self.get_settings()
+        components = []
+        youtube_newly_enabled = (
+            proposed_settings.youtube_music_manage_dependencies
+            and not self._settings.youtube_music_manage_dependencies
+        )
+        youtubejs_newly_enabled = (
+            proposed_settings.youtube_music_manage_dependencies
+            and proposed_settings.youtube_music_use_youtubejs
+            and not self._settings.youtube_music_use_youtubejs
+        )
+        if youtube_newly_enabled:
+            components.extend(["yt-dlp", "ytmusicapi", _("Node.js portátil (se não houver um compatível)")])
+            if proposed_settings.youtube_music_use_youtubejs:
+                components.append("YouTube.js")
+        elif youtubejs_newly_enabled:
+            components.extend([_("Node.js portátil (se não houver um compatível)"), "YouTube.js"])
+        autodj_needs_confirmation = (
+            proposed_settings.autodj_enabled
+            and (
+                not self._settings.autodj_enabled
+                or not self._autodj_optional_resources_confirmed
+            )
+        )
+        if autodj_needs_confirmation:
+            components.append(_("AutoDJ: librosa, NumPy, SciPy, Numba e PyAV"))
+
+        if components:
+            message = _(
+                "Para melhorar a reprodução e habilitar os recursos selecionados, o KeyTune instalará:\n\n{components}\n\n"
+                "Os arquivos ficarão apenas na pasta de recursos do KeyTune. Deseja instalar e ativar agora?"
+            ).format(components="\n".join(f"• {component}" for component in components))
+            response = wx.MessageBox(
+                message,
+                _("Preparar recursos adicionais"),
+                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_INFORMATION,
+                self,
+            )
+            if response != wx.YES:
+                return
+            if autodj_needs_confirmation:
+                self._autodj_optional_resources_confirmed = True
+        self.EndModal(wx.ID_OK)
 
     def _on_register_associations(self, _event):
         from ..file_associations import register_file_associations

@@ -4,6 +4,7 @@ import pathlib
 import sys
 import types
 import unittest
+from contextlib import ExitStack
 from unittest.mock import patch
 
 
@@ -89,7 +90,7 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
 
     def test_install_update_skips_work_when_all_dependencies_are_ready(self):
         with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir"):
-            with patch("player.youtube_music.dependencies._dependency_spec_available", return_value=True):
+            with patch("player.youtube_music.dependencies.optional_resource_installed", return_value=True):
                 with patch("player.youtube_music.dependencies._can_import_dependency", return_value=True):
                     with patch("player.youtube_music.dependencies.yt_dlp_executable_available", return_value=True):
                         with patch(
@@ -106,14 +107,15 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
         self.assertFalse(result.updated)
         self.assertEqual(result.versions["yt-dlp"], "2026.1.31")
 
-    def test_install_update_downloads_wheel_and_ytdlp_installer_when_forced(self):
+    @patch("player.youtube_music.dependencies.optional_resource_installed", return_value=False)
+    def test_install_update_downloads_missing_resource_and_updates_ytdlp(self, _installed):
         target_dir = pathlib.Path("C:/tmp/ytmusic-site-packages")
 
         with patch("player.youtube_music.dependencies.activate_youtube_dependency_target_dir", return_value=target_dir):
             with patch(
-                "player.youtube_music.dependencies._install_or_update_ytmusicapi",
-                return_value="1.12.1",
-            ) as ytmusicapi_install_mock:
+                "player.youtube_music.dependencies.install_optional_resource",
+                return_value={"versions": {"ytmusicapi": "1.12.1", "requests": "2.34.2"}},
+            ) as youtube_resource_install_mock:
                 with patch("player.youtube_music.dependencies._can_import_dependency", return_value=True):
                     with patch(
                         "player.youtube_music.dependencies.get_managed_yt_dlp_executable_path",
@@ -141,16 +143,38 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                                     )
 
         self.assertTrue(result.updated)
-        ytmusicapi_install_mock.assert_called_once_with(
-            target_dir=target_dir,
-            timeout_seconds=33,
-        )
+        youtube_resource_install_mock.assert_called_once_with("youtube", progress_callback=None)
         ytdlp_install_mock.assert_called_once_with(
             force=True,
             include_prerelease=True,
             timeout_seconds=33,
         )
         self.assertIn("ytmusicapi 1.12.1", result.command_output)
+
+    def test_forced_update_reuses_current_release_resources(self):
+        configure_youtube_dependency_management(
+            managed_install_enabled=True, auto_update_enabled=True, youtubejs_enabled=True,
+        )
+        with ExitStack() as stack:
+            for name in ("activate_youtube_dependency_target_dir", "get_managed_yt_dlp_executable_path",
+                         "get_installed_youtube_dependency_versions"):
+                stack.enter_context(patch.object(youtube_dependencies, name))
+            stack.enter_context(patch.object(youtube_dependencies, "optional_resource_installed", return_value=True))
+            stack.enter_context(patch.object(youtube_dependencies, "youtube_dependencies_available", return_value=True))
+            resource_install = stack.enter_context(patch.object(youtube_dependencies, "install_optional_resource"))
+            ytdlp_install = stack.enter_context(patch.object(youtube_dependencies, "install_or_update_yt_dlp_executable"))
+            stack.enter_context(patch("player.youtube_music.youtubejs_runtime.optional_resource_installed", return_value=True))
+            stack.enter_context(patch("player.youtube_music.youtubejs_runtime.find_all_available_javascript_runtimes",
+                                      return_value={"node": "C:/node/node.exe"}))
+            stack.enter_context(patch("player.youtube_music.youtubejs_runtime.youtubejs_dependencies_available", return_value=True))
+            stack.enter_context(patch("player.youtube_music.youtubejs_runtime.youtubejs_dependency_versions", return_value={}))
+            js_install = stack.enter_context(patch("player.youtube_music.youtubejs_runtime.install_optional_resource"))
+            stop_worker = stack.enter_context(patch("player.youtube_music.youtubejs_runtime._stop_worker"))
+            install_or_update_youtube_dependencies(force=True)
+        resource_install.assert_not_called()
+        js_install.assert_not_called()
+        stop_worker.assert_not_called()
+        ytdlp_install.assert_called_once()
 
 
 if __name__ == "__main__":

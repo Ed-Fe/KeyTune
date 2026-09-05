@@ -10,13 +10,16 @@ import os
 from player.youtube_music.auth import get_browser_auth_file_path
 
 
-def _configure_youtube_dependency_management(*, managed_install_enabled, auto_update_enabled, prefer_nightly_yt_dlp):
+def _configure_youtube_dependency_management(
+    *, managed_install_enabled, auto_update_enabled, prefer_nightly_yt_dlp, youtubejs_enabled=True
+):
     from player.youtube_music.dependencies import configure_youtube_dependency_management
 
     return configure_youtube_dependency_management(
         managed_install_enabled=managed_install_enabled,
         auto_update_enabled=auto_update_enabled,
         prefer_nightly_yt_dlp=prefer_nightly_yt_dlp,
+        youtubejs_enabled=youtubejs_enabled,
     )
 
 
@@ -26,12 +29,13 @@ def _find_all_available_javascript_runtimes():
     return find_all_available_javascript_runtimes()
 
 
-def _install_or_update_youtube_dependencies(*, force, include_prerelease):
+def _install_or_update_youtube_dependencies(*, force, include_prerelease, progress_callback=None):
     from player.youtube_music.dependencies import install_or_update_youtube_dependencies
 
     return install_or_update_youtube_dependencies(
         force=force,
         include_prerelease=include_prerelease,
+        progress_callback=progress_callback,
     )
 
 
@@ -54,10 +58,12 @@ def _youtube_dependencies_available():
 
 
 def _create_youtube_music_service():
+    from player.youtube_music.dependencies import youtubejs_resolver_enabled
     from player.youtube_music.service import YouTubeMusicService
     from player.youtube_music.youtubejs_runtime import warm_up
 
-    warm_up()
+    if youtubejs_resolver_enabled():
+        warm_up()
     return YouTubeMusicService()
 
 

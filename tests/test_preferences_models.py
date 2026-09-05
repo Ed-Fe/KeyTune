@@ -51,6 +51,16 @@ class AppSettingsTests(unittest.TestCase):
         self.assertFalse(restored_settings.youtube_music_auto_update_dependencies)
         self.assertEqual(restored_settings.youtube_music_dependency_update_interval_hours, 48)
         self.assertEqual(restored_settings.youtube_music_dependency_last_auto_update_epoch, 1700000000)
+        self.assertTrue(restored_settings.youtube_music_use_youtubejs)
+
+    def test_optional_resource_defaults_do_not_enable_downloads_for_old_settings(self):
+        new_settings = AppSettings()
+        old_settings = AppSettings.from_dict({"autodj_enabled": True})
+
+        self.assertTrue(new_settings.youtube_music_use_youtubejs)
+        self.assertFalse(old_settings.youtube_music_use_youtubejs)
+        self.assertFalse(old_settings.autodj_enabled)
+        self.assertFalse(old_settings.autodj_optional_resources_confirmed)
 
     def test_youtube_music_dependency_settings_are_clamped(self):
         restored_settings = AppSettings.from_dict(
@@ -66,6 +76,7 @@ class AppSettingsTests(unittest.TestCase):
     def test_autodj_settings_round_trip_and_reject_invalid_choices(self):
         settings = AppSettings(
             autodj_enabled=True,
+            autodj_optional_resources_confirmed=True,
             autodj_transition_sounds_enabled=True,
             autodj_profile="electronic",
             autodj_beats=32,
@@ -74,12 +85,18 @@ class AppSettingsTests(unittest.TestCase):
         restored_settings = AppSettings.from_dict(settings.to_dict())
 
         self.assertTrue(restored_settings.autodj_enabled)
+        self.assertTrue(restored_settings.autodj_optional_resources_confirmed)
         self.assertTrue(restored_settings.autodj_transition_sounds_enabled)
         self.assertEqual(restored_settings.autodj_profile, "electronic")
         self.assertEqual(restored_settings.autodj_beats, 32)
 
         invalid_settings = AppSettings.from_dict(
-            {"autodj_enabled": True, "autodj_profile": "aggressive", "autodj_beats": 12}
+            {
+                "autodj_enabled": True,
+                "autodj_optional_resources_confirmed": True,
+                "autodj_profile": "aggressive",
+                "autodj_beats": 12,
+            }
         )
         self.assertTrue(invalid_settings.autodj_enabled)
         self.assertEqual(invalid_settings.autodj_profile, "smooth")

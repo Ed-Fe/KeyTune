@@ -313,7 +313,7 @@ The **Playback** tab controls audio behavior and the initial state of new playli
 - **Default volume**: volume when starting the player (0-100).
 - **Volume step**: how much each press of `Up Arrow`/`Down Arrow` increases or decreases the volume (1-25).
 - **Crossfade (seconds)**: audio overlap between tracks during automatic transition (0-12 s). Use 0 to disable it. Crossfade is applied only between audio files.
-- **Enable AutoDJ**: analyzes the current track and up to six upcoming options in the background, including in new playlists, avoids recently played artists, and chooses by local transition energy, major/minor key, perceived loudness difference, and tempo compatibility. When the beat grid is reliable, it estimates the downbeat and section changes, aligns four-bar phrases, synchronizes both tracks, and corrects small phase drift during the overlap. The entry point can skip a silent or weak intro; the progressive bass and midrange swap ends by cutting the outgoing track on the planned beat. It can also be toggled from **Playback > Enable AutoDJ**. The manual queue always takes priority. If analysis is late, fails, or has insufficient confidence, the player uses the configured regular crossfade or advances normally.
+- **Enable AutoDJ**: under **Additional features**, downloads the optional libraries after confirmation and analyzes the current track and up to six upcoming options in the background. Once installed, it can also be toggled from **Playback > Enable AutoDJ**. It avoids recently played artists and chooses by local transition energy, major/minor key, perceived loudness difference, and tempo compatibility. When the beat grid is reliable, it estimates the downbeat and section changes, aligns four-bar phrases, synchronizes both tracks, and corrects small phase drift during the overlap. The manual queue always takes priority. If analysis is late, fails, or has insufficient confidence, the player uses the configured regular crossfade or advances normally.
 - **Play playlist with AutoDJ**: creates a separate dynamic tab without changing the source playlist, starts the current track immediately, and keeps up to five tracks prepared ahead. A read-only field available through normal NVDA focus shows the source, prepared and remaining counts, analysis activity, and next-transition details. It reports BPM, rhythmic confidence, tempo adjustment, and the reason when a regular transition is required; each item is also marked as played, playing, next, or prepared. Its controls can replace the next track, recalculate the future sequence, add files, pause or resume preparation, and end the session while preserving the prepared portion. `Tab` moves through the player, list, AutoDJ information, and controls; `Shift+Tab` follows the reverse path. The same actions are available with `Shift+F10` on the list. The sequence considers multiple transitions, avoids likely vocal clashes, shortens the overlap when necessary, and gradually attenuates a louder incoming track. The session, source, history, paused state, and unplanned tracks are restored with the player.
 - **AutoDJ profile**: *Smooth* uses a long, balanced blend; *Party* concentrates the bass swap around the center and gradually raises energy; *Electronic* applies stronger cuts and a faster swap for pronounced beats.
 - **AutoDJ transition length**: sets an overlap of 8, 16, or 32 beats. This is independent of the regular crossfade duration.
@@ -354,14 +354,20 @@ The **Library** tab controls the [smart library](#smart-library). Turning off th
 
 ### Additional features
 
-The **Additional features** tab contains optional integrations. Today it brings together the YouTube Music and YouTube controls in two sections.
+The **Additional features** tab contains the optional YouTube integrations and AutoDJ libraries. Before the first download, KeyTune displays a dialog listing every component that will be installed.
 
 #### YouTube Music and YouTube integration
 
-- **Enable additional features for YouTube Music and YouTube (yt-dlp and ytmusicapi)**: downloads and maintains a `yt-dlp` executable and the required Python packages in a local folder. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.
+- **Enable additional features for YouTube Music and YouTube (yt-dlp, ytmusicapi, and Node.js)**: downloads and maintains a `yt-dlp` executable, the required Python packages, and, when no compatible runtime exists, a portable Node.js for the EJS resolver. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.
 - **Automatically update YouTube Music dependencies**: checks for and applies updates at the interval defined below. It appears only when the option above is enabled.
 - **Use nightly version of yt-dlp (recommended)**: downloads nightly builds of `yt-dlp`. Recommended because YouTube and YouTube Music frequently change their extraction mechanisms and nightly usually receives fixes before the stable channel. It appears only when the integration is enabled.
+- **Use YouTube.js to improve resolution and playback (recommended)**: installs YouTube.js and uses the same Node.js 22 or newer prepared for `yt-dlp`. `yt-dlp` remains the fallback, and the YouTube.js package is included in periodic update checks.
 - **Update interval (hours)**: how often the player tries to update dependencies when the YouTube Music tab is opened (1-720 h). It is available only when automatic updates are enabled.
+
+#### Advanced AutoDJ
+
+- **Download resources and enable AutoDJ**: separately downloads `librosa`, NumPy, SciPy, Numba, and PyAV. These libraries are not part of the main installer. Disabling the option preserves files already downloaded.
+- **Play DJ effects**, **AutoDJ profile**, and **AutoDJ transition length** become available when AutoDJ is enabled.
 
 #### YouTube Music library
 

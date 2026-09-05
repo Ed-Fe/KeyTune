@@ -4,7 +4,7 @@
     [string]$MpvRuntimeArchive = "",
     [ValidateSet("stable", "nightly")]
     [string]$YtDlpChannel = "stable",
-    [string]$AppVersion = "1.0.0"
+    [string]$AppVersion = "2.0.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -68,7 +68,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Step "Gerando executável principal"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --collect-all mpv --collect-data librosa --collect-all av --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-data ytmusicapi --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+& $PythonExe scripts\build_optional_resources.py --output-dir "dist\optional-resources" --app-version $AppVersion
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao gerar os pacotes de recursos opcionais."
+}
+$PythonStableAbiDll = & $PythonExe -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
+Require-Path -Path $PythonStableAbiDll -Description "DLL da ABI estável do Python"
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
@@ -82,6 +88,26 @@ $smtcSmokeProcess = Start-Process `
     -WindowStyle Hidden
 if ($smtcSmokeProcess.ExitCode -ne 0) {
     throw "O executável não conseguiu inicializar os controles de mídia do sistema."
+}
+
+Write-Step "Validando dependências opcionais do YouTube no executável"
+$youtubeSmokeAppData = Join-Path (Resolve-Path "build") "youtube-resource-smoke"
+$youtubeSmokeResourceDir = Join-Path $youtubeSmokeAppData "KeyTune\resources\youtube_music\youtube"
+Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-YouTubePython-win-x64.zip" -DestinationPath $youtubeSmokeResourceDir
+$savedAppData = $env:APPDATA
+try {
+    $env:APPDATA = $youtubeSmokeAppData
+    $youtubeSmokeProcess = Start-Process `
+        -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+        -ArgumentList "--youtube-dependencies-smoke-test" `
+        -Wait `
+        -PassThru `
+        -WindowStyle Hidden
+    if ($youtubeSmokeProcess.ExitCode -ne 0) {
+        throw "As dependências opcionais do YouTube não puderam ser importadas."
+    }
+} finally {
+    $env:APPDATA = $savedAppData
 }
 
 Write-Step "Baixando yt-dlp oficial ($YtDlpChannel)"

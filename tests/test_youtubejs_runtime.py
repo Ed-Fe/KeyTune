@@ -17,6 +17,21 @@ from player.youtube_music import youtubejs_runtime
 
 
 class YouTubeJSRuntimeTests(unittest.TestCase):
+    def test_managed_node_is_refreshed_only_when_resource_is_outdated(self):
+        node_dir = pathlib.Path("C:/keytune/resources/node")
+        for installed in (True, False):
+            with self.subTest(installed=installed), patch.object(
+                youtubejs_runtime, "get_optional_resource_dir", return_value=node_dir,
+            ), patch.object(
+                youtubejs_runtime, "find_all_available_javascript_runtimes", return_value={"node": str(node_dir / "node.exe")},
+            ), patch.object(
+                youtubejs_runtime, "optional_resource_installed", return_value=installed,
+            ), patch.object(youtubejs_runtime, "youtubejs_dependency_versions", return_value={}), patch.object(
+                youtubejs_runtime, "install_optional_resource",
+            ) as install:
+                youtubejs_runtime.install_nodejs_dependency(force=True)
+                self.assertEqual(install.call_count, 0 if installed else 1)
+
     def setUp(self):
         youtubejs_runtime._stop_worker()
         self.addCleanup(youtubejs_runtime._stop_worker)
@@ -76,6 +91,26 @@ class YouTubeJSRuntimeTests(unittest.TestCase):
     def test_resolve_stream_reports_missing_package(self, _find_runtimes, _cache_dir, _is_dir, _is_file):
         with self.assertRaisesRegex(RuntimeError, "não está instalado"):
             youtubejs_runtime.resolve_stream("https://www.youtube.com/watch?v=abc123DEF45")
+
+    def test_node_resource_is_downloaded_only_when_no_compatible_node_exists(self):
+        with patch.object(
+            youtubejs_runtime,
+            "find_all_available_javascript_runtimes",
+            return_value={},
+        ), patch.object(youtubejs_runtime, "install_optional_resource") as install_resource:
+            youtubejs_runtime.install_nodejs_dependency()
+
+        install_resource.assert_called_once_with("node", progress_callback=None)
+
+    def test_system_node_is_reused_without_downloading_portable_node(self):
+        with patch.object(
+            youtubejs_runtime,
+            "find_all_available_javascript_runtimes",
+            return_value={"node": "C:/Program Files/nodejs/node.exe"},
+        ), patch.object(youtubejs_runtime, "install_optional_resource") as install_resource:
+            youtubejs_runtime.install_nodejs_dependency()
+
+        install_resource.assert_not_called()
 
 
 if __name__ == "__main__":

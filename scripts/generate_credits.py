@@ -12,7 +12,11 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from player.constants import GITHUB_REPOSITORY_NAME, GITHUB_REPOSITORY_OWNER  # noqa: E402
 
-REQUIREMENTS_PATH = REPO_ROOT / "requirements.txt"
+REQUIREMENTS_PATHS = (
+    REPO_ROOT / "requirements.txt",
+    REPO_ROOT / "requirements-youtube.txt",
+    REPO_ROOT / "requirements-autodj.txt",
+)
 CREDITS_PATH = REPO_ROOT / "docs" / "credits.md"
 HTTP_TIMEOUT_SECONDS = 10
 
@@ -143,7 +147,11 @@ def main() -> int:
     args = parser.parse_args()
     languages = args.languages or ["pt_BR"]
 
-    requirements_text = REQUIREMENTS_PATH.read_text(encoding="utf-8")
+    requirements_text = "\n".join(
+        requirements_path.read_text(encoding="utf-8")
+        for requirements_path in REQUIREMENTS_PATHS
+        if requirements_path.is_file()
+    )
     libraries = parse_requirements(requirements_text)
 
     # Fetch contributors once (language-neutral); ``None`` means the network

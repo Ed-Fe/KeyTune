@@ -71,6 +71,11 @@ It focuses on playlist management, folder browsing, session restore, and persist
    pip install -r requirements.txt
    ```
 
+   For source-tree development of the optional integrations, also install
+   `requirements-youtube.txt` and `requirements-autodj.txt`. Release builds
+   publish these components separately and the installed app downloads them
+   only after the user enables and confirms the corresponding feature.
+
 4. Download the MPV runtime for local development.
 
    ```powershell
