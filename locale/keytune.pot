@@ -17,14 +17,6 @@ msgstr ""
 msgid " visualizações"
 msgstr ""
 
-#: src/player/plugins/dialog.py
-msgid " — atualização de {version}"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid " — instalado"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "&1 estrela\tCtrl+1"
 msgstr ""
@@ -64,6 +56,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Arquivo"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Ativar"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -185,6 +181,7 @@ msgstr ""
 
 #: src/player/about/dialog.py
 #: src/player/playlists/queue_dialog.py
+#: src/player/plugins/dialog.py
 #: src/player/smart_library/search_dialog.py
 #: src/player/youtube_music/dialog.py
 msgid "&Fechar"
@@ -1027,6 +1024,10 @@ msgstr ""
 msgid "Agudos realçados"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Ainda não revisado"
+msgstr ""
+
 #: src/player/library/browser.py
 msgid "Ajuda da lista de itens"
 msgstr ""
@@ -1432,6 +1433,10 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Atualização disponível"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Atualização disponível (versão instalada: {version})"
 msgstr ""
 
 #: src/player/frames/update.py
@@ -2248,10 +2253,6 @@ msgstr ""
 msgid "Dados de conexão do YouTube Music"
 msgstr ""
 
-#: src/player/plugins/dialog.py
-msgid "Dados e permissões do plugin"
-msgstr ""
-
 #: src/player/equalizer/models.py
 msgid "Dance"
 msgstr ""
@@ -2382,6 +2383,18 @@ msgstr ""
 msgid "Detalhes do download"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Detalhes do plugin"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Detalhes do plugin selecionado"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Detalhes do plugin:"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "Detalhes técnicos: {detail}."
 msgstr ""
@@ -2446,6 +2459,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Dinamarca"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Disponível para instalar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -2717,10 +2734,6 @@ msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
 msgid "Escolha um país no menu para carregar o que está em alta."
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "Escolha um plugin. Pacotes são verificados por SHA-256 antes da instalação."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -3393,6 +3406,10 @@ msgstr ""
 msgid "Já existe um preset com esse nome. Escolha outro nome."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Já instalado"
+msgstr ""
+
 #: src/player/lyrics/service.py
 msgid "LRCLIB"
 msgstr ""
@@ -3612,11 +3629,11 @@ msgid "Marketplace de plugins"
 msgstr ""
 
 #: src/player/plugins/dialog.py
-msgid "Marketplace não verificado"
+msgid "Marketplace — revisão do catálogo: pendente"
 msgstr ""
 
 #: src/player/plugins/dialog.py
-msgid "Marketplace verificado"
+msgid "Marketplace — revisão do catálogo: revisado"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -5168,6 +5185,14 @@ msgid "Plugins"
 msgstr ""
 
 #: src/player/plugins/dialog.py
+msgid "Plugins disponíveis no marketplace"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Plugins disponíveis:"
+msgstr ""
+
+#: src/player/plugins/dialog.py
 msgid "Plugins instalados:"
 msgstr ""
 
@@ -5781,6 +5806,14 @@ msgstr ""
 msgid "Retomar preparação do AutoDJ"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "Revisado"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Revisão do catálogo: {review}"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Rock"
 msgstr ""
@@ -6066,6 +6099,10 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Status do download"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "Status: {status}"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -6657,10 +6694,6 @@ msgstr ""
 msgid "não listada"
 msgstr ""
 
-#: src/player/plugins/dialog.py
-msgid "não verificado"
-msgstr ""
-
 #: src/player/frames/smart_library/ratings.py
 msgid "não é favorito"
 msgstr ""
@@ -6771,10 +6804,6 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "tom original"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "verificado"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
