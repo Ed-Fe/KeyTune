@@ -373,9 +373,7 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
 
 
 class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
-    ACTION_INSTALL_DENO = "install-deno"
     ACTION_INSTALL_NODE = "install-node"
-    ACTION_OPEN_DENO = "open-deno"
     ACTION_OPEN_NODE = "open-node"
     ACTION_OPEN_GUIDE = "open-guide"
 
@@ -417,28 +415,19 @@ class YouTubeMusicJavascriptRuntimeDialog(wx.Dialog):
             else _("O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais.")
         )
         primary_button_labels = {
-            True: (
-                (_("Instalar &Deno"), self.ACTION_INSTALL_DENO),
-                (_("Instalar &Node.js"), self.ACTION_INSTALL_NODE),
-            ),
-            False: (
-                (_("Abrir site do &Deno"), self.ACTION_OPEN_DENO),
-                (_("Abrir site do &Node.js"), self.ACTION_OPEN_NODE),
-            ),
+            True: ((_("Instalar &Node.js"), self.ACTION_INSTALL_NODE),),
+            False: ((_("Abrir site do &Node.js"), self.ACTION_OPEN_NODE),),
         }
 
         instructions = wx.StaticText(
             self,
             label=_(
                 "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um "
-                "complemento do sistema chamado runtime JavaScript.\n\n"
+                "runtime JavaScript.\n\n"
                 "Sem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\n"
-                "Instale uma destas opções:\n"
-                "1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n"
-                "2. Node.js 22+\n\n"
-                "Para usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está "
-                "descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece "
-                "sua instalação automática.\n\n"
+                "Recomendamos o Node.js 24+, utilizado pelo yt-dlp e pelo YouTube.js. "
+                "O KeyTune pode manter uma cópia portátil automaticamente quando os recursos adicionais "
+                "do YouTube Music estão ativados.\n\n"
             ).format() + f"{install_hint}\n\n" + _(
                 "Depois da instalação, feche e abra o player novamente para que o novo runtime seja "
                 "encontrado no PATH do sistema."

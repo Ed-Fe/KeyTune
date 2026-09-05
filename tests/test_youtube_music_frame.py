@@ -19,9 +19,6 @@ from player.playlists import PlaylistState, ScreenTabState
 from player.youtube_music.service import InvalidYouTubeMusicAuthError, TemporaryYouTubeMusicAuthError
 
 
-_ACTION_INSTALL_DENO = youtube_music_frame_module.YouTubeMusicJavascriptRuntimeDialog.ACTION_INSTALL_DENO
-
-
 class _DummyFrame(FrameYouTubeMusicMixin):
     def __init__(self, service):
         self._youtube_music_service = service
@@ -315,35 +312,19 @@ class YouTubeMusicFrameTests(unittest.TestCase):
             ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
         )
 
-    def test_handle_javascript_runtime_error_opens_winget_install(self):
+    def test_handle_javascript_runtime_error_starts_managed_install(self):
         service = Mock()
         frame = _DummyFrame(service)
-        frame._launch_youtube_music_javascript_runtime_install = Mock(return_value=True)
-
-        class _FakeDialog:
-            def __init__(self, _parent, *, winget_available):
-                self.winget_available = winget_available
-
-            def ShowModal(self):
-                return youtube_music_frame_module.wx.ID_OK
-
-            def get_selected_action(self):
-                return _ACTION_INSTALL_DENO
-
-            def Destroy(self):
-                return None
+        frame.settings.youtube_music_manage_dependencies = True
 
         with patch(
             "player.frames.youtube_music.dependencies.is_missing_javascript_runtime_error_message",
             return_value=True,
-        ), patch("player.frames.youtube_music.dependencies.shutil.which", return_value="C:/Windows/System32/winget.exe"), patch(
-            "player.frames.youtube_music.dependencies.YouTubeMusicJavascriptRuntimeDialog",
-            _FakeDialog,
         ):
             handled = frame._handle_youtube_javascript_runtime_error("erro")
 
         self.assertTrue(handled)
-        frame._launch_youtube_music_javascript_runtime_install.assert_called_once_with("DenoLand.Deno", "Deno")
+        self.assertEqual(frame.youtube_dependency_update_calls, [(False, True)])
 
     def test_handle_javascript_runtime_error_ignores_other_messages(self):
         service = Mock()
@@ -371,7 +352,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertFalse(prompted)
         frame._show_youtube_javascript_runtime_dialog.assert_not_called()
 
-    def test_preferences_change_prompts_for_runtime_when_enabling_managed_dependencies(self):
+    def test_preferences_change_starts_managed_install_without_external_runtime_prompt(self):
         service = Mock()
         frame = _DummyFrame(service)
         previous_settings = types.SimpleNamespace(
@@ -384,7 +365,7 @@ class YouTubeMusicFrameTests(unittest.TestCase):
 
         frame._handle_youtube_music_preferences_change(previous_settings)
 
-        frame._prompt_for_missing_youtube_javascript_runtime.assert_called_once_with()
+        frame._prompt_for_missing_youtube_javascript_runtime.assert_not_called()
         self.assertEqual(frame.youtube_dependency_update_calls, [(False, True)])
         self.assertEqual(frame.youtube_screen_refresh_calls, 1)
 

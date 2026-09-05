@@ -1,5 +1,7 @@
 # Plugins do KeyTune 2
 
+Idiomas: [Português](plugins.md) · [English](plugins.en.md) · [Español](plugins.es.md). Veja também o [manual do usuário](manual.md). Estes guias são incluídos em HTML na pasta `docs` do player.
+
 O KeyTune 2 possui uma API pública baseada em capacidades, descoberta por manifesto, gerenciamento acessível, pacotes verificáveis e um marketplace que pode ser mantido inteiramente por pull requests no GitHub.
 
 ## Criando um plugin
@@ -18,7 +20,7 @@ Um pacote `.ktplugin` é um ZIP com `keytune-plugin.json` na raiz:
   "description": "Uma integração de exemplo.",
   "license": "MIT",
   "isolation": "process",
-  "permissions": ["playback.read", "notifications"]
+  "permissions": ["playback.read", "notifications", "ui.menu"]
 }
 ```
 
@@ -32,8 +34,6 @@ class Plugin:
         self.api = api
 
     def on_start(self):
-        state = self.api.playback_state()
-        playlists = self.api.playlists()
         self.api.add_menu_action("announce", "Anunciar faixa", self.announce)
 
     def announce(self):
@@ -118,7 +118,7 @@ O cliente baixa o catálogo fora da thread da interface, limita seu tamanho, exi
 
 ## Compatibilidade
 
-O primeiro número de `api_version` é a fronteira incompatível. Como a plataforma ainda está na mesma pull request e não houve uma API 2.0 publicada, estes métodos fazem parte diretamente do contrato 2.0 — não existe um bump artificial para 2.1. Depois da primeira publicação, novos métodos e eventos em versões menores serão aditivos. APIs só serão removidas em uma versão principal, após aviso de depreciação. Plugins devem ignorar eventos e campos desconhecidos. Dados privados ficam em uma pasta por id e nunca devem depender da estrutura interna do player.
+O KeyTune 2.0.0 introduz o contrato de plugins `api_version: "2.0"`. O primeiro número de `api_version` é a fronteira incompatível. Novos métodos e eventos em versões menores serão aditivos. APIs só serão removidas em uma versão principal, após aviso de depreciação. Plugins devem ignorar eventos e campos desconhecidos. Dados privados ficam em uma pasta por id e nunca devem depender da estrutura interna do player.
 
 ## Diagnóstico e distribuição
 

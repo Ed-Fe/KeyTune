@@ -90,6 +90,31 @@ class _FakeMPVModule:
 
 
 class MPVPlayerTests(unittest.TestCase):
+    def test_normal_load_overrides_previous_file_local_pause(self):
+        player = mpv_backend.MPVPlayer(video_output_enabled=False)
+        core = self.fake_module.created_players[0]
+        saved_pause = None
+
+        def loadfile(path, mode, **options):
+            nonlocal saved_pause
+            # MPV restores options belonging to the previous file before
+            # applying the new file's options.
+            if saved_pause is not None:
+                core.pause = saved_pause
+            saved_pause = core.pause
+            if "pause" in options:
+                core.pause = options["pause"] == "yes"
+            core.core_idle = False
+
+        core.loadfile = loadfile
+        player.set_media(mpv_backend.MPVMedia("a.mp3"))
+        player.play(pause_on_start=True)
+        self.assertFalse(player.is_playing())
+        player.stop()
+        player.set_media(mpv_backend.MPVMedia("b.mp3"))
+        player.play()
+        self.assertTrue(player.is_playing())
+
     def setUp(self):
         self._previous_module = mpv_backend._mpv_module
         self.fake_module = _FakeMPVModule()

@@ -861,7 +861,6 @@ class FrameUIMixin:
             page,
             on_replace_next=self.on_replace_autodj_next,
             on_recalculate=self.on_recalculate_autodj_session,
-            on_add_media=self.on_add_media_to_autodj_session,
             on_toggle_preparation=self.on_toggle_autodj_preparation,
             on_stop=self.on_stop_autodj_session,
         )

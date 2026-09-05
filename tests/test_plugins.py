@@ -7,7 +7,7 @@ import tempfile
 import time
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import zipfile
 
 SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
@@ -15,7 +15,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.plugins.api import PermissionDeniedError, PluginAPI, PluginContext
-from player.plugins.dialog import installation_summary
+from player.plugins.dialog import _INSTALLATION_CANCELLED, PluginManagerDialog, installation_summary, marketplace_details
 from player.plugins.installer import InstallationError, install_archive
 from player.plugins.host import PluginHostAdapter
 from player.plugins.manifest import ManifestError, PluginManifest, PluginPermission
@@ -54,16 +54,54 @@ class PluginTests(unittest.TestCase):
             isolation="in_process",
             permissions=["network", "ui.tab"],
         ))
-        summary = installation_summary(parsed, "Pacote local selecionado")
+        summary = installation_summary(parsed, "Marketplace — revisão do catálogo: revisado")
         self.assertIn("Nome: Teste", summary)
         self.assertIn("Versão: 1.0.0", summary)
         self.assertIn("Autor: Testes", summary)
         self.assertIn("Plugin de teste", summary)
         self.assertIn("Licença: MIT", summary)
         self.assertIn("Página: https://example.com/plugin", summary)
+        self.assertIn("Origem: Marketplace — revisão do catálogo: revisado", summary)
+        self.assertIn("Isolamento: No processo do player", summary)
         self.assertIn("Adicionar abas ao player", summary)
         self.assertIn("Acessar a internet", summary)
         self.assertIn("mesmo acesso do aplicativo", summary)
+
+    def test_marketplace_details_are_concise_and_exclude_download_metadata(self):
+        entry = parse_catalog(json.dumps({"schema_version": 1, "plugins": [{
+            "id": "org.test.plugin", "name": "Teste", "version": "1.0.0",
+            "author": "Testes", "description": "Plugin de teste",
+            "download_url": "https://example.com/teste.ktplugin",
+            "sha256": "a" * 64, "verified": True,
+        }]}))[0]
+        details = marketplace_details(entry, "0.9.0")
+        self.assertIn("Versão: 1.0.0", details)
+        self.assertIn("Autor: Testes", details)
+        self.assertIn("Plugin de teste", details)
+        self.assertIn("Atualização disponível", details)
+        self.assertIn("Revisão do catálogo: Revisado", details)
+        self.assertNotIn("https://", details)
+        self.assertNotIn("aaaa", details)
+
+    def test_cancelling_marketplace_installation_reopens_the_selected_plugin(self):
+        entry = parse_catalog(json.dumps({"schema_version": 1, "plugins": [{
+            "id": "org.test.plugin", "name": "Teste", "version": "1.0.0",
+            "author": "Testes", "download_url": "https://example.com/teste.ktplugin",
+            "sha256": "a" * 64,
+        }]}))[0]
+        dialog = PluginManagerDialog.__new__(PluginManagerDialog)
+        dialog._marketplace_entries = [entry]
+        dialog._install_and_activate = lambda *_args, **_kwargs: _INSTALLATION_CANCELLED
+        dialog._show_marketplace = Mock()
+        dialog.marketplace = SimpleNamespace(Enable=Mock())
+        with tempfile.NamedTemporaryFile(delete=False) as stream:
+            package = Path(stream.name)
+        try:
+            dialog._confirm_marketplace_install(entry, package)
+        finally:
+            package.unlink(missing_ok=True)
+        dialog._show_marketplace.assert_called_once_with(selected_plugin_id=entry.id)
+        dialog.marketplace.Enable.assert_called_once_with()
 
     def test_api_denies_missing_capability(self):
         api = PluginAPI(PluginContext("org.test.plugin", Path("."), frozenset()), Bridge())

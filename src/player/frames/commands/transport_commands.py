@@ -14,7 +14,9 @@ class TransportCommandsMixin:
 
     def on_stop(self, _event):
         state = self._get_playlist_state()
-        self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
+        self._cancel_crossfade_transition(
+            stop_incoming=True, stop_outgoing=True, invalidate_requests=True, restore_selection=True,
+        )
         active_player_key = getattr(self, "_active_player_key", None)
 
         def finish_stop():

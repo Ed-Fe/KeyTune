@@ -5,7 +5,7 @@ KeyTune is a media player built with Python, wxPython, and MPV.
 KeyTune 2 also includes a permission-based plugin platform, process-isolated
 plugin lifecycle, accessible plugin manager, verified package installer, and a
 GitHub-friendly marketplace workflow. See [the plugin developer and marketplace
-guide](docs/plugins.md).
+guide](docs/plugins.en.md) ([Português](docs/plugins.md), [Español](docs/plugins.es.md)).
 
 It focuses on playlist management, folder browsing, session restore, and persistent user preferences.
 
@@ -70,6 +70,11 @@ It focuses on playlist management, folder browsing, session restore, and persist
    ```bash
    pip install -r requirements.txt
    ```
+
+   For source-tree development of the optional integrations, also install
+   `requirements-youtube.txt` and `requirements-autodj.txt`. Release builds
+   publish these components separately and the installed app downloads them
+   only after the user enables and confirms the corresponding feature.
 
 4. Download the MPV runtime for local development.
 

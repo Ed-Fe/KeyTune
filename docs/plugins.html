@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plugins do KeyTune 2</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --text: #1f2328;
+  --muted: #5c6470;
+  --accent: #205375;
+  --accent-soft: #d9e7f0;
+  --border: #d7d0c4;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+  line-height: 1.65;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(32, 83, 117, 0.12), transparent 35%),
+    linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+}
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 18px 48px rgba(31, 35, 40, 0.08);
+  padding: 36px;
+}
+h1, h2, h3 { line-height: 1.2; }
+h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); }
+h2 { margin-top: 2.25rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+h3 { margin-top: 1.5rem; }
+p, li { font-size: 1rem; }
+a { color: var(--accent); }
+code {
+  background: var(--accent-soft);
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+}
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #111827;
+  color: #f9fafb;
+}
+pre code { background: transparent; padding: 0; }
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  background: rgba(32, 83, 117, 0.04);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: rgba(32, 83, 117, 0.08); }
+footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.toc {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(32, 83, 117, 0.04);
+}
+.toc h2 {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.15rem;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.toc li { margin: 0.25rem 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Plugins do KeyTune 2</h1>
+      <p>Idiomas: <a href="plugins.html">Português</a> · <a href="plugins.en.html">English</a> · <a href="plugins.es.html">Español</a>. Veja também o <a href="manual.html">manual do usuário</a>. Estes guias são incluídos em HTML na pasta <code>docs</code> do player.</p>
+<p>O KeyTune 2 possui uma API pública baseada em capacidades, descoberta por manifesto, gerenciamento acessível, pacotes verificáveis e um marketplace que pode ser mantido inteiramente por pull requests no GitHub.</p>
+
+    <nav class="toc" aria-label="Índice do manual">
+      <ol>
+        <li class="toc-level-2"><a href="#criando-um-plugin">Criando um plugin</a></li>
+        <li class="toc-level-2"><a href="#permissoes">Permissões</a></li>
+        <li class="toc-level-2"><a href="#referencia-da-api-2-0">Referência da API 2.0</a></li>
+        <li class="toc-level-3"><a href="#biblioteca-carregada-e-youtube-music">Biblioteca carregada e YouTube Music</a></li>
+        <li class="toc-level-3"><a href="#yt-dlp-e-autodj-online">yt-dlp e AutoDJ online</a></li>
+        <li class="toc-level-2"><a href="#marketplace-no-github">Marketplace no GitHub</a></li>
+        <li class="toc-level-2"><a href="#compatibilidade">Compatibilidade</a></li>
+        <li class="toc-level-2"><a href="#diagnostico-e-distribuicao">Diagnóstico e distribuição</a></li>
+      </ol>
+    </nav>
+    <h2 id="criando-um-plugin">Criando um plugin</h2>
+<p>Um pacote <code>.ktplugin</code> é um ZIP com <code>keytune-plugin.json</code> na raiz:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;org.exemplo.meu-plugin&quot;,
+  &quot;name&quot;: &quot;Meu plugin&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;api_version&quot;: &quot;2.0&quot;,
+  &quot;minimum_keytune_version&quot;: &quot;2.0.0&quot;,
+  &quot;entrypoint&quot;: &quot;plugin:Plugin&quot;,
+  &quot;author&quot;: &quot;Exemplo&quot;,
+  &quot;description&quot;: &quot;Uma integração de exemplo.&quot;,
+  &quot;license&quot;: &quot;MIT&quot;,
+  &quot;isolation&quot;: &quot;process&quot;,
+  &quot;permissions&quot;: [&quot;playback.read&quot;, &quot;notifications&quot;, &quot;ui.menu&quot;]
+}
+</code></pre>
+<p>O objeto indicado por <code>entrypoint</code> recebe a API no construtor. Pode implementar <code>on_start()</code>, <code>on_event(nome, dados)</code> e <code>on_stop()</code>. A API estável 2.x fornece estado/controle de reprodução, acesso às playlists já carregadas, biblioteca inteligente, YouTube Music, resolução pelo yt-dlp, análise AutoDJ, rede, armazenamento de configurações, notificações e contribuições de menu, aba e tela. Cada chamada exige a permissão correspondente.</p>
+<p>Um exemplo instalável e mantido junto ao player está em <code>examples/plugins/now-playing</code>. Ele demonstra menus, duas telas, leitura do estado de reprodução, biblioteca e configurações privadas. Gere o pacote com <code>python scripts/package_example_plugin.py</code>; o resultado é <code>examples/plugins/now-playing/now-playing-example-1.1.0.ktplugin</code>.</p>
+<pre><code class="language-python">class Plugin:
+    def __init__(self, api):
+        self.api = api
+
+    def on_start(self):
+        self.api.add_menu_action(&quot;announce&quot;, &quot;Anunciar faixa&quot;, self.announce)
+
+    def announce(self):
+        state = self.api.playback_state()
+        self.api.notify(state.get(&quot;media_path&quot;) or &quot;Nada em reprodução&quot;)
+</code></pre>
+<p>No modo <code>process</code>, <code>add_menu_action</code> aceita o mesmo callback da API normal; o host guarda apenas o id e envia <code>ui.action</code> ao worker, que executa o callback dentro do processo isolado. Sem callback, o plugin pode tratar <code>on_event("ui.action", {"id": ...})</code>. Fábricas wxPython de abas/telas são exclusivas do modo <code>in_process</code>; o exemplo usa esse modo justamente para demonstrá-las.</p>
+<p>Plugins com telas ricas podem optar por <code>in_process</code>; só esse modo recebe fábricas wxPython para abas e telas. Ele executa dentro do KeyTune e deve ser reservado a código plenamente confiável. No modo padrão <code>process</code>, uma falha comum fica separada do player, variáveis de ambiente sensíveis não são herdadas e a comunicação com recursos internos usa a API versionada. O plugin continua sendo Python normal: pode usar arquivos, rede, subprocessos e bibliotecas diretamente. Portanto, o processo separado <strong>não é uma sandbox de segurança contra código não confiável</strong>.</p>
+<h2 id="permissoes">Permissões</h2>
+<p>As permissões disponíveis são <code>playback.read</code>, <code>playback.control</code>, <code>library.read</code>, <code>library.write</code>, <code>youtube_music.read</code>, <code>youtube_music.write</code>, <code>yt_dlp</code>, <code>autodj.analyze</code>, <code>network</code>, <code>filesystem.read</code>, <code>filesystem.write</code>, <code>clipboard</code>, <code>notifications</code>, <code>ui.menu</code>, <code>ui.tab</code>, <code>ui.view</code> e <code>settings</code>. Antes de instalar ou atualizar, o KeyTune mostra os dados do manifesto, as permissões e o modo de isolamento. A confirmação instala e ativa o plugin com as permissões apresentadas.</p>
+<h2 id="referencia-da-api-2-0">Referência da API 2.0</h2>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Permissão</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>playback_state()</code></td>
+<td><code>playback.read</code></td>
+<td>mídia, posição, volume, velocidade, pitch e estado</td>
+</tr>
+<tr>
+<td><code>playback(action)</code></td>
+<td><code>playback.control</code></td>
+<td>executa <code>play_pause</code>, <code>stop</code>, <code>next</code> ou <code>previous</code></td>
+</tr>
+<tr>
+<td><code>playlists()</code> / <code>active_playlist()</code></td>
+<td><code>library.read</code></td>
+<td>abas carregadas, itens, rótulos e seleção atual</td>
+</tr>
+<tr>
+<td><code>library_search(query, limit)</code></td>
+<td><code>library.read</code></td>
+<td>registros da biblioteca inteligente</td>
+</tr>
+<tr>
+<td><code>add_to_playlist(paths, playlist_index=...)</code></td>
+<td><code>library.write</code></td>
+<td>quantidade adicionada</td>
+</tr>
+<tr>
+<td><code>youtube_music_account()</code></td>
+<td><code>youtube_music.read</code></td>
+<td>conexão e nome da conta, nunca cookies</td>
+</tr>
+<tr>
+<td><code>youtube_music_search(query, scope=...)</code></td>
+<td><code>youtube_music.read</code></td>
+<td>resultados normalizados do serviço do player</td>
+</tr>
+<tr>
+<td><code>youtube_music_playlists(limit=...)</code></td>
+<td><code>youtube_music.read</code></td>
+<td>playlists da conta conectada</td>
+</tr>
+<tr>
+<td><code>youtube_music_playlist(id)</code></td>
+<td><code>youtube_music.read</code></td>
+<td>conteúdo normalizado de uma playlist</td>
+</tr>
+<tr>
+<td><code>youtube_music_rate</code>, <code>youtube_music_create_playlist</code>, <code>youtube_music_add_tracks</code></td>
+<td><code>youtube_music.write</code></td>
+<td>alterações explícitas na conta conectada</td>
+</tr>
+<tr>
+<td><code>resolve_media(path, use_account_auth=False)</code></td>
+<td><code>yt_dlp</code></td>
+<td>URL reproduzível e metadados; cabeçalhos/cookies não são expostos</td>
+</tr>
+<tr>
+<td><code>yt_dlp_info(path, ...)</code></td>
+<td><code>yt_dlp</code></td>
+<td>metadados, formatos ou entradas de playlist extraídos pelo yt-dlp gerenciado</td>
+</tr>
+<tr>
+<td><code>yt_dlp_download(path, destino, ...)</code></td>
+<td><code>yt_dlp</code> + <code>filesystem.write</code></td>
+<td>caminhos finais dos arquivos baixados</td>
+</tr>
+<tr>
+<td><code>analyze_media(path, use_account_auth=False)</code></td>
+<td><code>autodj.analyze</code></td>
+<td>BPM, grade de batidas, confiança, energia e tonalidade</td>
+</tr>
+<tr>
+<td><code>request(...)</code></td>
+<td><code>network</code></td>
+<td>resposta HTTP limitada a 2 MB</td>
+</tr>
+<tr>
+<td><code>read_text(path, ...)</code></td>
+<td><code>filesystem.read</code></td>
+<td>texto externo limitado a 2 MB</td>
+</tr>
+<tr>
+<td><code>write_text(path, text, ...)</code></td>
+<td><code>filesystem.write</code></td>
+<td>gravação de texto externo limitada a 2 MB</td>
+</tr>
+<tr>
+<td><code>clipboard_text()</code> / <code>set_clipboard_text(text)</code></td>
+<td><code>clipboard</code></td>
+<td>leitura ou escrita de texto na área de transferência</td>
+</tr>
+<tr>
+<td><code>get_setting</code> / <code>set_setting</code></td>
+<td><code>settings</code></td>
+<td>JSON privado e atômico por plugin</td>
+</tr>
+<tr>
+<td><code>notify(message)</code></td>
+<td><code>notifications</code></td>
+<td>anúncio pelo mecanismo acessível do KeyTune</td>
+</tr>
+<tr>
+<td><code>add_menu_action</code>, <code>add_tab</code>, <code>add_view</code></td>
+<td><code>ui.*</code></td>
+<td>contribuição de interface</td>
+</tr>
+</tbody>
+</table>
+<p>Chamadas são síncronas. Plugins <code>in_process</code> não devem executar rede, yt-dlp ou análise na thread da interface; use uma thread de trabalho e devolva atualizações de UI pela integração do wxPython. Plugins isolados já fazem RPC a partir do processo separado. <code>api.data_directory</code>, <code>read_text()</code>, <code>write_text()</code> e <code>request()</code> são conveniências estáveis, não obrigações: o plugin pode usar <code>pathlib</code>, <code>requests</code>, sockets e outras bibliotecas Python normalmente. Valores retornados pela API são objetos JSON e não expõem instâncias internas mutáveis do player.</p>
+<p>Eventos estáveis iniciais são <code>playback.media_changed</code> (caminho, título, artista e índice da playlist), <code>tab.changed</code> (índice) e <code>ui.action</code> (id de uma ação registrada por plugin isolado). O <code>on_start()</code> ocorre depois da restauração da sessão, portanto as playlists consultadas nesse ponto já correspondem à interface carregada.</p>
+<h3 id="biblioteca-carregada-e-youtube-music">Biblioteca carregada e YouTube Music</h3>
+<p><code>playlists()</code> consulta exatamente as playlists e pastas abertas no momento, inclusive itens e rótulos visíveis. <code>library_search()</code> usa o banco da Biblioteca inteligente e devolve uma lista vazia quando ela está desativada. A API de YouTube Music reutiliza a sessão e os serviços do KeyTune: o plugin nunca recebe cookies, arquivos de autenticação ou cabeçalhos sensíveis. Avaliar mídia, criar playlists e adicionar faixas exigem a permissão de escrita separada <code>youtube_music.write</code>.</p>
+<h3 id="yt-dlp-e-autodj-online">yt-dlp e AutoDJ online</h3>
+<p>O KeyTune distribui e gerencia o <strong>executável oficial do yt-dlp</strong>, não mantém necessariamente o pacote Python <code>yt_dlp</code> importado dentro do processo. Por isso a API não entrega o objeto interno <code>YoutubeDL</code>: isso acoplaria plugins a uma dependência opcional e permitiria contornar a validação de opções. Em vez disso, <code>yt_dlp_info()</code> e <code>yt_dlp_download()</code> são fachadas estáveis sobre o mesmo executável e os runtimes JavaScript já usados pelo player. O padrão é anônimo; <code>use_account_auth=True</code> reutiliza internamente a autenticação protegida e exige também <code>youtube_music.read</code>, sem expor cookies ao plugin.</p>
+<p>Um plugin downloader pode, portanto, reutilizar o yt-dlp nativo do KeyTune sem empacotar outra cópia:</p>
+<pre><code class="language-python">info = api.yt_dlp_info(&quot;https://www.youtube.com/watch?v=...&quot;)
+files = api.yt_dlp_download(
+    &quot;https://www.youtube.com/watch?v=...&quot;,
+    r&quot;C:\Users\usuario\Videos&quot;,
+    format_selector=&quot;best[ext=mp4]/best&quot;,
+)
+</code></pre>
+<p>Downloads exigem simultaneamente <code>yt_dlp</code> e <code>filesystem.write</code>. A API aceita seletor de formato, modelo de nome sem componentes de pasta, playlist e limite de itens; argumentos de linha de comando arbitrários não são aceitos. O seletor padrão prefere um MP4 progressivo para não depender de um <code>ffmpeg.exe</code> externo. Seletores que combinam vídeo e áudio separados só funcionarão quando um executável FFmpeg compatível estiver disponível.</p>
+<p><code>resolve_media()</code> continua sendo a opção apropriada quando o plugin só precisa de uma URL reproduzível. <code>analyze_media()</code> aceita arquivo local, URL ou referência do YouTube Music e também é anônimo por padrão; conteúdo privado exige <code>use_account_auth=True</code> e <code>youtube_music.read</code>. Para conteúdo online, o KeyTune resolve a mídia, encaminha internamente somente os cabeçalhos necessários, baixa no máximo 120 MB para uma pasta temporária, decodifica os formatos do YouTube com os codecs FFmpeg empacotados pelo <strong>PyAV</strong> e analisa com <strong>librosa 0.11</strong>. O resultado remoto fica sete dias no cache; o arquivo temporário é removido imediatamente. A análise é limitada aos primeiros 15 minutos para manter uso previsível de memória e CPU.</p>
+<p>O librosa fornece rastreamento de batidas, envelope de ataques, RMS e cromagrama. PyAV evita depender de um <code>ffmpeg.exe</code> externo e oferece wheels para o build do Windows. Se um formato ainda não puder ser decodificado, a análise falha de modo isolado e a reprodução comum continua funcionando.</p>
+<h2 id="marketplace-no-github">Marketplace no GitHub</h2>
+<p>O repositório comunitário <code>keytune-plugins</code> mantém <code>catalog.json</code> com <code>schema_version: 1</code> e uma lista <code>plugins</code>. Cada entrada contém <code>id</code>, <code>name</code>, <code>version</code>, <code>description</code>, <code>author</code>, <code>homepage</code>, <code>download_url</code> HTTPS, <code>sha256</code> e <code>verified</code>. Autores:</p>
+<ol>
+<li>publicam o <code>.ktplugin</code> em uma GitHub Release;</li>
+<li>calculam SHA-256 do arquivo final;</li>
+<li>abrem uma pull request adicionando/atualizando uma entrada;</li>
+<li>passam pela validação automática de schema, ids únicos, HTTPS, checksum, manifesto e compatibilidade;</li>
+<li>recebem o selo <code>verified</code> somente após revisão humana da procedência.</li>
+</ol>
+<p>O cliente baixa o catálogo fora da thread da interface, limita seu tamanho, exige HTTPS inclusive após redirecionamentos, limita pacotes e arquivos extraídos, bloqueia <em>zip slip</em> e nomes perigosos no Windows, confere SHA-256, id e versão e instala transacionalmente. Depois de validar o pacote, mostra os dados e permissões reais do manifesto antes de permitir a instalação e ativação. O selo <code>verified</code> aparece nessa confirmação.</p>
+<h2 id="compatibilidade">Compatibilidade</h2>
+<p>O KeyTune 2.0.0 introduz o contrato de plugins <code>api_version: "2.0"</code>. O primeiro número de <code>api_version</code> é a fronteira incompatível. Novos métodos e eventos em versões menores serão aditivos. APIs só serão removidas em uma versão principal, após aviso de depreciação. Plugins devem ignorar eventos e campos desconhecidos. Dados privados ficam em uma pasta por id e nunca devem depender da estrutura interna do player.</p>
+<h2 id="diagnostico-e-distribuicao">Diagnóstico e distribuição</h2>
+<p>Falhas são registradas separadamente em <code>plugin-logs/&lt;id&gt;.log</code>. O pacote instalado fica em <code>plugins/&lt;id&gt;</code> e o estado/consentimento em <code>plugins/registry.json</code>. Não inclua segredos no manifesto ou pacote. Releases devem ser imutáveis: publique uma nova versão em vez de substituir um arquivo já catalogado.</p>
+      <footer>
+        Gerado em 04/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/plugins.md">ver fonte no GitHub</a>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

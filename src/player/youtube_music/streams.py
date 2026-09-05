@@ -13,11 +13,13 @@ from .dependencies import (
     ensure_yt_dlp_executable_available,
     install_or_update_youtube_dependencies,
     youtube_dependency_management_enabled,
+    youtubejs_resolver_enabled,
 )
 from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from .yt_dlp_runtime import find_incompatible_javascript_runtimes
+from .youtubejs_runtime import resolve_stream as resolve_youtubejs_stream
 from ..log import get_logger
 from ..i18n import _
 
@@ -86,7 +88,7 @@ def is_missing_javascript_runtime_error_message(error_message):
         return False
     return all(marker in normalized_error_message for marker in _JAVASCRIPT_RUNTIME_REQUIRED_MARKERS) and any(
         marker in normalized_error_message
-        for marker in ("deno 2.3+", "node.js 22+", "quickjs", "runtime compatível")
+        for marker in ("deno 2.3+", "node.js 24+", "quickjs", "runtime compatível")
     )
 
 
@@ -102,6 +104,41 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
         return ResolvedStreamPlayback(stream_url=normalized_media_path, http_headers={})
 
     _logger.info("Resolving stream for: %s", sanitize_sensitive_text(normalized_media_path))
+    playback_auth = load_saved_playback_auth()
+    use_saved_auth = bool(use_account_cookies)
+    cookie_header = playback_auth.cookie_header if use_saved_auth else ""
+    cookie_file_path = playback_auth.cookie_file_path if use_saved_auth else ""
+    yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
+    playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
+
+    if youtubejs_resolver_enabled():
+        youtubejs_started_at = time.monotonic()
+        try:
+            youtubejs_stream = resolve_youtubejs_stream(
+                normalized_media_path,
+                cookie_header="",
+                user_agent=playback_auth.user_agent if use_saved_auth else "",
+            )
+            _logger.info(
+                "YouTube.js resolved the stream in %.2f second(s)",
+                time.monotonic() - youtubejs_started_at,
+            )
+            return ResolvedStreamPlayback(
+                stream_url=youtubejs_stream.stream_url,
+                http_headers=_merge_playback_http_headers(
+                    playback_http_headers,
+                    target_stream_url=youtubejs_stream.stream_url,
+                ),
+                display_title=youtubejs_stream.display_title,
+                display_artist=youtubejs_stream.display_artist,
+            )
+        except Exception as exc:
+            _logger.warning(
+                "YouTube.js stream resolution failed after %.2f second(s); falling back to yt-dlp: %s",
+                time.monotonic() - youtubejs_started_at,
+                sanitize_sensitive_text(exc),
+            )
+
     ensure_yt_dlp_executable_available()
 
     available_js_runtimes = find_all_available_javascript_runtimes()
@@ -114,23 +151,17 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
             )
             raise RuntimeError(
                 _("O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: "
-                  "{runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS "
-                  "2023-12-9+ e Bun de 1.2.11 até 1.3.14.").format(runtimes=runtime_versions)
+                  "{runtimes}. Ative ou atualize os recursos adicionais para instalar o Node.js 24+.")
+                .format(runtimes=runtime_versions)
             )
         raise RuntimeError(
             _("Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema "
-              "(Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. "
+              "ou nos recursos adicionais do KeyTune. Recomendamos o Node.js 24+, que também "
+              "é utilizado pelo YouTube.js. "
               "Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas "
               "de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. "
-              "Instale um desses runtimes e tente novamente.")
+              "Ative ou atualize os recursos adicionais e tente novamente.")
         )
-
-    playback_auth = load_saved_playback_auth()
-    use_saved_auth = bool(use_account_cookies)
-    cookie_header = playback_auth.cookie_header if use_saved_auth else ""
-    cookie_file_path = playback_auth.cookie_file_path if use_saved_auth else ""
-    yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
-    playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
 
     base_options = {
         "quiet": True,
@@ -747,8 +778,8 @@ def _build_stream_resolution_error_message(
 
     if "js_challenge" in normalized_diagnostic_signals:
         guidance_parts.append(
-            _("O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ "
-              "ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais.")
+            _("O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar "
+              "o Node.js 24+ e tente novamente.")
         )
 
     if "sabr_missing_url" in normalized_diagnostic_signals or "only_images" in normalized_diagnostic_signals:

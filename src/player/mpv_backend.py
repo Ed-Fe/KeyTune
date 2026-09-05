@@ -295,7 +295,7 @@ class MPVPlayer:
         if self._needs_load or self._loaded_media_path != media.path:
             self._last_playback_error_detail = ""
             self._apply_media_http_headers(media)
-            loadfile_options: dict[str, str] = {}
+            loadfile_options: dict[str, str] = {"pause": "yes" if pause_on_start else "no"}
             if start_seconds is not None:
                 try:
                     normalized_start_seconds = max(0.0, float(start_seconds))
@@ -310,7 +310,6 @@ class MPVPlayer:
                     # subsequent user-initiated seeks.
                     loadfile_options["start"] = f"{normalized_start_seconds:.3f}"
             if pause_on_start:
-                loadfile_options["pause"] = "yes"
                 self._player.pause = True
             else:
                 self._player.pause = False

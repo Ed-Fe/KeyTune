@@ -212,6 +212,15 @@ class PlaylistPlaybackMixin:
             else:
                 wrapped_cycle = state.current_index == state.item_count - 1
 
+        playlist_before_transition = {
+            name: list(value) if isinstance(value, list) else value
+            for name in (
+                "current_index", "current_media_path", "last_position_ms", "was_playing",
+                "custom_queue", "autodj_next_path", "autodj_history",
+                "playback_order", "playback_order_position", "playback_gain_db",
+            )
+            for value in (getattr(state, name),)
+        }
         target = state.move_in_playback_order(1, wrap=should_wrap)
         if not target:
             return False
@@ -223,6 +232,8 @@ class PlaylistPlaybackMixin:
             allow_crossfade=True,
             autodj_transition=prepared_autodj,
         )
+        if self._crossfade_state is not None:
+            self._crossfade_state["playlist_before_transition"] = playlist_before_transition
         return True
 
     def _update_title(self):

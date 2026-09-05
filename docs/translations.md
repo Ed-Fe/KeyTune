@@ -66,7 +66,12 @@ locale/
   language.
 - **Line breaks** (`\n`): preserve the line breaks from the source text.
 
-## Manual, credits, and installer
+## Manual, plugin API, credits, and installer
+
+- **Plugin API**: translate `docs/plugins.md` to `docs/plugins.<language>.md`.
+  Keep API identifiers and permission names unchanged. Both Windows builds render
+  and bundle all plugin guides as HTML. Link the translated manual to its matching
+  guide; the renderer converts local documentation links from Markdown to HTML.
 
 - **Manual**: create `docs/manual.<language>.md` (for example,
   `docs/manual.en.md`). The build renders it to `manual.<language>.html`, and

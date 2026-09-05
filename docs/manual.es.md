@@ -313,7 +313,7 @@ La pestaña **Reproducción** controla el comportamiento de audio y el estado in
 - **Volumen predeterminado**: volumen al iniciar el reproductor (0-100).
 - **Paso de volumen**: cuánto aumenta o disminuye el volumen cada pulsación de `Flecha arriba`/`Flecha abajo` (1-25).
 - **Crossfade (segundos)**: superposición de audio entre pistas en la transición automática (0-12 s). Usa 0 para desactivarlo. El crossfade solo se aplica entre archivos de audio.
-- **Activar AutoDJ**: analiza en segundo plano la pista actual y hasta seis opciones siguientes, incluso en playlists nuevas, evita artistas recientes y elige por energía local de la transición, tonalidad mayor/menor, diferencia de volumen percibido y compatibilidad de tempo. Cuando la cuadrícula de beats es fiable, estima el primer tiempo del compás y los cambios de sección, alinea frases de cuatro compases, sincroniza ambas pistas y corrige pequeños desvíos de fase durante la superposición. El punto de entrada puede omitir una introducción silenciosa o débil; el intercambio progresivo de graves y medios termina cortando la pista saliente en el beat planificado. La cola manual siempre tiene prioridad. Si el análisis se retrasa, falla o no tiene suficiente confianza, el reproductor usa el crossfade normal configurado o avanza con normalidad.
+- **Activar AutoDJ**: en **Recursos adicionales**, descarga las bibliotecas opcionales después de una confirmación y analiza en segundo plano la pista actual y hasta seis opciones siguientes. Una vez instalado, también se puede activar desde **Reproducción > Activar AutoDJ**. Evita artistas recientes y elige por energía local de la transición, tonalidad mayor/menor, diferencia de volumen percibido y compatibilidad de tempo. Cuando la cuadrícula de beats es fiable, estima el primer tiempo del compás y los cambios de sección, alinea frases de cuatro compases y sincroniza ambas pistas. La cola manual siempre tiene prioridad. Si el análisis falla o no tiene suficiente confianza, el reproductor usa el crossfade normal configurado o avanza con normalidad.
 - **Reproducir playlist con AutoDJ**: crea una pestaña dinámica separada sin modificar la playlist original, inicia inmediatamente la pista actual y mantiene hasta cinco canciones preparadas por adelantado. Un campo de solo lectura disponible mediante el foco normal de NVDA muestra la fuente, las cantidades preparadas y restantes, la actividad del análisis y los detalles de la próxima transición. Informa BPM, confianza rítmica, ajuste de tempo y el motivo cuando se requiere una transición normal; cada elemento también se marca como reproducido, en reproducción, próximo o preparado. Sus controles permiten cambiar la próxima pista, recalcular la secuencia futura, añadir archivos, pausar o reanudar la preparación y finalizar la sesión conservando el tramo preparado. `Tab` recorre el reproductor, la lista, la información y los controles de AutoDJ; `Shift+Tab` sigue el camino inverso. Las mismas acciones están disponibles con `Shift+F10` sobre la lista. La secuencia considera varias transiciones, evita choques probables de voces, acorta la superposición cuando es necesario y atenúa gradualmente una pista entrante más alta. La sesión, la fuente, el historial, el estado pausado y las pistas aún no planificadas se restauran con el reproductor.
 - **Perfil de AutoDJ**: *Suave* usa una mezcla larga y equilibrada; *Fiesta* concentra el intercambio de graves en el centro y aumenta gradualmente la energía; *Electrónica* usa cortes más fuertes y un intercambio más rápido para ritmos marcados.
 - **Duración de la transición de AutoDJ**: define una superposición de 8, 16 o 32 beats. Este valor es independiente de la duración del crossfade normal.
@@ -354,14 +354,20 @@ La pestaña **Biblioteca** controla la [biblioteca inteligente](#biblioteca-inte
 
 ### Recursos adicionales
 
-La pestaña **Recursos adicionales** concentra las integraciones opcionales. Actualmente reúne los controles de YouTube Music y YouTube en dos secciones.
+La pestaña **Recursos adicionales** concentra las integraciones opcionales de YouTube y las bibliotecas de AutoDJ. Antes de la primera descarga, KeyTune muestra un diálogo con todos los componentes que se instalarán.
 
 #### Integración con YouTube Music y YouTube
 
-- **Activar recursos adicionales para YouTube Music y YouTube (yt-dlp y ytmusicapi)**: descarga y mantiene un ejecutable `yt-dlp` y los paquetes Python necesarios en una carpeta local. Sin esto, la pestaña de YouTube Music no funciona. En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar, los archivos ya descargados no se eliminan.
+- **Activar recursos adicionales para YouTube Music y YouTube (yt-dlp, ytmusicapi y Node.js)**: descarga y mantiene un ejecutable `yt-dlp`, los paquetes Python necesarios y, cuando no existe uno compatible, un Node.js portátil para el resolvedor EJS. Sin esto, la pestaña de YouTube Music no funciona. En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar, los archivos ya descargados no se eliminan.
 - **Actualizar automáticamente las dependencias de YouTube Music**: verifica y aplica actualizaciones en el intervalo definido abajo. Solo aparece cuando la opción anterior está activada.
 - **Usar versión nightly de yt-dlp (recomendado)**: descarga builds nightly de `yt-dlp`. Recomendado porque YouTube y YouTube Music cambian los mecanismos de extracción con frecuencia y la nightly suele recibir correcciones antes que el canal estable. Solo aparece cuando la integración está activada.
+- **Usar YouTube.js para mejorar la resolución y la reproducción (recomendado)**: instala YouTube.js y usa el mismo Node.js 24 o superior preparado para `yt-dlp`. `yt-dlp` permanece como alternativa y el paquete YouTube.js participa en las verificaciones periódicas de actualizaciones.
 - **Intervalo de actualización (horas)**: cada cuánto tiempo el reproductor intenta actualizar las dependencias cuando se abre la pestaña YouTube Music (1-720 h). Solo está disponible cuando la actualización automática está activada.
+
+#### AutoDJ avanzado
+
+- **Descargar recursos y activar AutoDJ**: descarga por separado `librosa`, NumPy, SciPy, Numba y PyAV. Estas bibliotecas no forman parte del instalador principal. Al desactivar la opción, se conservan los archivos descargados.
+- **Reproducir efectos de DJ**, **Perfil de AutoDJ** y **Duración de la transición** quedan disponibles cuando AutoDJ está activado.
 
 #### Biblioteca de YouTube Music
 
@@ -608,6 +614,14 @@ Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre
 Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección [Sesión de YouTube Music](#sesión-de-youtube-music) y reconecta la cuenta.
 
 Para investigar otros problemas, activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel ajustado a *Depuración*, el reproductor graba información detallada en `keytune.log` en la carpeta de datos. Usa **Abrir carpeta de logs** para localizar el archivo y, si necesitas reportar un problema, adjúntalo a la issue.
+
+## Plugins y marketplace
+
+Abre **Configuración > Gestionar plugins** para instalar un archivo `.ktplugin` o elige **Abrir marketplace**. Selecciona un plugin, revisa autor, versión, origen, permisos y aislamiento y confirma **Instalar y activar**. El gestor también permite activar, desactivar y desinstalar plugins; usa `Tab` para recorrer los controles y las flechas para seleccionar un elemento.
+
+Las acciones aparecen en **Configuración > Acciones de plugins**. Los plugins también pueden ofrecer pestañas y pantallas. Instala solo código de autores confiables: el proceso separado no es una sandbox de seguridad. La verificación indica revisión de procedencia, no una garantía de seguridad.
+
+La [guía de desarrollo y API 2.0](plugins.es.md) cubre manifiestos, permisos, métodos, eventos y publicación. Se incluye con el reproductor para leer sin conexión; los enlaces externos requieren internet.
 
 ## Para desarrolladores
 

@@ -5,6 +5,7 @@ from player.mpv_runtime import bootstrap_mpv_runtime
 
 
 _SMTC_SMOKE_TEST_ARGUMENT = "--smtc-smoke-test"
+_YOUTUBE_DEPENDENCIES_SMOKE_TEST_ARGUMENT = "--youtube-dependencies-smoke-test"
 _PLUGIN_WORKER_ARGUMENT = "--plugin-worker"
 
 
@@ -75,6 +76,13 @@ def _run_smtc_smoke_test():
     return 0
 
 
+def _run_youtube_dependencies_smoke_test():
+    from player.youtube_music.dependencies import import_ytmusicapi_module
+
+    import_ytmusicapi_module()
+    return 0
+
+
 def main():
     if _PLUGIN_WORKER_ARGUMENT in sys.argv[1:]:
         from player.plugins.worker import main as worker_main
@@ -83,6 +91,8 @@ def main():
         return 0
     if _SMTC_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
         return _run_smtc_smoke_test()
+    if _YOUTUBE_DEPENDENCIES_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
+        return _run_youtube_dependencies_smoke_test()
 
     bootstrap_mpv_runtime()
 
