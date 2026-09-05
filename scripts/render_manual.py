@@ -295,7 +295,14 @@ def main() -> int:
     else:
         body_source = "\n".join(lines[:title_index] + lines[title_index + 1 :])
 
-    html_text = render_markdown(body_source, title, language=language)
+    # Keep bundled documentation links usable without a Markdown viewer.
+    body_source = re.sub(
+        r"\]\(((?:manual|plugins|credits)(?:\.[a-zA-Z_-]+)?)\.md([#][^)]*)?\)",
+        lambda match: f"]({match[1]}.html{match[2] or ''})",
+        body_source,
+    )
+    source_url = f"https://github.com/ed-fe/KeyTune/blob/main/docs/{args.source.name}"
+    html_text = render_markdown(body_source, title, source_url=source_url, language=language)
     args.target.parent.mkdir(parents=True, exist_ok=True)
     args.target.write_text(html_text, encoding="utf-8")
     return 0

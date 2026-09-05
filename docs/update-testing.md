@@ -4,6 +4,10 @@ Este documento descreve um fluxo prático para validar a atualização automáti
 
 ## Objetivo do teste
 
+Na preparação de uma release, confirme a versão e a data de publicação no changelog. O workflow usa essa seção como corpo da release.
+
+Antes de distribuir o instalador, confirme em `dist/KeyTune/docs` a presença de `plugins.html`, `plugins.en.html` e `plugins.es.html`, além dos manuais. Abra cada manual e siga o link para a API sem conexão; confira também os links entre idiomas e o destino do rodapé. O instalador deve preservar esses arquivos na pasta `docs` da instalação.
+
 Validar que a aplicação empacotada:
 
 1. verifica uma release remota mais nova ao iniciar;

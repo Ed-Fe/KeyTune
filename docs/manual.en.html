@@ -145,6 +145,7 @@ footer {
         <li class="toc-level-4"><a href="#metadata-and-analysis-cache-2">Metadata and analysis cache</a></li>
         <li class="toc-level-3"><a href="#additional-features">Additional features</a></li>
         <li class="toc-level-4"><a href="#youtube-music-and-youtube-integration">YouTube Music and YouTube integration</a></li>
+        <li class="toc-level-4"><a href="#advanced-autodj">Advanced AutoDJ</a></li>
         <li class="toc-level-4"><a href="#youtube-music-library">YouTube Music library</a></li>
         <li class="toc-level-2"><a href="#equalizer">Equalizer</a></li>
         <li class="toc-level-3"><a href="#how-to-use">How to use</a></li>
@@ -156,6 +157,7 @@ footer {
         <li class="toc-level-3"><a href="#account-and-library">Account and library</a></li>
         <li class="toc-level-3"><a href="#search-in-the-catalog-and-on-youtube">Search in the catalog and on YouTube</a></li>
         <li class="toc-level-3"><a href="#open-playlist-or-video">Open playlist or video</a></li>
+        <li class="toc-level-3"><a href="#radio-from-the-current-track">Radio from the current track</a></li>
         <li class="toc-level-3"><a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a></li>
         <li class="toc-level-3"><a href="#youtube-music-session">YouTube Music session</a></li>
         <li class="toc-level-4"><a href="#what-cookies-are">What cookies are</a></li>
@@ -166,6 +168,7 @@ footer {
         <li class="toc-level-2"><a href="#accessibility-features">Accessibility features</a></li>
         <li class="toc-level-2"><a href="#updates">Updates</a></li>
         <li class="toc-level-2"><a href="#troubleshooting">Troubleshooting</a></li>
+        <li class="toc-level-2"><a href="#plugins-and-marketplace">Plugins and marketplace</a></li>
         <li class="toc-level-2"><a href="#for-developers">For developers</a></li>
       </ol>
     </nav>
@@ -213,7 +216,7 @@ footer {
 <li><code>Ctrl+Alt+O</code> - unified dialog that accepts any type: file, folder, playlist, link, or YouTube Music ID.</li>
 <li><code>Ctrl+O</code> - opens media files or an <code>.m3u</code>/<code>.m3u8</code> playlist.</li>
 <li><code>Ctrl+Shift+O</code> - opens a folder directly in the folder browser.</li>
-<li><code>Ctrl+V</code> - pastes a path or link from the clipboard into the current playlist.</li>
+<li><code>Ctrl+V</code> - pastes a path or link from the clipboard into the current playlist; YouTube Music playlist links are recognized by their <code>list=</code> parameter and opened as a complete playlist.</li>
 <li><code>Ctrl+Shift+V</code> - pastes and opens in a new playlist.</li>
 </ul>
 <p>Directly supported media formats:</p>
@@ -233,8 +236,9 @@ footer {
 <li><code>Ctrl+Shift+W</code>: close the current media</li>
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: move to the next or previous tab</li>
 <li><code>Ctrl+Shift+E</code>: open the equalizer for the active tab</li>
-<li><code>Ctrl+C</code>: copy the path or link of the selected item</li>
-<li><code>Ctrl+Shift+C</code>: copy the link or path of the currently playing media</li>
+<li><code>Ctrl+C</code>: copy the selection; in the folder browser, copies files or folders so they can be pasted into Windows File Explorer</li>
+<li><code>Ctrl+Shift+C</code>: copy the selected path in the folder browser or the link/path of the currently playing media in other tabs</li>
+<li><code>Ctrl+Space</code>: open the sorting menu in the folder browser</li>
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
 <li><code>Ctrl+B</code>: switch focus between the item browser and the player</li>
 <li><code>Ctrl+F</code>: find an item in the current playlist or folder</li>
@@ -274,6 +278,7 @@ footer {
 <li><code>Alt+Home</code> / <code>Alt+End</code>: go to the first or last item in the playlist</li>
 <li><code>E</code>: toggle shuffle mode</li>
 <li><code>R</code>: toggle repeat mode</li>
+<li><code>Ctrl+R</code>: start a new YouTube Music radio from the current track</li>
 <li><code>A</code>: toggle playback of related YouTube Music content (automatic radio at the end of the playlist)</li>
 <li><code>]</code> / <code>[</code>: increase or decrease playback speed</li>
 <li><code>Shift+]</code> / <code>Shift+[</code>: increase or decrease playback pitch by semitones</li>
@@ -304,6 +309,9 @@ footer {
 <ul>
 <li><code>Enter</code>: enters the selected subfolder or plays the media file.</li>
 <li><code>Backspace</code>: goes back to the parent folder (equivalent to selecting <code>..</code>).</li>
+<li><code>Ctrl+C</code>: copies the selected files or folders so they can be pasted into Windows File Explorer.</li>
+<li><code>Ctrl+Shift+C</code>: copies the paths of the selected items as text.</li>
+<li><code>Ctrl+Space</code>: opens the sorting menu. Items can be sorted by name, modification date, creation date, type, or size, in ascending or descending order. The parent folder remains at the top and folders stay grouped before files. The choice is remembered for this tab when the session is restored.</li>
 <li><code>Shift+F10</code>: opens the context menu.</li>
 <li><code>Tab</code> / <code>Esc</code>: returns focus to the player.</li>
 </ul>
@@ -422,6 +430,10 @@ footer {
 <li><strong>Default volume</strong>: volume when starting the player (0-100).</li>
 <li><strong>Volume step</strong>: how much each press of <code>Up Arrow</code>/<code>Down Arrow</code> increases or decreases the volume (1-25).</li>
 <li><strong>Crossfade (seconds)</strong>: audio overlap between tracks during automatic transition (0-12 s). Use 0 to disable it. Crossfade is applied only between audio files.</li>
+<li><strong>Enable AutoDJ</strong>: under <strong>Additional features</strong>, downloads the optional libraries after confirmation and analyzes the current track and up to six upcoming options in the background. Once installed, it can also be toggled from <strong>Playback &gt; Enable AutoDJ</strong>. It avoids recently played artists and chooses by local transition energy, major/minor key, perceived loudness difference, and tempo compatibility. When the beat grid is reliable, it estimates the downbeat and section changes, aligns four-bar phrases, synchronizes both tracks, and corrects small phase drift during the overlap. The manual queue always takes priority. If analysis is late, fails, or has insufficient confidence, the player uses the configured regular crossfade or advances normally.</li>
+<li><strong>Play playlist with AutoDJ</strong>: creates a separate dynamic tab without changing the source playlist, starts the current track immediately, and keeps up to five tracks prepared ahead. A read-only field available through normal NVDA focus shows the source, prepared and remaining counts, analysis activity, and next-transition details. It reports BPM, rhythmic confidence, tempo adjustment, and the reason when a regular transition is required; each item is also marked as played, playing, next, or prepared. Its controls can replace the next track, recalculate the future sequence, add files, pause or resume preparation, and end the session while preserving the prepared portion. <code>Tab</code> moves through the player, list, AutoDJ information, and controls; <code>Shift+Tab</code> follows the reverse path. The same actions are available with <code>Shift+F10</code> on the list. The sequence considers multiple transitions, avoids likely vocal clashes, shortens the overlap when necessary, and gradually attenuates a louder incoming track. The session, source, history, paused state, and unplanned tracks are restored with the player.</li>
+<li><strong>AutoDJ profile</strong>: <em>Smooth</em> uses a long, balanced blend; <em>Party</em> concentrates the bass swap around the center and gradually raises energy; <em>Electronic</em> applies stronger cuts and a faster swap for pronounced beats.</li>
+<li><strong>AutoDJ transition length</strong>: sets an overlap of 8, 16, or 32 beats. This is independent of the regular crossfade duration.</li>
 <li><strong>Seek step (seconds)</strong>: how much each press of <code>Left Arrow</code>/<code>Right Arrow</code> moves forward or backward in the media (1-120 s).</li>
 <li><strong>Default repeat</strong>: repeat mode automatically applied to new playlists. The options are <em>Repeat off</em>, <em>Repeat current track</em>, and <em>Repeat playlist</em>.</li>
 <li><strong>Audio device</strong>: sound output used for playback. <em>System default</em> follows the main Windows device.</li>
@@ -454,13 +466,19 @@ footer {
 <li><strong>Entries kept in the cache</strong>: how many resolved metadata records and audio analyses are stored (100-100000). The oldest entries are dropped once the limit is reached.</li>
 </ul>
 <h3 id="additional-features">Additional features</h3>
-<p>The <strong>Additional features</strong> tab contains optional integrations. Today it brings together the YouTube Music and YouTube controls in two sections.</p>
+<p>The <strong>Additional features</strong> tab contains the optional YouTube integrations and AutoDJ libraries. Before the first download, KeyTune displays a dialog listing every component that will be installed.</p>
 <h4 id="youtube-music-and-youtube-integration">YouTube Music and YouTube integration</h4>
 <ul>
-<li><strong>Enable additional features for YouTube Music and YouTube (yt-dlp and ytmusicapi)</strong>: downloads and maintains a <code>yt-dlp</code> executable and the required Python packages in a local folder. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.</li>
+<li><strong>Enable additional features for YouTube Music and YouTube (yt-dlp, ytmusicapi, and Node.js)</strong>: downloads and maintains a <code>yt-dlp</code> executable, the required Python packages, and, when no compatible runtime exists, a portable Node.js for the EJS resolver. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.</li>
 <li><strong>Automatically update YouTube Music dependencies</strong>: checks for and applies updates at the interval defined below. It appears only when the option above is enabled.</li>
 <li><strong>Use nightly version of yt-dlp (recommended)</strong>: downloads nightly builds of <code>yt-dlp</code>. Recommended because YouTube and YouTube Music frequently change their extraction mechanisms and nightly usually receives fixes before the stable channel. It appears only when the integration is enabled.</li>
+<li><strong>Use YouTube.js to improve resolution and playback (recommended)</strong>: installs YouTube.js and uses the same Node.js 24 or newer prepared for <code>yt-dlp</code>. <code>yt-dlp</code> remains the fallback, and the YouTube.js package is included in periodic update checks.</li>
 <li><strong>Update interval (hours)</strong>: how often the player tries to update dependencies when the YouTube Music tab is opened (1-720 h). It is available only when automatic updates are enabled.</li>
+</ul>
+<h4 id="advanced-autodj">Advanced AutoDJ</h4>
+<ul>
+<li><strong>Download resources and enable AutoDJ</strong>: separately downloads <code>librosa</code>, NumPy, SciPy, Numba, and PyAV. These libraries are not part of the main installer. Disabling the option preserves files already downloaded.</li>
+<li><strong>Play DJ effects</strong>, <strong>AutoDJ profile</strong>, and <strong>AutoDJ transition length</strong> become available when AutoDJ is enabled.</li>
 </ul>
 <h4 id="youtube-music-library">YouTube Music library</h4>
 <p>This section appears only when the integration is enabled.</p>
@@ -587,8 +605,9 @@ footer {
 <ul>
 <li><strong>Connect account...</strong>: opens the dialog to connect a YouTube Music account or renew the saved authentication.</li>
 <li><strong>Disconnect account</strong>: removes the saved authentication from this installation.</li>
-<li><strong>Refresh library</strong>: fetches the playlists and mixes available in the connected account again.</li>
+<li><strong>Refresh library</strong>: fetches the playlists and mixes available in the connected account again and refreshes feedback for songs visible in the account.</li>
 </ul>
+<p>The <strong>Like</strong> and <strong>Dislike</strong> actions are sent to the connected account, so they also appear in YouTube Music on mobile and other devices. KeyTune keeps a persistent, per-account cache of disliked tracks and updates it from history, liked songs, and lists returned by YouTube Music. Those tracks are removed from playlists and radios loaded through the account and skipped if they reappear in a restored queue. Because YouTube Music does not provide a complete list of disliked songs, a rating made outside KeyTune can only be imported when that track appears again in one of those account responses; <strong>Refresh library</strong> forces this check.</p>
 <p>Below the account section is the <strong>Playlists and mixes</strong> list with all playlists and mixes in the library. Use the <strong>Filter</strong> field to find items by name. The counter above the list shows how many items are visible after filtering. Below the list are the actions:</p>
 <ul>
 <li><strong>Open selection</strong>: opens the selected playlist or mix in a new tab (<code>Enter</code> in the list does the same).</li>
@@ -619,6 +638,9 @@ footer {
 </ul>
 <h3 id="open-playlist-or-video">Open playlist or video</h3>
 <p>The <strong>Open playlist or video</strong> section is also collapsed by default. Expand it to paste a YouTube Music or YouTube playlist, mix, or video link. Click <strong>Open link</strong> or press <code>Enter</code> in the field to open it.</p>
+<h3 id="radio-from-the-current-track">Radio from the current track</h3>
+<p>Press <code>Ctrl+R</code> or use <strong>Playback &gt; Start radio from this track</strong> while a YouTube Music song is playing. KeyTune opens a new tab, preserves the playback position, and places the current track at item 1 without continuing the previous radio queue.</p>
+<p>To reduce repeats between radios, the player excludes tracks already traversed in the source playlist and keeps a history of the 200 most recently played YouTube Music songs, restored with the session. KeyTune may make up to three requests and only adds previously unseen IDs. Because YouTube Music chooses the candidates, different songs cannot be guaranteed; if no new tracks are available, the new tab remains with only the seed track.</p>
 <h3 id="managing-youtube-music-playlists">Managing YouTube Music playlists</h3>
 <p>In addition to opening and saving playlists, KeyTune lets you edit your playlists directly in the connected account. All these actions require a connected account and change the playlist <strong>in your YouTube Music account</strong> - anything involving deletion is confirmed first and cannot be undone by the player.</p>
 <p><strong>Adding tracks to a playlist.</strong> Select one or more YouTube Music tracks (in the current playlist or in the search results list) and use <strong>Add to YouTube Music playlist...</strong> in the context menu (<code>Shift+F10</code>), or press <code>Ctrl+Shift+A</code> to add the track that is playing. A list of your editable playlists appears; personalized mixes and radios are not included in this list because they cannot be edited. At the top of the list is the <strong>Create new playlist...</strong> option, which creates a new playlist already containing the current selection (same behavior as the YouTube Music app).</p>
@@ -680,6 +702,7 @@ footer {
 <h3 id="shortcuts">Shortcuts</h3>
 <ul>
 <li><code>Ctrl+Shift+Y</code>: open the YouTube Music tab</li>
+<li><code>Ctrl+R</code>: start a new radio from the current track</li>
 <li><code>Ctrl+Shift+A</code>: add the current media to a YouTube Music playlist</li>
 <li><code>Enter</code> in the search field: run the search</li>
 <li><code>Enter</code> in the results list: add the item to the current playlist</li>
@@ -715,10 +738,14 @@ footer {
 <p>If the YouTube Music tab does not load or shows dependency errors, open <code>Ctrl+,</code> &gt; <strong>Additional features</strong> and confirm that <strong>Enable additional features for YouTube Music and YouTube</strong> is checked. The initial download can take a few minutes and requires internet access. If the dependencies are already installed but search or loading fails, use the nightly version of <code>yt-dlp</code> in the same preferences - it usually receives fixes before the stable channel.</p>
 <p>If the YouTube Music session expires or the player asks for authentication again, export the browser cookies as described in the <a href="#youtube-music-session">YouTube Music session</a> section and reconnect the account.</p>
 <p>To investigate other problems, enable log recording in <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Log recording</strong>. With <strong>Record diagnostic logs</strong> enabled and the level set to <em>Debug</em>, the player writes detailed information to <code>keytune.log</code> in the data folder. Use <strong>Open logs folder</strong> to locate the file and, if you need to report a problem, attach it to the issue.</p>
+<h2 id="plugins-and-marketplace">Plugins and marketplace</h2>
+<p>Open <strong>Settings &gt; Manage plugins</strong> to install a <code>.ktplugin</code> file or choose <strong>Open marketplace</strong>. Select a plugin, review its author, version, origin, permissions, and isolation, then confirm <strong>Install and enable</strong>. The manager also lets you enable, disable, and uninstall plugins; use <code>Tab</code> to move between controls and arrow keys to select an item.</p>
+<p>Plugin actions appear under <strong>Settings &gt; Plugin actions</strong>. Plugins may also provide tabs and views. Install only code from trusted authors: a separate process is not a security sandbox. Verified status means provenance was reviewed, not that security is guaranteed.</p>
+<p>The <a href="plugins.en.html">developer guide and API 2.0 reference</a> covers manifests, permissions, methods, events, and publishing. It ships with the player for offline reading; external links require internet access.</p>
 <h2 id="for-developers">For developers</h2>
 <p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generated on 17/08/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">view source on GitHub</a>
+        Generated on 04/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

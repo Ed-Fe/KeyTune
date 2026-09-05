@@ -127,6 +127,14 @@ if (Test-Path "locale") {
     Copy-Item -Path "locale" -Destination "dist\KeyTune\locale" -Recurse -Force
 }
 
+Write-Step "Renderizando documentação de plugins em HTML (por idioma)"
+foreach ($guide in Get-ChildItem -Path "docs" -Filter "plugins*.md") {
+    & $PythonExe scripts\render_manual.py $guide.FullName ("dist\KeyTune\docs\" + $guide.BaseName + ".html")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Falha ao renderizar documentação de plugins: $($guide.Name)."
+    }
+}
+
 Write-Step "Renderizando manual em HTML (por idioma)"
 & $PythonExe scripts\render_manual.py docs\manual.md dist\KeyTune\docs\manual.html
 if ($LASTEXITCODE -ne 0) {

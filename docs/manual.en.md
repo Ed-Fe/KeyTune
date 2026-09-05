@@ -361,7 +361,7 @@ The **Additional features** tab contains the optional YouTube integrations and A
 - **Enable additional features for YouTube Music and YouTube (yt-dlp, ytmusicapi, and Node.js)**: downloads and maintains a `yt-dlp` executable, the required Python packages, and, when no compatible runtime exists, a portable Node.js for the EJS resolver. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.
 - **Automatically update YouTube Music dependencies**: checks for and applies updates at the interval defined below. It appears only when the option above is enabled.
 - **Use nightly version of yt-dlp (recommended)**: downloads nightly builds of `yt-dlp`. Recommended because YouTube and YouTube Music frequently change their extraction mechanisms and nightly usually receives fixes before the stable channel. It appears only when the integration is enabled.
-- **Use YouTube.js to improve resolution and playback (recommended)**: installs YouTube.js and uses the same Node.js 22 or newer prepared for `yt-dlp`. `yt-dlp` remains the fallback, and the YouTube.js package is included in periodic update checks.
+- **Use YouTube.js to improve resolution and playback (recommended)**: installs YouTube.js and uses the same Node.js 24 or newer prepared for `yt-dlp`. `yt-dlp` remains the fallback, and the YouTube.js package is included in periodic update checks.
 - **Update interval (hours)**: how often the player tries to update dependencies when the YouTube Music tab is opened (1-720 h). It is available only when automatic updates are enabled.
 
 #### Advanced AutoDJ
@@ -616,6 +616,14 @@ If the YouTube Music tab does not load or shows dependency errors, open `Ctrl+,`
 If the YouTube Music session expires or the player asks for authentication again, export the browser cookies as described in the [YouTube Music session](#youtube-music-session) section and reconnect the account.
 
 To investigate other problems, enable log recording in `Ctrl+,` > **General** > **Log recording**. With **Record diagnostic logs** enabled and the level set to *Debug*, the player writes detailed information to `keytune.log` in the data folder. Use **Open logs folder** to locate the file and, if you need to report a problem, attach it to the issue.
+
+## Plugins and marketplace
+
+Open **Settings > Manage plugins** to install a `.ktplugin` file or choose **Open marketplace**. Select a plugin, review its author, version, origin, permissions, and isolation, then confirm **Install and enable**. The manager also lets you enable, disable, and uninstall plugins; use `Tab` to move between controls and arrow keys to select an item.
+
+Plugin actions appear under **Settings > Plugin actions**. Plugins may also provide tabs and views. Install only code from trusted authors: a separate process is not a security sandbox. Verified status means provenance was reviewed, not that security is guaranteed.
+
+The [developer guide and API 2.0 reference](plugins.en.md) covers manifests, permissions, methods, events, and publishing. It ships with the player for offline reading; external links require internet access.
 
 ## For developers
 

@@ -96,6 +96,14 @@ jobs:
             Copy-Item -Path "locale" -Destination "dist\KeyTune\locale" -Recurse -Force
           }
 
+      - name: Render plugin documentation as HTML (per language)
+        shell: powershell
+        run: |
+          foreach ($guide in Get-ChildItem -Path "docs" -Filter "plugins*.md") {
+            python scripts/render_manual.py $guide.FullName ("dist\KeyTune\docs\" + $guide.BaseName + ".html")
+            if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar documentação de plugins: $($guide.Name)." }
+          }
+
       - name: Render manual as HTML (per language)
         shell: powershell
         run: |

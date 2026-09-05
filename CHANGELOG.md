@@ -5,26 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2026-08-23
+## [2.0.0] - 2026-09-04
 
-### Adicionado
-- **Recursos opcionais sob demanda**: Node.js, bibliotecas Python do YouTube, YouTube.js e o analisador AutoDJ são publicados separadamente do instalador, com SHA-256 e manifesto vinculado à versão do KeyTune. A ativação em Preferências, Recursos adicionais, confirma os componentes necessários antes do download; o AutoDJ executa a análise em um processo separado.
-- **Atualização dos recursos**: pacotes válidos da versão instalada são reutilizados nas verificações periódicas; o yt-dlp continua recebendo atualizações do canal selecionado.
-- **Plataforma de plugins**: manifesto estrito, API 2.0 baseada em permissões, eventos de ciclo de vida, contribuições de menus, abas e telas, dados privados e compatibilidade versionada.
-- **Segurança e confiabilidade**: a confirmação de instalação mostra dados, permissões e isolamento do pacote antes de instalar e ativar; pacotes passam por SHA-256 e instalação transacional, falhas recebem logs separados e o worker padrão isola falhas sem herdar variáveis de ambiente sensíveis.
-- **Gerenciador e marketplace acessíveis**: gerenciamento completo por teclado, instalação de pacotes locais e catálogo remoto mantido por pull requests no GitHub, com downloads HTTPS e limites contra pacotes maliciosos.
-- **AutoDJ**: ativação pelo menu e pelas preferências, análise em segundo plano de BPM, batidas, downbeat, frases de quatro compassos, mudanças de seção, energia local, loudness e tonalidade maior/menor; seleção real entre até seis próximas faixas mesmo sem cache, sincronização temporária com correção de fase, troca progressiva de graves/EQ e corte da faixa anterior na batida final planejada; inclui fallback seguro e perfis Smooth/Party/Electronic realmente distintos.
-- **Sessões AutoDJ**: uma playlist pode iniciar em uma aba dinâmica própria, mantendo a origem intacta e até cinco faixas planejadas à frente; fonte, histórico e fila restante sobrevivem à restauração da sessão, a fila manual continua prioritária e o encerramento preserva a sequência preparada como playlist comum.
-- **Controles da sessão AutoDJ**: a aba agora mostra atividade, contagens, estado de cada faixa e detalhes da próxima transição, com ações acessíveis para trocar a próxima música, recalcular a sequência, adicionar arquivos e pausar ou retomar a preparação.
-- **Diagnóstico acessível do AutoDJ**: as informações ficam em um campo somente leitura alcançável por `Tab`, com BPM, confiança rítmica, ajuste de tempo e motivo de fallback; a confiança mínima também foi recalibrada para a escala observada nas análises reais do librosa.
-- **Transições adaptativas**: o planejamento de várias faixas considera provável sobreposição vocal, encurta a mistura quando necessário e aplica compensação conservadora de loudness à faixa de entrada.
-- **Documentação pública**: contrato da API, modelo de manifesto, catálogo JSON Schema, processo de publicação, garantias de migração e alertas claros sobre os limites do isolamento.
-- **API 2.0 de plugins**: acesso controlado às playlists abertas, Biblioteca inteligente, conta/biblioteca do YouTube Music, arquivos de texto, área de transferência, extração e downloads pelo yt-dlp e análise AutoDJ, sem expor cookies ou objetos internos do player; yt-dlp e AutoDJ online usam modo anônimo por padrão.
-- **AutoDJ para faixas online**: resolução pelo serviço de reprodução, download temporário limitado, análise com librosa e cache remoto com validade de sete dias.
+O KeyTune 2.0 traz AutoDJ para montar sessões e misturar músicas, uma plataforma de plugins com marketplace e integração com YouTube.js para a reprodução do YouTube. A versão também amplia a navegação por pastas e os recursos do YouTube Music.
 
-### Corrigido
-- **Colagem e início de playlists do YouTube Music**: `Ctrl+V` reconhece links com `list=` mesmo em abas de tela, abre a playlist completa e solicita explicitamente a reprodução da primeira faixa.
-- **Áudio picotando durante o AutoDJ**: a troca de graves e médios agora altera os ganhos dos filtros já instalados por comandos nativos do MPV, sem reconstruir a cadeia de áudio em cada etapa da transição.
+### AutoDJ
+
+- **Mixagem automática**: o novo AutoDJ analisa ritmo, BPM, tonalidade, energia e volume das músicas para escolher a sequência e preparar transições. Quando a análise permite, sincroniza as batidas, alinha frases musicais e faz a troca gradual de graves e médios entre as faixas. Também considera a sobreposição de vocais e as diferenças de volume.
+- **Sessões a partir de playlists**: a ação **Reproduzir playlist com AutoDJ** abre uma aba própria, preserva a playlist original e mantém até cinco músicas preparadas à frente. A fila manual tem prioridade, e a sessão pode ser restaurada ao reabrir o player.
+- **Controle da sequência**: é possível trocar a próxima música, recalcular a sequência, adicionar arquivos, pausar ou retomar a preparação e encerrar a sessão preservando o trecho preparado como playlist comum.
+- **Perfis e efeitos**: escolha entre **Suave**, **Festa** e **Eletrônica**, configure transições de 8, 16 ou 32 batidas e habilite efeitos de DJ opcionais.
+- **Informações acessíveis**: a aba da sessão mostra o estado das faixas, a atividade da análise e os detalhes da próxima transição, incluindo BPM, ajuste de tempo e confiança rítmica. As informações e os controles são acessíveis por teclado e leitor de tela.
+- **Músicas locais e online**: o AutoDJ também pode analisar faixas do YouTube Music e URLs compatíveis, com reaproveitamento das análises em cache. Quando não há análise suficiente, utiliza o crossfade comum configurado ou avança normalmente.
+
+### Plugins e marketplace
+
+- **Uma nova plataforma de extensões**: plugins podem adicionar ações de menu, abas, telas e integrações ao KeyTune.
+- **Gerenciador acessível**: instale pacotes `.ktplugin`, ative, desative e desinstale extensões em **Configurações > Gerenciar plugins**, com navegação por teclado.
+- **Marketplace integrado**: descubra e instale plugins pelo catálogo comunitário. Autores podem publicar seus pacotes e enviar contribuições ao catálogo por pull requests no GitHub.
+- **Permissões e confirmação de instalação**: antes de instalar e ativar um plugin, o player apresenta autor, versão, origem, permissões e modo de isolamento. Os pacotes do marketplace têm sua integridade verificada. O processo separado ajuda a conter falhas, mas não é uma sandbox de segurança; instale apenas plugins de autores confiáveis.
+- **API pública 2.0**: desenvolvedores têm acesso por permissões à reprodução, playlists abertas, Biblioteca inteligente, YouTube Music, extração e downloads pelo yt-dlp, análise AutoDJ, rede, arquivos de texto, área de transferência, configurações privadas e notificações acessíveis.
+- **Guias em três idiomas**: documentação da API, exemplos, manifesto, eventos e instruções de publicação em português, inglês e espanhol, incluídos em HTML com o player para consulta offline.
+
+### YouTube e YouTube Music
+
+- **Introdução do YouTube.js**: nova opção de resolução de mídia para reprodução do YouTube e YouTube Music. Pode ser ativada em **Preferências > Recursos adicionais** e compartilha o Node.js com o yt-dlp, que permanece disponível como alternativa quando a resolução pelo YouTube.js falha.
+- **Rádio da faixa atual**: `Ctrl+R`, ou **Reprodução > Iniciar rádio desta faixa**, cria uma rádio em uma nova aba sem interromper a música nem perder sua posição. A faixa atual inicia a lista, e o histórico recente ajuda a reduzir repetições.
+- **Filtro de músicas marcadas como “não gostei”**: o player mantém essas avaliações por conta para remover faixas de playlists e rádios carregadas e ignorá-las em filas restauradas. **Atualizar biblioteca** também consulta as avaliações disponíveis na conta; avaliações feitas em outros dispositivos são incorporadas quando aparecem nas respostas do YouTube Music.
+- **Abertura de playlists pela área de transferência**: `Ctrl+V` reconhece links de playlist do YouTube Music, abre a lista completa e inicia a primeira faixa, inclusive quando usado em abas de tela.
+
+### Navegação por pastas
+
+- **Classificação de arquivos**: `Ctrl+Espaço` abre opções para ordenar por nome, data de modificação, data de criação, tipo ou tamanho, em ordem crescente ou decrescente. As pastas continuam agrupadas antes dos arquivos, e a escolha é restaurada com a aba.
+- **Cópia para o Explorador do Windows**: no navegador de pastas, `Ctrl+C` copia os arquivos ou pastas selecionados para colar no Explorador. `Ctrl+Shift+C` copia seus caminhos como texto; nas demais abas, mantém a cópia do link ou caminho da mídia em reprodução.
+
+### Instalação de recursos opcionais
+
+- **Componentes sob demanda**: as bibliotecas do YouTube, o YouTube.js, o Node.js portátil e o analisador AutoDJ são distribuídos separadamente do instalador principal. Em **Preferências > Recursos adicionais**, o player apresenta os componentes necessários antes do download.
+- **Runtime compartilhado**: yt-dlp e YouTube.js utilizam o mesmo Node.js, com recomendação de Node.js 24 ou superior. O player aproveita um runtime compatível já instalado ou prepara a versão portátil necessária.
+- **Verificação e reutilização**: os pacotes opcionais têm verificação de integridade e são vinculados à versão do KeyTune. Componentes válidos já instalados são reaproveitados, e desativar um recurso preserva os arquivos baixados. O yt-dlp continua recebendo atualizações pelo canal estável ou nightly escolhido.
 
 ## [1.4.0] - 2026-08-17
 

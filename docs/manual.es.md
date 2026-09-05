@@ -361,7 +361,7 @@ La pestaña **Recursos adicionales** concentra las integraciones opcionales de Y
 - **Activar recursos adicionales para YouTube Music y YouTube (yt-dlp, ytmusicapi y Node.js)**: descarga y mantiene un ejecutable `yt-dlp`, los paquetes Python necesarios y, cuando no existe uno compatible, un Node.js portátil para el resolvedor EJS. Sin esto, la pestaña de YouTube Music no funciona. En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar, los archivos ya descargados no se eliminan.
 - **Actualizar automáticamente las dependencias de YouTube Music**: verifica y aplica actualizaciones en el intervalo definido abajo. Solo aparece cuando la opción anterior está activada.
 - **Usar versión nightly de yt-dlp (recomendado)**: descarga builds nightly de `yt-dlp`. Recomendado porque YouTube y YouTube Music cambian los mecanismos de extracción con frecuencia y la nightly suele recibir correcciones antes que el canal estable. Solo aparece cuando la integración está activada.
-- **Usar YouTube.js para mejorar la resolución y la reproducción (recomendado)**: instala YouTube.js y usa el mismo Node.js 22 o superior preparado para `yt-dlp`. `yt-dlp` permanece como alternativa y el paquete YouTube.js participa en las verificaciones periódicas de actualizaciones.
+- **Usar YouTube.js para mejorar la resolución y la reproducción (recomendado)**: instala YouTube.js y usa el mismo Node.js 24 o superior preparado para `yt-dlp`. `yt-dlp` permanece como alternativa y el paquete YouTube.js participa en las verificaciones periódicas de actualizaciones.
 - **Intervalo de actualización (horas)**: cada cuánto tiempo el reproductor intenta actualizar las dependencias cuando se abre la pestaña YouTube Music (1-720 h). Solo está disponible cuando la actualización automática está activada.
 
 #### AutoDJ avanzado
@@ -614,6 +614,14 @@ Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre
 Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección [Sesión de YouTube Music](#sesión-de-youtube-music) y reconecta la cuenta.
 
 Para investigar otros problemas, activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel ajustado a *Depuración*, el reproductor graba información detallada en `keytune.log` en la carpeta de datos. Usa **Abrir carpeta de logs** para localizar el archivo y, si necesitas reportar un problema, adjúntalo a la issue.
+
+## Plugins y marketplace
+
+Abre **Configuración > Gestionar plugins** para instalar un archivo `.ktplugin` o elige **Abrir marketplace**. Selecciona un plugin, revisa autor, versión, origen, permisos y aislamiento y confirma **Instalar y activar**. El gestor también permite activar, desactivar y desinstalar plugins; usa `Tab` para recorrer los controles y las flechas para seleccionar un elemento.
+
+Las acciones aparecen en **Configuración > Acciones de plugins**. Los plugins también pueden ofrecer pestañas y pantallas. Instala solo código de autores confiables: el proceso separado no es una sandbox de seguridad. La verificación indica revisión de procedencia, no una garantía de seguridad.
+
+La [guía de desarrollo y API 2.0](plugins.es.md) cubre manifiestos, permisos, métodos, eventos y publicación. Se incluye con el reproductor para leer sin conexión; los enlaces externos requieren internet.
 
 ## Para desarrolladores
 
