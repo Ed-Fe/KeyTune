@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2026-09-05
+
+### Corrigido
+
+- **Recursos adicionais do YouTube Music**: a atualização preserva as permissões do perfil do usuário ao substituir recursos opcionais. Pastas antigas que não puderem ser abertas são recuperadas em uma pasta de reparo, sem bloquear o download.
+- **Validação da conta do YouTube Music**: a ausência das bibliotecas opcionais agora informa que os recursos precisam ser ativados ou atualizados, em vez de indicar incorretamente uma conta inválida.
+- **Rádio do YouTube Music**: respostas de rádio sem endpoint em uma aba opcional não interrompem a fila de músicas, e buscas simultâneas restauram corretamente o parser da biblioteca.
+
 ## [2.0.2] - 2026-09-05
 
 ### Corrigido

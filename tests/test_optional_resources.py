@@ -55,6 +55,30 @@ class OptionalResourcesTests(unittest.TestCase):
                 "KeyTune-AutoDJ-win-x64.zip",
             )
 
+    def test_download_workspace_is_created_under_the_resource_parent(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_parent = Path(temporary) / "resources"
+            resource_parent.mkdir()
+
+            with patch("player.optional_resources.uuid.uuid4") as generate_uuid:
+                generate_uuid.return_value.hex = "workspace"
+                download_dir = optional_resources._create_download_dir(resource_parent, "youtube")
+
+            self.assertEqual(download_dir, resource_parent / ".keytune-youtube-workspace")
+            self.assertTrue(download_dir.is_dir())
+
+    def test_inaccessible_resource_uses_repaired_sibling_directory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "resources" / "youtube_music" / "youtube"
+            resource_dir.mkdir(parents=True)
+
+            with patch.object(optional_resources, "get_app_storage_dir", return_value=temporary), patch.object(
+                optional_resources.os, "scandir", side_effect=PermissionError
+            ):
+                resolved_dir = optional_resources.get_optional_resource_dir("youtube")
+
+            self.assertEqual(resolved_dir, resource_dir.with_name("youtube.repaired"))
+
     def test_install_validates_checksum_and_replaces_resource_atomically(self):
         with tempfile.TemporaryDirectory() as temporary:
             temporary_path = Path(temporary)

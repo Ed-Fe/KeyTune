@@ -1,12 +1,19 @@
 from __future__ import annotations
 
 import re
+import threading
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 
 from ..i18n import _
 from .models import YOUTUBE_SEARCH_SOURCE_MUSIC, YouTubeMediaSearchResult
 from .search import _normalize_music_track_result
+
+
+_WATCH_PLAYLIST_PARSER_LOCK = threading.RLock()
+_watch_playlist_parser_depth = 0
+_watch_playlist_parser_original = None
+_watch_playlist_parser_module = None
 
 
 @dataclass(frozen=True)
@@ -236,6 +243,49 @@ def tolerant_library_playlist_parsing():
         yield
     finally:
         library_mixin.parse_playlist = original_parse_playlist
+
+
+@contextmanager
+def tolerant_watch_playlist_parsing():
+    """Ignore optional watch-playlist tabs that YouTube omits an endpoint for.
+
+    ytmusicapi 1.12.0 assumes every tab has an ``endpoint``. Some radio
+    responses omit it for the lyrics or related tab even though their queue is
+    complete, causing ``get_watch_playlist`` to fail with ``KeyError``.
+    """
+    try:
+        from ytmusicapi.mixins import watch as watch_mixin
+    except Exception:
+        yield
+        return
+
+    global _watch_playlist_parser_depth, _watch_playlist_parser_module, _watch_playlist_parser_original
+    with _WATCH_PLAYLIST_PARSER_LOCK:
+        if _watch_playlist_parser_depth == 0:
+            original_get_tab_browse_id = getattr(watch_mixin, "get_tab_browse_id", None)
+            if not callable(original_get_tab_browse_id):
+                yield
+                return
+            _watch_playlist_parser_original = original_get_tab_browse_id
+            _watch_playlist_parser_module = watch_mixin
+
+            def get_tab_browse_id_tolerantly(watch_next_renderer, tab_id):
+                try:
+                    return _watch_playlist_parser_original(watch_next_renderer, tab_id)
+                except (KeyError, IndexError, TypeError, AttributeError):
+                    return None
+
+            watch_mixin.get_tab_browse_id = get_tab_browse_id_tolerantly
+        _watch_playlist_parser_depth += 1
+    try:
+        yield
+    finally:
+        with _WATCH_PLAYLIST_PARSER_LOCK:
+            _watch_playlist_parser_depth -= 1
+            if _watch_playlist_parser_depth == 0:
+                _watch_playlist_parser_module.get_tab_browse_id = _watch_playlist_parser_original
+                _watch_playlist_parser_module = None
+                _watch_playlist_parser_original = None
 
 
 def normalize_track_items(raw_items, *, badge):

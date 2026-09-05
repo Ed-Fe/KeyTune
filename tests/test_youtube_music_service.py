@@ -13,12 +13,25 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from player.youtube_music.service import YouTubeMusicService
+from player.youtube_music.service import YouTubeMusicDependencyUnavailableError, YouTubeMusicService
 from player.youtube_music.feedback_store import YouTubeMusicFeedbackStore
 from player.youtube_music.streams import ResolvedStreamPlayback
 
 
 class YouTubeMusicServiceTests(unittest.TestCase):
+    def test_missing_youtube_library_is_not_reported_as_invalid_account(self):
+        service = YouTubeMusicService()
+
+        with patch(
+            "player.youtube_music.service.import_ytmusicapi_module",
+            side_effect=ModuleNotFoundError(name="ytmusicapi"),
+        ):
+            with self.assertRaises(YouTubeMusicDependencyUnavailableError) as raised:
+                service.validate_saved_authentication()
+
+        self.assertFalse(raised.exception.should_disconnect)
+        self.assertIn("recursos adicionais", str(raised.exception))
+
     def test_save_browser_auth_validates_staged_files_before_replacing_saved_auth(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"

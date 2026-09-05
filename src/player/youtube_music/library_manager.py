@@ -4,6 +4,7 @@ from .browse import (
     normalize_mood_playlists,
     normalize_track_items,
     tolerant_library_playlist_parsing,
+    tolerant_watch_playlist_parsing,
 )
 from .charts import normalize_chart_results
 from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
@@ -279,15 +280,16 @@ class YouTubeMusicLibraryManager:
         With *playlist_id* we ask YouTube Music to continue that queue instead
         of starting a brand-new radio; without it we request a fresh radio.
         """
-        if playlist_id:
-            return client.get_watch_playlist(videoId=video_id, playlistId=playlist_id, limit=limit)
+        with tolerant_watch_playlist_parsing():
+            if playlist_id:
+                return client.get_watch_playlist(videoId=video_id, playlistId=playlist_id, limit=limit)
 
-        try:
-            return client.get_watch_playlist(videoId=video_id, radio=True, limit=limit)
-        except TypeError:
-            # Older ytmusicapi builds may not accept the ``radio`` keyword; the
-            # plain watch playlist (autoplay queue) is radio-like already.
-            return client.get_watch_playlist(videoId=video_id, limit=limit)
+            try:
+                return client.get_watch_playlist(videoId=video_id, radio=True, limit=limit)
+            except TypeError:
+                # Older ytmusicapi builds may not accept the ``radio`` keyword; the
+                # plain watch playlist (autoplay queue) is radio-like already.
+                return client.get_watch_playlist(videoId=video_id, limit=limit)
 
     def _build_radio_content(self, radio, seed_video_id, excluded_video_ids, fallback_title):
         """Turn a watch-playlist payload into content, dropping repeated tracks.

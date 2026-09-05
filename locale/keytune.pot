@@ -4867,6 +4867,10 @@ msgstr ""
 msgid "Os recursos adicionais do YouTube Music foram preparados, mas nem todos puderam ser carregados. Reinicie o aplicativo e tente novamente."
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "Os recursos adicionais do YouTube Music não estão disponíveis. Ative ou atualize os recursos adicionais e tente novamente."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Os valores abaixo mostram a curva do preset atualmente selecionado."
 msgstr ""

@@ -13,7 +13,7 @@
 ;   /DSourceDir=...      overrides the PyInstaller payload folder (default ..\dist\KeyTune).
 
 #ifndef AppVersion
-  #define AppVersion "2.0.2"
+  #define AppVersion "2.0.3"
 #endif
 
 #ifndef SourceDir
@@ -247,8 +247,9 @@ Root: HKA; Subkey: "Software\{#AppName}\Capabilities\FileAssociations"; ValueTyp
 ; Finished-page checkboxes for normal (interactive) installs.
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
 Filename: "{code:GetManualPath}"; Description: "{cm:ReadManual}"; Flags: postinstall shellexec skipifsilent unchecked
-; Silent in-app update path: relaunch the app automatically after replacing files.
-Filename: "{app}\{#AppExeName}"; Flags: nowait skipifnotsilent
+; Silent in-app update path: relaunch with the original user token when Inno
+; Setup has one, so user data is not first created by the elevated installer.
+Filename: "{app}\{#AppExeName}"; Flags: nowait skipifnotsilent runasoriginaluser
 
 [Code]
 function GetInstallMode(Param: string): string;

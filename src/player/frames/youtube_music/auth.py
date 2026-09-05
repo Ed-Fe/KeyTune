@@ -25,7 +25,10 @@ class AuthMixin:
         if bool(getattr(error, "should_disconnect", True)):
             return self._handle_invalid_youtube_music_auth(service, announce=announce)
 
-        message = _("Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes.")
+        if bool(getattr(error, "is_dependency_unavailable", False)):
+            message = str(error).strip()
+        else:
+            message = _("Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes.")
         service.clear_client_cache()
         self._youtube_music_library_status_message = message
         self._refresh_youtube_music_screen_later()

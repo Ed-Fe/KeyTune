@@ -50,6 +50,18 @@ class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
         super().__init__(message, should_disconnect=False)
 
 
+class YouTubeMusicDependencyUnavailableError(YouTubeMusicAuthValidationError):
+    is_dependency_unavailable = True
+
+    def __init__(self, message=None):
+        if message is None:
+            message = _(
+                "Os recursos adicionais do YouTube Music não estão disponíveis. "
+                "Ative ou atualize os recursos adicionais e tente novamente."
+            )
+        super().__init__(message, should_disconnect=False)
+
+
 _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS = (
     "authentication",
     "authorization",
@@ -80,6 +92,19 @@ def _is_probably_invalid_saved_auth_error(error):
 
     normalized_message = " ".join(messages).casefold()
     return any(marker in normalized_message for marker in _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS)
+
+
+def _is_missing_youtube_music_library_error(error):
+    current_error = error
+    visited_error_ids = set()
+    while current_error is not None and id(current_error) not in visited_error_ids:
+        visited_error_ids.add(id(current_error))
+        if isinstance(current_error, ModuleNotFoundError) and str(
+            getattr(current_error, "name", "") or ""
+        ).casefold() in {"ytmusicapi", "requests"}:
+            return True
+        current_error = getattr(current_error, "__cause__", None) or getattr(current_error, "__context__", None)
+    return False
 
 
 class YouTubeMusicService:
@@ -356,12 +381,14 @@ class YouTubeMusicService:
         if self._account_info is not None:
             return self._account_info
 
-        client = self.get_client()
         try:
+            client = self.get_client()
             account_info = client.get_account_info()
         except Exception as exc:
             _logger.warning("Failed to retrieve YouTube Music account info: %s", exc)
             self.clear_client_cache()
+            if _is_missing_youtube_music_library_error(exc):
+                raise YouTubeMusicDependencyUnavailableError() from exc
             if _is_probably_invalid_saved_auth_error(exc):
                 raise InvalidYouTubeMusicAuthError() from exc
             raise TemporaryYouTubeMusicAuthError() from exc

@@ -16,7 +16,11 @@ from player.frames.youtube_music import FrameYouTubeMusicMixin
 import player.frames.youtube_music as youtube_music_frame_module
 from player.frames.youtube_music.auth import AuthMixin
 from player.playlists import PlaylistState, ScreenTabState
-from player.youtube_music.service import InvalidYouTubeMusicAuthError, TemporaryYouTubeMusicAuthError
+from player.youtube_music.service import (
+    InvalidYouTubeMusicAuthError,
+    TemporaryYouTubeMusicAuthError,
+    YouTubeMusicDependencyUnavailableError,
+)
 
 
 class _DummyFrame(FrameYouTubeMusicMixin):
@@ -311,6 +315,18 @@ class YouTubeMusicFrameTests(unittest.TestCase):
             frame.status_updates,
             ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
         )
+
+    def test_missing_youtube_library_explains_that_resources_are_unavailable(self):
+        service = Mock()
+        service.has_saved_browser_auth.return_value = True
+        service.validate_saved_authentication.side_effect = YouTubeMusicDependencyUnavailableError()
+        frame = _DummyFrame(service)
+
+        authenticated = frame._ensure_youtube_music_authenticated()
+
+        self.assertFalse(authenticated)
+        self.assertIn("recursos adicionais", frame.announcements[-1])
+        self.assertIn("recursos adicionais", frame.status_updates[-1])
 
     def test_handle_javascript_runtime_error_starts_managed_install(self):
         service = Mock()

@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 from player.youtube_music.browse import (
     extract_browse_playlists_from_response,
     tolerant_library_playlist_parsing,
+    tolerant_watch_playlist_parsing,
 )
 from player.youtube_music.library_manager import YouTubeMusicLibraryManager
 
@@ -142,6 +143,28 @@ class TolerantLibraryPlaylistParsingTests(unittest.TestCase):
             with tolerant_library_playlist_parsing():
                 raise RuntimeError("boom")
         self.assertIs(library_mixin.parse_playlist, original)
+
+    def test_watch_playlist_ignores_an_optional_tab_without_an_endpoint(self):
+        from ytmusicapi.mixins import watch as watch_mixin
+
+        watch_renderer = {"tabs": [{"tabRenderer": {}}]}
+        original = watch_mixin.get_tab_browse_id
+        with tolerant_watch_playlist_parsing():
+            self.assertIsNone(watch_mixin.get_tab_browse_id(watch_renderer, 0))
+        self.assertIs(watch_mixin.get_tab_browse_id, original)
+
+    def test_overlapping_watch_playlist_fallbacks_restore_the_original_parser(self):
+        from ytmusicapi.mixins import watch as watch_mixin
+
+        original = watch_mixin.get_tab_browse_id
+        first = tolerant_watch_playlist_parsing()
+        second = tolerant_watch_playlist_parsing()
+        first.__enter__()
+        second.__enter__()
+        first.__exit__(None, None, None)
+        second.__exit__(None, None, None)
+
+        self.assertIs(watch_mixin.get_tab_browse_id, original)
 
 
 @unittest.skipUnless(HAS_YTMUSICAPI, "ytmusicapi is not installed")

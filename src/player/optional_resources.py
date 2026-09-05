@@ -6,7 +6,7 @@ import os
 import platform
 from pathlib import Path
 import shutil
-import tempfile
+import uuid
 import zipfile
 from urllib import error, request
 
@@ -49,8 +49,23 @@ def resource_asset_name(resource_name: str) -> str:
 
 def get_optional_resource_dir(resource_name: str) -> Path:
     if resource_name in {"node", "youtube"}:
-        return Path(get_app_storage_dir()) / "resources" / "youtube_music" / resource_name
-    return Path(get_app_storage_dir()) / "resources" / resource_name
+        resource_dir = Path(get_app_storage_dir()) / "resources" / "youtube_music" / resource_name
+    else:
+        resource_dir = Path(get_app_storage_dir()) / "resources" / resource_name
+    if _resource_dir_is_accessible(resource_dir):
+        return resource_dir
+    return resource_dir.with_name(f"{resource_dir.name}.repaired")
+
+
+def _resource_dir_is_accessible(resource_dir: Path) -> bool:
+    if not resource_dir.exists():
+        return True
+    try:
+        with os.scandir(resource_dir):
+            pass
+    except OSError:
+        return False
+    return True
 
 
 def read_optional_resource_manifest(resource_name: str) -> dict:
@@ -98,7 +113,7 @@ def install_optional_resource(resource_name: str, *, progress_callback=None) -> 
         raise OptionalResourceError(
             _("Não há espaço livre suficiente para instalar o recurso {name}.").format(name=asset_name)
         )
-    download_dir = Path(tempfile.mkdtemp(prefix=f"keytune-{resource_name}-", dir=resource_parent))
+    download_dir = _create_download_dir(resource_parent, resource_name)
     archive_path = download_dir / asset_name
     checksum_path = download_dir / checksum_name
     staging_dir = download_dir / "content"
@@ -183,6 +198,19 @@ def _calculate_sha256(file_path: Path) -> str:
         while chunk := source_file.read(UPDATE_DOWNLOAD_CHUNK_SIZE):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _create_download_dir(resource_parent: Path, resource_name: str) -> Path:
+    """Create an update workspace that inherits the resource directory ACL.
+
+    ``tempfile.mkdtemp`` creates a Windows directory with an explicit private
+    ACL.  Moving its extracted content into the resource directory preserves
+    that ACL, which can make the resource inaccessible after an elevated app
+    update.  A normal child directory inherits the per-user resource ACL.
+    """
+    download_dir = resource_parent / f".keytune-{resource_name}-{uuid.uuid4().hex}"
+    download_dir.mkdir()
+    return download_dir
 
 
 def _extract_archive(archive_path: Path, destination: Path) -> None:
