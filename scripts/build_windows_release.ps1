@@ -4,7 +4,7 @@
     [string]$MpvRuntimeArchive = "",
     [ValidateSet("stable", "nightly")]
     [string]$YtDlpChannel = "stable",
-    [string]$AppVersion = "2.0.3"
+    [string]$AppVersion = "2.0.4"
 )
 
 $ErrorActionPreference = "Stop"
@@ -77,6 +77,10 @@ Require-Path -Path $PythonStableAbiDll -Description "DLL da ABI estável do Pyth
 & $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
+}
+& $PythonExe scripts\validate_main_bundle.py dist\KeyTune
+if ($LASTEXITCODE -ne 0) {
+    throw "O executável principal incluiu dependências opcionais."
 }
 
 Write-Step "Validando controles de mídia do sistema no executável"

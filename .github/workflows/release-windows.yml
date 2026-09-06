@@ -48,6 +48,7 @@ jobs:
         run: |
           $pythonStableAbiDll = python -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
           pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$pythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+          python scripts/validate_main_bundle.py dist/KeyTune
 
       - name: Validate system media controls in packaged application
         shell: powershell

@@ -38,11 +38,11 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1
 ```
 
-Por padrão, o build script baixa e descompacta o runtime do MPV, baixa o `yt-dlp.exe` oficial e gera separadamente os pacotes opcionais de Node.js, dependências Python do YouTube, YouTube.js e AutoDJ. Esses quatro pacotes não entram no instalador principal; a release os publica com checksums para download sob demanda.
+Por padrão, o build script baixa e descompacta o runtime do MPV, baixa o `yt-dlp.exe` oficial e gera separadamente os pacotes opcionais de Node.js, dependências Python do YouTube, YouTube.js e AutoDJ. Esses quatro pacotes não entram no instalador principal; a release os publica com checksums para download sob demanda. O build falha se NumPy, librosa, SciPy, Numba, llvmlite ou PyAV aparecerem em `dist/KeyTune/_internal`.
 
 O build também exige Node.js com npm no PATH. Os manifestos dos pacotes devem usar a mesma versão de `APP_VERSION` em `src/player/constants.py` e da tag publicada.
 
-Antes de publicar, valide em uma pasta de dados limpa: ativação e confirmação pelo teclado em Recursos adicionais, download dos quatro pacotes com seus checksums, reprodução pelo YouTube.js e análise de uma faixa pelo processo isolado do AutoDJ, que reutiliza o runtime Python do KeyTune. Repita a atualização de dependências: pacotes válidos da mesma versão não devem ser baixados novamente, enquanto o yt-dlp continua consultando o canal selecionado. Confira também os anúncios de progresso com leitor de tela.
+Antes de publicar, valide em uma pasta de dados limpa: ativação e confirmação pelo teclado em Recursos adicionais, download dos quatro pacotes com seus checksums, reprodução pelo YouTube.js e análise de uma faixa pelo processo isolado do AutoDJ, que reutiliza o runtime Python do KeyTune. Repita a atualização de dependências: pacotes válidos com a mesma `resource_revision` não devem ser baixados novamente após atualizar somente o player; em especial, preserve o Node.js gerenciado já instalado. O yt-dlp continua consultando o canal selecionado. Confira também os anúncios de progresso com leitor de tela.
 
 Se quiser fixar o runtime do MPV a uma pasta local ou a um arquivo `.7z`, passe `-MpvSource` ou `-MpvRuntimeArchive` para o build script. Para testar uma release local já com o canal nightly do yt-dlp, use:
 

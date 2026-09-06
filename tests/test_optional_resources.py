@@ -18,7 +18,7 @@ from player import optional_resources
 
 
 class OptionalResourcesTests(unittest.TestCase):
-    def test_installed_resource_requires_current_manifest_and_files(self):
+    def test_installed_resource_requires_compatible_revision_and_files(self):
         with tempfile.TemporaryDirectory() as temporary:
             resource_dir = Path(temporary) / "youtubejs"
             resource_dir.mkdir()
@@ -27,7 +27,8 @@ class OptionalResourcesTests(unittest.TestCase):
                 json.dumps(
                     {
                         "resource": "youtubejs",
-                        "app_version": APP_VERSION,
+                        "app_version": "1.0.0",
+                        "resource_revision": optional_resources.RESOURCE_REVISIONS["youtubejs"],
                         "required_paths": ["resolve.mjs"],
                     }
                 ),
@@ -38,6 +39,44 @@ class OptionalResourcesTests(unittest.TestCase):
                 self.assertTrue(optional_resources.optional_resource_installed("youtubejs"))
                 (resource_dir / "resolve.mjs").unlink()
                 self.assertFalse(optional_resources.optional_resource_installed("youtubejs"))
+
+    def test_legacy_node_resource_is_reused_across_player_updates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "node"
+            resource_dir.mkdir()
+            (resource_dir / "node.exe").write_bytes(b"node")
+            (resource_dir / optional_resources.RESOURCE_MANIFEST_NAME).write_text(
+                json.dumps(
+                    {
+                        "resource": "node",
+                        "app_version": "1.0.0",
+                        "required_paths": ["node.exe"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with patch.object(optional_resources, "get_optional_resource_dir", return_value=resource_dir):
+                self.assertTrue(optional_resources.optional_resource_installed("node"))
+
+    def test_legacy_autodj_resource_is_refreshed_after_packaging_fix(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "autodj"
+            resource_dir.mkdir()
+            (resource_dir / "site-packages").mkdir()
+            (resource_dir / optional_resources.RESOURCE_MANIFEST_NAME).write_text(
+                json.dumps(
+                    {
+                        "resource": "autodj",
+                        "app_version": APP_VERSION,
+                        "required_paths": ["site-packages"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with patch.object(optional_resources, "get_optional_resource_dir", return_value=resource_dir):
+                self.assertFalse(optional_resources.optional_resource_installed("autodj"))
 
     def test_extract_archive_rejects_parent_traversal(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -92,6 +131,7 @@ class OptionalResourcesTests(unittest.TestCase):
                         {
                             "resource": "youtubejs",
                             "app_version": APP_VERSION,
+                            "resource_revision": optional_resources.RESOURCE_REVISIONS["youtubejs"],
                             "required_paths": ["resolve.mjs"],
                         }
                     ),

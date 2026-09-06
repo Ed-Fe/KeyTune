@@ -23,6 +23,16 @@ from .session import get_app_storage_dir
 
 
 RESOURCE_MANIFEST_NAME = "keytune-resource.json"
+RESOURCE_REVISIONS = {
+    "node": 1,
+    "youtube": 1,
+    "youtubejs": 1,
+    "autodj": 1,
+}
+# These resources predate resource revisions and are safe to reuse across
+# KeyTune updates. AutoDJ is intentionally omitted so affected installations
+# replace the previously published, incompatible scientific stack once.
+LEGACY_CROSS_VERSION_RESOURCES = frozenset({"node", "youtube", "youtubejs"})
 UPDATE_REPOSITORY_OWNER_ENV = "MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER"
 UPDATE_REPOSITORY_NAME_ENV = "MEDIA_PLAYER_UPDATE_REPOSITORY_NAME"
 
@@ -81,7 +91,15 @@ def read_optional_resource_manifest(resource_name: str) -> dict:
 
 def optional_resource_installed(resource_name: str) -> bool:
     manifest = read_optional_resource_manifest(resource_name)
-    if not manifest or str(manifest.get("app_version") or "") != APP_VERSION:
+    if not manifest:
+        return False
+    revision = manifest.get("resource_revision")
+    expected_revision = RESOURCE_REVISIONS.get(resource_name)
+    if revision is None:
+        compatible = resource_name in LEGACY_CROSS_VERSION_RESOURCES
+    else:
+        compatible = revision == expected_revision
+    if not compatible:
         return False
     required_paths = manifest.get("required_paths")
     if not isinstance(required_paths, list) or not required_paths:
@@ -235,6 +253,8 @@ def _validate_staged_resource(resource_name: str, staging_dir: Path) -> dict:
     if not isinstance(manifest, dict) or manifest.get("resource") != resource_name:
         raise OptionalResourceError(_("O pacote baixado não corresponde ao recurso solicitado."))
     if str(manifest.get("app_version") or "") != APP_VERSION:
+        raise OptionalResourceError(_("O pacote baixado não é compatível com esta versão do KeyTune."))
+    if manifest.get("resource_revision") != RESOURCE_REVISIONS.get(resource_name):
         raise OptionalResourceError(_("O pacote baixado não é compatível com esta versão do KeyTune."))
     required_paths = manifest.get("required_paths")
     if not isinstance(required_paths, list) or not required_paths:

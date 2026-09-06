@@ -11,8 +11,11 @@ import sys
 import tempfile
 import zipfile
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+from player.optional_resources import RESOURCE_REVISIONS
+
+
 RESOURCE_LABELS = {
     "node": "NodeJS",
     "youtube": "YouTubePython",
@@ -185,6 +188,7 @@ def _write_manifest(content, resource, app_version, required_paths, versions):
     manifest = {
         "resource": resource,
         "app_version": app_version,
+        "resource_revision": RESOURCE_REVISIONS[resource],
         "required_paths": required_paths,
         "versions": versions,
     }

@@ -12,6 +12,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **AutoDJ**: corrigida a análise que podia entrar em um loop infinito após uma falha nativa. A preparação agora pausa com um erro claro, e as transições sem análise usam o crossfade normal sem repetir tentativas automaticamente.
 - **Recursos do AutoDJ**: o analisador agora reutiliza o runtime Python do KeyTune. O pacote opcional contém apenas as bibliotecas científicas necessárias, sem empacotar uma segunda cópia do Python ou outro executável do aplicativo.
 - **Estabilidade da análise**: fixadas versões compatíveis de NumPy, SciPy, Numba e llvmlite, com validação da análise no executável empacotado.
+- **Empacotamento do Windows**: as bibliotecas científicas opcionais não são mais copiadas para o executável principal, evitando conflitos entre cópias do AutoDJ.
+- **Atualizações de recursos**: Node.js, YouTube Python e YouTube.js válidos são reutilizados entre atualizações do player; somente recursos com revisão incompatível são baixados novamente.
 
 ## [2.0.3] - 2026-09-05
 
