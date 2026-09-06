@@ -14,6 +14,7 @@ from ..optional_resources import (
 
 
 _DLL_DIRECTORY_HANDLES = []
+_AUTODJ_MODULES = ("librosa", "numpy", "av")
 
 
 def get_autodj_site_packages_dir() -> Path:
@@ -27,8 +28,17 @@ def get_autodj_worker_command() -> list[str]:
     return [sys.executable, str(main_script), "--autodj-analyzer"]
 
 
+def _autodj_modules_available() -> bool:
+    return all(importlib.util.find_spec(name) is not None for name in _AUTODJ_MODULES)
+
+
 def activate_autodj_dependencies() -> Path:
     target_dir = get_autodj_site_packages_dir()
+    # Source-tree development installs the optional libraries in its virtual
+    # environment. Keep it ahead of any resources left by a previously
+    # installed KeyTune version in AppData.
+    if not getattr(sys, "frozen", False) and _autodj_modules_available():
+        return target_dir
     if target_dir.is_dir():
         normalized = str(target_dir)
         if normalized not in sys.path:
@@ -46,11 +56,11 @@ def activate_autodj_dependencies() -> Path:
 def autodj_dependencies_available() -> bool:
     if optional_resource_installed("autodj"):
         activate_autodj_dependencies()
-        return all(importlib.util.find_spec(name) is not None for name in ("librosa", "numpy", "av"))
+        return _autodj_modules_available()
     if getattr(sys, "frozen", False):
         return False
     activate_autodj_dependencies()
-    return all(importlib.util.find_spec(name) is not None for name in ("librosa", "numpy", "av"))
+    return _autodj_modules_available()
 
 
 def install_autodj_dependencies(*, progress_callback=None) -> dict:

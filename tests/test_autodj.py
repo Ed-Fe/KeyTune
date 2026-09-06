@@ -25,6 +25,7 @@ from player.autodj import (
     build_mix_lavfi_filters,
     mix_values,
 )
+from player.autodj import dependencies as autodj_dependencies
 from player.autodj.service import AutoDJService
 from player.autodj.sound_effects import transition_sound_path
 from player.autodj.librosa_analyzer import AutoDJAnalyzerProcessError, LibrosaAnalyzer
@@ -37,6 +38,30 @@ from player.playlists.models import PlaylistState
 
 
 class AutoDJTests(unittest.TestCase):
+    def test_source_environment_does_not_prefer_managed_autodj_resources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "site-packages"
+            resource_dir.mkdir()
+            with patch.object(autodj_dependencies, "get_autodj_site_packages_dir", return_value=resource_dir), patch.object(
+                autodj_dependencies.sys, "frozen", False, create=True
+            ), patch.object(autodj_dependencies, "_autodj_modules_available", return_value=True), patch.object(
+                autodj_dependencies.sys, "path", list(autodj_dependencies.sys.path)
+            ):
+                autodj_dependencies.activate_autodj_dependencies()
+                self.assertNotIn(str(resource_dir), autodj_dependencies.sys.path)
+
+    def test_source_environment_uses_managed_resources_when_dependencies_are_missing(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "site-packages"
+            resource_dir.mkdir()
+            with patch.object(autodj_dependencies, "get_autodj_site_packages_dir", return_value=resource_dir), patch.object(
+                autodj_dependencies.sys, "frozen", False, create=True
+            ), patch.object(autodj_dependencies, "_autodj_modules_available", return_value=False), patch.object(
+                autodj_dependencies.sys, "path", list(autodj_dependencies.sys.path)
+            ):
+                autodj_dependencies.activate_autodj_dependencies()
+                self.assertEqual(autodj_dependencies.sys.path[0], str(resource_dir))
+
     def test_librosa_analyzer_uses_optional_worker_and_restores_tuple_fields(self):
         payload = {
             "bpm": 120.0,

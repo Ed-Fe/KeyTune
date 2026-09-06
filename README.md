@@ -72,7 +72,13 @@ It focuses on playlist management, folder browsing, session restore, and persist
    ```
 
    For source-tree development of the optional integrations, also install
-   `requirements-youtube.txt` and `requirements-autodj.txt`. Release builds
+   them with:
+
+   ```bash
+   pip install -r requirements-youtube.txt -r requirements-autodj.txt
+   ```
+
+   Release builds
    publish these components separately and the installed app downloads them
    only after the user enables and confirms the corresponding feature.
 

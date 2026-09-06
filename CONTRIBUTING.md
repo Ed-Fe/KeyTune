@@ -14,7 +14,9 @@ KeyTune is a media player. Contributions should preserve the existing structure:
 ## Local Setup
 
 1. Create and activate a virtual environment.
-2. Install dependencies with `pip install -r requirements.txt`.
+2. Install the main dependencies with `pip install -r requirements.txt`. To
+   develop or test YouTube Music and AutoDJ from the source tree, also run
+   `pip install -r requirements-youtube.txt -r requirements-autodj.txt`.
 3. Download the MPV runtime with `python scripts/download_mpv_runtime.py` if you do not already have a compatible libmpv installation.
 4. Run the app with `python src/main.py`.
 
