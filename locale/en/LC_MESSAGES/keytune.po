@@ -5177,3 +5177,27 @@ msgstr "To play from YouTube Music, yt-dlp needs a JavaScript runtime installed 
 
 msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
 msgstr "YouTube required JavaScript validation. Enable or update the additional resources to install Node.js 24+, then try again."
+
+msgid "A preparação do AutoDJ foi pausada após uma falha: {reason}"
+msgstr "AutoDJ preparation was paused after an error: {reason}"
+
+msgid "O analisador opcional do AutoDJ falhou."
+msgstr "The optional AutoDJ analyzer failed."
+
+msgid "O analisador opcional do AutoDJ retornou um resultado inválido."
+msgstr "The optional AutoDJ analyzer returned an invalid result."
+
+msgid "O processo isolado do AutoDJ encerrou sem resultado (código {exit_code})."
+msgstr "The isolated AutoDJ process exited without a result (code {exit_code})."
+
+msgid "Próxima transição: será usada a transição normal. Motivo: {reason}."
+msgstr "Next transition: the regular transition will be used. Reason: {reason}."
+
+msgid "Próxima, transição normal"
+msgstr "Next, regular transition"
+
+msgid "O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."
+msgstr "AutoDJ could not analyze these tracks. The regular transition will be used."
+
+msgid "nenhuma faixa pôde ser preparada"
+msgstr "no track could be prepared"

@@ -6,6 +6,7 @@ from player.mpv_runtime import bootstrap_mpv_runtime
 
 _SMTC_SMOKE_TEST_ARGUMENT = "--smtc-smoke-test"
 _YOUTUBE_DEPENDENCIES_SMOKE_TEST_ARGUMENT = "--youtube-dependencies-smoke-test"
+_AUTODJ_ANALYZER_ARGUMENT = "--autodj-analyzer"
 _PLUGIN_WORKER_ARGUMENT = "--plugin-worker"
 
 
@@ -84,6 +85,13 @@ def _run_youtube_dependencies_smoke_test():
 
 
 def main():
+    if _AUTODJ_ANALYZER_ARGUMENT in sys.argv[1:]:
+        from player.autodj.dependencies import activate_autodj_dependencies
+        from player.autodj.worker import main as worker_main
+
+        activate_autodj_dependencies()
+        argument_index = sys.argv.index(_AUTODJ_ANALYZER_ARGUMENT)
+        return worker_main(sys.argv[argument_index + 1:])
     if _PLUGIN_WORKER_ARGUMENT in sys.argv[1:]:
         from player.plugins.worker import main as worker_main
 

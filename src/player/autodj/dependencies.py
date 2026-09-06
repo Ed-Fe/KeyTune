@@ -20,9 +20,11 @@ def get_autodj_site_packages_dir() -> Path:
     return get_optional_resource_dir("autodj") / "site-packages"
 
 
-def get_autodj_analyzer_executable_path() -> Path:
-    executable_name = "autodj-analyzer.exe" if os.name == "nt" else "autodj-analyzer"
-    return get_optional_resource_dir("autodj") / "autodj-analyzer" / executable_name
+def get_autodj_worker_command() -> list[str]:
+    main_script = Path(__file__).resolve().parents[2] / "main.py"
+    if getattr(sys, "frozen", False):
+        return [sys.executable, "--autodj-analyzer"]
+    return [sys.executable, str(main_script), "--autodj-analyzer"]
 
 
 def activate_autodj_dependencies() -> Path:
@@ -42,8 +44,9 @@ def activate_autodj_dependencies() -> Path:
 
 
 def autodj_dependencies_available() -> bool:
-    if optional_resource_installed("autodj") and get_autodj_analyzer_executable_path().is_file():
-        return True
+    if optional_resource_installed("autodj"):
+        activate_autodj_dependencies()
+        return all(importlib.util.find_spec(name) is not None for name in ("librosa", "numpy", "av"))
     if getattr(sys, "frozen", False):
         return False
     activate_autodj_dependencies()

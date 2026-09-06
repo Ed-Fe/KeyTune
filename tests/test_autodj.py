@@ -27,7 +27,8 @@ from player.autodj import (
 )
 from player.autodj.service import AutoDJService
 from player.autodj.sound_effects import transition_sound_path
-from player.autodj.librosa_analyzer import LibrosaAnalyzer
+from player.autodj.librosa_analyzer import AutoDJAnalyzerProcessError, LibrosaAnalyzer
+from player.autodj import worker as autodj_worker
 from player.frames.autodj import FrameAutoDJMixin
 from player.frames.library_tabs.playback_control import PlaylistPlaybackMixin
 from player.frames.playback.backend import PlayerBackendMixin
@@ -45,24 +46,44 @@ class AutoDJTests(unittest.TestCase):
             "phrase_boundaries_ms": [0],
             "section_boundaries_ms": [500],
         }
-        with tempfile.TemporaryDirectory() as temporary:
-            worker_path = Path(temporary) / "autodj-analyzer.exe"
-            worker_path.touch()
-            completed = SimpleNamespace(
-                returncode=0,
-                stdout="KEYTUNE_AUTODJ_RESULT=" + json.dumps(payload),
-                stderr="",
-            )
-            with patch(
-                "player.autodj.dependencies.get_autodj_analyzer_executable_path",
-                return_value=worker_path,
-            ), patch("player.autodj.librosa_analyzer.subprocess.run", return_value=completed) as run_worker:
-                result = LibrosaAnalyzer().analyze("track.mp3")
+        def run(command, **_kwargs):
+            Path(command[-1]).write_text(json.dumps({"ok": True, "result": payload}), encoding="utf-8")
+            return SimpleNamespace(returncode=0)
+
+        with patch(
+            "player.autodj.dependencies.get_autodj_worker_command",
+            return_value=["KeyTune.exe", "--autodj-analyzer"],
+        ), patch("player.autodj.librosa_analyzer.subprocess.run", side_effect=run) as run_worker:
+            result = LibrosaAnalyzer().analyze("track.mp3")
 
         self.assertEqual(result.beats_ms, (0, 500))
         self.assertEqual(result.phrase_boundaries_ms, (0,))
         self.assertEqual(result.section_boundaries_ms, (500,))
         run_worker.assert_called_once()
+        self.assertEqual(run_worker.call_args.args[0][:2], ["KeyTune.exe", "--autodj-analyzer"])
+
+    def test_librosa_analyzer_reports_native_worker_exit_code(self):
+        with patch(
+            "player.autodj.dependencies.get_autodj_worker_command",
+            return_value=["KeyTune.exe", "--autodj-analyzer"],
+        ), patch(
+            "player.autodj.librosa_analyzer.subprocess.run",
+            return_value=SimpleNamespace(returncode=-1073741819),
+        ):
+            with self.assertRaisesRegex(AutoDJAnalyzerProcessError, "0xC0000005"):
+                LibrosaAnalyzer().analyze("track.mp3")
+
+    def test_autodj_worker_writes_result_without_using_console_output(self):
+        analysis = AudioAnalysis(120, (0, 500), .8, .6)
+        with tempfile.TemporaryDirectory() as temporary:
+            result_path = Path(temporary) / "result.json"
+            with patch.object(LibrosaAnalyzer, "_analyze_in_process", return_value=analysis):
+                exit_code = autodj_worker.main(["track.mp3", "22050", "900", str(result_path)])
+            payload = json.loads(result_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(exit_code, 0)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["result"]["bpm"], 120)
 
     def test_transition_sound_uses_the_profile_effect(self):
         path = transition_sound_path("party")

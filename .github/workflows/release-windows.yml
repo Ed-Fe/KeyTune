@@ -47,7 +47,7 @@ jobs:
         shell: powershell
         run: |
           $pythonStableAbiDll = python -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
-          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$pythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+          pyinstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$pythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 
       - name: Validate system media controls in packaged application
         shell: powershell
@@ -73,6 +73,30 @@ jobs:
             $env:APPDATA = $testAppData
             $process = Start-Process -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") -ArgumentList "--youtube-dependencies-smoke-test" -Wait -PassThru -WindowStyle Hidden
             if ($process.ExitCode -ne 0) { throw "As dependências opcionais do YouTube não puderam ser importadas." }
+          } finally {
+            $env:APPDATA = $savedAppData
+          }
+
+      - name: Validate optional AutoDJ dependencies in packaged application
+        shell: powershell
+        run: |
+          $testAppData = Join-Path (Resolve-Path "build") "autodj-resource-smoke"
+          $resourceDir = Join-Path $testAppData "KeyTune\resources\autodj"
+          Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-AutoDJ-win-x64.zip" -DestinationPath $resourceDir
+          $resultPath = Join-Path $testAppData "autodj-result.json"
+          $samplePath = (Resolve-Path "src\player\autodj\sounds\dj_record_swipe.wav").Path
+          $savedAppData = $env:APPDATA
+          try {
+            $env:APPDATA = $testAppData
+            $process = Start-Process `
+              -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+              -ArgumentList @("--autodj-analyzer", "`"$samplePath`"", "22050", "60", "`"$resultPath`"") `
+              -Wait `
+              -PassThru `
+              -WindowStyle Hidden
+            if ($process.ExitCode -ne 0) { throw "O processo isolado do AutoDJ falhou com o código $($process.ExitCode)." }
+            $result = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
+            if (-not $result.ok) { throw "O processo isolado do AutoDJ não retornou uma análise válida." }
           } finally {
             $env:APPDATA = $savedAppData
           }

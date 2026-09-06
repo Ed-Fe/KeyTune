@@ -69,6 +69,22 @@ class MainArgumentFilteringTests(unittest.TestCase):
         self.assertEqual(result, 0)
         import_ytmusicapi.assert_called_once_with()
 
+    @patch("player.autodj.worker.main", return_value=0)
+    @patch("player.autodj.dependencies.activate_autodj_dependencies")
+    def test_autodj_analyzer_mode_bypasses_normal_application_startup(
+        self, activate_dependencies, worker_main
+    ):
+        with patch.object(
+            sys,
+            "argv",
+            ["KeyTune.exe", "--autodj-analyzer", "track.mp3", "22050", "900", "result.json"],
+        ):
+            result = main.main()
+
+        self.assertEqual(result, 0)
+        activate_dependencies.assert_called_once_with()
+        worker_main.assert_called_once_with(["track.mp3", "22050", "900", "result.json"])
+
 
 if __name__ == "__main__":
     unittest.main()

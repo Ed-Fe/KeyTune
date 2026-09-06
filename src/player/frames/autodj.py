@@ -278,6 +278,11 @@ class FrameAutoDJMixin:
             state.autodj_waiting_for_next = False
             message = _("Preparação da sessão AutoDJ pausada.")
         else:
+            self._autodj_transition_requests = {
+                pair: request
+                for pair, request in getattr(self, "_autodj_transition_requests", {}).items()
+                if request.get("status") != "failed"
+            }
             message = _("Preparação da sessão AutoDJ retomada.")
         self._refresh_playlist_browser()
         self._announce(message)
@@ -472,11 +477,14 @@ class FrameAutoDJMixin:
         if state.current_media_path != current_path:
             return
         if error_message or not selections:
-            self._autodj_session_retry_at[state_key] = time.monotonic() + 30
+            state.autodj_preparation_paused = True
+            state.autodj_waiting_for_next = False
+            self._autodj_session_retry_at.pop(state_key, None)
+            reason = str(error_message or _("nenhuma faixa pôde ser preparada"))
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(
-                    _("O AutoDJ não conseguiu completar a fila agora; tentará novamente."),
-                    auto_clear_ms=7000,
+                    _("A preparação do AutoDJ foi pausada após uma falha: {reason}").format(reason=reason),
+                    auto_clear_ms=0,
                 )
             self._refresh_autodj_session_ui(state)
             return
@@ -565,10 +573,10 @@ class FrameAutoDJMixin:
         if request.get("status") == "failed":
             reason = str(request.get("error") or _("falha ao analisar as faixas"))
             return (
-                _("Próxima transição: aguardando nova tentativa. Motivo: {reason}.").format(
+                _("Próxima transição: será usada a transição normal. Motivo: {reason}.").format(
                     reason=reason
                 ),
-                _("Próxima, análise pendente"),
+                _("Próxima, transição normal"),
             )
         plan = request.get("plan")
         if plan is None or plan.fallback_crossfade:
@@ -779,6 +787,8 @@ class FrameAutoDJMixin:
             return False
 
         state = self._get_active_playlist_state()
+        if state is not None and state.autodj_session and state.autodj_preparation_paused:
+            return False
         pair = self._autodj_transition_pair(state)
         if pair is None:
             return False
@@ -938,11 +948,11 @@ class FrameAutoDJMixin:
             request.update(
                 status="failed",
                 error=error_message,
-                retry_at=time.monotonic() + 30,
+                retry_at=float("inf"),
             )
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(
-                    _("O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."),
+                    _("O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."),
                     auto_clear_ms=7000,
                 )
             self._refresh_autodj_session_ui(self._get_active_playlist_state())

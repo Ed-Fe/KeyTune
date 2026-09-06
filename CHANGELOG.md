@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-09-05
+
+### Corrigido
+
+- **AutoDJ**: corrigida a análise que podia entrar em um loop infinito após uma falha nativa. A preparação agora pausa com um erro claro, e as transições sem análise usam o crossfade normal sem repetir tentativas automaticamente.
+- **Recursos do AutoDJ**: o analisador agora reutiliza o runtime Python do KeyTune. O pacote opcional contém apenas as bibliotecas científicas necessárias, sem empacotar uma segunda cópia do Python ou outro executável do aplicativo.
+- **Estabilidade da análise**: fixadas versões compatíveis de NumPy, SciPy, Numba e llvmlite, com validação da análise no executável empacotado.
+
 ## [2.0.3] - 2026-09-05
 
 ### Corrigido

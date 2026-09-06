@@ -135,64 +135,36 @@ def _build_youtube(output_dir, args):
 def _build_autodj(output_dir, args):
     with tempfile.TemporaryDirectory(prefix="keytune-autodj-resource-", dir=output_dir.parent) as temporary:
         content = Path(temporary) / "content"
-        runtime_dir = Path(temporary) / "build-runtime"
+        site_packages = content / "site-packages"
         pip_temp_dir = Path(temporary) / "pip-temp"
         pip_temp_dir.mkdir()
         pip_environment = os.environ.copy()
         pip_environment.update({"TMP": str(pip_temp_dir), "TEMP": str(pip_temp_dir)})
-        subprocess.run([args.python_exe, "-m", "venv", str(runtime_dir)], check=True)
-        runtime_python = runtime_dir / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         subprocess.run(
             [
-                str(runtime_python),
+                args.python_exe,
                 "-m",
                 "pip",
                 "install",
                 "--disable-pip-version-check",
                 "--no-cache-dir",
                 "--only-binary=:all:",
-                "pyinstaller>=6",
+                "--target",
+                str(site_packages),
                 "-r",
                 str(PROJECT_ROOT / "requirements-autodj.txt"),
             ],
             check=True,
             env=pip_environment,
         )
-        site_packages = runtime_dir / ("Lib/site-packages" if os.name == "nt" else "lib/python/site-packages")
+        for cache_dir in site_packages.rglob("__pycache__"):
+            shutil.rmtree(cache_dir, ignore_errors=True)
         versions = _distribution_versions(site_packages, ("librosa", "numpy", "scipy", "numba", "av"))
-        subprocess.run(
-            [
-                str(runtime_python),
-                "-m",
-                "PyInstaller",
-                "--noconfirm",
-                "--clean",
-                "--console",
-                "--name",
-                "autodj-analyzer",
-                "--distpath",
-                str(content),
-                "--workpath",
-                str(Path(temporary) / "pyinstaller-work"),
-                "--specpath",
-                str(Path(temporary) / "pyinstaller-spec"),
-                "--paths",
-                str(PROJECT_ROOT / "src"),
-                "--collect-data",
-                "librosa",
-                "--collect-all",
-                "av",
-                "--exclude-module",
-                "numba.np.ufunc.tbbpool",
-                str(PROJECT_ROOT / "src" / "player" / "autodj" / "worker.py"),
-            ],
-            check=True,
-        )
         _write_manifest(
             content,
             "autodj",
             args.app_version,
-            ["autodj-analyzer/autodj-analyzer.exe"],
+            ["site-packages/librosa", "site-packages/numpy", "site-packages/av"],
             versions,
         )
         _archive_resource(output_dir, "autodj", content, args.architecture)

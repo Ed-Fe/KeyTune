@@ -602,6 +602,10 @@ msgstr ""
 msgid "A playlist selecionada é inválida."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "A preparação do AutoDJ foi pausada após uma falha: {reason}"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
 msgstr ""
@@ -4532,11 +4536,7 @@ msgid "Número máximo de itens"
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "O AutoDJ não conseguiu completar a fila agora; tentará novamente."
+msgid "O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -4589,6 +4589,14 @@ msgstr ""
 
 #: src/player/frames/playback/backend.py
 msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
+msgstr ""
+
+#: src/player/autodj/librosa_analyzer.py
+msgid "O analisador opcional do AutoDJ falhou."
+msgstr ""
+
+#: src/player/autodj/librosa_analyzer.py
+msgid "O analisador opcional do AutoDJ retornou um resultado inválido."
 msgstr ""
 
 #: src/player/update/service.py
@@ -4729,6 +4737,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
+msgstr ""
+
+#: src/player/autodj/librosa_analyzer.py
+msgid "O processo isolado do AutoDJ encerrou sem resultado (código {exit_code})."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -5387,10 +5399,6 @@ msgid "Próxima Fai&xa\tCtrl+PageDown"
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "Próxima transição: aguardando nova tentativa. Motivo: {reason}."
-msgstr ""
-
-#: src/player/frames/autodj.py
 msgid "Próxima transição: aguardando uma faixa preparada."
 msgstr ""
 
@@ -5403,6 +5411,10 @@ msgid "Próxima transição: comum. Motivo: {reason}."
 msgstr ""
 
 #: src/player/frames/autodj.py
+msgid "Próxima transição: será usada a transição normal. Motivo: {reason}."
+msgstr ""
+
+#: src/player/frames/autodj.py
 msgid "Próxima transição: {count} batidas."
 msgstr ""
 
@@ -5411,15 +5423,15 @@ msgid "Próxima, analisando transição"
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "Próxima, análise pendente"
-msgstr ""
-
-#: src/player/frames/autodj.py
 msgid "Próxima, transição comum"
 msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Próxima, transição de {count} batidas"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Próxima, transição normal"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -6688,6 +6700,10 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "nenhuma aba de mídia"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "nenhuma faixa pôde ser preparada"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py

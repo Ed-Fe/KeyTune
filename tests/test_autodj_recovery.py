@@ -63,3 +63,51 @@ class AutoDJRecoveryTests(unittest.TestCase):
         self.assertTrue(done.wait(3))
         self.assertIn("good.mp3", attempted)
         self.assertEqual([selection.path for selection in results[0][2]], ["good.mp3"])
+
+    def test_session_failure_pauses_preparation_instead_of_retrying_forever(self):
+        state = PlaylistState(title="AutoDJ")
+        state.set_items(["current.mp3"])
+        state.autodj_session = True
+        state.autodj_remaining_items = ["next.mp3"]
+        state.autodj_waiting_for_next = True
+        cancel_event = threading.Event()
+        frame = FrameAutoDJMixin()
+        frame.playlists = [state]
+        frame._autodj_session_requests = {id(state): cancel_event}
+        frame._autodj_session_retry_at = {}
+        frame._refresh_autodj_session_ui = Mock()
+        frame._set_status_message = Mock()
+
+        frame._finish_autodj_session_fill(
+            state,
+            "current.mp3",
+            (),
+            "falha nativa",
+            cancel_event,
+        )
+
+        self.assertTrue(state.autodj_preparation_paused)
+        self.assertFalse(state.autodj_waiting_for_next)
+        self.assertNotIn(id(state), frame._autodj_session_retry_at)
+        frame._set_status_message.assert_called_once_with(
+            "A preparação do AutoDJ foi pausada após uma falha: falha nativa",
+            auto_clear_ms=0,
+        )
+
+    def test_transition_failure_uses_regular_transition_without_automatic_retry(self):
+        state = PlaylistState(title="AutoDJ")
+        state.set_items(["current.mp3", "next.mp3"])
+        frame = FrameAutoDJMixin()
+        frame.settings = SimpleNamespace(autodj_enabled=True)
+        frame._get_active_playlist_state = lambda: state
+        frame._refresh_autodj_session_ui = Mock()
+        frame._set_status_message = Mock()
+        pair = ("current.mp3", "next.mp3")
+        frame._autodj_transition_requests = {pair: {"status": "pending"}}
+
+        frame._finish_autodj_transition_analysis(pair, "next.mp3", None, None, None, "falha nativa")
+
+        request = frame._autodj_transition_requests[pair]
+        self.assertEqual(request["status"], "failed")
+        self.assertEqual(request["retry_at"], float("inf"))
+        self.assertIsNone(frame._prepared_autodj_transition(state))

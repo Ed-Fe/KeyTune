@@ -74,7 +74,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 $PythonStableAbiDll = & $PythonExe -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
 Require-Path -Path $PythonStableAbiDll -Description "DLL da ABI estável do Python"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
@@ -105,6 +105,32 @@ try {
         -WindowStyle Hidden
     if ($youtubeSmokeProcess.ExitCode -ne 0) {
         throw "As dependências opcionais do YouTube não puderam ser importadas."
+    }
+} finally {
+    $env:APPDATA = $savedAppData
+}
+
+Write-Step "Validando dependências opcionais do AutoDJ no executável"
+$autodjSmokeAppData = Join-Path (Resolve-Path "build") "autodj-resource-smoke"
+$autodjSmokeResourceDir = Join-Path $autodjSmokeAppData "KeyTune\resources\autodj"
+Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-AutoDJ-win-x64.zip" -DestinationPath $autodjSmokeResourceDir
+$autodjSmokeResult = Join-Path $autodjSmokeAppData "autodj-result.json"
+$autodjSmokeSample = (Resolve-Path "src\player\autodj\sounds\dj_record_swipe.wav").Path
+$savedAppData = $env:APPDATA
+try {
+    $env:APPDATA = $autodjSmokeAppData
+    $autodjSmokeProcess = Start-Process `
+        -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+        -ArgumentList @("--autodj-analyzer", "`"$autodjSmokeSample`"", "22050", "60", "`"$autodjSmokeResult`"") `
+        -Wait `
+        -PassThru `
+        -WindowStyle Hidden
+    if ($autodjSmokeProcess.ExitCode -ne 0) {
+        throw "O processo isolado do AutoDJ falhou com o código $($autodjSmokeProcess.ExitCode)."
+    }
+    $autodjSmokePayload = Get-Content -LiteralPath $autodjSmokeResult -Raw | ConvertFrom-Json
+    if (-not $autodjSmokePayload.ok) {
+        throw "O processo isolado do AutoDJ não retornou uma análise válida."
     }
 } finally {
     $env:APPDATA = $savedAppData
