@@ -476,7 +476,17 @@ class FrameAutoDJMixin:
             return
         if state.current_media_path != current_path:
             return
+        # Keep a session playable when native analysis or a remote download
+        # fails. The planned transition is unavailable, but the source
+        # playlist still supplies a safe next item for the normal transition.
         if error_message or not selections:
+            fallback_path = next(
+                (path for path in state.autodj_remaining_items if path not in state.items),
+                "",
+            )
+            if fallback_path:
+                selections = (QueueCandidate(fallback_path, "", None, 0),)
+        if not selections:
             state.autodj_preparation_paused = True
             state.autodj_waiting_for_next = False
             self._autodj_session_retry_at.pop(state_key, None)
@@ -982,7 +992,7 @@ class FrameAutoDJMixin:
         if not request or request.get("status") != "ready":
             return None
         plan = request.get("plan")
-        if plan is None or plan.fallback_crossfade:
+        if plan is None:
             return None
         return {
             "pair": pair,

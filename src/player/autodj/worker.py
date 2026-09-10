@@ -34,10 +34,17 @@ def main(argv=None) -> int:
             os.environ.pop("KEYTUNE_AUTODJ_ANALYZER_WORKER", None)
         else:
             os.environ["KEYTUNE_AUTODJ_ANALYZER_WORKER"] = previous_worker_value
-    result_path.write_text(
-        json.dumps(payload, ensure_ascii=True, separators=(",", ":")),
-        encoding="utf-8",
-    )
+    try:
+        result_path.write_text(
+            json.dumps(payload, ensure_ascii=True, separators=(",", ":")),
+            encoding="utf-8",
+        )
+    except OSError:
+        # The main application may be closing while this isolated process is
+        # still finishing. Its temporary result directory is then gone and
+        # there is no caller left to consume a result; avoid an unhandled
+        # traceback from the child process during shutdown.
+        return exit_code or 1
     return exit_code
 
 

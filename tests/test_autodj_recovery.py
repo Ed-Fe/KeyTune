@@ -64,7 +64,7 @@ class AutoDJRecoveryTests(unittest.TestCase):
         self.assertIn("good.mp3", attempted)
         self.assertEqual([selection.path for selection in results[0][2]], ["good.mp3"])
 
-    def test_session_failure_pauses_preparation_instead_of_retrying_forever(self):
+    def test_session_failure_keeps_playback_moving_with_the_next_normal_track(self):
         state = PlaylistState(title="AutoDJ")
         state.set_items(["current.mp3"])
         state.autodj_session = True
@@ -77,6 +77,10 @@ class AutoDJRecoveryTests(unittest.TestCase):
         frame._autodj_session_retry_at = {}
         frame._refresh_autodj_session_ui = Mock()
         frame._set_status_message = Mock()
+        frame._get_active_playlist_state = lambda: state
+        frame._get_active_playlist_index = lambda: 0
+        frame._refresh_playlist_browser = Mock()
+        frame._play_media = Mock()
 
         frame._finish_autodj_session_fill(
             state,
@@ -86,13 +90,13 @@ class AutoDJRecoveryTests(unittest.TestCase):
             cancel_event,
         )
 
-        self.assertTrue(state.autodj_preparation_paused)
+        self.assertFalse(state.autodj_preparation_paused)
         self.assertFalse(state.autodj_waiting_for_next)
+        self.assertEqual(state.items, ["current.mp3", "next.mp3"])
+        self.assertEqual(state.autodj_remaining_items, [])
+        frame._play_media.assert_called_once_with(index=0)
         self.assertNotIn(id(state), frame._autodj_session_retry_at)
-        frame._set_status_message.assert_called_once_with(
-            "A preparação do AutoDJ foi pausada após uma falha: falha nativa",
-            auto_clear_ms=0,
-        )
+        frame._set_status_message.assert_not_called()
 
     def test_transition_failure_uses_regular_transition_without_automatic_retry(self):
         state = PlaylistState(title="AutoDJ")

@@ -11,8 +11,12 @@
 - [winrt-Windows.Foundation](https://pypi.org/project/winrt-Windows.Foundation/) (>=3.2.1)
 - [pyinstaller](https://pypi.org/project/pyinstaller/) (>=6.0)
 - [ytmusicapi](https://pypi.org/project/ytmusicapi/) (==1.12.0)
-- [librosa](https://pypi.org/project/librosa/) (==0.11.0)
+- [librosa](https://pypi.org/project/librosa/) (==1.0.0)
 - [av](https://pypi.org/project/av/) (==18.1.0)
+- [numpy](https://pypi.org/project/numpy/) (==2.3.5)
+- [scipy](https://pypi.org/project/scipy/) (==1.16.3)
+- [numba](https://pypi.org/project/numba/) (==0.67.0)
+- [llvmlite](https://pypi.org/project/llvmlite/) (==0.49.0)
 
 ## Contribuidores
 

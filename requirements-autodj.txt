@@ -1,6 +1,6 @@
-librosa==0.11.0
+librosa==1.0.0
 av==18.1.0
 numpy==2.3.5
 scipy==1.16.3
-numba==0.63.1
-llvmlite==0.46.0
+numba==0.67.0
+llvmlite==0.49.0

@@ -148,15 +148,26 @@ class TolerantLibraryPlaylistParsingTests(unittest.TestCase):
         from ytmusicapi.mixins import watch as watch_mixin
 
         watch_renderer = {"tabs": [{"tabRenderer": {}}]}
-        original = watch_mixin.get_tab_browse_id
+        parser_attribute = "get_tab_browse_ids"
+        original = getattr(watch_mixin, parser_attribute, None)
+        if not callable(original):
+            parser_attribute = "get_tab_browse_id"
+            original = getattr(watch_mixin, parser_attribute)
         with tolerant_watch_playlist_parsing():
-            self.assertIsNone(watch_mixin.get_tab_browse_id(watch_renderer, 0))
-        self.assertIs(watch_mixin.get_tab_browse_id, original)
+            if parser_attribute == "get_tab_browse_ids":
+                self.assertEqual(getattr(watch_mixin, parser_attribute)(watch_renderer), {})
+            else:
+                self.assertIsNone(getattr(watch_mixin, parser_attribute)(watch_renderer, 0))
+        self.assertIs(getattr(watch_mixin, parser_attribute), original)
 
     def test_overlapping_watch_playlist_fallbacks_restore_the_original_parser(self):
         from ytmusicapi.mixins import watch as watch_mixin
 
-        original = watch_mixin.get_tab_browse_id
+        parser_attribute = "get_tab_browse_ids"
+        original = getattr(watch_mixin, parser_attribute, None)
+        if not callable(original):
+            parser_attribute = "get_tab_browse_id"
+            original = getattr(watch_mixin, parser_attribute)
         first = tolerant_watch_playlist_parsing()
         second = tolerant_watch_playlist_parsing()
         first.__enter__()
@@ -164,7 +175,7 @@ class TolerantLibraryPlaylistParsingTests(unittest.TestCase):
         first.__exit__(None, None, None)
         second.__exit__(None, None, None)
 
-        self.assertIs(watch_mixin.get_tab_browse_id, original)
+        self.assertIs(getattr(watch_mixin, parser_attribute), original)
 
 
 @unittest.skipUnless(HAS_YTMUSICAPI, "ytmusicapi is not installed")

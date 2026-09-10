@@ -110,6 +110,15 @@ class AutoDJTests(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["result"]["bpm"], 120)
 
+    def test_autodj_worker_exits_quietly_when_shutdown_removes_the_result_directory(self):
+        analysis = AudioAnalysis(120, (0, 500), .8, .6)
+        with patch.object(LibrosaAnalyzer, "_analyze_in_process", return_value=analysis), patch.object(
+            Path, "write_text", side_effect=FileNotFoundError
+        ):
+            exit_code = autodj_worker.main(["track.mp3", "22050", "900", "missing/result.json"])
+
+        self.assertEqual(exit_code, 1)
+
     def test_transition_sound_uses_the_profile_effect(self):
         path = transition_sound_path("party")
         self.assertIsNotNone(path)
@@ -228,6 +237,22 @@ class AutoDJTests(unittest.TestCase):
 
         self.assertEqual(entry_ms, beats_ms[8])
         self.assertEqual(exit_ms, beats_ms[32])
+
+    def test_librosa_beat_estimator_avoids_numba_tracker(self):
+        import numpy as np
+
+        onset = np.zeros(440)
+        onset[3::22] = 1.0
+
+        bpm, beat_frames, confidence = LibrosaAnalyzer._estimate_beats_from_onsets(
+            onset,
+            22050,
+            np,
+        )
+
+        self.assertAlmostEqual(bpm, 117.45, places=2)
+        self.assertEqual(tuple(beat_frames[:4]), (3, 25, 47, 69))
+        self.assertGreater(confidence, 0.5)
 
     def test_librosa_estimates_mode_and_downbeat_phase(self):
         import numpy as np
@@ -929,6 +954,48 @@ class AutoDJTests(unittest.TestCase):
         frame = Frame(11000)
         self.assertTrue(frame._maybe_start_automatic_crossfade())
         self.assertIs(frame.play_request["autodj_transition"], transition)
+        self.assertTrue(frame.play_request["allow_crossfade"])
+
+    def test_fallback_autodj_transition_starts_before_the_end(self):
+        plan = AutoDJPlanner().plan(
+            AudioAnalysis(120, tuple(range(0, 20000, 500)), .1, .5),
+            AudioAnalysis(122, tuple(range(0, 20000, 492)), .8, .5),
+            beats=8,
+        )
+        transition = {"pair": ("outgoing.mp3", "incoming.mp3"), "plan": plan, "outgoing": AudioAnalysis(120, (), .1, .5)}
+
+        class State(PlaylistState):
+            def __init__(self):
+                super().__init__(title="AutoDJ")
+                self.set_items(["outgoing.mp3", "incoming.mp3"])
+
+        class Player:
+            def get_media(self): return object()
+            def is_playing(self): return True
+            def get_time(self): return 15000
+            def get_length(self): return 20000
+
+        class Frame(PlaylistPlaybackMixin):
+            def __init__(self):
+                self._crossfade_state = None
+                self.state = State()
+                self.player = Player()
+                self.play_request = None
+
+            def _get_playlist_state(self, _index=None): return self.state
+            def _prepared_autodj_transition(self, _state): return transition
+            def _autodj_transition_duration_ms(self, _transition): return 4000
+            def _autodj_preload_lead_ms(self, _media_path): return 1000
+            def _can_crossfade_to_media(self, _path, *, duration_override_ms=None): return duration_override_ms == 4000
+            def _get_active_playlist_index(self): return 0
+            def _describe_playlist_position(self, _state): return "Próxima faixa."
+            def _play_media(self, **kwargs): self.play_request = kwargs
+
+        frame = Frame()
+        self.assertTrue(frame._maybe_start_automatic_crossfade())
+        scheduled_plan = frame.play_request["autodj_transition"]["plan"]
+        self.assertEqual(scheduled_plan.outgoing_start_ms, 16000)
+        self.assertEqual(scheduled_plan.outgoing_end_ms, 20000)
         self.assertTrue(frame.play_request["allow_crossfade"])
 
     def test_crossfade_receives_autodj_entry_and_tempo(self):

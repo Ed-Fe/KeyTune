@@ -3,6 +3,8 @@ from __future__ import annotations
 import pathlib
 import sys
 import unittest
+from contextlib import contextmanager
+from unittest.mock import patch
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -55,6 +57,31 @@ def _manager(client):
 
 
 class RadioContentTests(unittest.TestCase):
+    def test_personalized_mix_uses_the_tolerant_watch_playlist_parser(self):
+        client = _FakeClient(
+            [{"playlistId": "RDCLAK5uy_mix", "tracks": [_track("abc123DEF45")] }]
+        )
+
+        @contextmanager
+        def tolerant_parser():
+            yield
+
+        with patch(
+            "player.youtube_music.library_manager.tolerant_watch_playlist_parsing",
+            side_effect=tolerant_parser,
+        ) as parser:
+            content = _manager(client).get_playlist_content("RDCLAK5uy_mix")
+
+        parser.assert_called_once_with()
+        self.assertEqual(
+            client.calls,
+            [{"playlistId": "RDCLAK5uy_mix", "limit": 200}],
+        )
+        self.assertEqual(
+            content.item_urls,
+            ["https://music.youtube.com/watch?v=abc123DEF45&list=RDCLAK5uy_mix"],
+        )
+
     def test_seed_track_is_never_returned(self):
         client = _FakeClient([{"playlistId": "RDAMVMseed", "tracks": [_track("seed"), _track("aaa")]}])
 

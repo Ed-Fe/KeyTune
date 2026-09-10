@@ -15,6 +15,7 @@ KEY_NAMES = ("C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯
 MAJOR_PROFILE = (6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
 MINOR_PROFILE = (6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
 PHRASE_BEATS = 16
+_ONSET_HOP_LENGTH = 512
 _WORKER_TIMEOUT_SECONDS = 15 * 60
 
 
@@ -97,15 +98,19 @@ class LibrosaAnalyzer:
         if samples.size == 0:
             return AudioAnalysis(0, (), 0, 0)
         onset_envelope = librosa.onset.onset_strength(y=samples, sr=sample_rate)
-        tempo, beat_frames = librosa.beat.beat_track(
-            onset_envelope=onset_envelope, sr=sample_rate, units="frames"
+        tempo_value, beat_frames, beat_confidence = self._estimate_beats_from_onsets(
+            onset_envelope,
+            sample_rate,
+            np,
         )
-        beat_times = librosa.frames_to_time(beat_frames, sr=sample_rate)
-        beats_ms = tuple(int(round(value * 1000)) for value in beat_times)
+        beats_ms = tuple(
+            int(round(frame * _ONSET_HOP_LENGTH * 1000 / sample_rate))
+            for frame in beat_frames
+        )
         onset_peak = float(np.max(onset_envelope)) if onset_envelope.size else 0.0
         valid_beat_frames = beat_frames[beat_frames < onset_envelope.size]
         beat_strength = float(np.mean(onset_envelope[valid_beat_frames])) if valid_beat_frames.size else 0.0
-        confidence = min(1.0, beat_strength / onset_peak) if onset_peak else 0.0
+        confidence = min(1.0, beat_confidence * (beat_strength / onset_peak)) if onset_peak else 0.0
         rms = librosa.feature.rms(y=samples)
         if rms.size:
             mean_rms_db = 20.0 * np.log10(max(float(np.mean(rms)), 1e-8))
@@ -115,7 +120,6 @@ class LibrosaAnalyzer:
         harmonic = librosa.effects.harmonic(y=samples, margin=4.0)
         chroma = librosa.feature.chroma_cqt(y=harmonic, sr=sample_rate)
         musical_key, musical_mode, key_confidence = self._estimate_key(chroma, np)
-        tempo_value = float(np.asarray(tempo).reshape(-1)[0]) if np.asarray(tempo).size else 0.0
         entry_ms, exit_ms = self._mix_points(beats_ms, beat_frames, rms, np)
         downbeat_offset = self._downbeat_offset(beat_frames, onset_envelope, rms, np)
         phrase_boundaries_ms = tuple(
@@ -160,6 +164,41 @@ class LibrosaAnalyzer:
             entry_vocal_probability=entry_vocal_probability,
             exit_vocal_probability=exit_vocal_probability,
         )
+
+    @staticmethod
+    def _estimate_beats_from_onsets(onset_envelope, sample_rate, np):
+        """Build a beat grid without librosa's Numba-backed beat tracker.
+
+        On Python 3.13, the third-party JIT compiler used by
+        ``librosa.beat.beat_track`` can terminate the isolated worker. A
+        normalized onset autocorrelation produces a stable grid without
+        invoking that compiler.
+        """
+        onset = np.asarray(onset_envelope, dtype=float).reshape(-1)
+        if onset.size < 4 or not float(np.max(onset)):
+            return 0.0, np.asarray((), dtype=int), 0.0
+        minimum_bpm, maximum_bpm = 60.0, 200.0
+        minimum_lag = max(1, int(round(60.0 * sample_rate / (_ONSET_HOP_LENGTH * maximum_bpm))))
+        maximum_lag = min(
+            onset.size - 1,
+            int(round(60.0 * sample_rate / (_ONSET_HOP_LENGTH * minimum_bpm))),
+        )
+        scores = []
+        for lag in range(minimum_lag, maximum_lag + 1):
+            left, right = onset[:-lag], onset[lag:]
+            denominator = float(np.linalg.norm(left) * np.linalg.norm(right))
+            if denominator:
+                scores.append((float(np.dot(left, right)) / denominator, lag))
+        if not scores:
+            return 0.0, np.asarray((), dtype=int), 0.0
+        best_score, best_lag = max(scores)
+        phase_scores = np.asarray([np.sum(onset[phase::best_lag]) for phase in range(best_lag)])
+        first_frame = int(np.argmax(phase_scores))
+        beat_frames = np.arange(first_frame, onset.size, best_lag, dtype=int)
+        bpm = 60.0 * sample_rate / (_ONSET_HOP_LENGTH * best_lag)
+        average_score = sum(score for score, _lag in scores) / len(scores)
+        confidence = max(0.0, min(1.0, (best_score - average_score) / max(1e-9, 1.0 - average_score)))
+        return bpm, beat_frames, confidence
 
     @staticmethod
     def _estimate_key(chroma, np):

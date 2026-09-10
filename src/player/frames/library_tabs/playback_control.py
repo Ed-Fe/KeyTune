@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 from ...constants import (
     APP_TITLE,
     PLAYBACK_RESTART_THRESHOLD_MS,
@@ -170,11 +172,29 @@ class PlaylistPlaybackMixin:
         prepared_autodj = getattr(self, "_prepared_autodj_transition", lambda _state: None)(state)
         if prepared_autodj is not None:
             plan = prepared_autodj["plan"]
-            transition_start_ms = plan.outgoing_start_ms
+            crossfade_window_ms = self._autodj_transition_duration_ms(prepared_autodj)
+            if crossfade_window_ms <= 0:
+                return False
+            if bool(getattr(plan, "fallback_crossfade", False)):
+                # The rhythmic plan is unavailable, but an AutoDJ session must
+                # still overlap its prepared next track.  Schedule a safe
+                # end-of-track fade rather than delegating to the optional
+                # global crossfade setting (which is commonly disabled).
+                transition_start_ms = max(0, int(total_time - crossfade_window_ms))
+                prepared_autodj = {
+                    **prepared_autodj,
+                    "plan": replace(
+                        plan,
+                        outgoing_start_ms=transition_start_ms,
+                        outgoing_end_ms=int(total_time),
+                        incoming_start_ms=0,
+                    ),
+                }
+            else:
+                transition_start_ms = plan.outgoing_start_ms
             preload_lead_ms = self._autodj_preload_lead_ms(prepared_autodj["pair"][1])
             if transition_start_ms is None or current_time < max(0, transition_start_ms - preload_lead_ms):
                 return False
-            crossfade_window_ms = self._autodj_transition_duration_ms(prepared_autodj)
         else:
             configured_crossfade_ms = self._crossfade_duration_ms()
             if configured_crossfade_ms <= 0:
