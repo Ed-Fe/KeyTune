@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Corrigido
+
+- **Estabilidade do AutoDJ**: a análise científica agora é serializada e limita as threads nativas para evitar encerramentos por pressão de memória no executável empacotado. Falhas e timeouts do processo isolado passam a preservar diagnósticos úteis.
+- **Continuidade do AutoDJ**: falhas ou atrasos na análise não pausam mais a sessão. Se a fila preparada acabar, o player avança imediatamente na ordem original e usa a transição normal enquanto prepara as faixas seguintes.
+- **Prazos de preparação do AutoDJ**: o tempo reservado às candidatas começa depois da análise da faixa atual, e resultados entregues após o prazo não alteram a fila nem a próxima transição.
+- **Análise de faixas online**: downloads inválidos, respostas que não são mídia e arquivos acima de 120 MB são rejeitados antes da análise. O cálculo de confiança rítmica deixa de ser reduzido por um único pico atípico.
+- **YouTube.js e yt-dlp**: o YouTube.js 18 prioriza áudio puro, aplica timeouts e controle de fluxo no proxy local e continua recorrendo ao yt-dlp quando necessário. O build valida Node.js e YouTube.js dentro do executável empacotado.
+- **Recursos adicionais**: o recurso AutoDJ passa à revisão 2 e declara todas as bibliotecas científicas exigidas. Os recursos Python do YouTube e YouTube.js também recebem novas revisões para substituir instalações anteriores incompatíveis.
+- **Runtime e dependências**: o desenvolvimento e a release do Windows passam a usar Python 3.14, com as dependências Python atualizadas para as versões compatíveis mais recentes.
+
 ## [2.0.4] - 2026-09-05
 
 ### Corrigido

@@ -30,8 +30,8 @@ Se essas variáveis não estiverem definidas, o app continua usando `Ed-Fe/KeyTu
 
 ## Preparando uma build local
 
-1. Confirme que `7-Zip` está disponível na máquina, porque o helper compartilhado do MPV descompacta o runtime.
-2. Confirme que o ambiente virtual tem `PyInstaller` disponível.
+1. Confirme que Python 3.14 e `7-Zip` estão disponíveis na máquina, porque o build usa o Python 3.14 e o helper compartilhado do MPV descompacta o runtime.
+2. Confirme que o ambiente virtual tem `PyInstaller` disponível e que Node.js 24 com npm está no `PATH`.
 3. Gere a release local com o script:
 
 ```powershell

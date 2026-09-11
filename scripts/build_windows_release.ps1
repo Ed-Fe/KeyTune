@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$PythonExe = "d:/git/Media-Player/.venv/Scripts/python.exe",
+    [string]$PythonExe = (Join-Path $PSScriptRoot "..\.venv\Scripts\python.exe"),
     [string]$MpvSource = "",
     [string]$MpvRuntimeArchive = "",
     [ValidateSet("stable", "nightly")]
@@ -74,7 +74,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 $PythonStableAbiDll = & $PythonExe -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
 Require-Path -Path $PythonStableAbiDll -Description "DLL da ABI estável do Python"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --hidden-import tomllib --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
 }
@@ -98,6 +98,10 @@ Write-Step "Validando dependências opcionais do YouTube no executável"
 $youtubeSmokeAppData = Join-Path (Resolve-Path "build") "youtube-resource-smoke"
 $youtubeSmokeResourceDir = Join-Path $youtubeSmokeAppData "KeyTune\resources\youtube_music\youtube"
 Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-YouTubePython-win-x64.zip" -DestinationPath $youtubeSmokeResourceDir
+$nodeSmokeResourceDir = Join-Path $youtubeSmokeAppData "KeyTune\resources\youtube_music\node"
+Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-NodeJS-win-x64.zip" -DestinationPath $nodeSmokeResourceDir
+$youtubeJsSmokeResourceDir = Join-Path $youtubeSmokeAppData "KeyTune\resources\youtubejs"
+Expand-Archive -LiteralPath "dist\optional-resources\KeyTune-YouTubeJS-win-x64.zip" -DestinationPath $youtubeJsSmokeResourceDir
 $savedAppData = $env:APPDATA
 try {
     $env:APPDATA = $youtubeSmokeAppData
@@ -109,6 +113,15 @@ try {
         -WindowStyle Hidden
     if ($youtubeSmokeProcess.ExitCode -ne 0) {
         throw "As dependências opcionais do YouTube não puderam ser importadas."
+    }
+    $youtubeJsSmokeProcess = Start-Process `
+        -FilePath (Resolve-Path "dist\KeyTune\KeyTune.exe") `
+        -ArgumentList "--youtubejs-dependencies-smoke-test" `
+        -Wait `
+        -PassThru `
+        -WindowStyle Hidden
+    if ($youtubeJsSmokeProcess.ExitCode -ne 0) {
+        throw "O Node.js ou o pacote YouTube.js não passou na validação do executável."
     }
 } finally {
     $env:APPDATA = $savedAppData

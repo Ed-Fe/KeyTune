@@ -19,6 +19,18 @@ _ONSET_HOP_LENGTH = 512
 _WORKER_TIMEOUT_SECONDS = 15 * 60
 
 
+def _bounded_worker_output(output_file, *, maximum_bytes=4096) -> str:
+    """Read only the tail of worker diagnostics to keep memory usage bounded."""
+    try:
+        output_file.flush()
+        output_file.seek(0, os.SEEK_END)
+        output_file.seek(max(0, output_file.tell() - maximum_bytes))
+        output = output_file.read().decode("utf-8", errors="replace")
+    except OSError:
+        return ""
+    return " ".join(output.split())[-1000:]
+
+
 class AutoDJAnalyzerProcessError(RuntimeError):
     """The isolated analyzer process exited without a usable result."""
 
@@ -30,7 +42,7 @@ class LibrosaAnalyzer:
     optional analysis runtime is damaged or unavailable.
     """
 
-    analysis_version = 6
+    analysis_version = 7
 
     def __init__(self, *, sample_rate=22050, maximum_duration_seconds=15 * 60):
         self.sample_rate = sample_rate
@@ -47,30 +59,43 @@ class LibrosaAnalyzer:
         creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
         with tempfile.TemporaryDirectory(prefix="keytune-autodj-result-") as temporary:
             result_path = Path(temporary) / "result.json"
-            completed = subprocess.run(
-                [
-                    *worker_command,
-                    str(path),
-                    str(self.sample_rate),
-                    str(self.maximum_duration_seconds),
-                    str(result_path),
-                ],
-                check=False,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=_WORKER_TIMEOUT_SECONDS,
-                creationflags=creation_flags,
-            )
+            output_path = Path(temporary) / "worker-output.log"
+            with output_path.open("w+b") as worker_output_file:
+                try:
+                    completed = subprocess.run(
+                        [
+                            *worker_command,
+                            str(path),
+                            str(self.sample_rate),
+                            str(self.maximum_duration_seconds),
+                            str(result_path),
+                        ],
+                        check=False,
+                        stdout=worker_output_file,
+                        stderr=subprocess.STDOUT,
+                        timeout=_WORKER_TIMEOUT_SECONDS,
+                        creationflags=creation_flags,
+                    )
+                except subprocess.TimeoutExpired as exc:
+                    worker_output = _bounded_worker_output(worker_output_file)
+                    message = _("O processo isolado do AutoDJ excedeu o tempo limite de análise.")
+                    if worker_output:
+                        message += " " + _("Detalhes: {detail}").format(detail=worker_output)
+                    raise AutoDJAnalyzerProcessError(message) from exc
+                worker_output = _bounded_worker_output(worker_output_file)
             try:
                 response = json.loads(result_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError, TypeError):
                 response = None
         if not isinstance(response, dict):
             exit_code = completed.returncode & 0xFFFFFFFF
+            message = _(
+                "O processo isolado do AutoDJ encerrou sem resultado (código {exit_code})."
+            ).format(exit_code=f"0x{exit_code:08X}")
+            if worker_output:
+                message += " " + _("Detalhes: {detail}").format(detail=worker_output)
             raise AutoDJAnalyzerProcessError(
-                _("O processo isolado do AutoDJ encerrou sem resultado (código {exit_code}).").format(
-                    exit_code=f"0x{exit_code:08X}"
-                )
+                message
             )
         if not response.get("ok"):
             detail = str(response.get("error") or _("O analisador opcional do AutoDJ falhou."))
@@ -107,10 +132,13 @@ class LibrosaAnalyzer:
             int(round(frame * _ONSET_HOP_LENGTH * 1000 / sample_rate))
             for frame in beat_frames
         )
-        onset_peak = float(np.max(onset_envelope)) if onset_envelope.size else 0.0
         valid_beat_frames = beat_frames[beat_frames < onset_envelope.size]
-        beat_strength = float(np.mean(onset_envelope[valid_beat_frames])) if valid_beat_frames.size else 0.0
-        confidence = min(1.0, beat_confidence * (beat_strength / onset_peak)) if onset_peak else 0.0
+        confidence = self._beat_grid_confidence(
+            onset_envelope,
+            valid_beat_frames,
+            beat_confidence,
+            np,
+        )
         rms = librosa.feature.rms(y=samples)
         if rms.size:
             mean_rms_db = 20.0 * np.log10(max(float(np.mean(rms)), 1e-8))
@@ -169,7 +197,7 @@ class LibrosaAnalyzer:
     def _estimate_beats_from_onsets(onset_envelope, sample_rate, np):
         """Build a beat grid without librosa's Numba-backed beat tracker.
 
-        On Python 3.13, the third-party JIT compiler used by
+        In frozen builds, the third-party JIT compiler used by
         ``librosa.beat.beat_track`` can terminate the isolated worker. A
         normalized onset autocorrelation produces a stable grid without
         invoking that compiler.
@@ -199,6 +227,41 @@ class LibrosaAnalyzer:
         average_score = sum(score for score, _lag in scores) / len(scores)
         confidence = max(0.0, min(1.0, (best_score - average_score) / max(1e-9, 1.0 - average_score)))
         return bpm, beat_frames, confidence
+
+    @staticmethod
+    def _beat_grid_confidence(onset_envelope, beat_frames, periodicity_confidence, np):
+        """Combine periodicity with local onset alignment without outlier bias."""
+        onset = np.nan_to_num(
+            np.asarray(onset_envelope, dtype=float).reshape(-1),
+            nan=0.0,
+            posinf=0.0,
+            neginf=0.0,
+        )
+        onset = np.maximum(onset, 0.0)
+        frames = np.asarray(beat_frames, dtype=int).reshape(-1)
+        if not onset.size or not frames.size or not float(np.max(onset)):
+            return 0.0
+        aligned_strengths = np.asarray(
+            [
+                np.max(onset[max(0, int(frame) - 2):min(onset.size, int(frame) + 3)])
+                for frame in frames
+                if 0 <= int(frame) < onset.size
+            ]
+        )
+        if not aligned_strengths.size:
+            return 0.0
+        onset_reference = float(np.percentile(onset, 95))
+        if onset_reference <= 0:
+            positive_onsets = onset[onset > 0]
+            onset_reference = float(np.mean(positive_onsets)) if positive_onsets.size else 0.0
+        alignment_confidence = min(
+            1.0,
+            float(np.mean(aligned_strengths)) / max(onset_reference, 1e-9),
+        )
+        periodicity = float(periodicity_confidence)
+        if not np.isfinite(periodicity):
+            return 0.0
+        return max(0.0, min(1.0, periodicity * alignment_confidence))
 
     @staticmethod
     def _estimate_key(chroma, np):

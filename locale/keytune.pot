@@ -500,6 +500,10 @@ msgstr ""
 msgid "A faixa já estava salva na biblioteca do YouTube Music."
 msgstr ""
 
+#: src/player/autodj/service.py
+msgid "A faixa online excede o limite de análise de 120 MB."
+msgstr ""
+
 #: src/player/frames/commands/app_commands.py
 msgid "A fila de reprodução está vazia. Use Ctrl+Shift+F para adicionar itens."
 msgstr ""
@@ -600,10 +604,6 @@ msgstr ""
 
 #: src/player/youtube_music/library_manager.py
 msgid "A playlist selecionada é inválida."
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "A preparação do AutoDJ foi pausada após uma falha: {reason}"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -1493,10 +1493,6 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "AutoDJ preparado: transição de {count} batidas."
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "AutoDJ preparando a próxima faixa para continuar a reprodução..."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -2403,12 +2399,14 @@ msgstr ""
 msgid "Detalhes técnicos: {detail}."
 msgstr ""
 
+#: src/player/autodj/librosa_analyzer.py
 #: src/player/frames/youtube_music/auth.py
 #: src/player/frames/youtube_music/browse.py
 #: src/player/frames/youtube_music/dependencies.py
 #: src/player/frames/youtube_music/lifecycle.py
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/frames/youtube_music/search.py
+#: src/player/youtube_music/youtubejs_runtime.py
 msgid "Detalhes: {detail}"
 msgstr ""
 
@@ -4474,6 +4472,10 @@ msgstr ""
 msgid "Não foi possível validar a integridade do arquivo."
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "Não foi possível validar o processo do YouTube.js."
+msgstr ""
+
 #: src/player/frames/update.py
 #: src/player/update/service.py
 msgid "Não foi possível verificar as atualizações."
@@ -4547,6 +4549,10 @@ msgstr ""
 msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "O Node.js ou o pacote YouTube.js não pôde ser preparado."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
 msgstr ""
@@ -4589,6 +4595,10 @@ msgstr ""
 
 #: src/player/frames/playback/backend.py
 msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
+msgstr ""
+
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "O YouTube.js demorou demais para responder."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py
@@ -4739,8 +4749,16 @@ msgstr ""
 msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "O processo do YouTube.js não passou na validação: {detail}"
+msgstr ""
+
 #: src/player/autodj/librosa_analyzer.py
 msgid "O processo isolado do AutoDJ encerrou sem resultado (código {exit_code})."
+msgstr ""
+
+#: src/player/autodj/librosa_analyzer.py
+msgid "O processo isolado do AutoDJ excedeu o tempo limite de análise."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -4755,8 +4773,20 @@ msgstr ""
 msgid "O que mudou nesta versão:"
 msgstr ""
 
+#: src/player/autodj/service.py
+msgid "O resolvedor remoto não retornou uma URL reproduzível."
+msgstr ""
+
+#: src/player/autodj/service.py
+msgid "O resolvedor remoto retornou uma URL de mídia inválida."
+msgstr ""
+
 #: src/player/youtube_music/feedback_manager.py
 msgid "O resultado selecionado não pode ser salvo no YouTube Music."
+msgstr ""
+
+#: src/player/autodj/service.py
+msgid "O servidor remoto não retornou uma mídia de áudio válida."
 msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
@@ -6645,6 +6675,10 @@ msgstr ""
 msgid "diferença de BPM acima do limite seguro"
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "erro desconhecido"
+msgstr ""
+
 #: src/player/frames/youtube_music/dependencies.py
 msgid "estável"
 msgstr ""
@@ -6700,10 +6734,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "nenhuma aba de mídia"
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "nenhuma faixa pôde ser preparada"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py

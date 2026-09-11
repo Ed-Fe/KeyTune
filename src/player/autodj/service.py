@@ -7,10 +7,13 @@ from http.client import IncompleteRead
 import os
 from pathlib import Path
 import tempfile
+import threading
 import time
 from urllib.error import URLError
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
+from ..i18n import _
 from .cache import AnalysisCache
 from .librosa_analyzer import LibrosaAnalyzer
 
@@ -20,11 +23,17 @@ REMOTE_DOWNLOAD_RETRY_DELAY_SECONDS = 0.5
 
 
 class AutoDJService:
+    # Scientific analysis can briefly consume hundreds of megabytes. Keep one
+    # analyzer process active per service to prevent PyInstaller installations
+    # from being terminated under memory pressure.
+    max_parallel_analyses = 1
+
     def __init__(self, cache_path, *, remote_resolver=None, remote_retry_handler=None, analyzer=None):
         self.cache = AnalysisCache(cache_path)
         self.remote_resolver = remote_resolver
         self.remote_retry_handler = remote_retry_handler
         self.analyzer = analyzer or LibrosaAnalyzer()
+        self._analysis_lock = threading.Lock()
 
     def get_cached(self, media_path):
         normalized = str(media_path or "").strip()
@@ -37,6 +46,10 @@ class AutoDJService:
         return asdict(cached) if cached is not None else None
 
     def analyze(self, media_path, *, remote_resolver=None):
+        with self._analysis_lock:
+            return self._analyze_serialized(media_path, remote_resolver=remote_resolver)
+
+    def _analyze_serialized(self, media_path, *, remote_resolver=None):
         normalized = str(media_path or "").strip()
         if not normalized:
             raise ValueError("O caminho da mídia é obrigatório.")
@@ -65,8 +78,11 @@ class AutoDJService:
         for attempt in range(REMOTE_DOWNLOAD_ATTEMPTS):
             try:
                 playback = resolver(media_path)
+                stream_url = str(getattr(playback, "stream_url", "") or "").strip()
+                if not stream_url:
+                    raise ValueError(_("O resolvedor remoto não retornou uma URL reproduzível."))
                 return self._download(
-                    playback.stream_url,
+                    stream_url,
                     target,
                     playback.http_headers or {},
                     resume=attempt > 0,
@@ -82,6 +98,9 @@ class AutoDJService:
 
     @staticmethod
     def _download(url, target, headers, *, resume=False):
+        parsed_url = urlsplit(str(url or "").strip())
+        if parsed_url.scheme.casefold() not in {"http", "https"} or not parsed_url.hostname:
+            raise ValueError(_("O resolvedor remoto retornou uma URL de mídia inválida."))
         request_headers = {str(key): str(value) for key, value in headers.items()}
         partial_paths = []
         if resume:
@@ -96,6 +115,8 @@ class AutoDJService:
         request = Request(url, headers=request_headers)
         with urlopen(request, timeout=30) as response:
             content_type = str(response.headers.get("Content-Type", "")).split(";", 1)[0].strip().lower()
+            if content_type.startswith("text/") or content_type in {"application/json", "application/xml"}:
+                raise ValueError(_("O servidor remoto não retornou uma mídia de áudio válida."))
             suffix = {"audio/mp4": ".m4a", "audio/webm": ".webm", "audio/ogg": ".ogg", "audio/mpeg": ".mp3", "audio/flac": ".flac"}.get(content_type, "")
             if not suffix and existing_path is not None:
                 suffix = existing_path.suffix
@@ -103,12 +124,18 @@ class AutoDJService:
             response_status = int(getattr(response, "status", 200) or 200)
             can_resume = existing_path == output_path and existing_size > 0 and response_status == 206
             total = existing_size if can_resume else 0
+            try:
+                response_size = int(response.headers.get("Content-Length", "") or 0)
+            except (TypeError, ValueError):
+                response_size = 0
+            if response_size > 0 and total + response_size > MAX_REMOTE_AUDIO_BYTES:
+                raise ValueError(_("A faixa online excede o limite de análise de 120 MB."))
             output = output_path.open("ab" if can_resume else "wb")
             try:
                 while chunk := response.read(256 * 1024):
                     total += len(chunk)
                     if total > MAX_REMOTE_AUDIO_BYTES:
-                        raise ValueError("A faixa online excede o limite de análise de 120 MB.")
+                        raise ValueError(_("A faixa online excede o limite de análise de 120 MB."))
                     output.write(chunk)
             finally:
                 output.close()

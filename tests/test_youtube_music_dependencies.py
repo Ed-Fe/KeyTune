@@ -168,6 +168,7 @@ class YouTubeMusicDependenciesTests(unittest.TestCase):
                                       return_value={"node": "C:/node/node.exe"}))
             stack.enter_context(patch("player.youtube_music.youtubejs_runtime.youtubejs_dependencies_available", return_value=True))
             stack.enter_context(patch("player.youtube_music.youtubejs_runtime.youtubejs_dependency_versions", return_value={}))
+            stack.enter_context(patch("player.youtube_music.youtubejs_runtime.validate_youtubejs_dependencies"))
             js_install = stack.enter_context(patch("player.youtube_music.youtubejs_runtime.install_optional_resource"))
             stop_worker = stack.enter_context(patch("player.youtube_music.youtubejs_runtime._stop_worker"))
             install_or_update_youtube_dependencies(force=True)

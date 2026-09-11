@@ -25,8 +25,8 @@ HAS_YTMUSICAPI = importlib.util.find_spec("ytmusicapi") is not None
 def make_playlist_tile(playlist_id, title, *, thumbnail):
     """Build a library grid tile shaped like YouTube Music's own response.
 
-    *thumbnail* is the ``musicThumbnailRenderer.thumbnail`` payload; passing
-    ``{}`` reproduces the tile that makes ytmusicapi raise ``KeyError``.
+    *thumbnail* is the ``musicThumbnailRenderer.thumbnail`` payload. Passing
+    ``{}`` reproduces an empty playlist without cover art.
     """
     return {
         "title": {
@@ -109,11 +109,15 @@ class FakeYTMusicClient:
 
 @unittest.skipUnless(HAS_YTMUSICAPI, "ytmusicapi is not installed")
 class TolerantLibraryPlaylistParsingTests(unittest.TestCase):
-    def test_untouched_parser_still_raises_on_a_tile_without_cover_art(self):
+    def test_current_parser_accepts_a_tile_without_cover_art(self):
         from ytmusicapi.mixins import library as library_mixin
 
-        with self.assertRaises(KeyError):
-            library_mixin.parse_playlist(make_playlist_tile("PLempty", "Playlist vazia", thumbnail={}))
+        playlist = library_mixin.parse_playlist(
+            make_playlist_tile("PLempty", "Playlist vazia", thumbnail={})
+        )
+
+        self.assertEqual(playlist["playlistId"], "PLempty")
+        self.assertEqual(playlist["title"], "Playlist vazia")
 
     def test_tolerant_parser_rebuilds_the_tile_without_cover_art(self):
         from ytmusicapi.mixins import library as library_mixin
@@ -202,9 +206,8 @@ class LibraryPlaylistFetchTests(unittest.TestCase):
         )
         self.assertEqual([playlist.playlist_id for playlist in playlists][1], "PLempty")
         self.assertFalse(has_more)
-        # The first attempt crashed, the tolerant retry succeeded: no need for
-        # the raw-response fallback.
-        self.assertEqual(client.parse_calls, 2)
+        # ytmusicapi 1.12.2 accepts the empty thumbnail payload directly.
+        self.assertEqual(client.parse_calls, 1)
 
     def test_healthy_libraries_are_fetched_in_a_single_attempt(self):
         client = FakeYTMusicClient([make_playlist_tile("PLgood", "Favoritas", thumbnail=COVER)])

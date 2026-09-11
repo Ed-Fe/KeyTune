@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import atexit
+from collections import deque
 import json
 import os
 import queue
@@ -11,6 +12,7 @@ from dataclasses import dataclass
 
 from .auth import sanitize_sensitive_text
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
+from ..i18n import _
 from ..optional_resources import (
     get_optional_resource_dir,
     install_optional_resource,
@@ -19,7 +21,7 @@ from ..optional_resources import (
 )
 
 
-YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS = 10
+YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS = 30
 _RESULT_PREFIX = "KEYTUNE_YOUTUBEJS_RESULT="
 _worker_process = None
 _worker_lock = threading.RLock()
@@ -68,6 +70,7 @@ def install_youtubejs_dependencies(*, force=False, progress_callback=None):
         install_optional_resource("youtubejs", progress_callback=progress_callback)
     if not youtubejs_dependencies_available():
         raise RuntimeError("O Node.js ou o pacote YouTube.js não pôde ser preparado.")
+    validate_youtubejs_dependencies()
     return youtubejs_dependency_versions()
 
 
@@ -103,6 +106,43 @@ def resolve_stream(media_url, *, cookie_header="", user_agent=""):
     )
 
 
+def validate_youtubejs_dependencies() -> None:
+    """Validate the managed Node.js resolver without making a network request."""
+    node_executable = find_all_available_javascript_runtimes().get("node", "")
+    resolver_dir = _youtubejs_resolver_dir()
+    resolver_script = resolver_dir / "resolve.mjs"
+    package_dir = _youtubejs_package_dir()
+    if not node_executable or not resolver_script.is_file() or not package_dir.is_dir():
+        raise RuntimeError(_("O Node.js ou o pacote YouTube.js não pôde ser preparado."))
+
+    commands = (
+        [node_executable, "--check", str(resolver_script)],
+        [node_executable, "--input-type=module", "--eval", "await import('youtubei.js')"],
+    )
+    for command in commands:
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=str(resolver_dir),
+                check=False,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=30,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise RuntimeError(_("Não foi possível validar o processo do YouTube.js.")) from exc
+        if completed.returncode != 0:
+            detail = " ".join(str(completed.stderr or completed.stdout or "").split())[-2000:]
+            raise RuntimeError(
+                _("O processo do YouTube.js não passou na validação: {detail}").format(
+                    detail=detail or _("erro desconhecido")
+                )
+            )
+
+
 def _request_worker(request):
     with _worker_lock:
         for attempt in range(2):
@@ -136,7 +176,7 @@ def _ensure_worker():
         [node_executable, str(resolver_script), _youtubejs_cache_dir()],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
         text=True,
         encoding="utf-8",
         errors="replace",
@@ -148,6 +188,12 @@ def _ensure_worker():
 
 def _read_worker_response(worker):
     result_queue = queue.Queue(maxsize=1)
+    diagnostics = deque(maxlen=20)
+    diagnostics_lock = threading.Lock()
+
+    def diagnostic_text() -> str:
+        with diagnostics_lock:
+            return " | ".join(diagnostics)[-2000:]
 
     def read_result():
         try:
@@ -155,6 +201,10 @@ def _read_worker_response(worker):
                 if line.startswith(_RESULT_PREFIX):
                     result_queue.put((line, None))
                     return
+                normalized_line = " ".join(str(line or "").split())
+                if normalized_line:
+                    with diagnostics_lock:
+                        diagnostics.append(sanitize_sensitive_text(normalized_line))
             result_queue.put(("", RuntimeError("O processo do YouTube.js foi encerrado.")))
         except Exception as exc:
             result_queue.put(("", exc))
@@ -163,11 +213,19 @@ def _read_worker_response(worker):
     reader.start()
     reader.join(YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS)
     if reader.is_alive():
-        raise RuntimeError("O YouTube.js demorou demais para responder.")
+        message = _("O YouTube.js demorou demais para responder.")
+        detail = diagnostic_text()
+        if detail:
+            message += " " + _("Detalhes: {detail}").format(detail=detail)
+        raise RuntimeError(message)
 
     response_line, error = result_queue.get_nowait()
     if error is not None:
-        raise RuntimeError(str(error)) from error
+        message = str(error)
+        detail = diagnostic_text()
+        if detail:
+            message += " " + _("Detalhes: {detail}").format(detail=detail)
+        raise RuntimeError(message) from error
     return _parse_response(response_line)
 
 

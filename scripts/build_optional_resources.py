@@ -162,12 +162,22 @@ def _build_autodj(output_dir, args):
         )
         for cache_dir in site_packages.rglob("__pycache__"):
             shutil.rmtree(cache_dir, ignore_errors=True)
-        versions = _distribution_versions(site_packages, ("librosa", "numpy", "scipy", "numba", "av"))
+        versions = _distribution_versions(
+            site_packages,
+            ("librosa", "numpy", "scipy", "numba", "llvmlite", "av"),
+        )
         _write_manifest(
             content,
             "autodj",
             args.app_version,
-            ["site-packages/librosa", "site-packages/numpy", "site-packages/av"],
+            [
+                "site-packages/librosa",
+                "site-packages/numpy",
+                "site-packages/scipy",
+                "site-packages/numba",
+                "site-packages/llvmlite",
+                "site-packages/av",
+            ],
             versions,
         )
         _archive_resource(output_dir, "autodj", content, args.architecture)

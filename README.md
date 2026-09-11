@@ -32,7 +32,7 @@ It focuses on playlist management, folder browsing, session restore, and persist
 
 ## Requirements
 
-- Python 3.10 or newer
+- Python 3.14
 - `python-mpv` installed in the active Python environment
 - A compatible libmpv runtime available in one of these locations:
 	- a local `mpv/` folder
@@ -41,6 +41,8 @@ It focuses on playlist management, folder browsing, session restore, and persist
 	- a supported Chocolatey installation path
 
 ## Installation
+
+Python 3.14 is required for source development and is also used by the Windows release build.
 
 1. Clone the repository.
 
@@ -54,14 +56,14 @@ It focuses on playlist management, folder browsing, session restore, and persist
    On Windows:
 
    ```powershell
-   python -m venv .venv
+   py -3.14 -m venv .venv
    .venv\Scripts\Activate.ps1
    ```
 
    On Linux or macOS:
 
    ```bash
-   python -m venv .venv
+   python3.14 -m venv .venv
    source .venv/bin/activate
    ```
 

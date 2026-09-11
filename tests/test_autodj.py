@@ -1,6 +1,8 @@
 import json
 import math
+import os
 from pathlib import Path
+import subprocess
 import struct
 import sys
 import tempfile
@@ -88,15 +90,36 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(run_worker.call_args.args[0][:2], ["KeyTune.exe", "--autodj-analyzer"])
 
     def test_librosa_analyzer_reports_native_worker_exit_code(self):
+        def fail_worker(_command, **kwargs):
+            kwargs["stdout"].write(b"native decoder crash")
+            return SimpleNamespace(returncode=-1073741819)
+
         with patch(
             "player.autodj.dependencies.get_autodj_worker_command",
             return_value=["KeyTune.exe", "--autodj-analyzer"],
         ), patch(
             "player.autodj.librosa_analyzer.subprocess.run",
-            return_value=SimpleNamespace(returncode=-1073741819),
+            side_effect=fail_worker,
         ):
-            with self.assertRaisesRegex(AutoDJAnalyzerProcessError, "0xC0000005"):
+            with self.assertRaisesRegex(
+                AutoDJAnalyzerProcessError,
+                "0xC0000005.*native decoder crash",
+            ):
                 LibrosaAnalyzer().analyze("track.mp3")
+
+    def test_librosa_analyzer_reports_worker_timeout(self):
+        with patch(
+            "player.autodj.dependencies.get_autodj_worker_command",
+            return_value=["KeyTune.exe", "--autodj-analyzer"],
+        ), patch(
+            "player.autodj.librosa_analyzer.subprocess.run",
+            side_effect=subprocess.TimeoutExpired("KeyTune.exe", 900),
+        ):
+            with self.assertRaisesRegex(AutoDJAnalyzerProcessError, "tempo limite"):
+                LibrosaAnalyzer().analyze("track.mp3")
+
+    def test_real_service_limits_parallel_scientific_analyses(self):
+        self.assertEqual(AutoDJService.max_parallel_analyses, 1)
 
     def test_autodj_worker_writes_result_without_using_console_output(self):
         analysis = AudioAnalysis(120, (0, 500), .8, .6)
@@ -118,6 +141,30 @@ class AutoDJTests(unittest.TestCase):
             exit_code = autodj_worker.main(["track.mp3", "22050", "900", "missing/result.json"])
 
         self.assertEqual(exit_code, 1)
+
+    def test_autodj_worker_limits_native_threads_and_restores_environment(self):
+        analysis = AudioAnalysis(120, (0, 500), .8, .6)
+        observed_environment = {}
+
+        def analyze(_self, _path):
+            observed_environment.update(
+                {name: os.environ.get(name) for name in autodj_worker._WORKER_ENVIRONMENT_DEFAULTS}
+            )
+            return analysis
+
+        with tempfile.TemporaryDirectory() as temporary, patch.dict(
+            os.environ,
+            {"OPENBLAS_NUM_THREADS": "8"},
+            clear=True,
+        ), patch.object(LibrosaAnalyzer, "_analyze_in_process", analyze):
+            exit_code = autodj_worker.main(
+                ["track.mp3", "22050", "900", str(Path(temporary) / "result.json")]
+            )
+            self.assertEqual(os.environ.get("OPENBLAS_NUM_THREADS"), "8")
+            self.assertNotIn("NUMBA_THREADING_LAYER", os.environ)
+
+        self.assertEqual(exit_code, 0)
+        self.assertTrue(all(value == "1" or value == "workqueue" for value in observed_environment.values()))
 
     def test_transition_sound_uses_the_profile_effect(self):
         path = transition_sound_path("party")
@@ -253,6 +300,30 @@ class AutoDJTests(unittest.TestCase):
         self.assertAlmostEqual(bpm, 117.45, places=2)
         self.assertEqual(tuple(beat_frames[:4]), (3, 25, 47, 69))
         self.assertGreater(confidence, 0.5)
+
+    def test_beat_grid_confidence_is_not_destroyed_by_one_onset_outlier(self):
+        import numpy as np
+
+        onset = np.zeros(440)
+        beat_frames = np.arange(3, 440, 22)
+        onset[beat_frames] = 1.0
+        onset[201] = 30.0
+
+        confidence = LibrosaAnalyzer._beat_grid_confidence(onset, beat_frames, 0.7, np)
+
+        self.assertGreaterEqual(confidence, 0.6)
+
+    def test_beat_grid_confidence_rejects_non_finite_input(self):
+        import numpy as np
+
+        confidence = LibrosaAnalyzer._beat_grid_confidence(
+            np.asarray([np.nan, np.inf, 1.0]),
+            np.asarray([2]),
+            np.nan,
+            np,
+        )
+
+        self.assertEqual(confidence, 0.0)
 
     def test_librosa_estimates_mode_and_downbeat_phase(self):
         import numpy as np
@@ -505,6 +576,60 @@ class AutoDJTests(unittest.TestCase):
 
         self.assertEqual(set(analyzed_paths), {"a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"})
         self.assertEqual(frame.state.peek_in_playback_order(1), "c.mp3")
+
+    def test_transition_candidate_timeout_falls_back_without_accepting_late_result(self):
+        beats = tuple(range(0, 40500, 500))
+        release_candidate = threading.Event()
+        finished = threading.Event()
+
+        class Service:
+            max_parallel_analyses = 1
+
+            def analyze(self, path):
+                if path == "b.mp3":
+                    release_candidate.wait(1)
+                return {
+                    "bpm": 120,
+                    "beats_ms": beats,
+                    "confidence": .9,
+                    "energy": .5,
+                }
+
+        class Player:
+            def get_media(self): return object()
+            def is_playing(self): return True
+
+        class Frame(FrameAutoDJMixin):
+            def __init__(self):
+                self.settings = SimpleNamespace(autodj_enabled=True, autodj_profile="smooth", autodj_beats=16)
+                self.state = PlaylistState(title="AutoDJ")
+                self.state.set_items(["a.mp3", "b.mp3"])
+                self.state.autodj_session = True
+                self.playlists = [self.state]
+                self.autodj_service = Service()
+                self.player = Player()
+                self._autodj_transition_requests = {}
+                self._autodj_session_requests = {}
+                self._autodj_session_results = {}
+                self._autodj_session_retry_at = {}
+                self._autodj_transition_candidate_wait_seconds = .01
+
+            def _get_active_playlist_state(self): return self.state
+            def _refresh_autodj_session_ui(self, _state=None): pass
+            def _set_status_message(self, *_args, **_kwargs): pass
+            def _finish_autodj_transition_analysis(self, *args):
+                super()._finish_autodj_transition_analysis(*args)
+                finished.set()
+
+        frame = Frame()
+        with patch("player.frames.autodj.wx.CallAfter", side_effect=lambda callback, *args: callback(*args)):
+            self.assertTrue(frame._maybe_prepare_autodj_transition())
+            self.assertTrue(finished.wait(1))
+
+        release_candidate.set()
+        request = frame._autodj_transition_requests[("a.mp3", "b.mp3")]
+        self.assertEqual(request["status"], "failed")
+        self.assertIsNone(frame._prepared_autodj_transition(frame.state))
 
     def test_autodj_session_fills_a_five_track_rolling_queue(self):
         beats = tuple(range(0, 40500, 500))
@@ -1260,3 +1385,38 @@ class AutoDJTests(unittest.TestCase):
 
             self.assertEqual(downloaded_path.read_bytes(), b"partial-rest")
             self.assertEqual(captured_requests[0][0].get_header("Range"), "bytes=7-")
+
+    def test_remote_download_rejects_oversized_content_before_writing(self):
+        class Response:
+            status = 200
+            headers = {
+                "Content-Type": "audio/webm",
+                "Content-Length": str(121 * 1024 * 1024),
+            }
+
+            def __enter__(self): return self
+            def __exit__(self, *_args): return False
+            def read(self, _size): raise AssertionError("oversized response must not be read")
+
+        with tempfile.TemporaryDirectory() as temporary, patch(
+            "player.autodj.service.urlopen", return_value=Response()
+        ):
+            with self.assertRaisesRegex(ValueError, "120 MB"):
+                AutoDJService._download(
+                    "https://example.invalid/audio",
+                    Path(temporary) / "audio",
+                    {},
+                )
+
+    def test_remote_download_rejects_non_http_urls(self):
+        with tempfile.TemporaryDirectory() as temporary, patch(
+            "player.autodj.service.urlopen"
+        ) as open_url:
+            with self.assertRaisesRegex(ValueError, "URL de mídia inválida"):
+                AutoDJService._download(
+                    "file:///C:/Windows/win.ini",
+                    Path(temporary) / "audio",
+                    {},
+                )
+
+        open_url.assert_not_called()

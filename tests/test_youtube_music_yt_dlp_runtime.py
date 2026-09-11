@@ -94,8 +94,7 @@ class YouTubeMusicYtDlpRuntimeTests(unittest.TestCase):
                 return_value=yt_dlp_path,
             ):
                 discovered_path = yt_dlp_runtime._find_javascript_runtime_executable("node")
-
-        self.assertEqual(pathlib.Path(discovered_path), runtime_path)
+                self.assertEqual(pathlib.Path(discovered_path), runtime_path.resolve())
 
     def test_download_media_uses_managed_runtime_and_returns_safe_paths(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
@@ -121,8 +120,9 @@ class YouTubeMusicYtDlpRuntimeTests(unittest.TestCase):
                     "https://youtu.be/example",
                     destination_directory=str(destination),
                 )
+                expected_path = str((destination / "video.mp4").resolve())
 
-        self.assertEqual(result, [str(destination / "video.mp4")])
+        self.assertEqual(result, [expected_path])
 
     def test_download_media_rejects_paths_in_filename_template(self):
         with tempfile.TemporaryDirectory() as temporary_dir, patch(

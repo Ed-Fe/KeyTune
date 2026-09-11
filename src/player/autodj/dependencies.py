@@ -14,7 +14,7 @@ from ..optional_resources import (
 
 
 _DLL_DIRECTORY_HANDLES = []
-_AUTODJ_MODULES = ("librosa", "numpy", "av")
+_AUTODJ_MODULES = ("librosa", "numpy", "scipy", "numba", "llvmlite", "av")
 
 
 def get_autodj_site_packages_dir() -> Path:

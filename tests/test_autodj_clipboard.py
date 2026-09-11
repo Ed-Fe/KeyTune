@@ -47,7 +47,7 @@ class AutoDJClipboardTests(unittest.TestCase):
             path = Path(directory) / "song.mp3"
             path.touch()
             frame._open_from_clipboard_text(f'"{path}"')
-            self.assertEqual(frame.state.autodj_remaining_items, [str(path)])
+            self.assertEqual(frame.state.autodj_remaining_items, [str(path.resolve())])
 
     def test_duplicate_paste_does_not_add_or_restart_preparation(self):
         frame = ClipboardFrame()
