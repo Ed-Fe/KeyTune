@@ -230,12 +230,13 @@ foreach ($file in $possibleLicenseFiles) {
 
 Write-Step "Compilando instalador (Inno Setup)"
 $isccCandidates = @(
+    "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe",
     "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
     "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
 )
 $iscc = $isccCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
 if (-not $iscc) {
-    Write-Host "ISCC.exe não encontrado — instalador não foi gerado. Instale com: choco install innosetup" -ForegroundColor Yellow
+    Write-Host "ISCC.exe não encontrado — instalador não foi gerado. Instale com: winget install --id JRSoftware.InnoSetup --exact" -ForegroundColor Yellow
     Write-Step "Release local gerada (sem instalador)"
 } else {
     & $iscc "/DAppVersion=$AppVersion" "installer\keytune.iss"

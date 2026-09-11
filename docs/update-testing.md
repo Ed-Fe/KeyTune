@@ -50,7 +50,7 @@ Se quiser fixar o runtime do MPV a uma pasta local ou a um arquivo `.7z`, passe 
 powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -YtDlpChannel nightly
 ```
 
-Ao final, você terá (o instalador exige `ISCC.exe` do Inno Setup 6 no PATH padrão; instale com `choco install innosetup`):
+Ao final, você terá (o instalador exige `ISCC.exe` do Inno Setup 6; instale por usuário com `winget install --id JRSoftware.InnoSetup --exact --scope user` ou por máquina com `choco install innosetup`):
 
 - `dist\KeyTune-Setup.exe`
 - `dist\KeyTune-Setup.exe.sha256`
