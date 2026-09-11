@@ -109,15 +109,13 @@ class FakeYTMusicClient:
 
 @unittest.skipUnless(HAS_YTMUSICAPI, "ytmusicapi is not installed")
 class TolerantLibraryPlaylistParsingTests(unittest.TestCase):
-    def test_current_parser_accepts_a_tile_without_cover_art(self):
+    def test_current_parser_rejects_a_tile_without_cover_art(self):
         from ytmusicapi.mixins import library as library_mixin
 
-        playlist = library_mixin.parse_playlist(
-            make_playlist_tile("PLempty", "Playlist vazia", thumbnail={})
-        )
-
-        self.assertEqual(playlist["playlistId"], "PLempty")
-        self.assertEqual(playlist["title"], "Playlist vazia")
+        with self.assertRaises(KeyError):
+            library_mixin.parse_playlist(
+                make_playlist_tile("PLempty", "Playlist vazia", thumbnail={})
+            )
 
     def test_tolerant_parser_rebuilds_the_tile_without_cover_art(self):
         from ytmusicapi.mixins import library as library_mixin
@@ -206,8 +204,9 @@ class LibraryPlaylistFetchTests(unittest.TestCase):
         )
         self.assertEqual([playlist.playlist_id for playlist in playlists][1], "PLempty")
         self.assertFalse(has_more)
-        # ytmusicapi 1.12.2 accepts the empty thumbnail payload directly.
-        self.assertEqual(client.parse_calls, 1)
+        # The first ytmusicapi parse fails on the empty thumbnail; KeyTune
+        # retries with the tolerant parser so the whole library remains usable.
+        self.assertEqual(client.parse_calls, 2)
 
     def test_healthy_libraries_are_fetched_in_a_single_attempt(self):
         client = FakeYTMusicClient([make_playlist_tile("PLgood", "Favoritas", thumbnail=COVER)])

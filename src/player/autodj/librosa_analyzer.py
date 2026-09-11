@@ -117,7 +117,11 @@ class LibrosaAnalyzer:
             import librosa
             import numpy as np
         except ImportError as exc:
-            raise RuntimeError("A análise avançada requer a biblioteca librosa.") from exc
+            raise RuntimeError(
+                _("A análise avançada requer a biblioteca librosa. Detalhes: {detail}").format(
+                    detail=str(exc) or exc.__class__.__name__
+                )
+            ) from exc
 
         samples, sample_rate = self._load_audio(path, librosa, np)
         if samples.size == 0:

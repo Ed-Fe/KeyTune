@@ -444,6 +444,10 @@ msgstr ""
 msgid "A alteração foi aplicada."
 msgstr ""
 
+#: src/player/autodj/librosa_analyzer.py
+msgid "A análise avançada requer a biblioteca librosa. Detalhes: {detail}"
+msgstr ""
+
 #: src/player/youtube_music/service.py
 msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr ""
