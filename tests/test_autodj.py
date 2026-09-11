@@ -1,4 +1,5 @@
 import json
+import importlib.util
 import math
 from pathlib import Path
 import struct
@@ -35,6 +36,9 @@ from player.frames.library_tabs.playback_control import PlaylistPlaybackMixin
 from player.frames.playback.backend import PlayerBackendMixin
 from player.frames.playback.crossfade import CrossfadeMixin
 from player.playlists.models import PlaylistState
+
+
+HAS_NUMPY = importlib.util.find_spec("numpy") is not None
 
 
 class AutoDJTests(unittest.TestCase):
@@ -212,6 +216,7 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(plan.outgoing_end_ms, beats[72])
         self.assertEqual(plan.incoming_start_ms, beats[20])
 
+    @unittest.skipUnless(HAS_NUMPY, "numpy is not installed")
     def test_librosa_mix_points_skip_weak_intro_and_outro(self):
         import numpy as np
 
@@ -229,6 +234,7 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(entry_ms, beats_ms[8])
         self.assertEqual(exit_ms, beats_ms[32])
 
+    @unittest.skipUnless(HAS_NUMPY, "numpy is not installed")
     def test_librosa_estimates_mode_and_downbeat_phase(self):
         import numpy as np
         from player.autodj.librosa_analyzer import MAJOR_PROFILE
@@ -249,6 +255,7 @@ class AutoDJTests(unittest.TestCase):
         self.assertGreater(confidence, 0)
         self.assertEqual(downbeat_offset, 2)
 
+    @unittest.skipUnless(HAS_NUMPY, "numpy is not installed")
     def test_librosa_finds_phrase_aligned_structural_boundary(self):
         import numpy as np
 
@@ -481,6 +488,58 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(set(analyzed_paths), {"a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"})
         self.assertEqual(frame.state.peek_in_playback_order(1), "c.mp3")
 
+    def test_transition_candidate_timeout_falls_back_without_accepting_late_result(self):
+        beats = tuple(range(0, 40500, 500))
+        release_candidate = threading.Event()
+        finished = threading.Event()
+
+        class Service:
+            def analyze(self, path):
+                if path == "b.mp3":
+                    release_candidate.wait(1)
+                return {
+                    "bpm": 120,
+                    "beats_ms": beats,
+                    "confidence": .9,
+                    "energy": .5,
+                }
+
+        class Player:
+            def get_media(self): return object()
+            def is_playing(self): return True
+
+        class Frame(FrameAutoDJMixin):
+            def __init__(self):
+                self.settings = SimpleNamespace(autodj_enabled=True, autodj_profile="smooth", autodj_beats=16)
+                self.state = PlaylistState(title="AutoDJ")
+                self.state.set_items(["a.mp3", "b.mp3"])
+                self.state.autodj_session = True
+                self.playlists = [self.state]
+                self.autodj_service = Service()
+                self.player = Player()
+                self._autodj_transition_requests = {}
+                self._autodj_session_requests = {}
+                self._autodj_session_results = {}
+                self._autodj_session_retry_at = {}
+                self._autodj_transition_candidate_wait_seconds = .01
+
+            def _get_active_playlist_state(self): return self.state
+            def _refresh_autodj_session_ui(self, _state=None): pass
+            def _set_status_message(self, *_args, **_kwargs): pass
+            def _finish_autodj_transition_analysis(self, *args):
+                super()._finish_autodj_transition_analysis(*args)
+                finished.set()
+
+        frame = Frame()
+        with patch("player.frames.autodj.wx.CallAfter", side_effect=lambda callback, *args: callback(*args)):
+            self.assertTrue(frame._maybe_prepare_autodj_transition())
+            self.assertTrue(finished.wait(1))
+
+        release_candidate.set()
+        request = frame._autodj_transition_requests[("a.mp3", "b.mp3")]
+        self.assertEqual(request["status"], "failed")
+        self.assertIsNone(frame._prepared_autodj_transition(frame.state))
+
     def test_autodj_session_fills_a_five_track_rolling_queue(self):
         beats = tuple(range(0, 40500, 500))
         finished = threading.Event()
@@ -679,7 +738,8 @@ class AutoDJTests(unittest.TestCase):
             def _announce(self, _message): pass
 
         frame = Frame()
-        self.assertTrue(frame.on_start_autodj_session(None))
+        with patch("player.frames.autodj.autodj_dependencies_available", return_value=True):
+            self.assertTrue(frame.on_start_autodj_session(None))
 
         session = frame.playlists[1]
         self.assertEqual(source.items, ["a.mp3", "b.mp3", "c.mp3"])

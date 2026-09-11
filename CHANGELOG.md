@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Corrigido
+
+- **Continuidade do AutoDJ**: falhas ou atrasos na análise de uma faixa não pausam mais a sessão inteira. O player mantém a sequência na ordem original, usa a transição normal quando necessário e continua preparando as músicas seguintes.
+- **Timeouts do AutoDJ**: o prazo das candidatas passa a começar somente depois da análise da faixa atual, e resultados entregues após o timeout não alteram a fila ou a próxima transição.
+- **Fim da faixa durante a análise**: se a fila preparada acabar antes de a próxima análise terminar, a reprodução avança imediatamente para a próxima música disponível em vez de encerrar a playlist.
+
 ## [2.0.4] - 2026-09-05
 
 ### Corrigido

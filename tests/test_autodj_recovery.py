@@ -64,18 +64,19 @@ class AutoDJRecoveryTests(unittest.TestCase):
         self.assertIn("good.mp3", attempted)
         self.assertEqual([selection.path for selection in results[0][2]], ["good.mp3"])
 
-    def test_session_failure_pauses_preparation_instead_of_retrying_forever(self):
+    def test_session_failure_falls_back_to_source_order_without_pausing(self):
         state = PlaylistState(title="AutoDJ")
         state.set_items(["current.mp3"])
         state.autodj_session = True
         state.autodj_remaining_items = ["next.mp3"]
-        state.autodj_waiting_for_next = True
         cancel_event = threading.Event()
         frame = FrameAutoDJMixin()
         frame.playlists = [state]
         frame._autodj_session_requests = {id(state): cancel_event}
         frame._autodj_session_retry_at = {}
         frame._refresh_autodj_session_ui = Mock()
+        frame._refresh_playlist_browser = Mock()
+        frame._get_active_playlist_state = Mock(return_value=state)
         frame._set_status_message = Mock()
 
         frame._finish_autodj_session_fill(
@@ -86,13 +87,84 @@ class AutoDJRecoveryTests(unittest.TestCase):
             cancel_event,
         )
 
-        self.assertTrue(state.autodj_preparation_paused)
+        self.assertFalse(state.autodj_preparation_paused)
         self.assertFalse(state.autodj_waiting_for_next)
+        self.assertEqual(state.items, ["current.mp3", "next.mp3"])
+        self.assertEqual(state.autodj_remaining_items, [])
         self.assertNotIn(id(state), frame._autodj_session_retry_at)
         frame._set_status_message.assert_called_once_with(
-            "A preparação do AutoDJ foi pausada após uma falha: falha nativa",
-            auto_clear_ms=0,
+            "O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal.",
+            auto_clear_ms=7000,
         )
+
+    def test_candidate_timeout_uses_fallback_and_ignores_late_result(self):
+        state = PlaylistState(title="AutoDJ")
+        state.set_items(["current.mp3"])
+        state.autodj_session = True
+        state.autodj_remaining_items = ["slow.mp3"]
+        analysis = asdict(AudioAnalysis(120, tuple(range(0, 60000, 500)), .95, .5, "C"))
+        release_candidate = threading.Event()
+
+        def analyze(path):
+            if path == "slow.mp3":
+                release_candidate.wait(1)
+            return analysis
+
+        frame = FrameAutoDJMixin()
+        frame.settings = SimpleNamespace()
+        frame.playlists = [state]
+        frame.autodj_service = SimpleNamespace(analyze=analyze)
+        frame._autodj_session_requests = {}
+        frame._autodj_session_results = {}
+        frame._autodj_session_retry_at = {}
+        frame._autodj_session_candidate_wait_seconds = .01
+        frame._refresh_autodj_session_ui = Mock()
+        frame._refresh_playlist_browser = Mock()
+        frame._get_active_playlist_state = Mock(return_value=state)
+        frame._set_status_message = Mock()
+        finished = threading.Event()
+        result = []
+
+        def capture(*args):
+            result.append(args)
+            finished.set()
+
+        frame._queue_autodj_session_fill = capture
+        self.assertTrue(frame._maybe_fill_autodj_session(state))
+        self.assertTrue(finished.wait(1))
+        self.assertEqual(result[0][2], [])
+
+        FrameAutoDJMixin._finish_autodj_session_fill(frame, *result[0])
+        release_candidate.set()
+
+        self.assertEqual(state.items, ["current.mp3", "slow.mp3"])
+        self.assertFalse(state.autodj_preparation_paused)
+
+    def test_media_end_uses_next_source_item_without_waiting_for_analysis(self):
+        state = PlaylistState(title="AutoDJ")
+        state.set_items(["current.mp3"])
+        state.autodj_session = True
+        state.autodj_remaining_items = ["next.mp3", "later.mp3"]
+        cancel_event = threading.Event()
+        frame = FrameAutoDJMixin()
+        frame.playlists = [state]
+        frame._autodj_session_requests = {id(state): cancel_event}
+        frame._autodj_session_results = {}
+        frame._autodj_session_retry_at = {}
+        frame._get_active_playlist_state = Mock(return_value=state)
+        frame._get_active_playlist_index = Mock(return_value=0)
+        frame._refresh_playlist_browser = Mock()
+        frame._set_status_message = Mock()
+        frame._play_media = Mock()
+        frame._maybe_fill_autodj_session = Mock()
+
+        self.assertTrue(frame._defer_autodj_advance(state))
+
+        self.assertTrue(cancel_event.is_set())
+        self.assertEqual(state.current_media_path, "next.mp3")
+        self.assertEqual(state.autodj_remaining_items, ["later.mp3"])
+        frame._play_media.assert_called_once_with(index=0)
+        frame._maybe_fill_autodj_session.assert_called_once_with(state)
 
     def test_transition_failure_uses_regular_transition_without_automatic_retry(self):
         state = PlaylistState(title="AutoDJ")
