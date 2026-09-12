@@ -448,6 +448,10 @@ msgstr ""
 msgid "A análise avançada requer a biblioteca librosa. Detalhes: {detail}"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "A análise da faixa atual falhou."
+msgstr ""
+
 #: src/player/youtube_music/service.py
 msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr ""
@@ -1125,6 +1129,10 @@ msgid "América do Sul"
 msgstr ""
 
 #: src/player/frames/autodj.py
+msgid "Analisada"
+msgstr ""
+
+#: src/player/frames/autodj.py
 msgid "Analisando próximas faixas."
 msgstr ""
 
@@ -1146,6 +1154,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Anunciar &marcadores da seleção"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Análise pendente"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -1503,12 +1515,12 @@ msgstr ""
 msgid "AutoDJ preparando as próximas faixas da sessão..."
 msgstr ""
 
-#: src/player/frames/autodj.py
-msgid "AutoDJ preparou {count} próximas faixas."
-msgstr ""
-
 #: src/player/preferences/dialog.py
 msgid "AutoDJ selecionado. As bibliotecas serão baixadas após a confirmação."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "AutoDJ selecionou {count} próximas faixas."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -2902,6 +2914,14 @@ msgstr ""
 msgid "Falha desconhecida."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Falha na análise"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Falhou"
 msgstr ""
@@ -3097,6 +3117,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Hungria"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Há faixas com falha na análise."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -3809,6 +3833,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Mídias mais curtas que isso sempre recomeçam do início."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Na fila"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Na fila, análise não confirmada"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4629,6 +4661,10 @@ msgstr ""
 msgid "O checksum do recurso adicional é inválido."
 msgstr ""
 
+#: src/player/autodj/service.py
+msgid "O download do áudio para análise excedeu o tempo limite."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O download pelo yt-dlp excedeu o tempo limite."
 msgstr ""
@@ -4793,6 +4829,10 @@ msgstr ""
 msgid "O servidor remoto não retornou uma mídia de áudio válida."
 msgstr ""
 
+#: src/player/autodj/service.py
+msgid "O servidor retornou um intervalo de áudio inválido."
+msgstr ""
+
 #: src/player/frames/library_tabs/station_radio.py
 msgid "O serviço do YouTube Music não está disponível para iniciar a rádio."
 msgstr ""
@@ -4847,6 +4887,10 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "O {source} não contém um browser.json válido nem um export JSON de cookies compatível."
+msgstr ""
+
+#: src/player/autodj/service.py
+msgid "O áudio baixado está incompleto. Não foi possível analisar a faixa."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -5278,10 +5322,6 @@ msgstr ""
 msgid "Preferências salvas."
 msgstr ""
 
-#: src/player/frames/autodj.py
-msgid "Preparada"
-msgstr ""
-
 #: src/player/frames/youtube_music/dependencies.py
 msgid "Preparando Node.js e YouTube.js..."
 msgstr ""
@@ -5433,7 +5473,7 @@ msgid "Próxima Fai&xa\tCtrl+PageDown"
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "Próxima transição: aguardando uma faixa preparada."
+msgid "Próxima transição: aguardando uma faixa na fila."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -5442,10 +5482,6 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Próxima transição: comum. Motivo: {reason}."
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "Próxima transição: será usada a transição normal. Motivo: {reason}."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -6293,6 +6329,10 @@ msgstr ""
 msgid "Tocando"
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Tocando, falha na análise"
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 #: src/player/frames/playback/engine.py
 msgid "Tocando: {name}"
@@ -6873,7 +6913,7 @@ msgid "vídeo"
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+msgid "{activity} Origem: {source}. Na fila: {queued}. Analisadas na fila: {analyzed}. Com falha na fila: {failed}. Restantes: {remaining}."
 msgstr ""
 
 #: src/player/frames/commands/app_commands.py

@@ -248,6 +248,15 @@ class YouTubeMusicService:
             anonymous_player_client=self._stream_playback_profile,
         )
 
+    def resolve_analysis_fallback(self, media_path):
+        """Resolve a fresh alternative for analysis without changing playback preferences."""
+        return resolve_music_stream_playback(
+            media_path,
+            use_account_cookies=False,
+            anonymous_player_client=self._stream_playback_profile,
+            allow_youtubejs=False,
+        )
+
     def advance_stream_playback_after_http_403(self):
         if self._stream_playback_profile == "visionos":
             self._stream_playback_profile = "web_embedded"

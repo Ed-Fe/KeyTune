@@ -15,6 +15,7 @@ KEY_NAMES = ("C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯
 MAJOR_PROFILE = (6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
 MINOR_PROFILE = (6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
 PHRASE_BEATS = 16
+MINIMUM_ENTRY_MS = 4_000
 _ONSET_HOP_LENGTH = 512
 _WORKER_TIMEOUT_SECONDS = 15 * 60
 
@@ -42,7 +43,8 @@ class LibrosaAnalyzer:
     optional analysis runtime is damaged or unavailable.
     """
 
-    analysis_version = 7
+    # Older remote results may have been computed from silently truncated audio.
+    analysis_version = 9
 
     def __init__(self, *, sample_rate=22050, maximum_duration_seconds=15 * 60):
         self.sample_rate = sample_rate
@@ -167,7 +169,11 @@ class LibrosaAnalyzer:
             rms,
             np,
         )
-        entry_ms = self._align_mix_point(entry_ms, section_boundaries_ms or phrase_boundaries_ms, after=True)
+        entry_ms = self._select_entry_point(
+            entry_ms,
+            section_boundaries_ms or phrase_boundaries_ms,
+            beats_ms,
+        )
         exit_ms = self._align_mix_point(exit_ms, section_boundaries_ms or phrase_boundaries_ms, after=False)
         entry_energy = self._energy_around(entry_ms, beats_ms, beat_frames, rms, np, forward=True)
         exit_energy = self._energy_around(exit_ms, beats_ms, beat_frames, rms, np, forward=False)
@@ -339,6 +345,21 @@ class LibrosaAnalyzer:
         if after:
             return next((value for value in boundaries_ms if value >= position_ms), boundaries_ms[-1])
         return next((value for value in reversed(boundaries_ms) if value <= position_ms), boundaries_ms[0])
+
+    @staticmethod
+    def _select_entry_point(position_ms, boundaries_ms, beats_ms, *, minimum_ms=MINIMUM_ENTRY_MS):
+        """Choose the first phrase boundary, or beat, at or after the minimum intro."""
+        if not beats_ms:
+            return position_ms
+        target_ms = max(int(position_ms or 0), int(minimum_ms))
+        boundary = next((value for value in boundaries_ms if value >= target_ms), None)
+        if boundary is not None:
+            return boundary
+        beat = next((value for value in beats_ms if value >= target_ms), None)
+        if beat is not None:
+            return beat
+        # Very short cues must remain playable instead of starting at their end.
+        return beats_ms[0]
 
     @staticmethod
     def _energy_around(position_ms, beats_ms, beat_frames, rms, np, *, forward):

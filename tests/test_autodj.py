@@ -206,12 +206,23 @@ class AutoDJTests(unittest.TestCase):
         )
         rejected = AutoDJPlanner().plan(
             AudioAnalysis(120, beats, .209, .5),
-            AudioAnalysis(123, beats, .17, .5),
+            AudioAnalysis(123, beats, .17, .5, entry_ms=4500),
         )
 
         self.assertFalse(accepted.fallback_crossfade)
         self.assertTrue(rejected.fallback_crossfade)
         self.assertEqual(rejected.reason, "confiança insuficiente")
+        self.assertEqual(rejected.incoming_start_ms, 4500)
+
+    def test_planner_keeps_analyzed_entry_when_tempos_require_fallback(self):
+        outgoing = AudioAnalysis(129.2, tuple(range(302, 305000, 464)), .282, .7)
+        incoming = AudioAnalysis(80.75, tuple(range(2786, 134000, 743)), .241, .7, entry_ms=26564)
+
+        plan = AutoDJPlanner().plan(outgoing, incoming, beats=16)
+
+        self.assertTrue(plan.fallback_crossfade)
+        self.assertEqual(plan.reason, "ajuste de tempo excederia o limite")
+        self.assertEqual(plan.incoming_start_ms, 26564)
 
     def test_artist_rule_and_energy_profile(self):
         candidates = [{"artist":"Recente","energy":.5}, {"artist":"Nova","energy":.58}]
@@ -284,6 +295,33 @@ class AutoDJTests(unittest.TestCase):
 
         self.assertEqual(entry_ms, beats_ms[8])
         self.assertEqual(exit_ms, beats_ms[32])
+
+    def test_librosa_entry_prefers_first_phrase_after_four_seconds(self):
+        entry_ms = LibrosaAnalyzer._select_entry_point(
+            302,
+            (302, 7733, 15164),
+            tuple(range(302, 16000, 465)),
+        )
+
+        self.assertEqual(entry_ms, 7733)
+
+    def test_librosa_entry_uses_first_eligible_beat_without_later_phrase(self):
+        entry_ms = LibrosaAnalyzer._select_entry_point(
+            500,
+            (500, 3500),
+            (500, 1500, 2500, 3500, 4500, 5500),
+        )
+
+        self.assertEqual(entry_ms, 4500)
+
+    def test_librosa_entry_keeps_very_short_cue_playable(self):
+        entry_ms = LibrosaAnalyzer._select_entry_point(
+            0,
+            (0, 1000),
+            (0, 1000, 2000, 3000),
+        )
+
+        self.assertEqual(entry_ms, 0)
 
     def test_librosa_beat_estimator_avoids_numba_tracker(self):
         import numpy as np
@@ -1011,13 +1049,29 @@ class AutoDJTests(unittest.TestCase):
 
             def _get_playlist_state(self, _index=None): return state
 
-        Frame()._refresh_autodj_session_ui(state)
+        frame = Frame()
+        frame._refresh_autodj_session_ui(state)
 
         self.assertIn("Origem", page.autodj_panel.values["summary"])
-        self.assertIn("Preparadas: 1", page.autodj_panel.values["summary"])
+        self.assertIn("Na fila: 1", page.autodj_panel.values["summary"])
+        self.assertIn("Analisadas na fila: 0", page.autodj_panel.values["summary"])
+        self.assertIn("análise não confirmada", page.browser_panel.statuses["C.mp3"])
         self.assertEqual(page.browser_panel.statuses["A.mp3"], "Tocada")
         self.assertEqual(page.browser_panel.statuses["B.mp3"], "Tocando")
         self.assertIn("Próxima", page.browser_panel.statuses["C.mp3"])
+
+        frame.autodj_service = SimpleNamespace(get_analysis_status=lambda path: "failed")
+        frame._refresh_autodj_session_ui(state)
+        self.assertIn("A análise da faixa atual falhou", page.autodj_panel.values["summary"])
+        self.assertIn("Com falha na fila: 1", page.autodj_panel.values["summary"])
+        self.assertIn("Falha na análise", page.browser_panel.statuses["C.mp3"])
+        self.assertNotIn("Preparada", page.browser_panel.statuses["C.mp3"])
+
+        frame.autodj_service = SimpleNamespace(get_analysis_status=lambda path: "ready")
+        frame._refresh_autodj_session_ui(state)
+        self.assertIn("Analisadas na fila: 1", page.autodj_panel.values["summary"])
+        self.assertIn("Com falha na fila: 0", page.autodj_panel.values["summary"])
+        self.assertNotIn("falhou", page.autodj_panel.values["summary"])
 
     def test_frame_converts_cached_analysis_and_derives_beat_duration(self):
         analysis = FrameAutoDJMixin._audio_analysis_from_result(
@@ -1356,7 +1410,7 @@ class AutoDJTests(unittest.TestCase):
     def test_resumed_http_download_appends_to_partial_file(self):
         class Response:
             status = 206
-            headers = {"Content-Type": "audio/webm"}
+            headers = {"Content-Type": "audio/webm", "Content-Range": "bytes 7-11/12"}
 
             def __init__(self):
                 self.chunks = iter((b"-rest", b""))

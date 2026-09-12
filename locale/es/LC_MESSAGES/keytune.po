@@ -5201,3 +5201,48 @@ msgstr "AutoDJ no pudo analizar estas pistas. Se usará la transición normal."
 
 msgid "nenhuma faixa pôde ser preparada"
 msgstr "no se pudo preparar ninguna pista"
+
+msgid "O servidor retornou um intervalo de áudio inválido."
+msgstr "El servidor devolvió un intervalo de audio no válido."
+
+msgid "O download do áudio para análise excedeu o tempo limite."
+msgstr "Se agotó el tiempo de descarga del audio para el análisis."
+
+msgid "O áudio baixado está incompleto. Não foi possível analisar a faixa."
+msgstr "El audio descargado está incompleto. No se pudo analizar la pista."
+
+msgid "AutoDJ selecionou {count} próximas faixas."
+msgstr "AutoDJ seleccionó {count} próximas pistas."
+
+msgid "A análise da faixa atual falhou."
+msgstr "Falló el análisis de la pista actual."
+
+msgid "Há faixas com falha na análise."
+msgstr "No se pudieron analizar algunas pistas."
+
+msgid "{activity} Origem: {source}. Na fila: {queued}. Analisadas na fila: {analyzed}. Com falha na fila: {failed}. Restantes: {remaining}."
+msgstr "{activity} Origen: {source}. En cola: {queued}. Analizadas en cola: {analyzed}. Con fallo en cola: {failed}. Restantes: {remaining}."
+
+msgid "Analisada"
+msgstr "Analizada"
+
+msgid "Falha na análise"
+msgstr "Error de análisis"
+
+msgid "Análise pendente"
+msgstr "Análisis pendiente"
+
+msgid "Na fila, análise não confirmada"
+msgstr "En cola, análisis no confirmado"
+
+msgid "Tocando, falha na análise"
+msgstr "Reproduciendo, error de análisis"
+
+msgid "Próxima transição: aguardando uma faixa na fila."
+msgstr "Próxima transición: esperando una pista en cola."
+
+msgid "Na fila"
+msgstr "En cola"
+
+msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
+msgstr "Error de análisis. Próxima transición: se usará la transición normal. Motivo: {reason}."

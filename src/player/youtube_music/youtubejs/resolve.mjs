@@ -147,31 +147,19 @@ async function resolve(request) {
   }
 
   const innertube = await innertubePromise;
-  const profiles = [
-    { client: "IOS", format: { type: "audio", quality: "best", format: "any" } },
-    { client: "ANDROID", format: { itag: 18 } },
-  ];
   let info;
   let format;
   let streamUrl = "";
-  let lastError;
-  for (const profile of profiles) {
-    try {
-      const candidateInfo = await innertube.getBasicInfo(videoId, { client: profile.client });
-      const candidateFormat = candidateInfo.chooseFormat(profile.format);
-      const candidateUrl = await candidateFormat.decipher(innertube.session.player);
-      if (candidateUrl) {
-        info = candidateInfo;
-        format = candidateFormat;
-        streamUrl = candidateUrl;
-        break;
-      }
-    } catch (error) {
-      lastError = error;
-    }
+  let resolutionError;
+  try {
+    info = await innertube.getBasicInfo(videoId, { client: "ANDROID" });
+    format = info.chooseFormat({ itag: 18 });
+    streamUrl = await format.decipher(innertube.session.player);
+  } catch (error) {
+    resolutionError = error;
   }
   if (!streamUrl) {
-    const detail = lastError instanceof Error ? `: ${lastError.message}` : "";
+    const detail = resolutionError instanceof Error ? `: ${resolutionError.message}` : "";
     throw new Error(`O YouTube.js não retornou uma URL direta de mídia${detail}.`);
   }
   let contentLength = Number(format.content_length) || Number(new URL(streamUrl).searchParams.get("clen")) || 0;

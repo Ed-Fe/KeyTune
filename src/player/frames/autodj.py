@@ -31,6 +31,7 @@ class FrameAutoDJMixin:
             Path(get_app_storage_dir()) / "autodj-analysis.db",
             remote_resolver=lambda media_path: self._get_youtube_music_service().resolve_stream_playback(media_path),
             remote_retry_handler=self._handle_autodj_remote_download_retry,
+            remote_fallback_resolver=lambda media_path: self._get_youtube_music_service().resolve_analysis_fallback(media_path),
         )
         self._autodj_transition_requests = {}
         self._autodj_session_requests = {}
@@ -548,9 +549,10 @@ class FrameAutoDJMixin:
                 )
             else:
                 self._set_status_message(
-                    _("AutoDJ preparou {count} próximas faixas.").format(count=len(selected_paths)),
+                    _("AutoDJ selecionou {count} próximas faixas.").format(count=len(selected_paths)),
                     auto_clear_ms=5000,
                 )
+        self._refresh_autodj_session_ui(state)
 
     def _refresh_autodj_session_ui(self, state=None):
         current_index = self.notebook.GetSelection() if hasattr(self, "notebook") else wx.NOT_FOUND
@@ -569,31 +571,58 @@ class FrameAutoDJMixin:
 
         prepared_count = max(0, len(state.items) - state.current_index - 1)
         remaining_count = len(state.autodj_remaining_items)
+        service = getattr(self, "autodj_service", None)
+        get_status = getattr(service, "get_analysis_status", None)
+        analysis_statuses = {
+            path: get_status(path) if callable(get_status) else "unknown"
+            for path in state.items[max(0, state.current_index):]
+        }
+        upcoming = state.items[state.current_index + 1:]
+        analyzed_count = sum(analysis_statuses.get(path) == "ready" for path in upcoming)
+        failed_count = sum(analysis_statuses.get(path) == "failed" for path in upcoming)
         if state.autodj_preparation_paused:
             activity = _("Preparação pausada.")
         elif id(state) in getattr(self, "_autodj_session_requests", {}):
             activity = _("Analisando próximas faixas.")
         else:
             activity = _("Sessão ativa.")
+        if analysis_statuses.get(state.current_media_path) == "failed":
+            activity += " " + _("A análise da faixa atual falhou.")
+        elif failed_count:
+            activity += " " + _("Há faixas com falha na análise.")
         summary = _(
-            "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+            "{activity} Origem: {source}. Na fila: {queued}. Analisadas na fila: {analyzed}. "
+            "Com falha na fila: {failed}. Restantes: {remaining}."
         ).format(
             activity=activity,
             source=state.autodj_source_title or _("playlist original"),
-            prepared=prepared_count,
+            queued=prepared_count,
+            analyzed=analyzed_count,
+            failed=failed_count,
             remaining=remaining_count,
         )
         details, next_status = self._autodj_transition_description(state)
         statuses = {}
+        analysis_labels = {
+            "ready": _("Analisada"),
+            "failed": _("Falha na análise"),
+            "pending": _("Análise pendente"),
+            "unknown": _("Na fila, análise não confirmada"),
+        }
         for index, path in enumerate(state.items):
             if index < state.current_index:
                 statuses[path] = _("Tocada")
             elif index == state.current_index:
-                statuses[path] = _("Tocando")
+                statuses[path] = (
+                    _("Tocando, falha na análise")
+                    if analysis_statuses.get(path) == "failed" else _("Tocando")
+                )
             elif index == state.current_index + 1:
-                statuses[path] = next_status
+                statuses[path] = next_status + ". " + analysis_labels.get(
+                    analysis_statuses.get(path), analysis_labels["unknown"]
+                )
             else:
-                statuses[path] = _("Preparada")
+                statuses[path] = analysis_labels.get(analysis_statuses.get(path), analysis_labels["unknown"])
         if browser is not None and hasattr(browser, "set_item_statuses"):
             browser.set_item_statuses(statuses)
         if panel is not None:
@@ -609,14 +638,14 @@ class FrameAutoDJMixin:
     def _autodj_transition_description(self, state):
         pair = self._autodj_transition_pair(state)
         if pair is None:
-            return _("Próxima transição: aguardando uma faixa preparada."), _("Preparada")
+            return _("Próxima transição: aguardando uma faixa na fila."), _("Na fila")
         request = getattr(self, "_autodj_transition_requests", {}).get(pair)
         if not request or request.get("status") == "pending":
             return _("Próxima transição: analisando."), _("Próxima, analisando transição")
         if request.get("status") == "failed":
             reason = str(request.get("error") or _("falha ao analisar as faixas"))
             return (
-                _("Próxima transição: será usada a transição normal. Motivo: {reason}.").format(
+                _("Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}.").format(
                     reason=reason
                 ),
                 _("Próxima, transição normal"),

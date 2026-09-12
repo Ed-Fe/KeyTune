@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+from collections import OrderedDict
 from http.client import IncompleteRead
 import os
+import re
 from pathlib import Path
 import tempfile
 import threading
@@ -14,12 +16,16 @@ from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 from ..i18n import _
+from ..log import get_logger
 from .cache import AnalysisCache
 from .librosa_analyzer import LibrosaAnalyzer
 
 MAX_REMOTE_AUDIO_BYTES = 120 * 1024 * 1024
 REMOTE_DOWNLOAD_ATTEMPTS = 3
 REMOTE_DOWNLOAD_RETRY_DELAY_SECONDS = 0.5
+REMOTE_DOWNLOAD_MAX_REQUESTS = 128
+REMOTE_DOWNLOAD_TIMEOUT_SECONDS = 180
+_logger = get_logger(__name__)
 
 
 class AutoDJService:
@@ -28,12 +34,28 @@ class AutoDJService:
     # from being terminated under memory pressure.
     max_parallel_analyses = 1
 
-    def __init__(self, cache_path, *, remote_resolver=None, remote_retry_handler=None, analyzer=None):
+    def __init__(self, cache_path, *, remote_resolver=None, remote_retry_handler=None,
+                 remote_fallback_resolver=None, analyzer=None):
         self.cache = AnalysisCache(cache_path)
         self.remote_resolver = remote_resolver
         self.remote_retry_handler = remote_retry_handler
+        self.remote_fallback_resolver = remote_fallback_resolver
         self.analyzer = analyzer or LibrosaAnalyzer()
         self._analysis_lock = threading.Lock()
+        self._status_lock = threading.Lock()
+        self._analysis_statuses = OrderedDict()
+
+    def get_analysis_status(self, media_path: str) -> str:
+        """Return the last observed result, without implying a queued track is analyzed."""
+        with self._status_lock:
+            return self._analysis_statuses.get(str(media_path or "").strip(), "unknown")
+
+    def _set_analysis_status(self, media_path: str, status: str) -> None:
+        with self._status_lock:
+            self._analysis_statuses[media_path] = status
+            self._analysis_statuses.move_to_end(media_path)
+            while len(self._analysis_statuses) > 512:
+                self._analysis_statuses.popitem(last=False)
 
     def get_cached(self, media_path):
         normalized = str(media_path or "").strip()
@@ -46,8 +68,19 @@ class AutoDJService:
         return asdict(cached) if cached is not None else None
 
     def analyze(self, media_path, *, remote_resolver=None):
+        normalized = str(media_path or "").strip()
         with self._analysis_lock:
-            return self._analyze_serialized(media_path, remote_resolver=remote_resolver)
+            self._set_analysis_status(normalized, "pending")
+            try:
+                result = self._analyze_serialized(normalized, remote_resolver=remote_resolver)
+            except IncompleteRead as exc:
+                self._set_analysis_status(normalized, "failed")
+                raise RuntimeError(_("O áudio baixado está incompleto. Não foi possível analisar a faixa.")) from exc
+            except Exception:
+                self._set_analysis_status(normalized, "failed")
+                raise
+            self._set_analysis_status(normalized, "ready")
+            return result
 
     def _analyze_serialized(self, media_path, *, remote_resolver=None):
         normalized = str(media_path or "").strip()
@@ -68,16 +101,32 @@ class AutoDJService:
         with tempfile.TemporaryDirectory(prefix="keytune-autodj-") as temporary:
             target = Path(temporary) / "audio"
             retry_handler = self.remote_retry_handler if remote_resolver is None else None
-            downloaded_path = self._download_remote(normalized, resolver, target, retry_handler=retry_handler)
+            try:
+                downloaded_path = self._download_remote(normalized, resolver, target, retry_handler=retry_handler)
+            except (OSError, IncompleteRead, ValueError) as exc:
+                if remote_resolver is not None or not callable(self.remote_fallback_resolver):
+                    raise
+                _logger.warning("AutoDJ download failed (%s); trying an alternate stream", type(exc).__name__)
+                # Never append bytes from a different representation to the first file.
+                downloaded_path = self._download_remote(
+                    normalized, self.remote_fallback_resolver, Path(temporary) / "alternative"
+                )
             analysis = self.analyzer.analyze(downloaded_path)
         self.cache.put_remote(normalized, analysis, self.analyzer.analysis_version)
         return asdict(analysis)
 
     def _download_remote(self, media_path, resolver, target, *, retry_handler=None):
         last_error = None
-        for attempt in range(REMOTE_DOWNLOAD_ATTEMPTS):
+        playback = None
+        failures = 0
+        previous_size = 0
+        started_at = time.monotonic()
+        for request_index in range(REMOTE_DOWNLOAD_MAX_REQUESTS):
+            if time.monotonic() - started_at >= REMOTE_DOWNLOAD_TIMEOUT_SECONDS:
+                raise TimeoutError(_("O download do áudio para análise excedeu o tempo limite."))
             try:
-                playback = resolver(media_path)
+                if playback is None:
+                    playback = resolver(media_path)
                 stream_url = str(getattr(playback, "stream_url", "") or "").strip()
                 if not stream_url:
                     raise ValueError(_("O resolvedor remoto não retornou uma URL reproduzível."))
@@ -85,15 +134,29 @@ class AutoDJService:
                     stream_url,
                     target,
                     playback.http_headers or {},
-                    resume=attempt > 0,
+                    resume=request_index > 0,
                 )
             except (ConnectionError, IncompleteRead, TimeoutError, URLError, OSError) as exc:
                 last_error = exc
-                if attempt + 1 >= REMOTE_DOWNLOAD_ATTEMPTS:
+                paths = list(Path(target).parent.glob(f"{Path(target).name}.*"))
+                if Path(target).is_file():
+                    paths.append(Path(target))
+                current_size = max((path.stat().st_size for path in paths if path.is_file()), default=0)
+                progressing = isinstance(exc, IncompleteRead) and current_size > previous_size
+                previous_size = current_size
+                if progressing:
+                    # Some media servers end a response after 1 MiB, even when
+                    # its headers advertise the whole file. Fetch the next range
+                    # from the same stream; partial audio must never be analyzed.
+                    failures = 0
+                    continue
+                failures += 1
+                if failures >= REMOTE_DOWNLOAD_ATTEMPTS:
                     raise
                 if callable(retry_handler):
                     retry_handler(media_path, exc)
-                time.sleep(REMOTE_DOWNLOAD_RETRY_DELAY_SECONDS * (attempt + 1))
+                playback = None
+                time.sleep(REMOTE_DOWNLOAD_RETRY_DELAY_SECONDS * failures)
         raise last_error or RuntimeError("Não foi possível baixar a faixa para análise.")
 
     @staticmethod
@@ -109,8 +172,9 @@ class AutoDJService:
                 partial_paths.append(Path(target))
         existing_path = max(partial_paths, key=lambda path: path.stat().st_size, default=None)
         existing_size = existing_path.stat().st_size if existing_path is not None else 0
-        if existing_size > 0:
-            request_headers["Range"] = f"bytes={existing_size}-"
+        # YouTube may return only the first 1 MiB without an explicit Range.
+        request_headers = {key: value for key, value in request_headers.items() if key.lower() != "range"}
+        request_headers["Range"] = f"bytes={existing_size}-"
 
         request = Request(url, headers=request_headers)
         with urlopen(request, timeout=30) as response:
@@ -124,12 +188,31 @@ class AutoDJService:
             response_status = int(getattr(response, "status", 200) or 200)
             can_resume = existing_path == output_path and existing_size > 0 and response_status == 206
             total = existing_size if can_resume else 0
+            range_size = None
+            expected_total = None
+            if response_status == 206:
+                content_range = re.fullmatch(
+                    r"bytes (\d+)-(\d+)/(\d+)",
+                    str(response.headers.get("Content-Range", "")).strip(),
+                )
+                if content_range is None:
+                    raise ValueError(_("O servidor retornou um intervalo de áudio inválido."))
+                start, end, expected_total = map(int, content_range.groups())
+                if start != total or not start <= end < expected_total:
+                    raise ValueError(_("O servidor retornou um intervalo de áudio inválido."))
+                range_size = end - start + 1
+                if expected_total > MAX_REMOTE_AUDIO_BYTES:
+                    raise ValueError(_("A faixa online excede o limite de análise de 120 MB."))
             try:
                 response_size = int(response.headers.get("Content-Length", "") or 0)
             except (TypeError, ValueError):
                 response_size = 0
             if response_size > 0 and total + response_size > MAX_REMOTE_AUDIO_BYTES:
                 raise ValueError(_("A faixa online excede o limite de análise de 120 MB."))
+            if range_size is not None and response_size > 0 and response_size != range_size:
+                raise ValueError(_("O servidor retornou um intervalo de áudio inválido."))
+            expected_response_size = range_size if range_size is not None else response_size
+            initial_size = total
             output = output_path.open("ab" if can_resume else "wb")
             try:
                 while chunk := response.read(256 * 1024):
@@ -139,4 +222,11 @@ class AutoDJService:
                     output.write(chunk)
             finally:
                 output.close()
+            received_size = total - initial_size
+            if expected_response_size and received_size < expected_response_size:
+                raise IncompleteRead(b"", expected_response_size - received_size)
+            if expected_response_size and received_size > expected_response_size:
+                raise ValueError(_("O servidor retornou um intervalo de áudio inválido."))
+            if expected_total is not None and total < expected_total:
+                raise IncompleteRead(b"", expected_total - total)
         return output_path

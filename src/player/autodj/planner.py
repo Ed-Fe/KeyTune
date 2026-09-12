@@ -38,10 +38,12 @@ class AutoDJPlanner:
             beats = 8
         confidence = min(outgoing.confidence, incoming.confidence)
         if not outgoing.bpm or not incoming.bpm or confidence < self.minimum_confidence:
-            return TransitionPlan(beats, None, None, 1, confidence, True, "confiança insuficiente")
+            return self._fallback_plan(beats, confidence, incoming, outgoing, "confiança insuficiente")
         ratio = outgoing.bpm / incoming.bpm
         if abs(ratio - 1) > self.max_tempo_adjustment:
-            return TransitionPlan(beats, None, None, 1, confidence, True, "ajuste de tempo excederia o limite")
+            return self._fallback_plan(
+                beats, confidence, incoming, outgoing, "ajuste de tempo excederia o limite"
+            )
         if outgoing.phrase_boundaries_ms:
             outgoing_boundary = self._value_at_or_before(outgoing.phrase_boundaries_ms, outgoing.exit_ms)
             outgoing_end_index = self._beat_index_at_or_before(outgoing.beats_ms, outgoing_boundary)
@@ -50,7 +52,7 @@ class AutoDJPlanner:
             outgoing_end_index -= outgoing_end_index % 4
         outgoing_start_index = outgoing_end_index - beats
         if outgoing_start_index < 0:
-            return TransitionPlan(beats, None, None, 1, confidence, True, "grade de batidas insuficiente")
+            return self._fallback_plan(beats, confidence, incoming, outgoing, "grade de batidas insuficiente")
 
         if incoming.phrase_boundaries_ms:
             incoming_boundary = self._value_at_or_after(incoming.phrase_boundaries_ms, incoming.entry_ms)
@@ -59,7 +61,7 @@ class AutoDJPlanner:
             incoming_start_index = self._beat_index_at_or_after(incoming.beats_ms, incoming.entry_ms)
             incoming_start_index += (-incoming_start_index) % 4
         if incoming_start_index >= len(incoming.beats_ms):
-            return TransitionPlan(beats, None, None, 1, confidence, True, "ponto de entrada indisponível")
+            return self._fallback_plan(beats, confidence, incoming, outgoing, "ponto de entrada indisponível")
 
         return TransitionPlan(
             beats,
@@ -72,6 +74,18 @@ class AutoDJPlanner:
             incoming_beat_ms=60000.0 / incoming.bpm,
             incoming_gain_db=self._incoming_gain_db(outgoing, incoming),
             vocal_overlap=vocal_overlap,
+        )
+
+    def _fallback_plan(self, beats, confidence, incoming, outgoing, reason):
+        return TransitionPlan(
+            beats,
+            None,
+            incoming.entry_ms,
+            1,
+            confidence,
+            True,
+            reason,
+            incoming_gain_db=self._incoming_gain_db(outgoing, incoming),
         )
 
     @staticmethod
