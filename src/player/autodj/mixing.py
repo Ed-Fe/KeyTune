@@ -27,9 +27,9 @@ class MixProfile:
 
 
 MIX_PROFILES = {
-    TransitionProfile.SMOOTH: MixProfile(0.25, 0.75, -9.0, -2.0, 0.25, 0.75),
-    TransitionProfile.PARTY: MixProfile(0.18, 0.82, -18.0, -4.0, 0.40, 0.60),
-    TransitionProfile.ELECTRONIC: MixProfile(0.12, 0.88, -24.0, -6.0, 0.44, 0.56),
+    TransitionProfile.SMOOTH: MixProfile(0.25, 0.75, 0.0, 0.0, 0.25, 0.75),
+    TransitionProfile.PARTY: MixProfile(0.18, 0.82, 0.0, 0.0, 0.40, 0.60),
+    TransitionProfile.ELECTRONIC: MixProfile(0.12, 0.88, 0.0, 0.0, 0.44, 0.56),
 }
 
 
@@ -49,6 +49,10 @@ def mix_values(progress, profile=TransitionProfile.SMOOTH):
     outgoing_progress = _smoothstep(progress, settings.outgoing_fade_start, 1.0)
     incoming_volume = math.sin((math.pi / 2.0) * incoming_progress)
     outgoing_volume = math.cos((math.pi / 2.0) * outgoing_progress)
+    combined_power = math.hypot(incoming_volume, outgoing_volume)
+    if combined_power > 1.0:
+        incoming_volume /= combined_power
+        outgoing_volume /= combined_power
 
     bass_swap = _smoothstep(progress, settings.bass_swap_start, settings.bass_swap_end)
     incoming_bass_db = settings.bass_cut_db * (1.0 - bass_swap)
@@ -70,6 +74,8 @@ def mix_values(progress, profile=TransitionProfile.SMOOTH):
 
 
 def build_mix_lavfi_filters(bass_gain_db, mid_gain_db):
+    if abs(float(bass_gain_db)) < 0.01 and abs(float(mid_gain_db)) < 0.01:
+        return ()
     return (
         f"equalizer@autodj_bass_80=f=80:t=q:w=1:g={bass_gain_db:.2f}",
         f"equalizer@autodj_bass_180=f=180:t=q:w=1:g={bass_gain_db * 0.7:.2f}",

@@ -452,6 +452,11 @@ msgstr ""
 msgid "A análise da faixa atual falhou."
 msgstr ""
 
+#: src/player/autodj/librosa_analyzer.py
+#: src/player/autodj/service.py
+msgid "A análise do AutoDJ foi cancelada porque o resultado não é mais necessário."
+msgstr ""
+
 #: src/player/youtube_music/service.py
 msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr ""
@@ -6665,6 +6670,10 @@ msgstr ""
 
 #: src/player/lyrics/service.py
 msgid "[{source}: {title} - {artist}]"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "a faixa é longa demais para uma análise rítmica completa"
 msgstr ""
 
 #: src/player/frames/autodj.py

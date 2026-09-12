@@ -6,6 +6,23 @@ from enum import Enum
 from .analyzer import AudioAnalysis
 
 
+_HALF_STEP = 2.0 ** 0.5
+_LOUDNESS_DEADBAND_DB = 2.0
+_MAXIMUM_TRANSITION_ATTENUATION_DB = 2.0
+
+
+def normalize_bpm_to_reference(bpm: float, reference_bpm: float) -> float:
+    """Fold half/double-time estimates into the octave nearest ``reference_bpm``."""
+    if bpm <= 0 or reference_bpm <= 0:
+        return bpm
+    folded = float(bpm)
+    while folded < reference_bpm / _HALF_STEP:
+        folded *= 2.0
+    while folded > reference_bpm * _HALF_STEP:
+        folded /= 2.0
+    return folded
+
+
 class TransitionProfile(str, Enum):
     SMOOTH = "smooth"
     PARTY = "party"
@@ -39,10 +56,15 @@ class AutoDJPlanner:
         confidence = min(outgoing.confidence, incoming.confidence)
         if not outgoing.bpm or not incoming.bpm or confidence < self.minimum_confidence:
             return self._fallback_plan(beats, confidence, incoming, outgoing, "confiança insuficiente")
-        ratio = outgoing.bpm / incoming.bpm
+        compatible_incoming_bpm = normalize_bpm_to_reference(incoming.bpm, outgoing.bpm)
+        ratio = outgoing.bpm / compatible_incoming_bpm
         if abs(ratio - 1) > self.max_tempo_adjustment:
             return self._fallback_plan(
                 beats, confidence, incoming, outgoing, "ajuste de tempo excederia o limite"
+            )
+        if outgoing.analysis_truncated:
+            return self._fallback_plan(
+                beats, confidence, incoming, outgoing, "análise limitada pela duração"
             )
         if outgoing.phrase_boundaries_ms:
             outgoing_boundary = self._value_at_or_before(outgoing.phrase_boundaries_ms, outgoing.exit_ms)
@@ -90,15 +112,18 @@ class AutoDJPlanner:
 
     @staticmethod
     def _incoming_gain_db(outgoing, incoming):
-        if outgoing.exit_energy is not None and incoming.entry_energy is not None:
-            outgoing_loudness = outgoing.exit_energy * 30.0 - 35.0
-            incoming_loudness = incoming.entry_energy * 30.0 - 35.0
-        else:
+        outgoing_loudness = outgoing.exit_loudness_db
+        incoming_loudness = incoming.entry_loudness_db
+        if outgoing_loudness is None or incoming_loudness is None:
             outgoing_loudness = outgoing.loudness_db
             incoming_loudness = incoming.loudness_db
         if outgoing_loudness is None or incoming_loudness is None:
             return 0.0
-        return round(max(-6.0, min(0.0, outgoing_loudness - incoming_loudness)), 2)
+        difference_db = float(outgoing_loudness) - float(incoming_loudness)
+        if difference_db >= -_LOUDNESS_DEADBAND_DB:
+            return 0.0
+        attenuation_db = difference_db + _LOUDNESS_DEADBAND_DB
+        return round(max(-_MAXIMUM_TRANSITION_ATTENUATION_DB, attenuation_db), 2)
 
     @staticmethod
     def _value_at_or_before(values, position):

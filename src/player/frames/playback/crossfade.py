@@ -228,6 +228,12 @@ class CrossfadeMixin:
             incoming_volume = int(round(self.current_volume * math.sin((math.pi / 2.0) * progress)))
             outgoing_volume = int(round(self.current_volume * math.cos((math.pi / 2.0) * progress)))
         incoming_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        if crossfade_state.get("autodj"):
+            # Loudness matching only protects the overlap. Restore the incoming
+            # track to its original level during the second half of the mix.
+            recovery_progress = max(0.0, min(1.0, (progress - 0.5) * 2.0))
+            gain_recovery = recovery_progress * recovery_progress * (3.0 - (2.0 * recovery_progress))
+            incoming_gain_db *= 1.0 - gain_recovery
         outgoing_gain_db = float(crossfade_state.get("outgoing_gain_db", 0.0) or 0.0)
         incoming_volume = int(round(incoming_volume * math.pow(10.0, incoming_gain_db / 20.0)))
         outgoing_volume = int(round(outgoing_volume * math.pow(10.0, outgoing_gain_db / 20.0)))
@@ -254,7 +260,7 @@ class CrossfadeMixin:
             self._stop_player(outgoing_key, unload=True)
 
         self._restore_autodj_mix_filters(crossfade_state)
-        self._current_track_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        self._current_track_gain_db = 0.0
         state = self._get_active_playlist_state()
         if state is not None:
             state.playback_gain_db = self._current_track_gain_db
@@ -350,7 +356,7 @@ class CrossfadeMixin:
 
         self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
-        self._current_track_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
+        self._current_track_gain_db = 0.0
         state.playback_gain_db = self._current_track_gain_db
         self._bind_player_to_window()
         self._prepare_youtube_music_history_tracking(media_path)

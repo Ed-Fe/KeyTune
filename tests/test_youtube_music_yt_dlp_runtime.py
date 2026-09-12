@@ -92,6 +92,9 @@ class YouTubeMusicYtDlpRuntimeTests(unittest.TestCase):
             with patch("player.youtube_music.yt_dlp_runtime.shutil.which", return_value=None), patch(
                 "player.youtube_music.yt_dlp_runtime.find_yt_dlp_executable_path",
                 return_value=yt_dlp_path,
+            ), patch(
+                "player.optional_resources.get_optional_resource_dir",
+                return_value=runtime_dir / "managed-node-not-installed",
             ):
                 discovered_path = yt_dlp_runtime._find_javascript_runtime_executable("node")
                 self.assertEqual(pathlib.Path(discovered_path), runtime_path.resolve())
