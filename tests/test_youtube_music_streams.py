@@ -45,6 +45,20 @@ class YouTubeMusicStreamsTests(unittest.TestCase):
         self._youtubejs_patch.start()
         self.addCleanup(self._youtubejs_patch.stop)
 
+    def test_analysis_fallback_bypasses_youtubejs_for_this_request_only(self):
+        with patch("player.youtube_music.streams.load_saved_playback_auth", return_value=YouTubeMusicPlaybackAuth()), patch(
+            "player.youtube_music.streams.resolve_youtubejs_stream"
+        ) as youtubejs, patch(
+            "player.youtube_music.streams.youtubejs_resolver_enabled", return_value=True
+        ), patch(
+            "player.youtube_music.streams.ensure_yt_dlp_executable_available",
+            side_effect=RuntimeError("yt-dlp reached"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "yt-dlp reached"):
+                resolve_stream_playback("https://music.youtube.com/watch?v=abc123DEF45", allow_youtubejs=False)
+            youtubejs.assert_not_called()
+            self.assertTrue(youtube_music_streams.youtubejs_resolver_enabled())
+
     def test_resolve_stream_playback_prefers_youtubejs_and_preserves_metadata(self):
         playback_auth = YouTubeMusicPlaybackAuth(
             cookie_header="SID=abc",

@@ -4,9 +4,49 @@ import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 
 const RESULT_PREFIX = "KEYTUNE_YOUTUBEJS_RESULT=";
+const PROBE_TIMEOUT_MS = 15_000;
+const UPSTREAM_TIMEOUT_MS = 30_000;
 const streamUrls = new Map();
+
+function waitForDrain(response) {
+  return new Promise((resolve, reject) => {
+    if (response.destroyed || response.writableEnded) {
+      reject(new Error("A conexão local de reprodução foi encerrada."));
+      return;
+    }
+    const cleanup = () => {
+      response.off("drain", onDrain);
+      response.off("close", onClose);
+      response.off("error", onError);
+    };
+    const onDrain = () => {
+      cleanup();
+      resolve();
+    };
+    const onClose = () => {
+      cleanup();
+      reject(new Error("A conexão local de reprodução foi encerrada."));
+    };
+    const onError = (error) => {
+      cleanup();
+      reject(error);
+    };
+    response.once("drain", onDrain);
+    response.once("close", onClose);
+    response.once("error", onError);
+    if (response.destroyed || response.writableEnded) {
+      cleanup();
+      reject(new Error("A conexão local de reprodução foi encerrada."));
+    }
+  });
+}
+
 const proxyServer = createServer(async (request, response) => {
   try {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      response.writeHead(405, { allow: "GET, HEAD" }).end();
+      return;
+    }
     const token = new URL(request.url, "http://127.0.0.1").pathname.split("/").filter(Boolean)[1] || "";
     const stream = streamUrls.get(token);
     if (!stream) {
@@ -22,11 +62,17 @@ const proxyServer = createServer(async (request, response) => {
     }
     const rangeStart = parsedRange ? Number(parsedRange[1]) : 0;
     const streamEnd = stream.contentLength - 1;
-    if (rangeStart > streamEnd) {
+    const requestedEnd = parsedRange?.[2] ? Number(parsedRange[2]) : streamEnd;
+    if (
+      !Number.isSafeInteger(rangeStart) ||
+      !Number.isSafeInteger(requestedEnd) ||
+      rangeStart < 0 ||
+      requestedEnd < rangeStart ||
+      rangeStart > streamEnd
+    ) {
       response.writeHead(416, { "content-range": `bytes */${stream.contentLength}` }).end();
       return;
     }
-    const requestedEnd = parsedRange?.[2] ? Number(parsedRange[2]) : streamEnd;
     const rangeEnd = Math.min(requestedEnd, streamEnd);
     const responseHeaders = {
       "accept-ranges": "bytes",
@@ -43,15 +89,21 @@ const proxyServer = createServer(async (request, response) => {
     }
 
     for (let offset = rangeStart; offset <= rangeEnd; offset += 1024 * 1024) {
+      if (response.destroyed) {
+        return;
+      }
       const chunkEnd = Math.min(offset + 1024 * 1024 - 1, rangeEnd);
       const upstream = await fetch(stream.url, {
         headers: { Range: `bytes=${offset}-${chunkEnd}` },
+        signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
       });
-      if (!upstream.ok || !upstream.body) {
+      if (upstream.status !== 206 || !upstream.body) {
         throw new Error(`O Google recusou o bloco ${offset}-${chunkEnd}: HTTP ${upstream.status}.`);
       }
       for await (const chunk of upstream.body) {
-        response.write(chunk);
+        if (!response.write(chunk)) {
+          await waitForDrain(response);
+        }
       }
     }
     response.end();
@@ -95,15 +147,31 @@ async function resolve(request) {
   }
 
   const innertube = await innertubePromise;
-  const info = await innertube.getBasicInfo(videoId, { client: "ANDROID" });
-  const format = info.chooseFormat({ itag: 18 });
-  const streamUrl = await format.decipher(innertube.session.player);
+  let info;
+  let format;
+  let streamUrl = "";
+  let resolutionError;
+  try {
+    info = await innertube.getBasicInfo(videoId, { client: "ANDROID" });
+    format = info.chooseFormat({ itag: 18 });
+    streamUrl = await format.decipher(innertube.session.player);
+  } catch (error) {
+    resolutionError = error;
+  }
   if (!streamUrl) {
-    throw new Error("O YouTube.js não retornou uma URL direta de mídia.");
+    const detail = resolutionError instanceof Error ? `: ${resolutionError.message}` : "";
+    throw new Error(`O YouTube.js não retornou uma URL direta de mídia${detail}.`);
   }
   let contentLength = Number(format.content_length) || Number(new URL(streamUrl).searchParams.get("clen")) || 0;
   if (!contentLength) {
-    const probe = await fetch(streamUrl, { headers: { Range: "bytes=0-0" } });
+    const probe = await fetch(streamUrl, {
+      headers: { Range: "bytes=0-0" },
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    });
+    if (probe.status !== 206) {
+      await probe.body?.cancel();
+      throw new Error(`O YouTube.js não conseguiu medir a mídia: HTTP ${probe.status}.`);
+    }
     const contentRange = String(probe.headers.get("content-range") || "");
     contentLength = Number(contentRange.split("/").pop()) || 0;
     await probe.body?.cancel();
@@ -117,7 +185,7 @@ async function resolve(request) {
   streamUrls.set(token, {
     url: streamUrl,
     contentLength,
-    contentType: String(format.mime_type || "video/mp4").split(";", 1)[0],
+    contentType: String(format.mime_type || "audio/mp4").split(";", 1)[0],
   });
   if (streamUrls.size > 200) {
     streamUrls.delete(streamUrls.keys().next().value);

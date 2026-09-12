@@ -22,7 +22,7 @@ class YouTubeMusicServiceTests(unittest.TestCase):
     def test_missing_youtube_library_is_not_reported_as_invalid_account(self):
         service = YouTubeMusicService()
 
-        with patch(
+        with patch.object(service, "has_saved_browser_auth", return_value=True), patch(
             "player.youtube_music.service.import_ytmusicapi_module",
             side_effect=ModuleNotFoundError(name="ytmusicapi"),
         ):

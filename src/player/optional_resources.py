@@ -25,9 +25,9 @@ from .session import get_app_storage_dir
 RESOURCE_MANIFEST_NAME = "keytune-resource.json"
 RESOURCE_REVISIONS = {
     "node": 1,
-    "youtube": 1,
-    "youtubejs": 1,
-    "autodj": 1,
+    "youtube": 2,
+    "youtubejs": 2,
+    "autodj": 2,
 }
 # These resources predate resource revisions and are safe to reuse across
 # KeyTune updates. AutoDJ is intentionally omitted so affected installations

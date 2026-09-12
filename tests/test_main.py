@@ -69,6 +69,13 @@ class MainArgumentFilteringTests(unittest.TestCase):
         self.assertEqual(result, 0)
         import_ytmusicapi.assert_called_once_with()
 
+    @patch("player.youtube_music.youtubejs_runtime.validate_youtubejs_dependencies")
+    def test_youtubejs_dependencies_smoke_test_validates_node_resolver(self, validate):
+        result = main._run_youtubejs_dependencies_smoke_test()
+
+        self.assertEqual(result, 0)
+        validate.assert_called_once_with()
+
     @patch("player.autodj.worker.main", return_value=0)
     @patch("player.autodj.dependencies.activate_autodj_dependencies")
     def test_autodj_analyzer_mode_bypasses_normal_application_startup(

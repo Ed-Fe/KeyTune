@@ -78,6 +78,26 @@ class OptionalResourcesTests(unittest.TestCase):
             with patch.object(optional_resources, "get_optional_resource_dir", return_value=resource_dir):
                 self.assertFalse(optional_resources.optional_resource_installed("autodj"))
 
+    def test_previous_autodj_revision_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resource_dir = Path(temporary) / "autodj"
+            required_path = resource_dir / "site-packages" / "librosa"
+            required_path.mkdir(parents=True)
+            (resource_dir / optional_resources.RESOURCE_MANIFEST_NAME).write_text(
+                json.dumps(
+                    {
+                        "resource": "autodj",
+                        "app_version": APP_VERSION,
+                        "resource_revision": optional_resources.RESOURCE_REVISIONS["autodj"] - 1,
+                        "required_paths": ["site-packages/librosa"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with patch.object(optional_resources, "get_optional_resource_dir", return_value=resource_dir):
+                self.assertFalse(optional_resources.optional_resource_installed("autodj"))
+
     def test_extract_archive_rejects_parent_traversal(self):
         with tempfile.TemporaryDirectory() as temporary:
             archive_path = Path(temporary) / "resource.zip"

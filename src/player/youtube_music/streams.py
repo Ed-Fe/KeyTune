@@ -96,7 +96,7 @@ def resolve_stream_url(media_path):
     return resolve_stream_playback(media_path).stream_url
 
 
-def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_player_client=""):
+def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_player_client="", allow_youtubejs=True):
     global _PRERELEASE_SELF_HEAL_ATTEMPTED
 
     normalized_media_path = str(media_path or "").strip()
@@ -111,7 +111,7 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
     yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
     playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
 
-    if youtubejs_resolver_enabled():
+    if allow_youtubejs and youtubejs_resolver_enabled():
         youtubejs_started_at = time.monotonic()
         try:
             youtubejs_stream = resolve_youtubejs_stream(

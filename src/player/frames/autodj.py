@@ -31,6 +31,7 @@ class FrameAutoDJMixin:
             Path(get_app_storage_dir()) / "autodj-analysis.db",
             remote_resolver=lambda media_path: self._get_youtube_music_service().resolve_stream_playback(media_path),
             remote_retry_handler=self._handle_autodj_remote_download_retry,
+            remote_fallback_resolver=lambda media_path: self._get_youtube_music_service().resolve_analysis_fallback(media_path),
         )
         self._autodj_transition_requests = {}
         self._autodj_session_requests = {}
@@ -98,13 +99,31 @@ class FrameAutoDJMixin:
             service.advance_stream_playback_after_http_403()
 
     def _shutdown_autodj_service(self):
-        self._autodj_transition_requests = {}
+        self._discard_autodj_transition_requests()
         for request in getattr(self, "_autodj_session_requests", {}).values():
             request.set()
         self._autodj_session_requests = {}
         self._autodj_session_results = {}
         self._autodj_session_retry_at = {}
         self.autodj_service = None
+
+    def _discard_autodj_transition_requests(self, *, keep_pair=None):
+        retained = {}
+        for pair, request in getattr(self, "_autodj_transition_requests", {}).items():
+            if pair == keep_pair:
+                retained[pair] = request
+                continue
+            cancel_event = request.get("cancel_event") if isinstance(request, dict) else None
+            if cancel_event is not None:
+                cancel_event.set()
+        self._autodj_transition_requests = retained
+
+    @staticmethod
+    def _analyze_autodj_media(service, media_path, *, cancel_event=None, deadline=None):
+        kwargs = {}
+        if getattr(service, "supports_analysis_deadline", False) is True:
+            kwargs.update(cancel_event=cancel_event, deadline=deadline)
+        return service.analyze(media_path, **kwargs)
 
     def on_start_autodj_session(self, _event):
         if not autodj_dependencies_available():
@@ -192,7 +211,7 @@ class FrameAutoDJMixin:
         if not self._remove_autodj_prepared_paths(state, [next_path]):
             return False
         state.autodj_remaining_items = alternatives + [next_path]
-        self._autodj_transition_requests = {}
+        self._discard_autodj_transition_requests()
         self._refresh_playlist_browser()
         self._announce(_("Escolhendo outra próxima faixa."))
         self._maybe_fill_autodj_session(state)
@@ -212,7 +231,7 @@ class FrameAutoDJMixin:
         self._remove_autodj_prepared_paths(state, prepared_paths)
         combined = list(state.autodj_remaining_items) + prepared_paths
         state.autodj_remaining_items = list(dict.fromkeys(combined))
-        self._autodj_transition_requests = {}
+        self._discard_autodj_transition_requests()
         self._refresh_playlist_browser()
         self._announce(_("Recalculando a sequência AutoDJ."))
         self._maybe_fill_autodj_session(state)
@@ -320,23 +339,63 @@ class FrameAutoDJMixin:
         getattr(self, "_autodj_session_retry_at", {}).pop(state_key, None)
 
     def _defer_autodj_advance(self, state):
-        """Resume an exhausted AutoDJ session after its next track is ready."""
+        """Keep an exhausted AutoDJ session playing while analysis catches up."""
         if (
             state is None
             or not state.autodj_session
             or state.autodj_preparation_paused
             or not state.autodj_remaining_items
+            or state is not self._get_active_playlist_state()
         ):
             return False
-        state.autodj_waiting_for_next = True
-        self._maybe_fill_autodj_session(state)
-        self._refresh_autodj_session_ui(state)
+
+        # There is no audio left under which a pending analysis can finish.
+        # Preserve continuity by consuming the next source item immediately;
+        # its transition safely falls back to the regular crossfade.
+        self._cancel_autodj_session(state)
+        fallback_paths = self._append_autodj_session_paths(state, count=1)
+        if not fallback_paths or not state.move_in_playback_order(1, wrap=False):
+            return False
+
+        state.autodj_waiting_for_next = False
+        self._refresh_playlist_browser()
         if hasattr(self, "_set_status_message"):
             self._set_status_message(
-                _("AutoDJ preparando a próxima faixa para continuar a reprodução..."),
-                auto_clear_ms=0,
+                _("O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."),
+                auto_clear_ms=7000,
             )
+        self._play_media(index=self._get_active_playlist_index())
+        self._maybe_fill_autodj_session(state)
         return True
+
+    def _append_autodj_session_paths(self, state, paths=None, *, count=None):
+        """Append unique future paths and remove consumed source candidates."""
+        limit = None if count is None else max(0, int(count))
+        if limit == 0:
+            return []
+
+        available_paths = list(state.autodj_remaining_items if paths is None else paths)
+        selected_paths = []
+        unavailable_paths = set(state.items)
+        for path in available_paths:
+            if not path or path in unavailable_paths:
+                continue
+            selected_paths.append(path)
+            unavailable_paths.add(path)
+            if limit is not None and len(selected_paths) >= limit:
+                break
+
+        # PlaylistState indexes entries by path, so duplicate source entries
+        # cannot safely coexist in the dynamic queue. Remove every occurrence
+        # already prepared to prevent an endless refill cycle.
+        state.autodj_remaining_items = [
+            path for path in state.autodj_remaining_items
+            if path not in unavailable_paths
+        ]
+        if selected_paths:
+            selected_labels = [self._autodj_source_label(state, path) for path in selected_paths]
+            state.append_items(selected_paths, selected_labels)
+        return selected_paths
 
     def _maybe_fill_autodj_session(self, state=None):
         state = state or self._get_active_playlist_state()
@@ -370,7 +429,21 @@ class FrameAutoDJMixin:
 
         def worker():
             try:
-                current_analysis = self._audio_analysis_from_result(service.analyze(current_path))
+                analysis_deadline = time.monotonic() + float(
+                    getattr(
+                        self,
+                        "_autodj_session_candidate_wait_seconds",
+                        AUTODJ_SESSION_CANDIDATE_WAIT_SECONDS,
+                    )
+                )
+                current_analysis = self._audio_analysis_from_result(
+                    self._analyze_autodj_media(
+                        service,
+                        current_path,
+                        cancel_event=cancel_event,
+                        deadline=analysis_deadline,
+                    )
+                )
                 pending = iter(enumerate(candidate_paths))
                 worker_lock = threading.Lock()
                 candidates = []
@@ -386,7 +459,14 @@ class FrameAutoDJMixin:
                             except StopIteration:
                                 return
                         try:
-                            analysis = self._audio_analysis_from_result(service.analyze(candidate_path))
+                            analysis = self._audio_analysis_from_result(
+                                self._analyze_autodj_media(
+                                    service,
+                                    candidate_path,
+                                    cancel_event=cancel_event,
+                                    deadline=analysis_deadline,
+                                )
+                            )
                             candidate = QueueCandidate(
                                 candidate_path,
                                 self._autodj_source_artist(state, candidate_path),
@@ -394,22 +474,23 @@ class FrameAutoDJMixin:
                                 source_index,
                             )
                             with worker_lock:
-                                candidates.append(candidate)
+                                if not cancel_event.is_set() and not preparation_finished.is_set():
+                                    candidates.append(candidate)
                         except Exception as exc:
                             _logger.warning("AutoDJ session candidate analysis failed for %r: %s", candidate_path, exc)
 
+                worker_count = min(
+                    max(1, int(getattr(service, "max_parallel_analyses", 3))),
+                    max(1, len(candidate_paths)),
+                )
                 workers = [
                     threading.Thread(target=consume, daemon=True, name=f"autodj-session-{index + 1}")
-                    for index in range(min(3, max(1, len(candidate_paths))))
+                    for index in range(worker_count)
                 ]
                 for candidate_worker in workers:
                     candidate_worker.start()
                 for candidate_worker in workers:
-                    remaining_wait = max(
-                        0.0,
-                        float(getattr(self, "_autodj_session_candidate_wait_seconds", AUTODJ_SESSION_CANDIDATE_WAIT_SECONDS))
-                        - (time.monotonic() - worker_started_at),
-                    )
+                    remaining_wait = max(0.0, analysis_deadline - time.monotonic())
                     candidate_worker.join(remaining_wait)
                 preparation_finished.set()
                 if cancel_event.is_set():
@@ -435,7 +516,6 @@ class FrameAutoDJMixin:
                     cancel_event,
                 )
 
-        worker_started_at = time.monotonic()
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("AutoDJ preparando as próximas faixas da sessão..."), auto_clear_ms=0)
         self._refresh_autodj_session_ui(state)
@@ -476,24 +556,16 @@ class FrameAutoDJMixin:
             return
         if state.current_media_path != current_path:
             return
-        if error_message or not selections:
-            state.autodj_preparation_paused = True
-            state.autodj_waiting_for_next = False
-            self._autodj_session_retry_at.pop(state_key, None)
-            reason = str(error_message or _("nenhuma faixa pôde ser preparada"))
-            if hasattr(self, "_set_status_message"):
-                self._set_status_message(
-                    _("A preparação do AutoDJ foi pausada após uma falha: {reason}").format(reason=reason),
-                    auto_clear_ms=0,
-                )
-            self._refresh_autodj_session_ui(state)
-            return
-
         selected_paths = [selection.path for selection in selections if selection.path not in state.items]
-        selected_labels = [self._autodj_source_label(state, path) for path in selected_paths]
-        state.append_items(selected_paths, selected_labels)
-        selected_set = set(selected_paths)
-        state.autodj_remaining_items = [path for path in state.autodj_remaining_items if path not in selected_set]
+        used_fallback = bool(error_message or not selected_paths)
+        if used_fallback:
+            upcoming_count = max(0, len(state.items) - state.current_index - 1)
+            selected_paths = self._append_autodj_session_paths(
+                state,
+                count=max(0, 5 - upcoming_count),
+            )
+        else:
+            selected_paths = self._append_autodj_session_paths(state, selected_paths)
         self._autodj_session_retry_at.pop(state_key, None)
         resume_waiting_session = bool(state.autodj_waiting_for_next)
         state.autodj_waiting_for_next = False
@@ -504,10 +576,17 @@ class FrameAutoDJMixin:
                 self._play_media(index=self._get_active_playlist_index())
                 return
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(
-                _("AutoDJ preparou {count} próximas faixas.").format(count=len(selected_paths)),
-                auto_clear_ms=5000,
-            )
+            if used_fallback:
+                self._set_status_message(
+                    _("O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."),
+                    auto_clear_ms=7000,
+                )
+            else:
+                self._set_status_message(
+                    _("AutoDJ selecionou {count} próximas faixas.").format(count=len(selected_paths)),
+                    auto_clear_ms=5000,
+                )
+        self._refresh_autodj_session_ui(state)
 
     def _refresh_autodj_session_ui(self, state=None):
         current_index = self.notebook.GetSelection() if hasattr(self, "notebook") else wx.NOT_FOUND
@@ -526,31 +605,58 @@ class FrameAutoDJMixin:
 
         prepared_count = max(0, len(state.items) - state.current_index - 1)
         remaining_count = len(state.autodj_remaining_items)
+        service = getattr(self, "autodj_service", None)
+        get_status = getattr(service, "get_analysis_status", None)
+        analysis_statuses = {
+            path: get_status(path) if callable(get_status) else "unknown"
+            for path in state.items[max(0, state.current_index):]
+        }
+        upcoming = state.items[state.current_index + 1:]
+        analyzed_count = sum(analysis_statuses.get(path) == "ready" for path in upcoming)
+        failed_count = sum(analysis_statuses.get(path) == "failed" for path in upcoming)
         if state.autodj_preparation_paused:
             activity = _("Preparação pausada.")
         elif id(state) in getattr(self, "_autodj_session_requests", {}):
             activity = _("Analisando próximas faixas.")
         else:
             activity = _("Sessão ativa.")
+        if analysis_statuses.get(state.current_media_path) == "failed":
+            activity += " " + _("A análise da faixa atual falhou.")
+        elif failed_count:
+            activity += " " + _("Há faixas com falha na análise.")
         summary = _(
-            "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
+            "{activity} Origem: {source}. Na fila: {queued}. Analisadas na fila: {analyzed}. "
+            "Com falha na fila: {failed}. Restantes: {remaining}."
         ).format(
             activity=activity,
             source=state.autodj_source_title or _("playlist original"),
-            prepared=prepared_count,
+            queued=prepared_count,
+            analyzed=analyzed_count,
+            failed=failed_count,
             remaining=remaining_count,
         )
         details, next_status = self._autodj_transition_description(state)
         statuses = {}
+        analysis_labels = {
+            "ready": _("Analisada"),
+            "failed": _("Falha na análise"),
+            "pending": _("Análise pendente"),
+            "unknown": _("Na fila, análise não confirmada"),
+        }
         for index, path in enumerate(state.items):
             if index < state.current_index:
                 statuses[path] = _("Tocada")
             elif index == state.current_index:
-                statuses[path] = _("Tocando")
+                statuses[path] = (
+                    _("Tocando, falha na análise")
+                    if analysis_statuses.get(path) == "failed" else _("Tocando")
+                )
             elif index == state.current_index + 1:
-                statuses[path] = next_status
+                statuses[path] = next_status + ". " + analysis_labels.get(
+                    analysis_statuses.get(path), analysis_labels["unknown"]
+                )
             else:
-                statuses[path] = _("Preparada")
+                statuses[path] = analysis_labels.get(analysis_statuses.get(path), analysis_labels["unknown"])
         if browser is not None and hasattr(browser, "set_item_statuses"):
             browser.set_item_statuses(statuses)
         if panel is not None:
@@ -566,14 +672,14 @@ class FrameAutoDJMixin:
     def _autodj_transition_description(self, state):
         pair = self._autodj_transition_pair(state)
         if pair is None:
-            return _("Próxima transição: aguardando uma faixa preparada."), _("Preparada")
+            return _("Próxima transição: aguardando uma faixa na fila."), _("Na fila")
         request = getattr(self, "_autodj_transition_requests", {}).get(pair)
         if not request or request.get("status") == "pending":
             return _("Próxima transição: analisando."), _("Próxima, analisando transição")
         if request.get("status") == "failed":
             reason = str(request.get("error") or _("falha ao analisar as faixas"))
             return (
-                _("Próxima transição: será usada a transição normal. Motivo: {reason}.").format(
+                _("Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}.").format(
                     reason=reason
                 ),
                 _("Próxima, transição normal"),
@@ -613,6 +719,7 @@ class FrameAutoDJMixin:
             "ajuste de tempo excederia o limite": _("diferença de BPM acima do limite seguro"),
             "grade de batidas insuficiente": _("poucas batidas utilizáveis na faixa atual"),
             "ponto de entrada indisponível": _("nenhum ponto de entrada adequado na próxima faixa"),
+            "análise limitada pela duração": _("a faixa é longa demais para uma análise rítmica completa"),
         }.get(str(reason or ""), _("análise incompatível"))
 
     @staticmethod
@@ -645,7 +752,7 @@ class FrameAutoDJMixin:
             self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."))
             return False
         self.settings.autodj_enabled = enabling
-        self._autodj_transition_requests = {}
+        self._discard_autodj_transition_requests()
         self._refresh_autodj_menu_state()
         apply_filters = getattr(self, "_apply_equalizer_state_to_current_playback", None)
         if callable(apply_filters):
@@ -668,7 +775,7 @@ class FrameAutoDJMixin:
             getattr(self.settings, "autodj_beats", 16),
         )
         if current_values != previous_values:
-            self._autodj_transition_requests = {}
+            self._discard_autodj_transition_requests()
             apply_filters = getattr(self, "_apply_equalizer_state_to_current_playback", None)
             if callable(apply_filters):
                 apply_filters()
@@ -793,8 +900,7 @@ class FrameAutoDJMixin:
         if pair is None:
             return False
 
-        requests = getattr(self, "_autodj_transition_requests", {})
-        self._autodj_transition_requests = {key: value for key, value in requests.items() if key == pair}
+        self._discard_autodj_transition_requests(keep_pair=pair)
         if pair in self._autodj_transition_requests:
             existing_request = self._autodj_transition_requests[pair]
             if (
@@ -805,7 +911,14 @@ class FrameAutoDJMixin:
             else:
                 return existing_request.get("status") == "ready"
 
-        request = {"status": "pending", "plan": None, "outgoing": None, "incoming": None}
+        analysis_cancel_event = threading.Event()
+        request = {
+            "status": "pending",
+            "plan": None,
+            "outgoing": None,
+            "incoming": None,
+            "cancel_event": analysis_cancel_event,
+        }
         self._autodj_transition_requests[pair] = request
         profile_name = str(getattr(self.settings, "autodj_profile", "smooth") or "smooth")
         beat_count = int(getattr(self.settings, "autodj_beats", 16) or 16)
@@ -818,12 +931,32 @@ class FrameAutoDJMixin:
 
         def worker():
             try:
-                outgoing = self._audio_analysis_from_result(service.analyze(pair[0]))
+                analysis_deadline = time.monotonic() + float(
+                    getattr(
+                        self,
+                        "_autodj_transition_candidate_wait_seconds",
+                        AUTODJ_SESSION_CANDIDATE_WAIT_SECONDS,
+                    )
+                )
+                outgoing = self._audio_analysis_from_result(
+                    self._analyze_autodj_media(
+                        service,
+                        pair[0],
+                        cancel_event=analysis_cancel_event,
+                        deadline=analysis_deadline,
+                    )
+                )
                 analyzed_candidates = []
+                analysis_finished = analysis_cancel_event
 
                 def analyze_candidate(candidate_index, candidate_path):
                     try:
-                        result = service.analyze(candidate_path)
+                        result = self._analyze_autodj_media(
+                            service,
+                            candidate_path,
+                            cancel_event=analysis_cancel_event,
+                            deadline=analysis_deadline,
+                        )
                         incoming = self._audio_analysis_from_result(result)
                         plan = AutoDJPlanner().plan(
                             outgoing,
@@ -862,8 +995,10 @@ class FrameAutoDJMixin:
                 candidate_lock = threading.Lock()
 
                 def consume_candidates():
-                    while True:
+                    while not analysis_finished.is_set():
                         with candidate_lock:
+                            if analysis_finished.is_set():
+                                return
                             try:
                                 candidate_index, candidate_path = next(pending_candidates)
                             except StopIteration:
@@ -871,22 +1006,31 @@ class FrameAutoDJMixin:
                         candidate = analyze_candidate(candidate_index, candidate_path)
                         if candidate is not None:
                             with candidate_lock:
-                                analyzed_candidates.append(candidate)
+                                if not analysis_finished.is_set():
+                                    analyzed_candidates.append(candidate)
 
+                worker_count = min(
+                    max(1, int(getattr(service, "max_parallel_analyses", 3))),
+                    max(1, len(candidate_paths)),
+                )
                 candidate_workers = [
                     threading.Thread(
                         target=consume_candidates,
                         daemon=True,
                         name=f"autodj-candidate-{index + 1}",
                     )
-                    for index in range(min(3, max(1, len(candidate_paths))))
+                    for index in range(worker_count)
                 ]
                 for candidate_worker in candidate_workers:
                     candidate_worker.start()
                 for candidate_worker in candidate_workers:
-                    candidate_worker.join()
+                    remaining_wait = max(0.0, analysis_deadline - time.monotonic())
+                    candidate_worker.join(remaining_wait)
+                analysis_finished.set()
+                with candidate_lock:
+                    completed_candidates = list(analyzed_candidates)
                 chosen = AutoDJPlanner.choose_next(
-                    analyzed_candidates,
+                    completed_candidates,
                     recent_artists=recent_artists,
                     current_energy=(
                         outgoing.exit_energy
@@ -917,6 +1061,8 @@ class FrameAutoDJMixin:
                     None,
                     str(exc) or exc.__class__.__name__,
                 )
+            finally:
+                analysis_cancel_event.set()
 
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("AutoDJ analisando a faixa atual e as próximas opções..."), auto_clear_ms=0)
@@ -982,7 +1128,7 @@ class FrameAutoDJMixin:
         if not request or request.get("status") != "ready":
             return None
         plan = request.get("plan")
-        if plan is None or plan.fallback_crossfade:
+        if plan is None:
             return None
         return {
             "pair": pair,

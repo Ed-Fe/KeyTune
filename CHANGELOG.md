@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2026-09-12
+
+### Corrigido
+
+- **AutoDJ mais confiável**: a música continua tocando mesmo quando a análise demora ou falha; se necessário, a próxima faixa começa com uma transição normal.
+- **Transições mais naturais**: o AutoDJ identifica melhor o ritmo das músicas e evita mudanças que pareçam lentas demais ou rápidas demais.
+- **Volume mais estável**: a troca entre faixas fica mais equilibrada, e a música nova não continua baixa depois da transição.
+- **Som original preservado**: graves e médios deixam de ser reduzidos durante as transições; os perfis do AutoDJ ajustam apenas a passagem de volume entre as músicas.
+- **Playlists do YouTube Music**: playlists com miniaturas ausentes continuam carregando, e a reprodução pode recorrer a uma alternativa quando um método falha.
+- **Recursos adicionais**: melhorias de compatibilidade tornam mais confiáveis a instalação e o uso dos componentes do AutoDJ e do YouTube Music.
+
 ## [2.0.4] - 2026-09-05
 
 ### Corrigido

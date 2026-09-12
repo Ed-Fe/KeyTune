@@ -14,6 +14,7 @@ _WATCH_PLAYLIST_PARSER_LOCK = threading.RLock()
 _watch_playlist_parser_depth = 0
 _watch_playlist_parser_original = None
 _watch_playlist_parser_module = None
+_watch_playlist_parser_attribute = ""
 
 
 @dataclass(frozen=True)
@@ -259,23 +260,41 @@ def tolerant_watch_playlist_parsing():
         yield
         return
 
-    global _watch_playlist_parser_depth, _watch_playlist_parser_module, _watch_playlist_parser_original
+    global _watch_playlist_parser_depth, _watch_playlist_parser_module
+    global _watch_playlist_parser_original, _watch_playlist_parser_attribute
     with _WATCH_PLAYLIST_PARSER_LOCK:
         if _watch_playlist_parser_depth == 0:
-            original_get_tab_browse_id = getattr(watch_mixin, "get_tab_browse_id", None)
+            parser_attribute = "get_tab_browse_ids"
+            original_get_tab_browse_id = getattr(watch_mixin, parser_attribute, None)
+            if not callable(original_get_tab_browse_id):
+                # ytmusicapi 1.12.0 checks tabs one at a time; 1.12.1 and
+                # later introduced the plural helper. Support both managed
+                # runtime versions.
+                parser_attribute = "get_tab_browse_id"
+                original_get_tab_browse_id = getattr(watch_mixin, parser_attribute, None)
             if not callable(original_get_tab_browse_id):
                 yield
                 return
             _watch_playlist_parser_original = original_get_tab_browse_id
             _watch_playlist_parser_module = watch_mixin
+            _watch_playlist_parser_attribute = parser_attribute
 
-            def get_tab_browse_id_tolerantly(watch_next_renderer, tab_id):
-                try:
-                    return _watch_playlist_parser_original(watch_next_renderer, tab_id)
-                except (KeyError, IndexError, TypeError, AttributeError):
-                    return None
+            if parser_attribute == "get_tab_browse_ids":
+                def get_tab_browse_ids_tolerantly(watch_next_renderer):
+                    try:
+                        return _watch_playlist_parser_original(watch_next_renderer)
+                    except (KeyError, IndexError, TypeError, AttributeError):
+                        return {}
 
-            watch_mixin.get_tab_browse_id = get_tab_browse_id_tolerantly
+                setattr(watch_mixin, parser_attribute, get_tab_browse_ids_tolerantly)
+            else:
+                def get_tab_browse_id_tolerantly(watch_next_renderer, tab_id):
+                    try:
+                        return _watch_playlist_parser_original(watch_next_renderer, tab_id)
+                    except (KeyError, IndexError, TypeError, AttributeError):
+                        return None
+
+                setattr(watch_mixin, parser_attribute, get_tab_browse_id_tolerantly)
         _watch_playlist_parser_depth += 1
     try:
         yield
@@ -283,9 +302,14 @@ def tolerant_watch_playlist_parsing():
         with _WATCH_PLAYLIST_PARSER_LOCK:
             _watch_playlist_parser_depth -= 1
             if _watch_playlist_parser_depth == 0:
-                _watch_playlist_parser_module.get_tab_browse_id = _watch_playlist_parser_original
+                setattr(
+                    _watch_playlist_parser_module,
+                    _watch_playlist_parser_attribute,
+                    _watch_playlist_parser_original,
+                )
                 _watch_playlist_parser_module = None
                 _watch_playlist_parser_original = None
+                _watch_playlist_parser_attribute = ""
 
 
 def normalize_track_items(raw_items, *, badge):

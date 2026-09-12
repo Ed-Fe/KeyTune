@@ -114,6 +114,8 @@ class FrameEqualizerMixin:
 
     @staticmethod
     def _update_autodj_mix_filter_on_player(player, bass_gain_db, mid_gain_db):
+        if abs(float(bass_gain_db)) < 0.01 and abs(float(mid_gain_db)) < 0.01:
+            return True
         command_filter = getattr(player, "command_audio_filter", None)
         if not callable(command_filter):
             return False

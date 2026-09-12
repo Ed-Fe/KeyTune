@@ -6,6 +6,7 @@ from player.mpv_runtime import bootstrap_mpv_runtime
 
 _SMTC_SMOKE_TEST_ARGUMENT = "--smtc-smoke-test"
 _YOUTUBE_DEPENDENCIES_SMOKE_TEST_ARGUMENT = "--youtube-dependencies-smoke-test"
+_YOUTUBEJS_DEPENDENCIES_SMOKE_TEST_ARGUMENT = "--youtubejs-dependencies-smoke-test"
 _AUTODJ_ANALYZER_ARGUMENT = "--autodj-analyzer"
 _PLUGIN_WORKER_ARGUMENT = "--plugin-worker"
 
@@ -84,6 +85,13 @@ def _run_youtube_dependencies_smoke_test():
     return 0
 
 
+def _run_youtubejs_dependencies_smoke_test():
+    from player.youtube_music.youtubejs_runtime import validate_youtubejs_dependencies
+
+    validate_youtubejs_dependencies()
+    return 0
+
+
 def main():
     if _AUTODJ_ANALYZER_ARGUMENT in sys.argv[1:]:
         from player.autodj.dependencies import activate_autodj_dependencies
@@ -101,6 +109,8 @@ def main():
         return _run_smtc_smoke_test()
     if _YOUTUBE_DEPENDENCIES_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
         return _run_youtube_dependencies_smoke_test()
+    if _YOUTUBEJS_DEPENDENCIES_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
+        return _run_youtubejs_dependencies_smoke_test()
 
     bootstrap_mpv_runtime()
 

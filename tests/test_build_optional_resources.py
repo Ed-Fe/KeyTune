@@ -25,7 +25,9 @@ class OptionalResourceBuildTests(unittest.TestCase):
             args = SimpleNamespace(node_executable="node", app_version="2.0.0", architecture="x64")
 
             def install(command, *, cwd, check):
-                self.assertEqual(command, [str(node), str(npm_cli), "ci", "--omit=dev"])
+                resolved_node = node.resolve()
+                resolved_npm_cli = resolved_node.parent / "node_modules/npm/bin/npm-cli.js"
+                self.assertEqual(command, [str(resolved_node), str(resolved_npm_cli), "ci", "--omit=dev"])
                 package = cwd / "node_modules/youtubei.js/package.json"
                 package.parent.mkdir(parents=True)
                 package.write_text(json.dumps({"version": "1.0.0"}), encoding="utf-8")
@@ -44,14 +46,15 @@ class OptionalResourceBuildTests(unittest.TestCase):
 
             def install(command, **_kwargs):
                 target = Path(command[command.index("--target") + 1])
-                for package in ("librosa", "numpy", "av"):
+                for package in ("librosa", "numpy", "scipy", "numba", "llvmlite", "av"):
                     (target / package).mkdir(parents=True)
                     (target / package / "__init__.py").write_text("", encoding="utf-8")
                 for distribution, version in (
-                    ("librosa", "0.11.0"),
-                    ("numpy", "2.3.5"),
-                    ("scipy", "1.16.3"),
-                    ("numba", "0.63.1"),
+                    ("librosa", "1.0.0"),
+                    ("numpy", "2.5.3"),
+                    ("scipy", "1.18.1"),
+                    ("numba", "0.67.0"),
+                    ("llvmlite", "0.49.0"),
                     ("av", "18.1.0"),
                 ):
                     metadata_dir = target / f"{distribution}-{version}.dist-info"
@@ -64,7 +67,9 @@ class OptionalResourceBuildTests(unittest.TestCase):
             archive_path = root / "KeyTune-AutoDJ-win-x64.zip"
             with zipfile.ZipFile(archive_path) as archive:
                 names = set(archive.namelist())
-            self.assertIn("site-packages/librosa-0.11.0.dist-info/METADATA", names)
+            self.assertIn("site-packages/librosa-1.0.0.dist-info/METADATA", names)
+            for package in ("librosa", "numpy", "scipy", "numba", "llvmlite", "av"):
+                self.assertIn(f"site-packages/{package}/__init__.py", names)
             self.assertFalse(any("autodj-analyzer.exe" in name for name in names))
             self.assertFalse(any(name.endswith("python311.dll") for name in names))
             command = run.call_args.args[0]

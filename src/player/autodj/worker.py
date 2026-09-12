@@ -9,13 +9,25 @@ import sys
 from player.autodj.librosa_analyzer import LibrosaAnalyzer
 
 
+_WORKER_ENVIRONMENT_DEFAULTS = {
+    "NUMBA_THREADING_LAYER": "workqueue",
+    "NUMBA_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+}
+
+
 def main(argv=None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if len(arguments) != 4:
         return 2
-    previous_worker_value = os.environ.get("KEYTUNE_AUTODJ_ANALYZER_WORKER")
+    managed_environment = ("KEYTUNE_AUTODJ_ANALYZER_WORKER", *_WORKER_ENVIRONMENT_DEFAULTS)
+    previous_environment = {name: os.environ.get(name) for name in managed_environment}
     os.environ["KEYTUNE_AUTODJ_ANALYZER_WORKER"] = "1"
-    os.environ.setdefault("NUMBA_THREADING_LAYER", "workqueue")
+    for name, value in _WORKER_ENVIRONMENT_DEFAULTS.items():
+        os.environ[name] = value
     result_path = Path(arguments[3])
     try:
         try:
@@ -30,14 +42,22 @@ def main(argv=None) -> int:
             payload = {"ok": False, "error": str(exc) or exc.__class__.__name__}
             exit_code = 1
     finally:
-        if previous_worker_value is None:
-            os.environ.pop("KEYTUNE_AUTODJ_ANALYZER_WORKER", None)
-        else:
-            os.environ["KEYTUNE_AUTODJ_ANALYZER_WORKER"] = previous_worker_value
-    result_path.write_text(
-        json.dumps(payload, ensure_ascii=True, separators=(",", ":")),
-        encoding="utf-8",
-    )
+        for name, previous_value in previous_environment.items():
+            if previous_value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = previous_value
+    try:
+        result_path.write_text(
+            json.dumps(payload, ensure_ascii=True, separators=(",", ":")),
+            encoding="utf-8",
+        )
+    except OSError:
+        # The main application may be closing while this isolated process is
+        # still finishing. Its temporary result directory is then gone and
+        # there is no caller left to consume a result; avoid an unhandled
+        # traceback from the child process during shutdown.
+        return exit_code or 1
     return exit_code
 
 

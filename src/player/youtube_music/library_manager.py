@@ -647,7 +647,12 @@ class YouTubeMusicLibraryManager:
         normalized_playlist_id = str(playlist_id or "").strip()
 
         if is_watch_playlist_id(normalized_playlist_id):
-            playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=200)
+            # Personalized mixes use the same Watch Next response as radios.
+            # Some responses omit an endpoint on an optional tab; ytmusicapi
+            # otherwise raises KeyError while parsing a queue whose tracks are
+            # available. Use the shared tolerant parser here too.
+            with tolerant_watch_playlist_parsing():
+                playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=200)
             playlist_title = _("Seleção do YouTube Music")
             tracks = playlist.get("tracks") or []
         else:

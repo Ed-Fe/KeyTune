@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import io
 import pathlib
+from subprocess import CompletedProcess
 import sys
+import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -80,6 +82,37 @@ class YouTubeJSRuntimeTests(unittest.TestCase):
         self.assertEqual(first["stream_url"], "https://example.com/audio")
         self.assertEqual(second["stream_url"], "https://example.com/audio")
         start_process.assert_called_once()
+        self.assertIs(start_process.call_args.kwargs["stderr"], youtubejs_runtime.subprocess.STDOUT)
+
+    def test_validate_dependencies_checks_script_and_package_import(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resolver_dir = pathlib.Path(temporary)
+            resolver_script = resolver_dir / "resolve.mjs"
+            package_dir = resolver_dir / "node_modules" / "youtubei.js"
+            resolver_script.write_text("export {};", encoding="utf-8")
+            package_dir.mkdir(parents=True)
+            with patch.object(
+                youtubejs_runtime,
+                "find_all_available_javascript_runtimes",
+                return_value={"node": "C:/Node/node.exe"},
+            ), patch.object(
+                youtubejs_runtime,
+                "_youtubejs_resolver_dir",
+                return_value=resolver_dir,
+            ), patch.object(
+                youtubejs_runtime,
+                "_youtubejs_package_dir",
+                return_value=package_dir,
+            ), patch.object(
+                youtubejs_runtime.subprocess,
+                "run",
+                side_effect=lambda command, **_kwargs: CompletedProcess(command, 0, "", ""),
+            ) as run:
+                youtubejs_runtime.validate_youtubejs_dependencies()
+
+        self.assertEqual(run.call_count, 2)
+        self.assertIn("--check", run.call_args_list[0].args[0])
+        self.assertIn("await import('youtubei.js')", run.call_args_list[1].args[0])
 
     @patch("player.youtube_music.youtubejs_runtime.os.path.isfile", return_value=True)
     @patch("player.youtube_music.youtubejs_runtime.os.path.isdir", return_value=False)

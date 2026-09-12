@@ -28,6 +28,9 @@ class AudioAnalysis:
     loudness_db: float | None = None
     entry_vocal_probability: float = 0.0
     exit_vocal_probability: float = 0.0
+    analysis_truncated: bool = False
+    entry_loudness_db: float | None = None
+    exit_loudness_db: float | None = None
 
 
 class WaveAnalyzer:
