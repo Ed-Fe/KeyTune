@@ -75,6 +75,40 @@ class AudioOutputHelperTests(unittest.TestCase):
         self.assertEqual(frame._autodj_sound_player.device_id, "wasapi/{device-1}")
         self.assertEqual(frame._autodj_sound_player.reload_calls, 1)
 
+    def test_device_change_restores_playback_immediately(self):
+        class Player:
+            def __init__(self):
+                self.restored_snapshots = []
+
+            def set_audio_output_device(self, _device_id):
+                pass
+
+            def reload_audio_output(self):
+                pass
+
+            def restore_playback_state(self, snapshot):
+                self.restored_snapshots.append(snapshot)
+
+        class Frame(AudioOutputMixin):
+            def __init__(self):
+                self.player = Player()
+                self._player_keys = ("active",)
+
+            def _managed_player(self, _player_key):
+                return self.player
+
+            def _best_playback_snapshot_for_audio_swap(self, _active_player):
+                return (42.0, False)
+
+            def _schedule_audio_output_state_restore(self, _player, _snapshot):
+                pass
+
+        frame = Frame()
+
+        frame._apply_audio_output_device_to_players("wasapi/{device-1}")
+
+        self.assertEqual(frame.player.restored_snapshots, [(42.0, False)])
+
 
 if __name__ == "__main__":
     unittest.main()

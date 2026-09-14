@@ -256,6 +256,10 @@ class AudioOutputMixin:
                 pass
 
         if playback_snapshot is not None and active_player is not None:
+            try:
+                active_player.restore_playback_state(playback_snapshot)
+            except Exception:
+                pass
             self._schedule_audio_output_state_restore(active_player, playback_snapshot)
 
         return applied_to_any_player

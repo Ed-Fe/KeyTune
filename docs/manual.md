@@ -132,6 +132,7 @@ Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta
 - `]` / `[`: aumentar ou diminuir a velocidade de reprodução
 - `Shift+]` / `Shift+[`: aumentar ou diminuir o tom da reprodução em semitons
 - `Shift+\`: restaurar o tom original
+- `Alt+D`: abrir a seleção da saída de áudio
 - `Ctrl+Alt+L`: alternar o painel de letras
 - `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
 - `Ctrl+Shift+Q`: gerenciar a fila de reprodução

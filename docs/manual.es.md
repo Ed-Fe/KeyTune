@@ -132,6 +132,7 @@ Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos
 - `]` / `[`: aumentar o disminuir la velocidad de reproducción
 - `Shift+]` / `Shift+[`: aumentar o disminuir el tono de la reproducción en semitonos
 - `Shift+\`: restaurar el tono original
+- `Alt+D`: abrir el selector de salida de audio
 - `Ctrl+Alt+L`: alternar el panel de letras
 - `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
 - `Ctrl+Shift+Q`: administrar la cola de reproducción

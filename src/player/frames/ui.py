@@ -174,6 +174,7 @@ class FrameUIMixin:
             "\\ — Restaurar velocidade normal (1x)\n"
             "Shift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\n"
             "Shift+\\ — Restaurar o tom original\n"
+            "Alt+D — Selecionar dispositivo de áudio\n"
             "Menu Reprodução > Dispositivo de áudio — Trocar a saída de som\n"
             "Ctrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\n"
             "Alt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\n"
@@ -421,6 +422,7 @@ class FrameUIMixin:
         self.menu_announce_volume_id = wx.NewIdRef()
         self.menu_announce_status_id = wx.NewIdRef()
         self.menu_refresh_audio_output_devices_id = wx.NewIdRef()
+        self.menu_cycle_audio_output_device_id = wx.NewIdRef()
         self.menu_sleep_timer_dialog_id = wx.NewIdRef()
         self.menu_sleep_timer_end_of_track_id = wx.NewIdRef()
         self.menu_sleep_timer_status_id = wx.NewIdRef()
@@ -452,6 +454,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_increase_pitch_id, _("Aumentar &Tom (Shift+])"))
         playback_menu.Append(self.menu_decrease_pitch_id, _("Diminuir T&om (Shift+[)"))
         playback_menu.Append(self.menu_reset_pitch_id, _("Restaurar &Tom Original (Shift+\\)"))
+        playback_menu.Append(self.menu_cycle_audio_output_device_id, _("Selecionar dispositivo de á&udio\tAlt+D"))
         playback_menu.AppendSubMenu(self.audio_output_menu, _("Dispositivo de áu&dio"))
         playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Te&mporizador"))
         announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
@@ -760,6 +763,7 @@ class FrameUIMixin:
                 (wx.ACCEL_CTRL, ord("O"), self.menu_open_file_id),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("O"), int(self.menu_open_folder_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_ALT, ord("O"), int(self.menu_open_source_id)),
+                (wx.ACCEL_ALT, ord("D"), int(self.menu_cycle_audio_output_device_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("F"), int(self.menu_enqueue_item_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("Q"), int(self.menu_manage_queue_id)),
             ]
@@ -804,6 +808,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_decrease_pitch, id=self.menu_decrease_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_reset_pitch, id=self.menu_reset_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_audio_output_devices, id=self.menu_refresh_audio_output_devices_id)
+        self.Bind(wx.EVT_MENU, self.on_cycle_audio_output_device, id=self.menu_cycle_audio_output_device_id)
         self.Bind(wx.EVT_MENU, self.on_open_sleep_timer, id=self.menu_sleep_timer_dialog_id)
         self.Bind(wx.EVT_MENU, self.on_sleep_timer_end_of_track, id=self.menu_sleep_timer_end_of_track_id)
         self.Bind(wx.EVT_MENU, self.on_sleep_timer_status, id=self.menu_sleep_timer_status_id)

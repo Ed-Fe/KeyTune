@@ -4,7 +4,7 @@ from ...about import AboutDialog
 from ...i18n import _
 from ...log import setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
-from ...preferences import PreferencesDialog
+from ...preferences import AudioOutputDialog, PreferencesDialog
 
 
 class AppCommandsMixin:
@@ -80,6 +80,21 @@ class AppCommandsMixin:
 
     def on_refresh_audio_output_devices(self, _event):
         self._refresh_audio_output_menu(announce=True)
+
+    def on_cycle_audio_output_device(self, _event):
+        dialog = AudioOutputDialog(
+            self,
+            self._audio_output_devices(),
+            self._current_audio_output_device_id(),
+        )
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return
+            selected_device_id = dialog.selected_device_id()
+        finally:
+            dialog.Destroy()
+
+        self._set_audio_output_device(selected_device_id)
 
     def on_show_keyboard_help(self, _event):
         self._show_keyboard_help_dialog()

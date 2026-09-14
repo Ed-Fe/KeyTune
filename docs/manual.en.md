@@ -132,6 +132,7 @@ While the countdown runs, the player warns you when 5 minutes and when 1 minute 
 - `]` / `[`: increase or decrease playback speed
 - `Shift+]` / `Shift+[`: increase or decrease playback pitch by semitones
 - `Shift+\`: restore the original pitch
+- `Alt+D`: open the audio output selector
 - `Ctrl+Alt+L`: toggle the lyrics panel
 - `Ctrl+Shift+F`: add the selected item to the playback queue
 - `Ctrl+Shift+Q`: manage the playback queue

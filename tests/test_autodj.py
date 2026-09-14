@@ -677,7 +677,7 @@ class AutoDJTests(unittest.TestCase):
         plan = AutoDJPlanner().plan(outgoing, incoming, beats=32)
 
         self.assertEqual(plan.beat_count, 8)
-        self.assertEqual(plan.incoming_gain_db, -2)
+        self.assertEqual(plan.incoming_gain_db, -1)
         self.assertEqual(plan.vocal_overlap, .7)
 
     def test_planner_matches_loudness_at_the_transition_points(self):
@@ -706,7 +706,7 @@ class AutoDJTests(unittest.TestCase):
         )
 
         self.assertEqual(AutoDJPlanner().plan(outgoing, within_deadband).incoming_gain_db, 0.0)
-        self.assertEqual(AutoDJPlanner().plan(outgoing, much_louder).incoming_gain_db, -2.0)
+        self.assertEqual(AutoDJPlanner().plan(outgoing, much_louder).incoming_gain_db, -1.0)
 
     def test_queue_planner_builds_multiple_compatible_steps(self):
         beats = tuple(range(0, 40500, 500))

@@ -8,7 +8,7 @@ from .analyzer import AudioAnalysis
 
 _HALF_STEP = 2.0 ** 0.5
 _LOUDNESS_DEADBAND_DB = 2.0
-_MAXIMUM_TRANSITION_ATTENUATION_DB = 2.0
+_MAXIMUM_TRANSITION_ATTENUATION_DB = 1.0
 
 
 def normalize_bpm_to_reference(bpm: float, reference_bpm: float) -> float:
