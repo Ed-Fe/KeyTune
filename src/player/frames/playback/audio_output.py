@@ -159,13 +159,6 @@ class AudioOutputMixin:
         if not device_swap_requested:
             self._reload_audio_output_if_null()
 
-        refresh_audio_output_menu = getattr(self, "_refresh_audio_output_menu", None)
-        if callable(refresh_audio_output_menu):
-            try:
-                refresh_audio_output_menu()
-            except Exception:
-                pass
-
         if announcement:
             try:
                 self._announce(announcement)
@@ -387,19 +380,12 @@ class AudioOutputMixin:
                 self._apply_audio_output_device_to_players(previous_normalized_device_id)
             except Exception:
                 pass
-            refresh_audio_output_menu = getattr(self, "_refresh_audio_output_menu", None)
-            if callable(refresh_audio_output_menu):
-                refresh_audio_output_menu()
             if announce:
                 self._announce(_("Não foi possível trocar o dispositivo de áudio: {error}.").format(error=exc))
             return False
 
         self.settings.audio_output_device_id = normalized_device_id
         self._save_settings()
-        refresh_audio_output_menu = getattr(self, "_refresh_audio_output_menu", None)
-        if callable(refresh_audio_output_menu):
-            refresh_audio_output_menu()
-
         if announce:
             if normalized_device_id:
                 selected_device = None

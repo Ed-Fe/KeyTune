@@ -27,7 +27,6 @@ class SmtcReconnectTests(unittest.TestCase):
         frame._selected_audio_output_device_id = Mock(return_value="")
         frame._current_audio_output_device_id = Mock(return_value="")
         frame._reload_audio_output_if_null = Mock()
-        frame._refresh_audio_output_menu = Mock()
         frame._announce = Mock()
 
         frame._handle_audio_output_device_list_changed(

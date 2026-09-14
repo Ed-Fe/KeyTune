@@ -175,7 +175,6 @@ class FrameUIMixin:
             "Shift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\n"
             "Shift+\\ — Restaurar o tom original\n"
             "Alt+D — Selecionar dispositivo de áudio\n"
-            "Menu Reprodução > Dispositivo de áudio — Trocar a saída de som\n"
             "Ctrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\n"
             "Alt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\n"
             "Alt+Seta cima / baixo — Mover o item atual na playlist\n"
@@ -421,15 +420,11 @@ class FrameUIMixin:
         self.menu_announce_time_id = wx.NewIdRef()
         self.menu_announce_volume_id = wx.NewIdRef()
         self.menu_announce_status_id = wx.NewIdRef()
-        self.menu_refresh_audio_output_devices_id = wx.NewIdRef()
         self.menu_cycle_audio_output_device_id = wx.NewIdRef()
         self.menu_sleep_timer_dialog_id = wx.NewIdRef()
         self.menu_sleep_timer_end_of_track_id = wx.NewIdRef()
         self.menu_sleep_timer_status_id = wx.NewIdRef()
         self.menu_sleep_timer_cancel_id = wx.NewIdRef()
-        self.audio_output_menu = wx.Menu()
-        self._audio_output_menu_actions = {}
-        self._audio_output_menu_ids = []
         announce_menu = wx.Menu()
         playback_menu.Append(self.menu_previous_track_id, _("Faixa &Anterior\tCtrl+PageUp"))
         playback_menu.Append(self.menu_play_pause_id, _("Reproduzir / Pa&usar (Espaço)"))
@@ -455,7 +450,6 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_decrease_pitch_id, _("Diminuir T&om (Shift+[)"))
         playback_menu.Append(self.menu_reset_pitch_id, _("Restaurar &Tom Original (Shift+\\)"))
         playback_menu.Append(self.menu_cycle_audio_output_device_id, _("Selecionar dispositivo de á&udio\tAlt+D"))
-        playback_menu.AppendSubMenu(self.audio_output_menu, _("Dispositivo de áu&dio"))
         playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Te&mporizador"))
         announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
         announce_menu.Append(self.menu_announce_volume_id, _("Anunciar &Volume (V)"))
@@ -521,7 +515,6 @@ class FrameUIMixin:
         menu_bar.Append(help_menu, _("A&juda"))
         self.SetMenuBar(menu_bar)
         self._refresh_recent_menus()
-        self._refresh_audio_output_menu()
 
     def _build_library_menu(self):
         """Menu Biblioteca: busca global, favoritos, histórico e índice."""
@@ -610,61 +603,6 @@ class FrameUIMixin:
         cancel_item = sleep_timer_menu.Append(self.menu_sleep_timer_cancel_id, _("Ca&ncelar temporizador"))
         cancel_item.Enable(False)
         return sleep_timer_menu
-
-    def _refresh_audio_output_menu(self, announce=False):
-        if not hasattr(self, "audio_output_menu"):
-            return
-
-        while self.audio_output_menu.GetMenuItemCount():
-            self.audio_output_menu.Delete(self.audio_output_menu.FindItemByPosition(0))
-
-        # Same fix as the recent menus: unbind the handlers tied to the previous
-        # item ids so repeated device-list refreshes don't leak frame bindings.
-        for previous_item_id in getattr(self, "_audio_output_menu_ids", []):
-            self.Unbind(wx.EVT_MENU, id=int(previous_item_id))
-        self._audio_output_menu_actions = {}
-        self._audio_output_menu_ids = []
-
-        default_item = self.audio_output_menu.AppendRadioItem(wx.NewIdRef(), _("&Padrão do sistema"))
-        default_item_id = default_item.GetId()
-        self._audio_output_menu_ids.append(default_item_id)
-        self._audio_output_menu_actions[default_item_id] = ""
-        self.Bind(wx.EVT_MENU, self.on_select_audio_output_device, id=default_item_id)
-
-        devices = list(getattr(self, "_audio_output_devices", lambda: [])())
-        current_device_id = getattr(self, "_current_audio_output_device_id", lambda: "")()
-        default_item.Check(not current_device_id)
-
-        if devices:
-            self.audio_output_menu.AppendSeparator()
-            for device in devices:
-                item = self.audio_output_menu.AppendRadioItem(wx.NewIdRef(), device.menu_label)
-                item_id = item.GetId()
-                self._audio_output_menu_ids.append(item_id)
-                self._audio_output_menu_actions[item_id] = device.device_id
-                self.Bind(wx.EVT_MENU, self.on_select_audio_output_device, id=item_id)
-                item.Check(device.device_id == current_device_id)
-        else:
-            unavailable_item = self.audio_output_menu.Append(wx.ID_ANY, _("Nenhum dispositivo detectado agora"))
-            unavailable_item.Enable(False)
-
-        self.audio_output_menu.AppendSeparator()
-        self.audio_output_menu.Append(
-            self.menu_refresh_audio_output_devices_id,
-            _("&Atualizar lista de dispositivos"),
-        )
-
-        if announce:
-            if devices:
-                self._announce(
-                    ngettext(
-                        "Lista de dispositivos de áudio atualizada. {count} dispositivo disponível.",
-                        "Lista de dispositivos de áudio atualizada. {count} dispositivos disponíveis.",
-                        len(devices),
-                    ).format(count=len(devices))
-                )
-            else:
-                self._announce(_("Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."))
 
     def _build_ui(self):
         panel = wx.Panel(self)
@@ -807,7 +745,6 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_increase_pitch, id=self.menu_increase_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_decrease_pitch, id=self.menu_decrease_pitch_id)
         self.Bind(wx.EVT_MENU, self.on_reset_pitch, id=self.menu_reset_pitch_id)
-        self.Bind(wx.EVT_MENU, self.on_refresh_audio_output_devices, id=self.menu_refresh_audio_output_devices_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_audio_output_device, id=self.menu_cycle_audio_output_device_id)
         self.Bind(wx.EVT_MENU, self.on_open_sleep_timer, id=self.menu_sleep_timer_dialog_id)
         self.Bind(wx.EVT_MENU, self.on_sleep_timer_end_of_track, id=self.menu_sleep_timer_end_of_track_id)

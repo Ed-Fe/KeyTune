@@ -45,6 +45,7 @@ class AudioOutputDialog(wx.Dialog):
         self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
         self.apply_button.SetName(_("Aplicar dispositivo de áudio"))
         self.apply_button.SetToolTip(_("Aplica o dispositivo de áudio selecionado."))
+        self.apply_button.SetDefault()
         self.cancel_button.SetName(_("Cancelar seleção de dispositivo de áudio"))
         self.cancel_button.SetToolTip(_("Fecha a janela sem alterar o dispositivo de áudio."))
         button_sizer.AddButton(self.apply_button)

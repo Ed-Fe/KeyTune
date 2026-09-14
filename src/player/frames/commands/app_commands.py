@@ -70,17 +70,6 @@ class AppCommandsMixin:
         else:
             self._announce(_("Preferências salvas, mas o dispositivo de áudio anterior foi mantido."))
 
-    def on_select_audio_output_device(self, event):
-        selected_device_id = self._audio_output_menu_actions.get(event.GetId())
-        if selected_device_id is None:
-            event.Skip()
-            return
-
-        self._set_audio_output_device(selected_device_id)
-
-    def on_refresh_audio_output_devices(self, _event):
-        self._refresh_audio_output_menu(announce=True)
-
     def on_cycle_audio_output_device(self, _event):
         dialog = AudioOutputDialog(
             self,
