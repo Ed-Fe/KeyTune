@@ -322,7 +322,7 @@ The **Playback** tab controls audio behavior and the initial state of new playli
 - **Default repeat**: repeat mode automatically applied to new playlists. The options are *Repeat off*, *Repeat current track*, and *Repeat playlist*.
 - **Audio device**: sound output used for playback. *System default* follows the main Windows device.
 - **Enable shuffle in new playlists**: automatically enables shuffle mode in playlists created after saving.
-- **Apply crossfade when changing tracks manually**: when enabled, crossfade is also used when moving forward or backward manually; by default it applies only at the natural end of each track.
+- **Apply crossfade when changing tracks manually**: when enabled, crossfade is also used when moving forward or backward manually; by default it applies only at the natural end of each track. When an AutoDJ transition is ready, moving forward uses that plan even if this option is disabled.
 - **Disable video output (play audio only)**: keeps playback audio-only, including video files. Useful to avoid external video windows.
 
 ### Accessibility

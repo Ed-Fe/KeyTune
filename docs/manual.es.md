@@ -322,7 +322,7 @@ La pestaña **Reproducción** controla el comportamiento de audio y el estado in
 - **Repetición predeterminada**: modo de repetición aplicado automáticamente a playlists nuevas. Las opciones son *Repetición desactivada*, *Repetir pista actual* y *Repetir playlist*.
 - **Dispositivo de audio**: salida de sonido usada en la reproducción. *Predeterminado del sistema* sigue el dispositivo principal de Windows.
 - **Activar aleatorio en nuevas playlists**: activa automáticamente el modo aleatorio en playlists creadas después de guardar.
-- **Aplicar crossfade al cambiar de pista manualmente**: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista.
+- **Aplicar crossfade al cambiar de pista manualmente**: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista. Cuando hay una transición de AutoDJ preparada, avanzar usa ese plan aunque esta opción esté desactivada.
 - **Desactivar salida de video (reproducir solo audio)**: mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar ventanas externas de video.
 
 ### Accesibilidad

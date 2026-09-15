@@ -18,8 +18,8 @@ class MixValues:
 
 @dataclass(frozen=True)
 class MixProfile:
-    incoming_fade_end: float
-    outgoing_fade_start: float
+    volume_fade_start: float
+    volume_fade_end: float
     bass_cut_db: float
     mid_cut_db: float
     bass_swap_start: float
@@ -27,9 +27,9 @@ class MixProfile:
 
 
 MIX_PROFILES = {
-    TransitionProfile.SMOOTH: MixProfile(0.25, 0.75, 0.0, 0.0, 0.25, 0.75),
-    TransitionProfile.PARTY: MixProfile(0.18, 0.82, 0.0, 0.0, 0.40, 0.60),
-    TransitionProfile.ELECTRONIC: MixProfile(0.12, 0.88, 0.0, 0.0, 0.44, 0.56),
+    TransitionProfile.SMOOTH: MixProfile(0.0, 1.0, 0.0, 0.0, 0.25, 0.75),
+    TransitionProfile.PARTY: MixProfile(0.15, 0.85, 0.0, 0.0, 0.40, 0.60),
+    TransitionProfile.ELECTRONIC: MixProfile(0.30, 0.70, 0.0, 0.0, 0.44, 0.56),
 }
 
 
@@ -45,14 +45,9 @@ def mix_values(progress, profile=TransitionProfile.SMOOTH):
     settings = MIX_PROFILES[normalized_profile]
     progress = max(0.0, min(1.0, float(progress)))
 
-    incoming_progress = _smoothstep(progress, 0.0, settings.incoming_fade_end)
-    outgoing_progress = _smoothstep(progress, settings.outgoing_fade_start, 1.0)
-    incoming_volume = math.sin((math.pi / 2.0) * incoming_progress)
-    outgoing_volume = math.cos((math.pi / 2.0) * outgoing_progress)
-    combined_power = math.hypot(incoming_volume, outgoing_volume)
-    if combined_power > 1.0:
-        incoming_volume /= combined_power
-        outgoing_volume /= combined_power
+    volume_progress = _smoothstep(progress, settings.volume_fade_start, settings.volume_fade_end)
+    incoming_volume = math.sin((math.pi / 2.0) * volume_progress)
+    outgoing_volume = math.cos((math.pi / 2.0) * volume_progress)
 
     bass_swap = _smoothstep(progress, settings.bass_swap_start, settings.bass_swap_end)
     incoming_bass_db = settings.bass_cut_db * (1.0 - bass_swap)

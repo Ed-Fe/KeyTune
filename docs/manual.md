@@ -322,7 +322,7 @@ A aba **Reprodução** controla o comportamento de áudio e o estado inicial de 
 - **Repetição padrão**: modo de repetição aplicado automaticamente a playlists novas. As opções são *Repetição desligada*, *Repetir faixa atual* e *Repetir playlist*.
 - **Dispositivo de áudio**: saída de som usada na reprodução. *Padrão do sistema* segue o dispositivo principal do Windows.
 - **Ativar embaralhamento em novas playlists**: ativa o modo aleatório automaticamente em playlists criadas depois de salvar.
-- **Aplicar crossfade ao trocar de faixa manualmente**: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa.
+- **Aplicar crossfade ao trocar de faixa manualmente**: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa. Quando há uma transição AutoDJ pronta, avançar usa esse plano mesmo com esta opção desligada.
 - **Desativar saída de vídeo (tocar só o áudio)**: mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar janelas externas de vídeo.
 
 ### Acessibilidade

@@ -308,6 +308,11 @@ class PlaylistPlaybackMixin:
                 return
 
         should_wrap = state.repeat_mode == REPEAT_ALL
+        manual_autodj_transition = (
+            self._prepared_autodj_transition_for_manual_advance(state)
+            if direction > 0
+            else None
+        )
         target = state.move_in_playback_order(-1 if direction < 0 else 1, wrap=should_wrap)
         if not target:
             defer_autodj_advance = getattr(self, "_defer_autodj_advance", None)
@@ -319,11 +324,58 @@ class PlaylistPlaybackMixin:
             self._announce(boundary_message)
             return
 
-        allow_manual_crossfade = bool(getattr(self.settings, "crossfade_on_manual_track_change", False))
+        allow_manual_crossfade = manual_autodj_transition is not None or bool(
+            getattr(self.settings, "crossfade_on_manual_track_change", False)
+        )
         self._play_media(
             index=self._get_active_playlist_index(),
             allow_crossfade=allow_manual_crossfade,
+            autodj_transition=manual_autodj_transition,
         )
+
+    def _prepared_autodj_transition_for_manual_advance(self, state):
+        if getattr(self, "_crossfade_state", None) is not None:
+            return None
+
+        prepared_transition = getattr(self, "_prepared_autodj_transition", lambda _state: None)(state)
+        if prepared_transition is None:
+            return None
+
+        pair = prepared_transition.get("pair")
+        should_wrap = state.repeat_mode == REPEAT_ALL
+        next_media_path = state.peek_in_playback_order(1, wrap=should_wrap)
+        if not pair or pair[0] != state.current_media_path or pair[1] != next_media_path:
+            return None
+
+        if self.player.get_media() is None or not self.player.is_playing():
+            return None
+        current_time = self.player.get_time()
+        total_time = self.player.get_length()
+        if current_time is None or current_time < 0 or total_time is None or total_time <= current_time:
+            return None
+
+        transition_duration_ms = self._autodj_transition_duration_ms(prepared_transition)
+        if transition_duration_ms <= 0:
+            return None
+
+        outgoing = prepared_transition.get("outgoing")
+        beats_ms = tuple(getattr(outgoing, "beats_ms", ()) or ())
+        transition_start_ms = next(
+            (int(beat_ms) for beat_ms in beats_ms if current_time <= beat_ms < total_time),
+            int(current_time),
+        )
+        transition_end_ms = min(int(total_time), transition_start_ms + transition_duration_ms)
+        if transition_end_ms <= transition_start_ms:
+            return None
+
+        return {
+            **prepared_transition,
+            "plan": replace(
+                prepared_transition["plan"],
+                outgoing_start_ms=transition_start_ms,
+                outgoing_end_ms=transition_end_ms,
+            ),
+        }
 
     def _jump_to_playlist_boundary(self, to_last=False):
         if self._block_sensitive_action_during_youtube_music("track-selection"):

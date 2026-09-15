@@ -721,20 +721,29 @@ class AutoDJTests(unittest.TestCase):
 
         self.assertEqual([item.path for item in selections], ["g.mp3", "d.mp3"])
 
-    def test_mix_profiles_have_distinct_curves_without_tonal_adjustments(self):
-        smooth = mix_values(.1, TransitionProfile.SMOOTH)
-        party = mix_values(.1, TransitionProfile.PARTY)
-        electronic = mix_values(.1, TransitionProfile.ELECTRONIC)
+    def test_mix_profiles_use_complementary_constant_power_curves_without_tonal_adjustments(self):
+        smooth = mix_values(.25, TransitionProfile.SMOOTH)
+        party = mix_values(.25, TransitionProfile.PARTY)
+        electronic = mix_values(.25, TransitionProfile.ELECTRONIC)
 
         self.assertNotEqual(smooth.incoming_volume, party.incoming_volume)
         self.assertNotEqual(party.incoming_volume, electronic.incoming_volume)
         for profile in TransitionProfile:
-            for progress in (0.0, 0.5, 1.0):
+            previous_incoming = -1.0
+            previous_outgoing = 2.0
+            for progress in (0.0, 0.25, 0.5, 0.75, 1.0):
                 values = mix_values(progress, profile)
+                self.assertGreaterEqual(values.incoming_volume, previous_incoming)
+                self.assertLessEqual(values.outgoing_volume, previous_outgoing)
+                self.assertAlmostEqual(math.hypot(values.incoming_volume, values.outgoing_volume), 1.0)
                 self.assertEqual(values.incoming_bass_db, 0.0)
                 self.assertEqual(values.outgoing_bass_db, 0.0)
                 self.assertEqual(values.incoming_mid_db, 0.0)
                 self.assertEqual(values.outgoing_mid_db, 0.0)
+                previous_incoming = values.incoming_volume
+                previous_outgoing = values.outgoing_volume
+            self.assertGreater(mix_values(.25, profile).outgoing_volume, mix_values(.25, profile).incoming_volume)
+            self.assertGreater(mix_values(.75, profile).incoming_volume, mix_values(.75, profile).outgoing_volume)
         self.assertAlmostEqual(mix_values(.5, TransitionProfile.PARTY).incoming_volume, 2 ** -0.5)
         self.assertAlmostEqual(mix_values(.5, TransitionProfile.PARTY).outgoing_volume, 2 ** -0.5)
 
@@ -1409,6 +1418,76 @@ class AutoDJTests(unittest.TestCase):
         self.assertTrue(frame._maybe_start_automatic_crossfade())
         self.assertIs(frame.play_request["autodj_transition"], transition)
         self.assertTrue(frame.play_request["allow_crossfade"])
+
+    def test_manual_next_uses_prepared_autodj_transition_at_the_next_beat(self):
+        outgoing = AudioAnalysis(120, (10000, 10500, 11000), .9, .5)
+        plan = AutoDJPlanner().plan(
+            AudioAnalysis(120, tuple(range(0, 20500, 500)), .9, .5),
+            AudioAnalysis(121, tuple(range(0, 20500, 496)), .9, .5),
+            beats=16,
+        )
+        transition = {
+            "pair": ("outgoing.mp3", "incoming.mp3"),
+            "outgoing": outgoing,
+            "plan": plan,
+            "profile": "smooth",
+        }
+
+        class Player:
+            def get_media(self): return object()
+            def is_playing(self): return True
+            def get_time(self): return 10100
+            def get_length(self): return 30000
+
+        class Frame(PlaylistPlaybackMixin):
+            def __init__(self):
+                self._crossfade_state = None
+                self.settings = SimpleNamespace(crossfade_on_manual_track_change=False)
+                self.state = PlaylistState(title="AutoDJ")
+                self.state.set_items(["outgoing.mp3", "incoming.mp3"])
+                self.player = Player()
+                self.play_request = None
+
+            def _block_sensitive_action_during_youtube_music(self, _action): return False
+            def _get_playlist_state(self, _index=None): return self.state
+            def _prepared_autodj_transition(self, _state): return transition
+            def _autodj_transition_duration_ms(self, _transition): return 8000
+            def _get_active_playlist_index(self): return 0
+            def _play_media(self, **kwargs): self.play_request = kwargs
+
+        frame = Frame()
+        frame._play_adjacent_item(1)
+
+        forced_transition = frame.play_request["autodj_transition"]
+        self.assertEqual(frame.state.current_media_path, "incoming.mp3")
+        self.assertTrue(frame.play_request["allow_crossfade"])
+        self.assertEqual(forced_transition["plan"].outgoing_start_ms, 10500)
+        self.assertEqual(forced_transition["plan"].outgoing_end_ms, 18500)
+        self.assertEqual(forced_transition["plan"].incoming_start_ms, plan.incoming_start_ms)
+
+    def test_manual_next_keeps_configured_behavior_without_a_prepared_transition(self):
+        class Player:
+            def get_media(self): return object()
+
+        class Frame(PlaylistPlaybackMixin):
+            def __init__(self):
+                self.settings = SimpleNamespace(crossfade_on_manual_track_change=False)
+                self.state = PlaylistState(title="Playlist")
+                self.state.set_items(["a.mp3", "b.mp3"])
+                self.player = Player()
+                self.play_request = None
+
+            def _block_sensitive_action_during_youtube_music(self, _action): return False
+            def _get_playlist_state(self, _index=None): return self.state
+            def _prepared_autodj_transition(self, _state): return None
+            def _get_active_playlist_index(self): return 0
+            def _play_media(self, **kwargs): self.play_request = kwargs
+
+        frame = Frame()
+        frame._play_adjacent_item(1)
+
+        self.assertFalse(frame.play_request["allow_crossfade"])
+        self.assertIsNone(frame.play_request["autodj_transition"])
 
     def test_fallback_autodj_transition_starts_before_the_end(self):
         plan = AutoDJPlanner().plan(
