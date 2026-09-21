@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] - 2026-09-21
+
+### Corrigido
+
+- **Transições do AutoDJ**: perfis de mixagem voltam a aplicar suas curvas de volume corretamente, sem reduzir o volume geral durante a troca de faixas.
+- **Avanço manual no AutoDJ**: ao avançar para uma faixa que já tem transição preparada, o KeyTune usa esse plano mesmo que o crossfade manual esteja desativado.
+- **Saída de áudio**: ao trocar de dispositivo, a reprodução preserva de forma mais confiável a posição, o volume e os demais estados em uso.
+
+### Alterado
+
+- **Seleção da saída de áudio**: `Alt+D` agora abre um diálogo acessível e direto para escolher o dispositivo de reprodução.
+
 ## [2.0.5] - 2026-09-12
 
 ### Corrigido
