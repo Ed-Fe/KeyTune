@@ -82,9 +82,22 @@ class FrameEqualizerMixin:
             return state
         return self._get_playlist_state()
 
+    def _equalizer_fixed_active(self):
+        return bool(getattr(getattr(self, "settings", None), "equalizer_fixed_enabled", False))
+
     def _equalizer_filter_chain_for_state(self, state=None):
-        state = state or self._get_equalizer_target_state()
         equalizer_chain = ""
+        if self._equalizer_fixed_active():
+            # A equalização fixa vale para qualquer aba ou mídia, mesmo sem aba ativa.
+            preset = self._get_equalizer_preset(self.settings.equalizer_fixed_preset_id)
+            if self._equalizer_supported() and preset is not None:
+                equalizer_chain = build_mpv_equalizer_filter(
+                    preset,
+                    band_frequencies_hz=self._equalizer_band_frequencies(),
+                )
+            return equalizer_chain
+
+        state = state or self._get_equalizer_target_state()
         if self._equalizer_supported() and state and state.equalizer_enabled:
             preset = self._get_equalizer_preset(state.equalizer_preset_id)
             if preset is not None:
@@ -154,7 +167,45 @@ class FrameEqualizerMixin:
     def _equalizer_media_tab_count(self):
         return sum(1 for state in getattr(self, "playlists", []) if isinstance(state, PlaylistState))
 
+    def _set_fixed_equalizer(self, *, fixed_enabled=None, preset_id=None, announce=True):
+        preset = self._get_equalizer_preset(preset_id or self.settings.equalizer_fixed_preset_id)
+        if preset is None:
+            if announce:
+                self._announce(_("Nenhum preset de equalizador está disponível."))
+            return False
+
+        self.settings.equalizer_fixed_preset_id = preset.preset_id
+        if fixed_enabled is not None:
+            self.settings.equalizer_fixed_enabled = bool(fixed_enabled)
+        self._save_settings()
+
+        applied = self._apply_equalizer_state_to_current_playback()
+        self._refresh_equalizer_screen()
+        if not announce:
+            return applied
+
+        if self.settings.equalizer_fixed_enabled:
+            self._announce(
+                _("Equalização fixa: {name}. Vale para todas as abas e mídias.").format(name=preset.name)
+            )
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(_("Equalização fixa: {name}.").format(name=preset.name))
+        else:
+            self._announce(_("Equalização fixa desativada."))
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(_("Equalização fixa desativada."))
+        return applied
+
     def _set_equalizer_for_target_tab(self, *, enabled=None, preset_id=None, announce=True):
+        if self._equalizer_fixed_active():
+            # Com a equalização fixa ativa, escolher preset altera o preset fixo;
+            # desligar o equalizador desativa a equalização fixa.
+            return self._set_fixed_equalizer(
+                fixed_enabled=False if enabled is False else None,
+                preset_id=preset_id,
+                announce=announce,
+            )
+
         state = self._get_equalizer_target_state()
         if not state:
             if announce:
@@ -212,6 +263,7 @@ class FrameEqualizerMixin:
         return panel_class(
             parent,
             on_toggle_enabled=self.on_toggle_equalizer_enabled,
+            on_toggle_fixed=self.on_toggle_equalizer_fixed,
             on_select_preset=self.on_select_equalizer_preset,
             on_apply_to_all_tabs=self.on_apply_equalizer_to_all_tabs,
             on_create_preset=self.on_create_equalizer_preset,
@@ -271,19 +323,30 @@ class FrameEqualizerMixin:
         if panel is None:
             return
 
+        fixed_enabled = self._equalizer_fixed_active()
         state = self._get_equalizer_target_state()
-        selected_preset = self._get_equalizer_preset(state.equalizer_preset_id if state else None)
-        if state and selected_preset:
-            state.equalizer_preset_id = selected_preset.preset_id
+        if fixed_enabled:
+            selected_preset = self._get_equalizer_preset(self.settings.equalizer_fixed_preset_id)
+            if selected_preset:
+                self.settings.equalizer_fixed_preset_id = selected_preset.preset_id
+            target_tab_title = _("todas as abas e mídias (equalização fixa)")
+            selected_preset_id = self.settings.equalizer_fixed_preset_id
+        else:
+            selected_preset = self._get_equalizer_preset(state.equalizer_preset_id if state else None)
+            if state and selected_preset:
+                state.equalizer_preset_id = selected_preset.preset_id
+            target_tab_title = state.title if state else _("nenhuma aba de mídia")
+            selected_preset_id = state.equalizer_preset_id if state else DEFAULT_EQUALIZER_PRESET_ID
 
         panel.update_view(
-            target_tab_title=state.title if state else _("nenhuma aba de mídia"),
-            equalizer_enabled=state.equalizer_enabled if state else False,
+            target_tab_title=target_tab_title,
+            equalizer_enabled=fixed_enabled or bool(state and state.equalizer_enabled),
+            fixed_enabled=fixed_enabled,
             presets=self._available_equalizer_presets(),
-            selected_preset_id=state.equalizer_preset_id if state else DEFAULT_EQUALIZER_PRESET_ID,
+            selected_preset_id=selected_preset_id,
             selected_preset=selected_preset,
             band_frequencies_hz=self._equalizer_band_frequencies(),
-            can_apply_to_all=bool(state and self._equalizer_media_tab_count() > 1),
+            can_apply_to_all=bool(not fixed_enabled and state and self._equalizer_media_tab_count() > 1),
         )
 
     def _ensure_equalizer_available(self):
@@ -308,6 +371,19 @@ class FrameEqualizerMixin:
 
     def on_toggle_equalizer_enabled(self, enabled):
         self._set_equalizer_for_target_tab(enabled=enabled, announce=True)
+
+    def on_toggle_equalizer_fixed(self, enabled):
+        if not self._ensure_equalizer_available():
+            self._refresh_equalizer_screen()
+            return
+
+        preset_id = None
+        if enabled and not self._equalizer_fixed_active():
+            # Ao ligar, aproveita o preset já escolhido na aba se o equalizador dela estiver ligado.
+            state = self._get_equalizer_target_state()
+            if state and state.equalizer_enabled:
+                preset_id = state.equalizer_preset_id
+        self._set_fixed_equalizer(fixed_enabled=bool(enabled), preset_id=preset_id, announce=True)
 
     def on_select_equalizer_preset(self, preset_id):
         self._set_equalizer_for_target_tab(preset_id=preset_id, announce=True)
@@ -475,6 +551,8 @@ class FrameEqualizerMixin:
         self._announce(_("Preset criado e aplicado: {name}.").format(name=new_preset.name))
 
     def _current_equalizer_preset(self):
+        if self._equalizer_fixed_active():
+            return self._get_equalizer_preset(self.settings.equalizer_fixed_preset_id)
         state = self._get_equalizer_target_state()
         return self._get_equalizer_preset(state.equalizer_preset_id if state else None)
 
@@ -610,6 +688,8 @@ class FrameEqualizerMixin:
         for state in self.playlists:
             if isinstance(state, PlaylistState) and state.equalizer_preset_id == preset.preset_id:
                 state.equalizer_preset_id = fallback_preset_id
+        if self.settings.equalizer_fixed_preset_id == preset.preset_id:
+            self.settings.equalizer_fixed_preset_id = fallback_preset_id
 
         self._save_settings()
         self._apply_equalizer_state_to_current_playback(self._get_equalizer_target_state())

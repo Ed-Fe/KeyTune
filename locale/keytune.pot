@@ -1080,7 +1080,7 @@ msgid "Ajuste de tempo: {adjustment:+.1%}."
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
+msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas. Para usar sempre o mesmo preset em tudo o que abrir, ative a equalização fixa."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -1189,6 +1189,10 @@ msgstr ""
 
 #: src/player/preferences/audio_output_dialog.py
 msgid "Aplica o dispositivo de áudio selecionado."
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Aplica o preset escolhido a tudo o que for aberto, sem precisar configurar cada aba. A configuração fica salva até você alterar ou desativar."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2715,6 +2719,22 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Equalizador: {name}."
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Equalização fixa"
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "Equalização fixa desativada."
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "Equalização fixa: {name}."
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "Equalização fixa: {name}. Vale para todas as abas e mídias."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -6454,6 +6474,10 @@ msgstr ""
 msgid "Usar a API do KeyTune para ler arquivos externos"
 msgstr ""
 
+#: src/player/equalizer/panel.py
+msgid "Usar equalização &fixa em todas as abas e mídias"
+msgstr ""
+
 #: src/player/plugins/manifest.py
 msgid "Usar o resolvedor de mídia yt-dlp"
 msgstr ""
@@ -6920,6 +6944,10 @@ msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "toda a biblioteca"
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "todas as abas e mídias (equalização fixa)"
 msgstr ""
 
 #: src/player/frames/playback/controls.py

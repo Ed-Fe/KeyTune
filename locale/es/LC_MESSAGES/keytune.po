@@ -716,8 +716,8 @@ msgstr "Ajusta la ganancia general antes de las bandas. Si el sonido se distorsi
 msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
 msgstr "Ajusta cómo el reproductor inicia, guarda el estado y responde a los atajos. Usa las pestañas para navegar entre las categorías. Presiona Esc para cancelar o Enter en Guardar para confirmar."
 
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr "Ajusta el ecualizador de la pestaña de medios activa. Usa los botones para crear presets, editar o duplicar presets personalizados y guardar una copia editable de los presets integrados. Cuando quieras repetir la misma configuración en las pestañas abiertas, usa Aplicar en todas las pestañas."
+msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas. Para usar sempre o mesmo preset em tudo o que abrir, ative a equalização fixa."
+msgstr "Ajusta el ecualizador de la pestaña de medios activa. Usa los botones para crear presets, editar o duplicar presets personalizados y guardar una copia editable de los presets integrados. Cuando quieras repetir la misma configuración en las pestañas abiertas, usa Aplicar en todas las pestañas. Para usar siempre el mismo preset en todo lo que abras, activa la ecualización fija."
 
 msgid "Aleatória"
 msgstr "Aleatoria"
@@ -5246,3 +5246,24 @@ msgstr "En cola"
 
 msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
 msgstr "Error de análisis. Próxima transición: se usará la transición normal. Motivo: {reason}."
+
+msgid "Aplica o preset escolhido a tudo o que for aberto, sem precisar configurar cada aba. A configuração fica salva até você alterar ou desativar."
+msgstr "Aplica el preset elegido a todo lo que se abra, sin tener que configurar cada pestaña. La configuración queda guardada hasta que la cambies o la desactives."
+
+msgid "Equalização fixa"
+msgstr "Ecualización fija"
+
+msgid "Equalização fixa desativada."
+msgstr "Ecualización fija desactivada."
+
+msgid "Equalização fixa: {name}."
+msgstr "Ecualización fija: {name}."
+
+msgid "Equalização fixa: {name}. Vale para todas as abas e mídias."
+msgstr "Ecualización fija: {name}. Vale para todas las pestañas y medios."
+
+msgid "Usar equalização &fixa em todas as abas e mídias"
+msgstr "Usar ecualización &fija en todas las pestañas y medios"
+
+msgid "todas as abas e mídias (equalização fixa)"
+msgstr "todas las pestañas y medios (ecualización fija)"

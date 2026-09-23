@@ -57,7 +57,7 @@ from ..constants import (
     SEEK_STEP_MS,
     VOLUME_STEP,
 )
-from ..equalizer.models import EqualizerPreset
+from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID, EqualizerPreset, normalize_equalizer_preset_id
 
 
 @dataclass
@@ -109,6 +109,10 @@ class AppSettings:
     recent_folders: list[str] = field(default_factory=list)
     recent_playlists: list[str] = field(default_factory=list)
     equalizer_custom_presets: list[EqualizerPreset] = field(default_factory=list)
+    # Equalização fixa: quando ativa, vale para todas as abas e mídias e
+    # se sobrepõe ao equalizador de cada aba.
+    equalizer_fixed_enabled: bool = False
+    equalizer_fixed_preset_id: str = DEFAULT_EQUALIZER_PRESET_ID
     logging_enabled: bool = DEFAULT_LOGGING_ENABLED
     logging_level: str = DEFAULT_LOGGING_LEVEL
     welcome_screen_completed: bool = False
@@ -174,6 +178,8 @@ class AppSettings:
             "recent_folders": list(self.recent_folders),
             "recent_playlists": list(self.recent_playlists),
             "equalizer_custom_presets": [preset.to_dict() for preset in self.equalizer_custom_presets],
+            "equalizer_fixed_enabled": self.equalizer_fixed_enabled,
+            "equalizer_fixed_preset_id": self.equalizer_fixed_preset_id,
             "logging_enabled": self.logging_enabled,
             "logging_level": self.logging_level,
             "welcome_screen_completed": self.welcome_screen_completed,
@@ -324,6 +330,10 @@ class AppSettings:
         settings.recent_folders = _string_list(data.get("recent_folders"))
         settings.recent_playlists = _string_list(data.get("recent_playlists"))
         settings.equalizer_custom_presets = _equalizer_preset_list(data.get("equalizer_custom_presets"))
+        settings.equalizer_fixed_enabled = bool(data.get("equalizer_fixed_enabled", settings.equalizer_fixed_enabled))
+        settings.equalizer_fixed_preset_id = (
+            normalize_equalizer_preset_id(data.get("equalizer_fixed_preset_id")) or settings.equalizer_fixed_preset_id
+        )
         settings.logging_enabled = bool(data.get("logging_enabled", settings.logging_enabled))
         raw_logging_level = str(data.get("logging_level") or "").upper()
         settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL

@@ -11,6 +11,7 @@ class EqualizerTabPanel(wx.Panel):
         parent,
         *,
         on_toggle_enabled,
+        on_toggle_fixed,
         on_select_preset,
         on_apply_to_all_tabs,
         on_create_preset,
@@ -23,6 +24,7 @@ class EqualizerTabPanel(wx.Panel):
         self._choice_preset_ids = []
         self._updating_controls = False
         self._on_toggle_enabled = on_toggle_enabled
+        self._on_toggle_fixed = on_toggle_fixed
         self._on_select_preset = on_select_preset
         self._on_apply_to_all_tabs = on_apply_to_all_tabs
         self._on_create_preset = on_create_preset
@@ -39,7 +41,8 @@ class EqualizerTabPanel(wx.Panel):
                 "Ajuste o equalizador da aba de mídia ativa. "
                 "Use os botões para criar presets, editar ou duplicar presets personalizados "
                 "e salvar uma cópia editável de presets embutidos. "
-                "Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
+                "Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas. "
+                "Para usar sempre o mesmo preset em tudo o que abrir, ative a equalização fixa."
             ),
         )
         intro_label.Wrap(620)
@@ -59,6 +62,14 @@ class EqualizerTabPanel(wx.Panel):
         )
 
         controls_box = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Preset ativo")), wx.VERTICAL)
+        self.fixed_checkbox = wx.CheckBox(self, label=_("Usar equalização &fixa em todas as abas e mídias"))
+        self.fixed_checkbox.SetName(_("Equalização fixa"))
+        self.fixed_checkbox.SetToolTip(
+            _(
+                "Aplica o preset escolhido a tudo o que for aberto, sem precisar configurar cada aba. "
+                "A configuração fica salva até você alterar ou desativar."
+            )
+        )
         self.enable_checkbox = wx.CheckBox(self, label=_("Ativar &equalizador nesta aba"))
         self.enable_checkbox.SetName(_("Ativar equalizador nesta aba"))
         self.enable_checkbox.SetToolTip(_("Liga ou desliga o equalizador apenas para a aba de mídia ativa."))
@@ -119,6 +130,7 @@ class EqualizerTabPanel(wx.Panel):
             ),
         )
 
+        controls_box.Add(self.fixed_checkbox, 0, wx.ALL | wx.EXPAND, 6)
         controls_box.Add(self.enable_checkbox, 0, wx.ALL | wx.EXPAND, 6)
         controls_box.Add(preset_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         controls_box.Add(self.preset_choice, 0, wx.ALL | wx.EXPAND, 6)
@@ -156,6 +168,7 @@ class EqualizerTabPanel(wx.Panel):
 
         self.SetSizer(root_sizer)
 
+        self.fixed_checkbox.Bind(wx.EVT_CHECKBOX, self.on_toggle_fixed)
         self.enable_checkbox.Bind(wx.EVT_CHECKBOX, self.on_toggle_enabled)
         self.preset_choice.Bind(wx.EVT_CHOICE, self.on_select_preset)
         self.new_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_create_preset())
@@ -221,6 +234,7 @@ class EqualizerTabPanel(wx.Panel):
         *,
         target_tab_title,
         equalizer_enabled,
+        fixed_enabled=False,
         presets,
         selected_preset_id,
         selected_preset,
@@ -231,7 +245,10 @@ class EqualizerTabPanel(wx.Panel):
         self._updating_controls = True
         try:
             self.target_tab_label.SetLabel(_("Aba alvo: {title}").format(title=target_tab_title))
+            self.fixed_checkbox.SetValue(bool(fixed_enabled))
             self.enable_checkbox.SetValue(bool(equalizer_enabled))
+            # Com a equalização fixa ativa, o equalizador por aba fica sob controle dela.
+            self.enable_checkbox.Enable(not fixed_enabled)
 
             self.preset_choice.Clear()
             self._choice_preset_ids = []
@@ -294,6 +311,13 @@ class EqualizerTabPanel(wx.Panel):
             return
 
         self._on_toggle_enabled(self.enable_checkbox.GetValue())
+
+    def on_toggle_fixed(self, event):
+        if self._updating_controls:
+            event.Skip()
+            return
+
+        self._on_toggle_fixed(self.fixed_checkbox.GetValue())
 
     def on_select_preset(self, event):
         if self._updating_controls:

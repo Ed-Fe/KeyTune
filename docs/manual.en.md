@@ -389,6 +389,8 @@ In practice, this lets you keep one playlist with enhanced bass and another with
 
 When you open the equalizer, the **Target tab** field shows which playlist will receive the adjustments. Use the **Enable equalizer on this tab** checkbox to turn the effect on or off only for that tab.
 
+To avoid setting up each tab, check **Use fixed equalization on all tabs and media**. While it is on, the chosen preset applies to everything you open (files, folders, playlists, YouTube Music, radios) and is saved in your preferences: it only changes if you pick another preset or uncheck the box. While fixed equalization is active, the **Preset** field changes the fixed preset, and the per-tab checkbox and the **Apply to all tabs** button are unavailable. Unchecking it returns the equalizer to per-tab behavior.
+
 The **Preset** field lists all available presets. Built-in presets appear with the *(built-in)* suffix. When you select one, the **Description** field shows a note about the sound profile and the **Preset summary** section displays the preamp and each band value so you can review them before applying.
 
 #### Preset management buttons

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Não lançado]
+
+### Adicionado
+
+- **Equalização fixa**: no equalizador (`Ctrl+Shift+E`), a opção **Usar equalização fixa em todas as abas e mídias** aplica o preset escolhido a tudo o que for aberto, sem configurar aba por aba. A escolha fica salva nas preferências até você alterar o preset ou desativar a opção.
+
 ## [2.0.6] - 2026-09-21
 
 ### Corrigido

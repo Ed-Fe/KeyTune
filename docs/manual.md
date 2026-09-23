@@ -389,6 +389,8 @@ Na prática, isso permite deixar uma playlist com graves reforçados e outra com
 
 Ao abrir o equalizador, o campo **Aba alvo** mostra qual playlist receberá os ajustes. Use a caixa **Ativar equalizador nesta aba** para ligar ou desligar o efeito só naquela aba.
 
+Para não precisar configurar cada aba, marque **Usar equalização fixa em todas as abas e mídias**. Com ela ligada, o preset escolhido vale para tudo o que você abrir (arquivos, pastas, playlists, YouTube Music, rádios) e fica salvo nas preferências: ele só muda se você escolher outro preset ou desmarcar a caixa. Enquanto a equalização fixa está ativa, o campo **Preset** altera o preset fixo e a caixa por aba e o botão **Aplicar em todas as abas** ficam indisponíveis. Ao desmarcar, o equalizador volta a funcionar por aba.
+
 O campo **Preset** lista todos os presets disponíveis. Os embutidos aparecem com o sufixo *(embutido)*. Ao selecionar um, o campo **Descrição** mostra uma nota sobre o perfil sonoro e a seção **Resumo do preset** exibe os valores de pré-amplificação e de cada banda para conferir antes de aplicar.
 
 #### Botões de gerenciamento de presets

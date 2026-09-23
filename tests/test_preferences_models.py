@@ -23,6 +23,22 @@ class AppSettingsTests(unittest.TestCase):
         self.assertEqual(payload["audio_output_device_id"], "wasapi/{device-1}")
         self.assertEqual(restored_settings.audio_output_device_id, "wasapi/{device-1}")
 
+    def test_fixed_equalizer_settings_round_trip(self):
+        settings = AppSettings(equalizer_fixed_enabled=True, equalizer_fixed_preset_id="builtin:rock")
+
+        payload = settings.to_dict()
+        restored_settings = AppSettings.from_dict(payload)
+
+        self.assertTrue(payload["equalizer_fixed_enabled"])
+        self.assertTrue(restored_settings.equalizer_fixed_enabled)
+        self.assertEqual(restored_settings.equalizer_fixed_preset_id, "builtin:rock")
+
+    def test_fixed_equalizer_defaults_to_disabled_for_old_settings(self):
+        settings = AppSettings.from_dict({})
+
+        self.assertFalse(settings.equalizer_fixed_enabled)
+        self.assertEqual(settings.equalizer_fixed_preset_id, "builtin:flat")
+
     def test_generic_audio_backend_is_not_persisted_as_device(self):
         settings = AppSettings(audio_output_device_id="openal")
 

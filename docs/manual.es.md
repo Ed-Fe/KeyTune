@@ -389,6 +389,8 @@ En la práctica, esto permite dejar una playlist con graves reforzados y otra co
 
 Al abrir el ecualizador, el campo **Pestaña destino** muestra qué playlist recibirá los ajustes. Usa la casilla **Activar ecualizador en esta pestaña** para activar o desactivar el efecto solo en esa pestaña.
 
+Para no tener que configurar cada pestaña, marca **Usar ecualización fija en todas las pestañas y medios**. Mientras esté activa, el preset elegido se aplica a todo lo que abras (archivos, carpetas, playlists, YouTube Music, radios) y queda guardado en las preferencias: solo cambia si eliges otro preset o desmarcas la casilla. Con la ecualización fija activa, el campo **Preset** cambia el preset fijo, y la casilla por pestaña y el botón **Aplicar en todas las pestañas** quedan no disponibles. Al desmarcarla, el ecualizador vuelve a funcionar por pestaña.
+
 El campo **Preset** lista todos los presets disponibles. Los integrados aparecen con el sufijo *(integrado)*. Al seleccionar uno, el campo **Descripción** muestra una nota sobre el perfil sonoro y la sección **Resumen del preset** muestra los valores de preamplificación y de cada banda para revisarlos antes de aplicar.
 
 #### Botones de gestión de presets

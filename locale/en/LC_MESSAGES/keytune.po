@@ -716,8 +716,8 @@ msgstr "Adjusts the overall gain before the bands. If the sound distorts, lower 
 msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
 msgstr "Adjust how the player starts, saves state and responds to shortcuts. Use the tabs to navigate between categories. Press Esc to cancel or Enter on Save to confirm."
 
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr "Adjust the equalizer of the active media tab. Use the buttons to create presets, edit or duplicate custom presets and save an editable copy of built-in presets. When you want to repeat the same configuration across open tabs, use Apply to all tabs."
+msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas. Para usar sempre o mesmo preset em tudo o que abrir, ative a equalização fixa."
+msgstr "Adjust the equalizer of the active media tab. Use the buttons to create presets, edit or duplicate custom presets and save an editable copy of built-in presets. When you want to repeat the same configuration across open tabs, use Apply to all tabs. To always use the same preset for everything you open, turn on fixed equalization."
 
 msgid "Aleatória"
 msgstr "Random"
@@ -5246,3 +5246,24 @@ msgstr "Queued"
 
 msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
 msgstr "Analysis failed. Next transition: the regular transition will be used. Reason: {reason}."
+
+msgid "Aplica o preset escolhido a tudo o que for aberto, sem precisar configurar cada aba. A configuração fica salva até você alterar ou desativar."
+msgstr "Applies the chosen preset to everything that is opened, without setting up each tab. The setting stays saved until you change or disable it."
+
+msgid "Equalização fixa"
+msgstr "Fixed equalization"
+
+msgid "Equalização fixa desativada."
+msgstr "Fixed equalization disabled."
+
+msgid "Equalização fixa: {name}."
+msgstr "Fixed equalization: {name}."
+
+msgid "Equalização fixa: {name}. Vale para todas as abas e mídias."
+msgstr "Fixed equalization: {name}. Applies to all tabs and media."
+
+msgid "Usar equalização &fixa em todas as abas e mídias"
+msgstr "Use &fixed equalization on all tabs and media"
+
+msgid "todas as abas e mídias (equalização fixa)"
+msgstr "all tabs and media (fixed equalization)"
