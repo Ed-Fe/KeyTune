@@ -1,6 +1,7 @@
 from ...constants import PROGRESS_GAUGE_RANGE
 from ...i18n import _
 from ...library import folder_display_name
+from .live import is_live_media
 
 PLAYBACK_RATE_STEP = 0.25
 PLAYBACK_RATE_MIN = 0.25
@@ -72,6 +73,14 @@ class PlaybackControlsMixin:
             self._maybe_refresh_player_visual_hints()
             return
 
+        if is_live_media(media):
+            # A live has no duration to show: a fixed label keeps the screen
+            # reader quiet instead of re-announcing a ticking clock.
+            self._set_progress_label(_("Tempo: transmissão ao vivo"))
+            self._set_progress_gauge_value(PROGRESS_GAUGE_RANGE)
+            self._maybe_refresh_player_visual_hints()
+            return
+
         current_time = self.player.get_time()
         if current_time is None or current_time < 0:
             current_time = 0
@@ -109,7 +118,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         current_time = self.player.get_time()
@@ -171,7 +185,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         self.player.set_time(0)
@@ -187,7 +206,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         media_length = self.player.get_length()
@@ -258,12 +282,21 @@ class PlaybackControlsMixin:
             if callable(refresh_smtc):
                 refresh_smtc()
 
+    def _announce_live_seek_unavailable(self):
+        self._announce(_("Não é possível avançar ou voltar em uma transmissão ao vivo."))
+
     def _announce_playback_time(self):
-        if not self.player.get_media():
+        media = self.player.get_media()
+        if not media:
             self._announce(_("Nenhuma mídia carregada."))
             return
 
         current_time = self.player.get_time()
+        if is_live_media(media):
+            watched_label = self._format_time_ms(max(0, current_time or 0))
+            self._announce(_("Transmissão ao vivo. Você está assistindo há {time}.").format(time=watched_label))
+            return
+
         if current_time is None or current_time < 0:
             current_time = 0
 
@@ -339,7 +372,9 @@ class PlaybackControlsMixin:
             current_time = 0
 
         total_time = self.player.get_length()
-        if total_time is not None and total_time > 0:
+        if is_live_media(self.player.get_media()):
+            status_parts.append(_("Transmissão ao vivo."))
+        elif total_time is not None and total_time > 0:
             percentage = int(max(0, min(100, round((current_time / total_time) * 100))))
             status_parts.append(
                 _("Tempo {current} de {total}. {percent}%.").format(current=self._format_time_ms(current_time), total=self._format_time_ms(total_time), percent=percentage)

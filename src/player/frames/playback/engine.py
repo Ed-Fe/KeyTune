@@ -53,14 +53,14 @@ class PlaybackEngineMixin:
             error_message = ""
             player_key = request.get("player_key", self._active_player_key)
             try:
+                resolved_details = self._resolve_media_for_playback_details(request["media_path"])
                 (
                     playback_media_path,
                     playback_http_headers,
                     resolved_display_title,
                     resolved_display_artist,
-                ) = self._resolve_media_for_playback_details(
-                    request["media_path"]
-                )
+                ) = resolved_details[:4]
+                is_live = len(resolved_details) > 4 and resolved_details[4] is True
                 lock = getattr(self, "_playback_backend_lock", None)
                 with lock if lock is not None else contextlib.nullcontext():
                     if request_serial != self._playback_request_serial:
@@ -78,7 +78,14 @@ class PlaybackEngineMixin:
                     if not hasattr(self, "_player_playback_request_serials"):
                         self._player_playback_request_serials = {}
                     self._player_playback_request_serials[player_key] = request_serial
-                    media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
+                    media_kwargs = {"http_headers": playback_http_headers}
+                    live_video = False
+                    if is_live:
+                        # A live never resumes and can show its picture even when
+                        # the rest of the app plays audio only.
+                        live_video = self._live_video_enabled()
+                        media_kwargs.update(is_live=True, video=live_video)
+                    media = player_instance.media_new(playback_media_path, **media_kwargs)
                     player.stop()
                     player.set_media(media)
                     video_output_handle = request.get("video_output_handle")
@@ -108,11 +115,14 @@ class PlaybackEngineMixin:
                     if request.get("pause_after_start"):
                         play_kwargs["pause_on_start"] = True
                     player.play(**play_kwargs)
+                    if live_video:
+                        self._mark_player_showing_live_video(player_key)
                     if request.get("crossfade"):
                         try:
                             player.audio_set_volume(0)
                         except Exception:
                             pass
+                request["is_live"] = is_live
                 request["resolved_display_title"] = resolved_display_title
                 request["resolved_display_artist"] = resolved_display_artist
             except Exception as exc:
@@ -141,11 +151,16 @@ class PlaybackEngineMixin:
     ):
         target_player_key = player_key or self._active_player_key
         target_player = self._managed_player(target_player_key)
+        # A native video window is bound to the MPV instance that created it, so
+        # a slot that showed video must be rebuilt before its next media: either
+        # for a local video file, or because it last showed a live's picture.
+        needs_fresh_video_slot = (
+            self._video_output_enabled() and not is_audio_playback_media(media_path)
+        ) or self._player_showed_live_video(target_player_key)
         if (
             sys.platform.startswith("win")
-            and self._video_output_enabled()
+            and needs_fresh_video_slot
             and not crossfade
-            and not is_audio_playback_media(media_path)
             and target_player is not None
             and (
                 self._player_loaded_media_path(target_player_key)

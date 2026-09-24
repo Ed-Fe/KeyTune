@@ -9,6 +9,7 @@ from ...i18n import _
 import wx
 
 from ...autodj.sound_effects import transition_sound_path
+from ...constants import DEFAULT_LIVE_VIDEO_ENABLED
 from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
 from .helpers import is_youtube_music_media
@@ -20,6 +21,22 @@ _logger = get_logger(__name__)
 class PlayerBackendMixin:
     def _video_output_enabled(self):
         return not bool(getattr(self.settings, "disable_video_output", False))
+
+    def _live_video_enabled(self):
+        """Whether live broadcasts show their picture.
+
+        Independent of ``disable_video_output``: that switch keeps the rest of
+        the app audio only, while a live can still opt into video on its own.
+        """
+        return bool(getattr(self.settings, "live_video_enabled", DEFAULT_LIVE_VIDEO_ENABLED))
+
+    def _player_showed_live_video(self, player_key):
+        return player_key in getattr(self, "_live_video_player_keys", ())
+
+    def _mark_player_showing_live_video(self, player_key):
+        if not hasattr(self, "_live_video_player_keys"):
+            self._live_video_player_keys = set()
+        self._live_video_player_keys.add(player_key)
 
     def _create_player_backend(self):
         self._playback_request_serial = 0
@@ -233,6 +250,7 @@ class PlayerBackendMixin:
             self._player_event_managers[player_key] = event_manager
             self._set_player_loaded_media_path(player_key, None)
             getattr(self, "_player_playback_request_serials", {}).pop(player_key, None)
+            getattr(self, "_live_video_player_keys", set()).discard(player_key)
             self._players_generation += 1
 
             if player_key == getattr(self, "_active_player_key", None):
@@ -243,7 +261,9 @@ class PlayerBackendMixin:
         return player
 
     def _video_output_handle(self, index=None):
-        if not self._video_output_enabled():
+        # A live may show video even while the app-wide output is audio only,
+        # so the native surface must be available whenever either is enabled.
+        if not (self._video_output_enabled() or self._live_video_enabled()):
             return None
 
         video_panel = self._get_video_panel(index)
