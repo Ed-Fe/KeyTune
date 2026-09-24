@@ -483,6 +483,10 @@ msgstr ""
 msgid "A busca ignora acentos e maiúsculas e encontra o texto em qualquer parte do nome. Use F3 para o próximo resultado e Shift+F3 para o anterior."
 msgstr ""
 
+#: src/player/frames/playback/live.py
+msgid "A conexão com a transmissão ao vivo foi perdida. Reconectando."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "A conta do YouTube Music foi desconectada desta instalação."
 msgstr ""
@@ -671,6 +675,11 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "A seleção não contém faixas do YouTube Music para remover."
+msgstr ""
+
+#: src/player/frames/playback/live.py
+#: src/player/youtube_music/live_streams.py
+msgid "A transmissão ao vivo terminou."
 msgstr ""
 
 #: src/player/frames/update.py
@@ -1052,7 +1061,7 @@ msgid "Ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1177,6 +1186,10 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Ao vivo"
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Ao vivo: {name}"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -2012,6 +2025,10 @@ msgstr ""
 msgid "Conectar ou atualizar acesso do YouTube Music"
 msgstr ""
 
+#: src/player/frames/playback/engine.py
+msgid "Conexão com a transmissão ao vivo restabelecida."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "Conexão com o YouTube Music cancelada."
 msgstr ""
@@ -2825,6 +2842,10 @@ msgstr ""
 msgid "Esta pasta pode abrir como playlist estática ou no navegador de pastas."
 msgstr ""
 
+#: src/player/youtube_music/live_streams.py
+msgid "Esta transmissão ao vivo ainda não começou."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Estado"
 msgstr ""
@@ -2889,6 +2910,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Executa a busca usando o texto informado e o escopo selecionado."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3792,6 +3817,14 @@ msgstr ""
 msgid "Mostrar avisos e fazer anúncios pelo leitor de telas"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Mostrar o vídeo das &transmissões ao vivo"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Mostrar o vídeo das transmissões ao vivo"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Mostrar tela de &boas-vindas"
 msgstr ""
@@ -4461,6 +4494,10 @@ msgstr ""
 msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
 msgstr ""
 
+#: src/player/frames/playback/live.py
+msgid "Não foi possível reconectar à transmissão ao vivo."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Não foi possível registrar as associações de arquivo."
 msgstr ""
@@ -4558,6 +4595,10 @@ msgstr ""
 msgid "Não usar temporizador"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Não é possível avançar ou voltar em uma transmissão ao vivo."
+msgstr ""
+
 #: src/player/frames/library_tabs/tabs.py
 msgid "Não é possível fechar a última aba."
 msgstr ""
@@ -4624,6 +4665,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "O YouTube não disponibilizou um stream reproduzível para esta transmissão ao vivo."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -5586,6 +5631,10 @@ msgstr ""
 msgid "Recalcular sequência do AutoDJ"
 msgstr ""
 
+#: src/player/frames/playback/live.py
+msgid "Reconectando à transmissão ao vivo..."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Recursos adicionais"
 msgstr ""
@@ -6268,6 +6317,10 @@ msgid "Tempo: nenhuma mídia carregada."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+msgid "Tempo: transmissão ao vivo"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
 msgid "Tempo: {current} / duração desconhecida"
 msgstr ""
 
@@ -6378,6 +6431,26 @@ msgstr ""
 msgid "Tom: {pitch}."
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Transmissão ao vivo."
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+msgid "Transmissão ao vivo. Você está assistindo há {time}."
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Transmissão ao vivo. {position}"
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Transmissões ao vivo não podem ser analisadas pelo AutoDJ."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Traz para os resultados abaixo as faixas curtidas (Curtidas) da conta conectada."
 msgstr ""
@@ -6428,6 +6501,10 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Uma linha por mídia, da que tocou mais recentemente para a mais antiga."
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Uma transmissão ao vivo não pode entrar em crossfade."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -6628,6 +6705,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Volume padrão"
+msgstr ""
+
+#: src/player/frames/playback/live.py
+msgid "Vídeo das transmissões ao vivo ativado."
+msgstr ""
+
+#: src/player/frames/playback/live.py
+msgid "Vídeo das transmissões ao vivo desativado."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py

@@ -5246,3 +5246,69 @@ msgstr "En cola"
 
 msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
 msgstr "Error de análisis. Próxima transición: se usará la transición normal. Motivo: {reason}."
+
+msgid "Esta transmissão ao vivo ainda não começou."
+msgstr "Esta transmisión en vivo aún no ha comenzado."
+
+msgid "A transmissão ao vivo terminou."
+msgstr "La transmisión en vivo ha terminado."
+
+msgid "O YouTube não disponibilizou um stream reproduzível para esta transmissão ao vivo."
+msgstr "YouTube no ofreció un stream reproducible para esta transmisión en vivo."
+
+msgid "Tempo: transmissão ao vivo"
+msgstr "Tiempo: transmisión en vivo"
+
+msgid "Não é possível avançar ou voltar em uma transmissão ao vivo."
+msgstr "No se puede avanzar ni retroceder en una transmisión en vivo."
+
+msgid "Transmissão ao vivo. Você está assistindo há {time}."
+msgstr "Transmisión en vivo. Llevas {time} viéndola."
+
+msgid "Transmissão ao vivo."
+msgstr "Transmisión en vivo."
+
+msgid "A conexão com a transmissão ao vivo foi perdida. Reconectando."
+msgstr "Se perdió la conexión con la transmisión en vivo. Reconectando."
+
+msgid "Reconectando à transmissão ao vivo..."
+msgstr "Reconectando con la transmisión en vivo..."
+
+msgid "Não foi possível reconectar à transmissão ao vivo."
+msgstr "No se pudo reconectar con la transmisión en vivo."
+
+msgid "Vídeo das transmissões ao vivo ativado."
+msgstr "Video de las transmisiones en vivo activado."
+
+msgid "Vídeo das transmissões ao vivo desativado."
+msgstr "Video de las transmisiones en vivo desactivado."
+
+msgid "Conexão com a transmissão ao vivo restabelecida."
+msgstr "Conexión con la transmisión en vivo restablecida."
+
+msgid "Transmissão ao vivo. {position}"
+msgstr "Transmisión en vivo. {position}"
+
+msgid "Ao vivo: {name}"
+msgstr "En vivo: {name}"
+
+msgid "Uma transmissão ao vivo não pode entrar em crossfade."
+msgstr "Una transmisión en vivo no puede entrar en crossfade."
+
+msgid "Transmissões ao vivo não podem ser analisadas pelo AutoDJ."
+msgstr "AutoDJ no puede analizar transmisiones en vivo."
+
+msgid "Mostrar o vídeo das &transmissões ao vivo"
+msgstr "Mostrar el video de las &transmisiones en vivo"
+
+msgid "Mostrar o vídeo das transmissões ao vivo"
+msgstr "Mostrar el video de las transmisiones en vivo"
+
+msgid "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
+msgstr "Muestra la imagen de las transmisiones en vivo de YouTube en el área del reproductor, incluso con la salida de video desactivada para el resto de la aplicación. Si se desmarca, la transmisión reproduce solo el audio. Durante una transmisión, Ctrl+Alt+V alterna esta opción."
+
+msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
+msgstr "Transmisión en vivo solo con audio\n\nEl video de las transmisiones en vivo está desactivado.\nPresiona Ctrl+Alt+V, o abre Preferencias > Reproducción, para ver la imagen."
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la selección; en carpetas, permite pegar los archivos en el Explorador\nCtrl+Shift+C — Copiar la ruta de la selección en carpetas o del medio actual en las demás pestañas\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
