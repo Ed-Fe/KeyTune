@@ -316,6 +316,7 @@ class PlaybackEngineMixin:
 
         if request.get("is_live"):
             self._live_reconnect_attempts = 0
+            self._live_watch_baseline_ms = None
         self._set_active_player(player_key)
         self._current_track_gain_db = float(getattr(state, "playback_gain_db", 0.0) or 0.0)
         self._apply_equalizer_state()

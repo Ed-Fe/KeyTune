@@ -50,6 +50,18 @@ class PlaybackControlsMixin:
         self._last_visual_hints_signature = signature
         self._refresh_player_visual_hints()
 
+    def _remember_live_watch_baseline(self):
+        """Note where the player joined the live, once per start.
+
+        Called on the progress tick; ``_finish_media_start`` clears it so every
+        (re)connection measures its own watched time.
+        """
+        if getattr(self, "_live_watch_baseline_ms", None) is not None:
+            return
+        current_time = self.player.get_time()
+        if current_time is not None and current_time >= 0:
+            self._live_watch_baseline_ms = current_time
+
     def _set_progress_label(self, text):
         # The progress timer refreshes this label twice per second; skip the
         # SetLabel call (and the re-layout/repaint it triggers) when the text
@@ -82,6 +94,7 @@ class PlaybackControlsMixin:
             # reader quiet instead of re-announcing a ticking clock.
             self._set_progress_label(_("Tempo: transmissão ao vivo"))
             self._set_progress_gauge_value(PROGRESS_GAUGE_RANGE)
+            self._remember_live_watch_baseline()
             self._maybe_refresh_player_visual_hints()
             return
 
@@ -297,7 +310,9 @@ class PlaybackControlsMixin:
 
         current_time = self.player.get_time()
         if is_live_media(media):
-            watched_label = self._format_time_ms(max(0, current_time or 0))
+            # MPV joins a live partway into its buffer, so measure from where we started.
+            watched_ms = max(0, (current_time or 0) - (getattr(self, "_live_watch_baseline_ms", None) or 0))
+            watched_label = self._format_time_ms(watched_ms)
             self._announce(_("Transmissão ao vivo. Você está assistindo há {time}.").format(time=watched_label))
             return
 

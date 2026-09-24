@@ -635,6 +635,16 @@ class MPVLiveMediaTests(unittest.TestCase):
         self.assertEqual(len(end_reached), 1)
         self.assertEqual(len(live_ended), 0)
 
+    def test_a_live_reports_an_unknown_length_instead_of_its_dvr_window(self):
+        player, core = self._make_player()
+        core.duration = 35  # MPV reports the HLS DVR window as the duration.
+
+        player.set_media(mpv_backend.MPVMedia("live.m3u8", is_live=True))
+        self.assertEqual(player.get_length(), -1)
+
+        player.set_media(mpv_backend.MPVMedia("song.mp3"))
+        self.assertEqual(player.get_length(), 35000)
+
     def test_media_new_carries_the_live_and_video_flags(self):
         instance = mpv_backend.MPVInstance(video_output_enabled=False)
 

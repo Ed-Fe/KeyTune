@@ -589,6 +589,11 @@ class MPVPlayer:
         return ""
 
     def get_length(self):
+        # MPV reports the DVR window of a live HLS (a few tens of seconds) as its
+        # duration. A live has no length, and callers treat "unknown" (-1) as
+        # "no end to crossfade into, prefetch for, or resume from".
+        if self._media is not None and self._media.is_live:
+            return -1
         try:
             duration = self._player.duration
         except Exception:

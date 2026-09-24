@@ -171,12 +171,14 @@ class LiveTimeBarTests(unittest.TestCase):
 
     def test_time_bar_shows_a_fixed_live_label_and_a_full_gauge(self):
         frame = self._frame(SimpleNamespace(is_live=True))
+        frame.player.get_time.return_value = 20360
 
         frame._update_time_bar()
 
+        # The label carries no clock, so the screen reader has nothing to re-read.
         frame.progress_label.SetLabel.assert_called_once_with("Tempo: transmissão ao vivo")
         frame.progress_gauge.SetValue.assert_called_once_with(PROGRESS_GAUGE_RANGE)
-        frame.player.get_time.assert_not_called()
+        frame.player.get_length.assert_not_called()
 
     def test_seeking_a_live_is_refused_and_announced(self):
         frame = self._frame(SimpleNamespace(is_live=True))
@@ -207,6 +209,48 @@ class LiveTimeBarTests(unittest.TestCase):
         message = frame._announce.call_args.args[0]
         self.assertIn("ao vivo", message)
         self.assertIn("2:05", message)
+
+
+class LiveWatchedTimeTests(unittest.TestCase):
+    def _frame(self, current_time):
+        class Frame(PlaybackControlsMixin):
+            pass
+
+        frame = Frame()
+        frame._crossfade_state = None
+        frame.player = Mock()
+        frame.player.get_media.return_value = SimpleNamespace(is_live=True)
+        frame.player.get_time.return_value = current_time
+        frame.progress_label = Mock()
+        frame.progress_gauge = Mock()
+        frame._maybe_refresh_player_visual_hints = Mock()
+        frame._announce = Mock()
+        return frame
+
+    def test_the_baseline_is_taken_on_the_first_tick_and_kept_afterwards(self):
+        frame = self._frame(20360)
+        frame._update_time_bar()
+        frame.player.get_time.return_value = 90000
+        frame._update_time_bar()
+
+        self.assertEqual(frame._live_watch_baseline_ms, 20360)
+
+    def test_watched_time_is_measured_from_where_the_live_was_joined(self):
+        # MPV joins a live ~20 s into its buffer; that offset is not watched time.
+        frame = self._frame(20360)
+        frame._update_time_bar()
+        frame.player.get_time.return_value = 20360 + 125000
+
+        frame._announce_playback_time()
+
+        self.assertIn("2:05", frame._announce.call_args.args[0])
+
+    def test_an_unknown_position_does_not_set_the_baseline(self):
+        frame = self._frame(-1)
+
+        frame._update_time_bar()
+
+        self.assertIsNone(getattr(frame, "_live_watch_baseline_ms", None))
 
 
 class LiveVideoSlotTests(unittest.TestCase):
