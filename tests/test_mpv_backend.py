@@ -523,5 +523,128 @@ class MPVPlayerTests(unittest.TestCase):
         self.assertEqual(player.get_current_audio_output(), "null")
 
 
+class MPVLiveMediaTests(unittest.TestCase):
+    def setUp(self):
+        self._previous_module = mpv_backend._mpv_module
+        self.fake_module = _FakeMPVModule()
+        mpv_backend._mpv_module = self.fake_module
+        self.addCleanup(setattr, mpv_backend, "_mpv_module", self._previous_module)
+
+    def _make_player(self, *, video_output_enabled=False):
+        player = mpv_backend.MPVPlayer(video_output_enabled=video_output_enabled)
+        core = self.fake_module.created_players[0]
+        core.load_options = []
+        core.loadfile = lambda path, mode, **options: core.load_options.append(options)
+        return player, core
+
+    def _collect(self, player, event_type):
+        events = []
+        player.event_manager().event_attach(event_type, lambda event: events.append(event))
+        return events
+
+    def _set_eof_reached(self, core, value):
+        for callback in core.property_observers.get("eof-reached", []):
+            callback("eof-reached", value)
+
+    def test_live_media_never_starts_from_a_resume_position(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("https://live.example/index.m3u8", is_live=True))
+
+        player.play(start_seconds=120.0)
+
+        self.assertNotIn("start", core.load_options[0])
+
+    def test_regular_media_still_starts_from_the_resume_position(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("song.mp3"))
+
+        player.play(start_seconds=120.0)
+
+        self.assertEqual(core.load_options[0]["start"], "120.000")
+
+    def test_media_without_a_video_override_leaves_the_track_selection_alone(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("song.mp3"))
+
+        player.play()
+
+        self.assertNotIn("vid", core.load_options[0])
+
+    def test_video_override_selects_the_video_track_per_file(self):
+        player, core = self._make_player(video_output_enabled=False)
+        player.set_media(mpv_backend.MPVMedia("live.m3u8", is_live=True, video=True))
+        player.play()
+        player.set_media(mpv_backend.MPVMedia("live2.m3u8", is_live=True, video=False))
+        player.play()
+
+        self.assertEqual([options["vid"] for options in core.load_options], ["auto", "no"])
+
+    def test_media_can_enable_video_on_an_audio_only_player(self):
+        player, core = self._make_player(video_output_enabled=False)
+        player.set_hwnd(4321)
+        self.assertIsNone(core.wid)  # Audio-only default: nothing is embedded yet.
+
+        player.set_media(mpv_backend.MPVMedia("live.m3u8", is_live=True, video=True))
+        player.play()
+
+        self.assertEqual(core.wid, "4321")
+
+    def test_audio_only_media_does_not_embed_the_window(self):
+        player, core = self._make_player(video_output_enabled=False)
+        player.set_hwnd(4321)
+
+        player.set_media(mpv_backend.MPVMedia("song.mp3"))
+        player.play()
+
+        self.assertIsNone(core.wid)
+
+    def test_live_eof_reports_the_live_ended_instead_of_the_end_of_a_track(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("live.m3u8", is_live=True))
+        player.play()
+        end_reached = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_END_REACHED)
+        live_ended = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_LIVE_ENDED)
+
+        self._set_eof_reached(core, True)
+
+        self.assertEqual(len(end_reached), 0)
+        self.assertEqual(len(live_ended), 1)
+
+    def test_live_end_file_eof_reports_the_live_ended(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("live.m3u8", is_live=True))
+        player.play()
+        end_reached = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_END_REACHED)
+        live_ended = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_LIVE_ENDED)
+        end_event = type("_EndEvent", (), {"reason": self.fake_module.MpvEventEndFile.EOF})()
+
+        core.callbacks["end-file"](type("_Event", (), {"data": end_event})())
+
+        self.assertEqual(len(end_reached), 0)
+        self.assertEqual(len(live_ended), 1)
+
+    def test_regular_media_eof_still_reports_the_end_of_a_track(self):
+        player, core = self._make_player()
+        player.set_media(mpv_backend.MPVMedia("song.mp3"))
+        player.play()
+        end_reached = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_END_REACHED)
+        live_ended = self._collect(player, mpv_backend.PlayerEventType.MEDIA_PLAYER_LIVE_ENDED)
+
+        self._set_eof_reached(core, True)
+
+        self.assertEqual(len(end_reached), 1)
+        self.assertEqual(len(live_ended), 0)
+
+    def test_media_new_carries_the_live_and_video_flags(self):
+        instance = mpv_backend.MPVInstance(video_output_enabled=False)
+
+        media = instance.media_new("live.m3u8", http_headers={"User-Agent": "x"}, is_live=True, video=True)
+
+        self.assertTrue(media.is_live)
+        self.assertIs(media.video, True)
+        self.assertEqual(media.http_headers, {"User-Agent": "x"})
+        self.assertFalse(instance.media_new("song.mp3").is_live)
+
+
 if __name__ == "__main__":
     unittest.main()

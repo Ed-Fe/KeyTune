@@ -32,12 +32,20 @@ class PlayerEventType(Enum):
     MEDIA_PLAYER_END_REACHED = "media-player-end-reached"
     MEDIA_PLAYER_PLAYING = "media-player-playing"
     MEDIA_PLAYER_ERROR = "media-player-error"
+    # A live broadcast stopped delivering data. Unlike a track it has no "next":
+    # the listener decides whether to reconnect or report that it ended.
+    MEDIA_PLAYER_LIVE_ENDED = "media-player-live-ended"
 
 
 @dataclass(slots=True)
 class MPVMedia:
     path: str
     http_headers: dict[str, str] | None = None
+    is_live: bool = False
+    # ``None`` follows the player's video output setting; a boolean overrides it
+    # for this media only (e.g. showing the picture of a live while the rest of
+    # the app plays audio only).
+    video: bool | None = None
 
 
 @dataclass(slots=True)
@@ -76,7 +84,7 @@ class MPVPlayer:
         self._loaded_media_path: str | None = None
         self._needs_load = False
         self._bound_handle: str | None = None
-        self._bound_video_output = video_output_enabled
+        self._video_output_default = video_output_enabled
         self._last_end_reason: int | None = None
         self._last_playback_error_detail = ""
         # With ``keep-open=yes`` MPV does NOT send an end-file event at the
@@ -210,7 +218,7 @@ class MPVPlayer:
             if is_eof and not self._eof_reached_state:
                 self._needs_load = True
                 self._eof_reached_state = True
-                self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, event)
+                self._emit_natural_end(event)
 
         @self._player.event_callback("file-loaded", "playback-restart")
         def _on_playback_event(event):
@@ -229,7 +237,7 @@ class MPVPlayer:
                 self._eof_reached_state = True
                 self._needs_load = True
                 _logger.debug("eof-reached became True; emitting end-of-track.")
-                self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, None)
+                self._emit_natural_end(None)
             elif not reached:
                 self._eof_reached_state = False
 
@@ -237,6 +245,13 @@ class MPVPlayer:
             self._player.observe_property("eof-reached", _on_eof_reached)
         except Exception:
             _logger.warning("Could not observe 'eof-reached'; natural end of track may not be detected.")
+
+    def _emit_natural_end(self, event):
+        media = self._media
+        if media is not None and media.is_live:
+            self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_LIVE_ENDED, event)
+        else:
+            self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, event)
 
     def _handle_log_message(self, _level, _prefix, message):
         normalized_message = " ".join(str(message or "").split())
@@ -262,14 +277,21 @@ class MPVPlayer:
     def set_nsobject(self, handle):
         self._set_window_handle(handle)
 
+    def _video_wanted_for(self, media: MPVMedia | None) -> bool:
+        if media is None or media.video is None:
+            return self._video_output_default
+        return bool(media.video)
+
     def _set_window_handle(self, handle):
-        if not self._bound_video_output:
-            return
         try:
             normalized_handle = str(int(handle))
         except (TypeError, ValueError):
             return
+        # Always remember the handle: a media can turn video on for itself even
+        # when the player-wide default is audio only.
         self._bound_handle = normalized_handle
+        if not self._video_wanted_for(self._media):
+            return
         try:
             self._player.wid = normalized_handle
         except Exception:
@@ -290,13 +312,16 @@ class MPVPlayer:
         media = self._media
         if media is None:
             return
-        if self._bound_handle and self._bound_video_output:
+        if self._bound_handle and self._video_wanted_for(media):
             self._set_window_handle(self._bound_handle)
         if self._needs_load or self._loaded_media_path != media.path:
             self._last_playback_error_detail = ""
             self._apply_media_http_headers(media)
             loadfile_options: dict[str, str] = {"pause": "yes" if pause_on_start else "no"}
-            if start_seconds is not None:
+            if media.video is not None:
+                loadfile_options["vid"] = "auto" if media.video else "no"
+            # A live has no position to resume: it always joins at the live edge.
+            if start_seconds is not None and not media.is_live:
                 try:
                     normalized_start_seconds = max(0.0, float(start_seconds))
                 except (TypeError, ValueError):
@@ -619,8 +644,13 @@ class MPVInstance:
             audio_output_device_id=self._audio_output_device_id,
         )
 
-    def media_new(self, media_path, *, http_headers=None):
-        return MPVMedia(path=str(media_path or "").strip(), http_headers=dict(http_headers or {}))
+    def media_new(self, media_path, *, http_headers=None, is_live=False, video=None):
+        return MPVMedia(
+            path=str(media_path or "").strip(),
+            http_headers=dict(http_headers or {}),
+            is_live=bool(is_live),
+            video=video,
+        )
 
     def release(self):
         return None
