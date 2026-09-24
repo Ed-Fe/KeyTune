@@ -5310,5 +5310,551 @@ msgstr "Muestra la imagen de las transmisiones en vivo de YouTube en el área de
 msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
 msgstr "Transmisión en vivo solo con audio\n\nEl video de las transmisiones en vivo está desactivado.\nPresiona Ctrl+Alt+V, o abre Preferencias > Reproducción, para ver la imagen."
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la selección; en carpetas, permite pegar los archivos en el Explorador\nCtrl+Shift+C — Copiar la ruta de la selección en carpetas o del medio actual en las demás pestañas\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la selección; en carpetas, permite pegar los archivos en el Explorador\nCtrl+Shift+C — Copiar la ruta de la selección en carpetas o del medio actual en las demás pestañas\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir el medio abierto (audio o vídeo); más opciones en Archivo > Convertir\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+B — Descargar el medio actual de YouTube (audio o vídeo); selección y playlist completa en el menú contextual de la lista\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+
+msgid "&Baixar"
+msgstr "&Descargar"
+
+msgid "&Baixar mídia atual...\tCtrl+Shift+B"
+msgstr "&Descargar medio actual...\tCtrl+Shift+B"
+
+msgid "A instalação automática do FFmpeg só está disponível no Windows."
+msgstr "La instalación automática de FFmpeg solo está disponible en Windows."
+
+msgid "A instalação do FFmpeg foi cancelada."
+msgstr "Se canceló la instalación de FFmpeg."
+
+msgid "A qualidade {requested}p não estava disponível; o vídeo foi baixado em {actual}p."
+msgstr "La calidad {requested}p no estaba disponible; el vídeo se descargó en {actual}p."
+
+msgid "Altura máxima do vídeo. Se a qualidade escolhida não existir, o vídeo é baixado na melhor qualidade disponível."
+msgstr "Altura máxima del vídeo. Si la calidad elegida no existe, el vídeo se descarga en la mejor calidad disponible."
+
+msgid "Baixando..."
+msgstr "Descargando..."
+
+msgid "Baixando... {percent}%"
+msgstr "Descargando... {percent}%"
+
+msgid "Baixar"
+msgstr "Descargar"
+
+msgid "Baixar mídia"
+msgstr "Descargar medio"
+
+msgid "Baixar “{title}”. Escolha o formato e a qualidade."
+msgstr "Descargar “{title}”. Elige el formato y la calidad."
+
+msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. O KeyTune oferece instalá-lo na primeira vez que precisar."
+msgstr "Convertir el audio y descargar vídeo en alta resolución requieren FFmpeg, que aún no se ha encontrado. KeyTune ofrece instalarlo la primera vez que haga falta."
+
+msgid "Deseja cancelar o download?"
+msgstr "¿Quieres cancelar la descarga?"
+
+msgid "Desmarcado, o download começa direto com as opções da guia Download das Preferências, sem perguntar."
+msgstr "Desmarcada, la descarga empieza directamente con las opciones de la pestaña Descarga de las Preferencias, sin preguntar."
+
+msgid "Download"
+msgstr "Descarga"
+
+msgid "Download cancelado."
+msgstr "Descarga cancelada."
+
+msgid "Download concluído: {name}."
+msgstr "Descarga completada: {name}."
+
+msgid "Download em andamento."
+msgstr "Descarga en curso."
+
+msgid "Download em andamento: {percent}%."
+msgstr "Descarga en curso: {percent}%."
+
+msgid "Escolha a pasta de download"
+msgstr "Elige la carpeta de descarga"
+
+msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp e vale para mídias do YouTube e do YouTube Music."
+msgstr "Elige cómo descargar el medio que se está reproduciendo (Ctrl+Shift+B). La descarga usa yt-dlp y sirve para medios de YouTube y YouTube Music."
+
+msgid "Escolha o formato e a qualidade do download."
+msgstr "Elige el formato y la calidad de la descarga."
+
+msgid "Escolha se o download será apenas o áudio ou o vídeo completo."
+msgstr "Elige si se descargará solo el audio o el vídeo completo."
+
+msgid "Escolha uma pasta de destino para o download."
+msgstr "Elige una carpeta de destino para la descarga."
+
+msgid "Escolher &pasta..."
+msgstr "Elegir &carpeta..."
+
+msgid "Escolher pasta de download"
+msgstr "Elegir carpeta de descarga"
+
+msgid "Esta mídia já está no seu computador."
+msgstr "Este medio ya está en tu equipo."
+
+msgid "FFmpeg necessário"
+msgstr "FFmpeg necesario"
+
+msgid "FLAC (sem perdas)"
+msgstr "FLAC (sin pérdidas)"
+
+msgid "Iniciando o download."
+msgstr "Iniciando la descarga."
+
+msgid "Instalando o FFmpeg..."
+msgstr "Instalando FFmpeg..."
+
+msgid "Ligado, cada download abre um diálogo para confirmar formato e qualidade. Desligado, o download começa direto com as opções desta guia."
+msgstr "Activada, cada descarga abre un diálogo para confirmar el formato y la calidad. Desactivada, la descarga empieza directamente con las opciones de esta pestaña."
+
+msgid "MP3 {bitrate} kbps"
+msgstr "MP3 {bitrate} kbps"
+
+msgid "Melhor disponível"
+msgstr "Mejor disponible"
+
+msgid "Nenhuma mídia está tocando no momento."
+msgstr "No se está reproduciendo ningún medio."
+
+msgid "Não foi possível baixar a mídia: {reason}"
+msgstr "No se pudo descargar el medio: {reason}"
+
+msgid "Não foi possível baixar o FFmpeg. Verifique a conexão e tente novamente."
+msgstr "No se pudo descargar FFmpeg. Comprueba la conexión e inténtalo de nuevo."
+
+msgid "Não foi possível iniciar o download pelo yt-dlp."
+msgstr "No se pudo iniciar la descarga con yt-dlp."
+
+msgid "Não foi possível localizar o checksum oficial do FFmpeg baixado."
+msgstr "No se pudo localizar la suma de verificación oficial del FFmpeg descargado."
+
+msgid "Não foi possível usar a pasta de download escolhida."
+msgstr "No se pudo usar la carpeta de descarga elegida."
+
+msgid "Não é possível baixar uma transmissão ao vivo."
+msgstr "No se puede descargar una transmisión en directo."
+
+msgid "O FFmpeg baixado não passou na validação de integridade."
+msgstr "El FFmpeg descargado no superó la validación de integridad."
+
+msgid "O FFmpeg já está disponível para converter áudio e unir vídeo e áudio."
+msgstr "FFmpeg ya está disponible para convertir audio y unir vídeo y audio."
+
+msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
+msgstr "No se encontró FFmpeg. La descarga continuará en la calidad original, sin conversión."
+
+msgid "O download só está disponível para mídias do YouTube e do YouTube Music."
+msgstr "La descarga solo está disponible para medios de YouTube y YouTube Music."
+
+msgid "O pacote do FFmpeg veio sem os executáveis esperados."
+msgstr "El paquete de FFmpeg no incluía los ejecutables esperados."
+
+msgid "O yt-dlp não conseguiu baixar a mídia."
+msgstr "yt-dlp no pudo descargar el medio."
+
+msgid "Opções de download"
+msgstr "Opciones de descarga"
+
+msgid "Original"
+msgstr "Original"
+
+msgid "Original (sem conversão)"
+msgstr "Original (sin conversión)"
+
+msgid "Original mantém o áudio exatamente como o YouTube o entrega, sem converter. MP3 e FLAC convertem o áudio e exigem o FFmpeg. Se a qualidade escolhida não existir, o áudio é baixado na qualidade original."
+msgstr "Original mantiene el audio exactamente como lo entrega YouTube, sin convertir. MP3 y FLAC convierten el audio y requieren FFmpeg. Si la calidad elegida no existe, el audio se descarga en la calidad original."
+
+msgid "Para {what} o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nSim: instalar o FFmpeg e baixar.\nNão: baixar agora na qualidade original, sem conversão.\nCancelar: não baixar."
+msgstr "Para {what}, KeyTune necesita FFmpeg, que no se encontró. Se descargará de las versiones oficiales (unos {size} MB) y se guardará en la carpeta de recursos de KeyTune.\n\nSí: instalar FFmpeg y descargar.\nNo: descargar ahora en la calidad original, sin conversión.\nCancelar: no descargar."
+
+msgid "Pasta de download"
+msgstr "Carpeta de descarga"
+
+msgid "Pasta de download:"
+msgstr "Carpeta de descarga:"
+
+msgid "Pasta onde os arquivos baixados serão salvos."
+msgstr "Carpeta donde se guardarán los archivos descargados."
+
+msgid "Processando o arquivo..."
+msgstr "Procesando el archivo..."
+
+msgid "Qualidade do vídeo"
+msgstr "Calidad del vídeo"
+
+msgid "Qualidade do áudio"
+msgstr "Calidad del audio"
+
+msgid "Sem o FFmpeg, o arquivo foi baixado na qualidade original, sem conversão."
+msgstr "Sin FFmpeg, el archivo se descargó en la calidad original, sin conversión."
+
+msgid "Sempre &mostrar este diálogo ao baixar"
+msgstr "Mostrar siempre este diálogo al des&cargar"
+
+msgid "Sempre &mostrar o diálogo ao baixar"
+msgstr "Mostrar siempre el diálogo al des&cargar"
+
+msgid "Sempre mostrar este diálogo ao baixar"
+msgstr "Mostrar siempre este diálogo al descargar"
+
+msgid "Sempre mostrar o diálogo ao baixar"
+msgstr "Mostrar siempre el diálogo al descargar"
+
+msgid "Só vale quando o áudio é convertido para MP3 ou FLAC. Original mantém a taxa do arquivo baixado."
+msgstr "Solo se aplica cuando el audio se convierte a MP3 o FLAC. Original mantiene la frecuencia del archivo descargado."
+
+msgid "Taxa de amostragem do áudio"
+msgstr "Frecuencia de muestreo del audio"
+
+msgid "Tipo de download padrão"
+msgstr "Tipo de descarga predeterminado"
+
+msgid "Vídeo"
+msgstr "Vídeo"
+
+msgid "converter o áudio"
+msgstr "convertir el audio"
+
+msgid "unir o vídeo e o áudio"
+msgstr "unir el vídeo y el audio"
+
+msgid "{height}p"
+msgstr "{height}p"
+
+msgid "{rate} Hz"
+msgstr "{rate} Hz"
+
+msgid "Áudio"
+msgstr "Audio"
+
+msgid "&Converter"
+msgstr "&Convertir"
+
+msgid "A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B)."
+msgstr "La conversión funciona con archivos del equipo. Para medios de YouTube, usa Descargar (Ctrl+Shift+B)."
+
+msgid "A conversão precisa do FFmpeg, que não foi encontrado. Instale-o e tente de novo."
+msgstr "La conversión necesita FFmpeg, que no se encontró. Instálalo e inténtalo de nuevo."
+
+msgid "AVI"
+msgstr "AVI"
+
+msgid "Con&verter"
+msgstr "Con&vertir"
+
+msgid "Conversão cancelada."
+msgstr "Conversión cancelada."
+
+msgid "Conversão concluída: {name}."
+msgstr "Conversión completada: {name}."
+
+msgid "Conversão em andamento."
+msgstr "Conversión en curso."
+
+msgid "Conversão em andamento: {percent}%."
+msgstr "Conversión en curso: {percent}%."
+
+msgid "Convertendo..."
+msgstr "Convirtiendo..."
+
+msgid "Convertendo... {percent}%"
+msgstr "Convirtiendo... {percent}%"
+
+msgid "Converter &mídia atual...\tCtrl+Shift+K"
+msgstr "Convertir &medio actual...\tCtrl+Shift+K"
+
+msgid "Converter mídia"
+msgstr "Convertir medio"
+
+msgid "Deseja cancelar a conversão?"
+msgstr "¿Quieres cancelar la conversión?"
+
+msgid "Escolha a pasta de destino"
+msgstr "Elige la carpeta de destino"
+
+msgid "Escolha uma pasta de destino para o arquivo convertido."
+msgstr "Elige una carpeta de destino para el archivo convertido."
+
+msgid "Escolher pasta de destino"
+msgstr "Elegir carpeta de destino"
+
+msgid "Esta opção converte vídeo, mas a mídia atual é um áudio. Use as opções de áudio."
+msgstr "Esta opción convierte vídeo, pero el medio actual es un audio. Usa las opciones de audio."
+
+msgid "Esta opção converte áudio, mas a mídia atual é um vídeo. Use as opções de vídeo."
+msgstr "Esta opción convierte audio, pero el medio actual es un vídeo. Usa las opciones de vídeo."
+
+msgid "Este arquivo não tem faixa de vídeo para converter."
+msgstr "Este archivo no tiene pista de vídeo para convertir."
+
+msgid "Este arquivo não tem faixa de áudio para converter."
+msgstr "Este archivo no tiene pista de audio para convertir."
+
+msgid "Este tipo de arquivo não pode ser convertido."
+msgstr "Este tipo de archivo no se puede convertir."
+
+msgid "Formato de destino"
+msgstr "Formato de destino"
+
+msgid "Formato do arquivo de áudio gerado."
+msgstr "Formato del archivo de audio generado."
+
+msgid "Formato do vídeo gerado. O áudio é mantido e a imagem fica parada durante toda a duração."
+msgstr "Formato del vídeo generado. El audio se mantiene y la imagen permanece fija durante toda la duración."
+
+msgid "Iniciando a conversão."
+msgstr "Iniciando la conversión."
+
+msgid "M4A (AAC)"
+msgstr "M4A (AAC)"
+
+msgid "MKV"
+msgstr "MKV"
+
+msgid "MOV"
+msgstr "MOV"
+
+msgid "MP3"
+msgstr "MP3"
+
+msgid "MP4"
+msgstr "MP4"
+
+msgid "Marcado, o vídeo mostra a capa embutida no áudio. Sem capa, ou desmarcado, o fundo é preto."
+msgstr "Marcado, el vídeo muestra la carátula incrustada en el audio. Sin carátula, o desmarcado, el fondo es negro."
+
+msgid "Nenhuma mídia está aberta para converter."
+msgstr "No hay ningún medio abierto para convertir."
+
+msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão."
+msgstr "Nuevo formato del vídeo. Se mantiene el nombre del archivo, con la nueva extensión."
+
+msgid "Não foi possível converter a mídia: {reason}"
+msgstr "No se pudo convertir el medio: {reason}"
+
+msgid "Não foi possível iniciar o FFmpeg."
+msgstr "No se pudo iniciar FFmpeg."
+
+msgid "Não foi possível ler as informações do arquivo."
+msgstr "No se pudo leer la información del archivo."
+
+msgid "Não foi possível usar a pasta de destino escolhida."
+msgstr "No se pudo usar la carpeta de destino elegida."
+
+msgid "O FFmpeg não conseguiu converter o arquivo."
+msgstr "FFmpeg no pudo convertir el archivo."
+
+msgid "O FFmpeg não foi encontrado."
+msgstr "No se encontró FFmpeg."
+
+msgid "O arquivo da mídia atual não foi encontrado."
+msgstr "No se encontró el archivo del medio actual."
+
+msgid "O arquivo de origem não foi encontrado."
+msgstr "No se encontró el archivo de origen."
+
+msgid "O arquivo não pôde ser lido. Ele pode estar corrompido ou em um formato sem suporte."
+msgstr "No se pudo leer el archivo. Puede estar dañado o en un formato no compatible."
+
+msgid "O que você quer fazer com esta mídia?"
+msgstr "¿Qué quieres hacer con este medio?"
+
+msgid "OGG (Vorbis)"
+msgstr "OGG (Vorbis)"
+
+msgid "Opus"
+msgstr "Opus"
+
+msgid "Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."
+msgstr "Original mantiene la frecuencia del archivo. Opus siempre usa 48000 Hz."
+
+msgid "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nDeseja instalar o FFmpeg e converter agora?"
+msgstr "Para convertir, KeyTune necesita FFmpeg, que no se encontró. Se descargará de las versiones oficiales (unos {size} MB) y se guardará en la carpeta de recursos de KeyTune.\n\n¿Quieres instalar FFmpeg y convertir ahora?"
+
+msgid "Pasta de destino"
+msgstr "Carpeta de destino"
+
+msgid "Pasta onde o arquivo convertido será salvo. Por padrão, a mesma pasta do arquivo original."
+msgstr "Carpeta donde se guardará el archivo convertido. De forma predeterminada, la misma carpeta del archivo original."
+
+msgid "Resolução do vídeo"
+msgstr "Resolución del vídeo"
+
+msgid "Só o formato muda: as faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
+msgstr "Solo cambia el formato: las pistas compatibles con el nuevo formato se copian sin pérdida de calidad y las demás se recodifican."
+
+msgid "Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."
+msgstr "Tamaño del fotograma del vídeo generado. Resoluciones mayores generan archivos más grandes."
+
+msgid "Taxa de bits dos formatos com perdas (MP3, M4A, OGG e Opus). FLAC e WAV não usam esta opção."
+msgstr "Tasa de bits de los formatos con pérdidas (MP3, M4A, OGG y Opus). FLAC y WAV no usan esta opción."
+
+msgid "Usar a &capa do álbum como imagem, se houver"
+msgstr "Usar la &carátula del álbum como imagen, si existe"
+
+msgid "Usar a capa do álbum como imagem"
+msgstr "Usar la carátula del álbum como imagen"
+
+msgid "Vídeo para &áudio..."
+msgstr "Vídeo a &audio..."
+
+msgid "Vídeo para outro f&ormato de vídeo..."
+msgstr "Vídeo a otro f&ormato de vídeo..."
+
+msgid "Vídeo para outro formato de vídeo"
+msgstr "Vídeo a otro formato de vídeo"
+
+msgid "Vídeo para áudio"
+msgstr "Vídeo a audio"
+
+msgid "WAV (sem compressão)"
+msgstr "WAV (sin compresión)"
+
+msgid "WebM"
+msgstr "WebM"
+
+msgid "{bitrate} kbps"
+msgstr "{bitrate} kbps"
+
+msgid "{mode}: “{name}”. Escolha o formato de destino."
+msgstr "{mode}: “{name}”. Elige el formato de destino."
+
+msgid "Áudio para &vídeo..."
+msgstr "Audio a &vídeo..."
+
+msgid "Áudio para outro &formato de áudio..."
+msgstr "Audio a otro &formato de audio..."
+
+msgid "Áudio para outro formato de áudio"
+msgstr "Audio a otro formato de audio"
+
+msgid "Áudio para vídeo"
+msgstr "Audio a vídeo"
+
+msgid "Salvar em"
+msgstr "Guardar en"
+
+msgid "Mesma pasta do arquivo original ou outra pasta à sua escolha. O arquivo original nunca é alterado."
+msgstr "La misma carpeta del archivo original u otra carpeta a tu elección. El archivo original nunca se modifica."
+
+msgid "Mesma pasta do arquivo original"
+msgstr "Misma carpeta del archivo original"
+
+msgid "Outra pasta"
+msgstr "Otra carpeta"
+
+msgid "Pasta onde o arquivo convertido será salvo. Só vale com a opção Outra pasta."
+msgstr "Carpeta donde se guardará el archivo convertido. Solo se aplica con la opción Otra carpeta."
+
+msgid "Baixando {index} de {total}..."
+msgstr "Descargando {index} de {total}..."
+
+msgid "Baixando {index} de {total}... {percent}%"
+msgstr "Descargando {index} de {total}... {percent}%"
+
+msgid "Baixar playlist inteira do YouTube..."
+msgstr "Descargar la playlist completa de YouTube..."
+
+msgid "Baixar seleção do YouTube..."
+msgstr "Descargar la selección de YouTube..."
+
+msgid "Baixar seleção..."
+msgstr "Descargar selección..."
+
+msgid "Baixar {count} itens do YouTube para a pasta:"
+msgstr "Descargar {count} elementos de YouTube en la carpeta:"
+
+msgid "Baixar {count} itens. Escolha o formato e a qualidade."
+msgstr "Descargar {count} elementos. Elige el formato y la calidad."
+
+msgid "Conversão cancelada. {done} de {total} arquivos já foram convertidos."
+msgstr "Conversión cancelada. {done} de {total} archivos ya se habían convertido."
+
+msgid "Conversão concluída: {done} arquivos."
+msgstr "Conversión completada: {done} archivos."
+
+msgid "Conversão concluída: {done} de {total} arquivos. {failed} falharam."
+msgstr "Conversión completada: {done} de {total} archivos. {failed} fallaron."
+
+msgid "Conversão em andamento: arquivo {index} de {total}."
+msgstr "Conversión en curso: archivo {index} de {total}."
+
+msgid "Convertendo {index} de {total}..."
+msgstr "Convirtiendo {index} de {total}..."
+
+msgid "Convertendo {index} de {total}... {percent}%"
+msgstr "Convirtiendo {index} de {total}... {percent}%"
+
+msgid "Converter seleção..."
+msgstr "Convertir selección..."
+
+msgid "Download cancelado. {done} de {total} itens já foram baixados."
+msgstr "Descarga cancelada. {done} de {total} elementos ya se habían descargado."
+
+msgid "Download concluído: {done} de {total} itens em {folder}. {failed} falharam."
+msgstr "Descarga completada: {done} de {total} elementos en {folder}. {failed} fallaron."
+
+msgid "Download concluído: {done} itens em {folder}."
+msgstr "Descarga completada: {done} elementos en {folder}."
+
+msgid "Download em andamento: item {index} de {total}."
+msgstr "Descarga en curso: elemento {index} de {total}."
+
+msgid "Esta aba não tem uma playlist para baixar."
+msgstr "Esta pestaña no tiene una playlist para descargar."
+
+msgid "Iniciando a conversão de {count} arquivos."
+msgstr "Iniciando la conversión de {count} archivos."
+
+msgid "Iniciando o download de {count} itens."
+msgstr "Iniciando la descarga de {count} elementos."
+
+msgid "Nada para baixar: só mídias do YouTube e do YouTube Music podem ser baixadas."
+msgstr "Nada que descargar: solo se pueden descargar medios de YouTube y YouTube Music."
+
+msgid "Nenhum arquivo de áudio ou vídeo do computador está selecionado."
+msgstr "No hay ningún archivo de audio o vídeo del equipo seleccionado."
+
+msgid "Nenhum dos arquivos selecionados precisa desta conversão."
+msgstr "Ninguno de los archivos seleccionados necesita esta conversión."
+
+msgid "Nenhum item selecionado para baixar."
+msgstr "No hay ningún elemento seleccionado para descargar."
+
+msgid "Não foi possível baixar nenhum dos {total} itens: {reason}"
+msgstr "No se pudo descargar ninguno de los {total} elementos: {reason}"
+
+msgid "Não foi possível converter nenhum dos {total} arquivos: {reason}"
+msgstr "No se pudo convertir ninguno de los {total} archivos: {reason}"
+
+msgid "Sem o FFmpeg, os arquivos foram baixados na qualidade original, sem conversão."
+msgstr "Sin FFmpeg, los archivos se descargaron en la calidad original, sin conversión."
+
+msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
+msgstr "Solo se descargarán los primeros {limit} elementos; {count} quedarán fuera."
+
+msgid "{count} arquivos foram ignorados."
+msgstr "Se omitieron {count} archivos."
+
+msgid "{count} itens que não são do YouTube serão ignorados."
+msgstr "Se omitirán {count} elementos que no son de YouTube."
+
+msgid "{mode} (arquivos: {count})"
+msgstr "{mode} (archivos: {count})"
+
+msgid "{mode}: {count} arquivos. Escolha o formato de destino."
+msgstr "{mode}: {count} archivos. Elige el formato de destino."
+
+msgid "Baixar &seleção da lista..."
+msgstr "Descargar la &selección de la lista..."
+
+msgid "Baixar playlist &inteira..."
+msgstr "Descargar la playlist &completa..."
+
+msgid "Converter arquivos &selecionados na lista..."
+msgstr "Convertir los archivos &seleccionados de la lista..."
+
+msgid "Progresso da tarefa"
+msgstr "Progreso de la tarea"

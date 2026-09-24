@@ -5310,5 +5310,551 @@ msgstr "Shows the picture of YouTube live broadcasts in the player area, even wh
 msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
 msgstr "Live broadcast, audio only\n\nVideo for live broadcasts is turned off.\nPress Ctrl+Alt+V, or open Preferences > Playback, to see the picture."
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the selection; in folders, allows the files to be pasted into File Explorer\nCtrl+Shift+C — Copy the selection path in folders or the current media in other tabs\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nAlt+D — Select the audio device\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Alt+V — Toggle the video of live broadcasts\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nCtrl+Shift+D — Sleep timer (preset durations or end of track)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nCtrl+F — Find an item in the current playlist or folder\nF3 / Shift+F3 — Next or previous search result\nCtrl+G — Search the whole library (playlists, folders and history)\nCtrl+D — Add or remove the selection from favorites\nCtrl+0 to Ctrl+5 — Rate the selection from zero to five stars\nCtrl+Shift+H — Playback history\nCtrl+Shift+R — Continue listening to what was left half finished\nLibrary menu > Smart playlists — Open a saved rule\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the selection; in folders, allows the files to be pasted into File Explorer\nCtrl+Shift+C — Copy the selection path in folders or the current media in other tabs\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+Shift+K — Convert the open media (audio or video); more options under File > Convert\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nAlt+D — Select the audio device\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Alt+V — Toggle the video of live broadcasts\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nCtrl+Shift+B — Download the current YouTube media (audio or video); selection and whole playlist in the list's context menu\nCtrl+Shift+D — Sleep timer (preset durations or end of track)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nCtrl+F — Find an item in the current playlist or folder\nF3 / Shift+F3 — Next or previous search result\nCtrl+G — Search the whole library (playlists, folders and history)\nCtrl+D — Add or remove the selection from favorites\nCtrl+0 to Ctrl+5 — Rate the selection from zero to five stars\nCtrl+Shift+H — Playback history\nCtrl+Shift+R — Continue listening to what was left half finished\nLibrary menu > Smart playlists — Open a saved rule\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
+
+msgid "&Baixar"
+msgstr "&Download"
+
+msgid "&Baixar mídia atual...\tCtrl+Shift+B"
+msgstr "&Download current media...\tCtrl+Shift+B"
+
+msgid "A instalação automática do FFmpeg só está disponível no Windows."
+msgstr "Automatic FFmpeg installation is only available on Windows."
+
+msgid "A instalação do FFmpeg foi cancelada."
+msgstr "The FFmpeg installation was cancelled."
+
+msgid "A qualidade {requested}p não estava disponível; o vídeo foi baixado em {actual}p."
+msgstr "The {requested}p quality was not available; the video was downloaded at {actual}p."
+
+msgid "Altura máxima do vídeo. Se a qualidade escolhida não existir, o vídeo é baixado na melhor qualidade disponível."
+msgstr "Maximum video height. If the chosen quality does not exist, the video is downloaded in the best quality available."
+
+msgid "Baixando..."
+msgstr "Downloading..."
+
+msgid "Baixando... {percent}%"
+msgstr "Downloading... {percent}%"
+
+msgid "Baixar"
+msgstr "Download"
+
+msgid "Baixar mídia"
+msgstr "Download media"
+
+msgid "Baixar “{title}”. Escolha o formato e a qualidade."
+msgstr "Download “{title}”. Choose the format and quality."
+
+msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. O KeyTune oferece instalá-lo na primeira vez que precisar."
+msgstr "Converting audio and downloading high-resolution video require FFmpeg, which has not been found yet. KeyTune offers to install it the first time it is needed."
+
+msgid "Deseja cancelar o download?"
+msgstr "Do you want to cancel the download?"
+
+msgid "Desmarcado, o download começa direto com as opções da guia Download das Preferências, sem perguntar."
+msgstr "When unchecked, the download starts right away with the options from the Download tab in Preferences, without asking."
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Download cancelado."
+msgstr "Download cancelled."
+
+msgid "Download concluído: {name}."
+msgstr "Download finished: {name}."
+
+msgid "Download em andamento."
+msgstr "Download in progress."
+
+msgid "Download em andamento: {percent}%."
+msgstr "Download in progress: {percent}%."
+
+msgid "Escolha a pasta de download"
+msgstr "Choose the download folder"
+
+msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp e vale para mídias do YouTube e do YouTube Music."
+msgstr "Choose how to download the media that is playing (Ctrl+Shift+B). Downloads use yt-dlp and work for YouTube and YouTube Music media."
+
+msgid "Escolha o formato e a qualidade do download."
+msgstr "Choose the download format and quality."
+
+msgid "Escolha se o download será apenas o áudio ou o vídeo completo."
+msgstr "Choose whether to download only the audio or the full video."
+
+msgid "Escolha uma pasta de destino para o download."
+msgstr "Choose a destination folder for the download."
+
+msgid "Escolher &pasta..."
+msgstr "Choose &folder..."
+
+msgid "Escolher pasta de download"
+msgstr "Choose download folder"
+
+msgid "Esta mídia já está no seu computador."
+msgstr "This media is already on your computer."
+
+msgid "FFmpeg necessário"
+msgstr "FFmpeg required"
+
+msgid "FLAC (sem perdas)"
+msgstr "FLAC (lossless)"
+
+msgid "Iniciando o download."
+msgstr "Starting the download."
+
+msgid "Instalando o FFmpeg..."
+msgstr "Installing FFmpeg..."
+
+msgid "Ligado, cada download abre um diálogo para confirmar formato e qualidade. Desligado, o download começa direto com as opções desta guia."
+msgstr "When on, each download opens a dialog to confirm the format and quality. When off, the download starts right away with the options on this tab."
+
+msgid "MP3 {bitrate} kbps"
+msgstr "MP3 {bitrate} kbps"
+
+msgid "Melhor disponível"
+msgstr "Best available"
+
+msgid "Nenhuma mídia está tocando no momento."
+msgstr "No media is playing right now."
+
+msgid "Não foi possível baixar a mídia: {reason}"
+msgstr "Could not download the media: {reason}"
+
+msgid "Não foi possível baixar o FFmpeg. Verifique a conexão e tente novamente."
+msgstr "Could not download FFmpeg. Check your connection and try again."
+
+msgid "Não foi possível iniciar o download pelo yt-dlp."
+msgstr "Could not start the download with yt-dlp."
+
+msgid "Não foi possível localizar o checksum oficial do FFmpeg baixado."
+msgstr "Could not find the official checksum for the downloaded FFmpeg."
+
+msgid "Não foi possível usar a pasta de download escolhida."
+msgstr "Could not use the chosen download folder."
+
+msgid "Não é possível baixar uma transmissão ao vivo."
+msgstr "A live broadcast cannot be downloaded."
+
+msgid "O FFmpeg baixado não passou na validação de integridade."
+msgstr "The downloaded FFmpeg failed the integrity check."
+
+msgid "O FFmpeg já está disponível para converter áudio e unir vídeo e áudio."
+msgstr "FFmpeg is already available to convert audio and merge video and audio."
+
+msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
+msgstr "FFmpeg was not found. The download will continue in the original quality, without conversion."
+
+msgid "O download só está disponível para mídias do YouTube e do YouTube Music."
+msgstr "Downloading is only available for YouTube and YouTube Music media."
+
+msgid "O pacote do FFmpeg veio sem os executáveis esperados."
+msgstr "The FFmpeg package did not contain the expected executables."
+
+msgid "O yt-dlp não conseguiu baixar a mídia."
+msgstr "yt-dlp could not download the media."
+
+msgid "Opções de download"
+msgstr "Download options"
+
+msgid "Original"
+msgstr "Original"
+
+msgid "Original (sem conversão)"
+msgstr "Original (no conversion)"
+
+msgid "Original mantém o áudio exatamente como o YouTube o entrega, sem converter. MP3 e FLAC convertem o áudio e exigem o FFmpeg. Se a qualidade escolhida não existir, o áudio é baixado na qualidade original."
+msgstr "Original keeps the audio exactly as YouTube delivers it, without converting. MP3 and FLAC convert the audio and require FFmpeg. If the chosen quality does not exist, the audio is downloaded in the original quality."
+
+msgid "Para {what} o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nSim: instalar o FFmpeg e baixar.\nNão: baixar agora na qualidade original, sem conversão.\nCancelar: não baixar."
+msgstr "To {what}, KeyTune needs FFmpeg, which was not found. It will be downloaded from the official builds (about {size} MB) and stored in KeyTune's resources folder.\n\nYes: install FFmpeg and download.\nNo: download now in the original quality, without conversion.\nCancel: do not download."
+
+msgid "Pasta de download"
+msgstr "Download folder"
+
+msgid "Pasta de download:"
+msgstr "Download folder:"
+
+msgid "Pasta onde os arquivos baixados serão salvos."
+msgstr "Folder where the downloaded files will be saved."
+
+msgid "Processando o arquivo..."
+msgstr "Processing the file..."
+
+msgid "Qualidade do vídeo"
+msgstr "Video quality"
+
+msgid "Qualidade do áudio"
+msgstr "Audio quality"
+
+msgid "Sem o FFmpeg, o arquivo foi baixado na qualidade original, sem conversão."
+msgstr "Without FFmpeg, the file was downloaded in the original quality, without conversion."
+
+msgid "Sempre &mostrar este diálogo ao baixar"
+msgstr "Always &show this dialog when downloading"
+
+msgid "Sempre &mostrar o diálogo ao baixar"
+msgstr "Always &show the dialog when downloading"
+
+msgid "Sempre mostrar este diálogo ao baixar"
+msgstr "Always show this dialog when downloading"
+
+msgid "Sempre mostrar o diálogo ao baixar"
+msgstr "Always show the dialog when downloading"
+
+msgid "Só vale quando o áudio é convertido para MP3 ou FLAC. Original mantém a taxa do arquivo baixado."
+msgstr "Only applies when the audio is converted to MP3 or FLAC. Original keeps the sample rate of the downloaded file."
+
+msgid "Taxa de amostragem do áudio"
+msgstr "Audio sample rate"
+
+msgid "Tipo de download padrão"
+msgstr "Default download type"
+
+msgid "Vídeo"
+msgstr "Video"
+
+msgid "converter o áudio"
+msgstr "convert the audio"
+
+msgid "unir o vídeo e o áudio"
+msgstr "merge the video and audio"
+
+msgid "{height}p"
+msgstr "{height}p"
+
+msgid "{rate} Hz"
+msgstr "{rate} Hz"
+
+msgid "Áudio"
+msgstr "Audio"
+
+msgid "&Converter"
+msgstr "&Convert"
+
+msgid "A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B)."
+msgstr "Conversion works with files on your computer. For YouTube media, use Download (Ctrl+Shift+B)."
+
+msgid "A conversão precisa do FFmpeg, que não foi encontrado. Instale-o e tente de novo."
+msgstr "Conversion needs FFmpeg, which was not found. Install it and try again."
+
+msgid "AVI"
+msgstr "AVI"
+
+msgid "Con&verter"
+msgstr "Con&vert"
+
+msgid "Conversão cancelada."
+msgstr "Conversion cancelled."
+
+msgid "Conversão concluída: {name}."
+msgstr "Conversion finished: {name}."
+
+msgid "Conversão em andamento."
+msgstr "Conversion in progress."
+
+msgid "Conversão em andamento: {percent}%."
+msgstr "Conversion in progress: {percent}%."
+
+msgid "Convertendo..."
+msgstr "Converting..."
+
+msgid "Convertendo... {percent}%"
+msgstr "Converting... {percent}%"
+
+msgid "Converter &mídia atual...\tCtrl+Shift+K"
+msgstr "Convert &current media...\tCtrl+Shift+K"
+
+msgid "Converter mídia"
+msgstr "Convert media"
+
+msgid "Deseja cancelar a conversão?"
+msgstr "Do you want to cancel the conversion?"
+
+msgid "Escolha a pasta de destino"
+msgstr "Choose the destination folder"
+
+msgid "Escolha uma pasta de destino para o arquivo convertido."
+msgstr "Choose a destination folder for the converted file."
+
+msgid "Escolher pasta de destino"
+msgstr "Choose destination folder"
+
+msgid "Esta opção converte vídeo, mas a mídia atual é um áudio. Use as opções de áudio."
+msgstr "This option converts video, but the current media is audio. Use the audio options."
+
+msgid "Esta opção converte áudio, mas a mídia atual é um vídeo. Use as opções de vídeo."
+msgstr "This option converts audio, but the current media is a video. Use the video options."
+
+msgid "Este arquivo não tem faixa de vídeo para converter."
+msgstr "This file has no video track to convert."
+
+msgid "Este arquivo não tem faixa de áudio para converter."
+msgstr "This file has no audio track to convert."
+
+msgid "Este tipo de arquivo não pode ser convertido."
+msgstr "This type of file cannot be converted."
+
+msgid "Formato de destino"
+msgstr "Target format"
+
+msgid "Formato do arquivo de áudio gerado."
+msgstr "Format of the generated audio file."
+
+msgid "Formato do vídeo gerado. O áudio é mantido e a imagem fica parada durante toda a duração."
+msgstr "Format of the generated video. The audio is kept and the picture stays still for the whole duration."
+
+msgid "Iniciando a conversão."
+msgstr "Starting the conversion."
+
+msgid "M4A (AAC)"
+msgstr "M4A (AAC)"
+
+msgid "MKV"
+msgstr "MKV"
+
+msgid "MOV"
+msgstr "MOV"
+
+msgid "MP3"
+msgstr "MP3"
+
+msgid "MP4"
+msgstr "MP4"
+
+msgid "Marcado, o vídeo mostra a capa embutida no áudio. Sem capa, ou desmarcado, o fundo é preto."
+msgstr "When checked, the video shows the cover embedded in the audio. Without a cover, or unchecked, the background is black."
+
+msgid "Nenhuma mídia está aberta para converter."
+msgstr "No media is open to convert."
+
+msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão."
+msgstr "New video format. The file name is kept, with the new extension."
+
+msgid "Não foi possível converter a mídia: {reason}"
+msgstr "Could not convert the media: {reason}"
+
+msgid "Não foi possível iniciar o FFmpeg."
+msgstr "Could not start FFmpeg."
+
+msgid "Não foi possível ler as informações do arquivo."
+msgstr "Could not read the file information."
+
+msgid "Não foi possível usar a pasta de destino escolhida."
+msgstr "Could not use the chosen destination folder."
+
+msgid "O FFmpeg não conseguiu converter o arquivo."
+msgstr "FFmpeg could not convert the file."
+
+msgid "O FFmpeg não foi encontrado."
+msgstr "FFmpeg was not found."
+
+msgid "O arquivo da mídia atual não foi encontrado."
+msgstr "The file of the current media was not found."
+
+msgid "O arquivo de origem não foi encontrado."
+msgstr "The source file was not found."
+
+msgid "O arquivo não pôde ser lido. Ele pode estar corrompido ou em um formato sem suporte."
+msgstr "The file could not be read. It may be corrupted or in an unsupported format."
+
+msgid "O que você quer fazer com esta mídia?"
+msgstr "What do you want to do with this media?"
+
+msgid "OGG (Vorbis)"
+msgstr "OGG (Vorbis)"
+
+msgid "Opus"
+msgstr "Opus"
+
+msgid "Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."
+msgstr "Original keeps the file's rate. Opus always uses 48000 Hz."
+
+msgid "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nDeseja instalar o FFmpeg e converter agora?"
+msgstr "To convert, KeyTune needs FFmpeg, which was not found. It will be downloaded from the official builds (about {size} MB) and stored in KeyTune's resources folder.\n\nDo you want to install FFmpeg and convert now?"
+
+msgid "Pasta de destino"
+msgstr "Destination folder"
+
+msgid "Pasta onde o arquivo convertido será salvo. Por padrão, a mesma pasta do arquivo original."
+msgstr "Folder where the converted file will be saved. By default, the same folder as the original file."
+
+msgid "Resolução do vídeo"
+msgstr "Video resolution"
+
+msgid "Só o formato muda: as faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
+msgstr "Only the format changes: tracks compatible with the new format are copied without quality loss, and the others are re-encoded."
+
+msgid "Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."
+msgstr "Frame size of the generated video. Higher resolutions produce larger files."
+
+msgid "Taxa de bits dos formatos com perdas (MP3, M4A, OGG e Opus). FLAC e WAV não usam esta opção."
+msgstr "Bitrate for lossy formats (MP3, M4A, OGG, and Opus). FLAC and WAV do not use this option."
+
+msgid "Usar a &capa do álbum como imagem, se houver"
+msgstr "Use the album &cover as the picture, if any"
+
+msgid "Usar a capa do álbum como imagem"
+msgstr "Use the album cover as the picture"
+
+msgid "Vídeo para &áudio..."
+msgstr "Video to &audio..."
+
+msgid "Vídeo para outro f&ormato de vídeo..."
+msgstr "Video to another vide&o format..."
+
+msgid "Vídeo para outro formato de vídeo"
+msgstr "Video to another video format"
+
+msgid "Vídeo para áudio"
+msgstr "Video to audio"
+
+msgid "WAV (sem compressão)"
+msgstr "WAV (uncompressed)"
+
+msgid "WebM"
+msgstr "WebM"
+
+msgid "{bitrate} kbps"
+msgstr "{bitrate} kbps"
+
+msgid "{mode}: “{name}”. Escolha o formato de destino."
+msgstr "{mode}: “{name}”. Choose the target format."
+
+msgid "Áudio para &vídeo..."
+msgstr "Audio to &video..."
+
+msgid "Áudio para outro &formato de áudio..."
+msgstr "Audio to another audio &format..."
+
+msgid "Áudio para outro formato de áudio"
+msgstr "Audio to another audio format"
+
+msgid "Áudio para vídeo"
+msgstr "Audio to video"
+
+msgid "Salvar em"
+msgstr "Save in"
+
+msgid "Mesma pasta do arquivo original ou outra pasta à sua escolha. O arquivo original nunca é alterado."
+msgstr "The same folder as the original file, or another folder of your choice. The original file is never changed."
+
+msgid "Mesma pasta do arquivo original"
+msgstr "Same folder as the original file"
+
+msgid "Outra pasta"
+msgstr "Another folder"
+
+msgid "Pasta onde o arquivo convertido será salvo. Só vale com a opção Outra pasta."
+msgstr "Folder where the converted file will be saved. Only applies with the Another folder option."
+
+msgid "Baixando {index} de {total}..."
+msgstr "Downloading {index} of {total}..."
+
+msgid "Baixando {index} de {total}... {percent}%"
+msgstr "Downloading {index} of {total}... {percent}%"
+
+msgid "Baixar playlist inteira do YouTube..."
+msgstr "Download the whole playlist from YouTube..."
+
+msgid "Baixar seleção do YouTube..."
+msgstr "Download the selection from YouTube..."
+
+msgid "Baixar seleção..."
+msgstr "Download selection..."
+
+msgid "Baixar {count} itens do YouTube para a pasta:"
+msgstr "Download {count} items from YouTube to the folder:"
+
+msgid "Baixar {count} itens. Escolha o formato e a qualidade."
+msgstr "Download {count} items. Choose the format and quality."
+
+msgid "Conversão cancelada. {done} de {total} arquivos já foram convertidos."
+msgstr "Conversion cancelled. {done} of {total} files were already converted."
+
+msgid "Conversão concluída: {done} arquivos."
+msgstr "Conversion finished: {done} files."
+
+msgid "Conversão concluída: {done} de {total} arquivos. {failed} falharam."
+msgstr "Conversion finished: {done} of {total} files. {failed} failed."
+
+msgid "Conversão em andamento: arquivo {index} de {total}."
+msgstr "Conversion in progress: file {index} of {total}."
+
+msgid "Convertendo {index} de {total}..."
+msgstr "Converting {index} of {total}..."
+
+msgid "Convertendo {index} de {total}... {percent}%"
+msgstr "Converting {index} of {total}... {percent}%"
+
+msgid "Converter seleção..."
+msgstr "Convert selection..."
+
+msgid "Download cancelado. {done} de {total} itens já foram baixados."
+msgstr "Download cancelled. {done} of {total} items were already downloaded."
+
+msgid "Download concluído: {done} de {total} itens em {folder}. {failed} falharam."
+msgstr "Download finished: {done} of {total} items in {folder}. {failed} failed."
+
+msgid "Download concluído: {done} itens em {folder}."
+msgstr "Download finished: {done} items in {folder}."
+
+msgid "Download em andamento: item {index} de {total}."
+msgstr "Download in progress: item {index} of {total}."
+
+msgid "Esta aba não tem uma playlist para baixar."
+msgstr "This tab has no playlist to download."
+
+msgid "Iniciando a conversão de {count} arquivos."
+msgstr "Starting the conversion of {count} files."
+
+msgid "Iniciando o download de {count} itens."
+msgstr "Starting the download of {count} items."
+
+msgid "Nada para baixar: só mídias do YouTube e do YouTube Music podem ser baixadas."
+msgstr "Nothing to download: only YouTube and YouTube Music media can be downloaded."
+
+msgid "Nenhum arquivo de áudio ou vídeo do computador está selecionado."
+msgstr "No audio or video file from your computer is selected."
+
+msgid "Nenhum dos arquivos selecionados precisa desta conversão."
+msgstr "None of the selected files needs this conversion."
+
+msgid "Nenhum item selecionado para baixar."
+msgstr "No item selected to download."
+
+msgid "Não foi possível baixar nenhum dos {total} itens: {reason}"
+msgstr "Could not download any of the {total} items: {reason}"
+
+msgid "Não foi possível converter nenhum dos {total} arquivos: {reason}"
+msgstr "Could not convert any of the {total} files: {reason}"
+
+msgid "Sem o FFmpeg, os arquivos foram baixados na qualidade original, sem conversão."
+msgstr "Without FFmpeg, the files were downloaded in the original quality, without conversion."
+
+msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
+msgstr "Only the first {limit} items will be downloaded; {count} will be left out."
+
+msgid "{count} arquivos foram ignorados."
+msgstr "{count} files were skipped."
+
+msgid "{count} itens que não são do YouTube serão ignorados."
+msgstr "{count} items that are not from YouTube will be skipped."
+
+msgid "{mode} (arquivos: {count})"
+msgstr "{mode} (files: {count})"
+
+msgid "{mode}: {count} arquivos. Escolha o formato de destino."
+msgstr "{mode}: {count} files. Choose the target format."
+
+msgid "Baixar &seleção da lista..."
+msgstr "Download the list &selection..."
+
+msgid "Baixar playlist &inteira..."
+msgstr "Download the &whole playlist..."
+
+msgid "Converter arquivos &selecionados na lista..."
+msgstr "Convert the &selected files in the list..."
+
+msgid "Progresso da tarefa"
+msgstr "Task progress"
