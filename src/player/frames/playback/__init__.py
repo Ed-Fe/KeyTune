@@ -21,6 +21,7 @@ from .helpers import (
     is_music_youtube_url,
     is_youtube_music_media,
 )
+from .live import LivePlaybackMixin
 from .media_metadata import MediaMetadataMixin
 from .youtube_history import YouTubeHistoryMixin
 
@@ -30,6 +31,7 @@ class FramePlaybackMixin(
     AudioOutputMixin,
     CrossfadeMixin,
     PlaybackEngineMixin,
+    LivePlaybackMixin,
     YouTubeHistoryMixin,
     MediaMetadataMixin,
     PlaybackControlsMixin,

@@ -13,6 +13,7 @@ from ...constants import DEFAULT_LIVE_VIDEO_ENABLED
 from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
 from .helpers import is_youtube_music_media
+from .live import is_live_media
 
 
 _logger = get_logger(__name__)
@@ -183,6 +184,11 @@ class PlayerBackendMixin:
         event_manager.event_attach(
             PlayerEventType.MEDIA_PLAYER_ERROR,
             self._on_media_player_error,
+            player_key,
+        )
+        event_manager.event_attach(
+            PlayerEventType.MEDIA_PLAYER_LIVE_ENDED,
+            self._on_media_live_ended,
             player_key,
         )
         return player, event_manager
@@ -366,6 +372,15 @@ class PlayerBackendMixin:
                         return
 
         if not crossfade_state or crossfade_state.get("incoming_key") != player_key:
+            active_player = self._managed_player(player_key)
+            if (
+                player_key == getattr(self, "_active_player_key", None)
+                and active_player is not None
+                and is_live_media(active_player.get_media())
+            ):
+                # A dropped connection on a live is worth retrying, unlike a track.
+                self._handle_live_ended(player_key)
+                return
             if player_key == getattr(self, "_active_player_key", None):
                 message = _("Não foi possível reproduzir a mídia.")
                 if error_detail:

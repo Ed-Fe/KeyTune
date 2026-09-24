@@ -38,6 +38,13 @@ class LiveNotStartedError(RuntimeError):
         super().__init__(message or _("Esta transmissão ao vivo ainda não começou."))
 
 
+class LiveEndedError(RuntimeError):
+    """A broadcast we were watching is no longer live."""
+
+    def __init__(self, message=""):
+        super().__init__(message or _("A transmissão ao vivo terminou."))
+
+
 def live_status_from_info(info) -> str:
     """Return yt-dlp's ``live_status`` for *info*, falling back to ``is_live``."""
     if not isinstance(info, dict):

@@ -116,6 +116,27 @@ class LivePlaybackWorkerTests(unittest.TestCase):
         self.assertTrue(frame.finished[0][1])
 
 
+    def test_a_reconnect_that_resolves_to_a_recording_is_reported_as_ended(self):
+        # The broadcast finished and YouTube now serves it as a regular video.
+        frame = _WorkerFrame(("https://rr1.example.googlevideo.com/audio.webm", {}, "Jornal", "Canal", False))
+
+        request = frame.run_request(expect_live=True, live_reconnect=True)
+
+        frame.instance.media_new.assert_not_called()
+        frame.player.play.assert_not_called()
+        self.assertTrue(request["live_ended"])
+        self.assertFalse(frame.finished[0][1])
+
+    def test_a_reconnect_that_is_still_live_plays_normally(self):
+        frame = _WorkerFrame(("https://live/95.m3u8", {}, "Jornal", "Canal", True))
+
+        request = frame.run_request(expect_live=True, live_reconnect=True)
+
+        frame.instance.media_new.assert_called_once()
+        self.assertTrue(frame.finished[0][1])
+        self.assertTrue(request["is_live"])
+
+
 class LiveTimeBarTests(unittest.TestCase):
     def _frame(self, media):
         class Frame(PlaybackControlsMixin):
