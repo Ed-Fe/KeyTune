@@ -40,6 +40,10 @@ class PlaybackControlsMixin:
         signature = (
             getattr(active_state, "current_media_path", None),
             bool(getattr(self.settings, "disable_video_output", False)),
+            # A live changes what the panel says: its mode and whether the
+            # loaded media is one.
+            is_live_media(self.player.get_media()) if hasattr(self, "player") else False,
+            bool(getattr(self.settings, "live_video_enabled", True)),
         )
         if getattr(self, "_last_visual_hints_signature", "__unset__") == signature:
             return

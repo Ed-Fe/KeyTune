@@ -265,6 +265,7 @@ class PreferencesDialog(wx.Dialog):
         playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Controles de reprodução")), wx.VERTICAL)
         self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label=_("Ativar e&mbaralhamento em novas playlists"))
         self.disable_video_output_checkbox = wx.CheckBox(page, label=_("Desativar saída de &vídeo (tocar só o áudio)"))
+        self.live_video_checkbox = wx.CheckBox(page, label=_("Mostrar o vídeo das &transmissões ao vivo"))
         self._configure_checkbox(
             self.shuffle_new_playlists_checkbox,
             _("Ativar embaralhamento em novas playlists"),
@@ -276,6 +277,15 @@ class PreferencesDialog(wx.Dialog):
             _(
                 "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. "
                 "Útil para evitar a abertura de janelas externas de vídeo no Windows."
+            ),
+        )
+        self._configure_checkbox(
+            self.live_video_checkbox,
+            _("Mostrar o vídeo das transmissões ao vivo"),
+            _(
+                "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo "
+                "desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. "
+                "Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
             ),
         )
 
@@ -350,7 +360,8 @@ class PreferencesDialog(wx.Dialog):
 
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        playback_box.Add(self.live_video_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(playback_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -949,6 +960,7 @@ class PreferencesDialog(wx.Dialog):
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
+        self.live_video_checkbox.SetValue(settings.live_video_enabled)
         self.default_volume_ctrl.SetValue(settings.default_volume)
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
         self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
@@ -1013,6 +1025,7 @@ class PreferencesDialog(wx.Dialog):
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
+        settings.live_video_enabled = self.live_video_checkbox.GetValue()
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()

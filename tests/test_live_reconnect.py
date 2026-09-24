@@ -113,6 +113,50 @@ class LiveReconnectTests(unittest.TestCase):
         self.assertFalse(self.frame.state.was_playing)
 
 
+class LiveVideoToggleTests(unittest.TestCase):
+    def _frame(self, *, live_video_enabled=True, media=None):
+        frame = _LiveFrame()
+        frame.settings = SimpleNamespace(live_video_enabled=live_video_enabled)
+        frame._live_video_enabled = lambda: frame.settings.live_video_enabled
+        frame._save_settings = Mock()
+        frame.player = Mock()
+        frame.player.get_media.return_value = media
+        return frame
+
+    def test_toggling_flips_saves_and_announces_when_nothing_live_is_playing(self):
+        frame = self._frame(live_video_enabled=True, media=SimpleNamespace(is_live=False))
+
+        frame._toggle_live_video()
+
+        self.assertFalse(frame.settings.live_video_enabled)
+        frame._save_settings.assert_called_once_with()
+        self.assertEqual(frame._announce.call_args.args[0], "Vídeo das transmissões ao vivo desativado.")
+        frame._queue_media_start.assert_not_called()
+
+    def test_toggling_during_a_live_restarts_it_with_the_new_mode(self):
+        frame = self._frame(live_video_enabled=False, media=SimpleNamespace(is_live=True))
+
+        frame._toggle_live_video()
+
+        self.assertTrue(frame.settings.live_video_enabled)
+        frame._queue_media_start.assert_called_once_with(
+            LIVE_URL,
+            tab_index=2,
+            announce_message="Vídeo das transmissões ao vivo ativado.",
+            expect_live=True,
+            pause_after_start=False,
+        )
+        frame._announce.assert_not_called()
+
+    def test_a_paused_live_stays_paused_after_the_restart(self):
+        frame = self._frame(media=SimpleNamespace(is_live=True))
+        frame.state.was_playing = False
+
+        frame._toggle_live_video()
+
+        self.assertTrue(frame._queue_media_start.call_args.kwargs["pause_after_start"])
+
+
 class LivePlayerErrorTests(unittest.TestCase):
     def setUp(self):
         for target, kwargs in (

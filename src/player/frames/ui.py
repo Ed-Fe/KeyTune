@@ -9,6 +9,7 @@ from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
+from .playback.live import is_live_media
 
 
 class FrameUIMixin:
@@ -137,9 +138,23 @@ class FrameUIMixin:
             "Abra Preferências > Reprodução para reativar o vídeo quando quiser."
         )
 
+    def _player_live_audio_only_text(self):
+        return _(
+            "Transmissão ao vivo só com áudio\n\n"
+            "O vídeo das transmissões ao vivo está desativado.\n"
+            "Pressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
+        )
+
     def _player_overlay_text_for_state(self, state):
         if not state or not getattr(state, "current_media_path", None):
             return self._player_overlay_hint_text()
+
+        if (
+            not self._live_video_enabled()
+            and state is self._get_active_playlist_state()
+            and is_live_media(self.player.get_media())
+        ):
+            return self._player_live_audio_only_text()
 
         if (
             getattr(self.settings, "disable_video_output", False)
@@ -181,6 +196,7 @@ class FrameUIMixin:
             "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
             "Ctrl+L — Curtir mídia atual no YouTube Music\n"
             "Ctrl+Alt+L — Alternar painel de letras\n"
+            "Ctrl+Alt+V — Alternar o vídeo das transmissões ao vivo\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"

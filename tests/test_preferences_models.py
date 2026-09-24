@@ -159,6 +159,16 @@ class AppSettingsTests(unittest.TestCase):
         self.assertTrue(restored_settings.smart_library_resume_enabled)
         self.assertEqual(restored_settings.smart_library_indexed_folders, [])
 
+    def test_live_video_is_enabled_by_default_and_survives_an_old_settings_file(self):
+        self.assertTrue(AppSettings().live_video_enabled)
+        self.assertTrue(AppSettings.from_dict({"default_volume": 70}).live_video_enabled)
+
+    def test_live_video_setting_round_trips(self):
+        payload = AppSettings(live_video_enabled=False).to_dict()
+
+        self.assertIs(payload["live_video_enabled"], False)
+        self.assertFalse(AppSettings.from_dict(payload).live_video_enabled)
+
 
 if __name__ == "__main__":
     unittest.main()

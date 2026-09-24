@@ -14,6 +14,7 @@ from ..constants import (
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
     DEFAULT_CROSSFADE_SECONDS,
     DEFAULT_DISABLE_VIDEO_OUTPUT,
+    DEFAULT_LIVE_VIDEO_ENABLED,
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
@@ -70,6 +71,7 @@ class AppSettings:
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
+    live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
     audio_output_device_id: str = ""
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
@@ -134,6 +136,7 @@ class AppSettings:
             "confirm_on_exit": self.confirm_on_exit,
             "announcements_enabled": self.announcements_enabled,
             "disable_video_output": self.disable_video_output,
+            "live_video_enabled": self.live_video_enabled,
             "audio_output_device_id": (
                 self.audio_output_device_id if is_selectable_audio_output_device_id(self.audio_output_device_id) else ""
             ),
@@ -189,6 +192,7 @@ class AppSettings:
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
+        settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))
         raw_audio_output_device_id = normalize_audio_output_device_id(data.get("audio_output_device_id"))
         settings.audio_output_device_id = (
             raw_audio_output_device_id if is_selectable_audio_output_device_id(raw_audio_output_device_id) else ""

@@ -93,6 +93,37 @@ class LivePlaybackMixin:
         if reset:
             self._live_reconnect_attempts = 0
 
+    def _toggle_live_video(self):
+        self.settings.live_video_enabled = not self._live_video_enabled()
+        self._save_settings()
+        self._apply_live_video_setting_change()
+
+    def _apply_live_video_setting_change(self):
+        """Announce the new live-video mode and, if a live is playing, restart it.
+
+        The stream is re-resolved because audio mode picks a lighter variant
+        and the picture is decided when the media loads.
+        """
+        if self._live_video_enabled():
+            message = _("Vídeo das transmissões ao vivo ativado.")
+        else:
+            message = _("Vídeo das transmissões ao vivo desativado.")
+
+        player = getattr(self, "player", None)
+        state = self._get_active_playlist_state()
+        media_path = getattr(state, "current_media_path", None)
+        if player is None or not media_path or not is_live_media(player.get_media()):
+            self._announce(message)
+            return
+
+        self._queue_media_start(
+            media_path,
+            tab_index=self._get_active_playlist_index(),
+            announce_message=message,
+            expect_live=True,
+            pause_after_start=not getattr(state, "was_playing", True),
+        )
+
     def _handle_live_finished(self, message=None):
         """Stop treating the media as playing once the live cannot continue."""
         self._cancel_live_reconnect()
