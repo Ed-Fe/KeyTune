@@ -18,6 +18,7 @@ This manual presents the application's main features and the most common actions
 - Per-tab equalizer with built-in profiles and custom presets
 - A lyrics panel with automatic fetching and text copying
 - Dedicated YouTube Music tab, opened with `Ctrl+Shift+Y`
+- YouTube live broadcasts, with audio and optional video
 - Loading and saving playlists
 - Restoration of what was open in the last session
 - List of recent files, folders, and playlists
@@ -134,6 +135,7 @@ While the countdown runs, the player warns you when 5 minutes and when 1 minute 
 - `Shift+\`: restore the original pitch
 - `Alt+D`: open the audio output selector
 - `Ctrl+Alt+L`: toggle the lyrics panel
+- `Ctrl+Alt+V`: toggle the video of live broadcasts
 - `Ctrl+Shift+F`: add the selected item to the playback queue
 - `Ctrl+Shift+Q`: manage the playback queue
 - `Ctrl+Shift+D`: configure the timer
@@ -324,6 +326,7 @@ The **Playback** tab controls audio behavior and the initial state of new playli
 - **Enable shuffle in new playlists**: automatically enables shuffle mode in playlists created after saving.
 - **Apply crossfade when changing tracks manually**: when enabled, crossfade is also used when moving forward or backward manually; by default it applies only at the natural end of each track. When an AutoDJ transition is ready, moving forward uses that plan even if this option is disabled.
 - **Disable video output (play audio only)**: keeps playback audio-only, including video files. Useful to avoid external video windows.
+- **Show the video of live broadcasts**: shows the picture of YouTube live broadcasts in the player area, even when video output is turned off for the rest of the app. When unchecked, the broadcast plays audio only. `Ctrl+Alt+V` toggles this option during a broadcast.
 
 ### Accessibility
 
@@ -483,6 +486,17 @@ The **Search in the catalog and on YouTube** section is collapsed by default. Ex
 
 The **Open playlist or video** section is also collapsed by default. Expand it to paste a YouTube Music or YouTube playlist, mix, or video link. Click **Open link** or press `Enter` in the field to open it.
 
+### Live broadcasts
+
+Paste the link of a YouTube live broadcast into **Open playlist or video** (or use `Ctrl+V` / `Ctrl+Shift+V`, as with any link). KeyTune recognizes the broadcast on its own:
+
+- It plays at the current moment, without resuming from a saved position. The player announces "Live broadcast", the time bar shows a fixed label instead of a duration, and `T` tells you how long you have been watching.
+- With **Show the video of live broadcasts** turned on (the default), the picture appears in the player area even if **Disable video output** is checked. Video is capped at 720p. Turned off, the broadcast plays audio only, using the lightest variant. `Ctrl+Alt+V` toggles the option and restarts the broadcast in the new mode.
+- You cannot seek forward or back, or jump to the start or end: the player says so. Pausing and resuming continues from where you stopped.
+- If the connection drops, the player tries to reconnect up to three times (after 2, 5 and 10 seconds) and announces the loss and the restoration. If the broadcast has already ended, it announces "The live broadcast has ended" instead of playing the recording from the beginning.
+- A scheduled broadcast that has not started announces "This live broadcast has not started yet."; try again once it begins.
+- Live broadcasts stay out of AutoDJ and crossfade, have no lyrics, and do not create a resume point. Playback history records them after the usual minimum listening time. The **end of track** sleep timer does not apply to a live broadcast; use a preset duration.
+
 ### Radio from the current track
 
 Press `Ctrl+R` or use **Playback > Start radio from this track** while a YouTube Music song is playing. KeyTune opens a new tab, preserves the playback position, and places the current track at item 1 without continuing the previous radio queue.
@@ -611,6 +625,8 @@ If media does not open, test another local file to separate an invalid path, per
 If file association does not work as expected, there are two separate steps to confirm: first, that KeyTune was registered as an option (during installation or later in **Settings > General > Register as default player**); second, that it was chosen as the default application for those formats in Windows default app settings - registration alone does not automatically make KeyTune the default.
 
 If session restoration fails, open the app once without depending on the previous session and check whether window and folder settings are being saved normally.
+
+If a live broadcast does not open, confirm that **Additional features** are enabled and up to date (`yt-dlp` changes often to keep up with YouTube). Many requests in a row to YouTube can cause a temporary block (error 429); wait a few minutes and try again.
 
 If the YouTube Music tab does not load or shows dependency errors, open `Ctrl+,` > **Additional features** and confirm that **Enable additional features for YouTube Music and YouTube** is checked. The initial download can take a few minutes and requires internet access. If the dependencies are already installed but search or loading fails, use the nightly version of `yt-dlp` in the same preferences - it usually receives fixes before the stable channel.
 

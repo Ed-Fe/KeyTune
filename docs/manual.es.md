@@ -18,6 +18,7 @@ Este manual presenta las funciones principales de la aplicación y las acciones 
 - Ecualizador por pestaña con predefinidos y presets personalizados
 - Un panel de letras con búsqueda automática y copia del texto
 - Pestaña dedicada de YouTube Music, abierta con `Ctrl+Shift+Y`
+- Transmisiones en vivo de YouTube, con audio y video opcional
 - Carga y guardado de playlists
 - Restauración de lo que estaba abierto en la última sesión
 - Lista de archivos, carpetas y playlists recientes
@@ -134,6 +135,7 @@ Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos
 - `Shift+\`: restaurar el tono original
 - `Alt+D`: abrir el selector de salida de audio
 - `Ctrl+Alt+L`: alternar el panel de letras
+- `Ctrl+Alt+V`: alternar el video de las transmisiones en vivo
 - `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
 - `Ctrl+Shift+Q`: administrar la cola de reproducción
 - `Ctrl+Shift+D`: configurar el temporizador
@@ -324,6 +326,7 @@ La pestaña **Reproducción** controla el comportamiento de audio y el estado in
 - **Activar aleatorio en nuevas playlists**: activa automáticamente el modo aleatorio en playlists creadas después de guardar.
 - **Aplicar crossfade al cambiar de pista manualmente**: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista. Cuando hay una transición de AutoDJ preparada, avanzar usa ese plan aunque esta opción esté desactivada.
 - **Desactivar salida de video (reproducir solo audio)**: mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar ventanas externas de video.
+- **Mostrar el video de las transmisiones en vivo**: muestra la imagen de las transmisiones en vivo de YouTube en el área del reproductor, incluso con la salida de video desactivada para el resto de la aplicación. Si se desmarca, la transmisión reproduce solo el audio. `Ctrl+Alt+V` alterna esta opción durante una transmisión.
 
 ### Accesibilidad
 
@@ -483,6 +486,17 @@ La sección **Búsqueda en el catálogo y en YouTube** está contraída de forma
 
 La sección **Abrir playlist o video** también está contraída de forma predeterminada. Expándela para pegar un enlace de playlist, mix o video de YouTube Music o de YouTube. Haz clic en **Abrir enlace** o presiona `Enter` en el campo para abrir.
 
+### Transmisiones en vivo
+
+Pega el enlace de una transmisión en vivo de YouTube en **Abrir playlist o video** (o usa `Ctrl+V` / `Ctrl+Shift+V`, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo:
+
+- Se reproduce en el momento actual, sin retomar desde una posición guardada. El reproductor anuncia "Transmisión en vivo", la barra de tiempo muestra una etiqueta fija en lugar de la duración y `T` indica cuánto tiempo llevas viéndola.
+- Con **Mostrar el video de las transmisiones en vivo** activado (predeterminado), la imagen aparece en el área del reproductor aunque **Desactivar salida de video** esté marcado. El video se limita a 720p. Desactivado, la transmisión reproduce solo el audio, con la variante más ligera. `Ctrl+Alt+V` alterna la opción y reinicia la transmisión en el nuevo modo.
+- No es posible avanzar, retroceder ni ir al inicio o al final: el reproductor lo avisa. Pausar y reanudar continúa desde donde se detuvo.
+- Si la conexión se interrumpe, el reproductor intenta reconectar hasta tres veces (tras 2, 5 y 10 segundos) y anuncia la pérdida y el restablecimiento. Si la transmisión ya terminó, avisa "La transmisión en vivo ha terminado" en lugar de reproducir la grabación desde el principio.
+- Una transmisión programada que aún no ha comenzado avisa "Esta transmisión en vivo aún no ha comenzado."; inténtalo de nuevo cuando empiece.
+- Las transmisiones en vivo quedan fuera de AutoDJ y del crossfade, no tienen letra y no generan un punto de reanudación. El historial de reproducción las registra tras el tiempo mínimo de escucha. El temporizador de **fin de la pista** no se aplica a una transmisión en vivo; usa una duración predefinida.
+
 ### Radio desde la pista actual
 
 Presiona `Ctrl+R` o usa **Reproducción > Iniciar radio desde esta pista** mientras se reproduce una canción de YouTube Music. KeyTune abre una pestaña nueva, conserva la posición de reproducción y coloca la pista actual como elemento 1, sin continuar la cola de la radio anterior.
@@ -609,6 +623,8 @@ Si un medio no abre, prueba otro archivo local para separar un problema de ruta 
 Si la asociación de archivos no funciona como se esperaba, hay dos pasos separados que confirmar: primero, que KeyTune fue registrado como opción (durante la instalación o después en **Configuración > General > Registrar como reproductor predeterminado**); segundo, que fue elegido como aplicación predeterminada para esos formatos en la configuración de apps predeterminadas de Windows. El registro por sí solo no convierte a KeyTune automáticamente en el predeterminado.
 
 Si la restauración de sesión falla, abre la app una vez sin depender de la sesión anterior y verifica si la configuración de ventana y carpeta se está guardando normalmente.
+
+Si una transmisión en vivo no se abre, confirma que los **Recursos adicionales** estén activados y actualizados (`yt-dlp` cambia con frecuencia para seguir a YouTube). Muchas solicitudes seguidas a YouTube pueden causar un bloqueo temporal (error 429); espera unos minutos e inténtalo de nuevo.
 
 Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre `Ctrl+,` > **Recursos adicionales** y confirma que la opción **Activar recursos adicionales para YouTube Music y YouTube** esté marcada. La descarga inicial puede tardar algunos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de `yt-dlp` en las mismas preferencias; suele recibir correcciones antes que el canal estable.
 

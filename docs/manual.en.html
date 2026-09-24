@@ -157,6 +157,7 @@ footer {
         <li class="toc-level-3"><a href="#account-and-library">Account and library</a></li>
         <li class="toc-level-3"><a href="#search-in-the-catalog-and-on-youtube">Search in the catalog and on YouTube</a></li>
         <li class="toc-level-3"><a href="#open-playlist-or-video">Open playlist or video</a></li>
+        <li class="toc-level-3"><a href="#live-broadcasts">Live broadcasts</a></li>
         <li class="toc-level-3"><a href="#radio-from-the-current-track">Radio from the current track</a></li>
         <li class="toc-level-3"><a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a></li>
         <li class="toc-level-3"><a href="#youtube-music-session">YouTube Music session</a></li>
@@ -184,6 +185,7 @@ footer {
 <li>Per-tab equalizer with built-in profiles and custom presets</li>
 <li>A lyrics panel with automatic fetching and text copying</li>
 <li>Dedicated YouTube Music tab, opened with <code>Ctrl+Shift+Y</code></li>
+<li>YouTube live broadcasts, with audio and optional video</li>
 <li>Loading and saving playlists</li>
 <li>Restoration of what was open in the last session</li>
 <li>List of recent files, folders, and playlists</li>
@@ -285,6 +287,7 @@ footer {
 <li><code>Shift+\</code>: restore the original pitch</li>
 <li><code>Alt+D</code>: open the audio output selector</li>
 <li><code>Ctrl+Alt+L</code>: toggle the lyrics panel</li>
+<li><code>Ctrl+Alt+V</code>: toggle the video of live broadcasts</li>
 <li><code>Ctrl+Shift+F</code>: add the selected item to the playback queue</li>
 <li><code>Ctrl+Shift+Q</code>: manage the playback queue</li>
 <li><code>Ctrl+Shift+D</code>: configure the timer</li>
@@ -441,6 +444,7 @@ footer {
 <li><strong>Enable shuffle in new playlists</strong>: automatically enables shuffle mode in playlists created after saving.</li>
 <li><strong>Apply crossfade when changing tracks manually</strong>: when enabled, crossfade is also used when moving forward or backward manually; by default it applies only at the natural end of each track. When an AutoDJ transition is ready, moving forward uses that plan even if this option is disabled.</li>
 <li><strong>Disable video output (play audio only)</strong>: keeps playback audio-only, including video files. Useful to avoid external video windows.</li>
+<li><strong>Show the video of live broadcasts</strong>: shows the picture of YouTube live broadcasts in the player area, even when video output is turned off for the rest of the app. When unchecked, the broadcast plays audio only. <code>Ctrl+Alt+V</code> toggles this option during a broadcast.</li>
 </ul>
 <h3 id="accessibility">Accessibility</h3>
 <p>The <strong>Accessibility</strong> tab has a single option: <strong>Enable accessibility announcements</strong>. When enabled, the player announces changes in time, volume, tab switching, and status to the screen reader. When disabled, those announcements are suppressed. On-demand announcement shortcuts (<code>T</code>, <code>V</code>, <code>S</code>) keep working regardless of this setting - see <a href="#accessibility-features">Accessibility features</a> for details.</p>
@@ -639,6 +643,16 @@ footer {
 </ul>
 <h3 id="open-playlist-or-video">Open playlist or video</h3>
 <p>The <strong>Open playlist or video</strong> section is also collapsed by default. Expand it to paste a YouTube Music or YouTube playlist, mix, or video link. Click <strong>Open link</strong> or press <code>Enter</code> in the field to open it.</p>
+<h3 id="live-broadcasts">Live broadcasts</h3>
+<p>Paste the link of a YouTube live broadcast into <strong>Open playlist or video</strong> (or use <code>Ctrl+V</code> / <code>Ctrl+Shift+V</code>, as with any link). KeyTune recognizes the broadcast on its own:</p>
+<ul>
+<li>It plays at the current moment, without resuming from a saved position. The player announces "Live broadcast", the time bar shows a fixed label instead of a duration, and <code>T</code> tells you how long you have been watching.</li>
+<li>With <strong>Show the video of live broadcasts</strong> turned on (the default), the picture appears in the player area even if <strong>Disable video output</strong> is checked. Video is capped at 720p. Turned off, the broadcast plays audio only, using the lightest variant. <code>Ctrl+Alt+V</code> toggles the option and restarts the broadcast in the new mode.</li>
+<li>You cannot seek forward or back, or jump to the start or end: the player says so. Pausing and resuming continues from where you stopped.</li>
+<li>If the connection drops, the player tries to reconnect up to three times (after 2, 5 and 10 seconds) and announces the loss and the restoration. If the broadcast has already ended, it announces "The live broadcast has ended" instead of playing the recording from the beginning.</li>
+<li>A scheduled broadcast that has not started announces "This live broadcast has not started yet."; try again once it begins.</li>
+<li>Live broadcasts stay out of AutoDJ and crossfade, have no lyrics, and do not create a resume point. Playback history records them after the usual minimum listening time. The <strong>end of track</strong> sleep timer does not apply to a live broadcast; use a preset duration.</li>
+</ul>
 <h3 id="radio-from-the-current-track">Radio from the current track</h3>
 <p>Press <code>Ctrl+R</code> or use <strong>Playback &gt; Start radio from this track</strong> while a YouTube Music song is playing. KeyTune opens a new tab, preserves the playback position, and places the current track at item 1 without continuing the previous radio queue.</p>
 <p>To reduce repeats between radios, the player excludes tracks already traversed in the source playlist and keeps a history of the 200 most recently played YouTube Music songs, restored with the session. KeyTune may make up to three requests and only adds previously unseen IDs. Because YouTube Music chooses the candidates, different songs cannot be guaranteed; if no new tracks are available, the new tab remains with only the seed track.</p>
@@ -736,6 +750,7 @@ footer {
 <p>If media does not open, test another local file to separate an invalid path, permission, or incompatible file type problem.</p>
 <p>If file association does not work as expected, there are two separate steps to confirm: first, that KeyTune was registered as an option (during installation or later in <strong>Settings &gt; General &gt; Register as default player</strong>); second, that it was chosen as the default application for those formats in Windows default app settings - registration alone does not automatically make KeyTune the default.</p>
 <p>If session restoration fails, open the app once without depending on the previous session and check whether window and folder settings are being saved normally.</p>
+<p>If a live broadcast does not open, confirm that <strong>Additional features</strong> are enabled and up to date (<code>yt-dlp</code> changes often to keep up with YouTube). Many requests in a row to YouTube can cause a temporary block (error 429); wait a few minutes and try again.</p>
 <p>If the YouTube Music tab does not load or shows dependency errors, open <code>Ctrl+,</code> &gt; <strong>Additional features</strong> and confirm that <strong>Enable additional features for YouTube Music and YouTube</strong> is checked. The initial download can take a few minutes and requires internet access. If the dependencies are already installed but search or loading fails, use the nightly version of <code>yt-dlp</code> in the same preferences - it usually receives fixes before the stable channel.</p>
 <p>If the YouTube Music session expires or the player asks for authentication again, export the browser cookies as described in the <a href="#youtube-music-session">YouTube Music session</a> section and reconnect the account.</p>
 <p>To investigate other problems, enable log recording in <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Log recording</strong>. With <strong>Record diagnostic logs</strong> enabled and the level set to <em>Debug</em>, the player writes detailed information to <code>keytune.log</code> in the data folder. Use <strong>Open logs folder</strong> to locate the file and, if you need to report a problem, attach it to the issue.</p>
@@ -746,7 +761,7 @@ footer {
 <h2 id="for-developers">For developers</h2>
 <p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generated on 14/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 23/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

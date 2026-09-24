@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Não lançado]
+
+### Adicionado
+
+- **Transmissões ao vivo do YouTube**: cole o link de uma live em **Abrir playlist ou vídeo** e o KeyTune toca no momento atual, com áudio e vídeo opcional. A barra de tempo mostra um rótulo fixo de transmissão ao vivo, `T` informa há quanto tempo você assiste e saltos de posição são recusados com aviso.
+- **Vídeo das lives**: nova opção em **Preferências > Reprodução** (**Mostrar o vídeo das transmissões ao vivo**, ligada por padrão) que funciona mesmo com **Desativar saída de vídeo** marcado. `Ctrl+Alt+V` alterna a opção durante a transmissão.
+- **Reconexão automática**: se a conexão cair, o player tenta reconectar até três vezes e anuncia a perda e o restabelecimento. Se a transmissão já tiver terminado, avisa em vez de tocar a gravação desde o começo.
+
+### Alterado
+
+- **Lives fora de recursos que exigem uma faixa com fim**: não entram no AutoDJ nem no crossfade, não buscam letra e não geram ponto de retomada.
+
 ## [2.0.6] - 2026-09-21
 
 ### Corrigido

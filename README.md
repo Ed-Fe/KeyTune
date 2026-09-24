@@ -28,6 +28,7 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Built-in equalizer presets plus custom presets
 - YouTube Music integration for search, link-based open flows, library refresh, and account-synced likes/dislikes
 - Optional YouTube Music related-content autoplay (radio) when a playlist ends
+- YouTube live broadcasts from a link, with audio and optional video (`Ctrl+Alt+V`), automatic reconnection, and accessible status announcements
 - Fresh per-track YouTube Music radio (`Ctrl+R`) with recent-playback repeat suppression
 
 ## Requirements

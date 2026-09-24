@@ -157,6 +157,7 @@ footer {
         <li class="toc-level-3"><a href="#cuenta-y-biblioteca">Cuenta y biblioteca</a></li>
         <li class="toc-level-3"><a href="#busqueda-en-el-catalogo-y-en-youtube">Búsqueda en el catálogo y en YouTube</a></li>
         <li class="toc-level-3"><a href="#abrir-playlist-o-video">Abrir playlist o video</a></li>
+        <li class="toc-level-3"><a href="#transmisiones-en-vivo">Transmisiones en vivo</a></li>
         <li class="toc-level-3"><a href="#radio-desde-la-pista-actual">Radio desde la pista actual</a></li>
         <li class="toc-level-3"><a href="#administrar-playlists-de-youtube-music">Administrar playlists de YouTube Music</a></li>
         <li class="toc-level-3"><a href="#sesion-de-youtube-music">Sesión de YouTube Music</a></li>
@@ -184,6 +185,7 @@ footer {
 <li>Ecualizador por pestaña con predefinidos y presets personalizados</li>
 <li>Un panel de letras con búsqueda automática y copia del texto</li>
 <li>Pestaña dedicada de YouTube Music, abierta con <code>Ctrl+Shift+Y</code></li>
+<li>Transmisiones en vivo de YouTube, con audio y video opcional</li>
 <li>Carga y guardado de playlists</li>
 <li>Restauración de lo que estaba abierto en la última sesión</li>
 <li>Lista de archivos, carpetas y playlists recientes</li>
@@ -285,6 +287,7 @@ footer {
 <li><code>Shift+\</code>: restaurar el tono original</li>
 <li><code>Alt+D</code>: abrir el selector de salida de audio</li>
 <li><code>Ctrl+Alt+L</code>: alternar el panel de letras</li>
+<li><code>Ctrl+Alt+V</code>: alternar el video de las transmisiones en vivo</li>
 <li><code>Ctrl+Shift+F</code>: agregar el elemento seleccionado a la cola de reproducción</li>
 <li><code>Ctrl+Shift+Q</code>: administrar la cola de reproducción</li>
 <li><code>Ctrl+Shift+D</code>: configurar el temporizador</li>
@@ -441,6 +444,7 @@ footer {
 <li><strong>Activar aleatorio en nuevas playlists</strong>: activa automáticamente el modo aleatorio en playlists creadas después de guardar.</li>
 <li><strong>Aplicar crossfade al cambiar de pista manualmente</strong>: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista. Cuando hay una transición de AutoDJ preparada, avanzar usa ese plan aunque esta opción esté desactivada.</li>
 <li><strong>Desactivar salida de video (reproducir solo audio)</strong>: mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar ventanas externas de video.</li>
+<li><strong>Mostrar el video de las transmisiones en vivo</strong>: muestra la imagen de las transmisiones en vivo de YouTube en el área del reproductor, incluso con la salida de video desactivada para el resto de la aplicación. Si se desmarca, la transmisión reproduce solo el audio. <code>Ctrl+Alt+V</code> alterna esta opción durante una transmisión.</li>
 </ul>
 <h3 id="accesibilidad">Accesibilidad</h3>
 <p>La pestaña <strong>Accesibilidad</strong> tiene una sola opción: <strong>Activar anuncios de accesibilidad</strong>. Cuando está activada, el reproductor anuncia cambios de tiempo, volumen, cambio de pestañas y estado al lector de pantalla. Cuando está desactivada, esos anuncios se suprimen. Los atajos de anuncio bajo demanda (<code>T</code>, <code>V</code>, <code>S</code>) siguen funcionando independientemente de esta configuración; consulta <a href="#recursos-de-accesibilidad">Recursos de accesibilidad</a> para ver detalles.</p>
@@ -639,6 +643,16 @@ footer {
 </ul>
 <h3 id="abrir-playlist-o-video">Abrir playlist o video</h3>
 <p>La sección <strong>Abrir playlist o video</strong> también está contraída de forma predeterminada. Expándela para pegar un enlace de playlist, mix o video de YouTube Music o de YouTube. Haz clic en <strong>Abrir enlace</strong> o presiona <code>Enter</code> en el campo para abrir.</p>
+<h3 id="transmisiones-en-vivo">Transmisiones en vivo</h3>
+<p>Pega el enlace de una transmisión en vivo de YouTube en <strong>Abrir playlist o video</strong> (o usa <code>Ctrl+V</code> / <code>Ctrl+Shift+V</code>, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo:</p>
+<ul>
+<li>Se reproduce en el momento actual, sin retomar desde una posición guardada. El reproductor anuncia "Transmisión en vivo", la barra de tiempo muestra una etiqueta fija en lugar de la duración y <code>T</code> indica cuánto tiempo llevas viéndola.</li>
+<li>Con <strong>Mostrar el video de las transmisiones en vivo</strong> activado (predeterminado), la imagen aparece en el área del reproductor aunque <strong>Desactivar salida de video</strong> esté marcado. El video se limita a 720p. Desactivado, la transmisión reproduce solo el audio, con la variante más ligera. <code>Ctrl+Alt+V</code> alterna la opción y reinicia la transmisión en el nuevo modo.</li>
+<li>No es posible avanzar, retroceder ni ir al inicio o al final: el reproductor lo avisa. Pausar y reanudar continúa desde donde se detuvo.</li>
+<li>Si la conexión se interrumpe, el reproductor intenta reconectar hasta tres veces (tras 2, 5 y 10 segundos) y anuncia la pérdida y el restablecimiento. Si la transmisión ya terminó, avisa "La transmisión en vivo ha terminado" en lugar de reproducir la grabación desde el principio.</li>
+<li>Una transmisión programada que aún no ha comenzado avisa "Esta transmisión en vivo aún no ha comenzado."; inténtalo de nuevo cuando empiece.</li>
+<li>Las transmisiones en vivo quedan fuera de AutoDJ y del crossfade, no tienen letra y no generan un punto de reanudación. El historial de reproducción las registra tras el tiempo mínimo de escucha. El temporizador de <strong>fin de la pista</strong> no se aplica a una transmisión en vivo; usa una duración predefinida.</li>
+</ul>
 <h3 id="radio-desde-la-pista-actual">Radio desde la pista actual</h3>
 <p>Presiona <code>Ctrl+R</code> o usa <strong>Reproducción &gt; Iniciar radio desde esta pista</strong> mientras se reproduce una canción de YouTube Music. KeyTune abre una pestaña nueva, conserva la posición de reproducción y coloca la pista actual como elemento 1, sin continuar la cola de la radio anterior.</p>
 <p>Para reducir repeticiones entre radios, el reproductor excluye las pistas ya recorridas en la playlist de origen y mantiene un historial de las 200 canciones más recientes de YouTube Music, restaurado junto con la sesión. KeyTune puede realizar hasta tres búsquedas y solo agrega IDs nuevos. Como YouTube Music elige los candidatos, no es posible garantizar canciones diferentes; si no hay novedades, la pestaña nueva permanece únicamente con la pista inicial.</p>
@@ -735,6 +749,7 @@ footer {
 <p>Si un medio no abre, prueba otro archivo local para separar un problema de ruta inválida, permiso o tipo de archivo incompatible.</p>
 <p>Si la asociación de archivos no funciona como se esperaba, hay dos pasos separados que confirmar: primero, que KeyTune fue registrado como opción (durante la instalación o después en <strong>Configuración &gt; General &gt; Registrar como reproductor predeterminado</strong>); segundo, que fue elegido como aplicación predeterminada para esos formatos en la configuración de apps predeterminadas de Windows. El registro por sí solo no convierte a KeyTune automáticamente en el predeterminado.</p>
 <p>Si la restauración de sesión falla, abre la app una vez sin depender de la sesión anterior y verifica si la configuración de ventana y carpeta se está guardando normalmente.</p>
+<p>Si una transmisión en vivo no se abre, confirma que los <strong>Recursos adicionales</strong> estén activados y actualizados (<code>yt-dlp</code> cambia con frecuencia para seguir a YouTube). Muchas solicitudes seguidas a YouTube pueden causar un bloqueo temporal (error 429); espera unos minutos e inténtalo de nuevo.</p>
 <p>Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre <code>Ctrl+,</code> &gt; <strong>Recursos adicionales</strong> y confirma que la opción <strong>Activar recursos adicionales para YouTube Music y YouTube</strong> esté marcada. La descarga inicial puede tardar algunos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de <code>yt-dlp</code> en las mismas preferencias; suele recibir correcciones antes que el canal estable.</p>
 <p>Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección <a href="#sesión-de-youtube-music">Sesión de YouTube Music</a> y reconecta la cuenta.</p>
 <p>Para investigar otros problemas, activa el registro de logs en <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Registro de logs</strong>. Con <strong>Registrar logs de diagnóstico</strong> activado y el nivel ajustado a <em>Depuración</em>, el reproductor graba información detallada en <code>keytune.log</code> en la carpeta de datos. Usa <strong>Abrir carpeta de logs</strong> para localizar el archivo y, si necesitas reportar un problema, adjúntalo a la issue.</p>
@@ -745,7 +760,7 @@ footer {
 <h2 id="para-desarrolladores">Para desarrolladores</h2>
 <p>KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generado el 14/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 23/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

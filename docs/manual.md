@@ -18,6 +18,7 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 - Equalizador por aba com predefinições e presets personalizados
 - Painel de letras com busca automática e cópia do texto
 - Aba dedicada do YouTube Music, aberta com `Ctrl+Shift+Y`
+- Transmissões ao vivo do YouTube, com áudio e vídeo opcional
 - Carregamento e gravação de playlists
 - Restauração do que estava aberto na última sessão
 - Lista de arquivos, pastas e playlists recentes
@@ -134,6 +135,7 @@ Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta
 - `Shift+\`: restaurar o tom original
 - `Alt+D`: abrir a seleção da saída de áudio
 - `Ctrl+Alt+L`: alternar o painel de letras
+- `Ctrl+Alt+V`: alternar o vídeo das transmissões ao vivo
 - `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
 - `Ctrl+Shift+Q`: gerenciar a fila de reprodução
 - `Ctrl+Shift+D`: configurar o temporizador
@@ -324,6 +326,7 @@ A aba **Reprodução** controla o comportamento de áudio e o estado inicial de 
 - **Ativar embaralhamento em novas playlists**: ativa o modo aleatório automaticamente em playlists criadas depois de salvar.
 - **Aplicar crossfade ao trocar de faixa manualmente**: quando ligado, o crossfade também é usado ao avançar ou voltar manualmente; por padrão só vale no fim natural de cada faixa. Quando há uma transição AutoDJ pronta, avançar usa esse plano mesmo com esta opção desligada.
 - **Desativar saída de vídeo (tocar só o áudio)**: mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar janelas externas de vídeo.
+- **Mostrar o vídeo das transmissões ao vivo**: exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. `Ctrl+Alt+V` alterna esta opção durante uma transmissão.
 
 ### Acessibilidade
 
@@ -483,6 +486,17 @@ A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expand
 
 A seção **Abrir playlist ou vídeo** também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em **Abrir link** ou pressione `Enter` no campo para abrir.
 
+### Transmissões ao vivo
+
+Cole o link de uma transmissão ao vivo do YouTube em **Abrir playlist ou vídeo** (ou use `Ctrl+V` / `Ctrl+Shift+V`, como em qualquer link). O KeyTune reconhece a transmissão sozinho:
+
+- Ela toca no momento atual, sem retomar de uma posição salva. O player anuncia "Transmissão ao vivo", a barra de tempo mostra um rótulo fixo no lugar da duração e `T` informa há quanto tempo você está assistindo.
+- Com **Mostrar o vídeo das transmissões ao vivo** ligado (padrão), a imagem aparece na área do player mesmo que **Desativar saída de vídeo** esteja marcado. O vídeo é limitado a 720p. Desligado, a transmissão toca só o áudio, na variante mais leve. `Ctrl+Alt+V` alterna a opção e reinicia a transmissão no novo modo.
+- Não é possível avançar, voltar nem ir ao início ou ao fim: o player avisa. Pausar e retomar continua de onde parou.
+- Se a conexão cair, o player tenta reconectar até três vezes (após 2, 5 e 10 segundos) e anuncia a perda e o restabelecimento. Se a transmissão já tiver terminado, ele avisa "A transmissão ao vivo terminou" em vez de tocar a gravação desde o começo.
+- Uma transmissão agendada que ainda não começou avisa "Esta transmissão ao vivo ainda não começou."; tente de novo quando ela iniciar.
+- Transmissões ao vivo ficam fora do AutoDJ e do crossfade, não têm letra e não geram ponto de retomada. O histórico de reprodução as registra depois do tempo mínimo de audição. O temporizador **fim da faixa** não se aplica a uma transmissão ao vivo; use uma duração pronta.
+
 ### Rádio a partir da faixa atual
 
 Pressione `Ctrl+R` ou use **Reprodução > Iniciar rádio desta faixa** enquanto uma música do YouTube Music estiver tocando. O KeyTune abre uma nova aba, mantém a posição da reprodução e coloca a faixa atual como item 1, sem continuar a fila da rádio anterior.
@@ -613,6 +627,8 @@ Se a associação de arquivos não funcionar como esperado, há dois passos sepa
 Se a restauração de sessão falhar, abra o app uma vez sem depender da sessão anterior e verifique se a configuração de janela e pasta estão sendo salvas normalmente.
 
 Se a aba do YouTube Music não carregar ou exibir erros de dependência, abra `Ctrl+,` > **Recursos adicionais** e confirme que a opção **Ativar recursos adicionais para YouTube Music e YouTube** está marcada. O download inicial pode levar alguns minutos e exige internet. Se as dependências já estiverem instaladas mas a busca ou o carregamento falharem, use a versão nightly do `yt-dlp` nas mesmas preferências — ela costuma receber correções antes do canal estável.
+
+Se uma transmissão ao vivo não abrir, confirme que os **Recursos adicionais** estão ativados e atualizados (o `yt-dlp` muda com frequência para acompanhar o YouTube). Muitos pedidos seguidos ao YouTube podem causar um bloqueio temporário (erro 429); espere alguns minutos e tente de novo.
 
 Se a sessão do YouTube Music expirar ou o player pedir autenticação novamente, exporte os cookies do navegador conforme descrito na seção [Sessão do YouTube Music](#sessao-do-youtube-music) e reconecte a conta.
 
