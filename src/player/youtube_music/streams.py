@@ -16,11 +16,13 @@ from .dependencies import (
     youtubejs_resolver_enabled,
 )
 from .live_streams import (
+    LIVE_PLAYER_CLIENT,
     LiveNotStartedError,
     is_live_info,
     is_live_not_started_message,
     is_upcoming_info,
     live_display_title_from_info,
+    live_status_from_info,
     select_live_format,
 )
 from .playlists import is_youtube_music_media
@@ -221,6 +223,8 @@ def resolve_stream_playback(
         {"extractor_args": {"youtube": {"player_client": [normalized_player_client]}}},
     ]
 
+    live_probe_profile = {"extractor_args": {"youtube": {"player_client": [LIVE_PLAYER_CLIENT]}}}
+
     format_selectors = ["bestaudio/best"]
 
     warning_messages: list[str] = []
@@ -285,6 +289,9 @@ def resolve_stream_playback(
                         )
                 except RuntimeError as exc:
                     local_last_error = _clean_external_tool_error(exc) or str(exc)
+                    if _may_be_hidden_live_broadcast(info) and live_probe_profile not in extractor_profiles:
+                        _logger.info("Empty extractor response; retrying once with the live-capable player client")
+                        extractor_profiles.append(live_probe_profile)
                     continue
 
                 if resolved_playback.stream_url:
@@ -438,6 +445,16 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
         ),
         display_title=_display_title_from_info(info),
         display_artist=_display_artist_from_info(info),
+    )
+
+
+def _may_be_hidden_live_broadcast(info):
+    """True when the extractor answered with nothing to play or classify."""
+    return not (
+        live_status_from_info(info)
+        or _iter_stream_format_candidates(info)
+        or _iter_direct_stream_url_candidates(info)
+        or info.get("entries")
     )
 
 

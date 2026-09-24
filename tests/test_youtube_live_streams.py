@@ -198,6 +198,38 @@ class ResolveLiveStreamTests(unittest.TestCase):
             with self.assertRaises(LiveNotStartedError):
                 resolve_stream_playback(LIVE_URL)
 
+    def test_empty_default_client_response_retries_once_with_the_live_capable_client(self):
+        # The anonymous "visionos" client answers a live with only a title.
+        responses = [_response({"title": "LIVE: Jornal", "channel": "Canal de Notícias"}), _response(_live_info())]
+        captured_profiles = []
+
+        def fake_extract(_media_path, **kwargs):
+            captured_profiles.append(kwargs.get("extractor_args"))
+            return responses.pop(0)
+
+        with patch("player.youtube_music.streams.extract_yt_dlp_info", side_effect=fake_extract):
+            resolved = resolve_stream_playback(LIVE_URL, prefer_video=True)
+
+        self.assertTrue(resolved.is_live)
+        self.assertEqual(resolved.stream_url, "https://manifest.googlevideo.com/live/95.m3u8")
+        self.assertEqual(
+            captured_profiles,
+            [
+                {"youtube": {"player_client": ["visionos"]}},
+                {"youtube": {"player_client": ["web_safari"]}},
+            ],
+        )
+
+    def test_empty_response_is_not_retried_when_the_live_client_was_already_used(self):
+        with patch(
+            "player.youtube_music.streams.extract_yt_dlp_info",
+            return_value=_response({"title": "Sem formatos"}),
+        ) as extract_info:
+            with self.assertRaises(RuntimeError):
+                resolve_stream_playback(LIVE_URL, anonymous_player_client="web_safari")
+
+        self.assertEqual(extract_info.call_count, 1)
+
     def test_finished_broadcast_keeps_the_regular_audio_path(self):
         resolved = self._resolve(
             {

@@ -14,6 +14,11 @@ from ..i18n import _
 # mode picks the cheapest variant that still carries sound.
 LIVE_VIDEO_MAX_HEIGHT = 720
 
+# The anonymous default client ("visionos") returns neither ``live_status`` nor
+# any format for a live broadcast. This client exposes the HLS variants, so the
+# resolver retries with it once when a response comes back completely empty.
+LIVE_PLAYER_CLIENT = "web_safari"
+
 LIVE_STATUS_LIVE = "is_live"
 LIVE_STATUS_UPCOMING = "is_upcoming"
 
