@@ -27,6 +27,8 @@ from ..constants import (
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
 )
+from ..download.ffmpeg import ffmpeg_available
+from ..download.panel import DownloadOptionsPanel
 from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
 
@@ -74,6 +76,7 @@ class PreferencesDialog(wx.Dialog):
         self._build_playback_tab()
         self._build_accessibility_tab()
         self._build_smart_library_tab()
+        self._build_download_tab()
         self._build_additional_resources_tab()
 
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -564,6 +567,51 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_resume_edge_ctrl.Enable(resume_enabled)
         self.smart_library_cache_limit_ctrl.Enable(library_enabled)
 
+    def _build_download_tab(self):
+        page, page_sizer = self._create_tab_page(_("Download"))
+
+        info_label = wx.StaticText(
+            page,
+            label=_(
+                "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp "
+                "e vale para mídias do YouTube e do YouTube Music."
+            ),
+        )
+        info_label.Wrap(520)
+
+        download_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Opções de download")), wx.VERTICAL)
+        self.download_options_panel = DownloadOptionsPanel(page, kind_label=_("Tipo de download padrão"))
+        self.download_always_ask_checkbox = wx.CheckBox(page, label=_("Sempre &mostrar o diálogo ao baixar"))
+        self._configure_checkbox(
+            self.download_always_ask_checkbox,
+            _("Sempre mostrar o diálogo ao baixar"),
+            _(
+                "Ligado, cada download abre um diálogo para confirmar formato e qualidade. "
+                "Desligado, o download começa direto com as opções desta guia."
+            ),
+        )
+        download_box.Add(self.download_options_panel, 0, wx.EXPAND)
+        download_box.Add(self.download_always_ask_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+
+        ffmpeg_note = wx.StaticText(
+            page,
+            label=(
+                _("O FFmpeg já está disponível para converter áudio e unir vídeo e áudio.")
+                if ffmpeg_available()
+                else _(
+                    "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. "
+                    "O KeyTune oferece instalá-lo na primeira vez que precisar."
+                )
+            ),
+        )
+        ffmpeg_note.Wrap(520)
+
+        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(download_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(ffmpeg_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+
+        self.notebook.AddPage(page, _("Download"))
+
     def _build_additional_resources_tab(self):
         page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
         self._additional_resources_page = page
@@ -1010,6 +1058,15 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_cache_limit_ctrl.SetValue(settings.smart_library_cache_limit)
         self._refresh_smart_library_controls()
 
+        self.download_options_panel.set_values(
+            kind=settings.download_kind,
+            audio_quality=settings.download_audio_quality,
+            video_quality=settings.download_video_quality,
+            sample_rate=settings.download_sample_rate,
+            directory=settings.download_directory,
+        )
+        self.download_always_ask_checkbox.SetValue(settings.download_always_ask)
+
         self._refresh_additional_resources_controls()
 
     def get_settings(self):
@@ -1066,6 +1123,14 @@ class PreferencesDialog(wx.Dialog):
         settings.smart_library_resume_minimum_minutes = int(self.smart_library_resume_minimum_ctrl.GetValue())
         settings.smart_library_resume_edge_seconds = int(self.smart_library_resume_edge_ctrl.GetValue())
         settings.smart_library_cache_limit = int(self.smart_library_cache_limit_ctrl.GetValue())
+
+        download_choice = self.download_options_panel.get_choice()
+        settings.download_kind = download_choice.kind
+        settings.download_audio_quality = download_choice.audio_quality
+        settings.download_video_quality = download_choice.video_quality
+        settings.download_sample_rate = download_choice.sample_rate
+        settings.download_directory = self.download_options_panel.get_directory_setting()
+        settings.download_always_ask = self.download_always_ask_checkbox.GetValue()
 
         settings.logging_enabled = self.logging_enabled_checkbox.GetValue()
         selected_level_index = self.logging_level_choice.GetSelection()

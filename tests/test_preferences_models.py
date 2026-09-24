@@ -169,6 +169,52 @@ class AppSettingsTests(unittest.TestCase):
         self.assertIs(payload["live_video_enabled"], False)
         self.assertFalse(AppSettings.from_dict(payload).live_video_enabled)
 
+    def test_download_defaults_survive_an_old_settings_file(self):
+        restored_settings = AppSettings.from_dict({"default_volume": 70})
+
+        self.assertEqual(restored_settings.download_kind, "audio")
+        self.assertEqual(restored_settings.download_audio_quality, "original")
+        self.assertEqual(restored_settings.download_video_quality, "best")
+        self.assertEqual(restored_settings.download_sample_rate, 0)
+        self.assertEqual(restored_settings.download_directory, "")
+        self.assertTrue(restored_settings.download_always_ask)
+
+    def test_download_settings_round_trip(self):
+        settings = AppSettings(
+            download_kind="video",
+            download_audio_quality="mp3_256",
+            download_video_quality="720",
+            download_sample_rate=48000,
+            download_directory="D:\\Downloads",
+            download_always_ask=False,
+        )
+
+        restored_settings = AppSettings.from_dict(settings.to_dict())
+
+        self.assertEqual(restored_settings.download_kind, "video")
+        self.assertEqual(restored_settings.download_audio_quality, "mp3_256")
+        self.assertEqual(restored_settings.download_video_quality, "720")
+        self.assertEqual(restored_settings.download_sample_rate, 48000)
+        self.assertEqual(restored_settings.download_directory, "D:\\Downloads")
+        self.assertFalse(restored_settings.download_always_ask)
+
+    def test_invalid_download_settings_fall_back_to_the_defaults(self):
+        restored_settings = AppSettings.from_dict(
+            {
+                "download_kind": "gif",
+                "download_audio_quality": "wav",
+                "download_video_quality": "9999",
+                "download_sample_rate": 96000,
+                "download_directory": None,
+            }
+        )
+
+        self.assertEqual(restored_settings.download_kind, "audio")
+        self.assertEqual(restored_settings.download_audio_quality, "original")
+        self.assertEqual(restored_settings.download_video_quality, "best")
+        self.assertEqual(restored_settings.download_sample_rate, 0)
+        self.assertEqual(restored_settings.download_directory, "")
+
 
 if __name__ == "__main__":
     unittest.main()

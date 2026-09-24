@@ -5,6 +5,8 @@ from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
 from ..log import setup_logging
 from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
+from .convert import FrameConvertMixin
+from .download import FrameDownloadMixin
 from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
 from .item_search import FrameItemSearchMixin
@@ -25,6 +27,8 @@ from .youtube_music import FrameYouTubeMusicMixin
 class MediaPlayerFrame(
     FrameYouTubeMusicMixin,
     FrameCommandMixin,
+    FrameConvertMixin,
+    FrameDownloadMixin,
     FrameSessionMixin,
     FrameRecentsMixin,
     FrameEqualizerMixin,
@@ -65,6 +69,8 @@ class MediaPlayerFrame(
         self._suppress_next_auto_advance = False
         self._item_search_query = ""
         self._initialize_sleep_timer_state()
+        self._initialize_download_state()
+        self._initialize_convert_state()
         self._initialize_smart_library_state()
 
         self._build_menu_bar()

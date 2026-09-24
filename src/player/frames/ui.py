@@ -176,6 +176,7 @@ class FrameUIMixin:
             "Ctrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\n"
             "Ctrl+Shift+V — Colar e abrir em uma nova playlist\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
+            "Ctrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\n"
             "Ctrl+T — Nova playlist\n"
             "Ctrl+W — Fechar aba ou playlist atual\n"
             "Ctrl+Shift+W — Fechar mídia atual\n\n"
@@ -201,6 +202,7 @@ class FrameUIMixin:
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
             "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
+            "Ctrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\n"
             "Ctrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
@@ -382,6 +384,12 @@ class FrameUIMixin:
         self.menu_save_playlist_id = wx.NewIdRef()
         self.menu_close_media_id = wx.NewIdRef()
         self.menu_close_tab_id = wx.NewIdRef()
+        self.menu_convert_current_id = wx.NewIdRef()
+        self.menu_convert_selection_id = wx.NewIdRef()
+        self.menu_convert_audio_to_video_id = wx.NewIdRef()
+        self.menu_convert_video_to_audio_id = wx.NewIdRef()
+        self.menu_convert_audio_to_audio_id = wx.NewIdRef()
+        self.menu_convert_video_to_video_id = wx.NewIdRef()
         self.menu_copy_current_item_path_id = wx.NewIdRef()
         self.menu_paste_open_from_clipboard_id = wx.NewIdRef()
         self.menu_paste_open_from_clipboard_new_playlist_id = wx.NewIdRef()
@@ -405,6 +413,17 @@ class FrameUIMixin:
         self.recent_menu.AppendSubMenu(self.recent_playlists_menu, _("Playlists recentes"))
         file_menu.AppendSubMenu(self.recent_menu, _("&Recentes"))
         file_menu.AppendSeparator()
+        convert_menu = wx.Menu()
+        convert_menu.Append(self.menu_convert_current_id, _("Converter &mídia atual...\tCtrl+Shift+K"))
+        convert_menu.AppendSeparator()
+        convert_menu.Append(self.menu_convert_audio_to_video_id, _("Áudio para &vídeo..."))
+        convert_menu.Append(self.menu_convert_video_to_audio_id, _("Vídeo para &áudio..."))
+        convert_menu.Append(self.menu_convert_audio_to_audio_id, _("Áudio para outro &formato de áudio..."))
+        convert_menu.Append(self.menu_convert_video_to_video_id, _("Vídeo para outro f&ormato de vídeo..."))
+        convert_menu.AppendSeparator()
+        convert_menu.Append(self.menu_convert_selection_id, _("Converter arquivos &selecionados na lista..."))
+        file_menu.AppendSubMenu(convert_menu, _("Con&verter"))
+        file_menu.AppendSeparator()
         file_menu.Append(self.menu_save_playlist_id, _("Salvar Playli&st\tCtrl+Shift+S"))
         file_menu.Append(self.menu_close_media_id, _("Fechar Mí&dia\tCtrl+Shift+W"))
         file_menu.AppendSeparator()
@@ -420,6 +439,9 @@ class FrameUIMixin:
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
+        self.menu_download_media_id = wx.NewIdRef()
+        self.menu_download_selection_id = wx.NewIdRef()
+        self.menu_download_playlist_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
@@ -451,6 +473,9 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
+        playback_menu.Append(self.menu_download_media_id, _("&Baixar mídia atual...\tCtrl+Shift+B"))
+        playback_menu.Append(self.menu_download_selection_id, _("Baixar &seleção da lista..."))
+        playback_menu.Append(self.menu_download_playlist_id, _("Baixar playlist &inteira..."))
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
@@ -689,6 +714,7 @@ class FrameUIMixin:
 
         self.status_bar = self.CreateStatusBar(1)
         self.status_bar.SetStatusText("")
+        self._create_task_progress_gauge(self.status_bar)
         self._status_clear_timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self._on_status_clear_timer, self._status_clear_timer)
 
@@ -720,6 +746,8 @@ class FrameUIMixin:
                 (wx.ACCEL_ALT, ord("D"), int(self.menu_cycle_audio_output_device_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("F"), int(self.menu_enqueue_item_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("Q"), int(self.menu_manage_queue_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("B"), int(self.menu_download_media_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("K"), int(self.menu_convert_current_id)),
             ]
         )
         self.SetAcceleratorTable(accelerators)
@@ -748,6 +776,15 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
+        self.Bind(wx.EVT_MENU, self.on_download_current_media, id=self.menu_download_media_id)
+        self.Bind(wx.EVT_MENU, self.on_download_selection, id=self.menu_download_selection_id)
+        self.Bind(wx.EVT_MENU, self.on_download_playlist, id=self.menu_download_playlist_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_selection, id=self.menu_convert_selection_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_current_media, id=self.menu_convert_current_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_audio_to_video, id=self.menu_convert_audio_to_video_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_video_to_audio, id=self.menu_convert_video_to_audio_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_audio_to_audio, id=self.menu_convert_audio_to_audio_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_video_to_video, id=self.menu_convert_video_to_video_id)
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)

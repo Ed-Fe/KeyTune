@@ -201,6 +201,8 @@ class AppCommandsMixin:
         if hasattr(self, "plugin_service"):
             self.plugin_service.stop_all()
         self._shutdown_autodj_service()
+        self._shutdown_download()
+        self._shutdown_convert()
 
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then

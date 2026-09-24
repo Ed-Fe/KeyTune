@@ -407,7 +407,7 @@ class KeyNavigationMixin:
                 rate_current_youtube_music_media("DISLIKE" if event.ShiftDown() else "LIKE")
             return
 
-        if event.ControlDown() and key_code in (ord("B"), ord("b")):
+        if event.ControlDown() and not event.ShiftDown() and key_code in (ord("B"), ord("b")):
             self.on_toggle_playlist_browser(None)
             return
 
