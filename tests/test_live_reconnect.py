@@ -256,5 +256,111 @@ class LiveStartFailureTests(unittest.TestCase):
         frame._schedule_live_reconnect.assert_not_called()
 
 
+class _PermissiveFrame(PlaybackEngineMixin):
+    """Runs the whole success path of ``_finish_media_start`` with stubbed collaborators."""
+
+    def __init__(self):
+        self._playback_request_serial = 5
+        self._pending_playback_request_serial = 5
+        self._active_player_key = "primary"
+        self.state = SimpleNamespace(current_media_path=LIVE_URL, playback_gain_db=0.0)
+        self.lyrics_refreshes = []
+
+    def __getattr__(self, name):
+        if name.startswith("__"):
+            raise AttributeError(name)
+        # Cache the stub so tests can inspect the calls made through it.
+        stub = self.__dict__[name] = Mock(name=name)
+        return stub
+
+    def _get_playlist_state(self, _index=None):
+        return self.state
+
+    def _media_label(self, _path):
+        return "Jornal"
+
+    def _describe_playlist_position(self, _state):
+        return "Item 1 de 1."
+
+    def _refresh_lyrics_for_active_media(self, title, artist):
+        self.lyrics_refreshes.append((title, artist))
+
+    def run(self, **request_overrides):
+        request = {
+            "serial": 5,
+            "player_key": "primary",
+            "tab_index": 0,
+            "media_path": LIVE_URL,
+            "resolved_display_title": "Jornal",
+            "resolved_display_artist": "Canal",
+        }
+        request.update(request_overrides)
+        self._finish_media_start(request, True, "")
+        return request
+
+
+class LiveStartSuccessTests(unittest.TestCase):
+    def test_a_live_start_is_announced_and_shown_as_live(self):
+        frame = _PermissiveFrame()
+
+        frame.run(is_live=True)
+
+        self.assertEqual(frame._announce.call_args.args[0], "Transmissão ao vivo. Item 1 de 1.")
+        self.assertEqual(frame._set_status_message.call_args.args[0], "Ao vivo: Jornal")
+
+    def test_a_live_start_skips_the_lyrics_lookup(self):
+        frame = _PermissiveFrame()
+
+        frame.run(is_live=True)
+
+        self.assertEqual(frame.lyrics_refreshes, [("", "")])
+
+    def test_a_regular_start_still_looks_up_the_lyrics(self):
+        frame = _PermissiveFrame()
+
+        frame.run(is_live=False)
+
+        self.assertEqual(frame.lyrics_refreshes, [("Jornal", "Canal")])
+        self.assertEqual(frame._set_status_message.call_args.args[0], "Tocando: Jornal")
+
+    def test_a_reconnect_reports_the_restored_connection_and_resets_the_attempts(self):
+        frame = _PermissiveFrame()
+        frame._live_reconnect_attempts = 2
+
+        frame.run(is_live=True, live_reconnect=True, announce_message="")
+
+        self.assertEqual(frame._announce.call_args.args[0], "Conexão com a transmissão ao vivo restabelecida.")
+        self.assertEqual(frame._live_reconnect_attempts, 0)
+
+    def test_a_caller_supplied_announcement_wins_over_the_generic_live_one(self):
+        frame = _PermissiveFrame()
+
+        frame.run(is_live=True, announce_message="Vídeo das transmissões ao vivo ativado.")
+
+        self.assertEqual(frame._announce.call_args.args[0], "Vídeo das transmissões ao vivo ativado.")
+
+
+class AutoDJLiveGuardTests(unittest.TestCase):
+    def test_a_live_cannot_be_analysed(self):
+        from player.frames.autodj import _reject_live_for_analysis
+
+        with self.assertRaises(RuntimeError):
+            _reject_live_for_analysis(SimpleNamespace(is_live=True, stream_url="https://live/x.m3u8"))
+
+    def test_regular_streams_pass_through_untouched(self):
+        from player.frames.autodj import _reject_live_for_analysis
+
+        playback = SimpleNamespace(is_live=False, stream_url="https://media/audio.webm")
+
+        self.assertIs(_reject_live_for_analysis(playback), playback)
+
+    def test_a_result_without_the_live_flag_is_treated_as_regular(self):
+        from player.frames.autodj import _reject_live_for_analysis
+
+        playback = SimpleNamespace(stream_url="https://media/audio.webm")
+
+        self.assertIs(_reject_live_for_analysis(playback), playback)
+
+
 if __name__ == "__main__":
     unittest.main()

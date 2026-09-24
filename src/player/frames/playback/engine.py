@@ -66,6 +66,10 @@ class PlaybackEngineMixin:
                     # We were watching a live and it no longer is one (ended or
                     # now a recording): don't restart it from the beginning.
                     raise LiveEndedError()
+                if request.get("crossfade") and is_live:
+                    # A live has no start to fade into; failing here makes the
+                    # crossfade fall back to a regular start of the same media.
+                    raise RuntimeError(_("Uma transmissão ao vivo não pode entrar em crossfade."))
                 lock = getattr(self, "_playback_backend_lock", None)
                 with lock if lock is not None else contextlib.nullcontext():
                     if request_serial != self._playback_request_serial:
@@ -350,7 +354,11 @@ class PlaybackEngineMixin:
         # Busca a letra da faixa que acabou de entrar. O caminho de crossfade
         # (_begin_pending_crossfade) chama o mesmo helper, já que ele retorna
         # antes deste ponto durante uma transição.
-        self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
+        # There are no lyrics for a broadcast; an empty title clears the panel.
+        if request.get("is_live"):
+            self._refresh_lyrics_for_active_media("", "")
+        else:
+            self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
 
         if not resolved_display_title:
             self._queue_remote_media_metadata_resolution(media_path)

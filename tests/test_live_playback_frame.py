@@ -137,6 +137,17 @@ class LivePlaybackWorkerTests(unittest.TestCase):
         self.assertTrue(request["is_live"])
 
 
+    def test_a_live_never_enters_a_crossfade_and_falls_back_to_a_regular_start(self):
+        frame = _WorkerFrame(("https://live/95.m3u8", {}, "Jornal", "Canal", True))
+
+        request = frame.run_request(crossfade=True)
+
+        frame.instance.media_new.assert_not_called()
+        frame.player.play.assert_not_called()
+        self.assertFalse(frame.finished[0][1])
+        self.assertFalse(request["live_ended"])
+
+
 class LiveTimeBarTests(unittest.TestCase):
     def _frame(self, media):
         class Frame(PlaybackControlsMixin):
