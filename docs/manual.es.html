@@ -120,6 +120,8 @@ footer {
         <li class="toc-level-3"><a href="#atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</a></li>
         <li class="toc-level-3"><a href="#cola-de-reproduccion">Cola de reproducción</a></li>
         <li class="toc-level-3"><a href="#temporizador">Temporizador</a></li>
+        <li class="toc-level-3"><a href="#descargar-el-medio-actual">Descargar el medio actual</a></li>
+        <li class="toc-level-3"><a href="#convertir-medios">Convertir medios</a></li>
         <li class="toc-level-3"><a href="#atajos-de-reproduccion">Atajos de reproducción</a></li>
         <li class="toc-level-3"><a href="#navegador-de-elementos">Navegador de elementos</a></li>
         <li class="toc-level-4"><a href="#modo-playlist">Modo playlist</a></li>
@@ -143,6 +145,7 @@ footer {
         <li class="toc-level-4"><a href="#historial-de-reproduccion-2">Historial de reproducción</a></li>
         <li class="toc-level-4"><a href="#reanudar-donde-lo-dejaste-2">Reanudar donde lo dejaste</a></li>
         <li class="toc-level-4"><a href="#cache-de-metadatos-y-analisis-2">Caché de metadatos y análisis</a></li>
+        <li class="toc-level-3"><a href="#descarga">Descarga</a></li>
         <li class="toc-level-3"><a href="#recursos-adicionales">Recursos adicionales</a></li>
         <li class="toc-level-4"><a href="#integracion-con-youtube-music-y-youtube">Integración con YouTube Music y YouTube</a></li>
         <li class="toc-level-4"><a href="#autodj-avanzado">AutoDJ avanzado</a></li>
@@ -186,6 +189,8 @@ footer {
 <li>Un panel de letras con búsqueda automática y copia del texto</li>
 <li>Pestaña dedicada de YouTube Music, abierta con <code>Ctrl+Shift+Y</code></li>
 <li>Transmisiones en vivo de YouTube, con audio y video opcional</li>
+<li>Descarga del medio actual de YouTube (audio o video) con <code>Ctrl+Shift+B</code></li>
+<li>Conversión de audio y video entre formatos, con <code>Ctrl+Shift+K</code> o <strong>Archivo &gt; Convertir</strong></li>
 <li>Carga y guardado de playlists</li>
 <li>Restauración de lo que estaba abierto en la última sesión</li>
 <li>Lista de archivos, carpetas y playlists recientes</li>
@@ -266,6 +271,31 @@ footer {
 </ul>
 <p>El submenú también incluye <strong>Tiempo restante</strong>, que anuncia cuánto falta, y <strong>Cancelar temporizador</strong>, activo solo cuando hay un temporizador programado.</p>
 <p>Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos y cuando falta 1 minuto. El estado del temporizador también entra en el anuncio de estado de la tecla <code>S</code>.</p>
+<h3 id="descargar-el-medio-actual">Descargar el medio actual</h3>
+<p>Con una canción o un video de YouTube o YouTube Music en reproducción, pulsa <code>Ctrl+Shift+B</code> (o usa <strong>Reproducción &gt; Descargar medio actual</strong>) para descargarlo. La descarga usa <code>yt-dlp</code>, la misma herramienta que ya reproduce estos medios, y se hace en segundo plano: la reproducción continúa con normalidad.</p>
+<ul>
+<li><strong>Diálogo de descarga</strong>: elige <strong>Audio</strong> o <strong>Video</strong>, la calidad, la frecuencia de muestreo (solo para audio convertido) y la carpeta. Tu última elección pasa a ser la predeterminada en las Preferencias. Desmarca <strong>Mostrar siempre este diálogo al descargar</strong> para que las siguientes descargas empiecen directamente, con las opciones de la pestaña <strong>Descarga</strong> de las Preferencias.</li>
+<li><strong>Calidad no disponible</strong>: si la calidad elegida no existe para ese medio, KeyTune lo descarga en la calidad original y te avisa, por ejemplo, de que el video salió en 720p en lugar de 1080p.</li>
+<li><strong>Nombre del archivo</strong>: el archivo recibe el mismo nombre que KeyTune muestra para la pista (por ejemplo, <code>Artista — Título.mp3</code>), con los caracteres que Windows no acepta sustituidos por <code>_</code>. Si el mismo nombre se repite en una cola, el siguiente recibe " (2)"; descargar de nuevo el mismo elemento reemplaza el archivo anterior.</li>
+<li><strong>Seguimiento</strong>: el reproductor anuncia cuándo empieza y termina la descarga, y la barra de estado muestra el avance, junto con una barra de progreso a su derecha (en una cola, la barra avanza por el conjunto de elementos). Pulsa <code>Ctrl+Shift+B</code> de nuevo durante una descarga para oír el avance y, si quieres, cancelarla.</li>
+<li><strong>FFmpeg</strong>: convertir el audio (MP3 o FLAC, u otra frecuencia de muestreo) y descargar video en alta resolución requieren FFmpeg. Si no se encuentra, KeyTune pregunta si debe descargarlo (unos 90 MB, de las versiones oficiales recomendadas por <code>yt-dlp</code>, con verificación de integridad) a la carpeta de recursos de KeyTune. Si lo rechazas, la descarga sigue en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.</li>
+<li><strong>Selección y playlist completa</strong>: en el menú contextual de la lista (<code>Shift+F10</code> o la tecla Aplicaciones), <strong>Descargar la selección de YouTube</strong> descarga los elementos seleccionados y <strong>Descargar la playlist completa de YouTube</strong> descarga todos los elementos de la pestaña, en una subcarpeta con el nombre de la playlist. Los mismos comandos están en <strong>Reproducción &gt; Descargar la selección de la lista</strong> y <strong>Descargar la playlist completa</strong>, y la búsqueda de YouTube Music tiene <strong>Descargar selección</strong> en el menú <strong>Acciones</strong> (solo canciones y vídeos; las playlists de los resultados no se descargan). Antes de empezar, KeyTune muestra cuántos elementos se descargarán y la carpeta de destino, y pide confirmación.</li>
+<li><strong>Cómo funciona la cola</strong>: los elementos se descargan de uno en uno, con las mismas opciones. El reproductor anuncia el inicio y un resumen final (cuántos se descargaron y cuántos fallaron), la barra de estado muestra "elemento 3 de 20" y <code>Ctrl+Shift+B</code> informa la posición y permite cancelar. Un elemento que falla no detiene a los demás. Los elementos repetidos se descargan una vez, los que no son de YouTube se omiten, y una cola admite como máximo 200 elementos; el excedente queda fuera, con un aviso.</li>
+<li><strong>Límites</strong>: solo se descargan medios de YouTube y YouTube Music, y solo corre una descarga a la vez. Las transmisiones en vivo y los archivos que ya están en el equipo no se descargan.</li>
+</ul>
+<h3 id="convertir-medios">Convertir medios</h3>
+<p>KeyTune convierte un archivo de audio o de video que está en el equipo sin salir del reproductor. Abre el archivo, elige <strong>Archivo &gt; Convertir</strong> y usa una de las opciones:</p>
+<ul>
+<li><strong>Audio a video</strong>: genera un video a partir del audio, con una imagen fija. Elige MP4, MKV o WebM y la resolución (480p, 720p o 1080p). Si el audio tiene una carátula de álbum incrustada, esa será la imagen; sin carátula, el fondo es negro.</li>
+<li><strong>Video a audio</strong>: extrae el sonido del video a MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC o WAV.</li>
+<li><strong>Audio a otro formato de audio</strong>: convierte entre MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC y WAV. La carátula y la información de la pista acompañan la conversión a MP3, M4A y FLAC.</li>
+<li><strong>Video a otro formato de video</strong>: cambia solo el formato (MP4, MKV, WebM, AVI o MOV). Las pistas compatibles con el nuevo formato se copian sin pérdida de calidad y sin recodificar, lo que es rápido; las incompatibles se recodifican. Los subtítulos solo se conservan en MKV.</li>
+</ul>
+<p>El atajo <code>Ctrl+Shift+K</code> (o <strong>Archivo &gt; Convertir &gt; Convertir medio actual</strong>) pregunta qué hacer entre las opciones que sirven al tipo del medio abierto. Elegir en el menú una opción que no corresponde al medio abierto (por ejemplo, convertir audio con un video abierto) solo muestra un aviso.</p>
+<p>Para convertir varios archivos a la vez, selecciónalos en la lista (una carpeta o una playlist local) y usa <strong>Convertir selección</strong> en el menú contextual o <strong>Archivo &gt; Convertir &gt; Convertir los archivos seleccionados de la lista</strong>. KeyTune pregunta el modo, mostrando cuántos archivos atiende cada uno. Solo se convierten los archivos del tipo correcto y los demás se omiten; al cambiar solo el formato de vídeos, también se omiten los que ya están en el formato de destino. Las opciones valen para todos. Con <strong>Misma carpeta del archivo original</strong>, cada archivo va a la carpeta de su propio original; con <strong>Otra carpeta</strong>, todos van a la carpeta elegida. Los archivos se convierten de uno en uno, con el avance "archivo 2 de 8" y un resumen al final, y un error en un archivo no detiene a los otros.</p>
+<p>En el diálogo, además del formato, defines la calidad de los formatos con pérdidas (128, 192, 256 o 320 kbps), la frecuencia de muestreo (original, 44100 o 48000 Hz; Opus siempre usa 48000 Hz) y dónde guardar: <strong>Misma carpeta del archivo original</strong> (el valor predeterminado) u <strong>Otra carpeta</strong>, que habilita el campo de carpeta y el botón <strong>Elegir carpeta</strong> para indicar el destino; la última carpeta elegida se sugiere en la siguiente conversión, y una carpeta que no existe se crea. El archivo original nunca se modifica ni se sobrescribe: si ya existe un archivo con el mismo nombre, el nuevo recibe " (1)", " (2)", y así sucesivamente.</p>
+<p>La conversión se ejecuta en segundo plano y la reproducción continúa. El reproductor anuncia cuándo empieza y termina, y la barra de estado muestra el avance, junto con una barra de progreso a su derecha. Pulsa <code>Ctrl+Shift+K</code> durante una conversión para oír el avance y, si quieres, cancelarla; nunca queda un archivo incompleto.</p>
+<p>La conversión usa FFmpeg. Si no se encuentra, KeyTune pregunta si debe descargarlo (unos 90 MB, de las versiones oficiales recomendadas por <code>yt-dlp</code>, con verificación de integridad) a la carpeta de recursos de KeyTune; el mismo FFmpeg sirve para las descargas. Solo se convierten archivos del equipo: para medios de YouTube, usa <code>Ctrl+Shift+B</code>.</p>
 <h3 id="atajos-de-reproduccion">Atajos de reproducción</h3>
 <ul>
 <li><code>Espacio</code>: reproducir o pausar</li>
@@ -290,6 +320,8 @@ footer {
 <li><code>Ctrl+Alt+V</code>: alternar el video de las transmisiones en vivo</li>
 <li><code>Ctrl+Shift+F</code>: agregar el elemento seleccionado a la cola de reproducción</li>
 <li><code>Ctrl+Shift+Q</code>: administrar la cola de reproducción</li>
+<li><code>Ctrl+Shift+B</code>: descargar el medio actual de YouTube</li>
+<li><code>Ctrl+Shift+K</code>: convertir el medio abierto (audio o video)</li>
 <li><code>Ctrl+Shift+D</code>: configurar el temporizador</li>
 <li><code>T</code>: anunciar el tiempo actual del medio</li>
 <li><code>V</code>: anunciar el volumen actual</li>
@@ -411,7 +443,7 @@ footer {
 <h3 id="cache-de-metadatos-y-analisis">Caché de metadatos y análisis</h3>
 <p>La biblioteca guarda también los metadatos ya resueltos y los análisis de audio, para no repetir trabajo costoso en cada apertura. Una entrada se descarta automáticamente cuando el archivo cambia de tamaño o de fecha, y el número de entradas guardadas se ajusta en las preferencias.</p>
 <h2 id="configuracion">Configuración</h2>
-<p>Las preferencias están en <code>Ctrl+,</code> y se dividen en cinco pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong>, <strong>Biblioteca</strong> y <strong>Recursos adicionales</strong>.</p>
+<p>Las preferencias están en <code>Ctrl+,</code> y se dividen en seis pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong>, <strong>Biblioteca</strong>, <strong>Descarga</strong> y <strong>Recursos adicionales</strong>.</p>
 <h3 id="general">General</h3>
 <p>La pestaña <strong>General</strong> reúne las opciones que controlan cómo KeyTune vuelve a funcionar en la próxima apertura:</p>
 <ul>
@@ -469,6 +501,16 @@ footer {
 <h4 id="cache-de-metadatos-y-analisis-2">Caché de metadatos y análisis</h4>
 <ul>
 <li><strong>Entradas guardadas en la caché</strong>: cuántos metadatos resueltos y análisis de audio se guardan (100-100000). Las entradas más antiguas se descartan al alcanzar el límite.</li>
+</ul>
+<h3 id="descarga">Descarga</h3>
+<p>La pestaña <strong>Descarga</strong> define los valores predeterminados de <code>Ctrl+Shift+B</code>:</p>
+<ul>
+<li><strong>Tipo de descarga predeterminado</strong>: <strong>Audio</strong> o <strong>Video</strong>.</li>
+<li><strong>Calidad del audio</strong>: <strong>Original (sin conversión)</strong> mantiene el audio como lo entrega YouTube; <strong>MP3</strong> (128, 192, 256 o 320 kbps) y <strong>FLAC (sin pérdidas)</strong> convierten el audio y requieren FFmpeg.</li>
+<li><strong>Frecuencia de muestreo del audio</strong>: <strong>Original</strong>, 44100 Hz o 48000 Hz. Solo se aplica cuando el audio se convierte; YouTube entrega 44,1 o 48 kHz, así que frecuencias mayores no aportarían calidad.</li>
+<li><strong>Calidad del video</strong>: <strong>Mejor disponible</strong> o una altura máxima de 2160p a 144p. Si la altura elegida no existe, el video se descarga en la mejor calidad disponible.</li>
+<li><strong>Carpeta de descarga</strong>: dónde se guardan los archivos. De forma predeterminada, la carpeta <strong>Downloads\KeyTune</strong> de tu usuario.</li>
+<li><strong>Mostrar siempre el diálogo al descargar</strong>: activado (predeterminado), cada descarga abre el diálogo de confirmación; desactivado, la descarga empieza directamente con las opciones de esta pestaña.</li>
 </ul>
 <h3 id="recursos-adicionales">Recursos adicionales</h3>
 <p>La pestaña <strong>Recursos adicionales</strong> concentra las integraciones opcionales de YouTube y las bibliotecas de AutoDJ. Antes de la primera descarga, KeyTune muestra un diálogo con todos los componentes que se instalarán.</p>
@@ -749,6 +791,8 @@ footer {
 <p>Si un medio no abre, prueba otro archivo local para separar un problema de ruta inválida, permiso o tipo de archivo incompatible.</p>
 <p>Si la asociación de archivos no funciona como se esperaba, hay dos pasos separados que confirmar: primero, que KeyTune fue registrado como opción (durante la instalación o después en <strong>Configuración &gt; General &gt; Registrar como reproductor predeterminado</strong>); segundo, que fue elegido como aplicación predeterminada para esos formatos en la configuración de apps predeterminadas de Windows. El registro por sí solo no convierte a KeyTune automáticamente en el predeterminado.</p>
 <p>Si la restauración de sesión falla, abre la app una vez sin depender de la sesión anterior y verifica si la configuración de ventana y carpeta se está guardando normalmente.</p>
+<p>Si una conversión falla, confirma que el archivo se abre con normalidad en el reproductor y que la carpeta de destino permite escritura. El mensaje de FFmpeg se muestra y se anuncia; los archivos dañados o en formatos poco comunes pueden no convertirse.</p>
+<p>Si una descarga falla, confirma que los <strong>Recursos adicionales</strong> estén activados y actualizados y que la carpeta de descarga exista y permita escritura. Para convertir el audio hace falta FFmpeg; sin él, KeyTune descarga en la calidad original. El error 429 indica un bloqueo temporal de YouTube por exceso de solicitudes: espera unos minutos.</p>
 <p>Si una transmisión en vivo no se abre, confirma que los <strong>Recursos adicionales</strong> estén activados y actualizados (<code>yt-dlp</code> cambia con frecuencia para seguir a YouTube). Muchas solicitudes seguidas a YouTube pueden causar un bloqueo temporal (error 429); espera unos minutos e inténtalo de nuevo.</p>
 <p>Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre <code>Ctrl+,</code> &gt; <strong>Recursos adicionales</strong> y confirma que la opción <strong>Activar recursos adicionales para YouTube Music y YouTube</strong> esté marcada. La descarga inicial puede tardar algunos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de <code>yt-dlp</code> en las mismas preferencias; suele recibir correcciones antes que el canal estable.</p>
 <p>Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección <a href="#sesión-de-youtube-music">Sesión de YouTube Music</a> y reconecta la cuenta.</p>
@@ -760,7 +804,7 @@ footer {
 <h2 id="para-desarrolladores">Para desarrolladores</h2>
 <p>KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generado el 23/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 24/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

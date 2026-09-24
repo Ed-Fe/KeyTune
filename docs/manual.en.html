@@ -120,6 +120,8 @@ footer {
         <li class="toc-level-3"><a href="#tab-and-item-shortcuts">Tab and item shortcuts</a></li>
         <li class="toc-level-3"><a href="#playback-queue">Playback queue</a></li>
         <li class="toc-level-3"><a href="#sleep-timer">Sleep timer</a></li>
+        <li class="toc-level-3"><a href="#downloading-the-current-media">Downloading the current media</a></li>
+        <li class="toc-level-3"><a href="#converting-media">Converting media</a></li>
         <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
         <li class="toc-level-3"><a href="#item-browser">Item browser</a></li>
         <li class="toc-level-4"><a href="#playlist-mode">Playlist mode</a></li>
@@ -143,6 +145,7 @@ footer {
         <li class="toc-level-4"><a href="#playback-history-2">Playback history</a></li>
         <li class="toc-level-4"><a href="#resume-where-you-stopped-2">Resume where you stopped</a></li>
         <li class="toc-level-4"><a href="#metadata-and-analysis-cache-2">Metadata and analysis cache</a></li>
+        <li class="toc-level-3"><a href="#download">Download</a></li>
         <li class="toc-level-3"><a href="#additional-features">Additional features</a></li>
         <li class="toc-level-4"><a href="#youtube-music-and-youtube-integration">YouTube Music and YouTube integration</a></li>
         <li class="toc-level-4"><a href="#advanced-autodj">Advanced AutoDJ</a></li>
@@ -186,6 +189,8 @@ footer {
 <li>A lyrics panel with automatic fetching and text copying</li>
 <li>Dedicated YouTube Music tab, opened with <code>Ctrl+Shift+Y</code></li>
 <li>YouTube live broadcasts, with audio and optional video</li>
+<li>Download of the current YouTube media (audio or video) with <code>Ctrl+Shift+B</code></li>
+<li>Audio and video conversion between formats, with <code>Ctrl+Shift+K</code> or <strong>File &gt; Convert</strong></li>
 <li>Loading and saving playlists</li>
 <li>Restoration of what was open in the last session</li>
 <li>List of recent files, folders, and playlists</li>
@@ -266,6 +271,31 @@ footer {
 </ul>
 <p>The submenu also offers <strong>Time remaining</strong>, which announces how much is left, and <strong>Cancel timer</strong>, enabled only while a timer is scheduled.</p>
 <p>While the countdown runs, the player warns you when 5 minutes and when 1 minute are left. The timer state is also part of the status announcement on the <code>S</code> key.</p>
+<h3 id="downloading-the-current-media">Downloading the current media</h3>
+<p>While a YouTube or YouTube Music song or video is playing, press <code>Ctrl+Shift+B</code> (or use <strong>Playback &gt; Download current media</strong>) to download it. The download uses <code>yt-dlp</code>, the same tool that already plays this media, and runs in the background: playback carries on normally.</p>
+<ul>
+<li><strong>Download dialog</strong>: choose <strong>Audio</strong> or <strong>Video</strong>, the quality, the sample rate (converted audio only), and the folder. Your last choice becomes the default in Preferences. Uncheck <strong>Always show this dialog when downloading</strong> so later downloads start right away with the options from the <strong>Download</strong> tab in Preferences.</li>
+<li><strong>Unavailable quality</strong>: if the chosen quality does not exist for that media, KeyTune downloads it in the original quality and tells you, for example, that the video came out at 720p instead of 1080p.</li>
+<li><strong>File name</strong>: the file gets the same name KeyTune shows for the track (for example, <code>Artist — Title.mp3</code>), with the characters Windows does not accept replaced by <code>_</code>. If the same name repeats in a queue, the next one gets " (2)"; downloading the same item again replaces the previous file.</li>
+<li><strong>Progress</strong>: the player announces when the download starts and finishes, and the status bar shows the progress, along with a progress bar on its right (in a queue, the bar advances across the whole set of items). Press <code>Ctrl+Shift+B</code> again during a download to hear the progress and, if you want, cancel it.</li>
+<li><strong>FFmpeg</strong>: converting audio (MP3 or FLAC, or another sample rate) and downloading high-resolution video require FFmpeg. If it is not found, KeyTune asks whether to download it (about 90 MB, from the official builds recommended by <code>yt-dlp</code>, with an integrity check) into KeyTune's resources folder. If you decline, the download continues in the original quality, without conversion. An FFmpeg already installed on the system is also used.</li>
+<li><strong>Selection and whole playlist</strong>: in the list's context menu (<code>Shift+F10</code> or the Applications key), <strong>Download the selection from YouTube</strong> downloads the selected items and <strong>Download the whole playlist from YouTube</strong> downloads every item in the tab, into a subfolder named after the playlist. The same commands are under <strong>Playback &gt; Download the list selection</strong> and <strong>Download the whole playlist</strong>, and YouTube Music search has <strong>Download selection</strong> in the <strong>Actions</strong> menu (songs and videos only; playlists among the results are not downloaded). Before starting, KeyTune shows how many items will be downloaded and the destination folder, and asks for confirmation.</li>
+<li><strong>How the queue works</strong>: items are downloaded one at a time, with the same options. The player announces the start and a final summary (how many were downloaded and how many failed), the status bar shows "item 3 of 20", and <code>Ctrl+Shift+B</code> reports the position and lets you cancel. An item that fails does not stop the others. Repeated items are downloaded once, items that are not from YouTube are skipped, and a queue holds at most 200 items; the excess is left out, with a notice.</li>
+<li><strong>Limits</strong>: only YouTube and YouTube Music media are downloaded, and only one download runs at a time. Live broadcasts and files that are already on the computer are not downloaded.</li>
+</ul>
+<h3 id="converting-media">Converting media</h3>
+<p>KeyTune converts an audio or video file that is on your computer without leaving the player. Open the file, choose <strong>File &gt; Convert</strong>, and use one of the options:</p>
+<ul>
+<li><strong>Audio to video</strong>: makes a video from the audio, with a still picture. Choose MP4, MKV, or WebM and the resolution (480p, 720p, or 1080p). If the audio has an embedded album cover, it becomes the picture; without one, the background is black.</li>
+<li><strong>Video to audio</strong>: extracts the sound from the video to MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC, or WAV.</li>
+<li><strong>Audio to another audio format</strong>: converts between MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC, and WAV. The cover and track information come along when converting to MP3, M4A, and FLAC.</li>
+<li><strong>Video to another video format</strong>: changes only the format (MP4, MKV, WebM, AVI, or MOV). Tracks compatible with the new format are copied without quality loss and without re-encoding, which is fast; incompatible ones are re-encoded. Subtitles are only kept in MKV.</li>
+</ul>
+<p>The <code>Ctrl+Shift+K</code> shortcut (or <strong>File &gt; Convert &gt; Convert current media</strong>) asks what to do among the options that fit the type of the open media. Choosing from the menu an option that does not match the open media (for example, converting audio while a video is open) just announces a notice.</p>
+<p>To convert several files at once, select them in the list (a folder or a local playlist) and use <strong>Convert selection</strong> in the context menu or <strong>File &gt; Convert &gt; Convert the selected files in the list</strong>. KeyTune asks for the mode, showing how many files each one fits. Only files of the right type are converted and the others are skipped; when changing only the format of videos, those already in the target format are skipped too. The options apply to all of them. With <strong>Same folder as the original file</strong>, each file goes to its own original's folder; with <strong>Another folder</strong>, all go to the chosen folder. Files are converted one at a time, with progress like "file 2 of 8" and a summary at the end, and an error in one file does not stop the others.</p>
+<p>In the dialog, besides the format, you set the quality of lossy formats (128, 192, 256, or 320 kbps), the sample rate (original, 44100, or 48000 Hz; Opus always uses 48000 Hz), and where to save: <strong>Same folder as the original file</strong> (the default) or <strong>Another folder</strong>, which enables the folder field and the <strong>Choose folder</strong> button so you can pick the destination; the last folder you chose is suggested for the next conversion, and a folder that does not exist is created. The original file is never changed or overwritten: if a file with the same name already exists, the new one gets " (1)", " (2)", and so on.</p>
+<p>Conversion runs in the background and playback continues. The player announces when it starts and finishes, and the status bar shows the progress, along with a progress bar on its right. Press <code>Ctrl+Shift+K</code> during a conversion to hear the progress and, if you want, cancel it; an incomplete file is never left behind.</p>
+<p>Conversion uses FFmpeg. If it is not found, KeyTune asks whether to download it (about 90 MB, from the official builds recommended by <code>yt-dlp</code>, with an integrity check) into KeyTune's resources folder; the same FFmpeg serves downloads. Only files on your computer are converted: for YouTube media, use <code>Ctrl+Shift+B</code>.</p>
 <h3 id="playback-shortcuts">Playback shortcuts</h3>
 <ul>
 <li><code>Space</code>: play or pause</li>
@@ -290,6 +320,8 @@ footer {
 <li><code>Ctrl+Alt+V</code>: toggle the video of live broadcasts</li>
 <li><code>Ctrl+Shift+F</code>: add the selected item to the playback queue</li>
 <li><code>Ctrl+Shift+Q</code>: manage the playback queue</li>
+<li><code>Ctrl+Shift+B</code>: download the current YouTube media</li>
+<li><code>Ctrl+Shift+K</code>: convert the open media (audio or video)</li>
 <li><code>Ctrl+Shift+D</code>: configure the timer</li>
 <li><code>T</code>: announce the current media time</li>
 <li><code>V</code>: announce the current volume</li>
@@ -411,7 +443,7 @@ footer {
 <h3 id="metadata-and-analysis-cache">Metadata and analysis cache</h3>
 <p>The library also keeps metadata it has already resolved and audio analyses, so expensive work is not repeated on every open. An entry is discarded automatically when the file changes size or date, and the number of stored entries is adjustable in the preferences.</p>
 <h2 id="settings">Settings</h2>
-<p>Preferences are under <code>Ctrl+,</code> and are divided into five tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, and <strong>Additional features</strong>.</p>
+<p>Preferences are under <code>Ctrl+,</code> and are divided into six tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, and <strong>Additional features</strong>.</p>
 <h3 id="general">General</h3>
 <p>The <strong>General</strong> tab brings together the options that control how KeyTune resumes on the next launch:</p>
 <ul>
@@ -469,6 +501,16 @@ footer {
 <h4 id="metadata-and-analysis-cache-2">Metadata and analysis cache</h4>
 <ul>
 <li><strong>Entries kept in the cache</strong>: how many resolved metadata records and audio analyses are stored (100-100000). The oldest entries are dropped once the limit is reached.</li>
+</ul>
+<h3 id="download">Download</h3>
+<p>The <strong>Download</strong> tab sets the defaults for <code>Ctrl+Shift+B</code>:</p>
+<ul>
+<li><strong>Default download type</strong>: <strong>Audio</strong> or <strong>Video</strong>.</li>
+<li><strong>Audio quality</strong>: <strong>Original (no conversion)</strong> keeps the audio as YouTube delivers it; <strong>MP3</strong> (128, 192, 256, or 320 kbps) and <strong>FLAC (lossless)</strong> convert the audio and require FFmpeg.</li>
+<li><strong>Audio sample rate</strong>: <strong>Original</strong>, 44100 Hz, or 48000 Hz. It only applies when the audio is converted; YouTube delivers 44.1 or 48 kHz, so higher rates would bring no quality gain.</li>
+<li><strong>Video quality</strong>: <strong>Best available</strong> or a maximum height from 2160p to 144p. If the chosen height does not exist, the video is downloaded in the best quality available.</li>
+<li><strong>Download folder</strong>: where the files are saved. By default, the <strong>Downloads\KeyTune</strong> folder of your user.</li>
+<li><strong>Always show the dialog when downloading</strong>: on (the default), each download opens the confirmation dialog; off, the download starts right away with this tab's options.</li>
 </ul>
 <h3 id="additional-features">Additional features</h3>
 <p>The <strong>Additional features</strong> tab contains the optional YouTube integrations and AutoDJ libraries. Before the first download, KeyTune displays a dialog listing every component that will be installed.</p>
@@ -750,6 +792,8 @@ footer {
 <p>If media does not open, test another local file to separate an invalid path, permission, or incompatible file type problem.</p>
 <p>If file association does not work as expected, there are two separate steps to confirm: first, that KeyTune was registered as an option (during installation or later in <strong>Settings &gt; General &gt; Register as default player</strong>); second, that it was chosen as the default application for those formats in Windows default app settings - registration alone does not automatically make KeyTune the default.</p>
 <p>If session restoration fails, open the app once without depending on the previous session and check whether window and folder settings are being saved normally.</p>
+<p>If a conversion fails, confirm that the file opens normally in the player and that the destination folder is writable. FFmpeg's message is shown and announced; corrupted files or files in unusual formats may not convert.</p>
+<p>If a download fails, confirm that <strong>Additional features</strong> are enabled and up to date and that the download folder exists and is writable. Converting audio requires FFmpeg; without it, KeyTune downloads in the original quality. Error 429 means YouTube is temporarily blocking requests because of too many of them: wait a few minutes.</p>
 <p>If a live broadcast does not open, confirm that <strong>Additional features</strong> are enabled and up to date (<code>yt-dlp</code> changes often to keep up with YouTube). Many requests in a row to YouTube can cause a temporary block (error 429); wait a few minutes and try again.</p>
 <p>If the YouTube Music tab does not load or shows dependency errors, open <code>Ctrl+,</code> &gt; <strong>Additional features</strong> and confirm that <strong>Enable additional features for YouTube Music and YouTube</strong> is checked. The initial download can take a few minutes and requires internet access. If the dependencies are already installed but search or loading fails, use the nightly version of <code>yt-dlp</code> in the same preferences - it usually receives fixes before the stable channel.</p>
 <p>If the YouTube Music session expires or the player asks for authentication again, export the browser cookies as described in the <a href="#youtube-music-session">YouTube Music session</a> section and reconnect the account.</p>
@@ -761,7 +805,7 @@ footer {
 <h2 id="for-developers">For developers</h2>
 <p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
       <footer>
-        Generated on 23/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 24/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

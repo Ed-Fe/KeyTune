@@ -29,6 +29,9 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - YouTube Music integration for search, link-based open flows, library refresh, and account-synced likes/dislikes
 - Optional YouTube Music related-content autoplay (radio) when a playlist ends
 - YouTube live broadcasts from a link, with audio and optional video (`Ctrl+Alt+V`), automatic reconnection, and accessible status announcements
+- Audio and video conversion between formats (`Ctrl+Shift+K`, **File > Convert**): audio to video, video to audio, audio to audio, and video to video, powered by FFmpeg
+- Batch download and conversion: the selected list items or a whole YouTube playlist (into a folder named after it), and several local files at once, from the list's context menu
+- Download of the current YouTube or YouTube Music media as audio (original, MP3, FLAC) or video with `Ctrl+Shift+B`, using yt-dlp, with configurable quality, sample rate, and folder in a new **Download** preferences tab
 - Fresh per-track YouTube Music radio (`Ctrl+R`) with recent-playback repeat suppression
 
 ## Requirements
