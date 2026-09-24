@@ -15,6 +15,14 @@ from .dependencies import (
     youtube_dependency_management_enabled,
     youtubejs_resolver_enabled,
 )
+from .live_streams import (
+    LiveNotStartedError,
+    is_live_info,
+    is_live_not_started_message,
+    is_upcoming_info,
+    live_display_title_from_info,
+    select_live_format,
+)
 from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
@@ -80,6 +88,7 @@ class ResolvedStreamPlayback:
     http_headers: dict[str, str] | None = None
     display_title: str = ""
     display_artist: str = ""
+    is_live: bool = False
 
 
 def is_missing_javascript_runtime_error_message(error_message):
@@ -96,7 +105,20 @@ def resolve_stream_url(media_path):
     return resolve_stream_playback(media_path).stream_url
 
 
-def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_player_client="", allow_youtubejs=True):
+def resolve_stream_playback(
+    media_path,
+    *,
+    use_account_cookies=True,
+    anonymous_player_client="",
+    allow_youtubejs=True,
+    prefer_video=False,
+):
+    """Resolve *media_path* to a playable stream.
+
+    *prefer_video* only matters for live broadcasts, where it selects a muxed
+    audio+video format instead of the lightest audio-capable one. Regular
+    tracks keep resolving to audio.
+    """
     global _PRERELEASE_SELF_HEAL_ATTEMPTED
 
     normalized_media_path = str(media_path or "").strip()
@@ -227,6 +249,8 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
                         break
                     except Exception as exc:
                         local_last_error = _clean_external_tool_error(exc)
+                        if is_live_not_started_message(local_last_error):
+                            raise LiveNotStartedError() from exc
                         if (
                             network_attempt + 1 >= YTDLP_STREAM_NETWORK_ATTEMPTS
                             or not _is_transient_network_error(local_last_error)
@@ -244,11 +268,21 @@ def resolve_stream_playback(media_path, *, use_account_cookies=True, anonymous_p
                     local_last_error = _("O yt-dlp não conseguiu abrir a faixa do YouTube Music.")
                     continue
 
+                if is_upcoming_info(info):
+                    raise LiveNotStartedError()
+
                 try:
-                    resolved_playback = _preferred_stream_from_info(
-                        info,
-                        playback_auth_headers=playback_http_headers,
-                    )
+                    if is_live_info(info):
+                        resolved_playback = _preferred_live_stream_from_info(
+                            info,
+                            prefer_video=prefer_video,
+                            playback_auth_headers=playback_http_headers,
+                        )
+                    else:
+                        resolved_playback = _preferred_stream_from_info(
+                            info,
+                            playback_auth_headers=playback_http_headers,
+                        )
                 except RuntimeError as exc:
                     local_last_error = _clean_external_tool_error(exc) or str(exc)
                     continue
@@ -404,6 +438,37 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
         ),
         display_title=_display_title_from_info(info),
         display_artist=_display_artist_from_info(info),
+    )
+
+
+def _preferred_live_stream_from_info(info, *, prefer_video, playback_auth_headers=None):
+    best_format = select_live_format(_iter_stream_format_candidates(info), prefer_video=prefer_video)
+    if best_format is not None:
+        selected_stream_url = _stream_url_from_candidate(best_format)
+        format_http_headers = best_format.get("http_headers")
+    else:
+        # No usable variant: fall back to the master playlist, letting MPV
+        # choose the quality itself.
+        selected_stream_url = next(
+            (url for url in _iter_direct_stream_url_candidates(info) if _is_direct_media_stream_url(url)),
+            "",
+        )
+        format_http_headers = None
+
+    if not selected_stream_url:
+        raise RuntimeError(_("O YouTube não disponibilizou um stream reproduzível para esta transmissão ao vivo."))
+
+    return ResolvedStreamPlayback(
+        stream_url=selected_stream_url,
+        http_headers=_merge_playback_http_headers(
+            info.get("http_headers"),
+            format_http_headers,
+            playback_auth_headers,
+            target_stream_url=selected_stream_url,
+        ),
+        display_title=live_display_title_from_info(info),
+        display_artist=_display_artist_from_info(info),
+        is_live=True,
     )
 
 

@@ -68,7 +68,13 @@ class YouTubeMusicStreamCache:
             return self._cache.pop(cache_key, None) is not None
 
     def cache_stream_playback(self, media_path, resolved_playback):
-        """Store *resolved_playback* in the cache and return a normalized copy."""
+        """Store *resolved_playback* in the cache and return a normalized copy.
+
+        Live broadcasts are never cached: their manifests go stale, and every
+        reconnect must resolve a fresh one.
+        """
+        if getattr(resolved_playback, "is_live", False):
+            return resolved_playback
         cache_key = normalize_media_path(media_path)
         normalized_resolved_url = str(getattr(resolved_playback, "stream_url", "") or "").strip()
         normalized_http_headers = dict(getattr(resolved_playback, "http_headers", {}) or {})

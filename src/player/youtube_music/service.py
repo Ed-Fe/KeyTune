@@ -235,17 +235,18 @@ class YouTubeMusicService:
     def resolve_stream_url(self, media_path):
         return self.resolve_stream_playback(media_path).stream_url
 
-    def resolve_stream_playback(self, media_path):
+    def resolve_stream_playback(self, media_path, *, prefer_video=False):
         return self._stream_cache_manager.resolve_stream_playback(
             media_path,
-            resolve_fn=self._resolve_stream_playback_uncached,
+            resolve_fn=lambda path: self._resolve_stream_playback_uncached(path, prefer_video=prefer_video),
         )
 
-    def _resolve_stream_playback_uncached(self, media_path):
+    def _resolve_stream_playback_uncached(self, media_path, *, prefer_video=False):
         return resolve_music_stream_playback(
             media_path,
             use_account_cookies=False,
             anonymous_player_client=self._stream_playback_profile,
+            prefer_video=prefer_video,
         )
 
     def resolve_analysis_fallback(self, media_path):
