@@ -27,6 +27,8 @@ from ..constants import (
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
 )
+from ..download.ffmpeg import ffmpeg_available
+from ..download.panel import DownloadOptionsPanel
 from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
 
@@ -64,6 +66,7 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
         intro_label.Wrap(540)
+        intro_label.Hide()
 
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
@@ -74,6 +77,7 @@ class PreferencesDialog(wx.Dialog):
         self._build_playback_tab()
         self._build_accessibility_tab()
         self._build_smart_library_tab()
+        self._build_download_tab()
         self._build_additional_resources_tab()
 
         root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -109,6 +113,7 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         language_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Idioma")), wx.VERTICAL)
         self._language_choice_codes = [""]
@@ -261,10 +266,12 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Controles de reprodução")), wx.VERTICAL)
         self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label=_("Ativar e&mbaralhamento em novas playlists"))
         self.disable_video_output_checkbox = wx.CheckBox(page, label=_("Desativar saída de &vídeo (tocar só o áudio)"))
+        self.live_video_checkbox = wx.CheckBox(page, label=_("Mostrar o vídeo das &transmissões ao vivo"))
         self._configure_checkbox(
             self.shuffle_new_playlists_checkbox,
             _("Ativar embaralhamento em novas playlists"),
@@ -276,6 +283,15 @@ class PreferencesDialog(wx.Dialog):
             _(
                 "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. "
                 "Útil para evitar a abertura de janelas externas de vídeo no Windows."
+            ),
+        )
+        self._configure_checkbox(
+            self.live_video_checkbox,
+            _("Mostrar o vídeo das transmissões ao vivo"),
+            _(
+                "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo "
+                "desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. "
+                "Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
             ),
         )
 
@@ -350,7 +366,8 @@ class PreferencesDialog(wx.Dialog):
 
         playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        playback_box.Add(self.live_video_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(playback_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -365,6 +382,7 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         accessibility_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Leitor de tela")), wx.VERTICAL)
         self.announcements_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a&núncios de acessibilidade"))
@@ -379,7 +397,7 @@ class PreferencesDialog(wx.Dialog):
             page,
             label=_("Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."),
         )
-        help_label.Wrap(520)
+        help_label.Hide()
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(accessibility_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -553,6 +571,52 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_resume_edge_ctrl.Enable(resume_enabled)
         self.smart_library_cache_limit_ctrl.Enable(library_enabled)
 
+    def _build_download_tab(self):
+        page, page_sizer = self._create_tab_page(_("Download"))
+
+        info_label = wx.StaticText(
+            page,
+            label=_(
+                "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp "
+                "e vale para mídias do YouTube e do YouTube Music."
+            ),
+        )
+        info_label.Wrap(520)
+        info_label.Hide()
+
+        download_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Opções de download")), wx.VERTICAL)
+        self.download_options_panel = DownloadOptionsPanel(page, kind_label=_("Tipo de download padrão"))
+        self.download_always_ask_checkbox = wx.CheckBox(page, label=_("Sempre &mostrar o diálogo ao baixar"))
+        self._configure_checkbox(
+            self.download_always_ask_checkbox,
+            _("Sempre mostrar o diálogo ao baixar"),
+            _(
+                "Ligado, cada download abre um diálogo para confirmar formato e qualidade. "
+                "Desligado, o download começa direto com as opções desta guia."
+            ),
+        )
+        download_box.Add(self.download_options_panel, 0, wx.EXPAND)
+        download_box.Add(self.download_always_ask_checkbox, 0, wx.ALL | wx.EXPAND, 6)
+
+        ffmpeg_note = wx.StaticText(
+            page,
+            label=(
+                _("O FFmpeg já está disponível para converter áudio e unir vídeo e áudio.")
+                if ffmpeg_available()
+                else _(
+                    "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. "
+                    "O KeyTune oferece instalá-lo na primeira vez que precisar."
+                )
+            ),
+        )
+        ffmpeg_note.Wrap(520)
+
+        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
+        page_sizer.Add(download_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        page_sizer.Add(ffmpeg_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+
+        self.notebook.AddPage(page, _("Download"))
+
     def _build_additional_resources_tab(self):
         page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
         self._additional_resources_page = page
@@ -565,6 +629,7 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         self.youtube_music_resources_box = wx.StaticBoxSizer(
             wx.StaticBox(page, label=_("Integração com YouTube Music e YouTube")),
@@ -826,7 +891,7 @@ class PreferencesDialog(wx.Dialog):
         box_sizer = wx.BoxSizer(wx.VERTICAL)
         help_label = wx.StaticText(parent, label=help_text)
         visible_label.Wrap(500)
-        help_label.Wrap(500)
+        help_label.Hide()
 
         box_sizer.Add(visible_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         box_sizer.Add(control, 0, wx.ALL | wx.EXPAND, 6)
@@ -949,6 +1014,7 @@ class PreferencesDialog(wx.Dialog):
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
+        self.live_video_checkbox.SetValue(settings.live_video_enabled)
         self.default_volume_ctrl.SetValue(settings.default_volume)
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
         self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
@@ -998,6 +1064,15 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_cache_limit_ctrl.SetValue(settings.smart_library_cache_limit)
         self._refresh_smart_library_controls()
 
+        self.download_options_panel.set_values(
+            kind=settings.download_kind,
+            audio_quality=settings.download_audio_quality,
+            video_quality=settings.download_video_quality,
+            sample_rate=settings.download_sample_rate,
+            directory=settings.download_directory,
+        )
+        self.download_always_ask_checkbox.SetValue(settings.download_always_ask)
+
         self._refresh_additional_resources_controls()
 
     def get_settings(self):
@@ -1013,6 +1088,7 @@ class PreferencesDialog(wx.Dialog):
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
+        settings.live_video_enabled = self.live_video_checkbox.GetValue()
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
@@ -1053,6 +1129,14 @@ class PreferencesDialog(wx.Dialog):
         settings.smart_library_resume_minimum_minutes = int(self.smart_library_resume_minimum_ctrl.GetValue())
         settings.smart_library_resume_edge_seconds = int(self.smart_library_resume_edge_ctrl.GetValue())
         settings.smart_library_cache_limit = int(self.smart_library_cache_limit_ctrl.GetValue())
+
+        download_choice = self.download_options_panel.get_choice()
+        settings.download_kind = download_choice.kind
+        settings.download_audio_quality = download_choice.audio_quality
+        settings.download_video_quality = download_choice.video_quality
+        settings.download_sample_rate = download_choice.sample_rate
+        settings.download_directory = self.download_options_panel.get_directory_setting()
+        settings.download_always_ask = self.download_always_ask_checkbox.GetValue()
 
         settings.logging_enabled = self.logging_enabled_checkbox.GetValue()
         selected_level_index = self.logging_level_choice.GetSelection()

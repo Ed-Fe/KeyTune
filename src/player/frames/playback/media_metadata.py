@@ -27,6 +27,11 @@ class MediaMetadataMixin:
         return self._normalize_media_comparison_path(first_path) == self._normalize_media_comparison_path(second_path)
 
     def _resolve_media_for_playback_details(self, media_path):
+        """Return ``(stream, headers, title, artist, is_live)``.
+
+        Callers must tolerate a 4-item result (no ``is_live``): only the YouTube
+        path can report a live broadcast.
+        """
         if is_remote_media_path(media_path) and not is_youtube_music_media(media_path):
             resolved_playback = resolve_remote_media_playback(media_path)
             return (
@@ -34,26 +39,31 @@ class MediaMetadataMixin:
                 dict(getattr(resolved_playback, "http_headers", {}) or {}),
                 str(getattr(resolved_playback, "title", "") or "").strip(),
                 str(getattr(resolved_playback, "artist", "") or "").strip(),
+                False,
             )
 
         if not is_youtube_music_media(media_path):
-            return media_path, {}, "", ""
+            return media_path, {}, "", "", False
 
         youtube_music_service = self._youtube_music_service_for_playback()
         if youtube_music_service is None:
-            return media_path, {}, "", ""
+            return media_path, {}, "", "", False
 
-        resolved_playback = youtube_music_service.resolve_stream_playback(media_path)
+        resolved_playback = youtube_music_service.resolve_stream_playback(
+            media_path,
+            prefer_video=self._live_video_enabled(),
+        )
         return (
             resolved_playback.stream_url,
             dict(getattr(resolved_playback, "http_headers", {}) or {}),
             str(getattr(resolved_playback, "display_title", "") or "").strip(),
             str(getattr(resolved_playback, "display_artist", "") or "").strip(),
+            getattr(resolved_playback, "is_live", False) is True,
         )
 
     def _resolve_media_for_playback(self, media_path):
-        playback_media_path, playback_http_headers, _display_title, _display_artist = self._resolve_media_for_playback_details(media_path)
-        return playback_media_path, playback_http_headers
+        resolved_details = self._resolve_media_for_playback_details(media_path)
+        return resolved_details[0], resolved_details[1]
 
     def _media_label_from_playlist_state(self, state, media_path):
         if not isinstance(state, PlaylistState):

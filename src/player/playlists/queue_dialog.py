@@ -40,8 +40,7 @@ class QueueManagerDialog(wx.Dialog):
         intro_label = wx.StaticText(
             panel,
             label=_(
-                "Itens abaixo tocam antes da ordem normal, de cima para baixo. "
-                "Use Delete para remover e Alt+Seta para cima ou para baixo para reordenar."
+                "Itens abaixo tocam antes da ordem normal, de cima para baixo."
             ),
         )
         intro_label.Wrap(520)
@@ -52,6 +51,7 @@ class QueueManagerDialog(wx.Dialog):
 
         self.queue_list = wx.ListBox(panel, style=wx.LB_SINGLE)
         self.queue_list.SetName(_("Fila de reprodução"))
+        self.queue_list.SetToolTip(_("Delete remove o item. Alt+Seta para cima ou para baixo reordena."))
         self.queue_list.Bind(wx.EVT_KEY_DOWN, self.on_list_key_down)
         root_sizer.Add(self.queue_list, 1, wx.ALL | wx.EXPAND, 10)
 

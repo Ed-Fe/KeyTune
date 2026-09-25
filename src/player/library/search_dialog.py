@@ -39,6 +39,8 @@ class ItemSearchDialog(wx.Dialog):
         )
         hint.Wrap(420)
         hint.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+        hint.Hide()
+        self.query_text.SetToolTip(hint.GetLabel())
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         if button_sizer is not None:

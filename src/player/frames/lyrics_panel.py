@@ -125,7 +125,6 @@ class LyricsPanel(wx.Panel):
         attach_named_accessible(
             self.lyrics_text_ctrl,
             name=name,
-            description=_("Área de leitura das letras. Use as setas para navegar pelo texto."),
             value_provider=lambda: self.lyrics_text_ctrl.GetValue(),
         )
 

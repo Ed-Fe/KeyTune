@@ -1,3 +1,4 @@
+from ...download.plan import download_source_url
 from ...i18n import _, ngettext
 import wx
 
@@ -31,6 +32,20 @@ class SearchMixin:
             menu_item.Enable(can_add_selection)
 
         menu.AppendSubMenu(add_menu, _("Adicionar seleção..."))
+
+        # Só faixas e vídeos têm um endereço direto para baixar; playlists não.
+        download_entries = [
+            (result.playback_url, result.title)
+            for result in selected_results
+            if getattr(result, "playback_url", "")
+        ]
+        download_item = menu.Append(wx.ID_ANY, _("Baixar seleção..."))
+        download_item.Enable(any(download_source_url(url) for url, _title in download_entries))
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event, entries=tuple(download_entries): self.download_media_entries(entries),
+            id=download_item.GetId(),
+        )
 
         add_menu.Bind(
             wx.EVT_MENU,

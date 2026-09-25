@@ -166,8 +166,6 @@ class EqualizerPresetDialog(wx.Dialog):
         label = wx.StaticText(parent, label=_("{label}:").format(label=label_text))
         label.Wrap(250)
         control = self._build_gain_control(parent, name=label_text, help_text=help_text)
-        help_label = wx.StaticText(parent, label=help_text)
-        help_label.Wrap(250)
 
         # Plain vertical sizer instead of a per-control StaticBox: each gain
         # control already lives inside a section box ("Pré-amplificação" /
@@ -177,7 +175,6 @@ class EqualizerPresetDialog(wx.Dialog):
         box_sizer = wx.BoxSizer(wx.VERTICAL)
         box_sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         box_sizer.Add(control, 0, wx.ALL | wx.EXPAND, 6)
-        box_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         return box_sizer, control
 
     def _announce_from_parent(self, message):

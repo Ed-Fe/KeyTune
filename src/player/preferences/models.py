@@ -14,6 +14,7 @@ from ..constants import (
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
     DEFAULT_CROSSFADE_SECONDS,
     DEFAULT_DISABLE_VIDEO_OUTPUT,
+    DEFAULT_LIVE_VIDEO_ENABLED,
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
@@ -57,6 +58,17 @@ from ..constants import (
     SEEK_STEP_MS,
     VOLUME_STEP,
 )
+from ..download.options import (
+    DEFAULT_DOWNLOAD_ALWAYS_ASK,
+    DEFAULT_DOWNLOAD_AUDIO_QUALITY,
+    DEFAULT_DOWNLOAD_KIND,
+    DEFAULT_DOWNLOAD_SAMPLE_RATE,
+    DEFAULT_DOWNLOAD_VIDEO_QUALITY,
+    normalize_audio_quality,
+    normalize_download_kind,
+    normalize_sample_rate,
+    normalize_video_quality,
+)
 from ..equalizer.models import EqualizerPreset
 
 
@@ -70,6 +82,7 @@ class AppSettings:
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
+    live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
     audio_output_device_id: str = ""
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
@@ -93,6 +106,13 @@ class AppSettings:
     youtube_music_dependency_last_auto_update_epoch: int = 0
     youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
     youtube_music_home_discovery_limit: int = DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT
+    download_kind: str = DEFAULT_DOWNLOAD_KIND
+    download_audio_quality: str = DEFAULT_DOWNLOAD_AUDIO_QUALITY
+    download_video_quality: str = DEFAULT_DOWNLOAD_VIDEO_QUALITY
+    download_sample_rate: int = DEFAULT_DOWNLOAD_SAMPLE_RATE
+    # Vazio significa a pasta padrão (Downloads/KeyTune), resolvida na hora do download.
+    download_directory: str = ""
+    download_always_ask: bool = DEFAULT_DOWNLOAD_ALWAYS_ASK
     smart_library_enabled: bool = DEFAULT_SMART_LIBRARY_ENABLED
     smart_library_index_opened_folders: bool = DEFAULT_SMART_LIBRARY_INDEX_OPENED_FOLDERS
     smart_library_history_enabled: bool = DEFAULT_SMART_LIBRARY_HISTORY_ENABLED
@@ -134,6 +154,7 @@ class AppSettings:
             "confirm_on_exit": self.confirm_on_exit,
             "announcements_enabled": self.announcements_enabled,
             "disable_video_output": self.disable_video_output,
+            "live_video_enabled": self.live_video_enabled,
             "audio_output_device_id": (
                 self.audio_output_device_id if is_selectable_audio_output_device_id(self.audio_output_device_id) else ""
             ),
@@ -159,6 +180,12 @@ class AppSettings:
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "youtube_music_library_page_size": self.youtube_music_library_page_size,
             "youtube_music_home_discovery_limit": self.youtube_music_home_discovery_limit,
+            "download_kind": self.download_kind,
+            "download_audio_quality": self.download_audio_quality,
+            "download_video_quality": self.download_video_quality,
+            "download_sample_rate": self.download_sample_rate,
+            "download_directory": self.download_directory,
+            "download_always_ask": self.download_always_ask,
             "smart_library_enabled": self.smart_library_enabled,
             "smart_library_index_opened_folders": self.smart_library_index_opened_folders,
             "smart_library_history_enabled": self.smart_library_history_enabled,
@@ -189,6 +216,7 @@ class AppSettings:
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
+        settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))
         raw_audio_output_device_id = normalize_audio_output_device_id(data.get("audio_output_device_id"))
         settings.audio_output_device_id = (
             raw_audio_output_device_id if is_selectable_audio_output_device_id(raw_audio_output_device_id) else ""
@@ -278,6 +306,19 @@ class AppSettings:
             maximum=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
             fallback=settings.youtube_music_home_discovery_limit,
         )
+
+        settings.download_kind = normalize_download_kind(data.get("download_kind"), settings.download_kind)
+        settings.download_audio_quality = normalize_audio_quality(
+            data.get("download_audio_quality"), settings.download_audio_quality
+        )
+        settings.download_video_quality = normalize_video_quality(
+            data.get("download_video_quality"), settings.download_video_quality
+        )
+        settings.download_sample_rate = normalize_sample_rate(
+            data.get("download_sample_rate"), settings.download_sample_rate
+        )
+        settings.download_directory = str(data.get("download_directory") or "").strip()
+        settings.download_always_ask = bool(data.get("download_always_ask", settings.download_always_ask))
 
         settings.smart_library_enabled = bool(data.get("smart_library_enabled", settings.smart_library_enabled))
         settings.smart_library_index_opened_folders = bool(

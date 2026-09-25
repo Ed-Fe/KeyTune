@@ -7,6 +7,7 @@ from ...i18n import _
 import wx
 
 from ...library import is_audio_playback_media
+from ...youtube_music.live_streams import LiveEndedError
 from .helpers import is_youtube_music_media
 
 
@@ -53,14 +54,22 @@ class PlaybackEngineMixin:
             error_message = ""
             player_key = request.get("player_key", self._active_player_key)
             try:
+                resolved_details = self._resolve_media_for_playback_details(request["media_path"])
                 (
                     playback_media_path,
                     playback_http_headers,
                     resolved_display_title,
                     resolved_display_artist,
-                ) = self._resolve_media_for_playback_details(
-                    request["media_path"]
-                )
+                ) = resolved_details[:4]
+                is_live = len(resolved_details) > 4 and resolved_details[4] is True
+                if request.get("expect_live") and not is_live:
+                    # We were watching a live and it no longer is one (ended or
+                    # now a recording): don't restart it from the beginning.
+                    raise LiveEndedError()
+                if request.get("crossfade") and is_live:
+                    # A live has no start to fade into; failing here makes the
+                    # crossfade fall back to a regular start of the same media.
+                    raise RuntimeError(_("Uma transmissão ao vivo não pode entrar em crossfade."))
                 lock = getattr(self, "_playback_backend_lock", None)
                 with lock if lock is not None else contextlib.nullcontext():
                     if request_serial != self._playback_request_serial:
@@ -78,7 +87,14 @@ class PlaybackEngineMixin:
                     if not hasattr(self, "_player_playback_request_serials"):
                         self._player_playback_request_serials = {}
                     self._player_playback_request_serials[player_key] = request_serial
-                    media = player_instance.media_new(playback_media_path, http_headers=playback_http_headers)
+                    media_kwargs = {"http_headers": playback_http_headers}
+                    live_video = False
+                    if is_live:
+                        # A live never resumes and can show its picture even when
+                        # the rest of the app plays audio only.
+                        live_video = self._live_video_enabled()
+                        media_kwargs.update(is_live=True, video=live_video)
+                    media = player_instance.media_new(playback_media_path, **media_kwargs)
                     player.stop()
                     player.set_media(media)
                     video_output_handle = request.get("video_output_handle")
@@ -108,16 +124,20 @@ class PlaybackEngineMixin:
                     if request.get("pause_after_start"):
                         play_kwargs["pause_on_start"] = True
                     player.play(**play_kwargs)
+                    if live_video:
+                        self._mark_player_showing_live_video(player_key)
                     if request.get("crossfade"):
                         try:
                             player.audio_set_volume(0)
                         except Exception:
                             pass
+                request["is_live"] = is_live
                 request["resolved_display_title"] = resolved_display_title
                 request["resolved_display_artist"] = resolved_display_artist
             except Exception as exc:
                 success = False
                 error_message = str(exc)
+                request["live_ended"] = isinstance(exc, LiveEndedError)
 
             wx.CallAfter(
                 self._finish_media_start,
@@ -138,14 +158,27 @@ class PlaybackEngineMixin:
         initial_volume=None,
         crossfade=False,
         start_position_ms=0,
+        expect_live=False,
+        live_reconnect=False,
     ):
+        if not live_reconnect:
+            # Anything other than our own reconnect supersedes a pending one.
+            cancel_live_reconnect = getattr(self, "_cancel_live_reconnect", None)
+            if callable(cancel_live_reconnect):
+                cancel_live_reconnect()
+
         target_player_key = player_key or self._active_player_key
         target_player = self._managed_player(target_player_key)
+        # A native video window is bound to the MPV instance that created it, so
+        # a slot that showed video must be rebuilt before its next media: either
+        # for a local video file, or because it last showed a live's picture.
+        needs_fresh_video_slot = (
+            self._video_output_enabled() and not is_audio_playback_media(media_path)
+        ) or self._player_showed_live_video(target_player_key)
         if (
             sys.platform.startswith("win")
-            and self._video_output_enabled()
+            and needs_fresh_video_slot
             and not crossfade
-            and not is_audio_playback_media(media_path)
             and target_player is not None
             and (
                 self._player_loaded_media_path(target_player_key)
@@ -169,6 +202,8 @@ class PlaybackEngineMixin:
             "initial_volume": self.current_volume if initial_volume is None else initial_volume,
             "crossfade": bool(crossfade),
             "start_position_ms": start_position_ms,
+            "expect_live": bool(expect_live),
+            "live_reconnect": bool(live_reconnect),
         }
         self._pending_playback_request_serial = request["serial"]
         if (
@@ -235,6 +270,13 @@ class PlaybackEngineMixin:
                 if self._fallback_pending_crossfade_to_regular_playback():
                     return
                 self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
+            if request.get("live_ended"):
+                self._handle_live_finished()
+                return
+            if request.get("live_reconnect"):
+                # The re-resolution itself failed (e.g. network still down): try again.
+                self._schedule_live_reconnect()
+                return
             if error_message:
                 handled = False
                 if is_youtube_music_media(media_path) and hasattr(self, "_handle_youtube_javascript_runtime_error"):
@@ -272,6 +314,9 @@ class PlaybackEngineMixin:
                 crossfade_state["resolved_display_artist"] = str(request.get("resolved_display_artist", "") or "").strip()
             return
 
+        if request.get("is_live"):
+            self._live_reconnect_attempts = 0
+            self._live_watch_baseline_ms = None
         self._set_active_player(player_key)
         self._current_track_gain_db = float(getattr(state, "playback_gain_db", 0.0) or 0.0)
         self._apply_equalizer_state()
@@ -310,15 +355,26 @@ class PlaybackEngineMixin:
         # Busca a letra da faixa que acabou de entrar. O caminho de crossfade
         # (_begin_pending_crossfade) chama o mesmo helper, já que ele retorna
         # antes deste ponto durante uma transição.
-        self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
+        # There are no lyrics for a broadcast; an empty title clears the panel.
+        if request.get("is_live"):
+            self._refresh_lyrics_for_active_media("", "")
+        else:
+            self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
 
         if not resolved_display_title:
             self._queue_remote_media_metadata_resolution(media_path)
 
         announce_message = request.get("announce_message")
+        if request.get("live_reconnect"):
+            announce_message = _("Conexão com a transmissão ao vivo restabelecida.")
+        elif request.get("is_live") and announce_message is None:
+            announce_message = _("Transmissão ao vivo. {position}").format(
+                position=self._describe_playlist_position(state)
+            )
         if hasattr(self, "_set_status_message"):
             now_playing_label = self._media_label(media_path)
-            self._set_status_message(_("Tocando: {name}").format(name=now_playing_label), auto_clear_ms=0)
+            status_template = _("Ao vivo: {name}") if request.get("is_live") else _("Tocando: {name}")
+            self._set_status_message(status_template.format(name=now_playing_label), auto_clear_ms=0)
         if announce_message is not None:
             if announce_message:
                 self._announce(announce_message)

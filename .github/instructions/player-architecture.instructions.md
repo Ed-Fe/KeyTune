@@ -22,6 +22,17 @@ applyTo:
   - `smart_library/database.py` for the SQLite connection and schema; one access module per table alongside it
   - `smart_library/*_dialog.py` for the wx dialogs; everything else in the package must stay free of wxPython so it can be tested headless
   - The service must degrade to a no-op when the database cannot be opened; playback never depends on it.
+- For media download (`Ctrl+Shift+B`), keep responsibilities separated:
+  - `frames/download.py` for the window flow (validation, dialog, FFmpeg prompt, sequential queue worker, announcements); it serves the current media, the list selection, the whole playlist, and other screens through `download_media_entries`
+  - `frames/selection.py` for reading the selected list items, shared with the conversion flow
+  - `download/options.py` for option ids, defaults, and labels; `download/plan.py` for the yt-dlp format selector and post-processing arguments (pure, no I/O)
+  - `download/runner.py` for running yt-dlp with progress and cancellation; `download/ffmpeg.py` for locating and installing FFmpeg
+  - `download/panel.py` and `download/dialog.py` for the wx controls shared by the Preferences tab and the download dialog; everything else in the package must stay free of wxPython
+- For media conversion (`Ctrl+Shift+K`, File > Convert), keep responsibilities separated:
+  - `frames/convert.py` for the window flow (source validation, mode choice, dialog, FFmpeg prompt, background worker, announcements)
+  - `convert/options.py` for modes, formats, and labels; `convert/plan.py` for the FFmpeg commands (pure, no I/O); `convert/probe.py` for ffprobe; `convert/runner.py` for running FFmpeg with progress and cancellation
+  - `convert/dialog.py` for the wx dialog; everything else in the package must stay free of wxPython
+  - `process_control.py` (cancel token, process-tree kill) and `widgets.py` (accessible choice and folder rows) are shared with the download feature
 - Preserve public method names unless the refactor requires a coordinated call-site update.
 - Prefer small helper functions and composition over adding another long conditional block to an already-large module.
 - After structural Python refactors, run `python -m compileall src`.

@@ -25,13 +25,24 @@ _logger = get_logger(__name__)
 AUTODJ_SESSION_CANDIDATE_WAIT_SECONDS = 45
 
 
+def _reject_live_for_analysis(resolved_playback):
+    # A live has no end to download and analyse, so it can't take part in a mix.
+    if getattr(resolved_playback, "is_live", False) is True:
+        raise RuntimeError(_("Transmissões ao vivo não podem ser analisadas pelo AutoDJ."))
+    return resolved_playback
+
+
 class FrameAutoDJMixin:
     def _initialize_autodj_service(self):
         self.autodj_service = AutoDJService(
             Path(get_app_storage_dir()) / "autodj-analysis.db",
-            remote_resolver=lambda media_path: self._get_youtube_music_service().resolve_stream_playback(media_path),
+            remote_resolver=lambda media_path: _reject_live_for_analysis(
+                self._get_youtube_music_service().resolve_stream_playback(media_path)
+            ),
             remote_retry_handler=self._handle_autodj_remote_download_retry,
-            remote_fallback_resolver=lambda media_path: self._get_youtube_music_service().resolve_analysis_fallback(media_path),
+            remote_fallback_resolver=lambda media_path: _reject_live_for_analysis(
+                self._get_youtube_music_service().resolve_analysis_fallback(media_path)
+            ),
         )
         self._autodj_transition_requests = {}
         self._autodj_session_requests = {}

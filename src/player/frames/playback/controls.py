@@ -1,6 +1,7 @@
 from ...constants import PROGRESS_GAUGE_RANGE
 from ...i18n import _
 from ...library import folder_display_name
+from .live import is_live_media
 
 PLAYBACK_RATE_STEP = 0.25
 PLAYBACK_RATE_MIN = 0.25
@@ -39,11 +40,27 @@ class PlaybackControlsMixin:
         signature = (
             getattr(active_state, "current_media_path", None),
             bool(getattr(self.settings, "disable_video_output", False)),
+            # A live changes what the panel says: its mode and whether the
+            # loaded media is one.
+            is_live_media(self.player.get_media()) if hasattr(self, "player") else False,
+            bool(getattr(self.settings, "live_video_enabled", True)),
         )
         if getattr(self, "_last_visual_hints_signature", "__unset__") == signature:
             return
         self._last_visual_hints_signature = signature
         self._refresh_player_visual_hints()
+
+    def _remember_live_watch_baseline(self):
+        """Note where the player joined the live, once per start.
+
+        Called on the progress tick; ``_finish_media_start`` clears it so every
+        (re)connection measures its own watched time.
+        """
+        if getattr(self, "_live_watch_baseline_ms", None) is not None:
+            return
+        current_time = self.player.get_time()
+        if current_time is not None and current_time >= 0:
+            self._live_watch_baseline_ms = current_time
 
     def _set_progress_label(self, text):
         # The progress timer refreshes this label twice per second; skip the
@@ -69,6 +86,15 @@ class PlaybackControlsMixin:
         if media is None:
             self._set_progress_label(_("Tempo: nenhuma mídia carregada."))
             self._set_progress_gauge_value(0)
+            self._maybe_refresh_player_visual_hints()
+            return
+
+        if is_live_media(media):
+            # A live has no duration to show: a fixed label keeps the screen
+            # reader quiet instead of re-announcing a ticking clock.
+            self._set_progress_label(_("Tempo: transmissão ao vivo"))
+            self._set_progress_gauge_value(PROGRESS_GAUGE_RANGE)
+            self._remember_live_watch_baseline()
             self._maybe_refresh_player_visual_hints()
             return
 
@@ -109,7 +135,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         current_time = self.player.get_time()
@@ -171,7 +202,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         self.player.set_time(0)
@@ -187,7 +223,12 @@ class PlaybackControlsMixin:
                     stop_incoming=True, stop_outgoing=False, invalidate_requests=True, restore_selection=True,
                 )
 
-        if self.player.get_media() is None:
+        media = self.player.get_media()
+        if media is None:
+            return
+
+        if is_live_media(media):
+            self._announce_live_seek_unavailable()
             return
 
         media_length = self.player.get_length()
@@ -258,12 +299,23 @@ class PlaybackControlsMixin:
             if callable(refresh_smtc):
                 refresh_smtc()
 
+    def _announce_live_seek_unavailable(self):
+        self._announce(_("Não é possível avançar ou voltar em uma transmissão ao vivo."))
+
     def _announce_playback_time(self):
-        if not self.player.get_media():
+        media = self.player.get_media()
+        if not media:
             self._announce(_("Nenhuma mídia carregada."))
             return
 
         current_time = self.player.get_time()
+        if is_live_media(media):
+            # MPV joins a live partway into its buffer, so measure from where we started.
+            watched_ms = max(0, (current_time or 0) - (getattr(self, "_live_watch_baseline_ms", None) or 0))
+            watched_label = self._format_time_ms(watched_ms)
+            self._announce(_("Transmissão ao vivo. Você está assistindo há {time}.").format(time=watched_label))
+            return
+
         if current_time is None or current_time < 0:
             current_time = 0
 
@@ -339,7 +391,9 @@ class PlaybackControlsMixin:
             current_time = 0
 
         total_time = self.player.get_length()
-        if total_time is not None and total_time > 0:
+        if is_live_media(self.player.get_media()):
+            status_parts.append(_("Transmissão ao vivo."))
+        elif total_time is not None and total_time > 0:
             percentage = int(max(0, min(100, round((current_time / total_time) * 100))))
             status_parts.append(
                 _("Tempo {current} de {total}. {percent}%.").format(current=self._format_time_ms(current_time), total=self._format_time_ms(total_time), percent=percentage)

@@ -40,6 +40,9 @@ class AppCommandsMixin:
 
         if self.settings.disable_video_output != previous_settings.disable_video_output:
             self._refresh_player_backend_for_video_output_setting()
+        elif self.settings.live_video_enabled != previous_settings.live_video_enabled:
+            # The backend refresh above already restarts whatever is playing.
+            self._apply_live_video_setting_change()
 
         audio_output_updated = True
         if self.settings.audio_output_device_id != previous_settings.audio_output_device_id:
@@ -198,6 +201,8 @@ class AppCommandsMixin:
         if hasattr(self, "plugin_service"):
             self.plugin_service.stop_all()
         self._shutdown_autodj_service()
+        self._shutdown_download()
+        self._shutdown_convert()
 
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then

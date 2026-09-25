@@ -254,6 +254,12 @@ class KeyNavigationMixin:
             self.toggle_lyrics_panel()
             return
 
+        # Ctrl+Alt+V toggles the picture of live broadcasts (plain V announces
+        # the volume and Ctrl+V pastes).
+        if event.ControlDown() and event.AltDown() and not event.ShiftDown() and key_code in (ord("V"), ord("v")):
+            self._toggle_live_video()
+            return
+
         # While the lyrics text is focused, Esc closes the panel. Caret keys are
         # handled natively — the player-surface guard above already lets the
         # text control own them instead of driving seek/volume.
@@ -401,7 +407,7 @@ class KeyNavigationMixin:
                 rate_current_youtube_music_media("DISLIKE" if event.ShiftDown() else "LIKE")
             return
 
-        if event.ControlDown() and key_code in (ord("B"), ord("b")):
+        if event.ControlDown() and not event.ShiftDown() and key_code in (ord("B"), ord("b")):
             self.on_toggle_playlist_browser(None)
             return
 

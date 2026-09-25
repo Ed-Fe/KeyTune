@@ -2,6 +2,8 @@ import os
 
 import wx
 
+from ...convert.options import media_kind
+from ...download.plan import download_source_url
 from ...i18n import _
 from ...library import (
     FOLDER_SORT_CREATED,
@@ -79,6 +81,9 @@ class BrowserCommandsMixin:
         paste_new_item = menu.Append(wx.ID_ANY, _("Colar em nova playlist"))
         menu.AppendSeparator()
         enqueue_item = menu.Append(wx.ID_ANY, _("Adicionar à &Fila\tCtrl+Shift+F"))
+        download_selection_item = menu.Append(wx.ID_ANY, _("Baixar seleção do YouTube..."))
+        download_playlist_item = menu.Append(wx.ID_ANY, _("Baixar playlist inteira do YouTube..."))
+        convert_selection_item = menu.Append(wx.ID_ANY, _("Converter seleção..."))
         start_autodj_item = menu.Append(wx.ID_ANY, _("Reproduzir playlist com AutoDJ"))
         menu.AppendSeparator()
         remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
@@ -114,6 +119,17 @@ class BrowserCommandsMixin:
         if copy_path_item is not None:
             copy_path_item.Enable(selected_count > 0)
         enqueue_item.Enable(selected_count > 0)
+        download_selection_item.Enable(any(download_source_url(path) for path in selected_paths))
+        download_playlist_item.Enable(
+            bool(
+                current_state
+                and not current_state.is_folder_tab
+                and any(download_source_url(path) for path in current_state.items)
+            )
+        )
+        convert_selection_item.Enable(
+            any(media_kind(path) for path in selected_paths if not is_remote_media_path(path))
+        )
         start_autodj_item.Enable(bool(current_state and len(current_state.items) > 1 and not current_state.autodj_session))
         remove_item.Enable(selected_count > 0 and can_edit_playlist)
         like_item.Enable(has_youtube_items and bool(like_rateable_paths))
@@ -171,6 +187,9 @@ class BrowserCommandsMixin:
             lambda _event: self._enqueue_selected_item(),
             id=enqueue_item.GetId(),
         )
+        menu.Bind(wx.EVT_MENU, self.on_download_selection, id=download_selection_item.GetId())
+        menu.Bind(wx.EVT_MENU, self.on_download_playlist, id=download_playlist_item.GetId())
+        menu.Bind(wx.EVT_MENU, self.on_convert_selection, id=convert_selection_item.GetId())
         menu.Bind(wx.EVT_MENU, self.on_start_autodj_session, id=start_autodj_item.GetId())
         menu.Bind(
             wx.EVT_MENU,

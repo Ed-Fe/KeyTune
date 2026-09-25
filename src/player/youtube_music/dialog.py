@@ -320,7 +320,8 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
                 "Pública: aparece no seu perfil e pode surgir em buscas."
             ),
         )
-        privacy_hint.Wrap(440)
+        privacy_hint.Hide()
+        self.privacy_box.SetToolTip(privacy_hint.GetLabel())
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         # Descendant-scoped FindWindow so we don't rename wx.ID_OK buttons that
