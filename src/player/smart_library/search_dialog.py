@@ -91,7 +91,6 @@ class GlobalSearchDialog(wx.Dialog):
         attach_named_accessible(
             self.results_list,
             name=_("Resultados da busca"),
-            description=_("Use as setas para percorrer os resultados e Enter para reproduzir."),
         )
 
         self.status_label = wx.StaticText(self, label=_("Digite um texto e pressione Enter para procurar."))
@@ -99,7 +98,6 @@ class GlobalSearchDialog(wx.Dialog):
         attach_named_accessible(
             self.status_label,
             name=_("Situação da busca"),
-            description=_("Informa quantos resultados a busca encontrou."),
             value_provider=lambda: self.status_label.GetLabel(),
         )
 

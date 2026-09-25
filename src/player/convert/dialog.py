@@ -65,11 +65,11 @@ class ConvertDialog(wx.Dialog):
         options_sizer = wx.BoxSizer(wx.VERTICAL)
 
         if self._item_count > 1:
-            intro = _("{mode}: {count} arquivos. Escolha o formato de destino.").format(
+            intro = _("{mode}: {count} arquivos").format(
                 mode=mode_label(mode), count=self._item_count
             )
         else:
-            intro = _("{mode}: “{name}”. Escolha o formato de destino.").format(
+            intro = _("{mode}: “{name}”").format(
                 mode=mode_label(mode), name=os.path.basename(self._source_path)
             )
         intro_label = wx.StaticText(panel, label=intro)
@@ -150,17 +150,6 @@ class ConvertDialog(wx.Dialog):
         self.directory_ctrl.SetValue(str(other_directory or "").strip())
         self.destination_choice.Bind(wx.EVT_CHOICE, self._on_destination_changed)
 
-        if self._mode == MODE_VIDEO_TO_VIDEO:
-            note = wx.StaticText(
-                panel,
-                label=_(
-                    "Só o formato muda: as faixas compatíveis com o novo formato são copiadas sem perda de "
-                    "qualidade, e as demais são recodificadas."
-                ),
-            )
-            note.Wrap(520)
-            options_sizer.Add(note, 0, wx.ALL | wx.EXPAND, 6)
-
         root_sizer.Add(options_sizer, 1, wx.LEFT | wx.RIGHT | wx.EXPAND, 4)
 
         button_sizer = wx.StdDialogButtonSizer()
@@ -190,7 +179,11 @@ class ConvertDialog(wx.Dialog):
             return _("Formato do arquivo de áudio gerado.")
         if self._mode == MODE_AUDIO_TO_VIDEO:
             return _("Formato do vídeo gerado. O áudio é mantido e a imagem fica parada durante toda a duração.")
-        return _("Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão.")
+        return _(
+            "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão. "
+            "As faixas compatíveis com o novo formato são copiadas sem perda de qualidade, "
+            "e as demais são recodificadas."
+        )
 
     def _default_format_index(self):
         if self._audio_target and DEFAULT_AUDIO_FORMAT in self._target_formats:

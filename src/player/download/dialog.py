@@ -20,14 +20,15 @@ class DownloadDialog(wx.Dialog):
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
         if item_count > 1:
-            intro = _("Baixar {count} itens. Escolha o formato e a qualidade.").format(count=item_count)
+            intro = _("Baixar {count} itens").format(count=item_count)
         elif media_title:
-            intro = _("Baixar “{title}”. Escolha o formato e a qualidade.").format(title=media_title)
+            intro = _("Baixar “{title}”").format(title=media_title)
         else:
-            intro = _("Escolha o formato e a qualidade do download.")
-        intro_label = wx.StaticText(panel, label=intro)
-        intro_label.Wrap(520)
-        root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
+            intro = ""
+        if intro:
+            intro_label = wx.StaticText(panel, label=intro)
+            intro_label.Wrap(520)
+            root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
         self.options_panel = DownloadOptionsPanel(panel, kind_label=_("Baixar"))
         self.options_panel.set_values(

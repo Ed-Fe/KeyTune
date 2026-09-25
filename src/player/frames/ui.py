@@ -686,25 +686,21 @@ class FrameUIMixin:
         attach_named_accessible(
             self.progress_label,
             name=_("Tempo da mídia"),
-            description=_("Mostra o tempo decorrido e a duração total da mídia atual."),
             value_provider=lambda: self.progress_label.GetLabel(),
         )
         attach_named_accessible(
             self.lyrics_checkbox,
             name=_("Painel de letras"),
-            description=_("Ativa ou desativa a exibição das letras da música."),
             value_provider=lambda: _("Ativado") if self.lyrics_checkbox.GetValue() else _("Desativado"),
         )
         attach_named_accessible(
             self.progress_gauge,
             name=_("Barra de tempo"),
-            description=_("Mostra o progresso da mídia atual."),
             value_provider=self._time_bar_accessible_value,
         )
         attach_named_accessible(
             self.shortcuts_hint_label,
             name=_("Dicas rápidas de atalhos"),
-            description=_("Resume os atalhos mais usados para controlar o player."),
             value_provider=lambda: self.shortcuts_hint_label.GetLabel(),
         )
 
@@ -883,7 +879,6 @@ class FrameUIMixin:
         attach_named_accessible(
             video_panel,
             name=_("Área do player"),
-            description=_("Use Espaço para tocar ou pausar e as setas para navegar."),
         )
         video_panel.SetBackgroundColour(wx.Colour(0, 0, 0))
         video_panel.Bind(wx.EVT_SIZE, self.on_video_panel_resize)

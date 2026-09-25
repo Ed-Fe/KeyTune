@@ -52,8 +52,7 @@ class OpenSourceDialog(wx.Dialog):
         description = wx.StaticText(
             self,
             label=_(
-                "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. "
-                "Pastas podem abrir como playlist ou no navegador."
+                "Arquivo, pasta, link de mídia ou lista .m3u/.m3u8."
             ),
         )
         description.Wrap(420)
@@ -91,7 +90,6 @@ class OpenSourceDialog(wx.Dialog):
         attach_named_accessible(
             self.status_label,
             name=_("Resultado da origem informada"),
-            description=_("Informa como o arquivo, pasta ou link será aberto."),
             value_provider=lambda: self.status_label.GetLabel(),
         )
 

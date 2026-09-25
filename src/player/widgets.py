@@ -8,16 +8,17 @@ from .i18n import _
 
 
 def add_choice_row(parent, sizer, label_text, help_text, labels):
-    """Rótulo visível, lista de opções e ajuda; o nome acessível é o próprio rótulo."""
+    """Rótulo visível e lista de opções; a ajuda fica só no tooltip.
+
+    Um texto de ajuda visível seria lido por inteiro pelo leitor de tela ao abrir o
+    diálogo, antes de qualquer controle.
+    """
     label = wx.StaticText(parent, label=f"{label_text}:")
     choice = wx.Choice(parent, choices=labels, name=label_text)
     choice.SetToolTip(help_text)
-    help_label = wx.StaticText(parent, label=help_text)
     label.Wrap(500)
-    help_label.Wrap(500)
     sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
     sizer.Add(choice, 0, wx.ALL | wx.EXPAND, 6)
-    sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
     return choice
 
 

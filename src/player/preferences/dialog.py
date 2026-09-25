@@ -66,6 +66,7 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
         intro_label.Wrap(540)
+        intro_label.Hide()
 
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
@@ -112,6 +113,7 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         language_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Idioma")), wx.VERTICAL)
         self._language_choice_codes = [""]
@@ -264,6 +266,7 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Controles de reprodução")), wx.VERTICAL)
         self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label=_("Ativar e&mbaralhamento em novas playlists"))
@@ -379,6 +382,7 @@ class PreferencesDialog(wx.Dialog):
             label=_("Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         accessibility_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Leitor de tela")), wx.VERTICAL)
         self.announcements_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a&núncios de acessibilidade"))
@@ -393,7 +397,7 @@ class PreferencesDialog(wx.Dialog):
             page,
             label=_("Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."),
         )
-        help_label.Wrap(520)
+        help_label.Hide()
 
         page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
         page_sizer.Add(accessibility_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
@@ -578,6 +582,7 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         download_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Opções de download")), wx.VERTICAL)
         self.download_options_panel = DownloadOptionsPanel(page, kind_label=_("Tipo de download padrão"))
@@ -624,6 +629,7 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
         info_label.Wrap(520)
+        info_label.Hide()
 
         self.youtube_music_resources_box = wx.StaticBoxSizer(
             wx.StaticBox(page, label=_("Integração com YouTube Music e YouTube")),
@@ -885,7 +891,7 @@ class PreferencesDialog(wx.Dialog):
         box_sizer = wx.BoxSizer(wx.VERTICAL)
         help_label = wx.StaticText(parent, label=help_text)
         visible_label.Wrap(500)
-        help_label.Wrap(500)
+        help_label.Hide()
 
         box_sizer.Add(visible_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         box_sizer.Add(control, 0, wx.ALL | wx.EXPAND, 6)

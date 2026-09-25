@@ -54,7 +54,6 @@ class EqualizerTabPanel(wx.Panel):
         attach_named_accessible(
             self.target_tab_label,
             name=_("Aba de mídia alvo do equalizador"),
-            description=_("Informa qual aba de mídia receberá os ajustes do equalizador."),
             value_provider=lambda: self.target_tab_label.GetLabel(),
         )
 
@@ -88,22 +87,18 @@ class EqualizerTabPanel(wx.Panel):
         self._configure_action_button(
             self.new_button,
             name=_("Novo preset do equalizador"),
-            description=_("Cria um preset personalizado com base nos ajustes atuais."),
         )
         self._configure_action_button(
             self.edit_button,
             name=_("Editar preset do equalizador"),
-            description=_("Edita o preset selecionado ou salva uma cópia se o preset for embutido."),
         )
         self._configure_action_button(
             self.duplicate_button,
             name=_("Duplicar preset do equalizador"),
-            description=_("Cria uma cópia editável do preset selecionado."),
         )
         self._configure_action_button(
             self.delete_button,
             name=_("Excluir preset do equalizador"),
-            description=_("Exclui o preset personalizado selecionado."),
         )
 
         for button in (self.new_button, self.edit_button, self.duplicate_button, self.delete_button):
@@ -113,10 +108,6 @@ class EqualizerTabPanel(wx.Panel):
         self._configure_action_button(
             self.apply_all_button,
             name=_("Aplicar equalizador em todas as abas de mídia"),
-            description=_(
-                "Copia o estado atual do equalizador, incluindo ativação e preset, "
-                "para todas as abas de mídia abertas."
-            ),
         )
 
         controls_box.Add(self.enable_checkbox, 0, wx.ALL | wx.EXPAND, 6)
@@ -147,7 +138,6 @@ class EqualizerTabPanel(wx.Panel):
         attach_named_accessible(
             self.preamp_value_label,
             name=_("Pré-amplificação atual do preset"),
-            description=_("Mostra o ganho geral do preset selecionado antes das bandas."),
             value_provider=lambda: self.preamp_value_label.GetLabel(),
         )
 
@@ -177,20 +167,17 @@ class EqualizerTabPanel(wx.Panel):
             self._configure_action_button(
                 self.edit_button,
                 name=_("Salvar cópia do preset do equalizador"),
-                description=_("Cria uma cópia editável do preset embutido selecionado."),
             )
         else:
             self.edit_button.SetLabel(_("&Editar..."))
             self._configure_action_button(
                 self.edit_button,
                 name=_("Editar preset do equalizador"),
-                description=_("Edita o preset personalizado selecionado."),
             )
 
         self._configure_action_button(
             self.duplicate_button,
             name=_("Duplicar preset do equalizador"),
-            description=_("Cria uma cópia editável do preset personalizado selecionado."),
         )
 
         self.edit_button.Enable(has_selection)

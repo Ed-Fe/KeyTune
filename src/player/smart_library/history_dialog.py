@@ -117,7 +117,6 @@ class PlaybackHistoryDialog(wx.Dialog):
         attach_named_accessible(
             self.history_list,
             name=_("Histórico de reprodução"),
-            description=_("Use as setas para percorrer o histórico e Enter para reproduzir de novo."),
         )
 
         self.status_label = wx.StaticText(self, label="")
@@ -125,7 +124,6 @@ class PlaybackHistoryDialog(wx.Dialog):
         attach_named_accessible(
             self.status_label,
             name=_("Situação do histórico"),
-            description=_("Informa quantas reproduções o histórico guarda."),
             value_provider=lambda: self.status_label.GetLabel(),
         )
 

@@ -28,7 +28,6 @@ class AutoDJSessionPanel(wx.Panel):
         attach_named_accessible(
             self.info_ctrl,
             name=_("Informações da sessão AutoDJ"),
-            description=_("Resume o estado da sessão e informa como será a próxima transição."),
             value_provider=lambda: self.info_ctrl.GetValue(),
         )
         self.info_ctrl.SetMinSize((-1, 88))

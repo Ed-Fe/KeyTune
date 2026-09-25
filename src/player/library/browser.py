@@ -85,7 +85,6 @@ class PlaylistBrowserPanel(wx.Panel):
         attach_named_accessible(
             self.header_label,
             name=_("Título da playlist"),
-            description=_("Identifica a playlist ou pasta exibida na lista."),
             value_provider=lambda: self.header_label.GetLabel(),
         )
         self.items_list = VirtualItemsListCtrl(self, self._get_display_label)
@@ -100,7 +99,6 @@ class PlaylistBrowserPanel(wx.Panel):
         attach_named_accessible(
             self.hint_label,
             name=_("Ajuda da lista de itens"),
-            description=_("Resume os comandos disponíveis na lista de itens."),
             value_provider=lambda: self.hint_label.GetLabel(),
         )
 

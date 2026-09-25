@@ -88,19 +88,16 @@ class YouTubeMusicTabPanel(wx.Panel):
 		attach_named_accessible(
 			self.connection_label,
 			name=_("Status da conta do YouTube Music"),
-			description=_("Informa se existe uma conta do YouTube Music conectada nesta instalação."),
 			value_provider=lambda: self.connection_label.GetLabel(),
 		)
 		attach_named_accessible(
 			self.library_summary_label,
 			name=_("Resumo da biblioteca do YouTube Music"),
-			description=_("Resume quantas playlists ou mixes estão disponíveis na aba do YouTube Music."),
 			value_provider=lambda: self.library_summary_label.GetLabel(),
 		)
 		attach_named_accessible(
 			self.status_message_label,
 			name=_("Mensagem da central do YouTube Music"),
-			description=_("Mostra o resultado da última atualização, busca ou ação do YouTube Music."),
 			value_provider=lambda: self.status_message_label.GetLabel(),
 		)
 
@@ -217,7 +214,6 @@ class YouTubeMusicTabPanel(wx.Panel):
 		attach_named_accessible(
 			self.search_results_label,
 			name=_("Resumo da busca do YouTube"),
-			description=_("Mostra quantos resultados a busca atual retornou."),
 			value_provider=lambda: self.search_results_label.GetLabel(),
 		)
 

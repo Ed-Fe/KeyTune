@@ -200,7 +200,6 @@ class SmartPlaylistEditorDialog(wx.Dialog):
         attach_named_accessible(
             self.summary_label,
             name=_("Resumo da regra"),
-            description=_("Descreve em uma frase o que a playlist vai reunir."),
             value_provider=lambda: self.summary_label.GetLabel(),
         )
 
@@ -324,7 +323,6 @@ class SmartPlaylistManagerDialog(wx.Dialog):
         attach_named_accessible(
             self.rules_list,
             name=_("Playlists inteligentes salvas"),
-            description=_("Use as setas para percorrer as regras e Enter para abrir a playlist."),
         )
 
         self.status_label = wx.StaticText(self, label="")
@@ -332,7 +330,6 @@ class SmartPlaylistManagerDialog(wx.Dialog):
         attach_named_accessible(
             self.status_label,
             name=_("Situação das playlists inteligentes"),
-            description=_("Informa quantas regras estão salvas."),
             value_provider=lambda: self.status_label.GetLabel(),
         )
 
