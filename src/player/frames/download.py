@@ -38,6 +38,7 @@ from ..download.runner import DownloadCancelled, DownloadCancelToken, run_downlo
 from ..i18n import _
 from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
+from ..task_failures_dialog import offer_task_failures
 from .playback.live import is_live_media
 from .selection import selected_list_entries
 from .task_progress import TaskProgressMixin
@@ -495,6 +496,8 @@ class FrameDownloadMixin(TaskProgressMixin):
             _logger.warning("Batch download item failed (%s): %s", title, reason)
         self._set_status_message(message)
         self._announce(message)
+        if failures and done:
+            wx.CallAfter(offer_task_failures, self, _("Falhas no download"), failures)
 
     def _on_download_failed(self, token, reason):
         if not self._finish_download_state(token):

@@ -36,6 +36,7 @@ from ..download.ffmpeg import (
 from ..i18n import _
 from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
+from ..task_failures_dialog import offer_task_failures
 from ..process_control import CancelToken
 from .selection import selected_list_entries
 from .task_progress import TaskProgressMixin
@@ -424,6 +425,8 @@ class FrameConvertMixin(TaskProgressMixin):
             _logger.warning("Batch conversion item failed (%s): %s", name, reason)
         self._set_status_message(message)
         self._announce(message)
+        if failures and done:
+            wx.CallAfter(offer_task_failures, self, _("Falhas na conversão"), failures)
 
     def _on_conversion_failed(self, token, reason):
         if not self._finish_convert_state(token):
