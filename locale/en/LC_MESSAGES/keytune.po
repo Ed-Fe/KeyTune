@@ -45,9 +45,6 @@ msgstr "&Apply"
 msgid "&Arquivo"
 msgstr "&File"
 
-msgid "&Atualizar lista de dispositivos"
-msgstr "&Refresh device list"
-
 msgid "&Avaliação"
 msgstr "&Rating"
 
@@ -83,9 +80,6 @@ msgstr "&Related YouTube Music content (A)"
 
 msgid "&Continuar ouvindo\tCtrl+Shift+R"
 msgstr "&Continue listening\tCtrl+Shift+R"
-
-msgid "&Copiar caminho do item (Ctrl+C)"
-msgstr "&Copy item path (Ctrl+C)"
 
 msgid "&Criar"
 msgstr "&Create"
@@ -185,9 +179,6 @@ msgstr "&New..."
 
 msgid "&Ordenar por"
 msgstr "S&ort by"
-
-msgid "&Padrão do sistema"
-msgstr "&System default"
 
 msgid "&Pasta..."
 msgstr "&Folder..."
@@ -404,15 +395,6 @@ msgstr "The selected playlist has no playable tracks at the moment."
 msgid "A playlist selecionada é inválida."
 msgstr "The selected playlist is invalid."
 
-msgid "A PyPI não informou a versão mais recente da ytmusicapi."
-msgstr "PyPI did not report the latest ytmusicapi version."
-
-msgid "A PyPI não publicou a lista de releases da ytmusicapi."
-msgstr "PyPI did not publish the ytmusicapi release list."
-
-msgid "A PyPI não publicou arquivos para a versão mais recente da ytmusicapi."
-msgstr "PyPI did not publish files for the latest ytmusicapi version."
-
 msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
 msgstr "At any time, press F1 to open a quick help with the complete list of KeyTune keyboard shortcuts.\n\nFor a more detailed explanation of all features, open the user manual. Both are also available from the Help menu."
 
@@ -422,20 +404,8 @@ msgstr "The yt-dlp release did not publish all the required files."
 msgid "A release do yt-dlp veio com metadados incompletos."
 msgstr "The yt-dlp release came with incomplete metadata."
 
-msgid "A release mais recente da ytmusicapi não publicou um wheel utilizável."
-msgstr "The latest ytmusicapi release did not publish a usable wheel."
-
-msgid "A reprodução autenticada foi recusada. Tentando sem a conta..."
-msgstr "Authenticated playback was rejected. Trying without the account..."
-
 msgid "A resposta da conta do YouTube Music veio em formato inválido."
 msgstr "The YouTube Music account response was in an invalid format."
-
-msgid "A resposta da PyPI para ytmusicapi veio em formato inválido."
-msgstr "The PyPI response for ytmusicapi came in an invalid format."
-
-msgid "A resposta da PyPI veio em formato inválido."
-msgstr "The PyPI response came in an invalid format."
 
 msgid "A resposta da release do yt-dlp veio em formato inválido."
 msgstr "The yt-dlp release response came in an invalid format."
@@ -626,9 +596,6 @@ msgstr "Open selected YouTube Music playlist"
 msgid "Abrir seleção em nova playlist"
 msgstr "Open selection in a new playlist"
 
-msgid "Abrir site do &Deno"
-msgstr "Open &Deno website"
-
 msgid "Abrir site do &Node.js"
 msgstr "Open &Node.js website"
 
@@ -697,9 +664,6 @@ msgstr "Quick &shortcuts help\tF1"
 
 msgid "Ajuda rápida de atalhos"
 msgstr "Quick shortcuts help"
-
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar caminho ou link do item selecionado\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the path or link of the selected item\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nPlayback menu > Audio device — Change the sound output\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nCtrl+Shift+D — Sleep timer (preset durations or end of track)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nCtrl+F — Find an item in the current playlist or folder\nF3 / Shift+F3 — Next or previous search result\nCtrl+G — Search the whole library (playlists, folders and history)\nCtrl+D — Add or remove the selection from favorites\nCtrl+0 to Ctrl+5 — Rate the selection from zero to five stars\nCtrl+Shift+H — Playback history\nCtrl+Shift+R — Continue listening to what was left half finished\nLibrary menu > Smart playlists — Open a saved rule\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
 
 msgid "Ajuda rápida de atalhos:"
 msgstr "Quick shortcuts help:"
@@ -872,9 +836,6 @@ msgstr "Main shortcuts: Ctrl+Alt+O open media, playlist or folder · Ctrl+O open
 msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
 msgstr "Turns on shuffle mode automatically for playlists created after saving preferences."
 
-msgid "Ativa ou desativa a exibição das letras da música."
-msgstr "Turns the lyrics display on or off."
-
 msgid "Ativado"
 msgstr "Enabled"
 
@@ -883,9 +844,6 @@ msgstr "enabled"
 
 msgid "Ativar &equalizador nesta aba"
 msgstr "Enable &equalizer on this tab"
-
-msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp e ytmusicapi)"
-msgstr "Enable &additional resources for YouTube Music and YouTube (yt-dlp and ytmusicapi)"
 
 msgid "Ativar a &biblioteca inteligente"
 msgstr "Enable the smart &library"
@@ -1402,9 +1360,6 @@ msgstr "System media controls unavailable. Install the 'winrt-Windows.Media.Play
 msgid "Controles de reprodução"
 msgstr "Playback controls"
 
-msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
-msgstr "Copies the current equalizer state, including activation and preset, to all open media tabs."
-
 msgid "Copiar letra completa"
 msgstr "Copy full lyrics"
 
@@ -1419,18 +1374,6 @@ msgstr "Costa Rica"
 
 msgid "Cria a playlist com o nome e a privacidade informados."
 msgstr "Creates the playlist with the given name and privacy."
-
-msgid "Cria um preset personalizado com base nos ajustes atuais."
-msgstr "Creates a custom preset based on the current settings."
-
-msgid "Cria uma cópia editável do preset embutido selecionado."
-msgstr "Creates an editable copy of the selected built-in preset."
-
-msgid "Cria uma cópia editável do preset personalizado selecionado."
-msgstr "Creates an editable copy of the selected custom preset."
-
-msgid "Cria uma cópia editável do preset selecionado."
-msgstr "Creates an editable copy of the selected preset."
 
 msgid "Cria uma nova playlist (privada) na conta conectada do YouTube Music."
 msgstr "Creates a new (private) playlist in the connected YouTube Music account."
@@ -1542,9 +1485,6 @@ msgstr "Unknown"
 msgid "Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores."
 msgstr "Describes the main areas of the player window: tabs, item list, player and bottom bars."
 
-msgid "Descreve em uma frase o que a playlist vai reunir."
-msgstr "Describes in one sentence what the playlist will gather."
-
 msgid "Descrição do aplicativo"
 msgstr "Application description"
 
@@ -1626,9 +1566,6 @@ msgstr "Decrease &speed ([)"
 msgid "Dinamarca"
 msgstr "Denmark"
 
-msgid "Dispositivo de áu&dio"
-msgstr "Au&dio device"
-
 msgid "Dispositivo de áudio"
 msgstr "Audio device"
 
@@ -1676,12 +1613,6 @@ msgstr "&Delete"
 
 msgid "E&xcluir playlist..."
 msgstr "&Delete playlist..."
-
-msgid "Edita o preset personalizado selecionado."
-msgstr "Edits the selected custom preset."
-
-msgid "Edita o preset selecionado ou salva uma cópia se o preset for embutido."
-msgstr "Edits the selected preset or saves a copy if the preset is built-in."
 
 msgid "Editar preset do equalizador"
 msgstr "Edit equalizer preset"
@@ -1738,9 +1669,6 @@ msgstr "Enter opens the current selection. Esc closes the tab. Tab returns to th
 
 msgid "Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."
 msgstr "Enter activates. Delete removes. Shift+F10 opens actions. Type letters to find. Tab returns to the player."
-
-msgid "Enter entra na pasta ou toca o arquivo. Backspace volta. Digite letras para localizar. Tab volta ao player."
-msgstr "Enter enters the folder or plays the file. Backspace goes back. Type letters to find. Tab returns to the player."
 
 msgid "Enter no campo de busca executa a pesquisa. Enter na lista adiciona a seleção à playlist atual. Ctrl+Enter abre a seleção em nova playlist. Use Shift+F10 ou o botão Ações para mais opções."
 msgstr "Enter in the search field runs the search. Enter in the list adds the selection to the current playlist. Ctrl+Enter opens the selection in a new playlist. Use Shift+F10 or the Actions button for more options."
@@ -1841,9 +1769,6 @@ msgstr "This folder can open as a static playlist or in the folder browser."
 msgid "Estados Unidos"
 msgstr "United States"
 
-msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Faça login no YouTube Music pelo menu do aplicativo para usar o cliente \"tv\", que dispensa PO Token quando há cookies de conta válidos."
-msgstr "This content requires a PO Token that yt-dlp cannot generate on its own. Log in to YouTube Music from the application menu to use the \"tv\" client, which does not require a PO Token when valid account cookies are present."
-
 msgid "Este item já está na fila de reprodução."
 msgstr "This item is already in the playback queue."
 
@@ -1861,9 +1786,6 @@ msgstr "Europe"
 
 msgid "Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
 msgstr "Deletes the selected playlist from the account. It only works on playlists you created and asks for confirmation."
-
-msgid "Exclui o preset personalizado selecionado."
-msgstr "Deletes the selected custom preset."
 
 msgid "Excluindo a playlist \"{title}\" do YouTube Music..."
 msgstr "Deleting the playlist \"{title}\" from YouTube Music..."
@@ -2100,21 +2022,6 @@ msgstr[1] "Indexing finished: {count} media added to the library."
 msgid "Indonésia"
 msgstr "Indonesia"
 
-msgid "Informa qual aba de mídia receberá os ajustes do equalizador."
-msgstr "Indicates which media tab will receive the equalizer adjustments."
-
-msgid "Informa quantas regras estão salvas."
-msgstr "Reports how many rules are saved."
-
-msgid "Informa quantas reproduções o histórico guarda."
-msgstr "Reports how many plays the history holds."
-
-msgid "Informa quantos resultados a busca encontrou."
-msgstr "Reports how many results the search found."
-
-msgid "Informa se existe uma conta do YouTube Music conectada nesta instalação."
-msgstr "Indicates whether there is a YouTube Music account connected on this installation."
-
 msgid "Informativo (INFO)"
 msgstr "Informational (INFO)"
 
@@ -2123,9 +2030,6 @@ msgstr "Incomplete track information to search for lyrics."
 
 msgid "Informe o nome e a privacidade da nova playlist."
 msgstr "Enter the name and privacy of the new playlist."
-
-msgid "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. Pastas podem abrir como playlist ou no navegador."
-msgstr "Enter a file, a local folder, a media link or a .m3u/.m3u8 file/link. Folders can open as a playlist or in the browser."
 
 msgid "Informe um caminho local, uma pasta ou um link de mídia."
 msgstr "Enter a local path, a folder or a media link."
@@ -2141,9 +2045,6 @@ msgstr "Enter a local folder, an existing file, a .m3u/.m3u8 playlist or a media
 
 msgid "Inicialização e sessão"
 msgstr "Startup and session"
-
-msgid "Instalar &Deno"
-msgstr "Install &Deno"
 
 msgid "Instalar &Node.js"
 msgstr "Install &Node.js"
@@ -2229,9 +2130,6 @@ msgstr "Item {current} of {total}."
 
 msgid "Itens"
 msgstr "Items"
-
-msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo. Use Delete para remover e Alt+Seta para cima ou para baixo para reordenar."
-msgstr "Items below play before the normal order, from top to bottom. Use Delete to remove and Alt+Up or Down arrow to reorder."
 
 msgid "Itens na fila:"
 msgstr "Items in queue:"
@@ -2347,14 +2245,6 @@ msgstr "Remote links will be tried as media, except when they are .m3u/.m3u8 pla
 msgid "Lista as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida nos resultados abaixo."
 msgstr "Lists the YouTube Music moods and genres categories and loads the playlists of the chosen category in the results below."
 
-msgid "Lista de dispositivos de áudio atualizada, mas nenhum dispositivo foi detectado agora."
-msgstr "Audio device list refreshed, but no device was detected now."
-
-msgid "Lista de dispositivos de áudio atualizada. {count} dispositivo disponível."
-msgid_plural "Lista de dispositivos de áudio atualizada. {count} dispositivos disponíveis."
-msgstr[0] "Audio device list updated. {count} device available."
-msgstr[1] "Audio device list updated. {count} devices available."
-
 msgid "Lista de itens"
 msgstr "Item list"
 
@@ -2462,21 +2352,6 @@ msgstr[1] "Moods and genres — {category}: {count} playlists."
 msgid "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
 msgstr "Shows the description of the currently selected preset. Read-only field."
 
-msgid "Mostra o ganho geral do preset selecionado antes das bandas."
-msgstr "Shows the overall gain of the selected preset before the bands."
-
-msgid "Mostra o progresso da mídia atual."
-msgstr "Shows the progress of the current media."
-
-msgid "Mostra o resultado da última atualização, busca ou ação do YouTube Music."
-msgstr "Shows the result of the last YouTube Music update, search or action."
-
-msgid "Mostra o tempo decorrido e a duração total da mídia atual."
-msgstr "Shows the elapsed time and total duration of the current media."
-
-msgid "Mostra quantos resultados a busca atual retornou."
-msgstr "Shows how many results the current search returned."
-
 msgid "Mostrando 0 de 0 resultados."
 msgstr "Showing 0 of 0 results."
 
@@ -2557,9 +2432,6 @@ msgstr "No recent files."
 
 msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
 msgstr "No valid YouTube cookies were found in {browser}. Make sure you are signed in at music.youtube.com."
-
-msgid "Nenhum dispositivo detectado agora"
-msgstr "No device detected now"
 
 msgid "Nenhum favorito ainda. Use Ctrl+D para marcar o item atual."
 msgstr "No favorites yet. Use Ctrl+D to mark the current item."
@@ -2822,9 +2694,6 @@ msgstr "The selected items could not be rated."
 msgid "Não foi possível baixar a atualização."
 msgstr "Could not download the update."
 
-msgid "Não foi possível baixar o wheel oficial da ytmusicapi."
-msgstr "Could not download the official ytmusicapi wheel."
-
 msgid "Não foi possível baixar os arquivos oficiais do yt-dlp."
 msgstr "Could not download the official yt-dlp files."
 
@@ -2861,9 +2730,6 @@ msgstr "Could not complete the search right now."
 msgid "Não foi possível conectar a conta do YouTube Music."
 msgstr "Could not connect the YouTube Music account."
 
-msgid "Não foi possível consultar a release mais recente da ytmusicapi."
-msgstr "Could not query the latest ytmusicapi release."
-
 msgid "Não foi possível consultar a release mais recente do yt-dlp."
 msgstr "Could not query the latest yt-dlp release."
 
@@ -2881,9 +2747,6 @@ msgstr "Could not delete the YouTube Music playlist."
 
 msgid "Não foi possível exportar cookies do {browser}."
 msgstr "Could not export cookies from {browser}."
-
-msgid "Não foi possível extrair o wheel da ytmusicapi."
-msgstr "Could not extract the ytmusicapi wheel."
 
 msgid "Não foi possível favoritar os itens selecionados."
 msgstr "The selected items could not be added to favorites."
@@ -3083,26 +2946,11 @@ msgstr "The selected result cannot be saved to YouTube Music."
 msgid "O vídeo do YouTube não tem videoId válido."
 msgstr "The YouTube video has no valid videoId."
 
-msgid "O wheel da ytmusicapi baixado está corrompido."
-msgstr "The downloaded ytmusicapi wheel is corrupted."
-
-msgid "O wheel da ytmusicapi baixado não passou na validação de integridade."
-msgstr "The downloaded ytmusicapi wheel did not pass the integrity check."
-
-msgid "O wheel da ytmusicapi contém caminhos inválidos."
-msgstr "The ytmusicapi wheel contains invalid paths."
-
 msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
 msgstr "Windows could not decrypt the cookies from {browser}. Try using Firefox or manual import."
 
 msgid "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
 msgstr "The Windows Package Manager is not available on this installation. Use the buttons below to open the official websites."
-
-msgid "O YouTube exigiu PO Token (Proof of Origin) para reproduzir esta faixa nos clientes web/mweb. Faça login no YouTube Music pelo menu do aplicativo (a opção \"Autenticar\") usando cookies de uma janela privativa do navegador — o cliente \"tv\" usa esses cookies para reproduzir sem PO Token. Se já estiver autenticado, refaça o login com cookies recém-exportados."
-msgstr "YouTube required a PO Token (Proof of Origin) to play this track on the web/mweb clients. Log in to YouTube Music from the application menu (the \"Authenticate\" option) using cookies from a private browser window — the \"tv\" client uses those cookies to play without a PO Token. If you are already authenticated, log in again with freshly exported cookies."
-
-msgid "O YouTube exigiu validação JavaScript. Verifique se o sistema tem Deno 2.3+, Node.js 22+ ou QuickJS 2023-12-9+ instalado e tente novamente após atualizar os recursos adicionais."
-msgstr "YouTube required JavaScript validation. Make sure the system has Deno 2.3+, Node.js 22+, or QuickJS 2023-12-9+ installed, then try again after updating the additional resources."
 
 msgid "O YouTube Music já está processando uma solicitação. Aguarde um momento."
 msgstr "YouTube Music is already processing a request. Please wait a moment."
@@ -3127,9 +2975,6 @@ msgstr "YouTube rejected playback. Trying another profile..."
 
 msgid "O yt-dlp demorou demais para responder e foi interrompido."
 msgstr "yt-dlp took too long to respond and was interrupted."
-
-msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Atualize para Deno 2.3+ ou Node.js 22+; também são aceitos QuickJS 2023-12-9+ e Bun de 1.2.11 até 1.3.14."
-msgstr "yt-dlp found an installed JavaScript runtime, but none of the versions are compatible: {runtimes}. Update to Deno 2.3+ or Node.js 22+; QuickJS 2023-12-9+ and Bun from 1.2.11 through 1.3.14 are also supported."
 
 msgid "O yt-dlp não conseguiu abrir a faixa do YouTube Music."
 msgstr "yt-dlp could not open the YouTube Music track."
@@ -3221,17 +3066,11 @@ msgstr "Time panel"
 msgid "Panamá"
 msgstr "Panama"
 
-msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um complemento do sistema chamado runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nInstale uma destas opções:\n1. Deno 2.3+ (recomendado pelo projeto yt-dlp)\n2. Node.js 22+\n\nPara usuários avançados, QuickJS 2023-12-9+ também é compatível. O suporte ao Bun está descontinuado e limitado às versões de 1.2.11 até 1.3.14; por isso, o KeyTune não oferece sua instalação automática.\n\n"
-msgstr "To open music and videos from YouTube more reliably, the player needs a system component called a JavaScript runtime.\n\nWithout it, YouTube may block audio or video preparation and playback will not start.\n\nInstall one of these options:\n1. Deno 2.3+ (recommended by the yt-dlp project)\n2. Node.js 22+\n\nFor advanced users, QuickJS 2023-12-9+ is also compatible. Bun support is deprecated and limited to versions 1.2.11 through 1.3.14, so KeyTune does not offer automatic installation for it.\n\n"
-
 msgid "Para abrir no navegador, informe uma pasta local válida."
 msgstr "To open in the browser, enter a valid local folder."
 
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr "To set KeyTune as the default player, open the Windows Default apps settings. Do you want to open them now?"
-
-msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema (Deno 2.3+ recomendado ou Node.js 22+). QuickJS 2023-12-9+ também é compatível. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Instale um desses runtimes e tente novamente."
-msgstr "To play from YouTube Music, yt-dlp needs a compatible JavaScript runtime installed on the system (Deno 2.3+ recommended or Node.js 22+). QuickJS 2023-12-9+ is also compatible. Without one, yt-dlp cannot resolve YouTube's audio/video signatures and no client returns playable formats. Install one of these runtimes and try again."
 
 msgid "Parado."
 msgstr "Stopped."
@@ -3760,14 +3599,8 @@ msgstr "YouTube search results"
 msgid "Resultados da busca: nenhum ainda."
 msgstr "Search results: none yet."
 
-msgid "Resume os atalhos mais usados para controlar o player."
-msgstr "Summarizes the most-used shortcuts for controlling the player."
-
 msgid "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."
 msgstr "Summarizes the player features beyond basic playback: playlists, equalizer, YouTube Music and preferences."
-
-msgid "Resume quantas playlists ou mixes estão disponíveis na aba do YouTube Music."
-msgstr "Summarizes how many playlists or mixes are available on the YouTube Music tab."
 
 msgid "Resumo da atualização"
 msgstr "Update summary"
@@ -4164,20 +3997,8 @@ msgstr "Use the nightly version of yt-dlp"
 msgid "Use 'Carregar mais' ou desça até o final da lista para trazer mais."
 msgstr "Use 'Load more' or scroll to the end of the list to fetch more."
 
-msgid "Use as setas para percorrer as regras e Enter para abrir a playlist."
-msgstr "Use the arrow keys to move through the rules and Enter to open the playlist."
-
-msgid "Use as setas para percorrer o histórico e Enter para reproduzir de novo."
-msgstr "Use the arrow keys to move through the history and Enter to play again."
-
-msgid "Use as setas para percorrer os resultados e Enter para reproduzir."
-msgstr "Use the arrow keys to move through the results and Enter to play."
-
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr "Use Ctrl+Shift+W to close the current preview or Backspace to go up a folder."
-
-msgid "Use Espaço para tocar ou pausar e as setas para navegar."
-msgstr "Use Space to play or pause and the arrow keys to navigate."
 
 msgid "Use o menu Biblioteca para indexar pastas, consultar o histórico, apagar as posições de retomada ou limpar tudo."
 msgstr "Use the Library menu to index folders, review the history, erase the resume positions or clear everything."
@@ -4569,9 +4390,6 @@ msgstr "Africa"
 msgid "África do Sul"
 msgstr "South Africa"
 
-msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
-msgstr "Lyrics reading area. Use the arrow keys to navigate through the text."
-
 msgid "Área do player"
 msgstr "Player area"
 
@@ -4590,17 +4408,8 @@ msgstr "Library index"
 msgid "Última vez"
 msgstr "Last time"
 
-msgid "Analisa a faixa atual e a próxima em segundo plano para alinhar batidas e fazer uma transição automática. Se a análise não for confiável, a reprodução continua normalmente."
-msgstr "Analyzes the current and next track in the background to align beats and perform an automatic transition. If the analysis is not reliable, playback continues normally."
-
-msgid "Ativar &AutoDJ"
-msgstr "Enable &AutoDJ"
-
 msgid "Ativar Auto&DJ"
 msgstr "Enable Auto&DJ"
-
-msgid "Ativar AutoDJ"
-msgstr "Enable AutoDJ"
 
 msgid "AutoDJ {status}."
 msgstr "AutoDJ {status}."
@@ -4626,17 +4435,11 @@ msgstr "AutoDJ profile"
 msgid "{count} batidas"
 msgstr "{count} beats"
 
-msgid "AutoDJ analisando a faixa atual e a próxima..."
-msgstr "AutoDJ is analyzing the current and next track..."
-
 msgid "AutoDJ analisando a faixa atual e as próximas opções..."
 msgstr "AutoDJ is analyzing the current track and the upcoming options..."
 
 msgid "AutoDJ preparado: transição de {count} batidas."
 msgstr "AutoDJ ready: {count}-beat transition."
-
-msgid "O AutoDJ não conseguiu analisar estas faixas. Uma nova tentativa será feita automaticamente."
-msgstr "AutoDJ could not analyze these tracks. It will retry automatically."
 
 msgid "O AutoDJ não encontrou batidas compatíveis. Será usada a transição normal."
 msgstr "AutoDJ did not find compatible beats. The regular transition will be used."
@@ -4665,32 +4468,17 @@ msgstr "AutoDJ session ended. The prepared sequence was preserved as a playlist.
 msgid "AutoDJ preparando as próximas faixas da sessão..."
 msgstr "AutoDJ is preparing the next tracks in the session..."
 
-msgid "O AutoDJ não conseguiu completar a fila agora; tentará novamente."
-msgstr "AutoDJ could not complete the queue now; it will retry."
-
-msgid "AutoDJ preparou {count} próximas faixas."
-msgstr "AutoDJ prepared the next {count} tracks."
-
 msgid "Reproduzir playlist com AutoDJ"
 msgstr "Play playlist with AutoDJ"
 
 msgid "Encerrar sessão AutoDJ"
 msgstr "End AutoDJ session"
 
-msgid "Resumo da sessão AutoDJ"
-msgstr "AutoDJ session summary"
-
-msgid "Detalhes da próxima transição"
-msgstr "Next transition details"
-
 msgid "Trocar pró&xima"
 msgstr "Replace ne&xt"
 
 msgid "&Recalcular sequência"
 msgstr "&Recalculate sequence"
-
-msgid "&Adicionar músicas"
-msgstr "&Add music"
 
 msgid "&Pausar preparação"
 msgstr "&Pause preparation"
@@ -4752,9 +4540,6 @@ msgstr "Analyzing upcoming tracks."
 msgid "Sessão ativa."
 msgstr "Session active."
 
-msgid "{activity} Origem: {source}. Preparadas: {prepared}. Restantes: {remaining}."
-msgstr "{activity} Source: {source}. Prepared: {prepared}. Remaining: {remaining}."
-
 msgid "playlist original"
 msgstr "original playlist"
 
@@ -4764,26 +4549,11 @@ msgstr "Played"
 msgid "Tocando"
 msgstr "Playing"
 
-msgid "Preparada"
-msgstr "Prepared"
-
-msgid "Próxima transição: aguardando uma faixa preparada."
-msgstr "Next transition: waiting for a prepared track."
-
 msgid "Próxima transição: analisando."
 msgstr "Next transition: analyzing."
 
 msgid "Próxima, analisando transição"
 msgstr "Next, analyzing transition"
-
-msgid "Próxima transição: aguardando nova tentativa."
-msgstr "Next transition: waiting to retry."
-
-msgid "Próxima, análise pendente"
-msgstr "Next, analysis pending"
-
-msgid "Próxima transição: transição comum."
-msgstr "Next transition: regular transition."
 
 msgid "Próxima, transição comum"
 msgstr "Next, regular transition"
@@ -4824,9 +4594,6 @@ msgstr "AutoDJ session information"
 msgid "falha ao analisar as faixas"
 msgstr "track analysis failed"
 
-msgid "Próxima transição: aguardando nova tentativa. Motivo: {reason}."
-msgstr "Next transition: waiting to retry. Reason: {reason}."
-
 msgid "Próxima transição: comum. Motivo: {reason}."
 msgstr "Next transition: regular. Reason: {reason}."
 
@@ -4857,14 +4624,8 @@ msgstr "Play &DJ effects during transitions"
 msgid "Tocar efeitos de DJ nas transições"
 msgstr "Play DJ effects during transitions"
 
-msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ. O efeito usa o mesmo dispositivo de áudio selecionado para a reprodução."
-msgstr "Plays a short effect alongside the start of each synchronized AutoDJ transition. The effect uses the same audio device selected for playback."
-
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr "&Copy selection (Ctrl+C)"
-
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nMenu Reprodução > Dispositivo de áudio — Trocar a saída de som\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Quick shortcuts help\n\nFiles and playlists\nCtrl+Alt+O — Open media, playlist or folder\nCtrl+O — Open media files or a local playlist\nCtrl+Shift+O — Open folder in the browser\nCtrl+C — Copy the selection; in folders, allows the files to be pasted into File Explorer\nCtrl+Shift+C — Copy the selection path in folders or the current media in other tabs\nCtrl+V — Paste and add the media or link to the current playlist when possible\nCtrl+Shift+V — Paste and open in a new playlist\nCtrl+Shift+S — Save the current playlist\nCtrl+T — New playlist\nCtrl+W — Close the current tab or playlist\nCtrl+Shift+W — Close the current media\n\nPlayback\nSpace — Play/Pause\nLeft / right arrow — Move back or forward in the file\nShift+Left / right arrow — Move back or forward 1 minute\nHome / End — Go to the beginning or the end\nUp / down arrow — Increase or decrease the volume\n] / [ — Increase or decrease the playback speed\n\\ — Restore normal speed (1x)\nShift+] / Shift+[ — Raise or lower the pitch, in semitones, without changing the speed\nShift+\\ — Restore the original pitch\nPlayback menu > Audio device — Change the sound output\nCtrl+PageUp / Ctrl+PageDown — Previous or next track\nAlt+Left / right arrow — Previous or next track in the playlist\nAlt+Up / down arrow — Move the current item in the playlist\nAlt+Home / End — Go to the first or last item in the playlist\nCtrl+L — Like the current media on YouTube Music\nCtrl+Alt+L — Toggle the lyrics panel\nCtrl+Shift+L — Mark the current media as disliked on YouTube Music\nCtrl+Shift+A — Add the current media to a YouTube Music playlist\nCtrl+Shift+F — Add the selected item to the playback queue\nCtrl+Shift+Q — Manage the playback queue (view, remove, reorder)\nCtrl+Shift+D — Sleep timer (preset durations or end of track)\nE — Toggle shuffle mode\nR — Toggle repeat mode\nA — Toggle YouTube Music related content (automatic radio at the end of the playlist)\nT — Announce time\nV — Announce volume\nS — Announce status\n\nNavigation\nTab — Switch between the item list and the player\nCtrl+B — Toggle focus between the item list and the player\nCtrl+Shift+Y — Open the YouTube Music hub in a tab, when the integration is enabled\nCtrl+F — Find an item in the current playlist or folder\nF3 / Shift+F3 — Next or previous search result\nCtrl+G — Search the whole library (playlists, folders and history)\nCtrl+D — Add or remove the selection from favorites\nCtrl+0 to Ctrl+5 — Rate the selection from zero to five stars\nCtrl+Shift+H — Playback history\nCtrl+Shift+R — Continue listening to what was left half finished\nLibrary menu > Smart playlists — Open a saved rule\nEnter — Play or open the selected item in the browser\nDelete — Remove item from the playlist\nBackspace — Go up a folder in the browser\nType letters or numbers — Jump quickly to items starting with them\nCtrl+Tab / Ctrl+Shift+Tab — Next or previous tab\nF1 — Show this help"
 
 msgid "Copiar caminho da seleção"
 msgstr "Copy selection path"
@@ -4952,9 +4713,6 @@ msgstr "Chooses another prepared track for the next transition."
 msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução."
 msgstr "Discards the prepared sequence and calculates a new playback order."
 
-msgid "Adiciona outras músicas candidatas à sessão AutoDJ atual."
-msgstr "Adds more candidate songs to the current AutoDJ session."
-
 msgid "Interrompe temporariamente a análise e preparação de novas faixas."
 msgstr "Temporarily stops the analysis and preparation of new tracks."
 
@@ -4976,17 +4734,11 @@ msgstr "Copies all displayed lyrics to the clipboard."
 msgid "Título da playlist"
 msgstr "Playlist title"
 
-msgid "Identifica a playlist ou pasta exibida na lista."
-msgstr "Identifies the playlist or folder displayed in the list."
-
 msgid "Enter ativa. Delete remove. Shift+F10 abre as ações do item."
 msgstr "Enter activates. Delete removes. Shift+F10 opens item actions."
 
 msgid "Ajuda da lista de itens"
 msgstr "Item list help"
-
-msgid "Resume os comandos disponíveis na lista de itens."
-msgstr "Summarizes the commands available in the item list."
 
 msgid "Informe um caminho local ou cole um link de mídia ou playlist."
 msgstr "Enter a local path or paste a media or playlist link."
@@ -5008,9 +4760,6 @@ msgstr "Choose between opening the content as a playlist or browsing the folder.
 
 msgid "Resultado da origem informada"
 msgstr "Entered source result"
-
-msgid "Informa como o arquivo, pasta ou link será aberto."
-msgstr "Indicates how the file, folder, or link will be opened."
 
 msgid "Abrir origem informada"
 msgstr "Open entered source"
@@ -5178,9 +4927,6 @@ msgstr "To play from YouTube Music, yt-dlp needs a JavaScript runtime installed 
 msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
 msgstr "YouTube required JavaScript validation. Enable or update the additional resources to install Node.js 24+, then try again."
 
-msgid "A preparação do AutoDJ foi pausada após uma falha: {reason}"
-msgstr "AutoDJ preparation was paused after an error: {reason}"
-
 msgid "O analisador opcional do AutoDJ falhou."
 msgstr "The optional AutoDJ analyzer failed."
 
@@ -5190,17 +4936,11 @@ msgstr "The optional AutoDJ analyzer returned an invalid result."
 msgid "O processo isolado do AutoDJ encerrou sem resultado (código {exit_code})."
 msgstr "The isolated AutoDJ process exited without a result (code {exit_code})."
 
-msgid "Próxima transição: será usada a transição normal. Motivo: {reason}."
-msgstr "Next transition: the regular transition will be used. Reason: {reason}."
-
 msgid "Próxima, transição normal"
 msgstr "Next, regular transition"
 
 msgid "O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."
 msgstr "AutoDJ could not analyze these tracks. The regular transition will be used."
-
-msgid "nenhuma faixa pôde ser preparada"
-msgstr "no track could be prepared"
 
 msgid "O servidor retornou um intervalo de áudio inválido."
 msgstr "The server returned an invalid audio range."
@@ -5343,9 +5083,6 @@ msgstr "Download"
 msgid "Baixar mídia"
 msgstr "Download media"
 
-msgid "Baixar “{title}”. Escolha o formato e a qualidade."
-msgstr "Download “{title}”. Choose the format and quality."
-
 msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. O KeyTune oferece instalá-lo na primeira vez que precisar."
 msgstr "Converting audio and downloading high-resolution video require FFmpeg, which has not been found yet. KeyTune offers to install it the first time it is needed."
 
@@ -5375,9 +5112,6 @@ msgstr "Choose the download folder"
 
 msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp e vale para mídias do YouTube e do YouTube Music."
 msgstr "Choose how to download the media that is playing (Ctrl+Shift+B). Downloads use yt-dlp and work for YouTube and YouTube Music media."
-
-msgid "Escolha o formato e a qualidade do download."
-msgstr "Choose the download format and quality."
 
 msgid "Escolha se o download será apenas o áudio ou o vídeo completo."
 msgstr "Choose whether to download only the audio or the full video."
@@ -5471,9 +5205,6 @@ msgstr "To {what}, KeyTune needs FFmpeg, which was not found. It will be downloa
 
 msgid "Pasta de download"
 msgstr "Download folder"
-
-msgid "Pasta de download:"
-msgstr "Download folder:"
 
 msgid "Pasta onde os arquivos baixados serão salvos."
 msgstr "Folder where the downloaded files will be saved."
@@ -5628,9 +5359,6 @@ msgstr "When checked, the video shows the cover embedded in the audio. Without a
 msgid "Nenhuma mídia está aberta para converter."
 msgstr "No media is open to convert."
 
-msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão."
-msgstr "New video format. The file name is kept, with the new extension."
-
 msgid "Não foi possível converter a mídia: {reason}"
 msgstr "Could not convert the media: {reason}"
 
@@ -5673,17 +5401,8 @@ msgstr "Original keeps the file's rate. Opus always uses 48000 Hz."
 msgid "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nDeseja instalar o FFmpeg e converter agora?"
 msgstr "To convert, KeyTune needs FFmpeg, which was not found. It will be downloaded from the official builds (about {size} MB) and stored in KeyTune's resources folder.\n\nDo you want to install FFmpeg and convert now?"
 
-msgid "Pasta de destino"
-msgstr "Destination folder"
-
-msgid "Pasta onde o arquivo convertido será salvo. Por padrão, a mesma pasta do arquivo original."
-msgstr "Folder where the converted file will be saved. By default, the same folder as the original file."
-
 msgid "Resolução do vídeo"
 msgstr "Video resolution"
-
-msgid "Só o formato muda: as faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
-msgstr "Only the format changes: tracks compatible with the new format are copied without quality loss, and the others are re-encoded."
 
 msgid "Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."
 msgstr "Frame size of the generated video. Higher resolutions produce larger files."
@@ -5717,9 +5436,6 @@ msgstr "WebM"
 
 msgid "{bitrate} kbps"
 msgstr "{bitrate} kbps"
-
-msgid "{mode}: “{name}”. Escolha o formato de destino."
-msgstr "{mode}: “{name}”. Choose the target format."
 
 msgid "Áudio para &vídeo..."
 msgstr "Audio to &video..."
@@ -5765,9 +5481,6 @@ msgstr "Download selection..."
 
 msgid "Baixar {count} itens do YouTube para a pasta:"
 msgstr "Download {count} items from YouTube to the folder:"
-
-msgid "Baixar {count} itens. Escolha o formato e a qualidade."
-msgstr "Download {count} items. Choose the format and quality."
 
 msgid "Conversão cancelada. {done} de {total} arquivos já foram convertidos."
 msgstr "Conversion cancelled. {done} of {total} files were already converted."
@@ -5844,9 +5557,6 @@ msgstr "{count} items that are not from YouTube will be skipped."
 msgid "{mode} (arquivos: {count})"
 msgstr "{mode} (files: {count})"
 
-msgid "{mode}: {count} arquivos. Escolha o formato de destino."
-msgstr "{mode}: {count} files. Choose the target format."
-
 msgid "Baixar &seleção da lista..."
 msgstr "Download the list &selection..."
 
@@ -5858,3 +5568,48 @@ msgstr "Convert the &selected files in the list..."
 
 msgid "Progresso da tarefa"
 msgstr "Task progress"
+
+msgid "&Copiar lista"
+msgstr "&Copy list"
+
+msgid "Arquivo, pasta, link de mídia ou lista .m3u/.m3u8."
+msgstr "File, folder, media link or .m3u/.m3u8 list."
+
+msgid "Baixar {count} itens"
+msgstr "Download {count} items"
+
+msgid "Baixar “{title}”"
+msgstr "Download “{title}”"
+
+msgid "Delete remove o item. Alt+Seta para cima ou para baixo reordena."
+msgstr "Delete removes the item. Alt+Up or Down Arrow reorders."
+
+msgid "Falhas na conversão"
+msgstr "Conversion failures"
+
+msgid "Falhas no download"
+msgstr "Download failures"
+
+msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo."
+msgstr "Items below play before the normal order, from top to bottom."
+
+msgid "Itens que falharam"
+msgstr "Failed items"
+
+msgid "Motivo"
+msgstr "Reason"
+
+msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão. As faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
+msgstr "New video format. The file name is kept, with the new extension. Tracks compatible with the new format are copied without quality loss, and the others are re-encoded."
+
+msgid "{count} itens falharam. Deseja ver os detalhes?"
+msgstr "{count} items failed. Do you want to see the details?"
+
+msgid "{count} itens falharam. Os demais foram concluídos."
+msgstr "{count} items failed. The rest were completed."
+
+msgid "{mode}: {count} arquivos"
+msgstr "{mode}: {count} files"
+
+msgid "{mode}: “{name}”"
+msgstr "{mode}: “{name}”"

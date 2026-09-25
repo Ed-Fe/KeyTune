@@ -142,6 +142,10 @@ msgstr ""
 msgid "&Copiar letra completa"
 msgstr ""
 
+#: src/player/task_failures_dialog.py
+msgid "&Copiar lista"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr ""
@@ -195,6 +199,7 @@ msgstr ""
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/smart_library/search_dialog.py
+#: src/player/task_failures_dialog.py
 #: src/player/youtube_music/dialog.py
 msgid "&Fechar"
 msgstr ""
@@ -1302,6 +1307,10 @@ msgstr ""
 msgid "Arquivo, pasta ou link"
 msgstr ""
 
+#: src/player/library/open_dialog.py
+msgid "Arquivo, pasta, link de mídia ou lista .m3u/.m3u8."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos JSON (*.json)"
 msgstr ""
@@ -1380,10 +1389,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Ativa ou desativa a exibição das letras da música."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1743,16 +1748,16 @@ msgstr ""
 msgid "Baixar seleção..."
 msgstr ""
 
+#: src/player/download/dialog.py
+msgid "Baixar {count} itens"
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Baixar {count} itens do YouTube para a pasta:"
 msgstr ""
 
 #: src/player/download/dialog.py
-msgid "Baixar {count} itens. Escolha o formato e a qualidade."
-msgstr ""
-
-#: src/player/download/dialog.py
-msgid "Baixar “{title}”. Escolha o formato e a qualidade."
+msgid "Baixar “{title}”"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -2344,10 +2349,6 @@ msgstr ""
 msgid "Converter seleção..."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Copia o estado atual do equalizador, incluindo ativação e preset, para todas as abas de mídia abertas."
-msgstr ""
-
 #: src/player/frames/lyrics_panel.py
 msgid "Copia toda a letra exibida para a área de transferência."
 msgstr ""
@@ -2378,22 +2379,6 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Cria a playlist com o nome e a privacidade informados."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Cria um preset personalizado com base nos ajustes atuais."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Cria uma cópia editável do preset embutido selecionado."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Cria uma cópia editável do preset personalizado selecionado."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Cria uma cópia editável do preset selecionado."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -2510,6 +2495,10 @@ msgstr ""
 msgid "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
 msgstr ""
 
+#: src/player/playlists/queue_dialog.py
+msgid "Delete remove o item. Alt+Seta para cima ou para baixo reordena."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Depois da instalação, feche e abra o player novamente para que o novo runtime seja encontrado no PATH do sistema."
 msgstr ""
@@ -2545,10 +2534,6 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Descreve as áreas principais da janela do player: abas, lista de itens, player e barras inferiores."
-msgstr ""
-
-#: src/player/smart_library/smart_playlist_dialog.py
-msgid "Descreve em uma frase o que a playlist vai reunir."
 msgstr ""
 
 #: src/player/about/dialog.py
@@ -2806,14 +2791,6 @@ msgid "E&xcluir playlist..."
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Edita o preset personalizado selecionado."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Edita o preset selecionado ou salva uma cópia se o preset for embutido."
-msgstr ""
-
-#: src/player/equalizer/panel.py
 msgid "Editar preset do equalizador"
 msgstr ""
 
@@ -2992,10 +2969,6 @@ msgstr ""
 msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
 msgstr ""
 
-#: src/player/download/dialog.py
-msgid "Escolha o formato e a qualidade do download."
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Escolha o preset que será usado na aba de mídia ativa."
 msgstr ""
@@ -3170,10 +3143,6 @@ msgstr ""
 msgid "Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Exclui o preset personalizado selecionado."
-msgstr ""
-
 #: src/player/frames/youtube_music/playlists.py
 msgid "Excluindo a playlist \"{title}\" do YouTube Music..."
 msgstr ""
@@ -3258,6 +3227,14 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Falha na análise. Próxima transição: será usada a transição normal. Motivo: {reason}."
+msgstr ""
+
+#: src/player/frames/convert.py
+msgid "Falhas na conversão"
+msgstr ""
+
+#: src/player/frames/download.py
+msgid "Falhas no download"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -3481,10 +3458,6 @@ msgstr ""
 msgid "Há mais para carregar."
 msgstr ""
 
-#: src/player/library/browser.py
-msgid "Identifica a playlist ou pasta exibida na lista."
-msgstr ""
-
 #: src/player/equalizer/dialog.py
 msgid "Identificação do preset"
 msgstr ""
@@ -3539,30 +3512,6 @@ msgstr[1] ""
 msgid "Indonésia"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Informa como o arquivo, pasta ou link será aberto."
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Informa qual aba de mídia receberá os ajustes do equalizador."
-msgstr ""
-
-#: src/player/smart_library/smart_playlist_dialog.py
-msgid "Informa quantas regras estão salvas."
-msgstr ""
-
-#: src/player/smart_library/history_dialog.py
-msgid "Informa quantas reproduções o histórico guarda."
-msgstr ""
-
-#: src/player/smart_library/search_dialog.py
-msgid "Informa quantos resultados a busca encontrou."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Informa se existe uma conta do YouTube Music conectada nesta instalação."
-msgstr ""
-
 #: src/player/constants.py
 msgid "Informativo (INFO)"
 msgstr ""
@@ -3577,10 +3526,6 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Informe o nome e a privacidade da nova playlist."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Informe um arquivo, uma pasta local, um link de mídia ou um arquivo/link .m3u/.m3u8. Pastas podem abrir como playlist ou no navegador."
 msgstr ""
 
 #: src/player/library/open_dialog.py
@@ -3740,6 +3685,7 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
+#: src/player/task_failures_dialog.py
 msgid "Item"
 msgstr ""
 
@@ -3784,11 +3730,15 @@ msgid "Itens"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
-msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo. Use Delete para remover e Alt+Seta para cima ou para baixo para reordenar."
+msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Itens na fila:"
+msgstr ""
+
+#: src/player/task_failures_dialog.py
+msgid "Itens que falharam"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -4160,26 +4110,6 @@ msgstr[1] ""
 msgid "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Mostra o ganho geral do preset selecionado antes das bandas."
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Mostra o progresso da mídia atual."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Mostra o resultado da última atualização, busca ou ação do YouTube Music."
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Mostra o tempo decorrido e a duração total da mídia atual."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Mostra quantos resultados a busca atual retornou."
-msgstr ""
-
 #: src/player/youtube_music/panel.py
 msgid "Mostrando 0 de 0 resultados."
 msgstr ""
@@ -4202,6 +4132,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Mostrar tela de &boas-vindas"
+msgstr ""
+
+#: src/player/task_failures_dialog.py
+msgid "Motivo"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -4583,7 +4517,7 @@ msgid "Nova volta da playlist. "
 msgstr ""
 
 #: src/player/convert/dialog.py
-msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão."
+msgid "Novo formato do vídeo. O nome do arquivo é mantido, com a nova extensão. As faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -6458,20 +6392,8 @@ msgstr ""
 msgid "Resume o estado da sessão e informa como será a próxima transição."
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Resume os atalhos mais usados para controlar o player."
-msgstr ""
-
-#: src/player/library/browser.py
-msgid "Resume os comandos disponíveis na lista de itens."
-msgstr ""
-
 #: src/player/welcome/dialog.py
 msgid "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Resume quantas playlists ou mixes estão disponíveis na aba do YouTube Music."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -6870,10 +6792,6 @@ msgstr ""
 msgid "Suíça"
 msgstr ""
 
-#: src/player/convert/dialog.py
-msgid "Só o formato muda: as faixas compatíveis com o novo formato são copiadas sem perda de qualidade, e as demais são recodificadas."
-msgstr ""
-
 #: src/player/frames/download.py
 msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
 msgstr ""
@@ -7183,24 +7101,8 @@ msgstr ""
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Use Espaço para tocar ou pausar e as setas para navegar."
-msgstr ""
-
 #: src/player/preferences/audio_output_dialog.py
 msgid "Use as setas para escolher a saída de áudio."
-msgstr ""
-
-#: src/player/smart_library/smart_playlist_dialog.py
-msgid "Use as setas para percorrer as regras e Enter para abrir a playlist."
-msgstr ""
-
-#: src/player/smart_library/history_dialog.py
-msgid "Use as setas para percorrer o histórico e Enter para reproduzir de novo."
-msgstr ""
-
-#: src/player/smart_library/search_dialog.py
-msgid "Use as setas para percorrer os resultados e Enter para reproduzir."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7785,6 +7687,14 @@ msgstr ""
 msgid "{count} itens copiados."
 msgstr ""
 
+#: src/player/task_failures_dialog.py
+msgid "{count} itens falharam. Deseja ver os detalhes?"
+msgstr ""
+
+#: src/player/task_failures_dialog.py
+msgid "{count} itens falharam. Os demais foram concluídos."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "{count} itens que não são do YouTube serão ignorados."
 msgstr ""
@@ -7969,11 +7879,11 @@ msgid "{mode} (arquivos: {count})"
 msgstr ""
 
 #: src/player/convert/dialog.py
-msgid "{mode}: {count} arquivos. Escolha o formato de destino."
+msgid "{mode}: {count} arquivos"
 msgstr ""
 
 #: src/player/convert/dialog.py
-msgid "{mode}: “{name}”. Escolha o formato de destino."
+msgid "{mode}: “{name}”"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -8074,10 +7984,6 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "África do Sul"
-msgstr ""
-
-#: src/player/frames/lyrics_panel.py
-msgid "Área de leitura das letras. Use as setas para navegar pelo texto."
 msgstr ""
 
 #: src/player/frames/ui.py
