@@ -144,6 +144,8 @@ _INVALID_FOLDER_CHARACTERS = '<>:"/\\|?*'
 class DownloadItem:
     url: str
     title: str = ""
+    # Subpasta, dentro da pasta de destino, para onde o item vai (a playlist ou o álbum dele).
+    folder: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -158,25 +160,27 @@ class DownloadSelection:
 def select_download_items(entries) -> DownloadSelection:
     """Filtra ``(caminho, título)`` deixando só o que o yt-dlp baixa do YouTube.
 
-    Repetições contam uma vez só: a mesma faixa duas vezes na lista não deve ser
-    baixada duas vezes.
+    Uma entrada pode trazer um terceiro valor: a subpasta para onde o item vai.
+    Repetições contam uma vez só por pasta: a mesma faixa duas vezes na lista
+    não deve ser baixada duas vezes, mas cada playlist fica completa na pasta dela.
     """
     items: list[DownloadItem] = []
     seen: set[str] = set()
     skipped = 0
     truncated = 0
-    for media_path, title in entries:
+    for media_path, title, *rest in entries:
+        folder = str(rest[0] or "") if rest else ""
         url = download_source_url(media_path)
         if not url:
             skipped += 1
             continue
-        if url in seen:
+        if (url, folder) in seen:
             continue
-        seen.add(url)
+        seen.add((url, folder))
         if len(items) >= MAX_BATCH_ITEMS:
             truncated += 1
             continue
-        items.append(DownloadItem(url=url, title=str(title or "").strip()))
+        items.append(DownloadItem(url=url, title=str(title or "").strip(), folder=folder))
     return DownloadSelection(items=tuple(items), skipped=skipped, truncated=truncated)
 
 
@@ -186,6 +190,17 @@ def safe_folder_name(name, fallback="Playlist") -> str:
     # O Windows recusa nomes terminados em ponto ou espaço.
     cleaned = cleaned.strip().rstrip(". ")[:100].rstrip(". ")
     return cleaned or fallback
+
+
+def unique_folder_name(name, used) -> str:
+    """*name* ou, se já foi usado nesta fila, "nome (2)", "nome (3)"...; registra a escolha em *used*."""
+    candidate = name
+    number = 2
+    while candidate.casefold() in used:
+        candidate = f"{name} ({number})"
+        number += 1
+    used.add(candidate.casefold())
+    return candidate
 
 
 _MAX_FILE_STEM_LENGTH = 180
