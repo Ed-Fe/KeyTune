@@ -210,7 +210,7 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             results = service.search("teste", search_scope="music_songs")
 
         self.assertEqual(len(results), 1)
-        public_client.search.assert_called_once_with("teste", filter="songs", limit=15)
+        public_client.search.assert_called_once_with("teste", filter="songs", limit=20)
         fake_ytmusic_cls.assert_called_once_with()
 
     def test_get_playlist_content_uses_public_client_when_auth_is_not_required(self):

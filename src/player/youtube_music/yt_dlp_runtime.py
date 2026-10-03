@@ -312,6 +312,7 @@ def extract_info(
     extract_flat: str | bool | None = None,
     ignore_no_formats_error: bool = False,
     playlist_end: int | None = None,
+    playlist_items: str = "",
     quiet: bool = True,
     no_warnings: bool = False,
 ) -> YtDlpJsonResponse:
@@ -339,6 +340,7 @@ def extract_info(
         extract_flat=extract_flat,
         ignore_no_formats_error=ignore_no_formats_error,
         playlist_end=playlist_end,
+        playlist_items=playlist_items,
         quiet=quiet,
         no_warnings=no_warnings,
     )
@@ -497,6 +499,7 @@ def _build_yt_dlp_command(
     playlist_end: int | None,
     quiet: bool,
     no_warnings: bool,
+    playlist_items: str = "",
 ) -> list[str]:
     command = [
         str(executable_path),
@@ -522,6 +525,9 @@ def _build_yt_dlp_command(
         command.extend(("--socket-timeout", str(max(1, int(socket_timeout_seconds)))))
     if playlist_end is not None:
         command.extend(("--playlist-end", str(max(1, int(playlist_end)))))
+    normalized_playlist_items = str(playlist_items or "").strip()
+    if normalized_playlist_items:
+        command.extend(("--playlist-items", normalized_playlist_items))
 
     normalized_format_selector = str(format_selector or "").strip()
     if normalized_format_selector:

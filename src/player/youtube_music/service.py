@@ -435,6 +435,15 @@ class YouTubeMusicService:
     def search(self, query, *, search_scope):
         return self._library.search(query, search_scope=search_scope)
 
+    def fetch_search_page(self, query, *, search_scope, start=0, count=None):
+        return self._library.fetch_search_page(query, search_scope=search_scope, start=start, count=count)
+
+    def fetch_browse_page(self, result, *, section_id="", start=0, count=20):
+        return self._library.fetch_browse_page(result, section_id=section_id, start=start, count=count)
+
+    def get_youtube_playlist_content(self, playlist_id, fallback_title=""):
+        return self._library.get_youtube_playlist_content(playlist_id, fallback_title)
+
     def get_charts(self, country_code):
         return self._library.get_charts(country_code)
 

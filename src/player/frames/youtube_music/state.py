@@ -5,6 +5,7 @@ from player.youtube_music.models import YOUTUBE_MUSIC_SCREEN_ID
 from player.youtube_music.playlists import is_youtube_music_media
 
 from ...playlists import ScreenTabState
+from .navigation import YouTubeResultsView, results_view_summary
 from ._helpers import (
     _create_youtube_music_service,
     _youtube_music_has_saved_auth,
@@ -93,10 +94,11 @@ class LibraryStateMixin:
         return list(getattr(self, "_youtube_music_library_playlists", []))
 
     def _youtube_music_search_results(self):
-        return list(getattr(self, "_youtube_music_search_results_cache", []))
+        """Os itens da lista que está à mostra na aba."""
+        return list(self._youtube_music_current_results_view().results)
 
     def _youtube_music_search_summary(self):
-        return str(getattr(self, "_youtube_music_search_summary_message", "") or "").strip()
+        return results_view_summary(self._youtube_music_current_results_view())
 
     def _set_youtube_music_library_cache(self, playlists, *, status_message=None, has_more_playlists=None):
         self._youtube_music_library_playlists = list(playlists or [])
@@ -105,6 +107,7 @@ class LibraryStateMixin:
             self._youtube_music_library_status_message = str(status_message or "").strip()
         if has_more_playlists is not None:
             self._youtube_music_library_more_playlists_available = bool(has_more_playlists)
+        self._sync_youtube_music_library_view()
         self._refresh_youtube_music_screen_later()
 
     def _youtube_music_library_has_more_playlists(self):
@@ -119,13 +122,20 @@ class LibraryStateMixin:
             )
         )
 
-    def _set_youtube_music_search_results(self, search_results, *, search_summary=None, status_message=None):
-        self._youtube_music_search_results_cache = list(search_results or [])
+    def _set_youtube_music_search_results(self, search_results, *, search_summary=None, status_message=None, view=None):
+        search_results = list(search_results or [])
+        if view is None:
+            # Uma lista avulsa entra logo acima do início.
+            self._reset_youtube_music_results_views(
+                YouTubeResultsView(
+                    title="",
+                    results=search_results,
+                    summary=str(search_summary or "").strip(),
+                )
+            )
         service = getattr(self, "_youtube_music_service", None)
         if service is not None:
-            service.observe_feedback_items(self._youtube_music_search_results_cache)
-        if search_summary is not None:
-            self._youtube_music_search_summary_message = str(search_summary or "").strip()
+            service.observe_feedback_items(search_results)
         if status_message is not None:
             self._youtube_music_library_status_message = str(status_message or "").strip()
         self._refresh_youtube_music_screen_later()
@@ -137,6 +147,7 @@ class LibraryStateMixin:
         self._youtube_music_library_limit = self._youtube_music_library_page_size()
         if status_message is not None:
             self._youtube_music_library_status_message = str(status_message or "").strip()
+        self._sync_youtube_music_library_view()
         self._refresh_youtube_music_screen_later()
 
     def _youtube_music_library_has_loaded(self):
@@ -152,20 +163,13 @@ class LibraryStateMixin:
             on_connect=self._on_youtube_music_connect_button,
             on_disconnect=self._on_youtube_music_disconnect_button,
             on_refresh_library=self._on_youtube_music_refresh_button,
-            on_open_selected=self._on_youtube_music_open_selected_button,
             on_create_playlist=self._on_youtube_music_create_playlist_button,
-            on_delete_playlist=self._on_youtube_music_delete_playlist_button,
-            on_open_manual_source=self._on_youtube_music_open_manual_source_button,
-            on_search=self._on_youtube_music_search_button,
-            on_open_search_result=self._on_youtube_music_open_search_result_button,
-            on_save_search_result=self._on_youtube_music_save_search_result_button,
+            on_search=self.on_search_youtube_music,
             on_add_search_results_to_current_playlist=self._add_youtube_music_search_results_to_current_playlist,
             on_show_search_actions_menu=self._on_youtube_music_show_search_actions_menu,
-            on_load_more_playlists=self._on_youtube_music_load_more_playlists_button,
-            on_show_charts=self._on_youtube_music_charts_button,
-            on_show_moods=self._on_youtube_music_moods_button,
-            on_show_liked=self._on_youtube_music_liked_button,
-            on_show_history=self._on_youtube_music_history_button,
+            on_browse_search_result=self.on_browse_youtube_music_search_result,
+            on_results_back=self.on_youtube_music_results_back,
+            on_load_more_results=self.on_load_more_youtube_music_results,
             on_announce=self._announce,
         )
 
@@ -193,6 +197,9 @@ class LibraryStateMixin:
 
         service = getattr(self, "_youtube_music_service", None)
         connected = service.has_saved_browser_auth() if service is not None else _youtube_music_has_saved_auth()
+        results_view = self._youtube_music_current_results_view()
+        selected_result_id = getattr(self, "_youtube_music_pending_result_selection", "")
+        self._youtube_music_pending_result_selection = ""
         panel.update_view(
             connected=connected,
             account_name=self._youtube_music_account_name(),
@@ -205,7 +212,13 @@ class LibraryStateMixin:
             search_results=self._youtube_music_search_results(),
             search_summary=self._youtube_music_search_summary(),
             has_more_playlists=self._youtube_music_library_has_more_playlists(),
+            has_more_results=bool(results_view.has_more),
+            can_go_back=self._youtube_music_can_go_back_in_results(),
+            selected_result_id=selected_result_id,
         )
+        if getattr(self, "_youtube_music_pending_results_focus", False):
+            self._youtube_music_pending_results_focus = False
+            panel.focus_search_results()
 
     def _playlist_summary_by_id(self, playlist_id):
         normalized_playlist_id = str(playlist_id or "").strip()

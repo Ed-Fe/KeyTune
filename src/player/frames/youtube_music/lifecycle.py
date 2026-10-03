@@ -158,8 +158,7 @@ class LifecycleMixin:
             self._create_youtube_music_page,
             select=True,
             activation_message=_(
-                "Aba YouTube Music. Use os controles para conectar a conta, atualizar a biblioteca, pesquisar "
-                "no catálogo e abrir playlists, mixes, músicas ou vídeos."
+                "Aba YouTube Music. Navegue pela lista, faça uma busca ou cole um link."
             ),
             on_activate=self._refresh_youtube_music_screen_later,
             on_close=self._on_youtube_music_screen_closed,
@@ -221,41 +220,19 @@ class LifecycleMixin:
     def _on_youtube_music_refresh_button(self):
         self.on_refresh_youtube_music_library(None, announce=True)
 
-    def _on_youtube_music_open_selected_button(self):
-        panel = self._get_youtube_music_panel()
-        if panel is None:
-            return
-
-        playlist_id = panel.get_selected_playlist_id()
-        if not playlist_id:
-            self._announce(_("Selecione uma playlist ou mix do YouTube Music para abrir."))
-            return
-
-        playlist = self._playlist_summary_by_id(playlist_id)
-        if playlist is None:
-            self._announce(_("A playlist selecionada não está mais disponível na lista atual."))
-            return
-
-        self._load_youtube_music_playlist(playlist)
-
-    def _on_youtube_music_open_manual_source_button(self):
-        panel = self._get_youtube_music_panel()
-        manual_source = panel.get_manual_source() if panel is not None else ""
-        if not manual_source:
-            self._announce(_("Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir."))
-            return
-
-        playlist_id = extract_playlist_id_from_text(manual_source)
+    def _open_youtube_music_link(self, link):
+        """Abre o link de playlist, mix ou vídeo colado no campo de busca."""
+        link = str(link or "").strip()
+        playlist_id = extract_playlist_id_from_text(link)
         if playlist_id:
             playlist = self._playlist_summary_by_id(playlist_id)
             fallback_title = playlist.title if playlist is not None else f"Playlist {playlist_id}"
-            self._load_youtube_music_playlist_by_id(playlist_id, fallback_title=fallback_title)
-            return
+            return self._load_youtube_music_playlist_by_id(playlist_id, fallback_title=fallback_title)
 
-        video_id = extract_video_id_from_text(manual_source)
+        video_id = extract_video_id_from_text(link)
         if video_id:
-            self._open_youtube_music_manual_video(manual_source, video_id)
-            return
+            self._open_youtube_music_manual_video(link, video_id)
+            return True
 
         wx.MessageBox(
             _("Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube."),
@@ -263,6 +240,7 @@ class LifecycleMixin:
             wx.OK | wx.ICON_INFORMATION,
             self,
         )
+        return False
 
     def _open_youtube_music_manual_video(self, video_url, video_id):
         title = _("Vídeo do YouTube ({id})").format(id=video_id)
@@ -273,27 +251,6 @@ class LifecycleMixin:
             source_path=video_url,
             announce_message=_("Vídeo do YouTube aberto: {title}.").format(title=title),
         )
-
-    def _on_youtube_music_search_button(self):
-        self.on_search_youtube_music(None)
-
-    def _on_youtube_music_charts_button(self, panel, anchor_window=None):
-        self.on_show_youtube_music_charts(panel, anchor_window)
-
-    def _on_youtube_music_moods_button(self, panel, anchor_window=None):
-        self.on_show_youtube_music_moods(panel, anchor_window)
-
-    def _on_youtube_music_liked_button(self):
-        self.on_show_youtube_music_liked()
-
-    def _on_youtube_music_history_button(self):
-        self.on_show_youtube_music_history()
-
-    def _on_youtube_music_open_search_result_button(self):
-        self._open_youtube_music_search_results_in_new_playlist()
-
-    def _on_youtube_music_save_search_result_button(self):
-        self._save_youtube_music_search_result()
 
     def _initialize_youtube_music_startup_state(self):
         # Avoid an eager network round trip on startup just to fetch the

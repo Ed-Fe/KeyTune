@@ -391,15 +391,11 @@ class PlaylistEditMixin:
         self._announce(_("Criando a playlist \"{name}\" no YouTube Music...").format(name=playlist_name))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
-    def _on_youtube_music_delete_playlist_button(self):
-        return self._delete_selected_youtube_music_library_playlist()
-
     def _delete_selected_youtube_music_library_playlist(self):
-        panel = self._get_youtube_music_panel()
-        if panel is None:
-            return False
-
-        playlist_id = panel.get_selected_playlist_id()
+        selected_result = self._selected_youtube_music_search_result()
+        playlist_id = ""
+        if getattr(selected_result, "library_playlist", False):
+            playlist_id = str(selected_result.playlist_id or "").strip()
         if not playlist_id:
             self._announce(_("Selecione uma playlist do YouTube Music para excluir."))
             return False

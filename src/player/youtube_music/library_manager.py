@@ -6,8 +6,16 @@ from .browse import (
     tolerant_library_playlist_parsing,
     tolerant_watch_playlist_parsing,
 )
+from . import catalog
 from .charts import normalize_chart_results
-from .models import YouTubeMusicPlaylistContent, YouTubeMusicPlaylistSummary, get_search_scope_option
+from .models import (
+    YOUTUBE_ARTIST_SECTIONS,
+    YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+    YouTubeMusicPlaylistContent,
+    YouTubeMusicPlaylistSummary,
+    YouTubeResultPage,
+    get_search_scope_option,
+)
 from .playlists import (
     extract_personalized_mix_summaries,
     is_watch_playlist_id,
@@ -36,6 +44,7 @@ class YouTubeMusicLibraryManager:
         self._get_client = get_client_fn
         self._build_watch_url = build_watch_url_fn
         self._feedback_items = feedback_items_fn or (lambda _items: None)
+        self._artist_cache = ("", None)
 
     def search(self, query, *, search_scope):
         """Search YouTube Music or YouTube and return normalized results."""
@@ -63,6 +72,58 @@ class YouTubeMusicLibraryManager:
             return normalize_music_search_results(raw_results)
 
         return search_youtube_videos(normalized_query, limit=scope_option.limit)
+
+    def fetch_search_page(self, query, *, search_scope, start=0, count=None):
+        """Uma página da busca: os itens de *start* em diante e se há mais depois."""
+        scope_option = get_search_scope_option(search_scope)
+        page_size = count or scope_option.limit
+        if scope_option.source == YOUTUBE_SEARCH_SOURCE_YOUTUBE:
+            return catalog.youtube_search_page(query, scope_option.youtube_kind, start, page_size)
+
+        client = self._get_client(require_auth=scope_option.requires_auth)
+        return catalog.music_search_page(client, query, scope_option.music_filter, start, page_size)
+
+    def fetch_browse_page(self, result, *, section_id="", start=0, count=20):
+        """Uma página do que há dentro de um canal, artista, álbum ou playlist."""
+        result_type = str(getattr(result, "result_type", "") or "")
+        browse_id = str(getattr(result, "browse_id", "") or "").strip()
+        playlist_id = str(getattr(result, "playlist_id", "") or "").strip()
+        from_youtube = getattr(result, "source", "") == YOUTUBE_SEARCH_SOURCE_YOUTUBE
+
+        if result_type == "channel":
+            return catalog.youtube_channel_page(browse_id, section_id, start, count)
+        if result_type == "playlist" and from_youtube:
+            return catalog.youtube_playlist_page(playlist_id, start, count)
+
+        # Uma playlist da biblioteca pode ser privada: só a conta consegue abri-la.
+        client = self._get_client(require_auth=bool(getattr(result, "library_playlist", False)))
+        if result_type == "artist":
+            section_id = section_id or YOUTUBE_ARTIST_SECTIONS[0].section_id
+            return catalog.music_artist_page(client, self._get_artist(client, browse_id), section_id, start, count)
+        if result_type == "album":
+            return catalog.music_album_page(client, browse_id, playlist_id, start, count)
+        if result_type == "playlist":
+            return catalog.music_playlist_page(client, playlist_id, start, count)
+        return YouTubeResultPage()
+
+    def _get_artist(self, client, channel_id):
+        # A página do artista serve a todas as seções: guarda a última consultada.
+        cached_id, cached_artist = self._artist_cache
+        if cached_id == channel_id and cached_artist is not None:
+            return cached_artist
+        artist = client.get_artist(channel_id)
+        self._artist_cache = (channel_id, artist)
+        return artist
+
+    def get_youtube_playlist_content(self, playlist_id, fallback_title="", *, limit=200):
+        """Vídeos de uma playlist do YouTube comum, prontos para entrar numa playlist do player."""
+        page = catalog.youtube_playlist_page(playlist_id, 0, limit)
+        return YouTubeMusicPlaylistContent(
+            playlist_id=str(playlist_id or "").strip(),
+            title=str(fallback_title or _("Playlist do YouTube")).strip(),
+            item_urls=[result.playback_url for result in page.results],
+            item_labels=[result.choice_label for result in page.results],
+        )
 
     def get_charts(self, country_code):
         """Return the "em alta" (charts) playlists for a country as results.

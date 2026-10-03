@@ -22,6 +22,7 @@ from .auth import AuthMixin
 from .browse import BrowseMixin
 from .dependencies import DependencyMixin
 from .lifecycle import LifecycleMixin
+from .navigation import ResultsNavigationMixin
 from .playlists import PlaylistEditMixin
 from .search import SearchMixin
 from .state import LibraryStateMixin
@@ -34,6 +35,7 @@ class FrameYouTubeMusicMixin(
     LibraryStateMixin,
     AuthMixin,
     SearchMixin,
+    ResultsNavigationMixin,
     PlaylistEditMixin,
     BrowseMixin,
     LifecycleMixin,
