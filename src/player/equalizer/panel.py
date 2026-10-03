@@ -154,9 +154,8 @@ class EqualizerTabPanel(wx.Panel):
         self.delete_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_delete_preset())
         self.apply_all_button.Bind(wx.EVT_BUTTON, lambda _event: self._on_apply_to_all_tabs())
 
-    def _configure_action_button(self, button, *, name, description):
+    def _configure_action_button(self, button, *, name):
         button.SetName(name)
-        button.SetToolTip(description)
 
     def _update_action_buttons(self, selected_preset):
         has_selection = selected_preset is not None
