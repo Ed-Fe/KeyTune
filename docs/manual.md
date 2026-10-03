@@ -19,7 +19,7 @@ Este manual apresenta os recursos principais do aplicativo e as ações mais com
 - Painel de letras com busca automática e cópia do texto
 - Aba dedicada do YouTube Music, aberta com `Ctrl+Shift+Y`
 - Transmissões ao vivo do YouTube, com áudio e vídeo opcional
-- Download da mídia atual do YouTube (áudio ou vídeo) com `Ctrl+Shift+B`
+- Download de mídias do YouTube (áudio ou vídeo) com `Ctrl+Shift+B` ou **Arquivo > Baixar do YouTube**
 - Conversão de áudio e vídeo entre formatos, com `Ctrl+Shift+K` ou **Arquivo > Converter**
 - Carregamento e gravação de playlists
 - Restauração do que estava aberto na última sessão
@@ -39,24 +39,27 @@ O KeyTune depende do runtime do MPV para reproduzir mídia. O instalador já inc
 
 Ao abrir o KeyTune pela primeira vez, a janela principal mostra uma única aba de playlist vazia, sem nada para reproduzir ainda. A janela é dividida em quatro áreas:
 
-- **Barra de menus**, no topo: **Arquivo** (abrir mídia/pasta/playlist, recentes, salvar), **Reprodução** (play/pause, faixa anterior/próxima, embaralhar, repetição, dispositivo de áudio, anúncios), **Exibir** (alternar foco, equalizador, YouTube Music), **Abas** (nova aba, navegação entre abas, fechar), **Configurações** (preferências) e **Ajuda** (manual, atalhos, verificar atualizações).
-- **Área de abas**, ocupando a maior parte da janela: cada aba representa uma playlist ou uma pasta aberta (veja [Playlist, pastas e abas](#playlist-pastas-e-abas)). Dentro de cada aba, o espaço é dividido em duas partes lado a lado:
-    - à **esquerda**, o navegador de itens — a lista da playlist ou o conteúdo da pasta atual;
+- **Barra de menus**, no topo: **Arquivo** (abrir mídia/playlist, explorador de pastas, adicionar sem tocar, recentes, salvar), **Reprodução** (play/pause, faixa anterior/próxima, embaralhar, repetição, dispositivo de áudio, anúncios), **Exibir** (alternar foco, equalizador, YouTube Music), **Abas** (nova aba, navegação entre abas, fechar), **Configurações** (preferências) e **Ajuda** (manual, atalhos, verificar atualizações).
+- **Área de abas**, ocupando a maior parte da janela: cada aba representa uma playlist (veja [Playlist, pastas e abas](#playlist-pastas-e-abas)). Dentro de cada aba, o espaço é dividido em duas partes lado a lado:
+    - à **esquerda**, o navegador de itens — a lista da playlist;
     - à **direita**, a área do player. Quando a mídia atual é um vídeo, essa área mostra o quadro de vídeo; para áudio, ou quando nada está carregado,  ela mostra um texto de apoio com os atalhos mais usados para começar.
+- **Explorador de pastas**, à esquerda das abas quando aberto com `Ctrl+E`: mostra as pastas e os arquivos de mídia do computador, para tocar, adicionar à playlist ou pôr na fila (veja [Explorador de pastas](#explorador-de-pastas)).
 - **Painel de tempo**, abaixo da área de abas: mostra o tempo decorrido e a duração da mídia atual, uma barra de progresso visual e um resumo dos atalhos principais.
 - **Barra de status**, na borda inferior da janela: exibe mensagens curtas e temporárias sobre a última ação realizada (por exemplo, ao abrir um arquivo ou salvar uma playlist).
 
-Use `Tab` ou `Ctrl+B` para mover o foco entre o navegador de itens e o player dentro da aba ativa, e `F1` em qualquer momento para abrir a ajuda rápida de atalhos.
+Use `Tab` ou `Ctrl+B` para mover o foco entre o navegador de itens e o player dentro da aba ativa (com o explorador aberto, `Tab` passa também por ele), e `F1` em qualquer momento para abrir a ajuda rápida de atalhos.
 
 ## Como abrir mídia
 
-Você pode abrir arquivos de mídia, uma playlist local, uma pasta ou um caminho e link compatível usando os atalhos ou o menu **Arquivo**:
+Há três maneiras de pôr mídia no KeyTune — abrir, colar e o explorador de pastas — e as três funcionam do mesmo jeito: o que entra vai para a **playlist atual** e começa a tocar. Com `Shift`, entra **sem tocar**: vai para o fim da lista e o que está tocando continua.
 
-- `Ctrl+Alt+O` — diálogo unificado que aceita qualquer tipo: arquivo, pasta, playlist, link ou ID do YouTube Music.
-- `Ctrl+O` — abre arquivos de mídia ou uma playlist `.m3u`/`.m3u8`.
-- `Ctrl+Shift+O` — abre uma pasta diretamente no navegador de pastas.
-- `Ctrl+V` — cola um caminho ou link da área de transferência na playlist atual; links de playlist do YouTube Music são reconhecidos pelo parâmetro `list=` e abertos como uma playlist completa.
-- `Ctrl+Shift+V` — cola e abre em uma nova playlist.
+- `Ctrl+O` (**Arquivo > Abrir...**) — escolhe arquivos de mídia e os toca na playlist atual. Um arquivo de playlist `.m3u`/`.m3u8` é aberto como playlist.
+- `Ctrl+Shift+O` (**Arquivo > Abrir sem tocar...**) — escolhe arquivos e os põe no fim da playlist atual.
+- `Ctrl+V` — cola o que estiver na área de transferência e toca: links, caminhos em texto ou **arquivos e pastas copiados no Explorador de Arquivos do Windows** (de uma pasta entram todas as mídias, inclusive das subpastas). Links de playlist do YouTube Music são reconhecidos pelo parâmetro `list=` e abertos como uma playlist completa.
+- `Ctrl+Shift+V` — cola sem tocar.
+- `Ctrl+E` — abre o explorador de pastas ao lado da playlist; nele, `Enter` toca e `Shift+Enter` adiciona sem tocar.
+
+Para começar uma lista separada, crie uma playlist nova com `Ctrl+T` e abra ou cole nela. Para abrir um link, copie-o e use `Ctrl+V`.
 
 Formatos de mídia suportados diretamente:
 
@@ -67,9 +70,9 @@ O menu **Arquivo > Recentes** guarda separadamente os últimos **Arquivos recent
 
 ## Playlist, pastas e abas
 
-Cada playlist fica em uma aba separada. Isso ajuda a separar contextos, como uma lista de músicas para ouvir agora, uma pasta com arquivos locais ou uma coleção que você quer deixar organizada.
+Cada playlist fica em uma aba separada. Isso ajuda a separar contextos, como uma lista de músicas para ouvir agora ou uma coleção que você quer deixar organizada. As pastas do computador ficam no [explorador de pastas](#explorador-de-pastas), que vale para todas as abas e alimenta a playlist que estiver aberta.
 
-A aba ativa define o que está sendo reproduzido e o que aparece no navegador lateral. Você pode manter uma aba para uma playlist salva, outra para uma pasta inteira e outras para listas temporárias, sem misturar tudo no mesmo contexto. As abas podem ser abertas, alternadas e fechadas sem afetar as outras.
+A aba ativa define o que está sendo reproduzido e o que aparece no navegador lateral. Você pode manter uma aba para uma playlist salva e outras para listas temporárias, sem misturar tudo no mesmo contexto. As abas podem ser abertas, alternadas e fechadas sem afetar as outras.
 
 ### Atalhos de abas e itens
 
@@ -80,9 +83,8 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 - `Ctrl+Shift+W`: fechar a mídia atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar para a próxima ou aba anterior
 - `Ctrl+Shift+E`: abrir o equalizador da aba ativa
-- `Ctrl+C`: copiar a seleção; no navegador de pastas, copia os arquivos ou pastas para que possam ser colados no Explorador do Windows
-- `Ctrl+Shift+C`: copiar o caminho da seleção no navegador de pastas ou o link/caminho da mídia atual nas demais abas
-- `Ctrl+Espaço`: abrir o menu de classificação no navegador de pastas
+- `Ctrl+C`: copiar a seleção, como texto e, quando são arquivos do computador, também como arquivos — dá para colar em outra playlist, em um campo de texto ou no Explorador do Windows
+- `Ctrl+Shift+C`: copiar o link ou caminho da mídia atual (no explorador de pastas, o caminho da seleção)
 - `Ctrl+Shift+S`: salvar a playlist atual
 - `Ctrl+B`: alternar foco entre o navegador de itens e o player
 - `Ctrl+F`: localizar um item na playlist ou pasta atual
@@ -97,7 +99,7 @@ Os atalhos para abrir mídia, pastas, playlists e links estão na seção [Como 
 
 A fila de reprodução organiza o que deve tocar depois da faixa atual, sem depender da ordem da playlist que você está navegando. Ela sempre pertence à playlist que está tocando no momento.
 
-Use `Ctrl+Shift+F` ou o menu **Reprodução > Adicionar à Fila de Reprodução** para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use `Ctrl+Shift+Q` ou o menu **Reprodução > Gerenciar Fila de Reprodução**.
+Use `Ctrl+Shift+F` ou o menu **Reprodução > Adicionar à Fila de Reprodução** para adicionar ou remover itens da fila. Para ver, remover, reordenar ou limpar a fila inteira, use `Ctrl+Shift+Q` ou o menu **Reprodução > Gerenciar Fila de Reprodução**. O botão **Limpar tudo** pede confirmação antes de esvaziar a fila. No explorador de pastas, `Ctrl+Shift+F` põe a seleção na fila sem tirar o que já estava nela.
 
 Se a fila estiver vazia, o gerenciador informa isso e pede para adicionar itens primeiro.
 
@@ -116,33 +118,31 @@ O submenu ainda traz **Tempo restante**, que anuncia quanto falta, e **Cancelar 
 
 Enquanto a contagem corre, o player avisa quando faltam 5 minutos e quando falta 1 minuto. O estado do temporizador também entra no anúncio de status da tecla `S`.
 
-### Baixar a mídia atual
+### Baixar do YouTube
 
-Com uma música ou vídeo do YouTube ou do YouTube Music tocando, pressione `Ctrl+Shift+B` (ou use **Reprodução > Baixar mídia atual**) para baixá-lo. O download usa o `yt-dlp`, o mesmo que já toca essas mídias, e acontece em segundo plano: a reprodução continua normalmente.
+`Ctrl+Shift+B` baixa músicas e vídeos do YouTube e do YouTube Music, e segue a mesma regra do `Ctrl+Shift+K` (converter): com o foco numa lista — a playlist ou os resultados da busca do YouTube Music — baixa a **seleção** dela; com o foco no player, baixa a **mídia atual**. Os mesmos comandos estão em **Arquivo > Baixar do YouTube** (**Baixar mídia atual**, **Baixar seleção** e **Baixar playlist inteira**). O download usa o `yt-dlp`, o mesmo que já toca essas mídias, e acontece em segundo plano: a reprodução continua normalmente.
 
 - **Diálogo de download**: escolha **Áudio** ou **Vídeo**, a qualidade, a taxa de amostragem (só para áudio convertido) e a pasta. A última escolha vira o padrão das Preferências. Desmarque **Sempre mostrar este diálogo ao baixar** para que os próximos downloads comecem direto, com as opções da aba **Download** das Preferências.
 - **Qualidade indisponível**: se a qualidade escolhida não existir para aquela mídia, o KeyTune baixa na qualidade original e avisa, por exemplo, que o vídeo saiu em 720p em vez de 1080p.
-- **Nome do arquivo**: o arquivo recebe o mesmo nome que o KeyTune mostra para a faixa (por exemplo, `Artista — Título.mp3`), com os caracteres que o Windows não aceita trocados por `_`. Se o mesmo nome se repetir numa fila, o seguinte ganha " (2)"; baixar de novo o mesmo item substitui o arquivo anterior.
+- **Nome do arquivo**: o arquivo recebe o mesmo nome que o KeyTune mostra para a faixa (por exemplo, `Artista — Título.mp3`), com os caracteres que o Windows não aceita trocados por `_`. Um download nunca substitui um arquivo que já está na pasta: se o nome já existir, ou se repetir numa fila, o novo arquivo ganha " (2)", " (3)" e assim por diante.
 - **Acompanhamento**: o player anuncia o início e o fim do download, e a barra de status mostra o andamento, junto com uma barra de progresso à direita dela (numa fila, a barra avança pelo conjunto de itens). Pressione `Ctrl+Shift+B` de novo durante um download para ouvir o andamento e, se quiser, cancelá-lo.
 - **FFmpeg**: converter o áudio (MP3 ou FLAC, ou outra taxa de amostragem) e baixar vídeo em alta resolução exigem o FFmpeg. Se ele não for encontrado, o KeyTune pergunta se deve baixá-lo (cerca de 90 MB, das versões oficiais recomendadas pelo `yt-dlp`, com verificação de integridade) para a pasta de recursos do KeyTune. Se você recusar, o download segue na qualidade original, sem conversão. Um FFmpeg já instalado no sistema também é usado.
-- **Seleção e playlist inteira**: no menu de contexto da lista (`Shift+F10` ou a tecla Aplicativos), **Baixar seleção do YouTube** baixa os itens selecionados e **Baixar playlist inteira do YouTube** baixa todos os itens da aba, em uma subpasta com o nome da playlist. Os mesmos comandos estão em **Reprodução > Baixar seleção da lista** e **Baixar playlist inteira**, e a busca do YouTube Music tem **Baixar seleção** no menu **Ações** (só faixas e vídeos; playlists dos resultados não são baixadas). Antes de começar, o KeyTune mostra quantos itens serão baixados e a pasta de destino e pede confirmação.
+- **Seleção e playlist inteira**: **Baixar seleção** baixa os itens selecionados e **Baixar playlist inteira** baixa todos os itens da aba, em uma subpasta com o nome da playlist. Os dois estão em **Arquivo > Baixar do YouTube** e no menu de contexto da lista (`Shift+F10` ou a tecla Aplicativos); a busca do YouTube Music tem **Baixar seleção** no menu **Ações** (só faixas e vídeos; playlists dos resultados não são baixadas). Antes de começar, o KeyTune mostra quantos itens serão baixados e a pasta de destino e pede confirmação.
 - **Como a fila funciona**: os itens são baixados um por vez, com as mesmas opções. O player anuncia o início e o resumo final (quantos foram baixados e quantos falharam), a barra de status mostra "item 3 de 20" e `Ctrl+Shift+B` informa a posição e permite cancelar. Um item que falha não interrompe os demais. Itens repetidos são baixados uma vez, itens que não são do YouTube são ignorados, e uma fila leva no máximo 200 itens; o excedente fica de fora, com aviso.
-- **Limites**: só mídias do YouTube e do YouTube Music são baixadas, e só um download roda por vez. Transmissões ao vivo e arquivos que já estão no computador não são baixados.
+- **Limites**: só mídias do YouTube e do YouTube Music são baixadas, e só um download roda por vez. Transmissões ao vivo e arquivos que já estão no computador não são baixados; numa fila, uma transmissão ao vivo entra no resumo como falha e os demais itens seguem.
 
 ### Converter mídia
 
-O KeyTune converte um arquivo de áudio ou de vídeo que está no computador, sem sair do player. Abra o arquivo, escolha **Arquivo > Converter** e use uma das opções:
+O KeyTune converte arquivos de áudio ou de vídeo que estão no computador, sem sair do player. `Ctrl+Shift+K` segue a mesma regra do `Ctrl+Shift+B` (baixar): com o foco numa lista — a playlist ou o explorador de pastas — converte a **seleção** dela; com o foco no player, converte a **mídia atual**. Os mesmos comandos estão em **Arquivo > Converter** (**Converter mídia atual** e **Converter seleção**) e no menu de contexto das listas. O KeyTune pergunta o que fazer, oferecendo só as opções que servem ao tipo do arquivo:
 
 - **Áudio para vídeo**: gera um vídeo a partir do áudio, com uma imagem parada. Escolha MP4, MKV ou WebM e a resolução (480p, 720p ou 1080p). Se o áudio tiver uma capa de álbum embutida, ela vira a imagem; sem capa, o fundo é preto.
 - **Vídeo para áudio**: extrai o som do vídeo para MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC ou WAV.
 - **Áudio para outro formato de áudio**: converte entre MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC e WAV. A capa e as informações da faixa acompanham a conversão para MP3, M4A e FLAC.
 - **Vídeo para outro formato de vídeo**: troca só o formato (MP4, MKV, WebM, AVI ou MOV). As faixas compatíveis com o novo formato são copiadas sem perda de qualidade e sem recodificar, o que é rápido; as incompatíveis são recodificadas. Legendas só são mantidas em MKV.
 
-O atalho `Ctrl+Shift+K` (ou **Arquivo > Converter > Converter mídia atual**) pergunta o que fazer entre as opções que servem ao tipo da mídia aberta. Escolher no menu uma opção que não corresponde à mídia aberta (por exemplo, converter áudio com um vídeo aberto) apenas avisa.
+Para converter vários arquivos de uma vez, selecione-os na playlist ou no explorador e pressione `Ctrl+Shift+K`. O KeyTune pergunta o modo, mostrando quantos arquivos cada um atende. Só os arquivos do tipo certo são convertidos e os demais são ignorados; ao trocar só o formato de vídeos, os que já estão no formato de destino também. As opções valem para todos. Com **Mesma pasta do arquivo original**, cada arquivo vai para a pasta do próprio original; com **Outra pasta**, todos vão para a pasta escolhida. Os arquivos são convertidos um por vez, com o andamento "arquivo 2 de 8" e um resumo no fim, e um erro em um arquivo não interrompe os outros.
 
-Para converter vários arquivos de uma vez, selecione-os na lista (uma pasta ou uma playlist local) e use **Converter seleção** no menu de contexto ou **Arquivo > Converter > Converter arquivos selecionados na lista**. O KeyTune pergunta o modo, mostrando quantos arquivos cada um atende. Só os arquivos do tipo certo são convertidos e os demais são ignorados; ao trocar só o formato de vídeos, os que já estão no formato de destino também. As opções valem para todos. Com **Mesma pasta do arquivo original**, cada arquivo vai para a pasta do próprio original; com **Outra pasta**, todos vão para a pasta escolhida. Os arquivos são convertidos um por vez, com o andamento "arquivo 2 de 8" e um resumo no fim, e um erro em um arquivo não interrompe os outros.
-
-No diálogo, além do formato, você define a qualidade dos formatos com perdas (128, 192, 256 ou 320 kbps), a taxa de amostragem (original, 44100 ou 48000 Hz; o Opus sempre usa 48000 Hz) e onde salvar: **Mesma pasta do arquivo original** (o padrão) ou **Outra pasta**, que habilita o campo de pasta e o botão **Escolher pasta** para você indicar o destino; a última pasta escolhida é sugerida na próxima conversão, e uma pasta que não existe é criada. O arquivo original nunca é alterado nem sobrescrito: se já existir um arquivo com o mesmo nome, o novo recebe " (1)", " (2)" e assim por diante.
+No diálogo, além do formato, você define a qualidade dos formatos com perdas (128, 192, 256 ou 320 kbps), a taxa de amostragem (original, 44100 ou 48000 Hz; o Opus sempre usa 48000 Hz) e onde salvar: **Mesma pasta do arquivo original** (o padrão) ou **Outra pasta**, que habilita o campo de pasta e o botão **Escolher pasta** para você indicar o destino; uma pasta que não existe é criada. O diálogo abre com as últimas escolhas — formato (um para cada tipo de conversão), qualidade, taxa de amostragem, resolução, uso da capa e pasta —, que ficam guardadas entre sessões. O arquivo original nunca é alterado nem sobrescrito: se já existir um arquivo com o mesmo nome, o novo recebe " (1)", " (2)" e assim por diante.
 
 A conversão roda em segundo plano e a reprodução continua. O player anuncia o início e o fim, e a barra de status mostra o andamento, junto com uma barra de progresso à direita dela. Pressione `Ctrl+Shift+K` durante uma conversão para ouvir o andamento e, se quiser, cancelá-la; um arquivo incompleto nunca é deixado para trás.
 
@@ -172,8 +172,8 @@ A conversão usa o FFmpeg. Se ele não for encontrado, o KeyTune pergunta se dev
 - `Ctrl+Alt+V`: alternar o vídeo das transmissões ao vivo
 - `Ctrl+Shift+F`: adicionar o item selecionado à fila de reprodução
 - `Ctrl+Shift+Q`: gerenciar a fila de reprodução
-- `Ctrl+Shift+B`: baixar a mídia atual do YouTube
-- `Ctrl+Shift+K`: converter a mídia aberta (áudio ou vídeo)
+- `Ctrl+Shift+B`: baixar do YouTube — a seleção, com o foco numa lista; a mídia atual, com o foco no player
+- `Ctrl+Shift+K`: converter — a seleção, com o foco numa lista; a mídia atual, com o foco no player
 - `Ctrl+Shift+D`: configurar o temporizador
 - `T`: anunciar o tempo atual da mídia
 - `V`: anunciar o volume atual
@@ -185,32 +185,39 @@ O atalho `Ctrl+W` fecha a aba ativa diretamente; o atalho `Ctrl+Shift+W` fecha o
 
 ### Navegador de itens
 
-O navegador fica à esquerda da janela e opera em dois modos distintos dependendo do que está na aba ativa: **modo playlist** e **modo pasta**. Use `Tab` ou `Ctrl+B` para alternar o foco entre o navegador e o player.
-
-#### Modo playlist
-
-Quando a aba contém uma playlist, o navegador mostra todos os itens da sequência. O item em reprodução fica marcado com `▶` no início da linha. Os atalhos disponíveis são:
+O navegador fica à esquerda de cada aba e mostra todos os itens da playlist. O item em reprodução fica marcado com `▶` no início da linha. Use `Tab` ou `Ctrl+B` para alternar o foco entre o navegador e o player. Os atalhos disponíveis são:
 
 - `Enter`: toca o item selecionado imediatamente.
 - `Delete`: remove o item selecionado da playlist.
-- `Shift+F10`: abre o menu contextual com ações adicionais sobre o item ou sobre toda a seleção (a lista aceita seleção múltipla). Além de copiar, colar e remover, o menu traz as ações do YouTube Music quando a seleção contém faixas dessa origem: **Curtir**/**Não gostei**, **Adicionar à playlist do YouTube Music...** e, quando a aba atual é uma playlist sua do YouTube Music, **Remover da playlist do YouTube Music**. Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
+- `Shift+F10`: abre o menu contextual com ações adicionais sobre o item ou sobre toda a seleção (a lista aceita seleção múltipla). Além de copiar, colar (tocando ou sem tocar) e remover, o menu traz as ações do YouTube Music quando a seleção contém faixas dessa origem: **Curtir**/**Não gostei**, **Adicionar à playlist do YouTube Music...** e, quando a aba atual é uma playlist sua do YouTube Music, **Remover da playlist do YouTube Music**. Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
 - `Tab` / `Esc`: volta o foco para o player.
 
-#### Modo pasta
+### Explorador de pastas
 
-Quando a aba veio de uma pasta aberta com `Ctrl+Shift+O`, o navegador exibe o conteúdo do diretório atual: subpastas e arquivos de mídia. Conforme a reprodução avança, o item correspondente à mídia atual fica em destaque automaticamente. Ao mover a seleção para um arquivo de mídia, o player já inicia a reprodução desse arquivo. Os atalhos disponíveis são:
+`Ctrl+E` (ou **Arquivo > Explorador de Pastas**) abre, à esquerda das abas, uma lista com as pastas e os arquivos de mídia do computador. Ele não ocupa uma aba: fica ao lado de qualquer playlist e serve para montá-la aos poucos, sem interromper o que está tocando. Pressionar `Ctrl+E` de novo, com o foco no explorador, fecha a lista; se o foco estiver em outro lugar, o atalho leva o foco até ela.
 
-- `Enter`: entra na subpasta selecionada ou toca o arquivo de mídia.
-- `Backspace`: volta para a pasta superior (equivale a selecionar `..`).
-- `Ctrl+C`: copia os arquivos ou pastas selecionados, permitindo colá-los no Explorador do Windows.
-- `Ctrl+Shift+C`: copia os caminhos dos itens selecionados como texto.
-- `Ctrl+Espaço`: abre o menu de classificação. É possível ordenar por nome, data de modificação, data de criação, tipo ou tamanho, em ordem crescente ou decrescente. A pasta acima permanece no topo e as pastas continuam agrupadas antes dos arquivos. A escolha é lembrada para essa aba ao restaurar a sessão.
-- `Shift+F10`: abre o menu contextual.
-- `Tab` / `Esc`: volta o foco para o player.
+O explorador começa em **Este computador**, com as pastas Músicas, Vídeos, Downloads, Área de trabalho e Documentos e as unidades de disco. A pasta em que você parou e a classificação escolhida são lembradas ao reabrir o KeyTune. As pastas de **Arquivo > Recentes > Pastas recentes** também abrem aqui.
+
+Atalhos com o foco no explorador:
+
+- `Enter`: entra na pasta selecionada ou toca o arquivo, adicionando-o à playlist atual.
+- `Shift+Enter`: adiciona a seleção à playlist atual **sem tocar**. Com uma pasta selecionada, entram todas as mídias dela, inclusive das subpastas.
+- `Ctrl+Shift+F`: adiciona a seleção à fila de reprodução.
+- `Ctrl+Shift+K`: converte os arquivos selecionados (veja [Converter mídia](#converter-midia)).
+- `Backspace`: volta para a pasta acima.
+- `Ctrl+C`: copia os arquivos ou pastas selecionados, para colar em uma playlist ou no Explorador do Windows.
+- `Ctrl+Shift+C`: copia os caminhos da seleção como texto.
+- `Ctrl+Espaço`: abre o menu de classificação. É possível ordenar por nome, data de modificação, data de criação, tipo ou tamanho, em ordem crescente ou decrescente. As pastas continuam agrupadas antes dos arquivos.
+- `F5`: atualiza a pasta.
+- `Shift+F10`: abre o menu contextual com todas as ações: **Tocar agora**, **Adicionar à playlist sem tocar**, **Adicionar à fila de reprodução**, **Abrir em nova playlist**, **Adicionar a pasta atual inteira à playlist**, **Converter...**, **Indexar pasta na biblioteca**, **Copiar**, **Copiar caminho**, **Mostrar no Explorador de Arquivos do Windows**, classificação, **Atualizar** e **Fechar explorador**.
+- `Tab`: vai para a lista da playlist; `Shift+Tab`: vai para o player. Com o explorador aberto, `Tab` percorre explorador, playlist e player.
+- `Esc`: devolve o foco para onde ele estava antes de abrir o explorador.
+
+A lista aceita seleção múltipla, e todas as ações valem para a seleção inteira.
 
 #### Localização rápida por digitação
 
-Nos dois modos, digitar letras ou números move a seleção para o primeiro item cujo nome começa com os caracteres digitados. A busca ignora acentos e diferenças entre maiúsculas e minúsculas. Após um segundo sem digitar, o acumulador de caracteres é resetado e a próxima letra inicia uma nova busca.
+Na playlist e no explorador de pastas, digitar letras ou números move a seleção para o primeiro item cujo nome começa com os caracteres digitados. A busca ignora acentos e diferenças entre maiúsculas e minúsculas. Após um segundo sem digitar, o acumulador de caracteres é resetado e a próxima letra inicia uma nova busca.
 
 #### Busca na playlist ou pasta atual
 
@@ -249,7 +256,7 @@ O menu **Biblioteca** reúne todos os comandos.
 - **Biblioteca > Resumo da biblioteca** anuncia quantas mídias, pastas, favoritos e reproduções estão guardados.
 - **Biblioteca > Limpar biblioteca...** apaga tudo (índice, favoritos, avaliações, histórico e retomada), com confirmação.
 
-Se preferir que só as pastas escolhidas por você entrem no índice, desligue **Indexar automaticamente as pastas abertas no navegador** nas preferências.
+Se preferir que só as pastas escolhidas por você entrem no índice, desligue **Indexar automaticamente as pastas abertas no navegador** nas preferências. Navegar pelo explorador não indexa nada sozinho: entram no índice as pastas abertas pelos recentes e as que você indexar pelo menu contextual do explorador.
 
 ### Busca global
 
@@ -496,46 +503,59 @@ A integração do YouTube Music depende da forma como o site muda e de como o `y
 
 ### Conta e biblioteca
 
-A seção **Conta e biblioteca** mostra o status da conta conectada, o resumo da biblioteca carregada e a última mensagem de operação. Ela tem três botões:
+A aba tem duas partes: em cima, a seção **Conta e biblioteca**; embaixo, o campo de busca e **uma lista só**, por onde passa todo o resto (sua biblioteca, a busca e o que há dentro de cada item).
+
+A seção **Conta e biblioteca** mostra o status da conta conectada, o resumo da biblioteca carregada e a última mensagem de operação. Ela tem quatro botões:
 
 - **Conectar conta...**: abre o diálogo para conectar uma conta do YouTube Music ou renovar a autenticação salva.
 - **Desconectar conta**: remove a autenticação salva desta instalação.
 - **Atualizar biblioteca**: busca novamente as playlists e mixes disponíveis na conta conectada e atualiza os feedbacks de músicas visíveis na conta.
+- **Nova playlist...**: cria uma playlist nova na sua conta. O player pede o nome e a privacidade (Privada, Não listada ou Pública). Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
 
 As ações **Curtir** e **Não gostei** são enviadas à conta conectada, portanto também aparecem no YouTube Music do celular e de outros dispositivos. O KeyTune mantém, por conta, um cache persistente das faixas marcadas como não gostei e o atualiza com o histórico, as músicas curtidas e as listas retornadas pelo YouTube Music. Essas faixas são removidas de playlists e rádios carregadas pela conta e são ignoradas caso reapareçam em uma fila restaurada. Como o YouTube Music não oferece uma lista completa de músicas marcadas como não gostei, uma avaliação feita fora do KeyTune só pode ser importada quando a faixa volta a aparecer em uma dessas respostas da conta; **Atualizar biblioteca** força essa verificação.
 
-Abaixo da seção de conta fica a lista **Playlists e mixes** com todas as playlists e mixes da biblioteca. Use o campo **Filtro** para localizar itens pelo nome. O contador acima da lista mostra quantos itens estão visíveis após o filtro. Abaixo da lista ficam as ações:
+### A lista
 
-- **Abrir seleção**: abre a playlist ou mix selecionada em uma nova aba (`Enter` na lista faz o mesmo).
-- **Nova playlist...**: cria uma playlist nova na sua conta. O player pede o nome e a privacidade (Privada, Não listada ou Pública). Veja [Gerenciar playlists do YouTube Music](#gerenciar-playlists-do-youtube-music).
-- **Excluir playlist...**: exclui a playlist selecionada da sua conta, com confirmação. Só funciona em playlists que você criou — mixes, paradas e playlists de terceiros não podem ser excluídos.
-- **Carregar mais playlists**: traz o próximo lote quando há mais playlists para carregar. Você também pode pressionar `Page Down` estando no fim da lista.
+A lista funciona como o explorador de pastas: você entra nos itens e volta. Ela começa no **Início**, com cinco itens:
 
-### Busca no catálogo e no YouTube
+- **Suas playlists e mixes**: as playlists e mixes da conta conectada. `Enter` numa delas abre a playlist em uma aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista; `Shift+Enter` adiciona as faixas à playlist atual sem tocar. **Excluir playlist do YouTube Music...**, no menu **Ações...**, exclui da conta a playlist selecionada, com confirmação — só funciona em playlists que você criou. Quando houver mais playlists para carregar, desça além do último item. Exige conta conectada.
+- **Curtidas**: as faixas curtidas (a playlist *Curtidas/Liked Music* da sua conta). Exige conta conectada.
+- **Histórico**: seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.
+- **Em alta**: *Global* e os continentes. Entre num continente, escolha o país e as paradas e os destaques em alta aparecem como playlists que você pode tocar, abrir ou salvar na biblioteca. Não exige conta conectada.
+- **Moods e gêneros**: as categorias de climas e gêneros do YouTube Music (por exemplo *Foco*, *Treino*, *Pop*, *Rock*). Entre numa categoria para ver as playlists dela. Não exige conta conectada.
 
-A seção **Busca no catálogo e no YouTube** fica recolhida por padrão. Expanda-a para pesquisar. Ela tem:
+As teclas são as mesmas em qualquer nível:
 
-- **Campo de busca**: digite o que deseja procurar e pressione `Enter` ou clique em **Pesquisar**.
-- **Escopo**: escolhe onde a busca será feita. As opções disponíveis são:
+- `Enter`: entra no item quando ele não toca sozinho (os itens do início, um continente, um país, uma categoria, um canal, um artista) e **toca** quando ele toca (faixa, vídeo, álbum ou playlist — um álbum ou uma playlist entram inteiros na playlist atual). `Shift+Enter` adiciona sem tocar. O duplo clique faz o mesmo que `Enter`.
+- `Seta para a direita`: mostra, na mesma lista, o que há dentro do item selecionado — inclusive de um álbum ou de uma playlist, que com `Enter` tocariam.
+- `Backspace` (ou `Seta para a esquerda`, ou `Alt+Seta para a esquerda`): volta à lista anterior, com a seleção no item que você tinha aberto. Dá para ir encadeando — de um artista para um álbum, de um canal para uma playlist dele — e voltar um nível por vez, até o **Início**.
+- `Seta para baixo` ou `Page Down` no último item: carrega mais. Cada lista traz 20 itens por vez; o KeyTune busca os próximos, anuncia quantos chegaram e mantém o foco onde estava. No fim de tudo, anuncia que não há mais itens.
+- Letras: pulam para o item que começa com elas.
+- `Shift+F10`, a tecla Aplicativos, o botão direito do mouse ou o botão **Ações...**: abrem o menu de ações do item selecionado — **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Adicionar seleção...** (em nova playlist ou em uma playlist aberta), **Baixar seleção...** e **Salvar no YouTube Music** (playlists ou faixas compatíveis).
+- `Ctrl+Shift+B` (ou **Baixar seleção...** no menu **Ações...**): baixa o que está selecionado. Com faixas ou vídeos, baixa cada um. Com uma **playlist ou álbum** selecionado, o KeyTune busca todas as faixas de dentro e baixa tudo. A regra é sempre a mesma: você escolhe a pasta de destino, cada playlist ou álbum vira uma **subpasta com o nome dele** dentro dela, e as faixas e vídeos avulsos ficam na própria pasta — inclusive numa seleção mista. Duas listas com o mesmo nome ganham pastas separadas (*Mix* e *Mix (2)*), e uma faixa que está em duas playlists é baixada nas duas, para cada pasta ficar completa. Antes de começar, o player confirma a quantidade e a pasta, como em qualquer download em lote.
+
+A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo.
+
+Logo acima da lista, uma linha diz onde você está e quantos itens há (por exemplo, *Em alta — Europa: 24 itens*). O leitor de telas anuncia a mesma informação a cada vez que a lista muda.
+
+### Buscar e abrir links
+
+- **Buscar ou colar link**: digite o que deseja procurar e pressione `Enter`. Quando a busca traz resultados, o foco vai direto para a lista; sem resultados, ele fica no campo para você corrigir o texto. Os resultados entram por cima do **Início**: `Backspace` volta para ele.
+- **Colar um link**: um link de playlist, mix ou vídeo do YouTube Music ou do YouTube colado no mesmo campo é aberto direto com `Enter`, em vez de ser pesquisado.
+- **Em**: escolhe onde a busca será feita. As opções disponíveis são:
     - *YouTube Music — músicas*: faixas do catálogo do YouTube Music.
     - *YouTube Music — vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
+    - *YouTube Music — álbuns*: álbuns, singles e EPs do catálogo.
+    - *YouTube Music — artistas*: artistas, que você abre para escolher entre músicas, álbuns, singles, vídeos e artistas parecidos.
     - *YouTube Music — playlists*: playlists do catálogo do YouTube Music.
     - *YouTube — vídeos*: vídeos do YouTube em geral, sem exigir conta.
-- **Explorar**: quatro botões trazem mais conteúdo para a mesma lista de resultados:
-    - **Em alta...**: abre um menu com *Global* no topo e os demais países agrupados em submenus por continente. Ao escolher um país, as paradas e os destaques em alta do YouTube Music aparecem na lista, como playlists que você pode abrir ou salvar na biblioteca. Não exige conta conectada.
-    - **Moods e gêneros...**: abre um menu com as categorias de climas e gêneros do YouTube Music (por exemplo *Foco*, *Treino*, *Pop*, *Rock*). Ao escolher uma categoria, as playlists dela aparecem na lista. Não exige conta conectada.
-    - **Curtidas**: carrega as faixas curtidas (a playlist *Curtidas/Liked Music* da sua conta). Exige conta conectada.
-    - **Histórico**: carrega seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.
-- **Lista de resultados**: mostra os itens encontrados (da busca, das paradas em alta, de moods e gêneros, das curtidas ou do histórico). A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo. `Enter` adiciona a seleção à playlist atual; `Ctrl+Enter` abre a seleção em nova playlist; `Shift+F10` ou o botão **Ações...** abre o menu contextual com opções adicionais.
-- **Salvar no Music**: salva a seleção na biblioteca do YouTube Music quando o resultado for compatível (playlists ou faixas).
-
-### Abrir playlist ou vídeo
-
-A seção **Abrir playlist ou vídeo** também fica recolhida por padrão. Expanda-a para colar um link de playlist, mix ou vídeo do YouTube Music ou do YouTube. Clique em **Abrir link** ou pressione `Enter` no campo para abrir.
+    - *YouTube — canais*: canais do YouTube, que você abre para escolher entre vídeos, Shorts, transmissões ao vivo e playlists.
+    - *YouTube — playlists*: playlists do YouTube em geral.
+- **Dentro de um canal ou artista**: ao entrar, a lista mostra primeiro o que há para ver. Num canal do YouTube: *Vídeos*, *Shorts*, *Ao vivo* e *Playlists*. Num artista do YouTube Music: *Músicas*, *Álbuns*, *Singles e EPs*, *Vídeos* e *Artistas parecidos*. Entre no que quiser para ver os itens; `Backspace` volta para escolher outro.
 
 ### Transmissões ao vivo
 
-Cole o link de uma transmissão ao vivo do YouTube em **Abrir playlist ou vídeo** (ou use `Ctrl+V` / `Ctrl+Shift+V`, como em qualquer link). O KeyTune reconhece a transmissão sozinho:
+Cole o link de uma transmissão ao vivo do YouTube no campo **Buscar ou colar link** (ou use `Ctrl+V`, como em qualquer link). O KeyTune reconhece a transmissão sozinho:
 
 - Ela toca no momento atual, sem retomar de uma posição salva. O player anuncia "Transmissão ao vivo", a barra de tempo mostra um rótulo fixo no lugar da duração e `T` informa há quanto tempo você está assistindo.
 - Com **Mostrar o vídeo das transmissões ao vivo** ligado (padrão), a imagem aparece na área do player mesmo que **Desativar saída de vídeo** esteja marcado. O vídeo é limitado a 720p. Desligado, a transmissão toca só o áudio, na variante mais leve. `Ctrl+Alt+V` alterna a opção e reinicia a transmissão no novo modo.
@@ -628,9 +648,12 @@ O arquivo `cookies.txt` exportado contém informações de autenticação da sua
 - `Ctrl+Shift+Y`: abrir a aba do YouTube Music
 - `Ctrl+R`: iniciar uma nova rádio a partir da faixa atual
 - `Ctrl+Shift+A`: adicionar a mídia atual a uma playlist do YouTube Music
-- `Enter` no campo de busca: executar a pesquisa
-- `Enter` na lista de resultados: adicionar o item à playlist atual
-- `Ctrl+Enter` na lista de resultados: abrir o item em nova playlist
+- `Enter` no campo de busca: executar a pesquisa; quando há resultados, o foco vai para a lista
+- `Enter` na lista de resultados: tocar a seleção na playlist atual
+- `Shift+Enter` na lista de resultados: adicionar a seleção à playlist atual sem tocar
+- `Seta para a direita` na lista de resultados: abrir o canal, artista, álbum ou playlist para ver o conteúdo (`Enter` também, em canais e artistas)
+- `Backspace`, `Seta para a esquerda` ou `Alt+Seta para a esquerda` na lista de resultados: voltar à lista anterior
+- `Seta para baixo` ou `Page Down` no último resultado: carregar mais
 - `Ctrl+Espaço` na lista de resultados: marcar ou desmarcar o item em foco (seleção múltipla)
 - `Ctrl+Setas` na lista de resultados: mover o foco sem alterar a seleção
 - `Shift+Setas` na lista de resultados: selecionar um intervalo de itens
