@@ -18,7 +18,7 @@ KeyTune is a media player. Contributions should preserve the existing structure:
    from `uv.lock`, including the optional YouTube Music and AutoDJ dependencies.
    Add packages with `uv add`, and upgrade with `uv lock --upgrade`.
 3. Download the MPV runtime with `uv run python scripts/download_mpv_runtime.py` if you do not already have a compatible libmpv installation.
-4. Run the app with `uv run python src/main.py`.
+4. Run the app with `uv run keytune`.
 
 ## What to Check
 

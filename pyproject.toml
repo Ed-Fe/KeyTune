@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "keytune"
 description = "KeyTune: media player focused on accessibility and keyboard-first use."
@@ -15,6 +19,9 @@ dependencies = [
     "winrt-Windows.Foundation; sys_platform == 'win32'",
 ]
 
+[project.scripts]
+keytune = "main:main"
+
 [dependency-groups]
 dev = ["pyinstaller"]
 # Optional integrations: release builds publish them as separate downloadable
@@ -22,6 +29,15 @@ dev = ["pyinstaller"]
 youtube = ["ytmusicapi"]
 autodj = ["librosa", "av", "numpy", "scipy", "numba", "llvmlite"]
 
+[tool.hatch.version]
+path = "src/player/constants.py"
+pattern = 'APP_VERSION = "(?P<version>[^"]+)"'
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/player"]
+include = ["src/main.py"]
+sources = ["src"]
+
 [tool.uv]
-package = false
+package = true
 default-groups = ["dev", "youtube", "autodj"]

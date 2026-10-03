@@ -272,7 +272,7 @@ wheels = [
 
 [[package]]
 name = "keytune"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "accessible-output2" },
     { name = "markdown" },

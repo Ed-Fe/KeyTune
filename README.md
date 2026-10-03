@@ -82,7 +82,7 @@ Python 3.14 is required for source development and is also used by the Windows r
 5. Run the application.
 
    ```powershell
-   uv run python src/main.py
+   uv run keytune
    ```
 
 ## Usage

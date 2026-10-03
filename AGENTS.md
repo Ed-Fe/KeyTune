@@ -5,7 +5,7 @@ Runtime instructions for coding agents — every line is loaded into each sessio
 ## Commands
 
 - Install: `uv sync` (creates `.venv` from `uv.lock`; dependencies live in `pyproject.toml`). Add a package with `uv add <pkg>` (or `uv add --group youtube|autodj|dev <pkg>`), upgrade with `uv lock --upgrade`.
-- Run: `python src/main.py`.
+- Run: `uv run keytune` (entry point for `src/main.py`; `python src/main.py` also works).
 - Syntax check after Python changes: `python -m compileall src`.
 - Tests (backend/services/parsing changes): `python -m unittest discover -s tests`.
 - Windows release build: `scripts/build_windows_release.ps1` (validate via `docs/update-testing.md`).
