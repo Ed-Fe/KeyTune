@@ -1,0 +1,27 @@
+[project]
+name = "keytune"
+description = "KeyTune: media player focused on accessibility and keyboard-first use."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.14"
+dynamic = ["version"]
+dependencies = [
+    "wxPython",
+    "python-mpv",
+    "accessible-output2",
+    "Markdown",
+    "winrt-Windows.Media; sys_platform == 'win32'",
+    "winrt-Windows.Media.Playback; sys_platform == 'win32'",
+    "winrt-Windows.Foundation; sys_platform == 'win32'",
+]
+
+[dependency-groups]
+dev = ["pyinstaller"]
+# Optional integrations: release builds publish them as separate downloadable
+# resources (see scripts/build_optional_resources.py).
+youtube = ["ytmusicapi"]
+autodj = ["librosa", "av", "numpy", "scipy", "numba", "llvmlite"]
+
+[tool.uv]
+package = false
+default-groups = ["dev", "youtube", "autodj"]

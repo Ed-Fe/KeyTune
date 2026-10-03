@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -97,31 +96,51 @@ def _build_youtubejs(output_dir, args):
         _archive_resource(output_dir, "youtubejs", content, args.architecture)
 
 
+def _install_group(python_exe, group, site_packages, temporary):
+    """Instala o grupo de dependências do uv.lock em ``site_packages``."""
+    uv = shutil.which("uv")
+    if not uv:
+        raise RuntimeError("O uv não foi encontrado no PATH; instale-o em https://docs.astral.sh/uv/.")
+    requirements = temporary / f"requirements-{group}.txt"
+    subprocess.run(
+        [
+            uv,
+            "export",
+            "--only-group",
+            group,
+            "--frozen",
+            "--no-emit-project",
+            "--no-hashes",
+            "--output-file",
+            str(requirements),
+        ],
+        check=True,
+        cwd=PROJECT_ROOT,
+    )
+    subprocess.run(
+        [
+            uv,
+            "pip",
+            "install",
+            "--no-cache",
+            "--only-binary",
+            ":all:",
+            "--python",
+            python_exe,
+            "--target",
+            str(site_packages),
+            "-r",
+            str(requirements),
+        ],
+        check=True,
+    )
+
+
 def _build_youtube(output_dir, args):
     with tempfile.TemporaryDirectory(prefix="keytune-youtube-resource-", dir=output_dir.parent) as temporary:
         content = Path(temporary) / "content"
         site_packages = content / "site-packages"
-        pip_temp_dir = Path(temporary) / "pip-temp"
-        pip_temp_dir.mkdir()
-        pip_environment = os.environ.copy()
-        pip_environment.update({"TMP": str(pip_temp_dir), "TEMP": str(pip_temp_dir)})
-        subprocess.run(
-            [
-                args.python_exe,
-                "-m",
-                "pip",
-                "install",
-                "--disable-pip-version-check",
-                "--no-cache-dir",
-                "--only-binary=:all:",
-                "--target",
-                str(site_packages),
-                "-r",
-                str(PROJECT_ROOT / "requirements-youtube.txt"),
-            ],
-            check=True,
-            env=pip_environment,
-        )
+        _install_group(args.python_exe, "youtube", site_packages, Path(temporary))
         for cache_dir in site_packages.rglob("__pycache__"):
             shutil.rmtree(cache_dir, ignore_errors=True)
         versions = _distribution_versions(site_packages, ("ytmusicapi", "requests"))
@@ -139,27 +158,7 @@ def _build_autodj(output_dir, args):
     with tempfile.TemporaryDirectory(prefix="keytune-autodj-resource-", dir=output_dir.parent) as temporary:
         content = Path(temporary) / "content"
         site_packages = content / "site-packages"
-        pip_temp_dir = Path(temporary) / "pip-temp"
-        pip_temp_dir.mkdir()
-        pip_environment = os.environ.copy()
-        pip_environment.update({"TMP": str(pip_temp_dir), "TEMP": str(pip_temp_dir)})
-        subprocess.run(
-            [
-                args.python_exe,
-                "-m",
-                "pip",
-                "install",
-                "--disable-pip-version-check",
-                "--no-cache-dir",
-                "--only-binary=:all:",
-                "--target",
-                str(site_packages),
-                "-r",
-                str(PROJECT_ROOT / "requirements-autodj.txt"),
-            ],
-            check=True,
-            env=pip_environment,
-        )
+        _install_group(args.python_exe, "autodj", site_packages, Path(temporary))
         for cache_dir in site_packages.rglob("__pycache__"):
             shutil.rmtree(cache_dir, ignore_errors=True)
         versions = _distribution_versions(

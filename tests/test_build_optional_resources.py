@@ -45,6 +45,8 @@ class OptionalResourceBuildTests(unittest.TestCase):
             args = SimpleNamespace(python_exe="python.exe", app_version="2.0.4", architecture="x64")
 
             def install(command, **_kwargs):
+                if "--target" not in command:
+                    return
                 target = Path(command[command.index("--target") + 1])
                 for package in ("librosa", "numpy", "scipy", "numba", "llvmlite", "av"):
                     (target / package).mkdir(parents=True)
@@ -61,7 +63,9 @@ class OptionalResourceBuildTests(unittest.TestCase):
                     metadata_dir.mkdir()
                     (metadata_dir / "METADATA").write_text("", encoding="utf-8")
 
-            with patch.object(builder.subprocess, "run", side_effect=install) as run:
+            with patch.object(builder.shutil, "which", return_value="uv"), patch.object(
+                builder.subprocess, "run", side_effect=install,
+            ) as run:
                 builder._build_autodj(root, args)
 
             archive_path = root / "KeyTune-AutoDJ-win-x64.zip"

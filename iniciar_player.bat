@@ -9,8 +9,7 @@ if not exist "%VENV_PYTHON%" (
     echo Ambiente virtual nao encontrado em "%ROOT_DIR%.venv".
     echo.
     echo Crie o ambiente e instale as dependencias com:
-    echo   py -m venv .venv
-    echo   .venv\Scripts\python.exe -m pip install -r requirements.txt
+    echo   uv sync
     echo.
     pause
     exit /b 1

@@ -4,7 +4,7 @@ Runtime instructions for coding agents — every line is loaded into each sessio
 
 ## Commands
 
-- Install: `pip install -r requirements.txt` (virtualenv recommended).
+- Install: `uv sync` (creates `.venv` from `uv.lock`; dependencies live in `pyproject.toml`). Add a package with `uv add <pkg>` (or `uv add --group youtube|autodj|dev <pkg>`), upgrade with `uv lock --upgrade`.
 - Run: `python src/main.py`.
 - Syntax check after Python changes: `python -m compileall src`.
 - Tests (backend/services/parsing changes): `python -m unittest discover -s tests`.
@@ -43,7 +43,7 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - The update dialog shows the GitHub release body as the changelog — keep `CHANGELOG.md` and the published release notes consistent (the app doesn't read the file).
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Full feature list and shortcut inventory: `README.md`, `docs/manual.md`.
-- Run `python scripts/generate_credits.py --language pt_BR --language en` after editing `requirements.txt` (or before a release) to keep `docs/credits.md` and `docs/credits.en.md` — shown by the About dialog — accurate; they're also regenerated automatically during Windows release builds.
+- Run `python scripts/generate_credits.py --language pt_BR --language en` after editing dependencies in `pyproject.toml` (or before a release) to keep `docs/credits.md` and `docs/credits.en.md` — shown by the About dialog — accurate; they're also regenerated automatically during Windows release builds.
 
 ## Detailed rules (`.github/`)
 

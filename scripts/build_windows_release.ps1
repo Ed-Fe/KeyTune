@@ -29,21 +29,16 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
 Write-Step "Validando pré-requisitos"
-Require-Path -Path $PythonExe -Description "Python do ambiente virtual"
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    throw "uv não encontrado no PATH. Instale em https://docs.astral.sh/uv/."
+}
 
-Write-Step "Instalando dependências no venv"
-& $PythonExe -m pip install --upgrade pip
+Write-Step "Instalando dependências no venv (uv.lock)"
+uv sync --frozen --no-default-groups --group dev
 if ($LASTEXITCODE -ne 0) {
-    throw "Falha ao atualizar pip no venv."
+    throw "Falha ao sincronizar as dependências com o uv."
 }
-& $PythonExe -m pip install -r requirements.txt
-if ($LASTEXITCODE -ne 0) {
-    throw "Falha ao instalar dependências do requirements.txt."
-}
-& $PythonExe -m pip install pyinstaller
-if ($LASTEXITCODE -ne 0) {
-    throw "Falha ao instalar PyInstaller no venv."
-}
+Require-Path -Path $PythonExe -Description "Python do ambiente virtual"
 
 & $PythonExe -m PyInstaller --version | Out-Null
 if ($LASTEXITCODE -ne 0) {
