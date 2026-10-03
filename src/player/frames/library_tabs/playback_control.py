@@ -10,7 +10,6 @@ from ...constants import (
     REPEAT_ONE,
 )
 from ...i18n import _
-from ...library import folder_display_name
 from ...log import get_logger
 from ...playlists import ScreenTabState
 from ...youtube_music.playlists import is_youtube_music_media
@@ -24,19 +23,14 @@ class PlaylistPlaybackMixin:
         return REPEAT_MODE_LABELS.get(repeat_mode, REPEAT_MODE_LABELS[REPEAT_OFF])
 
     def _describe_playlist_position(self, state):
+        """Complemento falado ao trocar de aba ou de item.
+
+        A mídia atual não é anunciada: o nome já está no título da janela e na
+        barra de status, e a fala a cada troca de item mais atrapalhava.
+        """
         if not state.current_media_path:
-            if state.is_folder_tab and state.folder_current_path:
-                return _("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path))
             return _("Nenhuma mídia tocando agora.")
-
-        media_name = self._media_label(state.current_media_path)
-        if state.is_folder_tab:
-            return _("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path))
-
-        if state.item_count <= 1 or not 0 <= state.current_index < state.item_count:
-            return _("Item atual: {name}.").format(name=media_name)
-
-        return _("Item atual: {name}. Item {current} de {total}.").format(name=media_name, current=state.current_index + 1, total=state.item_count)
+        return ""
 
     def _play_media(
         self,
@@ -520,7 +514,7 @@ class PlaylistPlaybackMixin:
             _logger.debug("Media end: repeat-one, replaying current track.")
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=_("Repetindo faixa atual. {position}").format(position=self._describe_playlist_position(state)),
+                announce_message=_("Repetindo faixa atual."),
             )
             return
 

@@ -294,6 +294,6 @@ class RelatedAutoplayMixin:
 
         self._play_media(
             index=self._get_active_playlist_index(),
-            announce_message=_("Conteúdo relacionado. {position}").format(position=self._describe_playlist_position(state)),
+            announce_message=_("Conteúdo relacionado."),
         )
         return True

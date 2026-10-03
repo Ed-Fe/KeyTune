@@ -368,9 +368,7 @@ class PlaybackEngineMixin:
         if request.get("live_reconnect"):
             announce_message = _("Conexão com a transmissão ao vivo restabelecida.")
         elif request.get("is_live") and announce_message is None:
-            announce_message = _("Transmissão ao vivo. {position}").format(
-                position=self._describe_playlist_position(state)
-            )
+            announce_message = _("Transmissão ao vivo.")
         if hasattr(self, "_set_status_message"):
             now_playing_label = self._media_label(media_path)
             status_template = _("Ao vivo: {name}") if request.get("is_live") else _("Tocando: {name}")
@@ -378,9 +376,6 @@ class PlaybackEngineMixin:
         if announce_message is not None:
             if announce_message:
                 self._announce(announce_message)
-            return
-
-        self._announce(self._describe_playlist_position(state))
 
     def _refresh_lyrics_for_active_media(self, resolved_display_title, resolved_display_artist):
         """Kick off the lyrics lookup for the media that just became active.

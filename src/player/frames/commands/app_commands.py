@@ -266,6 +266,29 @@ class AppCommandsMixin:
 
         self._announce_queue_toggle(added, removed, last_added_label, last_removed_label)
 
+    def _enqueue_media_paths(self, media_paths):
+        """Põe *media_paths* na fila da playlist que está tocando, sem alternar."""
+        state = self._get_active_playlist_state()
+        if not state or state.is_loading:
+            self._announce(_("Nenhuma playlist ativa."))
+            return False
+
+        added = 0
+        last_added_label = ""
+        for path in media_paths:
+            label = self._queue_entry_label(state, path)
+            if state.enqueue_item(path, label):
+                added += 1
+                last_added_label = label
+
+        if added and self._is_current_playlist_state(state):
+            self._refresh_playlist_browser()
+        if added:
+            self._announce_queue_toggle(added, 0, last_added_label, "")
+        else:
+            self._announce(_("Os itens selecionados já estão na fila de reprodução."))
+        return added > 0
+
     def _announce_queue_toggle(self, added, removed, added_label, removed_label):
         if added and removed:
             self._announce(

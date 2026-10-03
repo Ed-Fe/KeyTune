@@ -9,6 +9,7 @@ from .convert import FrameConvertMixin
 from .download import FrameDownloadMixin
 from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
+from .explorer import FrameExplorerMixin
 from .item_search import FrameItemSearchMixin
 from .library import FrameLibraryMixin
 from .lyrics_panel import LyricsPanel
@@ -32,6 +33,7 @@ class MediaPlayerFrame(
     FrameSessionMixin,
     FrameRecentsMixin,
     FrameEqualizerMixin,
+    FrameExplorerMixin,
     FrameItemSearchMixin,
     FrameSmartLibraryMixin,
     FrameSleepTimerMixin,

@@ -5,14 +5,13 @@ import threading
 import wx
 
 from ..library import (
-    discover_folder_entries,
     is_remote_media_path,
     load_playlist,
     scan_folder_contents,
 )
 from ..i18n import _
 from ..log import get_logger
-from ..playlists import PlaylistState, build_folder_tab_title
+from ..playlists import PlaylistState
 
 
 _logger = get_logger(__name__)
@@ -89,53 +88,6 @@ class FrameLibraryLoaderMixin:
 
     def _process_library_request(self, request):
         kind = request.get("kind")
-
-        if kind == "folder":
-            try:
-                folder_entries, media_files = scan_folder_contents(
-                    request["folder_path"],
-                    sort_by=request.get("sort_by", "name"),
-                    descending=bool(request.get("sort_descending", False)),
-                )
-                media_item_index_map = {path: index for index, path in enumerate(media_files)}
-                media_browser_labels = [os.path.basename(path) or path for path in media_files]
-                folder_entry_index_map = {
-                    os.path.normcase(os.path.normpath(getattr(entry, "path", ""))): index
-                    for index, entry in enumerate(folder_entries)
-                    if getattr(entry, "path", None)
-                }
-                error_message = ""
-            except OSError as exc:
-                folder_entries = []
-                media_files = []
-                media_item_index_map = {}
-                media_browser_labels = []
-                folder_entry_index_map = {}
-                error_message = str(exc)
-                _logger.warning("OS error loading folder %r: %s", request["folder_path"], exc)
-            except Exception as exc:
-                folder_entries = []
-                media_files = []
-                media_item_index_map = {}
-                media_browser_labels = []
-                folder_entry_index_map = {}
-                error_message = f"Falha inesperada ao carregar a pasta: {exc}."
-                _logger.error("Unexpected error loading folder %r: %s", request["folder_path"], exc, exc_info=True)
-
-            if self._library_stop_event.is_set():
-                return
-
-            wx.CallAfter(
-                self._finish_folder_load_request,
-                request,
-                folder_entries,
-                folder_entry_index_map,
-                media_files,
-                media_item_index_map,
-                media_browser_labels,
-                error_message,
-            )
-            return
 
         if kind == "folder_playlist":
             try:
@@ -214,22 +166,6 @@ class FrameLibraryLoaderMixin:
         state.source_path = None
         state.set_items([], auto_select=False)
         state.begin_library_load("Carregando playlist...")
-
-    def _begin_folder_load(self, state, folder_path, root_path=None, selected_path=None):
-        normalized_root_path = self._normalize_path(root_path) if root_path else folder_path
-        if not normalized_root_path:
-            normalized_root_path = folder_path
-
-        state.finish_library_load()
-        state.set_folder_location(
-            root_path=normalized_root_path,
-            current_path=folder_path,
-            selected_path=selected_path,
-        )
-        state.title = build_folder_tab_title(folder_path)
-        state.source_path = None
-        state.set_items([], auto_select=False)
-        state.begin_library_load("Carregando itens da pasta...")
 
     def _finish_playlist_load_request(self, request, items, item_index_map, browser_item_labels, error_message):
         if self._library_stop_event.is_set():
@@ -344,74 +280,3 @@ class FrameLibraryLoaderMixin:
                     len(items),
                 ).format(title=state.title, count=len(items)),
             )
-
-    def _finish_folder_load_request(
-        self,
-        request,
-        folder_entries,
-        folder_entry_index_map,
-        media_files,
-        media_item_index_map,
-        media_browser_labels,
-        error_message,
-    ):
-        if self._library_stop_event.is_set():
-            return
-
-        state = request.get("state")
-        request_serial = request.get("serial")
-        if not self._is_current_library_request(state, request_serial):
-            return
-
-        state.finish_library_load()
-        state.set_folder_entries(folder_entries, entry_index_map=folder_entry_index_map)
-        state.set_items_prepared(media_files, media_item_index_map, media_browser_labels, auto_select=False)
-
-        tab_index = self._resolve_playlist_state_index(state)
-        if tab_index == wx.NOT_FOUND:
-            return
-
-        self.notebook.SetPageText(tab_index, state.title)
-
-        if error_message:
-            if self._is_current_playlist_state(state):
-                self._update_title()
-                self._refresh_playlist_browser()
-            self._announce(_("Não foi possível carregar a pasta selecionada: {error}.").format(error=error_message))
-            return
-
-        recent_path = request.get("recent_path")
-        if recent_path:
-            self._add_recent_path("recent_folders", recent_path)
-
-        if self._is_current_playlist_state(state):
-            self._update_title()
-            self._refresh_playlist_browser()
-            if request.get("focus_items"):
-                browser = self._get_browser_panel(tab_index)
-                if browser:
-                    wx.CallAfter(browser.focus_current_item)
-
-            completion_announcement = request.get("completion_announcement")
-            if completion_announcement:
-                wx.CallAfter(self._announce, completion_announcement)
-
-    def _get_folder_entries(self, state=None):
-        state = state or self._get_playlist_state()
-        if not state or not state.is_folder_tab or not state.folder_current_path:
-            return []
-
-        if state.is_loading or state.folder_entries_loaded:
-            return state.folder_entries
-
-        try:
-            entries = discover_folder_entries(
-                state.folder_current_path,
-                sort_by=state.folder_sort_by,
-                descending=state.folder_sort_descending,
-            )
-        except OSError:
-            entries = []
-
-        state.set_folder_entries(entries)
-        return state.folder_entries

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import tempfile
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, call, patch
@@ -17,6 +18,11 @@ from player.frames.commands.open_commands import OpenCommandsMixin
 from player.playlists import PlaylistState, ScreenTabState
 
 
+def _run_inline(_owner, work, on_done):
+    on_done(work())
+
+
+@patch("player.frames.commands.open_commands.run_in_background", _run_inline)
 class ClipboardShortcutTests(unittest.TestCase):
     def _autodj_navigation_frame(self, panel):
         frame = KeyNavigationMixin.__new__(KeyNavigationMixin)
@@ -97,18 +103,16 @@ class ClipboardShortcutTests(unittest.TestCase):
         frame.on_start_radio_from_current.assert_called_once_with(None)
         frame._handle_screen_tab_key_down.assert_not_called()
 
-    def test_control_space_opens_sort_menu_in_the_folder_browser(self):
+    def test_explorer_shortcuts_win_over_global_ones_while_it_has_focus(self):
         frame = KeyNavigationMixin.__new__(KeyNavigationMixin)
-        browser = SimpleNamespace(
-            items_list=object(),
-            is_item_navigation_active=Mock(return_value=True),
-        )
-        frame._get_browser_panel = Mock(return_value=browser)
-        frame._get_tab_state = Mock(return_value=PlaylistState(title="Músicas", tab_type="folder"))
-        frame.on_show_folder_sort_menu = Mock()
+        frame._get_browser_panel = Mock(return_value=None)
+        frame._get_tab_state = Mock(return_value=PlaylistState(title="Playlist"))
+        frame._explorer_has_focus = Mock(return_value=True)
+        frame._handle_explorer_key_down = Mock(return_value=True)
+        frame.on_copy_current_item = Mock()
 
         event = Mock()
-        event.GetKeyCode.return_value = 32
+        event.GetKeyCode.return_value = ord("C")
         event.ControlDown.return_value = True
         event.ShiftDown.return_value = False
         event.AltDown.return_value = False
@@ -116,7 +120,27 @@ class ClipboardShortcutTests(unittest.TestCase):
         with patch("player.frames.commands.key_navigation.wx.Window.FindFocus", return_value=None):
             frame.on_key_down(event)
 
-        frame.on_show_folder_sort_menu.assert_called_once_with(browser, browser.items_list)
+        frame._handle_explorer_key_down.assert_called_once_with(event)
+        frame.on_copy_current_item.assert_not_called()
+
+    def test_control_v_pastes_and_shift_pastes_without_playing(self):
+        for shift_down, expected in ((False, "on_paste_open_from_clipboard"), (True, "on_paste_without_playing")):
+            frame = KeyNavigationMixin.__new__(KeyNavigationMixin)
+            frame._get_browser_panel = Mock(return_value=None)
+            frame._get_tab_state = Mock(return_value=PlaylistState(title="Playlist"))
+            frame.on_paste_open_from_clipboard = Mock()
+            frame.on_paste_without_playing = Mock()
+
+            event = Mock()
+            event.GetKeyCode.return_value = ord("V")
+            event.ControlDown.return_value = True
+            event.ShiftDown.return_value = shift_down
+            event.AltDown.return_value = False
+
+            with patch("player.frames.commands.key_navigation.wx.Window.FindFocus", return_value=None):
+                frame.on_key_down(event)
+
+            getattr(frame, expected).assert_called_once_with(None)
 
     def test_control_shift_c_uses_playing_media_even_on_screen_tab(self):
         frame = KeyNavigationMixin.__new__(KeyNavigationMixin)
@@ -156,25 +180,125 @@ class ClipboardShortcutTests(unittest.TestCase):
         frame.on_paste_open_from_clipboard.assert_called_once_with(None)
         frame._handle_screen_tab_key_down.assert_not_called()
 
-    def test_control_shift_c_copies_selected_path_on_folder_tab(self):
-        frame = KeyNavigationMixin.__new__(KeyNavigationMixin)
-        folder_state = PlaylistState(title="Músicas", tab_type="folder")
-        frame._get_browser_panel = Mock(return_value=None)
-        frame._get_tab_state = Mock(return_value=folder_state)
-        frame.on_copy_current_item_path = Mock()
-        frame.on_copy_playing_media_path = Mock()
+    def _paste_frame(self):
+        frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
+        frame._announce = Mock()
+        frame._normalize_path = lambda path: str(path)
+        frame._play_media_paths_in_current_playlist = Mock(return_value=True)
+        frame._add_media_paths_without_playing = Mock(return_value=True)
+        frame._open_playlist_source = Mock(return_value=True)
+        return frame
 
-        event = Mock()
-        event.GetKeyCode.return_value = ord("C")
-        event.ControlDown.return_value = True
-        event.ShiftDown.return_value = True
-        event.AltDown.return_value = False
+    def test_pasted_folder_expands_to_its_media_including_subfolders(self):
+        frame = self._paste_frame()
+        with tempfile.TemporaryDirectory() as folder:
+            nested = pathlib.Path(folder, "Álbum")
+            nested.mkdir()
+            first = pathlib.Path(folder, "a.mp3")
+            second = nested / "b.flac"
+            for media_file in (first, second, pathlib.Path(folder, "capa.jpg")):
+                media_file.write_bytes(b"")
 
-        with patch("player.frames.commands.key_navigation.wx.Window.FindFocus", return_value=None):
-            frame.on_key_down(event)
+            with patch("player.frames.commands.open_commands.run_in_background", _run_inline):
+                frame._open_clipboard_sources([folder])
 
-        frame.on_copy_current_item_path.assert_called_once_with(None)
-        frame.on_copy_playing_media_path.assert_not_called()
+        frame._play_media_paths_in_current_playlist.assert_called_once_with([str(first), str(second)])
+        frame._announce.assert_called_once_with("Lendo as pastas coladas...")
+
+    def test_pasted_folder_is_read_outside_the_interface_thread(self):
+        frame = self._paste_frame()
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("player.frames.commands.open_commands.run_in_background") as run_in_background:
+                with patch("player.frames.commands.open_commands.collect_media_paths") as collect:
+                    frame._open_clipboard_sources([folder])
+
+        run_in_background.assert_called_once()
+        collect.assert_not_called()
+        frame._play_media_paths_in_current_playlist.assert_not_called()
+
+    def test_paste_without_playing_only_appends(self):
+        frame = self._paste_frame()
+        with tempfile.TemporaryDirectory() as folder:
+            media_file = pathlib.Path(folder, "a.mp3")
+            media_file.write_bytes(b"")
+
+            frame._open_clipboard_sources([str(media_file), "https://example.com/b.mp3"], play=False)
+
+        frame._add_media_paths_without_playing.assert_called_once_with(
+            [str(media_file), "https://example.com/b.mp3"],
+            verified=True,
+        )
+
+    def test_open_and_paste_play_in_the_current_playlist_and_keep_advancing(self):
+        frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
+        frame._get_playlist_state = Mock(return_value=PlaylistState(title="Lista"))
+        frame._open_external_media_paths = Mock(return_value=True)
+        frame._suppress_next_auto_advance = True
+
+        self.assertTrue(frame._play_media_paths_in_current_playlist(["a.mp3", "b.mp3"]))
+
+        frame._open_external_media_paths.assert_called_once_with(["a.mp3", "b.mp3"], verified=True)
+        self.assertFalse(frame._suppress_next_auto_advance)
+
+    def test_opened_files_go_to_the_current_playlist_like_pasted_ones(self):
+        frame = self._paste_frame()
+
+        frame._open_split_selected_files(["a.mp3"], [], "Abrir arquivos")
+
+        frame._play_media_paths_in_current_playlist.assert_called_once_with(["a.mp3"])
+
+    def test_pasted_local_files_are_checked_outside_the_interface_thread(self):
+        frame = self._paste_frame()
+        with patch("player.frames.commands.open_commands.run_in_background") as run_in_background:
+            with patch("os.path.isfile") as isfile, patch("os.path.isdir") as isdir:
+                frame._open_clipboard_sources([r"Z:\rede\a.mp3", r"Z:\rede\b.mp3"])
+
+        run_in_background.assert_called_once()
+        isfile.assert_not_called()
+        isdir.assert_not_called()
+        frame._play_media_paths_in_current_playlist.assert_not_called()
+
+    def test_single_pasted_playlist_file_opens_as_playlist(self):
+        frame = self._paste_frame()
+        with tempfile.TemporaryDirectory() as folder:
+            playlist_file = pathlib.Path(folder, "lista.m3u8")
+            playlist_file.write_text("", encoding="utf-8")
+
+            frame._open_clipboard_sources([str(playlist_file)])
+
+        frame._open_playlist_source.assert_called_once_with(str(playlist_file))
+        frame._play_media_paths_in_current_playlist.assert_not_called()
+
+    def test_empty_folder_paste_reports_that_nothing_was_found(self):
+        frame = self._paste_frame()
+        with tempfile.TemporaryDirectory() as folder:
+            with patch("player.frames.commands.open_commands.run_in_background", _run_inline):
+                frame._open_clipboard_sources([folder])
+
+        frame._play_media_paths_in_current_playlist.assert_not_called()
+        frame._announce.assert_called_with("Nenhuma mídia compatível foi encontrada no conteúdo colado.")
+
+    def test_copied_files_take_precedence_over_clipboard_text(self):
+        frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
+        copied_files = [r"C:\Músicas\Faixa.mp3", r"C:\Músicas\Álbum"]
+
+        with patch("player.frames.commands.open_commands.wx") as wx_module:
+            wx_module.TheClipboard.Open.return_value = True
+            wx_module.TheClipboard.IsSupported.return_value = True
+            wx_module.TheClipboard.GetData.return_value = True
+            wx_module.FileDataObject.return_value.GetFilenames.return_value = copied_files
+            sources = frame._read_clipboard_sources()
+
+        self.assertEqual(sources, copied_files)
+        wx_module.TheClipboard.Close.assert_called_once_with()
+
+    def test_clipboard_text_is_split_into_clean_lines(self):
+        frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
+
+        self.assertEqual(
+            frame._clipboard_text_sources('"C:\\Músicas\\a.mp3"\r\n\r\n  https://example.com/b.mp3 '),
+            ["C:\\Músicas\\a.mp3", "https://example.com/b.mp3"],
+        )
 
     def test_youtube_music_playlist_link_uses_playlist_loader(self):
         frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
@@ -209,28 +333,19 @@ class ClipboardShortcutTests(unittest.TestCase):
 
         frame.on_copy_current_item.assert_called_once_with(None)
 
-    def test_copy_current_item_uses_file_clipboard_on_folder_tab(self):
+    def test_copy_current_item_publishes_the_selection_as_text_and_files(self):
         frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
-        selected_paths = [r"C:\Músicas\Faixa.mp3", r"C:\Músicas\Álbum"]
+        selected_paths = [r"C:\Músicas\Faixa.mp3", "https://example.com/b.mp3"]
         browser = SimpleNamespace(get_selected_item_paths=Mock(return_value=selected_paths))
-        frame._get_tab_state = Mock(return_value=PlaylistState(title="Músicas", tab_type="folder"))
+        frame._get_tab_state = Mock(return_value=PlaylistState(title="Playlist"))
         frame._get_browser_panel = Mock(return_value=browser)
-        frame._copy_files_to_clipboard = Mock(return_value=True)
+        frame._copy_items_to_clipboard = Mock(return_value=True)
         frame._announce = Mock()
 
         frame.on_copy_current_item()
 
-        frame._copy_files_to_clipboard.assert_called_once_with(selected_paths)
+        frame._copy_items_to_clipboard.assert_called_once_with(selected_paths)
         frame._announce.assert_called_once_with("2 itens copiados.")
-
-    def test_copy_current_item_keeps_text_copy_on_playlist_tab(self):
-        frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
-        frame._get_tab_state = Mock(return_value=PlaylistState(title="Playlist"))
-        frame.on_copy_current_item_path = Mock()
-
-        frame.on_copy_current_item()
-
-        frame.on_copy_current_item_path.assert_called_once_with(None)
 
     @patch("player.frames.commands.open_commands.wx.FileDataObject")
     def test_copy_files_to_clipboard_publishes_every_selected_path(self, file_data_object_class):

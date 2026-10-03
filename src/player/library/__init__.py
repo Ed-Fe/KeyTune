@@ -7,6 +7,14 @@ from ..folder_sort import (
     FOLDER_SORT_SIZE,
     FOLDER_SORT_TYPE,
 )
+from .explorer import (
+    EXPLORER_ROOT,
+    ExplorerState,
+    collect_media_paths,
+    explorer_display_name,
+    explorer_parent_path,
+    scan_explorer_folder,
+)
 from .text import normalize_search_text
 from .media_scan import (
     discover_folder_entries,
@@ -24,13 +32,7 @@ from .models import (
     FOLDER_ENTRY_PARENT,
     FolderBrowserEntry,
 )
-from .open_dialog import (
-    OPEN_MODE_FOLDER_BROWSER,
-    OPEN_MODE_PLAYLIST,
-    OPEN_SOURCE_DIALOG_TITLE,
-    OpenSourceDialog,
-    build_supported_media_wildcard,
-)
+from .open_dialog import build_supported_media_wildcard
 from .search_dialog import ITEM_SEARCH_DIALOG_TITLE, ItemSearchDialog
 from .playlist_io import (
     is_playlist_source,
@@ -41,12 +43,14 @@ from .playlist_io import (
 )
 
 __all__ = [
+    "EXPLORER_ROOT",
+    "ExplorerState",
+    "collect_media_paths",
+    "explorer_display_name",
+    "explorer_parent_path",
+    "scan_explorer_folder",
     "ITEM_SEARCH_DIALOG_TITLE",
-    "OPEN_MODE_FOLDER_BROWSER",
-    "OPEN_MODE_PLAYLIST",
-    "OPEN_SOURCE_DIALOG_TITLE",
     "ItemSearchDialog",
-    "OpenSourceDialog",
     "PlaylistBrowserPanel",
     "VirtualItemsListCtrl",
     "build_supported_media_wildcard",

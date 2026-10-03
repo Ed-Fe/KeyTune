@@ -3,7 +3,6 @@ import os
 import wx
 
 from ...i18n import _
-from ...library import folder_display_name
 from ...playlists import (
     PlaylistState,
     ScreenTabState,
@@ -387,12 +386,7 @@ class TabManagementMixin:
             self._update_title()
             self._refresh_playlist_browser()
             if announce:
-                if state.is_folder_tab and state.folder_current_path:
-                    self._announce(
-                        _("Aba {num}: {title}. Pasta atual: {folder}.").format(num=index + 1, title=state.title, folder=folder_display_name(state.folder_current_path))
-                    )
-                else:
-                    self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
+                self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
             return
 
         if previous_active_playlist_index == index and self._player_has_loaded_media(state.current_media_path):
@@ -401,14 +395,14 @@ class TabManagementMixin:
             self._update_time_bar()
             self._refresh_playlist_browser()
             if announce:
-                self._announce(_("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state))
+                self._announce(f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip())
             return
 
         pause_after_restore = not state.was_playing
         self._update_title()
         self._refresh_playlist_browser()
         announce_message = (
-            _("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state)
+            f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip()
             if announce
             else None
         )
@@ -490,7 +484,7 @@ class TabManagementMixin:
         if next_state:
             closed_name = current_state.title if current_state else _("sem nome")
             if isinstance(next_state, PlaylistState):
-                suffix = _("Agora em {title}.").format(title=next_state.title) + " " + self._describe_playlist_position(next_state)
+                suffix = f'{_("Agora em {title}.").format(title=next_state.title)} {self._describe_playlist_position(next_state)}'.strip()
             else:
                 suffix = _("Agora em {title}.").format(title=next_state.title)
             self._announce(_("Aba fechada: {name}.").format(name=closed_name) + " " + suffix)

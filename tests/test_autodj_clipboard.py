@@ -2,13 +2,18 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from player.frames.autodj import FrameAutoDJMixin
 from player.frames.commands.open_commands import OpenCommandsMixin
 from player.playlists import PlaylistState
+
+
+def _run_inline(_owner, work, on_done):
+    on_done(work())
+
 
 
 class ClipboardFrame(OpenCommandsMixin, FrameAutoDJMixin):
@@ -27,6 +32,7 @@ class ClipboardFrame(OpenCommandsMixin, FrameAutoDJMixin):
         self._normalize_path = lambda path: str(Path(path).resolve())
 
 
+@patch("player.frames.commands.open_commands.run_in_background", _run_inline)
 class AutoDJClipboardTests(unittest.TestCase):
     def test_paste_adds_candidates_without_replacing_current_or_prepared_tracks(self):
         frame = ClipboardFrame()
@@ -58,19 +64,12 @@ class AutoDJClipboardTests(unittest.TestCase):
         self.assertEqual(frame.state.autodj_remaining_items, [path])
         frame._maybe_fill_autodj_session.assert_not_called()
 
-    def test_force_new_playlist_keeps_existing_behavior(self):
-        frame = ClipboardFrame()
-        path = "https://music.youtube.com/watch?v=abc123DEF45"
-        frame._open_from_clipboard_text(path, force_new_playlist=True)
-        frame._open_media_paths.assert_called_once_with([path])
-        self.assertEqual(frame.state.autodj_remaining_items, [])
-
     def test_ordinary_playlist_keeps_existing_behavior(self):
         frame = ClipboardFrame()
         frame.state.autodj_session = False
         path = "https://music.youtube.com/watch?v=abc123DEF45"
         frame._open_from_clipboard_text(path)
-        frame._open_external_media_paths.assert_called_once_with([path])
+        frame._open_external_media_paths.assert_called_once_with([path], verified=True)
 
     def test_pasting_does_not_resume_paused_preparation(self):
         frame = ClipboardFrame()

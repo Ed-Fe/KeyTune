@@ -4,17 +4,15 @@ import wx
 
 from ...constants import PLAYLIST_WILDCARD
 from ...library import (
-    OPEN_MODE_FOLDER_BROWSER,
-    OPEN_MODE_PLAYLIST,
-    OPEN_SOURCE_DIALOG_TITLE,
-    OpenSourceDialog,
     build_supported_media_wildcard,
+    collect_media_paths,
     is_playlist_source,
     is_remote_media_path,
     is_supported_media,
     playlist_display_name,
     save_playlist,
 )
+from ..background import run_in_background
 from ...i18n import _
 from ...playlists import ScreenTabState
 from ...youtube_music import extract_playlist_id_from_text
@@ -22,6 +20,7 @@ from ...youtube_music import extract_playlist_id_from_text
 
 class OpenCommandsMixin:
     def _split_selected_files(self, paths):
+        """Separa mídias e playlists existentes; consulta o disco, então roda fora da interface."""
         media_paths = []
         playlist_paths = []
 
@@ -57,29 +56,43 @@ class OpenCommandsMixin:
         self._open_selected_files(paths, dialog_title=_("Abrir arquivos"))
 
     def on_open_folder(self, _event):
-        with wx.DirDialog(
+        self.on_toggle_explorer()
+
+    def on_add_files_without_playing(self, _event=None):
+        with wx.FileDialog(
             self,
-            _("Escolha uma pasta para navegar"),
-            defaultPath=self._default_dialog_directory(),
-            style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
+            _("Escolha os arquivos para abrir sem tocar"),
+            defaultDir=self._default_dialog_directory(),
+            wildcard=build_supported_media_wildcard(include_playlists=False),
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE,
         ) as dialog:
             if dialog.ShowModal() == wx.ID_CANCEL:
                 return
-            folder_path = dialog.GetPath()
+            paths = dialog.GetPaths()
 
-        self._open_folder_path(folder_path)
+        def finish(split):
+            media_paths, _playlist_paths = split
+            if not media_paths:
+                self._announce(_("Nenhuma mídia compatível para adicionar."))
+                return
+            self._add_media_paths_without_playing(media_paths, verified=True)
 
-    def on_open_source(self, _event):
-        self._show_open_source_dialog(initial_mode=OPEN_MODE_PLAYLIST)
+        run_in_background(self, lambda: self._split_selected_files(paths), finish)
 
-    def on_copy_current_item_path(self, _event):
+    def _selected_item_paths_to_copy(self):
         if isinstance(self._get_tab_state(), ScreenTabState):
-            return
+            return None
 
         browser = self._get_browser_panel()
         selected_items = browser.get_selected_item_paths() if browser else []
         if not selected_items:
             self._announce(_("Nenhum item selecionado para copiar."))
+            return None
+        return selected_items
+
+    def on_copy_current_item_path(self, _event):
+        selected_items = self._selected_item_paths_to_copy()
+        if not selected_items:
             return
 
         if not self._copy_text_to_clipboard("\n".join(selected_items)):
@@ -94,21 +107,11 @@ class OpenCommandsMixin:
             self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
 
     def on_copy_current_item(self, _event=None):
-        state = self._get_tab_state()
-        if isinstance(state, ScreenTabState):
-            return
-
-        if not getattr(state, "is_folder_tab", False):
-            self.on_copy_current_item_path(_event)
-            return
-
-        browser = self._get_browser_panel()
-        selected_items = browser.get_selected_item_paths() if browser else []
+        selected_items = self._selected_item_paths_to_copy()
         if not selected_items:
-            self._announce(_("Nenhum item selecionado para copiar."))
             return
 
-        if not self._copy_files_to_clipboard(selected_items):
+        if not self._copy_items_to_clipboard(selected_items):
             self._announce(_("Não foi possível acessar a área de transferência."))
             return
 
@@ -135,20 +138,10 @@ class OpenCommandsMixin:
         return True
 
     def on_paste_open_from_clipboard(self, _event):
-        text = self._read_text_from_clipboard()
-        if not text:
-            self._announce(_("A área de transferência está vazia."))
-            return
+        self._open_clipboard_sources(self._read_clipboard_sources())
 
-        self._open_from_clipboard_text(text, force_new_playlist=False)
-
-    def on_paste_open_from_clipboard_new_playlist(self, _event):
-        text = self._read_text_from_clipboard()
-        if not text:
-            self._announce(_("A área de transferência está vazia."))
-            return
-
-        self._open_from_clipboard_text(text, force_new_playlist=True)
+    def on_paste_without_playing(self, _event=None):
+        self._open_clipboard_sources(self._read_clipboard_sources(), play=False)
 
     def _copy_text_to_clipboard(self, text):
         if not text or not wx.TheClipboard.Open():
@@ -176,127 +169,194 @@ class OpenCommandsMixin:
         finally:
             wx.TheClipboard.Close()
 
-    def _read_text_from_clipboard(self):
+    def _copy_items_to_clipboard(self, paths):
+        """Copia os itens como texto e, quando são arquivos, também como arquivos.
+
+        Assim a mesma cópia serve para colar no KeyTune, em um campo de texto ou
+        no Explorador de Arquivos do Windows.
+        """
+        normalized_paths = [str(path or "").strip() for path in paths]
+        normalized_paths = [path for path in normalized_paths if path]
+        if not normalized_paths:
+            return False
+
+        data = wx.DataObjectComposite()
+        data.Add(wx.TextDataObject("\n".join(normalized_paths)), True)
+        local_files = [path for path in normalized_paths if not is_remote_media_path(path) and os.path.exists(path)]
+        if local_files:
+            file_data = wx.FileDataObject()
+            for path in local_files:
+                file_data.AddFile(path)
+            data.Add(file_data)
+
         if not wx.TheClipboard.Open():
-            return ""
+            return False
         try:
-            data = wx.TextDataObject()
-            if not wx.TheClipboard.GetData(data):
-                return ""
-            return (data.GetText() or "").strip()
+            return bool(wx.TheClipboard.SetData(data))
         finally:
             wx.TheClipboard.Close()
 
-    def _open_from_clipboard_text(self, text, *, force_new_playlist=False):
+    def _read_clipboard_sources(self):
+        """Arquivos ou pastas copiados (como no Explorador do Windows) ou linhas de texto."""
+        if not wx.TheClipboard.Open():
+            return []
+        try:
+            file_data = wx.FileDataObject()
+            if wx.TheClipboard.IsSupported(wx.DataFormat(wx.DF_FILENAME)) and wx.TheClipboard.GetData(file_data):
+                filenames = [str(path) for path in file_data.GetFilenames() if path]
+                if filenames:
+                    return filenames
+
+            text_data = wx.TextDataObject()
+            if not wx.TheClipboard.GetData(text_data):
+                return []
+            return self._clipboard_text_sources(text_data.GetText())
+        finally:
+            wx.TheClipboard.Close()
+
+    def _clipboard_text_sources(self, text):
         normalized_lines = [
             str(line or "").strip().strip('"').strip("'")
             for line in str(text or "").replace("\r", "\n").split("\n")
         ]
-        normalized_sources = [line for line in normalized_lines if line]
-        if not normalized_sources:
+        return [line for line in normalized_lines if line]
+
+    def _open_from_clipboard_text(self, text):
+        self._open_clipboard_sources(self._clipboard_text_sources(text))
+
+    def _open_remote_clipboard_playlist(self, source):
+        """Abre *source* se for um link de playlist; devolve se a colagem terminou aqui."""
+        youtube_music_playlist_id = extract_playlist_id_from_text(source)
+        open_youtube_music_playlist = getattr(self, "_load_youtube_music_playlist_by_id", None)
+        if youtube_music_playlist_id and callable(open_youtube_music_playlist):
+            open_youtube_music_playlist(
+                youtube_music_playlist_id,
+                fallback_title=_("Playlist do YouTube Music"),
+            )
+            return True
+        if not is_playlist_source(source):
+            return False
+        self._open_clipboard_playlist(source)
+        return True
+
+    def _open_clipboard_playlist(self, playlist_source):
+        if not self._open_playlist_source(playlist_source):
+            self._announce(_("Não foi possível abrir a playlist da área de transferência."))
+
+    def _classify_clipboard_sources(self, sources):
+        """Diz o que é cada item colado: ``(itens, erro)``, com itens ``(caminho, tipo)``.
+
+        Consulta o disco para os caminhos locais, então roda fora da interface.
+        """
+        mixed_playlist_message = _(
+            "A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."
+        )
+        pasted = []
+        for source in sources:
+            if is_remote_media_path(source):
+                if is_playlist_source(source):
+                    return [], mixed_playlist_message
+                pasted.append((source, "media"))
+                continue
+
+            normalized_local = self._normalize_path(source)
+            if normalized_local and os.path.isdir(normalized_local):
+                pasted.append((normalized_local, "folder"))
+                continue
+
+            if normalized_local and os.path.isfile(normalized_local):
+                if not is_playlist_source(normalized_local):
+                    pasted.append((normalized_local, "media"))
+                    continue
+                if len(sources) > 1:
+                    return [], mixed_playlist_message
+                pasted.append((normalized_local, "playlist"))
+                continue
+
+            if len(sources) == 1:
+                return [], _("Conteúdo da área de transferência não suportado.")
+            return [], _("A área de transferência contém itens não suportados para colagem em lote.")
+        return pasted, ""
+
+    def _open_clipboard_sources(self, sources, *, play=True):
+        """Abre o que foi colado: links, arquivos e pastas (com as subpastas)."""
+        sources = [str(source or "").strip() for source in sources or ()]
+        sources = [source for source in sources if source]
+        if not sources:
             self._announce(_("A área de transferência está vazia."))
             return
 
-        if len(normalized_sources) > 1:
+        all_remote = all(is_remote_media_path(source) for source in sources)
+        if len(sources) == 1 and all_remote and self._open_remote_clipboard_playlist(sources[0]):
+            return
+
+        def finish(classified):
+            self._open_classified_clipboard_sources(*classified, play=play)
+
+        if all_remote:
+            finish(self._classify_clipboard_sources(sources))
+        else:
+            run_in_background(self, lambda: self._classify_clipboard_sources(sources), finish)
+
+    def _open_classified_clipboard_sources(self, pasted, error_message, *, play):
+        if error_message:
+            self._announce(error_message)
+            return
+        if pasted[0][1] == "playlist":
+            self._open_clipboard_playlist(pasted[0][0])
+            return
+
+        def expand():
             media_sources = []
-            for source in normalized_sources:
-                if is_remote_media_path(source):
-                    if is_playlist_source(source):
-                        self._announce(_("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."))
-                        return
-                    media_sources.append(source)
-                    continue
+            for path, kind in pasted:
+                media_sources.extend(collect_media_paths([path]) if kind == "folder" else [path])
+            return media_sources
 
-                normalized_local = self._normalize_path(source)
-                if normalized_local and os.path.isfile(normalized_local):
-                    if is_playlist_source(normalized_local):
-                        self._announce(_("A área de transferência contém playlists misturadas com múltiplos itens. Use apenas mídias ou links."))
-                        return
-                    media_sources.append(normalized_local)
-                    continue
+        def finish(media_sources):
+            self._finish_clipboard_paste(media_sources, play=play)
 
-                self._announce(_("A área de transferência contém itens não suportados para colagem em lote."))
-                return
+        if any(kind == "folder" for _path, kind in pasted):
+            self._announce(_("Lendo as pastas coladas..."))
+            run_in_background(self, expand, finish)
+        else:
+            finish(expand())
 
-            if not self._paste_media_paths(media_sources, force_new_playlist=force_new_playlist):
-                self._announce(_("Não foi possível abrir a mídia da área de transferência."))
+    def _finish_clipboard_paste(self, media_sources, *, play):
+        if not media_sources:
+            self._announce(_("Nenhuma mídia compatível foi encontrada no conteúdo colado."))
             return
 
-        normalized_source = normalized_sources[0]
+        if not play:
+            self._add_media_paths_without_playing(media_sources, verified=True)
+        elif not self._play_media_paths_in_current_playlist(media_sources):
+            self._announce(_("Não foi possível abrir a mídia da área de transferência."))
 
-        if is_remote_media_path(normalized_source):
-            youtube_music_playlist_id = extract_playlist_id_from_text(normalized_source)
-            open_youtube_music_playlist = getattr(self, "_load_youtube_music_playlist_by_id", None)
-            if youtube_music_playlist_id and callable(open_youtube_music_playlist):
-                open_youtube_music_playlist(
-                    youtube_music_playlist_id,
-                    fallback_title=_("Playlist do YouTube Music"),
-                )
-                return
-            if is_playlist_source(normalized_source):
-                if not self._open_playlist_source(normalized_source):
-                    self._announce(_("Não foi possível abrir a playlist da área de transferência."))
-                return
+    def _play_media_paths_in_current_playlist(self, paths):
+        """Põe *paths* na playlist atual e toca o primeiro novo.
 
-            if not self._paste_media_paths([normalized_source], force_new_playlist=force_new_playlist):
-                self._announce(_("Não foi possível abrir a mídia da área de transferência."))
-            return
-
-        normalized_local = self._normalize_path(normalized_source)
-        if normalized_local:
-            if os.path.isdir(normalized_local):
-                if not self._open_folder_path(normalized_local):
-                    self._announce(_("Não foi possível abrir a pasta da área de transferência."))
-                return
-
-            if os.path.isfile(normalized_local):
-                if is_playlist_source(normalized_local):
-                    if not self._open_playlist_source(normalized_local):
-                        self._announce(_("Não foi possível abrir a playlist da área de transferência."))
-                    return
-
-                if not self._paste_media_paths([normalized_local], force_new_playlist=force_new_playlist):
-                    self._announce(_("Não foi possível abrir a mídia da área de transferência."))
-                return
-
-        self._announce(_("Conteúdo da área de transferência não suportado."))
-
-    def _paste_media_paths(self, paths, *, force_new_playlist=False):
-        if force_new_playlist:
-            return self._open_media_paths(paths)
+        Abrir (Ctrl+O), colar (Ctrl+V) e o Enter do explorador chegam aqui, para
+        que os três se comportem do mesmo jeito.
+        """
         state = self._get_playlist_state()
         if state is not None and getattr(state, "autodj_session", False):
             self._add_media_to_autodj_session(paths)
             return True
-        return self._open_external_media_paths(paths)
-
-    def _show_open_source_dialog(self, initial_source="", initial_mode=OPEN_MODE_PLAYLIST):
-        source_value = initial_source
-        open_mode = initial_mode
-
-        while True:
-            dialog = OpenSourceDialog(
-                self,
-                default_dir=self._default_dialog_directory(),
-                initial_source=source_value,
-                initial_mode=open_mode,
-            )
-            try:
-                if dialog.ShowModal() == wx.ID_CANCEL:
-                    return
-                source_value = dialog.get_source()
-                open_mode = dialog.get_open_mode()
-            finally:
-                dialog.Destroy()
-
-            if self._open_source_from_dialog(source_value, open_mode):
-                return
+        if not self._open_external_media_paths(paths, verified=True):
+            return False
+        # Não é uma abertura avulsa vinda de fora: a playlist segue adiante.
+        self._suppress_next_auto_advance = False
+        return True
 
     def _open_selected_files(self, paths, dialog_title=None):
         if dialog_title is None:
             dialog_title = _("Abrir arquivos")
-        media_paths, playlist_paths = self._split_selected_files(paths)
+        run_in_background(
+            self,
+            lambda: self._split_selected_files(paths),
+            lambda split: self._open_split_selected_files(*split, dialog_title),
+        )
 
+    def _open_split_selected_files(self, media_paths, playlist_paths, dialog_title):
         if playlist_paths and media_paths:
             wx.MessageBox(
                 _("Selecione uma única playlist ou apenas arquivos de mídia."),
@@ -319,7 +379,7 @@ class OpenCommandsMixin:
             return self._open_playlist_source(playlist_paths[0])
 
         if media_paths:
-            return self._open_media_paths(media_paths)
+            return self._play_media_paths_in_current_playlist(media_paths)
 
         wx.MessageBox(
             _("Nenhum arquivo de mídia ou playlist compatível foi selecionado."),
@@ -330,8 +390,13 @@ class OpenCommandsMixin:
         return False
 
     def _open_external_files(self, paths):
-        media_paths, playlist_paths = self._split_selected_files(paths)
+        run_in_background(
+            self,
+            lambda: self._split_selected_files(paths),
+            lambda split: self._open_split_external_files(*split),
+        )
 
+    def _open_split_external_files(self, media_paths, playlist_paths):
         if playlist_paths and media_paths:
             self._announce(_("Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."))
             return False
@@ -341,83 +406,12 @@ class OpenCommandsMixin:
             return False
 
         if media_paths:
-            return self._open_external_media_paths(media_paths)
+            return self._open_external_media_paths(media_paths, verified=True)
 
         if playlist_paths:
             return self._open_playlist_source(playlist_paths[0])
 
         self._announce(_("Nenhum arquivo compatível foi recebido do Explorador."))
-        return False
-
-    def _open_source_from_dialog(self, source_value, open_mode):
-        normalized_source = str(source_value or "").strip()
-        if not normalized_source:
-            wx.MessageBox(
-                _("Informe um caminho local, uma pasta ou um link de mídia."),
-                OPEN_SOURCE_DIALOG_TITLE,
-                wx.OK | wx.ICON_INFORMATION,
-                self,
-            )
-            return False
-
-        normalized_local_source = ""
-        if not is_remote_media_path(normalized_source):
-            normalized_local_source = self._normalize_path(normalized_source)
-
-        if open_mode == OPEN_MODE_FOLDER_BROWSER:
-            if normalized_local_source and self._open_folder_path(normalized_local_source):
-                return True
-
-            wx.MessageBox(
-                _("Para abrir no navegador, informe uma pasta local válida."),
-                OPEN_SOURCE_DIALOG_TITLE,
-                wx.OK | wx.ICON_WARNING,
-                self,
-            )
-            return False
-
-        if normalized_local_source and os.path.isdir(normalized_local_source):
-            if self._open_folder_as_playlist(normalized_local_source):
-                return True
-
-            wx.MessageBox(
-                _("Não foi possível abrir a pasta selecionada como playlist."),
-                OPEN_SOURCE_DIALOG_TITLE,
-                wx.OK | wx.ICON_ERROR,
-                self,
-            )
-            return False
-
-        if is_playlist_source(normalized_source):
-            if self._open_playlist_source(normalized_source):
-                return True
-
-            wx.MessageBox(
-                _("Não foi possível abrir a playlist ou link informado."),
-                OPEN_SOURCE_DIALOG_TITLE,
-                wx.OK | wx.ICON_ERROR,
-                self,
-            )
-            return False
-
-        if (normalized_local_source and os.path.isfile(normalized_local_source)) or is_remote_media_path(normalized_source):
-            if self._open_media_paths([normalized_source if is_remote_media_path(normalized_source) else normalized_local_source]):
-                return True
-
-            wx.MessageBox(
-                _("Não foi possível abrir a mídia informada."),
-                OPEN_SOURCE_DIALOG_TITLE,
-                wx.OK | wx.ICON_ERROR,
-                self,
-            )
-            return False
-
-        message = (
-            _("Não foi possível interpretar o link informado como mídia ou playlist.")
-            if is_remote_media_path(normalized_source)
-            else _("Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia.")
-        )
-        wx.MessageBox(message, OPEN_SOURCE_DIALOG_TITLE, wx.OK | wx.ICON_WARNING, self)
         return False
 
     def on_save_playlist(self, _event):
@@ -475,7 +469,9 @@ class OpenCommandsMixin:
             return
 
         if path and attribute_name == "recent_media_files":
-            if self._open_media_paths([path]):
+            # Um arquivo recente entra como qualquer arquivo aberto: na playlist atual, tocando.
+            is_available = is_remote_media_path(path) or os.path.isfile(path)
+            if is_available and self._play_media_paths_in_current_playlist([path]):
                 return
         elif path and attribute_name == "recent_folders":
             if self._open_folder_path(path):

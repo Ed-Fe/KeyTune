@@ -92,15 +92,15 @@ class PlaylistBrowserLibraryMarksTests(unittest.TestCase):
     def test_items_render_without_marks_by_default(self):
         panel = self._playlist_panel()
 
-        self.assertEqual(panel._get_display_label(1), "   2. Canção")
+        self.assertEqual(panel._get_display_label(1), "Canção")
 
     def test_marks_are_appended_to_the_display_label(self):
         panel = self._playlist_panel()
 
         panel.set_library_marks({"C:\\Musica\\Estrada.mp3": "favorito, 5 estrelas"})
 
-        self.assertEqual(panel._get_display_label(0), "▶ 1. Estrada — favorito, 5 estrelas")
-        self.assertEqual(panel._get_display_label(1), "   2. Canção")
+        self.assertEqual(panel._get_display_label(0), "▶ Estrada — favorito, 5 estrelas")
+        self.assertEqual(panel._get_display_label(1), "Canção")
 
     def test_marks_do_not_leak_into_the_search_label(self):
         panel = self._playlist_panel()
@@ -122,7 +122,7 @@ class PlaylistBrowserLibraryMarksTests(unittest.TestCase):
 
         panel.set_library_marks({})
 
-        self.assertEqual(panel._get_display_label(0), "▶ 1. Estrada")
+        self.assertEqual(panel._get_display_label(0), "▶ Estrada")
 
     def test_folder_files_show_marks_but_directories_do_not(self):
         panel = PlaylistBrowserPanel.__new__(PlaylistBrowserPanel)

@@ -58,6 +58,17 @@ from ..constants import (
     SEEK_STEP_MS,
     VOLUME_STEP,
 )
+from ..convert.options import (
+    AUDIO_BITRATES,
+    AUDIO_FORMAT_IDS,
+    AUDIO_TO_VIDEO_FORMATS,
+    DEFAULT_AUDIO_BITRATE,
+    DEFAULT_AUDIO_FORMAT,
+    DEFAULT_VIDEO_FORMAT,
+    DEFAULT_VIDEO_HEIGHT,
+    VIDEO_CONTAINER_FORMATS,
+    VIDEO_HEIGHTS as CONVERT_VIDEO_HEIGHTS,
+)
 from ..download.options import (
     DEFAULT_DOWNLOAD_ALWAYS_ASK,
     DEFAULT_DOWNLOAD_AUDIO_QUALITY,
@@ -113,6 +124,16 @@ class AppSettings:
     # Vazio significa a pasta padrão (Downloads/KeyTune), resolvida na hora do download.
     download_directory: str = ""
     download_always_ask: bool = DEFAULT_DOWNLOAD_ALWAYS_ASK
+    # Última escolha feita no diálogo de conversão, oferecida de novo na próxima.
+    convert_audio_format: str = DEFAULT_AUDIO_FORMAT
+    convert_audio_bitrate: int = DEFAULT_AUDIO_BITRATE
+    convert_sample_rate: int = DEFAULT_DOWNLOAD_SAMPLE_RATE
+    convert_video_format: str = DEFAULT_VIDEO_FORMAT
+    convert_container_format: str = DEFAULT_VIDEO_FORMAT
+    convert_video_height: int = DEFAULT_VIDEO_HEIGHT
+    convert_use_cover: bool = True
+    convert_same_folder: bool = True
+    convert_directory: str = ""
     smart_library_enabled: bool = DEFAULT_SMART_LIBRARY_ENABLED
     smart_library_index_opened_folders: bool = DEFAULT_SMART_LIBRARY_INDEX_OPENED_FOLDERS
     smart_library_history_enabled: bool = DEFAULT_SMART_LIBRARY_HISTORY_ENABLED
@@ -186,6 +207,15 @@ class AppSettings:
             "download_sample_rate": self.download_sample_rate,
             "download_directory": self.download_directory,
             "download_always_ask": self.download_always_ask,
+            "convert_audio_format": self.convert_audio_format,
+            "convert_audio_bitrate": self.convert_audio_bitrate,
+            "convert_sample_rate": self.convert_sample_rate,
+            "convert_video_format": self.convert_video_format,
+            "convert_container_format": self.convert_container_format,
+            "convert_video_height": self.convert_video_height,
+            "convert_use_cover": self.convert_use_cover,
+            "convert_same_folder": self.convert_same_folder,
+            "convert_directory": self.convert_directory,
             "smart_library_enabled": self.smart_library_enabled,
             "smart_library_index_opened_folders": self.smart_library_index_opened_folders,
             "smart_library_history_enabled": self.smart_library_history_enabled,
@@ -319,6 +349,21 @@ class AppSettings:
         )
         settings.download_directory = str(data.get("download_directory") or "").strip()
         settings.download_always_ask = bool(data.get("download_always_ask", settings.download_always_ask))
+        for name, choices in (
+            ("convert_audio_format", AUDIO_FORMAT_IDS),
+            ("convert_audio_bitrate", AUDIO_BITRATES),
+            ("convert_video_format", AUDIO_TO_VIDEO_FORMATS),
+            ("convert_container_format", VIDEO_CONTAINER_FORMATS),
+            ("convert_video_height", CONVERT_VIDEO_HEIGHTS),
+        ):
+            if data.get(name) in choices:
+                setattr(settings, name, data[name])
+        settings.convert_sample_rate = normalize_sample_rate(
+            data.get("convert_sample_rate"), settings.convert_sample_rate
+        )
+        settings.convert_use_cover = bool(data.get("convert_use_cover", settings.convert_use_cover))
+        settings.convert_same_folder = bool(data.get("convert_same_folder", settings.convert_same_folder))
+        settings.convert_directory = str(data.get("convert_directory") or "").strip()
 
         settings.smart_library_enabled = bool(data.get("smart_library_enabled", settings.smart_library_enabled))
         settings.smart_library_index_opened_folders = bool(

@@ -48,6 +48,7 @@ class PlaylistBrowserPanel(wx.Panel):
         on_toggle_navigation_mode=None,
         on_tab=None,
         on_show_context_menu=None,
+        folder_hint=None,
     ):
         super().__init__(parent)
 
@@ -58,6 +59,7 @@ class PlaylistBrowserPanel(wx.Panel):
         self._on_toggle_navigation_mode = on_toggle_navigation_mode
         self._on_tab = on_tab
         self._on_show_context_menu = on_show_context_menu
+        self._folder_hint = folder_hint
         self._items = []
         self._mode = "playlist"
         self._suppress_selection_event = False
@@ -252,7 +254,8 @@ class PlaylistBrowserPanel(wx.Panel):
 
         self.header_label.SetLabel(_("{title} — {path}").format(title=title, path=current_path))
         self.hint_label.SetLabel(
-            _("Enter entra na pasta ou toca o arquivo. Backspace volta. Ctrl+Espaço classifica. Digite letras para localizar. Tab volta ao player.")
+            self._folder_hint
+            or _("Enter entra na pasta ou toca o arquivo. Backspace volta. Ctrl+Espaço classifica. Digite letras para localizar. Tab volta ao player.")
         )
         self.hint_label.Wrap(260)
         self._render_mode = "folder"
@@ -430,8 +433,8 @@ class PlaylistBrowserPanel(wx.Panel):
         return self._format_folder_label(self._items[index], self._current_folder_media_path())
 
     def _format_label(self, index, item_label, current_index, mark_suffix=""):
-        prefix = "▶ " if index == current_index else "   "
-        return f"{prefix}{index + 1}. {item_label}{mark_suffix}"
+        prefix = "▶ " if index == current_index else ""
+        return f"{prefix}{item_label}{mark_suffix}"
 
     def _format_folder_label(self, entry, current_media_path):
         if getattr(entry, "is_parent", False):

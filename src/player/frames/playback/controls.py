@@ -1,6 +1,5 @@
 from ...constants import PROGRESS_GAUGE_RANGE
 from ...i18n import _
-from ...library import folder_display_name
 from .live import is_live_media
 
 PLAYBACK_RATE_STEP = 0.25
@@ -351,10 +350,6 @@ class PlaybackControlsMixin:
 
         if state and current_tab is not state:
             status_parts.append(_("Aba de mídia ativa: {title}.").format(title=state.title))
-
-        if state:
-            if state.is_folder_tab and state.folder_current_path:
-                status_parts.append(_("Pasta atual: {name}.").format(name=folder_display_name(state.folder_current_path)))
 
         media_path = state.current_media_path if state else None
         if not media_path:

@@ -149,6 +149,15 @@ class QueueManagerDialog(wx.Dialog):
     def _clear_all(self):
         if not self._entries:
             return
+        # Esvaziar a fila não tem volta e o botão fica a um Alt+L de distância.
+        with wx.MessageDialog(
+            self,
+            _("Deseja remover todos os {count} itens da fila de reprodução?").format(count=len(self._entries)),
+            _("Limpar a fila de reprodução"),
+            wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
+        ) as dialog:
+            if dialog.ShowModal() != wx.ID_YES:
+                return
         self._on_clear()
         self._reload_entries()
         self._announce_message(_("Fila de reprodução esvaziada."))

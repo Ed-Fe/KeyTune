@@ -42,7 +42,7 @@ class PlaylistItemRemovalMixin:
             state.select_index(next_index)
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=_("{prefix}: {name}.").format(prefix=announce_prefix, name=removed_name) + " " + self._describe_playlist_position(state),
+                announce_message=_("{prefix}: {name}.").format(prefix=announce_prefix, name=removed_name),
             )
             return
 
@@ -110,7 +110,7 @@ class PlaylistItemRemovalMixin:
             state.select_index(next_index)
             self._play_media(
                 index=self._get_active_playlist_index(),
-                announce_message=_("{prefix}: {count} itens removidos.").format(prefix=announce_prefix, count=removed_count) + " " + self._describe_playlist_position(state),
+                announce_message=_("{prefix}: {count} itens removidos.").format(prefix=announce_prefix, count=removed_count),
             )
             return
 
