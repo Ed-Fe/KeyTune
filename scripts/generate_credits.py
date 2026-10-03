@@ -4,6 +4,7 @@ import argparse
 import json
 import re
 import sys
+import tomllib
 from pathlib import Path
 from urllib import error, request
 
@@ -12,11 +13,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from player.constants import GITHUB_REPOSITORY_NAME, GITHUB_REPOSITORY_OWNER  # noqa: E402
 
-REQUIREMENTS_PATHS = (
-    REPO_ROOT / "requirements.txt",
-    REPO_ROOT / "requirements-youtube.txt",
-    REPO_ROOT / "requirements-autodj.txt",
-)
+PYPROJECT_PATH = REPO_ROOT / "pyproject.toml"
 CREDITS_PATH = REPO_ROOT / "docs" / "credits.md"
 HTTP_TIMEOUT_SECONDS = 10
 
@@ -55,6 +52,17 @@ def credits_path_for_language(language: str) -> Path:
     return REPO_ROOT / "docs" / f"credits.{language}.md"
 
 REQUIREMENT_LINE_PATTERN = re.compile(r"^([A-Za-z0-9_.-]+)\s*([><=!~]=?\s*[\w.]+)?")
+
+
+def read_pyproject_requirements(pyproject_path: Path) -> str:
+    """Junta as dependências do projeto e de todos os grupos, uma por linha."""
+    if not pyproject_path.is_file():
+        return ""
+    data = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+    requirements = list(data.get("project", {}).get("dependencies", []))
+    for group in data.get("dependency-groups", {}).values():
+        requirements.extend(item for item in group if isinstance(item, str))
+    return "\n".join(requirements)
 
 
 def parse_requirements(requirements_text: str) -> list[tuple[str, str, str]]:
@@ -147,12 +155,7 @@ def main() -> int:
     args = parser.parse_args()
     languages = args.languages or ["pt_BR"]
 
-    requirements_text = "\n".join(
-        requirements_path.read_text(encoding="utf-8")
-        for requirements_path in REQUIREMENTS_PATHS
-        if requirements_path.is_file()
-    )
-    libraries = parse_requirements(requirements_text)
+    libraries = parse_requirements(read_pyproject_requirements(PYPROJECT_PATH))
 
     # Fetch contributors once (language-neutral); ``None`` means the network
     # lookup failed and each language reuses its previously written list.

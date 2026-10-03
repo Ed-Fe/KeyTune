@@ -55,43 +55,24 @@ Python 3.14 is required for source development and is also used by the Windows r
    cd KeyTune
    ```
 
-2. Create and activate a virtual environment.
+2. Install [uv](https://docs.astral.sh/uv/).
 
-   On Windows:
-
-   ```powershell
-   py -3.14 -m venv .venv
-   .venv\Scripts\Activate.ps1
-   ```
-
-   On Linux or macOS:
+3. Install dependencies. This creates `.venv` with Python 3.14 and installs the
+   exact versions pinned in `uv.lock`.
 
    ```bash
-   python3.14 -m venv .venv
-   source .venv/bin/activate
+   uv sync
    ```
 
-3. Install dependencies.
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   For source-tree development of the optional integrations, also install
-   them with:
-
-   ```bash
-   pip install -r requirements-youtube.txt -r requirements-autodj.txt
-   ```
-
-   Release builds
+   The command also installs the optional YouTube Music and AutoDJ
+   integrations for source-tree development. Release builds
    publish these components separately and the installed app downloads them
    only after the user enables and confirms the corresponding feature.
 
 4. Download the MPV runtime for local development.
 
    ```powershell
-   python scripts/download_mpv_runtime.py
+   uv run python scripts/download_mpv_runtime.py
    ```
 
    This helper downloads the latest `mpv-winbuild` release, extracts the folder containing `libmpv-2.dll`, and writes it to `./mpv/` by default. It depends on `7z` or 7-Zip to unpack the `.7z` archive.
@@ -101,7 +82,7 @@ Python 3.14 is required for source development and is also used by the Windows r
 5. Run the application.
 
    ```powershell
-   .venv\Scripts\python.exe src/main.py
+   uv run keytune
    ```
 
 ## Usage

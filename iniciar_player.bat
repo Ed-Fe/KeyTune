@@ -2,30 +2,17 @@
 setlocal
 
 set "ROOT_DIR=%~dp0"
-set "VENV_PYTHON=%ROOT_DIR%.venv\Scripts\python.exe"
-set "PLAYER_ENTRY=%ROOT_DIR%src\main.py"
 
-if not exist "%VENV_PYTHON%" (
-    echo Ambiente virtual nao encontrado em "%ROOT_DIR%.venv".
-    echo.
-    echo Crie o ambiente e instale as dependencias com:
-    echo   py -m venv .venv
-    echo   .venv\Scripts\python.exe -m pip install -r requirements.txt
-    echo.
-    pause
-    exit /b 1
-)
-
-if not exist "%PLAYER_ENTRY%" (
-    echo Arquivo de arranque nao encontrado: "%PLAYER_ENTRY%".
-    echo Verifique se o script esta na raiz do projeto.
+where uv >nul 2>nul
+if errorlevel 1 (
+    echo uv nao encontrado. Instale em https://docs.astral.sh/uv/ e tente novamente.
     echo.
     pause
     exit /b 1
 )
 
 pushd "%ROOT_DIR%" >nul
-"%VENV_PYTHON%" "%PLAYER_ENTRY%"
+uv run keytune
 set "EXIT_CODE=%ERRORLEVEL%"
 popd >nul
 
