@@ -5613,3 +5613,495 @@ msgstr "{mode}: {count} archivos"
 
 msgid "{mode}: “{name}”"
 msgstr "{mode}: “{name}”"
+
+msgid "Os itens selecionados já estão na fila de reprodução."
+msgstr "Los elementos seleccionados ya están en la cola de reproducción."
+
+msgid "Copiar seleção\tCtrl+C"
+msgstr "Copiar selección\tCtrl+C"
+
+msgid "Colar na playlist atual\tCtrl+V"
+msgstr "Pegar en la playlist actual\tCtrl+V"
+
+msgid "Colar sem tocar\tCtrl+Shift+I"
+msgstr "Pegar sin reproducir\tCtrl+Shift+I"
+
+msgid "Colar em nova playlist\tCtrl+Shift+V"
+msgstr "Pegar en una playlist nueva\tCtrl+Shift+V"
+
+msgid "Escolha os arquivos para adicionar à playlist sem tocar"
+msgstr "Elige los archivos para añadir a la playlist sin reproducir"
+
+msgid "Nenhuma mídia compatível para adicionar."
+msgstr "No hay medios compatibles para añadir."
+
+msgid "Nenhuma mídia compatível foi encontrada no conteúdo colado."
+msgstr "No se encontraron medios compatibles en el contenido pegado."
+
+msgid "Explorador de pastas"
+msgstr "Explorador de carpetas"
+
+msgid "Enter abre ou toca. Ctrl+Enter adiciona sem tocar. Shift+F10 abre as ações."
+msgstr "Enter abre o reproduce. Ctrl+Enter añade sin reproducir. Shift+F10 abre las acciones."
+
+msgid "Pasta atual do explorador"
+msgstr "Carpeta actual del explorador"
+
+msgid "Lendo as pastas selecionadas..."
+msgstr "Leyendo las carpetas seleccionadas..."
+
+msgid "&Tocar agora"
+msgstr "&Reproducir ahora"
+
+msgid "&Adicionar à playlist sem tocar\tCtrl+Enter"
+msgstr "&Añadir a la playlist sin reproducir\tCtrl+Enter"
+
+msgid "Adicionar à &fila de reprodução\tCtrl+Shift+F"
+msgstr "Añadir a la &cola de reproducción\tCtrl+Shift+F"
+
+msgid "Abrir em &nova playlist"
+msgstr "Abrir en una playlist &nueva"
+
+msgid "Adicionar a &pasta atual inteira à playlist"
+msgstr "Añadir toda la car&peta actual a la playlist"
+
+msgid "Con&verter...\tCtrl+Shift+K"
+msgstr "Con&vertir...\tCtrl+Shift+K"
+
+msgid "&Indexar pasta na biblioteca"
+msgstr "&Indexar carpeta en la biblioteca"
+
+msgid "&Copiar\tCtrl+C"
+msgstr "&Copiar\tCtrl+C"
+
+msgid "Copiar ca&minho\tCtrl+Shift+C"
+msgstr "Copiar &ruta\tCtrl+Shift+C"
+
+msgid "At&ualizar\tF5"
+msgstr "Act&ualizar\tF5"
+
+msgid "&Fechar explorador\tCtrl+Shift+O"
+msgstr "Cerrar e&xplorador\tCtrl+Shift+O"
+
+msgid "Enter entra na pasta ou toca o arquivo. Ctrl+Enter adiciona sem tocar. Ctrl+Shift+F põe na fila. Backspace volta. Shift+F10 abre ações. Tab vai para a playlist."
+msgstr "Enter entra en la carpeta o reproduce el archivo. Ctrl+Enter añade sin reproducir. Ctrl+Shift+F pone en la cola. Retroceso vuelve. Shift+F10 abre acciones. Tab va a la playlist."
+
+msgid "Explorador"
+msgstr "Explorador"
+
+msgid "Explorador de pastas fechado."
+msgstr "Explorador de carpetas cerrado."
+
+msgid "A pasta não está mais disponível."
+msgstr "La carpeta ya no está disponible."
+
+msgid "Nenhum item selecionado no explorador."
+msgstr "Ningún elemento seleccionado en el explorador."
+
+msgid "A lista de unidades não pode ser classificada."
+msgstr "La lista de unidades no se puede ordenar."
+
+msgid "Mostrar no &Explorador de Arquivos do Windows"
+msgstr "Mostrar en el &Explorador de archivos de Windows"
+
+msgid "Explorador de pastas: {name}."
+msgstr "Explorador de carpetas: {name}."
+
+msgid "Nenhuma mídia compatível foi encontrada na seleção."
+msgstr "No se encontraron medios compatibles en la selección."
+
+msgid "Não foi possível abrir o Explorador de Arquivos do Windows."
+msgstr "No se pudo abrir el Explorador de archivos de Windows."
+
+msgid "Localiza itens da pasta aberta no explorador."
+msgstr "Busca elementos de la carpeta abierta en el explorador."
+
+msgid "Os itens já estavam em {title}."
+msgstr "Los elementos ya estaban en {title}."
+
+msgid "Explorador de &Pastas\tCtrl+Shift+O"
+msgstr "Explorador de &Carpetas\tCtrl+Shift+O"
+
+msgid "Adicionar arquivos sem &tocar... (Ctrl+I)"
+msgstr "Añadir archivos sin &reproducir... (Ctrl+I)"
+
+msgid "Colar na playlist atual s&em tocar (Ctrl+Shift+I)"
+msgstr "Pegar en la playlist actual s&in reproducir (Ctrl+Shift+I)"
+
+msgid "Este computador"
+msgstr "Este equipo"
+
+msgid "Músicas"
+msgstr "Música"
+
+msgid "Vídeos"
+msgstr "Vídeos"
+
+msgid "Downloads"
+msgstr "Descargas"
+
+msgid "Área de trabalho"
+msgstr "Escritorio"
+
+msgid "Documentos"
+msgstr "Documentos"
+
+msgid "Limpar a fila de reprodução"
+msgstr "Vaciar la cola de reproducción"
+
+msgid "Deseja remover todos os {count} itens da fila de reprodução?"
+msgstr "¿Deseas quitar los {count} elementos de la cola de reproducción?"
+
+msgid "Pasta atual: {name}. {count} item."
+msgid_plural "Pasta atual: {name}. {count} itens."
+msgstr[0] "Carpeta actual: {name}. {count} elemento."
+msgstr[1] "Carpeta actual: {name}. {count} elementos."
+
+msgid "{count} item adicionado a {title}, sem tocar."
+msgid_plural "{count} itens adicionados a {title}, sem tocar."
+msgstr[0] "{count} elemento añadido a {title}, sin reproducir."
+msgstr[1] "{count} elementos añadidos a {title}, sin reproducir."
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+I — Colar na playlist atual sem tocar\nCtrl+I — Escolher arquivos e adicionar à playlist atual sem tocar\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nCtrl+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir el explorador de carpetas junto a la playlist; de nuevo, con el foco en él, lo cierra\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (incluso desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+I — Pegar en la playlist actual sin reproducir\nCtrl+I — Elegir archivos y añadirlos a la playlist actual sin reproducir\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir el medio abierto (audio o vídeo); más opciones en Archivo > Convertir\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+B — Descargar el medio actual de YouTube (audio o vídeo); selección y playlist completa en el menú contextual de la lista\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nCtrl+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Volver a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nDelete — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+
+msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgstr "Atajos principales: Ctrl+Alt+O abrir medio, playlist o carpeta · Ctrl+O abrir archivos o playlist · Ctrl+Shift+O explorador de carpetas · Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Tab elementos/reproductor · Ctrl+F localizar elemento (F3 siguiente) · Ctrl+G buscar en la biblioteca · Ctrl+D favorito · Ctrl+Shift+H historial · Ctrl+Shift+D temporizador · Ctrl+Shift+Y panel de YouTube Music (opcional) · F1 ayuda"
+
+msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr "Sin medio cargado\n\nCtrl+Alt+O abre medio, playlist o carpeta\nCtrl+O abre archivos o playlist\nCtrl+Shift+O abre el explorador de carpetas\nEspacio reproduce o pausa\nTab alterna entre elementos y reproductor\nCtrl+Shift+Y abre el panel de YouTube Music cuando la integración opcional está activada\nF1 muestra la ayuda rápida de atajos"
+
+msgid "Lendo as pastas coladas..."
+msgstr "Leyendo las carpetas pegadas..."
+
+msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
+msgstr "No se puede añadir una unidad entera de una vez. Entra en ella y elige una carpeta."
+
+msgid "Repetindo faixa atual."
+msgstr "Repitiendo la pista actual."
+
+msgid "Conteúdo relacionado."
+msgstr "Contenido relacionado."
+
+msgid "Sessão restaurada com {count} abas. {title}."
+msgstr "Sesión restaurada con {count} pestañas. {title}."
+
+msgid "Colar\tCtrl+V"
+msgstr "Pegar\tCtrl+V"
+
+msgid "Colar sem tocar\tCtrl+Shift+V"
+msgstr "Pegar sin reproducir\tCtrl+Shift+V"
+
+msgid "Escolha os arquivos para abrir sem tocar"
+msgstr "Elige los archivos para abrir sin reproducir"
+
+msgid "Enter abre ou toca. Shift+Enter adiciona sem tocar. Shift+F10 abre as ações."
+msgstr "Enter abre o reproduce. Shift+Enter añade sin reproducir. Shift+F10 abre las acciones."
+
+msgid "&Adicionar à playlist sem tocar\tShift+Enter"
+msgstr "&Añadir a la playlist sin reproducir\tShift+Enter"
+
+msgid "&Fechar explorador\tCtrl+E"
+msgstr "&Cerrar explorador\tCtrl+E"
+
+msgid "&Abrir...\tCtrl+O"
+msgstr "&Abrir...\tCtrl+O"
+
+msgid "Abrir sem &tocar...\tCtrl+Shift+O"
+msgstr "Abrir &sin reproducir...\tCtrl+Shift+O"
+
+msgid "&Explorador de Pastas\tCtrl+E"
+msgstr "&Explorador de carpetas\tCtrl+E"
+
+msgid "Co&lar (Ctrl+V)"
+msgstr "&Pegar (Ctrl+V)"
+
+msgid "Colar se&m tocar (Ctrl+Shift+V)"
+msgstr "Pegar sin reprod&ucir (Ctrl+Shift+V)"
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+O — Abrir archivos en la playlist actual y reproducir (un archivo de playlist se abre como playlist)\nCtrl+Shift+O — Abrir archivos sin reproducir: van al final de la playlist actual\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (incluso desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar sin reproducir\nCtrl+E — Abrir el explorador de carpetas junto a la playlist; de nuevo, con el foco en él, lo cierra\nCtrl+T — Nueva playlist (abre o pega en ella para empezar otra lista)\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir el medio abierto (audio o vídeo); más opciones en Archivo > Convertir\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+B — Descargar el medio actual de YouTube (audio o vídeo); selección y playlist completa en el menú contextual de la lista\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nShift+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Volver a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nDelete — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+
+msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgstr "Atajos principales: Ctrl+O abrir · Ctrl+V pegar · Ctrl+E explorador de carpetas · Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Tab elementos/reproductor · Ctrl+F localizar elemento (F3 siguiente) · Ctrl+G buscar en la biblioteca · Ctrl+D favorito · Ctrl+Shift+H historial · Ctrl+Shift+D temporizador · Ctrl+Shift+Y panel de YouTube Music (opcional) · F1 ayuda"
+
+msgid "Sem mídia carregada\n\nCtrl+O abre arquivos ou uma playlist\nCtrl+V cola links, arquivos ou pastas copiados\nCtrl+E abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr "Sin medio cargado\n\nCtrl+O abre archivos o una playlist\nCtrl+V pega enlaces, archivos o carpetas copiados\nCtrl+E abre el explorador de carpetas\nEspacio reproduce o pausa\nTab alterna entre elementos y reproductor\nCtrl+Shift+Y abre el panel de YouTube Music cuando la integración opcional está activada\nF1 muestra la ayuda rápida de atajos"
+
+msgid "Enter entra na pasta ou toca o arquivo. Shift+Enter adiciona sem tocar. Ctrl+Shift+F põe na fila. Backspace volta. Shift+F10 abre ações. Tab vai para a playlist."
+msgstr "Enter entra en la carpeta o reproduce el archivo. Shift+Enter añade sin reproducir. Ctrl+Shift+F pone en la cola. Retroceso vuelve. Shift+F10 abre acciones. Tab va a la playlist."
+
+msgid "Enter no campo de busca executa a pesquisa. Enter na lista toca a seleção na playlist atual. Shift+Enter adiciona sem tocar. Use Shift+F10 ou o botão Ações para mais opções."
+msgstr "Enter en el campo de búsqueda ejecuta la búsqueda. Enter en la lista reproduce la selección en la playlist actual. Shift+Enter agrega sin reproducir. Usa Shift+F10 o el botón Acciones para más opciones."
+
+msgid "&Usar a capa do álbum como imagem, se houver"
+msgstr "&Usar la portada del álbum como imagen, si la hay"
+
+msgid "Baixar seleção...\tCtrl+Shift+B"
+msgstr "Descargar selección...\tCtrl+Shift+B"
+
+msgid "Baixar playlist inteira..."
+msgstr "Descargar playlist completa..."
+
+msgid "Converter seleção...\tCtrl+Shift+K"
+msgstr "Convertir selección...\tCtrl+Shift+K"
+
+msgid "Os arquivos selecionados não foram encontrados."
+msgstr "No se encontraron los archivos seleccionados."
+
+msgid "Con&verter seleção...\tCtrl+Shift+K"
+msgstr "Con&vertir selección...\tCtrl+Shift+K"
+
+msgid "Converter &mídia atual... (Ctrl+Shift+K no player)"
+msgstr "Convertir &medio actual... (Ctrl+Shift+K en el reproductor)"
+
+msgid "Converter &seleção... (Ctrl+Shift+K na lista)"
+msgstr "Convertir &selección... (Ctrl+Shift+K en la lista)"
+
+msgid "Baixar &mídia atual... (Ctrl+Shift+B no player)"
+msgstr "Descargar &medio actual... (Ctrl+Shift+B en el reproductor)"
+
+msgid "Baixar &seleção... (Ctrl+Shift+B na lista)"
+msgstr "Descargar &selección... (Ctrl+Shift+B en la lista)"
+
+msgid "Baixar &playlist inteira..."
+msgstr "Descargar &playlist completa..."
+
+msgid "&Baixar do YouTube"
+msgstr "&Descargar de YouTube"
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+O — Abrir archivos en la playlist actual y reproducir (un archivo de playlist se abre como playlist)\nCtrl+Shift+O — Abrir archivos sin reproducir: van al final de la playlist actual\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (incluso desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar sin reproducir\nCtrl+E — Abrir el explorador de carpetas junto a la playlist; de nuevo, con el foco en él, lo cierra\nCtrl+T — Nueva playlist (abre o pega en ella para empezar otra lista)\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir: con el foco en una lista, la selección; en el reproductor, el medio actual\nCtrl+Shift+B — Descargar de YouTube: con el foco en una lista, la selección; en el reproductor, el medio actual (playlist completa en Archivo > Descargar de YouTube)\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nShift+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Volver a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nDelete — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+
+msgid "Desça até o fim da lista para carregar mais."
+msgstr "Baja hasta el final de la lista para cargar más."
+
+msgid "Não foi possível carregar esta lista agora."
+msgstr "No se pudo cargar esta lista ahora."
+
+msgid "Carregando mais resultados."
+msgstr "Cargando más resultados."
+
+msgid "{title}: nenhum resultado."
+msgstr "{title}: ningún resultado."
+
+msgid "Este resultado não tem conteúdo para abrir."
+msgstr "Este resultado no tiene contenido para abrir."
+
+msgid "Não foi possível abrir este resultado agora."
+msgstr "No se pudo abrir este resultado ahora."
+
+msgid "Não há lista anterior para voltar."
+msgstr "No hay una lista anterior a la que volver."
+
+msgid "Abrindo {title}."
+msgstr "Abriendo {title}."
+
+msgid "Fim da lista: não há mais resultados."
+msgstr "Fin de la lista: no hay más resultados."
+
+msgid "Canal {name}"
+msgstr "Canal {name}"
+
+msgid "Artista {name}"
+msgstr "Artista {name}"
+
+msgid "Álbum {name}"
+msgstr "Álbum {name}"
+
+msgid "Playlist {name}"
+msgstr "Playlist {name}"
+
+msgid "Não foi possível carregar mais resultados agora."
+msgstr "No se pudieron cargar más resultados ahora."
+
+msgid "Ver conteúdo (Seta para a direita)"
+msgstr "Ver contenido (Flecha derecha)"
+
+msgid "Voltar à lista anterior (Backspace)"
+msgstr "Volver a la lista anterior (Retroceso)"
+
+msgid "Busca em {scope} por {query}"
+msgstr "Búsqueda en {scope} de {query}"
+
+msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
+msgstr "yt-dlp no pudo listar el contenido de YouTube."
+
+msgid "Playlist do YouTube"
+msgstr "Playlist de YouTube"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Álbuns"
+msgstr "Álbumes"
+
+msgid "Singles e EPs"
+msgstr "Sencillos y EP"
+
+msgid "Artistas parecidos"
+msgstr "Artistas similares"
+
+msgid "YouTube Music — álbuns"
+msgstr "YouTube Music — álbumes"
+
+msgid "YouTube Music — artistas"
+msgstr "YouTube Music — artistas"
+
+msgid "YouTube — canais"
+msgstr "YouTube — canales"
+
+msgid "YouTube — playlists"
+msgstr "YouTube — playlists"
+
+msgid "álbum"
+msgstr "álbum"
+
+msgid "artista"
+msgstr "artista"
+
+msgid "canal"
+msgstr "canal"
+
+msgid "Filtro do conteúdo aberto"
+msgstr "Filtro del contenido abierto"
+
+msgid "Escolhe o que mostrar do canal ou artista aberto: vídeos, playlists, álbuns e assim por diante."
+msgstr "Elige qué mostrar del canal o artista abierto: videos, playlists, álbumes, etc."
+
+msgid "Pesquise músicas, vídeos, álbuns, artistas e playlists do YouTube Music, ou vídeos, canais e playlists do YouTube. Você pode abrir um canal, artista, álbum ou playlist para ver o que há dentro, salvar playlists ou faixas no Music e adicionar resultados a uma playlist do player."
+msgstr "Busca canciones, videos, álbumes, artistas y playlists de YouTube Music, o videos, canales y playlists de YouTube. Puedes abrir un canal, artista, álbum o playlist para ver lo que contiene, guardar playlists o pistas en Music y añadir resultados a una playlist del reproductor."
+
+msgid "Mostrar:"
+msgstr "Mostrar:"
+
+msgid "Enter no campo de busca executa a pesquisa. Enter na lista toca a seleção na playlist atual (num canal ou artista, entra nele). Shift+Enter adiciona sem tocar. Seta para a direita abre o canal, artista, álbum ou playlist para ver o conteúdo; Backspace volta. Descer além do último item carrega mais resultados. Use Shift+F10 ou o botão Ações para mais opções."
+msgstr "Enter en el campo de búsqueda ejecuta la búsqueda. Enter en la lista reproduce la selección en la playlist actual (en un canal o artista, entra en él). Shift+Enter añade sin reproducir. Flecha derecha abre el canal, artista, álbum o playlist para ver su contenido; Retroceso vuelve. Bajar más allá del último elemento carga más resultados. Usa Shift+F10 o el botón Acciones para más opciones."
+
+msgid " inscritos"
+msgstr " suscriptores"
+
+msgid "ao vivo"
+msgstr "en vivo"
+
+msgid "{count} inscritos"
+msgstr "{count} suscriptores"
+
+msgid "{title}: {count} resultado."
+msgid_plural "{title}: {count} resultados."
+msgstr[0] "{title}: {count} resultado."
+msgstr[1] "{title}: {count} resultados."
+
+msgid "Mais {count} resultado. Total: {total}."
+msgid_plural "Mais {count} resultados. Total: {total}."
+msgstr[0] "{count} resultado más. Total: {total}."
+msgstr[1] "{count} resultados más. Total: {total}."
+
+msgid "Carregando mais itens."
+msgstr "Cargando más elementos."
+
+msgid "{title}: nenhum item."
+msgstr "{title}: ningún elemento."
+
+msgid "Início"
+msgstr "Inicio"
+
+msgid "Início: escolha uma lista, faça uma busca ou cole um link."
+msgstr "Inicio: elige una lista, haz una búsqueda o pega un enlace."
+
+msgid "Fim da lista: não há mais itens."
+msgstr "Fin de la lista: no hay más elementos."
+
+msgid "Tocar (Enter)"
+msgstr "Reproducir (Enter)"
+
+msgid "Adicionar sem tocar (Shift+Enter)"
+msgstr "Añadir sin reproducir (Shift+Enter)"
+
+msgid "Salvar no YouTube Music"
+msgstr "Guardar en YouTube Music"
+
+msgid "Selecione ao menos um item da lista para abrir o menu de ações."
+msgstr "Selecciona al menos un elemento de la lista para abrir el menú de acciones."
+
+msgid "Excluir playlist do YouTube Music..."
+msgstr "Eliminar playlist de YouTube Music..."
+
+msgid "Buscar no YouTube Music e no YouTube, ou colar um link"
+msgstr "Buscar en YouTube Music y en YouTube, o pegar un enlace"
+
+msgid "Digite o que procura e pressione Enter. Um link de playlist, mix ou vídeo colado aqui é aberto direto."
+msgstr "Escribe lo que buscas y pulsa Enter. Un enlace de playlist, mix o video pegado aquí se abre directamente."
+
+msgid "Onde buscar"
+msgstr "Dónde buscar"
+
+msgid "Lista atual do YouTube Music"
+msgstr "Lista actual de YouTube Music"
+
+msgid "Ações do item selecionado"
+msgstr "Acciones del elemento seleccionado"
+
+msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, ver conteúdo, baixar, salvar e outras."
+msgstr "Abre el menú con las acciones del elemento seleccionado: reproducir, añadir, ver contenido, descargar, guardar y otras."
+
+msgid "Buscar ou colar link:"
+msgstr "Buscar o pegar un enlace:"
+
+msgid "Em:"
+msgstr "En:"
+
+msgid "&Ações..."
+msgstr "&Acciones..."
+
+msgid "Enter entra no item ou toca; Shift+Enter adiciona sem tocar. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
+msgstr "Enter entra en el elemento o lo reproduce; Shift+Enter añade sin reproducir. Flecha derecha muestra lo que hay dentro y Retroceso vuelve. Bajar más allá del último elemento carga más. Shift+F10 abre las acciones."
+
+msgid "Em alta — {group}"
+msgstr "Tendencias — {group}"
+
+msgid "Em alta em {country}"
+msgstr "Tendencias en {country}"
+
+msgid "Moods e gêneros — {category}"
+msgstr "Estados de ánimo y géneros — {category}"
+
+msgid "Aba YouTube Music. Navegue pela lista, faça uma busca ou cole um link."
+msgstr "Pestaña YouTube Music. Navega por la lista, haz una búsqueda o pega un enlace."
+
+msgid "Suas playlists e mixes"
+msgstr "Tus playlists y mixes"
+
+msgid "Curtidas"
+msgstr "Me gusta"
+
+msgid "Em alta"
+msgstr "Tendencias"
+
+msgid "Moods e gêneros"
+msgstr "Estados de ánimo y géneros"
+
+msgid "{title}: {count} item."
+msgid_plural "{title}: {count} itens."
+msgstr[0] "{title}: {count} elemento."
+msgstr[1] "{title}: {count} elementos."
+
+msgid "Mais {count} item. Total: {total}."
+msgid_plural "Mais {count} itens. Total: {total}."
+msgstr[0] "{count} elemento más. Total: {total}."
+msgstr[1] "{count} elementos más. Total: {total}."
+
+msgid "Carregando as faixas de {title} para baixar."
+msgstr "Cargando las pistas de {title} para descargar."
+
+msgid "Carregando as faixas das listas selecionadas para baixar."
+msgstr "Cargando las pistas de las listas seleccionadas para descargar."
+
+msgid "Não foi possível carregar as faixas para baixar."
+msgstr "No se pudieron cargar las pistas para descargar."
+
+msgid "Cada playlist ou álbum fica em uma subpasta com o nome dele."
+msgstr "Cada playlist o álbum queda en una subcarpeta con su nombre."
+
+msgid "A seleção atual não tem faixas que possam ser baixadas."
+msgstr "La selección actual no tiene pistas que se puedan descargar."
