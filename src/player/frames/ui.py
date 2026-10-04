@@ -7,6 +7,7 @@ from ..accessibility import attach_named_accessible
 from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
+from ..radio.media import is_radio_media
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
@@ -153,6 +154,7 @@ class FrameUIMixin:
             not self._live_video_enabled()
             and state is self._get_active_playlist_state()
             and is_live_media(self.player.get_media())
+            and not is_radio_media(state.current_media_path)
         ):
             return self._player_live_audio_only_text()
 
@@ -226,6 +228,7 @@ class FrameUIMixin:
             "Tab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\n"
             "Ctrl+B — Alternar foco entre a lista de itens e o player\n"
             "Ctrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\n"
+            "Ctrl+Shift+N — Abrir as rádios online em uma aba\n"
             "Ctrl+F — Localizar item na playlist ou pasta atual\n"
             "F3 / Shift+F3 — Próximo ou anterior resultado da busca\n"
             "Ctrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\n"
@@ -391,6 +394,7 @@ class FrameUIMixin:
         self.menu_youtube_music_disconnect_id = wx.NewIdRef()
         self.menu_youtube_music_refresh_library_id = wx.NewIdRef()
         self.menu_open_youtube_music_id = wx.NewIdRef()
+        self.menu_open_radio_id = wx.NewIdRef()
         self.menu_save_playlist_id = wx.NewIdRef()
         self.menu_close_media_id = wx.NewIdRef()
         self.menu_close_tab_id = wx.NewIdRef()
@@ -513,6 +517,7 @@ class FrameUIMixin:
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
+        view_menu.Append(self.menu_open_radio_id, _("&Rádios online por aba\tCtrl+Shift+N"))
         view_menu.AppendSeparator()
         self.menu_find_item_id = wx.NewIdRef()
         self.menu_find_next_item_id = wx.NewIdRef()
@@ -774,6 +779,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_disconnect_youtube_music, id=self.menu_youtube_music_disconnect_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_youtube_music_library, id=self.menu_youtube_music_refresh_library_id)
         self.Bind(wx.EVT_MENU, self.on_open_youtube_music, id=self.menu_open_youtube_music_id)
+        self.Bind(wx.EVT_MENU, self.on_open_radio, id=self.menu_open_radio_id)
         self.Bind(wx.EVT_MENU, self.on_save_playlist, id=self.menu_save_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_previous_track, id=self.menu_previous_track_id)
         self.Bind(wx.EVT_MENU, self.on_play_pause, id=self.menu_play_pause_id)

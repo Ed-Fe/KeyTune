@@ -370,6 +370,9 @@ class PlaybackControlsMixin:
         media_name = self._media_label(media_path)
         playback_state = _("tocando") if self.player.is_playing() else _("pausado")
         status_parts.append(_("Mídia: {name}. Estado: {state}.").format(name=media_name, state=playback_state))
+        radio_now_playing_sentence = getattr(self, "_radio_now_playing_sentence", None)
+        if callable(radio_now_playing_sentence) and radio_now_playing_sentence():
+            status_parts.append(radio_now_playing_sentence())
         status_parts.append(
             _("Velocidade atual: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
         )

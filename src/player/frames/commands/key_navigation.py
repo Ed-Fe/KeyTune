@@ -277,6 +277,10 @@ class KeyNavigationMixin:
             self.on_open_youtube_music(None)
             return
 
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("N"), ord("n")):
+            self.on_open_radio(None)
+            return
+
         if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("M"), ord("m")):
             self.on_show_media_comments(None)
             return

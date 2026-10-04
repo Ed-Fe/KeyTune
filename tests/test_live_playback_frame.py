@@ -88,6 +88,18 @@ class LivePlaybackWorkerTests(unittest.TestCase):
         )
         self.assertEqual(frame.marked_live_video, [])
 
+    def test_online_radio_never_asks_for_video_nor_marks_the_slot_for_rebuild(self):
+        radio_path = "https://stream.example.com/live#keytune-radio=uuid"
+        frame = _WorkerFrame(("https://stream.example.com/live", {}, "", "", True), live_video=True)
+
+        request = frame.run_request(media_path=radio_path)
+
+        frame.instance.media_new.assert_called_once_with(
+            "https://stream.example.com/live", http_headers={}, is_live=True, video=False
+        )
+        self.assertTrue(request["is_live"])
+        self.assertEqual(frame.marked_live_video, [])
+
     def test_live_media_ignores_the_resume_position(self):
         frame = _WorkerFrame(("https://live/95.m3u8", {}, "", "", True))
 

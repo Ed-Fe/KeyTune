@@ -31,6 +31,7 @@ from .models import (
     default_media_label,
     is_remote_media,
 )
+from .radio_stations import DEFAULT_RADIO_STATION_LIMIT, RadioStationTable
 from .ratings import RatingStore
 from .records import MediaRecordStore
 from .resume import ResumeStore
@@ -57,6 +58,7 @@ class SmartLibraryService:
         self._history = HistoryStore(self._database, self._records)
         self._metadata_cache = MetadataCache(self._database)
         self._smart_playlists = SmartPlaylistStore(self._database)
+        self._radio_stations = RadioStationTable(self._database, self._records)
         self._work_queue = queue.Queue()
         self._worker = None
         self._shutting_down = False
@@ -258,6 +260,30 @@ class SmartLibraryService:
         if not self._available:
             return 0
         return self._ratings.get_rating(media_path)
+
+    # ------------------------------------------------------------------
+    # Rádios online
+    # ------------------------------------------------------------------
+    def save_radio_station(self, media_path, label, details):
+        """Guarda os dados de uma rádio de forma síncrona: é uma escrita só e curta."""
+        if not self._available:
+            return False
+        return self._radio_stations.save(media_path, label, details)
+
+    def radio_station(self, media_path):
+        if not self._available:
+            return None
+        return self._radio_stations.get(media_path)
+
+    def favorite_radio_stations(self, limit=DEFAULT_RADIO_STATION_LIMIT):
+        if not self._available:
+            return []
+        return self._radio_stations.favorites(limit=limit)
+
+    def recent_radio_stations(self, limit=DEFAULT_RADIO_STATION_LIMIT):
+        if not self._available:
+            return []
+        return self._radio_stations.recently_played(limit=limit)
 
     # ------------------------------------------------------------------
     # Histórico

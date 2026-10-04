@@ -15,6 +15,7 @@ from .library import FrameLibraryMixin
 from .lyrics_panel import LyricsPanel
 from .playback import FramePlaybackMixin
 from .plugins import FramePluginMixin
+from .radio import FrameRadioMixin
 from .recents import FrameRecentsMixin
 from .session import FrameSessionMixin
 from .sleep_timer import FrameSleepTimerMixin
@@ -27,6 +28,7 @@ from .youtube_music import FrameYouTubeMusicMixin
 
 class MediaPlayerFrame(
     FrameYouTubeMusicMixin,
+    FrameRadioMixin,
     FrameCommandMixin,
     FrameConvertMixin,
     FrameDownloadMixin,

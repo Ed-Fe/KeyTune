@@ -116,6 +116,9 @@ class AppSettings:
     # Vazio: o idioma segue o do KeyTune e a região fica a cargo do YouTube.
     youtube_content_language: str = ""
     youtube_content_region: str = ""
+    # País das rádios online; vazio segue o país configurado no sistema.
+    radio_country_code: str = ""
+    radio_country_name: str = ""
     # Vazio: a faixa de áudio que o YouTube entrega; "original" ou um idioma para os vídeos dublados.
     youtube_audio_language: str = ""
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
@@ -204,6 +207,8 @@ class AppSettings:
             "youtube_music_save_history": self.youtube_music_save_history,
             "youtube_content_language": self.youtube_content_language,
             "youtube_content_region": self.youtube_content_region,
+            "radio_country_code": self.radio_country_code,
+            "radio_country_name": self.radio_country_name,
             "youtube_audio_language": self.youtube_audio_language,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
@@ -316,6 +321,8 @@ class AppSettings:
         )
         settings.youtube_content_language = str(data.get("youtube_content_language") or "").strip()
         settings.youtube_content_region = str(data.get("youtube_content_region") or "").strip().upper()
+        settings.radio_country_code = str(data.get("radio_country_code") or "").strip().upper()
+        settings.radio_country_name = str(data.get("radio_country_name") or "").strip()
         settings.youtube_audio_language = str(data.get("youtube_audio_language") or "").strip()
         settings.youtube_music_dependency_update_interval_hours = _clamp_int(
             data.get(
