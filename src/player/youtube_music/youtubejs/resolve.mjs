@@ -310,6 +310,7 @@ function searchEntry(node) {
       channel_id: /^UC[\w-]{22}$/.test(node.author?.id || "") ? node.author.id : "",
       duration: Number(node.duration?.seconds) || 0,
       view_count_text: textOf(node.short_view_count) || textOf(node.view_count),
+      published: textOf(node.published),
       live_status: node.is_live ? "is_live" : "",
     };
   }

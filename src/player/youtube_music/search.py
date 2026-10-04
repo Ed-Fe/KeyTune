@@ -218,9 +218,11 @@ def _normalize_music_track_result(item, *, result_type):
     if album_name and result_type == "song":
         detail_parts.append(album_name)
 
-    views_text = str(item.get("views") or "").strip()
-    if views_text and result_type == "video":
-        detail_parts.append(views_text)
+    count_text = _localized_short_count(item.get("views"))
+    if count_text:
+        # Faixas contam reproduções; vídeos, visualizações.
+        label = _("{count} reproduções") if result_type == "song" else _("{count} visualizações")
+        detail_parts.append(label.format(count=count_text))
 
     feedback_tokens = item.get("feedbackTokens") or {}
     if not isinstance(feedback_tokens, dict):
@@ -341,6 +343,21 @@ def _format_duration(duration_seconds):
     if hours:
         return f"{hours}:{minutes:02}:{seconds:02}"
     return f"{minutes}:{seconds:02}"
+
+
+def _localized_short_count(value):
+    """``"1.1M plays"`` ou ``"2B"``, como o YouTube Music conta em inglês, vira ``"1,1 mi"`` ou ``"2 bi"``."""
+    match = re.fullmatch(r"([\d.,]+)\s*([KMB]?)(?:\s+\w+)?", str(value or "").strip())
+    if not match:
+        return ""
+    # A vírgula decimal é traduzida: em inglês volta a ser ponto.
+    number = match.group(1).replace(".", _(","))
+    pattern = {
+        "K": _("{number} mil"),
+        "M": _("{number} mi"),
+        "B": _("{number} bi"),
+    }.get(match.group(2), "{number}")
+    return pattern.format(number=number)
 
 
 def _format_view_count(view_count):

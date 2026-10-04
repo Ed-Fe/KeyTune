@@ -6337,3 +6337,21 @@ msgstr "Closed {title}."
 
 msgid "Ir para o &canal"
 msgstr "Go to the &channel"
+
+msgid "{count} reproduções"
+msgstr "{count} plays"
+
+msgid ","
+msgstr "."
+
+msgid "{number} mil"
+msgstr "{number}K"
+
+msgid "{number} mi"
+msgstr "{number}M"
+
+msgid "{number} bi"
+msgstr "{number}B"
+
+msgid "Ir para o &artista"
+msgstr "Go to the &artist"

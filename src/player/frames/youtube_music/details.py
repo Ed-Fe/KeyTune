@@ -3,8 +3,16 @@
 import wx
 
 from player.youtube_music import details as youtube_details
-from player.youtube_music.models import YOUTUBE_SEARCH_SOURCE_YOUTUBE, YouTubeMediaSearchResult
-from player.youtube_music.playlists import extract_video_id_from_text
+from player.youtube_music.models import (
+    YOUTUBE_SEARCH_SOURCE_MUSIC,
+    YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+    YouTubeMediaSearchResult,
+)
+from player.youtube_music.playlists import extract_video_id_from_text, is_music_youtube_url
+
+# As faixas do YouTube Music ficam num canal automático, "Artista - Topic",
+# cujo identificador é o do artista no YouTube Music.
+TOPIC_CHANNEL_SUFFIX = " - Topic"
 
 from ...i18n import _
 
@@ -35,8 +43,10 @@ class DetailsMixin:
 
         def on_success(details):
             actions = []
-            if details.channel_id:
-                actions.append((_("Ir para o &canal"), lambda: self._open_youtube_music_channel(details)))
+            owner = self._youtube_music_details_owner(media_url, details)
+            if owner is not None:
+                label = _("Ir para o &artista") if owner.result_type == "artist" else _("Ir para o &canal")
+                actions.append((label, lambda: self._open_youtube_music_details_owner(owner)))
             self._show_youtube_music_reading_dialog(
                 title=_("Detalhes de {title}").format(title=details.title) if details.title else _("Detalhes"),
                 text=youtube_details.details_reading_text(details),
@@ -57,19 +67,33 @@ class DetailsMixin:
         self._announce(_("Carregando os detalhes."))
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
-    def _open_youtube_music_channel(self, details):
-        """Abre o KeyTube no canal da mídia cujos detalhes estavam na tela."""
-        channel = YouTubeMediaSearchResult(
+    @staticmethod
+    def _youtube_music_details_owner(media_url, details):
+        """O artista (faixa do YouTube Music) ou o canal da mídia, para ir até ele; ``None`` sem ele."""
+        if not details.channel_id:
+            return None
+        if is_music_youtube_url(media_url) and details.channel.endswith(TOPIC_CHANNEL_SUFFIX):
+            return YouTubeMediaSearchResult(
+                source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+                result_type="artist",
+                title=details.channel[: -len(TOPIC_CHANNEL_SUFFIX)],
+                browse_id=details.channel_id,
+                source_badge="YouTube Music",
+            )
+        return YouTubeMediaSearchResult(
             source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
             result_type="channel",
             title=details.channel,
             browse_id=details.channel_id,
             source_badge="YouTube",
         )
+
+    def _open_youtube_music_details_owner(self, owner):
+        """Abre o KeyTube no artista ou canal da mídia cujos detalhes estavam na tela."""
         self.on_open_youtube_music(None)
         if self._get_youtube_music_panel() is None:
             return False
-        return self.on_browse_youtube_music_search_result(channel, focus_results=True)
+        return self.on_browse_youtube_music_search_result(owner, focus_results=True)
 
     def _show_youtube_music_reading_dialog(self, *, title, text, name, actions=()):
         """Caixa só de leitura, com o cursor no começo do texto; Esc fecha.

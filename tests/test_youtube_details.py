@@ -127,6 +127,16 @@ class DetailsFrameTests(unittest.TestCase):
         self.assertEqual((channel.result_type, channel.browse_id, channel.title), ("channel", "UC" + "a" * 22, "Canal"))
         self.assertTrue(frame.on_browse_youtube_music_search_result.call_args.kwargs["focus_results"])
 
+    def test_a_music_track_offers_its_artist_instead_of_the_topic_channel(self):
+        frame = _Frame()
+        found = details.YouTubeMediaDetails(title="Faixa", channel="Ana - Topic", channel_id="UC" + "b" * 22)
+        with patch.object(details, "media_details", return_value=found):
+            frame._open_youtube_music_details("https://music.youtube.com/watch?v=dQw4w9WgXcQ")
+
+        self.assertEqual(frame.dialogs[0]["actions"][0][0], "Ir para o &artista")
+        owner = frame._youtube_music_details_owner("https://music.youtube.com/watch?v=dQw4w9WgXcQ", found)
+        self.assertEqual((owner.result_type, owner.title, owner.browse_id), ("artist", "Ana", "UC" + "b" * 22))
+
     def test_a_playlist_and_a_local_file_have_no_details(self):
         frame = _Frame()
         playlist = YouTubeMediaSearchResult(

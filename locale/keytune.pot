@@ -447,6 +447,10 @@ msgstr ""
 msgid "&Voltar"
 msgstr ""
 
+#: src/player/youtube_music/search.py
+msgid ","
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "1 estrela"
 msgstr ""
@@ -3657,6 +3661,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/navigation.py
 msgid "Início: escolha uma lista, faça uma busca ou cole um link."
+msgstr ""
+
+#: src/player/frames/youtube_music/details.py
+msgid "Ir para o &artista"
 msgstr ""
 
 #: src/player/frames/youtube_music/details.py
@@ -7871,6 +7879,10 @@ msgid_plural "{count} reproduções no histórico."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/youtube_music/search.py
+msgid "{count} reproduções"
+msgstr ""
+
 #: src/player/youtube_music/comments.py
 msgid "{count} respostas"
 msgstr ""
@@ -8034,6 +8046,18 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "{name}: {value} dB."
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} bi"
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} mi"
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} mil"
 msgstr ""
 
 #: src/player/frames/smart_library/resume.py
