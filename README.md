@@ -12,7 +12,7 @@ It focuses on playlist management, folder browsing, session restore, and persist
 ## Features
 
 - Embedded MPV playback inside a wxPython window
-- Tabbed playlists and folder browsing
+- Tabbed playlists and a folder explorer next to the tabs (`Ctrl+E`)
 - `.m3u` and `.m3u8` playlist loading and saving
 - Session restore for tabs, playback position, volume, and the current item
 - Persistent preferences stored in `settings.json`
@@ -26,7 +26,8 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - AutoDJ sessions with a visible rolling queue, per-track state, preparation controls, multi-track planning, downbeat/section/key/vocal analysis, loudness-aware selection, phrase alignment, tempo matching, and profile-specific bass/EQ mixing
 - Sleep timer with preset durations, a custom duration, or an end-of-track stop (`Ctrl+Shift+D`)
 - Built-in equalizer presets plus custom presets
-- YouTube Music integration for search, link-based open flows, library refresh, and account-synced likes/dislikes
+- KeyTube (`Ctrl+Shift+Y`): YouTube Music and YouTube in one list, with search, link-based open flows, channels, subscriptions, comments, details, library refresh, and account-synced likes/dislikes
+- Online radio from the Radio Browser directory (`Ctrl+Shift+N`), with favorites, recents, and browsing by country, genre, and language
 - Optional YouTube Music related-content autoplay (radio) when a playlist ends
 - YouTube live broadcasts from a link, with audio and optional video (`Ctrl+Alt+V`), automatic reconnection, and accessible status announcements
 - Audio and video conversion between formats (`Ctrl+Shift+K`, **File > Convert**): audio to video, video to audio, audio to audio, and video to video, powered by FFmpeg

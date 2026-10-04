@@ -106,9 +106,9 @@ footer {
   <main>
     <section class="card">
       <h1>KeyTune Manual</h1>
-      <p>KeyTune is a media player designed for keyboard use with a focus on accessibility. It was built to work well with playlists, folder navigation, and preserving what you were doing between sessions.</p>
-<p>This project was developed with AI assistance, including GitHub Copilot, OpenAI Codex, and Anthropic Claude Code.</p>
-<p>This manual presents the application's main features and the most common actions so you can start using the player quickly.</p>
+      <p>KeyTune is a media player built to be used from the keyboard, with accessibility first. It works well with playlists, with folder browsing, and with picking up where you left off last time.</p>
+<p>This project was developed with AI assistance, including GitHub Copilot, OpenAI Codex and Anthropic's Claude Code.</p>
+<p>Here you will find the app's features and step-by-step instructions for the most common tasks. If you just want to start listening, read <a href="#getting-started">Getting started</a> and <a href="#how-to-open-media">How to open media</a>. The rest is for reference.</p>
 
     <nav class="toc" aria-label="Manual table of contents">
       <ol>
@@ -116,18 +116,20 @@ footer {
         <li class="toc-level-2"><a href="#getting-started">Getting started</a></li>
         <li class="toc-level-2"><a href="#interface">Interface</a></li>
         <li class="toc-level-2"><a href="#how-to-open-media">How to open media</a></li>
-        <li class="toc-level-2"><a href="#playlist-folders-and-tabs">Playlist, folders, and tabs</a></li>
-        <li class="toc-level-3"><a href="#tab-and-item-shortcuts">Tab and item shortcuts</a></li>
+        <li class="toc-level-2"><a href="#playback">Playback</a></li>
+        <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
         <li class="toc-level-3"><a href="#playback-queue">Playback queue</a></li>
         <li class="toc-level-3"><a href="#sleep-timer">Sleep timer</a></li>
-        <li class="toc-level-3"><a href="#downloading-the-current-media">Downloading the current media</a></li>
-        <li class="toc-level-3"><a href="#converting-media">Converting media</a></li>
-        <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
+        <li class="toc-level-3"><a href="#lyrics">Lyrics</a></li>
+        <li class="toc-level-2"><a href="#playlists-folders-and-tabs">Playlists, folders and tabs</a></li>
+        <li class="toc-level-3"><a href="#tab-and-item-shortcuts">Tab and item shortcuts</a></li>
         <li class="toc-level-3"><a href="#item-browser">Item browser</a></li>
-        <li class="toc-level-4"><a href="#playlist-mode">Playlist mode</a></li>
-        <li class="toc-level-4"><a href="#folder-mode">Folder mode</a></li>
-        <li class="toc-level-4"><a href="#quick-location-by-typing">Quick location by typing</a></li>
-        <li class="toc-level-4"><a href="#search-within-the-current-playlist-or-folder">Search within the current playlist or folder</a></li>
+        <li class="toc-level-3"><a href="#how-lists-work">How lists work</a></li>
+        <li class="toc-level-3"><a href="#folder-explorer">Folder explorer</a></li>
+        <li class="toc-level-3"><a href="#finding-items">Finding items</a></li>
+        <li class="toc-level-2"><a href="#download-and-convert">Download and convert</a></li>
+        <li class="toc-level-3"><a href="#download-from-youtube">Download from YouTube</a></li>
+        <li class="toc-level-3"><a href="#convert-media">Convert media</a></li>
         <li class="toc-level-2"><a href="#smart-library">Smart library</a></li>
         <li class="toc-level-3"><a href="#what-goes-into-the-index">What goes into the index</a></li>
         <li class="toc-level-3"><a href="#global-search">Global search</a></li>
@@ -135,40 +137,43 @@ footer {
         <li class="toc-level-3"><a href="#playback-history">Playback history</a></li>
         <li class="toc-level-3"><a href="#resume-where-you-stopped">Resume where you stopped</a></li>
         <li class="toc-level-3"><a href="#smart-playlists">Smart playlists</a></li>
-        <li class="toc-level-3"><a href="#metadata-and-analysis-cache">Metadata and analysis cache</a></li>
-        <li class="toc-level-2"><a href="#settings">Settings</a></li>
-        <li class="toc-level-3"><a href="#general">General</a></li>
-        <li class="toc-level-3"><a href="#playback">Playback</a></li>
-        <li class="toc-level-3"><a href="#accessibility">Accessibility</a></li>
-        <li class="toc-level-3"><a href="#library">Library</a></li>
-        <li class="toc-level-4"><a href="#library-index">Library index</a></li>
-        <li class="toc-level-4"><a href="#playback-history-2">Playback history</a></li>
-        <li class="toc-level-4"><a href="#resume-where-you-stopped-2">Resume where you stopped</a></li>
-        <li class="toc-level-4"><a href="#metadata-and-analysis-cache-2">Metadata and analysis cache</a></li>
-        <li class="toc-level-3"><a href="#download">Download</a></li>
-        <li class="toc-level-3"><a href="#additional-features">Additional features</a></li>
-        <li class="toc-level-4"><a href="#youtube-music-and-youtube-integration">YouTube Music and YouTube integration</a></li>
-        <li class="toc-level-4"><a href="#advanced-autodj">Advanced AutoDJ</a></li>
-        <li class="toc-level-4"><a href="#youtube-music-library">YouTube Music library</a></li>
+        <li class="toc-level-2"><a href="#keytube-youtube-and-youtube-music">KeyTube: YouTube and YouTube Music</a></li>
+        <li class="toc-level-3"><a href="#account-and-library">Account and library</a></li>
+        <li class="toc-level-3"><a href="#the-list">The list</a></li>
+        <li class="toc-level-3"><a href="#search-and-open-links">Search and open links</a></li>
+        <li class="toc-level-3"><a href="#video-and-song-details">Video and song details</a></li>
+        <li class="toc-level-3"><a href="#comments">Comments</a></li>
+        <li class="toc-level-3"><a href="#audio-language">Audio language</a></li>
+        <li class="toc-level-3"><a href="#live-broadcasts">Live broadcasts</a></li>
+        <li class="toc-level-3"><a href="#radio-from-the-current-track">Radio from the current track</a></li>
+        <li class="toc-level-3"><a href="#manage-youtube-music-playlists">Manage YouTube Music playlists</a></li>
+        <li class="toc-level-3"><a href="#connect-your-account">Connect your account</a></li>
+        <li class="toc-level-4"><a href="#what-cookies-are">What cookies are</a></li>
+        <li class="toc-level-4"><a href="#connect-through-the-browser">Connect through the browser</a></li>
+        <li class="toc-level-4"><a href="#alternative-export-the-cookies-txt">Alternative: export the cookies.txt</a></li>
+        <li class="toc-level-4"><a href="#security">Security</a></li>
+        <li class="toc-level-3"><a href="#keytube-shortcuts">KeyTube shortcuts</a></li>
+        <li class="toc-level-2"><a href="#online-radio">Online radio</a></li>
+        <li class="toc-level-3"><a href="#the-home">The home</a></li>
+        <li class="toc-level-3"><a href="#keys-and-actions">Keys and actions</a></li>
+        <li class="toc-level-3"><a href="#search-and-paste-addresses">Search and paste addresses</a></li>
+        <li class="toc-level-3"><a href="#how-the-radio-plays">How the radio plays</a></li>
         <li class="toc-level-2"><a href="#equalizer">Equalizer</a></li>
-        <li class="toc-level-3"><a href="#how-to-use">How to use</a></li>
-        <li class="toc-level-4"><a href="#preset-management-buttons">Preset management buttons</a></li>
+        <li class="toc-level-3"><a href="#how-to-use-it">How to use it</a></li>
+        <li class="toc-level-4"><a href="#management-buttons">Management buttons</a></li>
         <li class="toc-level-4"><a href="#preset-editor">Preset editor</a></li>
         <li class="toc-level-3"><a href="#built-in-presets">Built-in presets</a></li>
         <li class="toc-level-3"><a href="#tips">Tips</a></li>
-        <li class="toc-level-2"><a href="#youtube-music">YouTube Music</a></li>
-        <li class="toc-level-3"><a href="#account-and-library">Account and library</a></li>
-        <li class="toc-level-3"><a href="#search-in-the-catalog-and-on-youtube">Search in the catalog and on YouTube</a></li>
-        <li class="toc-level-3"><a href="#open-playlist-or-video">Open playlist or video</a></li>
-        <li class="toc-level-3"><a href="#live-broadcasts">Live broadcasts</a></li>
-        <li class="toc-level-3"><a href="#radio-from-the-current-track">Radio from the current track</a></li>
-        <li class="toc-level-3"><a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a></li>
-        <li class="toc-level-3"><a href="#youtube-music-session">YouTube Music session</a></li>
-        <li class="toc-level-4"><a href="#what-cookies-are">What cookies are</a></li>
-        <li class="toc-level-4"><a href="#how-to-connect-via-direct-browser-extraction">How to connect via direct browser extraction</a></li>
-        <li class="toc-level-4"><a href="#alternative-step-by-step-manual-cookies-txt-export">Alternative step by step: manual cookies.txt export</a></li>
-        <li class="toc-level-4"><a href="#security-information">Security information</a></li>
-        <li class="toc-level-3"><a href="#shortcuts">Shortcuts</a></li>
+        <li class="toc-level-2"><a href="#autodj">AutoDJ</a></li>
+        <li class="toc-level-2"><a href="#settings">Settings</a></li>
+        <li class="toc-level-3"><a href="#general">General</a></li>
+        <li class="toc-level-3"><a href="#playback-2">Playback</a></li>
+        <li class="toc-level-3"><a href="#accessibility">Accessibility</a></li>
+        <li class="toc-level-3"><a href="#library">Library</a></li>
+        <li class="toc-level-3"><a href="#download">Download</a></li>
+        <li class="toc-level-3"><a href="#keytube">KeyTube</a></li>
+        <li class="toc-level-3"><a href="#online-radio-2">Online radio</a></li>
+        <li class="toc-level-3"><a href="#additional-resources">Additional resources</a></li>
         <li class="toc-level-2"><a href="#accessibility-features">Accessibility features</a></li>
         <li class="toc-level-2"><a href="#updates">Updates</a></li>
         <li class="toc-level-2"><a href="#troubleshooting">Troubleshooting</a></li>
@@ -178,382 +183,552 @@ footer {
     </nav>
     <h2 id="what-keytune-offers">What KeyTune offers</h2>
 <ul>
-<li>Keyboard-controlled media playback</li>
-<li>Tabbed playlists</li>
-<li>A playback queue to organize what plays next</li>
-<li>Search within the current playlist or folder, with keyboard navigation between results</li>
-<li>Smart library with global search, favorites, ratings, history, and per-file resume</li>
-<li>Sleep timer with preset durations or a pause at the end of the current track</li>
-<li>Folder navigation with preview</li>
-<li>Per-tab equalizer with built-in profiles and custom presets</li>
-<li>A lyrics panel with automatic fetching and text copying</li>
-<li>Dedicated YouTube Music tab, opened with <code>Ctrl+Shift+Y</code></li>
+<li>Audio and video playback controlled from the keyboard</li>
+<li>Playlists in tabs, with an independent playback queue</li>
+<li>Folder explorer next to the tabs</li>
+<li>Search in the current playlist or folder, with navigation between results</li>
+<li>Smart library: global search, favorites, ratings, history and per-file resume</li>
+<li>Sleep timer with preset durations or a pause at the end of the track</li>
+<li>Per-tab equalizer, with presets and your own presets</li>
+<li>Lyrics panel with automatic search</li>
+<li>KeyTube tab, with YouTube Music and YouTube (<code>Ctrl+Shift+Y</code>)</li>
 <li>YouTube live broadcasts, with audio and optional video</li>
-<li>Download of the current YouTube media (audio or video) with <code>Ctrl+Shift+B</code></li>
-<li>Audio and video conversion between formats, with <code>Ctrl+Shift+K</code> or <strong>File &gt; Convert</strong></li>
-<li>Loading and saving playlists</li>
-<li>Restoration of what was open in the last session</li>
-<li>List of recent files, folders, and playlists</li>
-<li>Accessibility announcements when screen readers are available</li>
+<li>Online radio from all over the world (<code>Ctrl+Shift+N</code>)</li>
+<li>Download of YouTube songs and videos (<code>Ctrl+Shift+B</code>)</li>
+<li>Audio and video conversion between formats (<code>Ctrl+Shift+K</code>)</li>
+<li>AutoDJ, which mixes the tracks of the playlist</li>
+<li>Plugins and marketplace</li>
+<li>Restoring what was open in the last session</li>
+<li>Announcements for screen readers</li>
 </ul>
 <h2 id="getting-started">Getting started</h2>
 <ol>
-<li>Download the latest <code>KeyTune-Setup.exe</code> installer from the <a href="https://github.com/ed-fe/KeyTune/releases">releases</a> page.</li>
-<li>Run the installer and follow the steps. On the additional tasks page, you can choose to create a desktop shortcut and select which audio, video, and playlist formats you want to associate with KeyTune - all optional and unchecked by default. Associating a format registers KeyTune as an option in the <em>Open with</em> menu; to make it open those files automatically, you still need to confirm it as the default in Windows settings.</li>
-<li>At the end, the installer offers to start KeyTune and open this manual.</li>
-<li>In future runs, when an update is available, the application itself shows a dialog with what's new and asks for confirmation before downloading and installing it (see <a href="#updates">Updates</a>).</li>
+<li>Download the latest <code>KeyTune-Setup.exe</code> from the <a href="https://github.com/ed-fe/KeyTune/releases">releases</a> page.</li>
+<li>Run the installer and follow the steps. On the additional tasks page you can create a desktop shortcut and choose which audio, video and playlist formats to associate with KeyTune. All of this is optional and unchecked by default. Associating a format adds KeyTune to the <em>Open with</em> menu; for it to open those files on its own, you still need to set it as the default in the Windows settings.</li>
+<li>From then on, when a new version is available, KeyTune shows what's new and asks for confirmation before downloading and installing (see <a href="#updates">Updates</a>).</li>
 </ol>
-<p>KeyTune depends on the MPV runtime to play media. The installer already includes this runtime; if the player opens but does not play anything, see the <a href="#troubleshooting">Troubleshooting</a> section.</p>
+<p>KeyTune plays media through the MPV runtime, and the installer already includes it. If the player opens but plays nothing, see <a href="#troubleshooting">Troubleshooting</a>.</p>
 <h2 id="interface">Interface</h2>
-<p>When you open KeyTune for the first time, the main window shows a single empty playlist tab, with nothing to play yet. The window is divided into four areas:</p>
+<p>The first time you open it, the window shows an empty playlist tab. It has these areas:</p>
 <ul>
-<li><strong>Menu bar</strong>, at the top: <strong>File</strong> (open media/folder/playlist, recent items, save), <strong>Playback</strong> (play/pause, previous/next track, shuffle, repeat, audio device, announcements), <strong>View</strong> (switch focus, equalizer, YouTube Music), <strong>Tabs</strong> (new tab, tab navigation, close), <strong>Settings</strong> (preferences), and <strong>Help</strong> (manual, shortcuts, check for updates).</li>
-<li><strong>Tab area</strong>, taking up most of the window: each tab represents a playlist or an open folder (see <a href="#playlist-folders-and-tabs">Playlist, folders, and tabs</a>). Inside each tab, the space is split into two side-by-side parts:<ul>
-<li>on the <strong>left</strong>, the item browser - the playlist list or the contents of the current folder;</li>
-<li>on the <strong>right</strong>, the player area. When the current media is a video, this area shows the video frame; for audio, or when nothing is loaded, it shows supporting text with the most commonly used shortcuts to get started.</li>
+<li><strong>Menu bar</strong>, at the top: <strong>File</strong>, <strong>Playback</strong>, <strong>View</strong>, <strong>Library</strong>, <strong>Tabs</strong>, <strong>Settings</strong> and <strong>Help</strong>.</li>
+<li><strong>Tab area</strong>, which takes up most of the window. Each tab is a playlist (see <a href="#playlists-folders-and-tabs">Playlists, folders and tabs</a>) and is split into two parts side by side: on the left, the item browser, which is the playlist list; on the right, the player area. For a video, the player area shows the video frame. For audio, or with nothing loaded, it shows a help text with the most-used shortcuts.</li>
+<li><strong>Folder explorer</strong>, to the left of the tabs when opened with <code>Ctrl+E</code>. It shows the folders and media files on the computer (see <a href="#folder-explorer">Folder explorer</a>).</li>
+<li><strong>Time panel</strong>, below the tabs: elapsed time, duration, progress bar and a summary of the main shortcuts.</li>
+<li><strong>Status bar</strong>, along the bottom edge: the result of the last action.</li>
 </ul>
-</li>
-<li><strong>Time panel</strong>, below the tab area: shows the elapsed time and duration of the current media, a visual progress bar, and a summary of the main shortcuts.</li>
-<li><strong>Status bar</strong>, at the bottom edge of the window: displays short, temporary messages about the last action performed (for example, when opening a file or saving a playlist).</li>
-</ul>
-<p>Use <code>Tab</code> or <code>Ctrl+B</code> to move focus between the item browser and the player within the active tab, and <code>F1</code> at any time to open the quick shortcut help.</p>
+<p><code>Tab</code> or <code>Ctrl+B</code> switch focus between the item browser and the player (with the explorer open, <code>Tab</code> goes through it too). <code>F1</code>, at any time, opens the quick shortcuts help.</p>
 <h2 id="how-to-open-media">How to open media</h2>
-<p>You can open media files, a local playlist, a folder, or a compatible path and link using the shortcuts or the <strong>File</strong> menu:</p>
+<p>There are three ways to put media into KeyTune: open, paste and use the folder explorer. All three work the same way: what comes in goes to the <strong>current playlist</strong> and starts playing. With <code>Shift</code>, it goes in <strong>without playing</strong>, at the end of the list, and whatever was playing keeps playing.</p>
+<table>
+<thead>
+<tr>
+<th>To</th>
+<th>Playing</th>
+<th>Without playing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Choose files</td>
+<td><code>Ctrl+O</code> (<strong>File &gt; Open...</strong>)</td>
+<td><code>Ctrl+Shift+O</code> (<strong>File &gt; Open without playing...</strong>)</td>
+</tr>
+<tr>
+<td>Paste from the clipboard</td>
+<td><code>Ctrl+V</code></td>
+<td><code>Ctrl+Shift+V</code></td>
+</tr>
+<tr>
+<td>Use the folder explorer</td>
+<td><code>Enter</code></td>
+<td><code>Shift+Enter</code></td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><code>Ctrl+Alt+O</code> - unified dialog that accepts any type: file, folder, playlist, link, or YouTube Music ID.</li>
-<li><code>Ctrl+O</code> - opens media files or an <code>.m3u</code>/<code>.m3u8</code> playlist.</li>
-<li><code>Ctrl+Shift+O</code> - opens a folder directly in the folder browser.</li>
-<li><code>Ctrl+V</code> - pastes a path or link from the clipboard into the current playlist; YouTube Music playlist links are recognized by their <code>list=</code> parameter and opened as a complete playlist.</li>
-<li><code>Ctrl+Shift+V</code> - pastes and opens in a new playlist.</li>
+<li>A <code>.m3u</code> or <code>.m3u8</code> file opened with <code>Ctrl+O</code> becomes a playlist.</li>
+<li><code>Ctrl+V</code> accepts links, paths as text, and files or folders copied in Windows File Explorer. From a folder, all the media come in, including those in subfolders. YouTube Music playlist links are recognized by the <code>list=</code> parameter and opened as the complete playlist.</li>
 </ul>
-<p>Directly supported media formats:</p>
+<p>To start a separate list, create a new playlist with <code>Ctrl+T</code> and open or paste into it. To open a link, copy it and use <code>Ctrl+V</code>.</p>
+<p>Formats supported directly:</p>
 <ul>
 <li>Audio: <code>.mp3</code>, <code>.wav</code>, <code>.flac</code>, <code>.aac</code>, <code>.ogg</code>, <code>.oga</code>, <code>.m4a</code>, <code>.opus</code>, <code>.wma</code>, <code>.aiff</code>, <code>.aif</code>, <code>.ac3</code>, <code>.mka</code>, <code>.wv</code>, <code>.ape</code>.</li>
 <li>Video: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
 </ul>
-<p>The <strong>File &gt; Recent</strong> menu separately stores the latest <strong>Recent files</strong>, <strong>Recent folders</strong>, and <strong>Recent playlists</strong>, making it easier to reopen what you used before without navigating again.</p>
-<h2 id="playlist-folders-and-tabs">Playlist, folders, and tabs</h2>
-<p>Each playlist is kept in a separate tab. This helps separate contexts, such as a list of songs to listen to now, a folder with local files, or a collection you want to keep organized.</p>
-<p>The active tab defines what is being played and what appears in the side browser. You can keep one tab for a saved playlist, another for an entire folder, and others for temporary lists, without mixing everything in the same context. Tabs can be opened, switched, and closed without affecting the others.</p>
-<h3 id="tab-and-item-shortcuts">Tab and item shortcuts</h3>
-<p>The shortcuts for opening media, folders, playlists, and links are in the <a href="#how-to-open-media">How to open media</a> section above. The shortcuts below are specific to tabs and the current playlist:</p>
+<p><strong>File &gt; Recent</strong> keeps, in separate lists, the last files, folders and playlists you used.</p>
+<h2 id="playback">Playback</h2>
+<h3 id="playback-shortcuts">Playback shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Space</code></td>
+<td>Play or pause</td>
+</tr>
+<tr>
+<td><code>Left arrow</code> / <code>Right arrow</code></td>
+<td>Rewind or fast-forward the media (the step is in <strong>Preferences &gt; Playback</strong>)</td>
+</tr>
+<tr>
+<td><code>Shift+Left arrow</code> / <code>Shift+Right arrow</code></td>
+<td>Rewind or fast-forward 1 minute</td>
+</tr>
+<tr>
+<td><code>Home</code> / <code>End</code></td>
+<td>Go to the start or the end of the media</td>
+</tr>
+<tr>
+<td><code>Up arrow</code> / <code>Down arrow</code></td>
+<td>Raise or lower the volume</td>
+</tr>
+<tr>
+<td><code>Ctrl+.</code></td>
+<td>Stop</td>
+</tr>
+<tr>
+<td><code>Ctrl+PageUp</code> / <code>Ctrl+PageDown</code></td>
+<td>Previous or next track</td>
+</tr>
+<tr>
+<td><code>Alt+Left arrow</code> / <code>Alt+Right arrow</code></td>
+<td>The same, as an alternative</td>
+</tr>
+<tr>
+<td><code>Alt+Up arrow</code> / <code>Alt+Down arrow</code></td>
+<td>Move the current item up or down in the playlist</td>
+</tr>
+<tr>
+<td><code>Alt+Home</code> / <code>Alt+End</code></td>
+<td>Go to the first or the last item of the playlist</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td>Toggle shuffle</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Toggle repeat mode</td>
+</tr>
+<tr>
+<td><code>]</code> / <code>[</code></td>
+<td>Raise or lower the speed</td>
+</tr>
+<tr>
+<td><code>\</code></td>
+<td>Back to normal speed</td>
+</tr>
+<tr>
+<td><code>Shift+]</code> / <code>Shift+[</code></td>
+<td>Raise or lower the pitch, in semitones</td>
+</tr>
+<tr>
+<td><code>Shift+\</code></td>
+<td>Back to the original pitch</td>
+</tr>
+<tr>
+<td><code>Alt+D</code></td>
+<td>Choose the audio output</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+L</code></td>
+<td>Show or hide the lyrics panel</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+V</code></td>
+<td>Toggle the video of live broadcasts</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+F</code></td>
+<td>Put the selected item in the queue</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+Q</code></td>
+<td>Manage the queue</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+D</code></td>
+<td>Configure the sleep timer</td>
+</tr>
+<tr>
+<td><code>T</code>, <code>V</code>, <code>S</code></td>
+<td>Announce the time, the volume and the status</td>
+</tr>
+</tbody>
+</table>
+<p>The shortcuts for YouTube Music, download and convert are in <a href="#keytube-youtube-and-youtube-music">KeyTube</a>, <a href="#download-from-youtube">Download from YouTube</a> and <a href="#convert-media">Convert media</a>.</p>
+<p><code>Ctrl+W</code> closes the active tab. <code>Ctrl+Shift+W</code> closes, or unloads, only the current media.</p>
+<h3 id="playback-queue">Playback queue</h3>
+<p>The queue defines what plays after the current track, regardless of the order of the playlist you are looking at. It always belongs to the playlist that is playing.</p>
+<p><code>Ctrl+Shift+F</code> (or <strong>Playback &gt; Add to playback queue</strong>) puts an item in the queue or takes it out. <code>Ctrl+Shift+Q</code> (or <strong>Playback &gt; Manage playback queue</strong>) shows the queue and lets you remove, reorder or clear it.</p>
+<h3 id="sleep-timer">Sleep timer</h3>
+<p>The sleep timer pauses playback after an agreed time, good for listening to something before falling asleep. It <strong>pauses</strong> instead of stopping: the position is kept and <code>Space</code> continues from where it stopped.</p>
+<p>Open it with <code>Ctrl+Shift+D</code> or <strong>Playback &gt; Sleep timer</strong>. The options:</p>
 <ul>
-<li><code>Ctrl+T</code>: open a new playlist tab</li>
-<li><code>Ctrl+W</code>: close the current tab or playlist</li>
-<li><code>Ctrl+Shift+W</code>: close the current media</li>
-<li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: move to the next or previous tab</li>
-<li><code>Ctrl+Shift+E</code>: open the equalizer for the active tab</li>
-<li><code>Ctrl+C</code>: copy the selection; in the folder browser, copies files or folders so they can be pasted into Windows File Explorer</li>
-<li><code>Ctrl+Shift+C</code>: copy the selected path in the folder browser or the link/path of the currently playing media in other tabs</li>
-<li><code>Ctrl+Space</code>: open the sorting menu in the folder browser</li>
+<li><strong>Preset durations</strong>: 5, 10, 15, 30, 45, 60, 90 or 120 minutes, right in the submenu.</li>
+<li><strong>Custom time</strong>: from 1 to 720 minutes, in the settings box.</li>
+<li><strong>At the end of the current track</strong>: playback ends when the track finishes, without advancing, repeating or pulling in related content. Does not apply to live broadcasts.</li>
+<li><strong>Do not use a timer</strong>: cancels the schedule.</li>
+</ul>
+<p>The submenu also has <strong>Time remaining</strong> and <strong>Cancel timer</strong>. The player warns you when 5 minutes are left and when 1 minute is left.</p>
+<h3 id="lyrics">Lyrics</h3>
+<p><code>Ctrl+Alt+L</code>, or the <strong>Lyrics</strong> box in the time panel, shows or hides the lyrics panel. When the track changes, KeyTune looks for the lyrics on its own, first on LRCLIB and then on YouTube Music. The <strong>Copy full lyrics</strong> button copies the text to the clipboard.</p>
+<h2 id="playlists-folders-and-tabs">Playlists, folders and tabs</h2>
+<p>Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The active tab decides what plays and what shows in the item browser.</p>
+<h3 id="tab-and-item-shortcuts">Tab and item shortcuts</h3>
+<ul>
+<li><code>Ctrl+T</code>: new playlist tab</li>
+<li><code>Ctrl+W</code>: close the current tab</li>
+<li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: next tab or previous tab</li>
+<li><code>Ctrl+Shift+E</code>: equalizer of the active tab</li>
+<li><code>Ctrl+C</code>: copy the selection as text and, for files on the computer, also as files. You can paste into another playlist, into a text field or into Windows Explorer</li>
+<li><code>Ctrl+Shift+C</code>: copy the link or the path of the current media (in the folder explorer, the path of the selection)</li>
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
 <li><code>Ctrl+B</code>: switch focus between the item browser and the player</li>
 <li><code>Ctrl+F</code>: find an item in the current playlist or folder</li>
-<li><code>Ctrl+G</code>: search the whole library (playlists, folders, and history)</li>
-<li><code>Ctrl+D</code>: add the selection to favorites or remove it</li>
+<li><code>Ctrl+G</code>: search the whole library</li>
+<li><code>Ctrl+D</code>: favorite or unfavorite the selection</li>
 <li><code>Ctrl+0</code> to <code>Ctrl+5</code>: rate the selection from zero to five stars</li>
-<li><code>Ctrl+Shift+H</code>: open the playback history</li>
-<li><code>Ctrl+Shift+R</code>: continue listening to what was left half finished</li>
+<li><code>Ctrl+Shift+H</code>: playback history</li>
+<li><code>Ctrl+Shift+R</code>: continue listening to what was left halfway</li>
 <li><code>F3</code> / <code>Shift+F3</code>: next or previous search result</li>
 </ul>
-<h3 id="playback-queue">Playback queue</h3>
-<p>The playback queue organizes what should play after the current track, without depending on the order of the playlist you are browsing. It always belongs to the playlist that is currently playing.</p>
-<p>Use <code>Ctrl+Shift+F</code> or the <strong>Playback &gt; Add to Playback Queue</strong> menu to add or remove items from the queue. To view, remove, reorder, or clear the entire queue, use <code>Ctrl+Shift+Q</code> or the <strong>Playback &gt; Manage Playback Queue</strong> menu.</p>
-<p>If the queue is empty, the queue manager tells you so and asks you to add items first.</p>
-<h3 id="sleep-timer">Sleep timer</h3>
-<p>The sleep timer pauses playback on its own after an agreed amount of time - handy for listening to something before falling asleep without leaving the player running all night. It <strong>pauses</strong> instead of stopping, so the media position is preserved and <code>Space</code> resumes right where it left off.</p>
-<p>Use <code>Ctrl+Shift+D</code> or the <strong>Playback &gt; Sleep Timer</strong> menu to set it up. The options are:</p>
-<ul>
-<li><strong>Preset durations</strong>: 5, 10, 15, 30, 45, 60, 90, or 120 minutes, available directly in the submenu.</li>
-<li><strong>Custom time</strong>: any value from 1 to 720 minutes, in the configuration dialog.</li>
-<li><strong>At the end of the current track</strong>: playback ends when the track finishes, without advancing to the next one, repeating, or pulling in related content.</li>
-<li><strong>Do not use a timer</strong>: cancels the schedule.</li>
-</ul>
-<p>The submenu also offers <strong>Time remaining</strong>, which announces how much is left, and <strong>Cancel timer</strong>, enabled only while a timer is scheduled.</p>
-<p>While the countdown runs, the player warns you when 5 minutes and when 1 minute are left. The timer state is also part of the status announcement on the <code>S</code> key.</p>
-<h3 id="downloading-the-current-media">Downloading the current media</h3>
-<p>While a YouTube or YouTube Music song or video is playing, press <code>Ctrl+Shift+B</code> (or use <strong>Playback &gt; Download current media</strong>) to download it. The download uses <code>yt-dlp</code>, the same tool that already plays this media, and runs in the background: playback carries on normally.</p>
-<ul>
-<li><strong>Download dialog</strong>: choose <strong>Audio</strong> or <strong>Video</strong>, the quality, the sample rate (converted audio only), and the folder. Your last choice becomes the default in Preferences. Uncheck <strong>Always show this dialog when downloading</strong> so later downloads start right away with the options from the <strong>Download</strong> tab in Preferences.</li>
-<li><strong>Unavailable quality</strong>: if the chosen quality does not exist for that media, KeyTune downloads it in the original quality and tells you, for example, that the video came out at 720p instead of 1080p.</li>
-<li><strong>File name</strong>: the file gets the same name KeyTune shows for the track (for example, <code>Artist — Title.mp3</code>), with the characters Windows does not accept replaced by <code>_</code>. If the same name repeats in a queue, the next one gets " (2)"; downloading the same item again replaces the previous file.</li>
-<li><strong>Progress</strong>: the player announces when the download starts and finishes, and the status bar shows the progress, along with a progress bar on its right (in a queue, the bar advances across the whole set of items). Press <code>Ctrl+Shift+B</code> again during a download to hear the progress and, if you want, cancel it.</li>
-<li><strong>FFmpeg</strong>: converting audio (MP3 or FLAC, or another sample rate) and downloading high-resolution video require FFmpeg. If it is not found, KeyTune asks whether to download it (about 90 MB, from the official builds recommended by <code>yt-dlp</code>, with an integrity check) into KeyTune's resources folder. If you decline, the download continues in the original quality, without conversion. An FFmpeg already installed on the system is also used.</li>
-<li><strong>Selection and whole playlist</strong>: in the list's context menu (<code>Shift+F10</code> or the Applications key), <strong>Download the selection from YouTube</strong> downloads the selected items and <strong>Download the whole playlist from YouTube</strong> downloads every item in the tab, into a subfolder named after the playlist. The same commands are under <strong>Playback &gt; Download the list selection</strong> and <strong>Download the whole playlist</strong>, and YouTube Music search has <strong>Download selection</strong> in the <strong>Actions</strong> menu (songs and videos only; playlists among the results are not downloaded). Before starting, KeyTune shows how many items will be downloaded and the destination folder, and asks for confirmation.</li>
-<li><strong>How the queue works</strong>: items are downloaded one at a time, with the same options. The player announces the start and a final summary (how many were downloaded and how many failed), the status bar shows "item 3 of 20", and <code>Ctrl+Shift+B</code> reports the position and lets you cancel. An item that fails does not stop the others. Repeated items are downloaded once, items that are not from YouTube are skipped, and a queue holds at most 200 items; the excess is left out, with a notice.</li>
-<li><strong>Limits</strong>: only YouTube and YouTube Music media are downloaded, and only one download runs at a time. Live broadcasts and files that are already on the computer are not downloaded.</li>
-</ul>
-<h3 id="converting-media">Converting media</h3>
-<p>KeyTune converts an audio or video file that is on your computer without leaving the player. Open the file, choose <strong>File &gt; Convert</strong>, and use one of the options:</p>
-<ul>
-<li><strong>Audio to video</strong>: makes a video from the audio, with a still picture. Choose MP4, MKV, or WebM and the resolution (480p, 720p, or 1080p). If the audio has an embedded album cover, it becomes the picture; without one, the background is black.</li>
-<li><strong>Video to audio</strong>: extracts the sound from the video to MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC, or WAV.</li>
-<li><strong>Audio to another audio format</strong>: converts between MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC, and WAV. The cover and track information come along when converting to MP3, M4A, and FLAC.</li>
-<li><strong>Video to another video format</strong>: changes only the format (MP4, MKV, WebM, AVI, or MOV). Tracks compatible with the new format are copied without quality loss and without re-encoding, which is fast; incompatible ones are re-encoded. Subtitles are only kept in MKV.</li>
-</ul>
-<p>The <code>Ctrl+Shift+K</code> shortcut (or <strong>File &gt; Convert &gt; Convert current media</strong>) asks what to do among the options that fit the type of the open media. Choosing from the menu an option that does not match the open media (for example, converting audio while a video is open) just announces a notice.</p>
-<p>To convert several files at once, select them in the list (a folder or a local playlist) and use <strong>Convert selection</strong> in the context menu or <strong>File &gt; Convert &gt; Convert the selected files in the list</strong>. KeyTune asks for the mode, showing how many files each one fits. Only files of the right type are converted and the others are skipped; when changing only the format of videos, those already in the target format are skipped too. The options apply to all of them. With <strong>Same folder as the original file</strong>, each file goes to its own original's folder; with <strong>Another folder</strong>, all go to the chosen folder. Files are converted one at a time, with progress like "file 2 of 8" and a summary at the end, and an error in one file does not stop the others.</p>
-<p>In the dialog, besides the format, you set the quality of lossy formats (128, 192, 256, or 320 kbps), the sample rate (original, 44100, or 48000 Hz; Opus always uses 48000 Hz), and where to save: <strong>Same folder as the original file</strong> (the default) or <strong>Another folder</strong>, which enables the folder field and the <strong>Choose folder</strong> button so you can pick the destination; the last folder you chose is suggested for the next conversion, and a folder that does not exist is created. The original file is never changed or overwritten: if a file with the same name already exists, the new one gets " (1)", " (2)", and so on.</p>
-<p>Conversion runs in the background and playback continues. The player announces when it starts and finishes, and the status bar shows the progress, along with a progress bar on its right. Press <code>Ctrl+Shift+K</code> during a conversion to hear the progress and, if you want, cancel it; an incomplete file is never left behind.</p>
-<p>Conversion uses FFmpeg. If it is not found, KeyTune asks whether to download it (about 90 MB, from the official builds recommended by <code>yt-dlp</code>, with an integrity check) into KeyTune's resources folder; the same FFmpeg serves downloads. Only files on your computer are converted: for YouTube media, use <code>Ctrl+Shift+B</code>.</p>
-<h3 id="playback-shortcuts">Playback shortcuts</h3>
-<ul>
-<li><code>Space</code>: play or pause</li>
-<li><code>Left Arrow</code> / <code>Right Arrow</code>: rewind or fast-forward in the current media</li>
-<li><code>Shift+Left Arrow</code> / <code>Shift+Right Arrow</code>: rewind or fast-forward 1 minute in the current media</li>
-<li><code>Home</code> / <code>End</code>: go to the beginning or end of the media</li>
-<li><code>Up Arrow</code> / <code>Down Arrow</code>: increase or decrease the volume</li>
-<li><code>Ctrl+.</code>: stop playback</li>
-<li><code>Ctrl+PageUp</code> / <code>Ctrl+PageDown</code>: previous or next track in the playlist</li>
-<li><code>Alt+Left Arrow</code> / <code>Alt+Right Arrow</code>: previous or next track in the playlist (alternative to <code>Ctrl+PageUp</code>/<code>Ctrl+PageDown</code>)</li>
-<li><code>Alt+Up Arrow</code> / <code>Alt+Down Arrow</code>: move the current item up or down in the playlist</li>
-<li><code>Alt+Home</code> / <code>Alt+End</code>: go to the first or last item in the playlist</li>
-<li><code>E</code>: toggle shuffle mode</li>
-<li><code>R</code>: toggle repeat mode</li>
-<li><code>Ctrl+R</code>: start a new YouTube Music radio from the current track</li>
-<li><code>A</code>: toggle playback of related YouTube Music content (automatic radio at the end of the playlist)</li>
-<li><code>]</code> / <code>[</code>: increase or decrease playback speed</li>
-<li><code>Shift+]</code> / <code>Shift+[</code>: increase or decrease playback pitch by semitones</li>
-<li><code>Shift+\</code>: restore the original pitch</li>
-<li><code>Alt+D</code>: open the audio output selector</li>
-<li><code>Ctrl+Alt+L</code>: toggle the lyrics panel</li>
-<li><code>Ctrl+Alt+V</code>: toggle the video of live broadcasts</li>
-<li><code>Ctrl+Shift+F</code>: add the selected item to the playback queue</li>
-<li><code>Ctrl+Shift+Q</code>: manage the playback queue</li>
-<li><code>Ctrl+Shift+B</code>: download the current YouTube media</li>
-<li><code>Ctrl+Shift+K</code>: convert the open media (audio or video)</li>
-<li><code>Ctrl+Shift+D</code>: configure the timer</li>
-<li><code>T</code>: announce the current media time</li>
-<li><code>V</code>: announce the current volume</li>
-<li><code>S</code>: announce the player status</li>
-<li><code>Ctrl+L</code>: like the current media on YouTube Music</li>
-<li><code>Ctrl+Shift+L</code>: mark the current media as disliked on YouTube Music (and skip to the next track)</li>
-</ul>
-<p>The <code>Ctrl+W</code> shortcut closes the active tab directly; the <code>Ctrl+Shift+W</code> shortcut closes or unloads the current media in the active tab.</p>
 <h3 id="item-browser">Item browser</h3>
-<p>The browser is on the left side of the window and operates in two distinct modes depending on what is in the active tab: <strong>playlist mode</strong> and <strong>folder mode</strong>. Use <code>Tab</code> or <code>Ctrl+B</code> to switch focus between the browser and the player.</p>
-<h4 id="playlist-mode">Playlist mode</h4>
-<p>When the tab contains a playlist, the browser shows all items in the sequence. The item currently playing is marked with <code>▶</code> at the start of the line. The available shortcuts are:</p>
+<p>The browser sits on the left of each tab and lists the playlist items. What is playing has <code>▶</code> at the start of the line.</p>
 <ul>
-<li><code>Enter</code>: plays the selected item immediately.</li>
-<li><code>Delete</code>: removes the selected item from the playlist.</li>
-<li><code>Shift+F10</code>: opens the context menu with additional actions for the item or the whole selection (the list supports multiple selection). In addition to copy, paste, and remove, the menu shows YouTube Music actions when the selection contains tracks from that source: <strong>Like</strong>/<strong>Dislike</strong>, <strong>Add to YouTube Music playlist...</strong>, and, when the current tab is one of your YouTube Music playlists, <strong>Remove from YouTube Music playlist</strong>. See <a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a>.</li>
-<li><code>Tab</code> / <code>Esc</code>: returns focus to the player.</li>
+<li><code>Enter</code>: plays the selected item.</li>
+<li><code>Delete</code>: takes the item out of the playlist.</li>
+<li><code>Shift+F10</code>: opens the context menu of the item or the selection. Besides copy, paste (playing or not) and remove, the menu brings the YouTube actions when the selection has items from that source: <strong>Like</strong>, <strong>Dislike</strong>, <strong>View details</strong>, <strong>View comments</strong> and <strong>Add to YouTube Music playlist...</strong>. When the tab is one of your YouTube Music playlists, <strong>Remove from YouTube Music playlist</strong> also appears. See <a href="#manage-youtube-music-playlists">Manage YouTube Music playlists</a>.</li>
+<li><code>Tab</code> or <code>Esc</code>: gives focus back to the player.</li>
 </ul>
-<h4 id="folder-mode">Folder mode</h4>
-<p>When the tab came from a folder opened with <code>Ctrl+Shift+O</code>, the browser displays the contents of the current directory: subfolders and media files. As playback advances, the item corresponding to the current media is highlighted automatically. When you move the selection to a media file, the player immediately starts playing that file. The available shortcuts are:</p>
+<h3 id="how-lists-work">How lists work</h3>
+<p>The folder explorer, KeyTube and online radio navigate the same way: you go into items, see what is inside and go back. The keys are the same in all three.</p>
 <ul>
-<li><code>Enter</code>: enters the selected subfolder or plays the media file.</li>
-<li><code>Backspace</code>: goes back to the parent folder (equivalent to selecting <code>..</code>).</li>
-<li><code>Ctrl+C</code>: copies the selected files or folders so they can be pasted into Windows File Explorer.</li>
-<li><code>Ctrl+Shift+C</code>: copies the paths of the selected items as text.</li>
-<li><code>Ctrl+Space</code>: opens the sorting menu. Items can be sorted by name, modification date, creation date, type, or size, in ascending or descending order. The parent folder remains at the top and folders stay grouped before files. The choice is remembered for this tab when the session is restored.</li>
-<li><code>Shift+F10</code>: opens the context menu.</li>
-<li><code>Tab</code> / <code>Esc</code>: returns focus to the player.</li>
+<li><code>Enter</code>: goes into the item when it holds other items (a folder, a channel, an artist, a country) and <strong>plays</strong> when it plays (a file, a track, a video, a radio station). Albums and playlists go whole into the current playlist.</li>
+<li><code>Shift+Enter</code>: adds to the current playlist <strong>without playing</strong>.</li>
+<li><code>Right arrow</code>: shows what is inside the item, in the same list, even when <code>Enter</code> would play.</li>
+<li><code>Backspace</code>: goes back to the previous list, with the selection on the item you had opened. In KeyTube and online radio, <code>Left arrow</code> and <code>Alt+Left arrow</code> also go back.</li>
+<li><code>Down arrow</code> or <code>Page Down</code> on the last item: loads more, in KeyTube and online radio.</li>
+<li>Letters: jump to the item that starts with them.</li>
+<li><code>Shift+F10</code>, the Applications key or the right mouse button: open the item's actions menu.</li>
+<li>Multiple selection: <code>Shift+arrows</code> select a range and <code>Ctrl+arrows</code> move focus without changing the selection. <code>Ctrl+Space</code> selects or deselects the item in focus (in the explorer, <code>Ctrl+Space</code> opens sorting).</li>
 </ul>
-<h4 id="quick-location-by-typing">Quick location by typing</h4>
-<p>In both modes, typing letters or numbers moves the selection to the first item whose name starts with the typed characters. The search ignores accents and differences between uppercase and lowercase. After one second without typing, the character accumulator is reset and the next letter starts a new search.</p>
-<h4 id="search-within-the-current-playlist-or-folder">Search within the current playlist or folder</h4>
-<p>To search long lists, use the full search instead of quick typing. It finds the text <strong>anywhere</strong> in the item name, not just at the beginning.</p>
+<h3 id="folder-explorer">Folder explorer</h3>
+<p><code>Ctrl+E</code> (or <strong>File &gt; Folder Explorer</strong>) opens, to the left of the tabs, the list of folders and media files on the computer. It does not take up a tab: it sits next to any playlist and is meant for building it little by little, without interrupting what is playing. With focus on it, <code>Ctrl+E</code> closes the list; with focus elsewhere, it moves focus to it.</p>
+<p>It starts at <strong>This PC</strong>, with the Music, Videos, Downloads, Desktop and Documents folders and the disk drives. The folder where you stopped and the chosen sort order are kept for the next time you open it, and the folders from <strong>File &gt; Recent &gt; Recent folders</strong> also open here.</p>
+<p>In addition to the keys in <a href="#how-lists-work">How lists work</a>:</p>
 <ul>
-<li><code>Ctrl+F</code>: opens the <strong>Find item</strong> dialog. Type the text and confirm with <code>Enter</code> or the <strong>Find</strong> button.</li>
-<li><code>F3</code>: goes to the next result.</li>
-<li><code>Shift+F3</code>: goes back to the previous result.</li>
+<li><code>Enter</code> goes into the folder or plays the file, adding it to the current playlist. With <code>Shift+Enter</code>, all the media in a folder come in, including those in subfolders.</li>
+<li><code>Ctrl+Shift+F</code> adds the selection to the queue, and <code>Ctrl+Shift+K</code> converts the selected files (see <a href="#convert-media">Convert media</a>).</li>
+<li><code>Backspace</code> goes up to the parent folder.</li>
+<li><code>Ctrl+C</code> copies the selected files or folders, to paste into a playlist or into Windows Explorer. <code>Ctrl+Shift+C</code> copies the paths as text.</li>
+<li><code>Ctrl+Space</code> opens the sort menu: by name, date modified, date created, type or size, in ascending or descending order.</li>
+<li><code>F5</code> refreshes the folder.</li>
+<li><code>Shift+F10</code> opens the menu with all the actions: <strong>Play now</strong>, <strong>Add to playlist without playing</strong>, <strong>Add to playback queue</strong>, <strong>Open in new playlist</strong>, <strong>Add the whole current folder to the playlist</strong>, <strong>Convert...</strong>, <strong>Index folder in the library</strong>, <strong>Copy</strong>, <strong>Copy path</strong>, <strong>Show in Windows File Explorer</strong>, sorting, <strong>Refresh</strong> and <strong>Close explorer</strong>.</li>
+<li><code>Esc</code> gives focus back to where it was before you opened the explorer.</li>
 </ul>
-<p>The search can also be opened from the <strong>View &gt; Find item</strong> menu, which likewise offers <strong>Next result</strong> and <strong>Previous result</strong>.</p>
-<p>Useful details:</p>
+<h3 id="finding-items">Finding items</h3>
+<p><strong>Quick typing.</strong> In the playlist and in the explorer, typing letters or numbers moves the selection to the first item whose name starts with what you typed. The search ignores accents and letter case. After one second without typing, the next letter starts a new search.</p>
+<p><strong>Full search.</strong> For long lists, use <code>Ctrl+F</code> (or <strong>View &gt; Find item...</strong>), which finds the text in <strong>any part</strong> of the name, not just at the start.</p>
 <ul>
-<li>The search ignores accents and case differences, just like quick typing.</li>
-<li>It scans the items shown in the active tab, so it works in local playlists as well as folders and lists coming from YouTube Music.</li>
-<li>The first search considers the item already selected; from then on, <code>F3</code> and <code>Shift+F3</code> move forward or back.</li>
-<li>The screen reader reads the name of the matching item. The search position appears in the status bar, such as <code>Search "rock": result 2 of 7.</code>, along with a note when the search wraps around the list.</li>
-<li>The search text is kept for the session: <code>F3</code> repeats the last search without reopening the dialog. If there is no text yet, <code>F3</code> opens the search dialog.</li>
-<li>If nothing matches, the current selection is kept and the player reports that there are no matching items.</li>
+<li><code>Ctrl+F</code> opens the <strong>Find item</strong> box. Type the text and confirm with <code>Enter</code> or with the <strong>Find</strong> button.</li>
+<li><code>F3</code> goes to the next result and <code>Shift+F3</code> to the previous one. The <strong>View</strong> menu has the same commands.</li>
+<li>The search goes through the items of the active tab: playlists, folders and KeyTube lists.</li>
+<li><code>F3</code> repeats the last search without opening the box. If there has been no search yet, it opens the box.</li>
 </ul>
-<p>For organization tasks, it is useful to think of tabs as independent workspaces: one tab to play something now, another to review the library, and another for tests or temporary collections.</p>
+<h2 id="download-and-convert">Download and convert</h2>
+<h3 id="download-from-youtube">Download from YouTube</h3>
+<p><code>Ctrl+Shift+B</code> downloads YouTube and YouTube Music songs and videos. It follows the same rule as <code>Ctrl+Shift+K</code> (convert): with focus on a list (the playlist or the KeyTube results), it downloads the <strong>selection</strong>; with focus on the player, it downloads the <strong>current media</strong>. The same commands are in <strong>File &gt; Download from YouTube</strong>: <strong>Download current media</strong>, <strong>Download selection</strong> and <strong>Download whole playlist</strong>. The download uses <code>yt-dlp</code>, the same tool that already plays this media, and it happens in the background: playback continues normally.</p>
+<ol>
+<li>Select what you want to download, or leave focus on the player to download the current media.</li>
+<li>Press <code>Ctrl+Shift+B</code>.</li>
+<li>In the dialog, choose <strong>Audio</strong> or <strong>Video</strong>, the quality, the sample rate (only for converted audio) and the folder. Your last choice becomes the default in Preferences.</li>
+<li>Confirm.</li>
+</ol>
+<p>Things worth knowing:</p>
+<ul>
+<li><strong>No dialog.</strong> Uncheck <strong>Always show this dialog when downloading</strong> so the next downloads start right away, with the options from the <strong>Download</strong> tab in Preferences.</li>
+<li><strong>Quality not available.</strong> If the chosen quality does not exist for that media, KeyTune downloads the original quality and tells you.</li>
+<li><strong>File name.</strong> The file gets the same name KeyTune shows for the track (<code>Artist — Title.mp3</code>). A download never replaces a file that is already in the folder: if the name exists, the new one gets " (2)", " (3)" and so on.</li>
+<li><strong>Progress.</strong> Press <code>Ctrl+Shift+B</code> again during a download to hear the progress or cancel.</li>
+<li><strong>FFmpeg.</strong> Converting the audio (MP3, FLAC or another sample rate) and downloading high-resolution video require FFmpeg. If it isn't found, KeyTune asks whether it can download it (about 90 MB). If you refuse, the download continues in the original quality, without conversion. An FFmpeg already installed on the system is also used.</li>
+</ul>
+<p><strong>Several items at once.</strong> <strong>Download selection</strong> downloads the selected items, and <strong>Download whole playlist</strong> downloads all the items in the tab into a subfolder named after the playlist. Both are in <strong>File &gt; Download from YouTube</strong> and in the list's context menu. KeyTune asks for confirmation before starting.</p>
+<p>Items are downloaded one at a time, with the same options. At the end, the player summarizes how many succeeded and how many failed, and <code>Ctrl+Shift+B</code> tells you the position and lets you cancel. An item that fails does not interrupt the others, and KeyTune offers a list with each failure and its reason, with the <strong>Copy list</strong> button. A queue holds at most 200 items.</p>
+<p>Only YouTube and YouTube Music media can be downloaded, one at a time.</p>
+<h3 id="convert-media">Convert media</h3>
+<p>KeyTune converts audio and video files from your computer without leaving the player. <code>Ctrl+Shift+K</code> follows the same rule as <code>Ctrl+Shift+B</code>: with focus on a list (the playlist or the folder explorer), it converts the <strong>selection</strong>; with focus on the player, it converts the <strong>current media</strong>. The same commands are in <strong>File &gt; Convert</strong> (<strong>Convert current media</strong> and <strong>Convert selection</strong>) and in the lists' context menu.</p>
+<p>KeyTune asks what to do and shows only the options that suit the file type:</p>
+<ul>
+<li><strong>Audio to video</strong>: creates a video from the audio, with a still image. Choose MP4, MKV or WebM and the resolution (480p, 720p or 1080p). If the audio has embedded album art, it becomes the image; without art, the background is black.</li>
+<li><strong>Video to audio</strong>: extracts the sound from the video to MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC or WAV.</li>
+<li><strong>Audio to another audio format</strong>: converts between MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC and WAV. Cover art and track information come along when converting to MP3, M4A and FLAC.</li>
+<li><strong>Video to another video format</strong>: changes only the format (MP4, MKV, WebM, AVI or MOV). Tracks that are compatible with the new format are copied without re-encoding, which is fast and loses no quality; incompatible ones are re-encoded. Subtitles are only kept in MKV.</li>
+</ul>
+<p>In the dialog, besides the format, you set:</p>
+<ul>
+<li>the quality of lossy formats (128, 192, 256 or 320 kbps);</li>
+<li>the sample rate (original, 44100 or 48000 Hz; Opus always uses 48000 Hz);</li>
+<li>where to save: <strong>Same folder as the original file</strong> (the default) or <strong>Another folder</strong>, which enables the folder field and the <strong>Choose folder</strong> button.</li>
+</ul>
+<p>The dialog remembers your last choices. The original file is never changed or overwritten: if a file with the same name already exists, the new one gets " (1)", " (2)" and so on.</p>
+<p><strong>Several files.</strong> Select them in the playlist or in the explorer and press <code>Ctrl+Shift+K</code>. KeyTune asks for the mode and shows how many files each one applies to. Only files of the right type are converted. The options apply to all of them. With <strong>Same folder as the original file</strong>, each file goes to its own original's folder; with <strong>Another folder</strong>, all go to the chosen folder. Files are converted one at a time, with a summary at the end. An error in one file does not interrupt the others, and the list of failures can be opened and copied, as with downloads.</p>
+<p>Conversion runs in the background, and playback continues. Press <code>Ctrl+Shift+K</code> during a conversion to hear the progress or cancel; an incomplete file is never left behind.</p>
+<p>Conversion uses FFmpeg, the same one as the download. If it isn't found, KeyTune asks whether it can download it, as described in <a href="#download-from-youtube">Download from YouTube</a>. Only files on the computer are converted; for YouTube media, use <code>Ctrl+Shift+B</code>.</p>
 <h2 id="smart-library">Smart library</h2>
-<p>While <code>Ctrl+F</code> searches the list that is currently open, the <strong>smart library</strong> remembers what you have already opened and listened to, and makes all of it searchable at once. It also keeps favorites, ratings, the playback history, and the point where each long media stopped.</p>
-<p>Everything lives in a local database (<code>smart_library.db</code>) in the same data folder as the preferences. Nothing leaves your computer, and the whole feature can be turned off in <code>Ctrl+,</code> &gt; <strong>Library</strong>.</p>
-<p>The <strong>Library</strong> menu gathers every command.</p>
+<p>While <code>Ctrl+F</code> searches the list that is open, the <strong>smart library</strong> remembers what you have opened and listened to and makes it all searchable at once. It also keeps favorites, ratings, the playback history and the point where each long media stopped.</p>
+<p>Everything lives in a local database (<code>smart_library.db</code>), in the same data folder as the preferences. Nothing leaves your computer, and the whole feature can be turned off in <code>Ctrl+,</code> &gt; <strong>Library</strong>. The <strong>Library</strong> menu gathers the commands.</p>
 <h3 id="what-goes-into-the-index">What goes into the index</h3>
 <ul>
-<li>The media of any playlist or folder you open enters the index in the background.</li>
-<li><strong>Library &gt; Index a folder into the library...</strong> picks a folder and walks its subfolders too, without stalling playback. The player speaks when it is done.</li>
-<li><strong>Library &gt; Refresh indexed folders</strong> rescans the folders already indexed and drops files that no longer exist.</li>
-<li><strong>Library &gt; Library summary</strong> announces how much media, how many folders, favorites, and plays are stored.</li>
-<li><strong>Library &gt; Clear the library...</strong> erases everything (index, favorites, ratings, history, and resume points), with a confirmation.</li>
+<li>The media of any playlist or folder you open goes into the index, in the background.</li>
+<li><strong>Library &gt; Index a folder into the library...</strong> scans a folder and its subfolders.</li>
+<li><strong>Library &gt; Refresh indexed folders</strong> scans the already indexed folders again and drops files that no longer exist.</li>
+<li><strong>Library &gt; Library summary</strong> announces how many media items, folders, favorites and plays are stored.</li>
+<li><strong>Library &gt; Clear the library...</strong> erases everything (index, favorites, ratings, history and resume), with confirmation.</li>
 </ul>
-<p>If you would rather index only the folders you pick yourself, turn off <strong>Automatically index folders opened in the browser</strong> in the preferences.</p>
+<p>If you prefer that only the folders you choose go into the index, turn off <strong>Automatically index folders opened in the browser</strong> in the preferences. Browsing in the explorer does not index anything on its own: the folders opened from Recent and the ones you index from the explorer's context menu go into the index.</p>
 <h3 id="global-search">Global search</h3>
+<p><code>Ctrl+G</code> opens the <strong>Search the library</strong> box. Type the text and confirm with <code>Enter</code> or with the <strong>Search</strong> button.</p>
 <ul>
-<li><code>Ctrl+G</code> opens the <strong>Search the library</strong> box.</li>
-<li>Type the text and confirm with <code>Enter</code> or the <strong>Search</strong> button. The search ignores accents and case, and every word you type must appear somewhere in the item or folder name.</li>
-<li>The <strong>Filter</strong> field narrows the search to <strong>Everything in the library</strong>, <strong>Favorites only</strong>, <strong>Rated only</strong>, or <strong>Already played only</strong>. The last three work even with an empty text field.</li>
-<li>Results appear in a list with item, rating, and folder columns, so the screen reader reads all three while you move with the arrow keys. Focus goes to the list as soon as the search finishes.</li>
-<li>The search is served by a full-text index, so it stays instant even with tens of thousands of files. It matches the start of each word ("estrad" finds "Estrada"); when nothing matches that way, the player still runs a scan that finds fragments inside a word ("onita" finds "Bonita").</li>
-<li><code>Enter</code> (or the <strong>Play</strong> button) opens <strong>all</strong> results in a new playlist and starts on the selected track - so a search becomes a usable list, not a lone track.</li>
-<li><strong>Add to queue</strong> queues only the selected item in the playlist that is playing.</li>
+<li>The search ignores accents and letter case, and each word you type must appear somewhere in the item's or folder's name.</li>
+<li>The <strong>Filter</strong> field limits the search to <strong>Everything in the library</strong>, <strong>Favorites only</strong>, <strong>Rated only</strong> or <strong>Already played only</strong>. The last three work even with the text empty.</li>
+<li>Results come in a list with item, rating and folder columns.</li>
+<li>The search is instant even with tens of thousands of files. It matches the start of each word ("estrad" finds "Estrada") and, if nothing turns up, it also looks in the middle of words ("onita" finds "Bonita").</li>
+<li><code>Enter</code> (or the <strong>Play</strong> button) opens <strong>all</strong> the results in a new playlist and starts from the selected track, so a search becomes a usable list.</li>
+<li><strong>Add to queue</strong> queues only the selected item, in the playlist that is playing.</li>
 </ul>
 <h3 id="favorites-and-ratings">Favorites and ratings</h3>
-<p>Both commands act on whatever is selected in the item list; with nothing selected, they act on the media that is playing.</p>
+<p>The commands act on what is selected in the list; with no selection, they act on the media that is playing.</p>
 <ul>
-<li><code>Ctrl+D</code>: add to or remove from favorites. With several items selected, it adds all of them.</li>
-<li><code>Ctrl+0</code> to <code>Ctrl+5</code>: give zero to five stars.</li>
-<li><strong>Library &gt; Announce the selection's marks</strong>: reads the item's favorite state, rating, and play count.</li>
-<li><strong>Library &gt; Open favorites in a new playlist</strong>: builds a playlist with everything you marked.</li>
+<li><code>Ctrl+D</code>: favorites or unfavorites.</li>
+<li><code>Ctrl+0</code> to <code>Ctrl+5</code>: gives from zero to five stars.</li>
+<li><strong>Library &gt; Announce the selection's marks</strong>: reads the item's favorite status, rating and play count.</li>
+<li><strong>Library &gt; Open favorites in a new playlist</strong>: builds a playlist with everything you favorited.</li>
 </ul>
-<p>The same commands are in the item list context menu (<code>Shift+F10</code>).</p>
-<p>Favorites and ratings appear next to the name in the item list itself - for example <code>2. Estrada - favorite, 5 stars</code> - in playlists and in the folder browser alike. The screen reader announces the mark together with the item, with no command needed. The suffix is display only: <code>Ctrl+F</code> search, tab names, and the saved session all keep using the plain name.</p>
+<p>The same commands are in the list's context menu (<code>Shift+F10</code>).</p>
+<p>Favorite status and rating appear next to the name, in the list itself, for example <code>Estrada — favorite, 5 stars</code>, both in playlists and in the folder explorer. That way the screen reader speaks the mark together with the item.</p>
 <h3 id="playback-history">Playback history</h3>
+<p><code>Ctrl+Shift+H</code> opens the <strong>Playback history</strong>. The <strong>View</strong> field chooses between three views, and the columns change with it:</p>
 <ul>
-<li><code>Ctrl+Shift+H</code> opens the <strong>Playback history</strong>.</li>
-<li>The <strong>View</strong> field picks between three views, and the columns change with it:</li>
-<li><strong>All plays</strong>: one row per time the media played, with when it played, where it stopped, and its source (local playlist, folder, remote media, or YouTube Music).</li>
-<li><strong>Grouped by media</strong>: one row per media, with how many times it played, the last time, and its marks. Playing the same track forty times stops flooding the list.</li>
+<li><strong>All plays</strong>: one line for each time the media played, with when it played, where it stopped and the source (local playlist, folder, remote media or YouTube Music).</li>
+<li><strong>Grouped by media</strong>: one line per media item, with how many times it played, the last time and the marks.</li>
 <li><strong>Most played</strong>: the same grouping, from the most played to the least played.</li>
-<li>The <strong>Filter by text</strong> field narrows the list; <code>Enter</code> (or <strong>Play</strong>) plays it again and <strong>Add to queue</strong> queues it.</li>
-<li><strong>Remove entry</strong> drops one play from the list without removing the media from the index. In the grouped views the button becomes <strong>Remove from history</strong> and drops every play of that media. <strong>Clear history</strong> erases everything, with a confirmation.</li>
-<li>A track only enters the history after playing long enough to count as listened to (about 25% of its duration, at most 20 seconds).</li>
-<li>The history is trimmed to the limit set in the preferences, discarding the oldest entries.</li>
 </ul>
-<p>This history is local and independent from <strong>Save listened tracks to the YouTube Music history</strong>, which records into your YouTube Music account.</p>
+<p><strong>Filter by text</strong> narrows the list. <code>Enter</code> (or <strong>Play</strong>) plays again, and <strong>Add to queue</strong> queues it. <strong>Remove entry</strong> takes one play out of the list without deleting the media from the index; in the grouped views the button becomes <strong>Remove from history</strong> and deletes all plays of that media. <strong>Clear history</strong> erases everything, with confirmation.</p>
+<p>A track only enters the history after playing long enough to count as listened, and the oldest entries drop out when the history goes over the limit in the preferences.</p>
+<p>This history is local and has no relation to <strong>Save what I listened to in the YouTube Music history</strong>, which records to your YouTube Music account.</p>
 <h3 id="resume-where-you-stopped">Resume where you stopped</h3>
-<p>Podcasts, audiobooks, and long videos start again from where they stopped, and the status bar shows "Resuming ... at ...". The rule is deliberately conservative:</p>
+<p>Podcasts, audiobooks and long videos pick up from the point where they stopped. The rule is deliberately conservative:</p>
 <ul>
-<li>it applies only to local files - streams have no stable timeline across sessions;</li>
-<li>only to media above the configured <strong>minimum duration</strong> (10 minutes by default);</li>
-<li>stopping inside the configured <strong>margin</strong> (30 seconds by default) at the start or the end creates no resume point;</li>
-<li>reaching the end of the track clears the mark, so next time it starts over.</li>
+<li>it only applies to local files, because streams don't have a stable timeline between sessions;</li>
+<li>it only applies to media longer than the configured <strong>minimum duration</strong> (10 minutes by default);</li>
+<li>stopping within the configured <strong>margin</strong> (30 seconds by default) of the start or the end does not create a resume point;</li>
+<li>reaching the end of the track erases the mark, and the next time it starts from the beginning.</li>
 </ul>
-<p><strong>Library &gt; Continue listening</strong> (<code>Ctrl+Shift+R</code>) opens a playlist with everything that is half finished, newest first, each item showing where it stopped - that is how you find the podcast you left in the middle without having to remember where it was.</p>
-<p><strong>Library &gt; Clear resume positions</strong> wipes them all at once.</p>
+<p><strong>Library &gt; Continue listening</strong> (<code>Ctrl+Shift+R</code>) opens a playlist with everything left halfway, from the most recent to the oldest, and each item shows where it stopped. <strong>Library &gt; Clear resume positions</strong> clears them all at once.</p>
 <h3 id="smart-playlists">Smart playlists</h3>
-<p>A smart playlist is a saved rule, not a fixed list: it is built every time you open it, so it follows your rating and history changes. "Five stars I have not played in 30 days" is still correct a month later, on its own.</p>
-<p><strong>Library &gt; Smart playlists</strong> lists the saved rules so you can open one with a single command, and <strong>Manage smart playlists...</strong> creates, edits, and removes them.</p>
-<p>In the editor everything is a keyboard field - no visual rule builder:</p>
+<p>A smart playlist is a saved rule, not a fixed list. It is built every time you open it, so it follows changes in ratings and history: "five stars that I haven't played in 30 days" is still right a month later, on its own.</p>
+<p><strong>Library &gt; Smart playlists</strong> lists the saved rules, to open with a single command, and <strong>Manage smart playlists...</strong> creates, edits and removes them. In the editor, everything is a keyboard field, with no visual builder:</p>
 <ul>
 <li><strong>Favorites only</strong> and <strong>Minimum rating</strong> filter by your marks.</li>
-<li><strong>Not played for at least (days)</strong> finds what has gone stale; <strong>Include media never played</strong> decides whether things you never played come along.</li>
-<li><strong>Minimum plays</strong> goes the other way: only what you have already listened to a lot.</li>
-<li><strong>Limit to folder</strong> restricts to one folder and everything under it.</li>
-<li><strong>Include remote media</strong> also brings in YouTube Music links and radios, which are left out by default.</li>
-<li><strong>Sort by</strong> and <strong>Maximum number of items</strong> decide what comes out and in what order.</li>
+<li><strong>Not played for at least (days)</strong> finds what has been forgotten, and <strong>Include media never played</strong> decides whether what never played comes along.</li>
+<li><strong>Minimum plays</strong> goes the other way: only what you have listened to a lot.</li>
+<li><strong>Limit to folder</strong> restricts to one folder and everything below it.</li>
+<li><strong>Include remote media</strong> also brings YouTube Music links and radio stations, which are left out by default.</li>
+<li><strong>Sort by</strong> and <strong>Maximum number of items</strong> define what comes out and in what order.</li>
 </ul>
-<p>Every change updates the <strong>Rule summary</strong> at the bottom of the box, in one sentence - for screen reader users it is the fastest way to check what the rule will gather before saving. Rules with a repeated name get an automatic numeric suffix, and changes are saved even if you close the box with <code>Esc</code>.</p>
-<h3 id="metadata-and-analysis-cache">Metadata and analysis cache</h3>
-<p>The library also keeps metadata it has already resolved and audio analyses, so expensive work is not repeated on every open. An entry is discarded automatically when the file changes size or date, and the number of stored entries is adjustable in the preferences.</p>
-<h2 id="settings">Settings</h2>
-<p>Preferences are under <code>Ctrl+,</code> and are divided into six tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, and <strong>Additional features</strong>.</p>
-<h3 id="general">General</h3>
-<p>The <strong>General</strong> tab brings together the options that control how KeyTune resumes on the next launch:</p>
+<p>Each change updates the <strong>Rule summary</strong>, at the end of the box, in one sentence: the fastest way to check what the rule will gather before saving.</p>
+<h2 id="keytube-youtube-and-youtube-music">KeyTube: YouTube and YouTube Music</h2>
+<p>KeyTube is KeyTune's hub for YouTube Music and regular YouTube. In versions up to 2.0.6 it was called YouTube Music and handled music only; today it also brings together YouTube videos, channels, subscriptions and comments. Open it with <code>Ctrl+Shift+Y</code> (or <strong>View &gt; KeyTube per tab</strong>). It is a separate tab, so you can keep the local library in one and KeyTube in another.</p>
+<p>For the tab to work, turn on the integration in <code>Ctrl+,</code> &gt; <strong>Additional resources</strong> and connect a YouTube account. The same account serves YouTube and YouTube Music.</p>
+<p>The integration depends on how the site changes and on how <code>yt-dlp</code> reads those pages. Because of that, errors, temporary failures and stops with no apparent explanation can happen. When that happens, updating the dependencies or trying again later is usually enough.</p>
+<h3 id="account-and-library">Account and library</h3>
+<p>The tab has two parts. At the top, the <strong>Account and library</strong> section; below it, the search field and <strong>a single list</strong>, through which everything else passes: your library, the search and what is inside each item.</p>
+<p><strong>Account and library</strong> shows the connected account, the summary of the loaded library and the last operation message. The buttons:</p>
 <ul>
-<li><strong>Restore session on startup</strong>: reopens tabs and tries to restore the state from the previous run.</li>
-<li><strong>Remember window size</strong>: saves and restores the main window size between runs.</li>
-<li><strong>Remember last used folder</strong>: uses the last opened folder as the initial directory in open and save dialogs.</li>
-<li><strong>Confirm before exiting</strong>: asks for confirmation before closing the player.</li>
+<li><strong>Connect account...</strong>: opens the dialog to connect an account or renew the saved authentication.</li>
+<li><strong>Disconnect account</strong>: removes the saved authentication on this installation.</li>
+<li><strong>Refresh library</strong>: searches again for the account's playlists and mixes and updates the ratings of songs visible in the account.</li>
+<li><strong>New playlist...</strong>: creates a playlist in your account. The player asks for the name and the privacy (see <a href="#manage-youtube-music-playlists">Manage YouTube Music playlists</a>).</li>
 </ul>
-<p>This same tab contains the <strong>File associations</strong> section (Windows). The <strong>Register as default player</strong> button adds KeyTune to the <em>Open with</em> menu for audio, video, and playlist formats. After registering, set the app as the default in Windows settings if you want those files to open directly in KeyTune. The <strong>Unregister associations</strong> button removes this registration.</p>
-<p>The <strong>General</strong> tab also includes the <strong>Log recording</strong> section:</p>
+<p><strong>Like</strong> and <strong>Dislike</strong> are sent to the connected account, so they also show up in YouTube Music on your phone and other devices. KeyTune removes tracks marked as disliked from the account's playlists and radios. A rating made outside KeyTune is only noticed when the track shows up again; <strong>Refresh library</strong> forces the check.</p>
+<h3 id="the-list">The list</h3>
+<p>The list works like the folder explorer (see <a href="#how-lists-work">How lists work</a>) and starts at <strong>Home</strong>, with seven items:</p>
 <ul>
-<li><strong>Record diagnostic logs</strong>: when enabled, the player writes a rotating log file to disk. Useful for debugging problems and attaching to bug reports. Logs are written in English.</li>
-<li><strong>Detail level</strong>: controls how much information is recorded. <em>Errors only</em> is the quietest; <em>Debug</em> is the most detailed and can generate large files. It is available only when logging is enabled.</li>
-<li><strong>Open logs folder</strong>: opens the folder where log files are saved in the file explorer.</li>
+<li><strong>Your playlists and mixes</strong>: those of the connected account. <code>Enter</code> opens the playlist in its own tab, where you can edit it in the account; <code>Right arrow</code> shows the tracks in the list itself. Requires a connected account.</li>
+<li><strong>Liked songs</strong>: the tracks you liked (the <em>Liked Music</em> playlist of your account). Requires a connected account.</li>
+<li><strong>History</strong>: your YouTube Music playback history. Requires a connected account.</li>
+<li><strong>Videos from subscriptions</strong>: the new videos from the channels you are subscribed to, with duration, views and date. Requires a connected account and YouTube.js turned on.</li>
+<li><strong>Subscribed channels</strong>: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts and playlists. Requires a connected account and YouTube.js turned on. Both subscription lists are read-only: subscribing and unsubscribing are still done on YouTube.</li>
+<li><strong>Trending</strong>: <em>Global</em> and the continents. Go into a continent, choose the country, and the charts and highlights that are trending appear as playlists you can play, open or save to the library. Does not require an account.</li>
+<li><strong>Moods and genres</strong>: YouTube Music's mood and genre categories (<em>Focus</em>, <em>Workout</em>, <em>Pop</em>, <em>Rock</em>...). Go into a category to see its playlists. Does not require an account.</li>
 </ul>
-<p>Logs are rotated automatically every 2 MB and up to 3 previous files are kept. Files from previous sessions are stored as <code>keytune.log.1</code>, <code>.2</code>, and <code>.3</code> in the same folder.</p>
-<h3 id="playback">Playback</h3>
-<p>The <strong>Playback</strong> tab controls audio behavior and the initial state of new playlists:</p>
+<p>In KeyTube, also:</p>
 <ul>
-<li><strong>Default volume</strong>: volume when starting the player (0-100).</li>
-<li><strong>Volume step</strong>: how much each press of <code>Up Arrow</code>/<code>Down Arrow</code> increases or decreases the volume (1-25).</li>
-<li><strong>Crossfade (seconds)</strong>: audio overlap between tracks during automatic transition (0-12 s). Use 0 to disable it. Crossfade is applied only between audio files.</li>
-<li><strong>Enable AutoDJ</strong>: under <strong>Additional features</strong>, downloads the optional libraries after confirmation and analyzes the current track and up to six upcoming options in the background. Once installed, it can also be toggled from <strong>Playback &gt; Enable AutoDJ</strong>. It avoids recently played artists and chooses by local transition energy, major/minor key, perceived loudness difference, and tempo compatibility. When the beat grid is reliable, it estimates the downbeat and section changes, aligns four-bar phrases, synchronizes both tracks, and corrects small phase drift during the overlap. The manual queue always takes priority. If analysis is late, fails, or has insufficient confidence, the player uses the configured regular crossfade or advances normally.</li>
-<li><strong>Play playlist with AutoDJ</strong>: creates a separate dynamic tab without changing the source playlist, starts the current track immediately, and keeps up to five tracks prepared ahead. A read-only field available through normal NVDA focus shows the source, prepared and remaining counts, analysis activity, and next-transition details. It reports BPM, rhythmic confidence, tempo adjustment, and the reason when a regular transition is required; each item is also marked as played, playing, next, or prepared. Its controls can replace the next track, recalculate the future sequence, add files, pause or resume preparation, and end the session while preserving the prepared portion. <code>Tab</code> moves through the player, list, AutoDJ information, and controls; <code>Shift+Tab</code> follows the reverse path. The same actions are available with <code>Shift+F10</code> on the list. The sequence considers multiple transitions, avoids likely vocal clashes, shortens the overlap when necessary, and gradually attenuates a louder incoming track. The session, source, history, paused state, and unplanned tracks are restored with the player.</li>
-<li><strong>AutoDJ profile</strong>: <em>Smooth</em> uses a long, balanced blend; <em>Party</em> concentrates the bass swap around the center and gradually raises energy; <em>Electronic</em> applies stronger cuts and a faster swap for pronounced beats.</li>
-<li><strong>AutoDJ transition length</strong>: sets an overlap of 8, 16, or 32 beats. This is independent of the regular crossfade duration.</li>
-<li><strong>Seek step (seconds)</strong>: how much each press of <code>Left Arrow</code>/<code>Right Arrow</code> moves forward or backward in the media (1-120 s).</li>
-<li><strong>Default repeat</strong>: repeat mode automatically applied to new playlists. The options are <em>Repeat off</em>, <em>Repeat current track</em>, and <em>Repeat playlist</em>.</li>
-<li><strong>Audio device</strong>: sound output used for playback. <em>System default</em> follows the main Windows device.</li>
-<li><strong>Enable shuffle in new playlists</strong>: automatically enables shuffle mode in playlists created after saving.</li>
-<li><strong>Apply crossfade when changing tracks manually</strong>: when enabled, crossfade is also used when moving forward or backward manually; by default it applies only at the natural end of each track. When an AutoDJ transition is ready, moving forward uses that plan even if this option is disabled.</li>
-<li><strong>Disable video output (play audio only)</strong>: keeps playback audio-only, including video files. Useful to avoid external video windows.</li>
-<li><strong>Show the video of live broadcasts</strong>: shows the picture of YouTube live broadcasts in the player area, even when video output is turned off for the rest of the app. When unchecked, the broadcast plays audio only. <code>Ctrl+Alt+V</code> toggles this option during a broadcast.</li>
+<li><code>Backspace</code> goes back one level at a time, down to <strong>Home</strong>. You can chain: from an artist to an album, from a channel to one of its playlists.</li>
+<li>Each list brings 20 items at a time.</li>
+<li>The <strong>Actions...</strong> button opens the item's menu: <strong>Play</strong>, <strong>Add without playing</strong>, <strong>View contents</strong>, <strong>Back to the previous list</strong>, <strong>View comments</strong>, <strong>View details</strong>, <strong>Go to the channel</strong> (or <strong>Go to the artist</strong>, followed by the name), <strong>Add selection...</strong> (to a new playlist or to an open one), <strong>Download selection...</strong> and <strong>Save to YouTube Music</strong> (compatible playlists or tracks). On one of your playlists, the menu also has <strong>Delete YouTube Music playlist...</strong>, which deletes it from the account, with confirmation, and only works for playlists you created. On a comment, it has <strong>Read the whole comment</strong>.</li>
+<li><code>Shift+Enter</code> on one of your playlists adds the tracks to the current playlist without playing.</li>
+<li><code>Ctrl+Shift+B</code> (or <strong>Download selection...</strong>) downloads what is selected. With a <strong>playlist or an album</strong>, KeyTune fetches all the tracks inside and downloads everything. You choose the destination folder; each playlist or album becomes a <strong>subfolder with its name</strong>, and standalone tracks and videos stay in the folder itself, even in a mixed selection. Two lists with the same name get separate folders (<em>Mix</em> and <em>Mix (2)</em>), and a track that is in two playlists is downloaded in both, so each folder is complete.</li>
 </ul>
-<h3 id="accessibility">Accessibility</h3>
-<p>The <strong>Accessibility</strong> tab has a single option: <strong>Enable accessibility announcements</strong>. When enabled, the player announces changes in time, volume, tab switching, and status to the screen reader. When disabled, those announcements are suppressed. On-demand announcement shortcuts (<code>T</code>, <code>V</code>, <code>S</code>) keep working regardless of this setting - see <a href="#accessibility-features">Accessibility features</a> for details.</p>
-<h3 id="library">Library</h3>
-<p>The <strong>Library</strong> tab controls the <a href="#smart-library">smart library</a>. Turning off the first option disables the whole feature and greys out the rest.</p>
-<h4 id="library-index">Library index</h4>
+<p>Just above the list, a line tells you where you are and how many items there are (for example, <em>Trending — Europe: 24 items</em>).</p>
+<h3 id="search-and-open-links">Search and open links</h3>
 <ul>
-<li><strong>Enable the smart library</strong>: turns on the global search (<code>Ctrl+G</code>), favorites, ratings, history, and per-file resume.</li>
-<li><strong>Automatically index folders opened in the browser</strong>: when you open a folder, its media enters the index in the background.</li>
+<li><strong>Search or paste a link</strong>: type what you are looking for and press <code>Enter</code>. The results appear on top of <strong>Home</strong>, and <code>Backspace</code> goes back to it.</li>
+<li><strong>Paste a link</strong>: a YouTube Music or YouTube playlist, mix or video link pasted into that field is opened with <code>Enter</code>, instead of being searched.</li>
+<li><strong>In</strong> and <strong>Type</strong>: two boxes next to the field. <strong>In</strong> chooses where to search (<em>YouTube Music</em> or <em>YouTube</em>) and <strong>Type</strong>, what to search for there. In both, the first letter jumps to the option.<ul>
+<li>In <em>YouTube Music</em>: <em>Songs</em> (tracks from the catalog), <em>Videos</em> (music videos and YouTube Music videos), <em>Albums</em> (albums, singles and EPs), <em>Artists</em> and <em>Playlists</em> (from the YouTube Music catalog).</li>
+<li>In <em>YouTube</em>: <em>Videos</em> (in general, no account required), <em>Channels</em> and <em>Playlists</em>.</li>
 </ul>
-<h4 id="playback-history-2">Playback history</h4>
+</li>
+<li><strong>Inside a channel or artist</strong>: when you go in, the list shows what there is to see first. In a YouTube channel: <em>Videos</em>, <em>Shorts</em>, <em>Live</em> and <em>Playlists</em>. In a YouTube Music artist: <em>Songs</em>, <em>Albums</em>, <em>Singles and EPs</em>, <em>Videos</em> and <em>Similar artists</em>. Go into whichever you like; <code>Backspace</code> goes back to choose another.</li>
+</ul>
+<h3 id="video-and-song-details">Video and song details</h3>
+<p><strong>View details</strong>, in the <strong>Actions...</strong> menu (or in the playlist's context menu, for a YouTube item), opens a reading box with title, channel and subscribers, duration, views, likes, publication date and the whole description. For the media that is playing, use <code>Ctrl+Shift+I</code> (<strong>Playback &gt; View details of the current media</strong>). The <strong>Go to the channel</strong> button, or <strong>Go to the artist</strong> on a YouTube Music track, opens the channel or the artist in KeyTube; the same command is in the <strong>Actions...</strong> menu.</p>
+<h3 id="comments">Comments</h3>
+<p><strong>View comments</strong>, in the <strong>Actions...</strong> menu of a video or a song, opens the comments in the list itself, on top of what you were looking at; <code>Backspace</code> goes back. For the media that is playing, use <code>Ctrl+Shift+M</code> (<strong>Playback &gt; View comments on the current media</strong>), which opens the tab already on the comments.</p>
 <ul>
-<li><strong>Keep a local playback history</strong>: records every track that plays long enough to count as listened to.</li>
-<li><strong>Plays kept in the history</strong>: how many entries the history holds (50-20000). Past that, the oldest are discarded.</li>
+<li>Each line has the author, the text, the date, the likes and how many replies there are. The comment pinned by the channel is marked as <em>pinned</em>.</li>
+<li><code>Enter</code> opens the whole comment in a reading box; <code>Esc</code> closes it.</li>
+<li><code>Right arrow</code>, on a comment with replies, opens the replies.</li>
 </ul>
-<h4 id="resume-where-you-stopped-2">Resume where you stopped</h4>
+<p>With YouTube.js turned on (<strong>Preferences &gt; Additional resources</strong>), comments arrive in under a second, in the content language, with pagination and replies. Without it, KeyTune uses yt-dlp, which is slower, brings only the first 20 comments, without replies, and with dates in English.</p>
+<h3 id="audio-language">Audio language</h3>
+<p><strong>Playback &gt; Audio language of the current media...</strong> lists the audio tracks of the YouTube video that is playing (the original and the dubs) and starts playing the chosen one from the same point. The choice holds for that media until you close KeyTune. To make it hold for all of them, use <strong>Audio of dubbed videos</strong> in the preferences.</p>
+<h3 id="live-broadcasts">Live broadcasts</h3>
+<p>Paste the link of a YouTube live broadcast into the <strong>Search or paste a link</strong> field (or use <code>Ctrl+V</code>, as with any link). KeyTune recognizes the broadcast on its own.</p>
 <ul>
-<li><strong>Remember the position of long media</strong>: turns on per-file resume.</li>
-<li><strong>Minimum duration to remember the position (minutes)</strong>: media shorter than this always starts over (1-240 min).</li>
-<li><strong>Margin ignored at the start and at the end (seconds)</strong>: stopping inside that margin creates no resume point (5-300 s).</li>
+<li>It plays at the current moment, without resuming from a saved position. The time bar shows a fixed label in place of the duration, and <code>T</code> tells you how long you have been watching.</li>
+<li>With <strong>Show the video of live broadcasts</strong> turned on (the default), the picture appears in the player area even with <strong>Disable video output</strong> checked. The video is limited to 720p. Turned off, the broadcast plays only the audio, in the lightest variant. <code>Ctrl+Alt+V</code> toggles the option and restarts the broadcast in the new mode.</li>
+<li>You can't rewind, fast-forward, or go to the start or the end. Pausing and resuming continues from where it stopped.</li>
+<li>If the connection drops, the player tries to reconnect up to three times and lets you know. If the broadcast has already ended, the player lets you know instead of playing the recording from the beginning.</li>
+<li>A scheduled broadcast that hasn't started yet lets you know; try again when it starts.</li>
+<li>Live broadcasts stay out of AutoDJ and crossfade, have no lyrics and don't create a resume point.</li>
 </ul>
-<h4 id="metadata-and-analysis-cache-2">Metadata and analysis cache</h4>
+<h3 id="radio-from-the-current-track">Radio from the current track</h3>
+<p>With a YouTube Music song playing, press <code>Ctrl+R</code> (or use <strong>Playback &gt; Start radio from this track</strong>). KeyTune opens a new tab, keeps the playback position and puts the current track as item 1, without continuing the previous radio's queue.</p>
+<p>KeyTune avoids repeating tracks from the source playlist and from the last radios you opened. Since YouTube Music is the one that picks the candidates, there is no guarantee of different songs; if there is nothing new, the new tab stays with just the first track.</p>
+<p>Don't confuse it with <a href="#online-radio">online radio</a>, which are real radio stations.</p>
+<h3 id="manage-youtube-music-playlists">Manage YouTube Music playlists</h3>
+<p>Besides opening and saving playlists, KeyTune edits your playlists directly in the connected account. All of this requires a connected account and changes the playlist <strong>in your YouTube Music account</strong>. Deleting can't be undone from the player.</p>
+<p><strong>Add tracks.</strong> Select one or more YouTube Music tracks (in the current playlist or in the search results) and use <strong>Add to YouTube Music playlist...</strong> in the context menu (<code>Shift+F10</code>). To add the track that is playing, press <code>Ctrl+Shift+A</code>. The list of your editable playlists appears; mixes and personalized radios are not included because they can't be edited. At the top there is <strong>Create new playlist...</strong>, which creates a playlist already containing the selection.</p>
+<p><strong>Remove tracks.</strong> With one of your playlists open in the current tab, select the tracks and use <strong>Remove from YouTube Music playlist</strong> in the context menu. The player asks for confirmation. Removal is only offered on playlists you created or where you are a collaborator.</p>
+<p><strong>Create a playlist.</strong> Use <strong>New playlist...</strong> (in the <em>Playlists and mixes</em> section) to create an empty one, or <strong>Create new playlist...</strong> in the add-tracks dialog to create it already with the selection. In both cases the player asks for the <strong>name</strong> and the <strong>privacy</strong>: <em>Private</em> (only you see it), <em>Unlisted</em> (visible to anyone with the link) or <em>Public</em> (appears on your profile and may show up in searches). The default is Private.</p>
+<p><strong>Delete a playlist.</strong> Select the playlist in <em>Playlists and mixes</em> and use <strong>Delete playlist...</strong>. You can only delete playlists you created.</p>
+<h3 id="connect-your-account">Connect your account</h3>
+<p>To use your library (saved playlists, history, likes and ratings), connect an account. The <strong>Connect account</strong> dialog offers two modes:</p>
+<ol>
+<li><strong>Extract from the installed browser</strong>: choose Firefox, Google Chrome, Microsoft Edge, Brave or Opera from the list and click <strong>Connect</strong>. KeyTune extracts the session from the browser profile through <code>yt-dlp</code>. Firefox is the most recommended, because it works best on Windows.</li>
+<li><strong>Import a file or manual text</strong>: for browsers that are not on the list, or custom setups, import a <code>cookies.txt</code> file or paste the session's HTTP headers.</li>
+</ol>
+<p>On Windows, Chrome, Edge and Brave may require the browser to be fully closed and, in some versions, the browser's own protection prevents extraction. If that happens, use Firefox or the manual import.</p>
+<h4 id="what-cookies-are">What cookies are</h4>
+<p>Cookies are small text files that browsers keep to remember preferences and logins. When you sign in to YouTube Music, the browser saves cookies with your authentication. When you connect the account in KeyTune, the app uses that session to access your library without asking for your password.</p>
+<h4 id="connect-through-the-browser">Connect through the browser</h4>
+<ol>
+<li>Sign in to your account on <a href="https://music.youtube.com/">YouTube Music</a> in the browser (Chrome, Edge, Firefox, Brave or Opera).</li>
+<li>In KeyTune, open KeyTube (<code>Ctrl+Shift+Y</code>).</li>
+<li>In the <strong>Account and library</strong> section, click <strong>Connect account...</strong>.</li>
+<li>Choose <strong>Extract from the installed browser</strong>.</li>
+<li>Choose the browser from the list and click <strong>Connect</strong>.</li>
+</ol>
+<h4 id="alternative-export-the-cookies-txt">Alternative: export the cookies.txt</h4>
+<p>Use this path if you choose manual mode or have a browser that is not supported directly.</p>
+<p><strong>Before you start</strong>, install the <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> extension in the browser.</p>
+<p><strong>1. Enable the extension in incognito tabs.</strong> In an incognito tab, Google doesn't refresh the cookies all the time during normal browser use.</p>
+<ol>
+<li>Press <code>Ctrl+L</code> to focus the address bar.</li>
+<li>Press <code>Escape</code> to leave the address bar's edit box.</li>
+<li>Press <code>Alt+F</code> to open the browser menu.</li>
+<li>With the arrow keys, go to <strong>Extensions</strong>, open the submenu with <code>Enter</code> and choose <strong>Manage extensions</strong>.</li>
+<li>Find <strong>Get cookies.txt LOCALLY</strong> and click <strong>Details</strong> (or "Learn more").</li>
+<li>On the details page, turn on <strong>Allow in private tabs</strong> (or <strong>Allow in incognito</strong>).</li>
+<li>Close the page and go back to the browser.</li>
+</ol>
+<p><strong>2. Sign in and export the cookies.</strong></p>
+<ol>
+<li>Open an incognito tab (<code>Ctrl+Shift+N</code> or <code>Ctrl+Shift+P</code>).</li>
+<li>Go to <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
+<li>Sign in with your Google account.</li>
+<li>Open the <strong>Get cookies.txt LOCALLY</strong> extension and click <strong>Export</strong> (or <strong>Download</strong>) to save the <code>cookies.txt</code>.</li>
+<li>Close the incognito tab without visiting other sites.</li>
+</ol>
+<p><strong>3. Import into KeyTune.</strong></p>
+<ol>
+<li>In the <strong>Connect account...</strong> dialog, choose <strong>Import a file or manual text</strong>.</li>
+<li>Select the downloaded <code>cookies.txt</code> (or paste the headers text) and click <strong>Connect</strong>.</li>
+</ol>
+<h4 id="security">Security</h4>
+<p>The <code>cookies.txt</code> holds your account's authentication. Because of that:</p>
 <ul>
-<li><strong>Entries kept in the cache</strong>: how many resolved metadata records and audio analyses are stored (100-100000). The oldest entries are dropped once the limit is reached.</li>
+<li>use the file only on your own computer;</li>
+<li>don't share it with anyone;</li>
+<li>delete it after importing, if you like: KeyTune's internal copy has only the YouTube cookies needed for the connection;</li>
+<li>when you disconnect the account in KeyTune, the stored cookies are removed.</li>
 </ul>
-<h3 id="download">Download</h3>
-<p>The <strong>Download</strong> tab sets the defaults for <code>Ctrl+Shift+B</code>:</p>
+<h3 id="keytube-shortcuts">KeyTube shortcuts</h3>
 <ul>
-<li><strong>Default download type</strong>: <strong>Audio</strong> or <strong>Video</strong>.</li>
-<li><strong>Audio quality</strong>: <strong>Original (no conversion)</strong> keeps the audio as YouTube delivers it; <strong>MP3</strong> (128, 192, 256, or 320 kbps) and <strong>FLAC (lossless)</strong> convert the audio and require FFmpeg.</li>
-<li><strong>Audio sample rate</strong>: <strong>Original</strong>, 44100 Hz, or 48000 Hz. It only applies when the audio is converted; YouTube delivers 44.1 or 48 kHz, so higher rates would bring no quality gain.</li>
-<li><strong>Video quality</strong>: <strong>Best available</strong> or a maximum height from 2160p to 144p. If the chosen height does not exist, the video is downloaded in the best quality available.</li>
-<li><strong>Download folder</strong>: where the files are saved. By default, the <strong>Downloads\KeyTune</strong> folder of your user.</li>
-<li><strong>Always show the dialog when downloading</strong>: on (the default), each download opens the confirmation dialog; off, the download starts right away with this tab's options.</li>
+<li><code>Ctrl+Shift+Y</code>: open KeyTube</li>
+<li><code>Ctrl+R</code>: start a radio from the current track</li>
+<li><code>Ctrl+Shift+A</code>: add the current media to a YouTube Music playlist</li>
+<li><code>Ctrl+Shift+I</code>: view the details of the current media</li>
+<li><code>Ctrl+Shift+M</code>: view the comments of the current media</li>
+<li><code>Ctrl+L</code>: like the current media</li>
+<li><code>Ctrl+Shift+L</code>: mark the current media as disliked (and skip to the next track)</li>
+<li><code>A</code>: turn related content at the end of the playlist on or off</li>
+<li><code>Enter</code> in the search field: search; with results, focus goes to the list</li>
+<li><code>Esc</code>: close the tab, when it is focused</li>
 </ul>
-<h3 id="additional-features">Additional features</h3>
-<p>The <strong>Additional features</strong> tab contains the optional YouTube integrations and AutoDJ libraries. Before the first download, KeyTune displays a dialog listing every component that will be installed.</p>
-<h4 id="youtube-music-and-youtube-integration">YouTube Music and YouTube integration</h4>
+<h2 id="online-radio">Online radio</h2>
+<p><code>Ctrl+Shift+N</code> (or <strong>View &gt; Online radio in a tab</strong>) opens a tab to listen to radio stations from all over the world. The stations come from <a href="https://www.radio-browser.info/">Radio Browser</a>, an open directory maintained by the community. You don't need an account or to turn anything on in <strong>Additional resources</strong>: the stations play directly, without going through <code>yt-dlp</code>.</p>
+<p>The tab has a search field and, below it, a single list that works like the folder explorer and like the KeyTube list: you go into items and come back.</p>
+<h3 id="the-home">The home</h3>
+<p>The list starts at <strong>Home</strong>, with these items:</p>
 <ul>
-<li><strong>Enable additional features for YouTube Music and YouTube (yt-dlp, ytmusicapi, and Node.js)</strong>: downloads and maintains a <code>yt-dlp</code> executable, the required Python packages, and, when no compatible runtime exists, a portable Node.js for the EJS resolver. Without this, the YouTube Music tab does not work. On first run, the download can take a few minutes and requires internet access. When disabled, already downloaded files are not removed.</li>
-<li><strong>Automatically update YouTube Music dependencies</strong>: checks for and applies updates at the interval defined below. It appears only when the option above is enabled.</li>
-<li><strong>Use nightly version of yt-dlp (recommended)</strong>: downloads nightly builds of <code>yt-dlp</code>. Recommended because YouTube and YouTube Music frequently change their extraction mechanisms and nightly usually receives fixes before the stable channel. It appears only when the integration is enabled.</li>
-<li><strong>Use YouTube.js to improve resolution and playback (recommended)</strong>: installs YouTube.js and uses the same Node.js 24 or newer prepared for <code>yt-dlp</code>. <code>yt-dlp</code> remains the fallback, and the YouTube.js package is included in periodic update checks.</li>
-<li><strong>Update interval (hours)</strong>: how often the player tries to update dependencies when the YouTube Music tab is opened (1-720 h). It is available only when automatic updates are enabled.</li>
+<li><strong>Favorite radio stations</strong>: the ones you marked with <code>Ctrl+D</code>.</li>
+<li><strong>Recently listened</strong>: the last stations you played.</li>
+<li><strong>Radio stations in your country</strong>: those of the country KeyTune treats as yours. By default it is the Windows one; you can choose another in <strong>Preferences &gt; Online radio</strong>, under <strong>My country</strong>, or in the country's actions menu, inside the tab (<strong>Set ... as my country</strong>).</li>
+<li><strong>Most listened worldwide</strong>.</li>
+<li><strong>Countries</strong>: choose a country and see the <strong>Most listened</strong>, <strong>All, in alphabetical order</strong> or <strong>By state or region</strong>.</li>
+<li><strong>Genres</strong>: choose a genre to see its stations.</li>
+<li><strong>Languages</strong>: choose a language to see its stations.</li>
 </ul>
-<h4 id="advanced-autodj">Advanced AutoDJ</h4>
+<h3 id="keys-and-actions">Keys and actions</h3>
+<p>In addition to the keys in <a href="#how-lists-work">How lists work</a>:</p>
 <ul>
-<li><strong>Download resources and enable AutoDJ</strong>: separately downloads <code>librosa</code>, NumPy, SciPy, Numba, and PyAV. These libraries are not part of the main installer. Disabling the option preserves files already downloaded.</li>
-<li><strong>Play DJ effects</strong>, <strong>AutoDJ profile</strong>, and <strong>AutoDJ transition length</strong> become available when AutoDJ is enabled.</li>
+<li><code>Ctrl+D</code>: adds the station to favorites or takes it out. It is the same favorite as the playlists', and the list marks the station as "favorite".</li>
+<li><code>Ctrl+C</code>: copies the stream address of the selected station.</li>
+<li>The <strong>Actions...</strong> button opens the menu with <strong>Play</strong>, <strong>Add without playing</strong>, <strong>View contents</strong>, <strong>Back to the previous list</strong>, <strong>Add to favorites</strong> (or <strong>Remove from favorites</strong>), <strong>View radio station details</strong>, <strong>Open the radio station's website in the browser</strong>, <strong>Copy the stream address</strong> and <strong>Vote for this radio station in the directory</strong>. With a station playing, the menu also lets you favorite it even if it isn't selected.</li>
 </ul>
-<h4 id="youtube-music-library">YouTube Music library</h4>
-<p>This section appears only when the integration is enabled.</p>
-<ul>
-<li><strong>Playlists loaded at a time</strong>: how many library playlists are fetched in each load (5-200). Smaller values speed up opening; when the end of the list is reached, the player offers to load more.</li>
-<li><strong>Personalized mixes to discover</strong>: maximum number of items scanned on the YouTube Music home page to find personalized mixes (5-200). Smaller values make synchronization faster.</li>
-<li><strong>Play related content at the end of the playlist (automatic radio)</strong>: when the last YouTube Music track ends naturally - or when you request the next track while on the last one -, the player searches for related tracks (YouTube Music radio) and continues playing automatically. For a continuous transition, the search starts shortly before the last track ends and the next link is resolved in advance, avoiding a pause while content is discovered. It can also be turned on or off with the <code>A</code> key during playback. Tracks already in the playlist are not added again, and when the radio returns only repeats the player seeds the search from an earlier track before giving up.</li>
-<li><strong>Save listened songs to YouTube Music history</strong>: enabled by default. When you listen to a YouTube Music track for enough time (about 30% of the duration, between 15 and 30 seconds), the player marks that track as watched in your YouTube Music account history. Disable it to play YouTube Music tracks without recording anything in history.</li>
-</ul>
+<p><strong>View radio station details</strong> opens a reading box with name, country, state or region, language, genres, quality (codec and bitrate), votes, listeners in the last 24 hours, website and stream address, with a button to open the website. <strong>Vote for this radio station in the directory</strong> records your vote on Radio Browser.</p>
+<h3 id="search-and-paste-addresses">Search and paste addresses</h3>
+<p>Type the name of a radio station in the search field and press <code>Enter</code>. The <strong>In</strong> box chooses where to search: <strong>Worldwide</strong> or only your country. If you paste a stream address into the field, it plays right away, with no search.</p>
+<h3 id="how-the-radio-plays">How the radio plays</h3>
+<p>The station goes into the current playlist under the station's name. It plays as an audio-only live broadcast: you can't rewind or fast-forward, and it stays out of AutoDJ and crossfade.</p>
+<p>The song the station announces appears in the status bar, in the format <em>Station: title</em>, and goes into the status announcement (<code>S</code>). Recent stations come from the playback history.</p>
 <h2 id="equalizer">Equalizer</h2>
-<p>The equalizer is opened per tab with <code>Ctrl+Shift+E</code>, so each playlist can have its own adjustment.</p>
-<p>In practice, this lets you keep one playlist with enhanced bass and another with a more neutral adjustment without having to redo everything whenever you switch contexts.</p>
-<h3 id="how-to-use">How to use</h3>
-<p>When you open the equalizer, the <strong>Target tab</strong> field shows which playlist will receive the adjustments. Use the <strong>Enable equalizer on this tab</strong> checkbox to turn the effect on or off only for that tab.</p>
-<p>The <strong>Preset</strong> field lists all available presets. Built-in presets appear with the <em>(built-in)</em> suffix. When you select one, the <strong>Description</strong> field shows a note about the sound profile and the <strong>Preset summary</strong> section displays the preamp and each band value so you can review them before applying.</p>
-<h4 id="preset-management-buttons">Preset management buttons</h4>
+<p><code>Ctrl+Shift+E</code> (or <strong>View &gt; Per-tab equalizer</strong>) opens the active tab's equalizer, so each playlist can have its own setting. That lets you, for example, keep one playlist with boosted bass and another with a neutral setting, without redoing everything each time you switch.</p>
+<h3 id="how-to-use-it">How to use it</h3>
+<p>The <strong>Target tab</strong> field shows which playlist receives the adjustments. The <strong>Enable equalizer on this tab</strong> box turns the effect on or off for that tab only.</p>
+<p>The <strong>Preset</strong> field lists all the presets. The built-in ones carry the suffix <em>(built-in)</em>. When you choose one, <strong>Description</strong> shows a note about the sound profile and <strong>Preset summary</strong> brings the preamp and the value of each band, so you can check before applying.</p>
+<h4 id="management-buttons">Management buttons</h4>
 <ul>
-<li><strong>New...</strong>: creates a custom preset from scratch. Opens the editor so you can define the name, preamp, and gain for each band. Use this button when you want a curve that does not exist among the built-in presets.</li>
-<li><strong>Edit...</strong>: edits an existing custom preset. This button appears this way only when the selected preset is custom.</li>
-<li><strong>Save copy...</strong>: when the selected preset is built-in, the button changes its name to <strong>Save copy...</strong> and creates an editable version based on it. Use this path to start from a built-in preset and adjust it.</li>
-<li><strong>Duplicate...</strong>: creates a copy of a custom preset with a new name, keeping the original untouched. Not available for built-in presets.</li>
-<li><strong>Delete</strong>: permanently removes the selected custom preset. Not available for built-in presets.</li>
-<li><strong>Apply to all tabs</strong>: copies the preset and enabled state from the current tab to all open media tabs.</li>
+<li><strong>New...</strong>: creates a custom preset from scratch. The editor asks for the name, the preamp and the gain of each band. Use it when you want a curve that doesn't exist among the built-in ones.</li>
+<li><strong>Edit...</strong>: edits a custom preset. It only appears like this when the selected one is custom.</li>
+<li><strong>Save copy...</strong>: when the selected one is built-in, this is the button that appears. It creates an editable version based on it, the right way to start from a ready-made preset and adjust.</li>
+<li><strong>Duplicate...</strong>: copies a custom preset under another name, without touching the original. Doesn't apply to built-in ones.</li>
+<li><strong>Delete</strong>: permanently removes the selected custom preset. Doesn't apply to built-in ones.</li>
+<li><strong>Apply to all tabs</strong>: copies the current tab's preset and enabled state to all open media tabs.</li>
 </ul>
 <h4 id="preset-editor">Preset editor</h4>
-<p>The editor shows the name field, the preamp control, and one control for each frequency band. Each band accepts values from -12.0 dB to +12.0 dB. Positive values boost the frequency; negative values attenuate it. The preamp adjusts the overall gain before all bands.</p>
+<p>The editor has the name field, the preamp and one control per frequency band. Each band goes from -12.0 dB to +12.0 dB: positive values boost the frequency and negative ones cut it. The preamp adjusts the overall gain before all the bands.</p>
 <h3 id="built-in-presets">Built-in presets</h3>
-<p>KeyTune includes 18 presets ready to use:</p>
+<p>KeyTune comes with 18 presets:</p>
 <table>
 <thead>
 <tr>
@@ -568,35 +743,35 @@ footer {
 </tr>
 <tr>
 <td>Classical</td>
-<td>Enhances definition and brightness without overdoing the bass</td>
+<td>Brings out definition and brightness without overdoing the bass</td>
 </tr>
 <tr>
 <td>Club</td>
-<td>More energetic bass and treble</td>
+<td>Livelier bass and treble</td>
 </tr>
 <tr>
 <td>Dance</td>
-<td>More bass impact and top-end brightness</td>
+<td>More impact in the bass and sparkle at the top</td>
 </tr>
 <tr>
 <td>Deep bass</td>
-<td>Prioritizes sub-bass and bass to add weight to the beat</td>
+<td>Prioritizes sub-bass and bass, to give weight to the beat</td>
 </tr>
 <tr>
 <td>Bass and treble</td>
-<td>V-shaped curve with strong bass and bright treble</td>
+<td>V-shaped curve, with strong bass and bright treble</td>
 </tr>
 <tr>
-<td>Enhanced treble</td>
-<td>Highlights details, voices, and overall brightness</td>
+<td>Boosted treble</td>
+<td>Highlights detail, vocals and overall brightness</td>
 </tr>
 <tr>
 <td>Headphones</td>
-<td>Balance designed for headphones with a sense of clarity</td>
+<td>Balance designed for headphones, with a sense of clarity</td>
 </tr>
 <tr>
-<td>Large hall</td>
-<td>Creates a more open and spacious feel</td>
+<td>Large room</td>
+<td>Creates a more open, spacious feel</td>
 </tr>
 <tr>
 <td>Live</td>
@@ -604,208 +779,153 @@ footer {
 </tr>
 <tr>
 <td>Party</td>
-<td>Curve for casual volume and upbeat songs</td>
+<td>Curve for casual volumes and upbeat music</td>
 </tr>
 <tr>
 <td>Pop</td>
-<td>Vocals, brightness, and clean bass</td>
+<td>Clean vocals, brightness and bass</td>
 </tr>
 <tr>
 <td>Reggae</td>
-<td>More body in the bass with relaxed mids</td>
+<td>More body in the bass, with relaxed mids</td>
 </tr>
 <tr>
 <td>Rock</td>
-<td>Guitar attack, snare, and overall presence</td>
+<td>Guitar attack, snare and overall presence</td>
 </tr>
 <tr>
 <td>Ska</td>
-<td>Firm bass with lively mids and treble</td>
+<td>Firm bass, with lively mids and highs</td>
 </tr>
 <tr>
 <td>Soft</td>
-<td>Gentle listening, reduces harshness</td>
+<td>Calm listening, reduces harshness</td>
 </tr>
 <tr>
 <td>Soft rock</td>
-<td>Balance with light vocal presence and brightness</td>
+<td>Balance with a slight presence of voice and brightness</td>
 </tr>
 <tr>
 <td>Techno</td>
-<td>Beat, sub-bass, and electronic brightness</td>
+<td>Beat, sub-bass and electronic sparkle</td>
 </tr>
 </tbody>
 </table>
 <h3 id="tips">Tips</h3>
 <ul>
-<li>Reduce the preamp if the sound starts to distort.</li>
-<li>Make small adjustments to the bands to avoid excess.</li>
-<li>Use <strong>Save copy...</strong> on a built-in preset to start from a ready-made curve and adjust only what you need.</li>
-<li>Use <strong>Duplicate...</strong> instead of editing directly when you want to experiment without losing the previous version.</li>
+<li>Lower the preamp if the sound starts to distort.</li>
+<li>To adjust a ready-made curve, use <strong>Save copy...</strong> on the built-in preset. To experiment without losing the current version, use <strong>Duplicate...</strong>.</li>
 </ul>
-<h2 id="youtube-music">YouTube Music</h2>
-<p>KeyTune includes a dedicated YouTube Music tab. Use <code>Ctrl+Shift+Y</code> to open it. It works as a separate tab, so you can keep the local library in one tab and YouTube Music in another.</p>
-<p>For the tab to work, you must enable the integration in <code>Ctrl+,</code> &gt; <strong>Additional features</strong> and connect an account.</p>
-<p>The YouTube Music integration depends on how the site changes and how <code>yt-dlp</code> interprets those pages. Because of that, errors, temporary failures, and even stops without an apparent explanation can occur; when this happens, you usually need to update the dependencies or try again later.</p>
-<h3 id="account-and-library">Account and library</h3>
-<p>The <strong>Account and library</strong> section shows the connected account status, the loaded library summary, and the latest operation message. It has three buttons:</p>
+<h2 id="autodj">AutoDJ</h2>
+<p>AutoDJ mixes the playlist's tracks the way a DJ would, instead of cutting from one to the next. It is not part of the installer: KeyTune downloads the analysis libraries (<code>librosa</code>, NumPy, SciPy, Numba and PyAV) after you confirm, in <strong>Preferences &gt; Additional resources</strong>. Once installed, <strong>Playback &gt; Enable AutoDJ</strong> turns it on and off.</p>
+<p>It analyzes the current track and the next options in the background and picks the following one by energy, key, volume and tempo, avoiding repeating recent artists. When the rhythm is reliable, it aligns the beats of the two tracks during the overlap. The manual queue always takes priority. If the analysis is late, fails or isn't confident, the player uses the regular crossfade or moves on to the next track normally.</p>
+<p><strong>Play playlist with AutoDJ</strong> creates a separate tab, without touching the original playlist. The current track starts right away, and KeyTune keeps up to five songs prepared ahead. The tab has a reading field with the source, how many tracks are prepared, the analysis activity and the next transition: BPM, tempo adjustment and, when a regular transition is needed, the reason. Each item appears as played, playing, next or prepared.</p>
+<p>The session controls swap the next track, recalculate the sequence, add files, pause or resume the preparation and end the session keeping the part already prepared. The same actions are in <code>Shift+F10</code>, on the list. The session is restored along with the player.</p>
+<p>AutoDJ options are in <strong>Preferences &gt; Playback</strong> and <strong>Additional resources</strong>; see <a href="#settings">Settings</a>.</p>
+<h2 id="settings">Settings</h2>
+<p>Preferences open with <code>Ctrl+,</code> and are divided into eight tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, <strong>KeyTube</strong>, <strong>Online radio</strong> and <strong>Additional resources</strong>.</p>
+<h3 id="general">General</h3>
+<p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says.</p>
+<p>The <strong>File association</strong> section (Windows) has the <strong>Register as default player</strong> button, which adds KeyTune to the <em>Open with</em> menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. <strong>Unregister associations</strong> undoes the registration.</p>
+<p>The <strong>Log recording</strong> section helps investigate problems. <strong>Record diagnostic logs</strong> writes a log file, in English, to the data folder, useful to attach to a bug report. <strong>Detail level</strong> goes from <em>Errors only</em>, the quietest, to <em>Debug</em>, which produces large files. <strong>Open log folder</strong> takes you to them.</p>
+<h3 id="playback-2">Playback</h3>
 <ul>
-<li><strong>Connect account...</strong>: opens the dialog to connect a YouTube Music account or renew the saved authentication.</li>
-<li><strong>Disconnect account</strong>: removes the saved authentication from this installation.</li>
-<li><strong>Refresh library</strong>: fetches the playlists and mixes available in the connected account again and refreshes feedback for songs visible in the account.</li>
+<li><strong>Crossfade (seconds)</strong>: the audio overlap between tracks on the automatic change (0 to 12 s). Use 0 to turn it off. Only applies between audio files.</li>
+<li><strong>Apply crossfade when changing track manually</strong>: with the option on, the crossfade also applies when you skip forward or back with the controls; by default, only at the natural end of the track. When an AutoDJ transition is ready, skipping forward uses that plan even with the option off.</li>
+<li><strong>Audio device</strong>: the sound output. <em>System default</em> follows the main Windows device.</li>
+<li><strong>Disable video output (play audio only)</strong>: plays only the audio, including from video files. Avoids external video windows.</li>
+<li><strong>Show the video of live broadcasts</strong>: shows the picture of YouTube broadcasts in the player area even with video output disabled for the rest of the app. Unchecked, the broadcast plays only the audio. <code>Ctrl+Alt+V</code> toggles it during a broadcast.</li>
 </ul>
-<p>The <strong>Like</strong> and <strong>Dislike</strong> actions are sent to the connected account, so they also appear in YouTube Music on mobile and other devices. KeyTune keeps a persistent, per-account cache of disliked tracks and updates it from history, liked songs, and lists returned by YouTube Music. Those tracks are removed from playlists and radios loaded through the account and skipped if they reappear in a restored queue. Because YouTube Music does not provide a complete list of disliked songs, a rating made outside KeyTune can only be imported when that track appears again in one of those account responses; <strong>Refresh library</strong> forces this check.</p>
-<p>Below the account section is the <strong>Playlists and mixes</strong> list with all playlists and mixes in the library. Use the <strong>Filter</strong> field to find items by name. The counter above the list shows how many items are visible after filtering. Below the list are the actions:</p>
+<p>The <strong>default volume</strong>, the <strong>volume</strong> and <strong>seek</strong> steps (how much each arrow changes), the <strong>default repeat</strong> and <strong>shuffle</strong> for new playlists complete the tab and also do what the name says.</p>
+<p>With AutoDJ installed, there are two more options: <strong>AutoDJ profile</strong> (<em>Smooth</em> makes a long, balanced mix; <em>Party</em> concentrates the bass swap in the middle and raises the energy gradually; <em>Electronic</em> uses sharper cuts and a faster swap, designed for strong beats) and <strong>AutoDJ transition length</strong> (8, 16 or 32 beats, independent of the regular crossfade).</p>
+<h3 id="accessibility">Accessibility</h3>
+<p>It has a single option: <strong>Enable accessibility announcements</strong>. When on, the player announces changes of time, volume, tab switching and status to the screen reader. When off, those announcements stop. The on-demand announcement shortcuts (<code>T</code>, <code>V</code> and <code>S</code>) work either way. See <a href="#accessibility-features">Accessibility features</a>.</p>
+<h3 id="library">Library</h3>
+<p>Controls the <a href="#smart-library">smart library</a>. Turning off <strong>Enable the smart library</strong> deactivates the whole feature and disables the other options.</p>
 <ul>
-<li><strong>Open selection</strong>: opens the selected playlist or mix in a new tab (<code>Enter</code> in the list does the same).</li>
-<li><strong>New playlist...</strong>: creates a new playlist in your account. The player asks for the name and privacy (Private, Unlisted, or Public). See <a href="#managing-youtube-music-playlists">Managing YouTube Music playlists</a>.</li>
-<li><strong>Delete playlist...</strong>: deletes the selected playlist from your account, with confirmation. It only works for playlists you created - mixes, charts, and third-party playlists cannot be deleted.</li>
-<li><strong>Load more playlists</strong>: fetches the next batch when there are more playlists to load. You can also press <code>Page Down</code> when at the end of the list.</li>
+<li><strong>Automatically index folders opened in the browser</strong>: when you open a folder, its media goes into the index in the background.</li>
+<li><strong>Keep a local playback history</strong> and <strong>Plays kept in the history</strong> (50 to 20000): over the limit, the oldest drop out.</li>
+<li><strong>Remember the position of long media</strong>, <strong>Minimum duration to remember the position</strong> (1 to 240 minutes) and <strong>Margin ignored at the start and at the end</strong> (5 to 300 seconds): see <a href="#resume-where-you-stopped">Resume where you stopped</a>.</li>
+<li><strong>Entries kept in the cache</strong> (100 to 100000): how many metadata items and audio analyses are kept.</li>
 </ul>
-<h3 id="search-in-the-catalog-and-on-youtube">Search in the catalog and on YouTube</h3>
-<p>The <strong>Search in the catalog and on YouTube</strong> section is collapsed by default. Expand it to search. It has:</p>
+<h3 id="download">Download</h3>
+<p>Sets the defaults for <code>Ctrl+Shift+B</code>:</p>
 <ul>
-<li><strong>Search field</strong>: type what you want to search for and press <code>Enter</code> or click <strong>Search</strong>.</li>
-<li><strong>Scope</strong>: chooses where the search will be performed. The available options are:<ul>
-<li><em>YouTube Music - songs</em>: tracks from the YouTube Music catalog.</li>
-<li><em>YouTube Music - videos</em>: music videos and video content from YouTube Music.</li>
-<li><em>YouTube Music - playlists</em>: playlists from the YouTube Music catalog.</li>
-<li><em>YouTube - videos</em>: YouTube videos in general, without requiring an account.</li>
+<li><strong>Default download type</strong>: <strong>Audio</strong> or <strong>Video</strong>.</li>
+<li><strong>Audio quality</strong>: <strong>Original (no conversion)</strong> keeps the audio as YouTube delivers it; <strong>MP3</strong> (128, 192, 256 or 320 kbps) and <strong>FLAC (lossless)</strong> convert the audio and require FFmpeg.</li>
+<li><strong>Audio sample rate</strong>: <strong>Original</strong>, 44100 Hz or 48000 Hz. Only applies when the audio is converted. YouTube delivers 44.1 or 48 kHz, so higher rates would bring no quality gain.</li>
+<li><strong>Video quality</strong>: <strong>Best available</strong> or a maximum height from 2160p to 144p. If the chosen height doesn't exist, the video is downloaded in the best quality available.</li>
+<li><strong>Download folder</strong>: where the files are saved. The default is <strong>Downloads\KeyTune</strong>, in your user folder.</li>
+<li><strong>Always show the dialog when downloading</strong>: on (the default), each download opens the confirmation dialog; off, the download starts right away with the options from this tab.</li>
 </ul>
-</li>
-<li><strong>Explore</strong>: four buttons bring more content into the same results list:<ul>
-<li><strong>Trending...</strong>: opens a menu with <em>Global</em> at the top and the other countries grouped into submenus by continent. When you choose a country, the YouTube Music charts and trending highlights appear in the list as playlists you can open or save to the library. Does not require a connected account.</li>
-<li><strong>Moods and genres...</strong>: opens a menu with YouTube Music mood and genre categories (for example <em>Focus</em>, <em>Workout</em>, <em>Pop</em>, <em>Rock</em>). When you choose a category, its playlists appear in the list. Does not require a connected account.</li>
-<li><strong>Liked songs</strong>: loads liked tracks (the <em>Liked Music</em> playlist from your account). Requires a connected account.</li>
-<li><strong>History</strong>: loads your YouTube Music playback history, from the most recent track to the oldest. Requires a connected account.</li>
-</ul>
-</li>
-<li><strong>Results list</strong>: shows the items found (from search, trending charts, moods and genres, liked songs, or history). The list allows <strong>multiple selection</strong>: use <code>Ctrl+Arrows</code> to move focus without changing the selection, <code>Ctrl+Space</code> to check or uncheck the focused item, and <code>Shift+Arrows</code> to select a range. <code>Enter</code> adds the selection to the current playlist; <code>Ctrl+Enter</code> opens the selection in a new playlist; <code>Shift+F10</code> or the <strong>Actions...</strong> button opens the context menu with additional options.</li>
-<li><strong>Save to Music</strong>: saves the selection to the YouTube Music library when the result is compatible (playlists or tracks).</li>
-</ul>
-<h3 id="open-playlist-or-video">Open playlist or video</h3>
-<p>The <strong>Open playlist or video</strong> section is also collapsed by default. Expand it to paste a YouTube Music or YouTube playlist, mix, or video link. Click <strong>Open link</strong> or press <code>Enter</code> in the field to open it.</p>
-<h3 id="live-broadcasts">Live broadcasts</h3>
-<p>Paste the link of a YouTube live broadcast into <strong>Open playlist or video</strong> (or use <code>Ctrl+V</code> / <code>Ctrl+Shift+V</code>, as with any link). KeyTune recognizes the broadcast on its own:</p>
+<h3 id="keytube">KeyTube</h3>
+<p>Gathers the YouTube and YouTube Music options. They only take effect with the integration turned on in <strong>Additional resources</strong>.</p>
+<p><strong>Library</strong></p>
 <ul>
-<li>It plays at the current moment, without resuming from a saved position. The player announces "Live broadcast", the time bar shows a fixed label instead of a duration, and <code>T</code> tells you how long you have been watching.</li>
-<li>With <strong>Show the video of live broadcasts</strong> turned on (the default), the picture appears in the player area even if <strong>Disable video output</strong> is checked. Video is capped at 720p. Turned off, the broadcast plays audio only, using the lightest variant. <code>Ctrl+Alt+V</code> toggles the option and restarts the broadcast in the new mode.</li>
-<li>You cannot seek forward or back, or jump to the start or end: the player says so. Pausing and resuming continues from where you stopped.</li>
-<li>If the connection drops, the player tries to reconnect up to three times (after 2, 5 and 10 seconds) and announces the loss and the restoration. If the broadcast has already ended, it announces "The live broadcast has ended" instead of playing the recording from the beginning.</li>
-<li>A scheduled broadcast that has not started announces "This live broadcast has not started yet."; try again once it begins.</li>
-<li>Live broadcasts stay out of AutoDJ and crossfade, have no lyrics, and do not create a resume point. Playback history records them after the usual minimum listening time. The <strong>end of track</strong> sleep timer does not apply to a live broadcast; use a preset duration.</li>
+<li><strong>Playlists loaded at a time</strong>: how many playlists from the library come with each load (5 to 200). Smaller values open faster; at the end of the list, the player offers to load more.</li>
+<li><strong>Custom mixes to discover</strong>: the maximum number of items scanned on the YouTube Music home to find personalized mixes (5 to 200). Smaller values make syncing faster.</li>
 </ul>
-<h3 id="radio-from-the-current-track">Radio from the current track</h3>
-<p>Press <code>Ctrl+R</code> or use <strong>Playback &gt; Start radio from this track</strong> while a YouTube Music song is playing. KeyTune opens a new tab, preserves the playback position, and places the current track at item 1 without continuing the previous radio queue.</p>
-<p>To reduce repeats between radios, the player excludes tracks already traversed in the source playlist and keeps a history of the 200 most recently played YouTube Music songs, restored with the session. KeyTune may make up to three requests and only adds previously unseen IDs. Because YouTube Music chooses the candidates, different songs cannot be guaranteed; if no new tracks are available, the new tab remains with only the seed track.</p>
-<h3 id="managing-youtube-music-playlists">Managing YouTube Music playlists</h3>
-<p>In addition to opening and saving playlists, KeyTune lets you edit your playlists directly in the connected account. All these actions require a connected account and change the playlist <strong>in your YouTube Music account</strong> - anything involving deletion is confirmed first and cannot be undone by the player.</p>
-<p><strong>Adding tracks to a playlist.</strong> Select one or more YouTube Music tracks (in the current playlist or in the search results list) and use <strong>Add to YouTube Music playlist...</strong> in the context menu (<code>Shift+F10</code>), or press <code>Ctrl+Shift+A</code> to add the track that is playing. A list of your editable playlists appears; personalized mixes and radios are not included in this list because they cannot be edited. At the top of the list is the <strong>Create new playlist...</strong> option, which creates a new playlist already containing the current selection (same behavior as the YouTube Music app).</p>
-<p><strong>Removing tracks from a playlist.</strong> With one of your YouTube Music playlists open in the current tab, select the tracks and use <strong>Remove from YouTube Music playlist</strong> in the context menu. The player asks for confirmation and, when finished, also removes the tracks from the open tab so the list continues to mirror the account. Removal is offered only for playlists you created or where you are a collaborator.</p>
-<p><strong>Creating a playlist.</strong> Use <strong>New playlist...</strong> in the <em>Playlists and mixes</em> section to create an empty playlist, or <strong>Create new playlist...</strong> in the add tracks dialog to create it already with the selection. In both cases, the player opens a dialog where you enter the <strong>name</strong> and choose the <strong>privacy</strong>: <em>Private</em> (only you can see it), <em>Unlisted</em> (visible to anyone with the link), or <em>Public</em> (appears on your profile and may appear in searches). The default is Private. After creating it, the library is refreshed so the new playlist appears in the list.</p>
-<p><strong>Deleting a playlist.</strong> Select the playlist in the <em>Playlists and mixes</em> list and use <strong>Delete playlist...</strong>. You can only delete playlists you created; the player confirms first and then refreshes the library.</p>
-<h3 id="youtube-music-session">YouTube Music session</h3>
-<p>To use your library features (saved playlists, history, likes, and ratings), you need to connect your YouTube Music account. KeyTune offers two connection modes in the <strong>Connect account</strong> dialog:</p>
-<ol>
-<li><strong>Extract from installed browser:</strong> Select Firefox, Google Chrome, Microsoft Edge, Brave, or Opera from the list and click <strong>Connect</strong>. KeyTune extracts the session directly from the browser profile using <code>yt-dlp</code>. Firefox is recommended because it offers better compatibility on Windows.</li>
-<li><strong>Import file or manual text:</strong> For unlisted browsers or custom configurations, you can import an exported <code>cookies.txt</code> file or paste session HTTP headers.</li>
-</ol>
-<p>On Windows, Chrome, Edge, and Brave may need to be completely closed, and some browser versions may prevent extraction through their own security protections. If that happens, use Firefox or manual import.</p>
-<h4 id="what-cookies-are">What cookies are</h4>
-<p>Cookies are small text files that browsers store to remember your preferences and login information on websites. When you log in to YouTube Music, the browser saves cookies that contain your authentication. When connecting your account in KeyTune, the application uses this logged-in session information to access your library without asking for your password.</p>
-<h4 id="how-to-connect-via-direct-browser-extraction">How to connect via direct browser extraction</h4>
-<ol>
-<li>Make sure you are logged into your account on <a href="https://music.youtube.com/">YouTube Music</a> in your browser (Chrome, Edge, Firefox, Brave, or Opera).</li>
-<li>In KeyTune, open the YouTube Music tab (<code>Ctrl+Shift+Y</code>).</li>
-<li>In the <strong>Account and library</strong> section, click <strong>Connect account...</strong>.</li>
-<li>In the dialog that opens, select <strong>Extract from installed browser</strong>.</li>
-<li>Select your browser from the list and click <strong>Connect</strong>.</li>
-</ol>
-<h4 id="alternative-step-by-step-manual-cookies-txt-export">Alternative step by step: manual cookies.txt export</h4>
-<p>If you choose manual mode or use a browser that is not directly supported:</p>
-<p><strong>Prerequisite:</strong> install the <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a> extension in your browser.</p>
-<p><strong>1. Enable the extension in incognito tabs</strong></p>
-<p>Using an incognito/private tab prevents Google from frequently renewing cookies during normal browser use.</p>
-<ol>
-<li>Press <code>Ctrl+L</code> to focus the address bar.</li>
-<li>Press <code>Esc</code> to exit the address bar edit box.</li>
-<li>Press <code>Alt+F</code> to open the browser menu.</li>
-<li>Navigate with the arrows to <strong>Extensions</strong>, expand the submenu by pressing <code>Enter</code>, and choose <strong>Manage extensions</strong>.</li>
-<li>Find <strong>Get cookies.txt LOCALLY</strong> and click <strong>Details</strong> (or "Learn more").</li>
-<li>On the details page, find the <strong>Allow in private tabs</strong> or <strong>Allow in incognito</strong> option and enable it.</li>
-<li>Close the page and return to your browser.</li>
-</ol>
-<p><strong>2. Log in and export cookies</strong></p>
-<ol>
-<li>Open a new incognito/private tab (<code>Ctrl+Shift+N</code> or <code>Ctrl+Shift+P</code>).</li>
-<li>Navigate to <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
-<li>Log in with your Google account.</li>
-<li>Open the <strong>Get cookies.txt LOCALLY</strong> extension and click <strong>Export</strong> or <strong>Download</strong> to save the <code>cookies.txt</code> file.</li>
-<li>Close the incognito tab without navigating to other sites.</li>
-</ol>
-<p><strong>3. Import into KeyTune</strong></p>
-<ol>
-<li>In KeyTune's <strong>Connect account...</strong> dialog, select <strong>Import file or manual text</strong>.</li>
-<li>Select the downloaded <code>cookies.txt</code> file (or paste header text) and click <strong>Connect</strong>.</li>
-</ol>
-<h4 id="security-information">Security information</h4>
-<p>The exported <code>cookies.txt</code> file contains authentication information for your account. For security:</p>
+<p><strong>Playback</strong></p>
 <ul>
-<li>Use the file only on your own computer.</li>
-<li>Do not share the file with other people.</li>
-<li>Delete the file after importing it into KeyTune if you want. The internal copy contains only the YouTube cookies required for the connection.</li>
-<li>If you disconnect the account in KeyTune, the stored cookies will be removed.</li>
+<li><strong>Play related tracks at the end of the playlist</strong>: when the last YouTube Music track ends, or when you ask for the next one while on the last, the player fetches related tracks (the YouTube Music radio) and keeps playing, with no pause between one and the next. The <code>A</code> key turns it on and off during playback. Tracks that are already in the playlist don't come in again.</li>
+<li><strong>Save what I listened to in the YouTube Music history</strong>: on by default. When you listen to a track long enough (about 30% of the duration, between 15 and 30 seconds), the player marks it as watched in your account's history. Turn it off to play without recording anything.</li>
 </ul>
-<h3 id="shortcuts">Shortcuts</h3>
+<p><strong>Language and region</strong></p>
 <ul>
-<li><code>Ctrl+Shift+Y</code>: open the YouTube Music tab</li>
-<li><code>Ctrl+R</code>: start a new radio from the current track</li>
-<li><code>Ctrl+Shift+A</code>: add the current media to a YouTube Music playlist</li>
-<li><code>Enter</code> in the search field: run the search</li>
-<li><code>Enter</code> in the results list: add the item to the current playlist</li>
-<li><code>Ctrl+Enter</code> in the results list: open the item in a new playlist</li>
-<li><code>Ctrl+Space</code> in the results list: check or uncheck the focused item (multiple selection)</li>
-<li><code>Ctrl+Arrows</code> in the results list: move focus without changing the selection</li>
-<li><code>Shift+Arrows</code> in the results list: select a range of items</li>
-<li><code>Shift+F10</code> in the results list: open the actions menu</li>
-<li><code>Enter</code> in the library playlist list: open the selection</li>
-<li><code>Page Down</code> at the end of the playlist list: load more playlists</li>
-<li><code>Esc</code>: close the tab when it has focus</li>
+<li><strong>Content language</strong>: the language requested from YouTube in searches and in the texts it returns (counts, dates). The default is <strong>Same as KeyTune</strong>. It applies to YouTube searches with YouTube.js turned on; YouTube Music searches use only the region.</li>
+<li><strong>Content region</strong>: the country used in YouTube and YouTube Music searches. With <strong>Automatic</strong>, YouTube decides from your connection.</li>
+<li><strong>Audio of dubbed videos</strong>: some videos come with the original audio and dubs. Here you choose what plays: <strong>Whatever YouTube delivers</strong> (the default), <strong>The video's original</strong> or the dub in a language. Videos without the requested track play normally. A track that isn't the default goes through yt-dlp and takes a few seconds longer to start.</li>
+</ul>
+<h3 id="online-radio-2">Online radio</h3>
+<ul>
+<li><strong>My country</strong>: the country that opens the home of the <strong>Online radio</strong> tab and that appears as a search option. With <strong>Automatic (follow the system)</strong>, the country set in Windows applies. A country that isn't on the list can be set in the tab itself, in the country's actions menu.</li>
+</ul>
+<h3 id="additional-resources">Additional resources</h3>
+<p>Gathers the optional YouTube and AutoDJ integrations and libraries. Before the first download, KeyTune shows a dialog with all the components that will be installed.</p>
+<p><strong>YouTube components</strong></p>
+<ul>
+<li><strong>Enable the YouTube and YouTube Music integration</strong>: downloads and keeps the <code>yt-dlp</code> executable, the necessary Python packages and, if there isn't a compatible one, a portable Node.js for the EJS resolver. Without this, KeyTube doesn't work. The first time, the download may take a few minutes and requires internet. When you turn it off, the files already downloaded stay in place.</li>
+<li><strong>Update the components automatically</strong>: checks for and applies updates at the interval set below. Only available with the integration turned on.</li>
+<li><strong>Use the nightly version of yt-dlp (recommended)</strong>: downloads <code>yt-dlp</code> nightly builds. YouTube changes its extraction mechanisms often, and the nightly usually gets fixes before the stable channel.</li>
+<li><strong>Use YouTube.js (recommended)</strong>: improves resolution and playback. Installs YouTube.js and uses the same Node.js 24 or higher prepared for <code>yt-dlp</code>, which stays as a fallback. The package is part of the periodic update check.</li>
+<li><strong>Update interval (hours)</strong>: how often the player tries to update the dependencies when KeyTube is opened (1 to 720 h). Only available with automatic update turned on.</li>
+</ul>
+<p><strong>AutoDJ</strong></p>
+<ul>
+<li><strong>Download resources and enable AutoDJ</strong>: downloads <code>librosa</code>, NumPy, SciPy, Numba and PyAV separately; they don't come in the installer. When you turn it off, the downloaded files stay in place.</li>
+<li><strong>Play DJ effects during transitions</strong>, <strong>AutoDJ profile</strong> and <strong>AutoDJ transition length</strong> become available with AutoDJ turned on.</li>
 </ul>
 <h2 id="accessibility-features">Accessibility features</h2>
-<p>The application was designed for screen readers and keyboard use. In general:</p>
+<p>KeyTune was designed for screen readers and for keyboard-only use:</p>
 <ul>
 <li>focus avoids unnecessary jumps to the native video area;</li>
-<li>state and navigation announcements are made when accessibility support is available;</li>
-<li>fields, buttons, and lists have names and descriptions readable by screen readers.</li>
+<li>states and navigation are announced when accessibility support is available;</li>
+<li>fields, buttons, lists and groups have names and descriptions readable by screen readers.</li>
 </ul>
-<p>If you use a screen reader, the on-demand announcement shortcuts <code>T</code>, <code>V</code>, and <code>S</code> (described in <a href="#playback-shortcuts">Playback shortcuts</a>) and the <code>F1</code> quick help help you orient yourself without depending on automatic events.</p>
-<p>Automatic announcements - such as track changes, tab switching, and volume changes - can be turned on or off in <code>Ctrl+,</code> &gt; <strong>Accessibility</strong>.</p>
-<p>Item search avoids redundant announcements: since <code>Ctrl+F</code>, <code>F3</code>, and <code>Shift+F3</code> move the selection to the matching item, the screen reader is what reads the track, and the search position stays in the status bar. The smart library follows the same idea: the result and history lists have named columns, focus moves to the list as soon as a search finishes, and favorites and ratings - which never show up in the item label - are always spoken when they change. The timer, in turn, speaks when it is scheduled, when 5 minutes are left, when 1 minute is left, and when it pauses playback; its state also appears in the <code>S</code> key announcement.</p>
-<p>The lyrics panel is also designed for this use: <code>Ctrl+Alt+L</code> or the <strong>Lyrics</strong> checkbox in the time area shows or hides the panel, and the text can be read, navigated with the arrow keys, and copied with the <strong>Copy full lyrics</strong> button. When the track changes, the player tries to fetch the lyrics automatically from LRCLIB first and then YouTube Music.</p>
+<p>If you use a screen reader, <code>T</code>, <code>V</code> and <code>S</code> (see <a href="#playback-shortcuts">Playback shortcuts</a>) and the quick help <code>F1</code> help you find your bearings without depending on the automatic announcements. Those announcements, such as track change, tab change and volume change, can be turned on or off in <code>Ctrl+,</code> &gt; <strong>Accessibility</strong>.</p>
+<p>Favorites and ratings are spoken together with the item, and details, comments and plugin permissions appear in reading fields with a label. The screen reader also announces the name of the group when focus enters it.</p>
 <h2 id="updates">Updates</h2>
-<p>On startup, KeyTune can check for updates automatically. To check manually at any time, use the <strong>Help &gt; Check for updates</strong> menu.</p>
-<p>When a new version is available, the application shows a dialog with the release notes, the file name, and the download size before asking for confirmation. If you accept, the application downloads the package, shows download progress, and asks for permission to install after the file is ready. If you cancel or close the dialog, nothing is installed and the player continues working normally.</p>
+<p>On startup, KeyTune can check for updates on its own. To check at any time, use <strong>Help &gt; Check for updates</strong>.</p>
+<p>When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<p>If the application does not open correctly, first check whether installation completed without errors (reinstalling with the latest installer solves most cases) and whether the system has permission to access the files or folders you tried to open.</p>
-<p>If the player cannot find the MPV runtime, check whether it is in one of these paths: an <code>mpv/</code> folder next to the executable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, the cache saved from the previous run, or a compatible Chocolatey installation.</p>
-<p>If media does not open, test another local file to separate an invalid path, permission, or incompatible file type problem.</p>
-<p>If file association does not work as expected, there are two separate steps to confirm: first, that KeyTune was registered as an option (during installation or later in <strong>Settings &gt; General &gt; Register as default player</strong>); second, that it was chosen as the default application for those formats in Windows default app settings - registration alone does not automatically make KeyTune the default.</p>
-<p>If session restoration fails, open the app once without depending on the previous session and check whether window and folder settings are being saved normally.</p>
-<p>If a conversion fails, confirm that the file opens normally in the player and that the destination folder is writable. FFmpeg's message is shown and announced; corrupted files or files in unusual formats may not convert.</p>
-<p>If a download fails, confirm that <strong>Additional features</strong> are enabled and up to date and that the download folder exists and is writable. Converting audio requires FFmpeg; without it, KeyTune downloads in the original quality. Error 429 means YouTube is temporarily blocking requests because of too many of them: wait a few minutes.</p>
-<p>If a live broadcast does not open, confirm that <strong>Additional features</strong> are enabled and up to date (<code>yt-dlp</code> changes often to keep up with YouTube). Many requests in a row to YouTube can cause a temporary block (error 429); wait a few minutes and try again.</p>
-<p>If the YouTube Music tab does not load or shows dependency errors, open <code>Ctrl+,</code> &gt; <strong>Additional features</strong> and confirm that <strong>Enable additional features for YouTube Music and YouTube</strong> is checked. The initial download can take a few minutes and requires internet access. If the dependencies are already installed but search or loading fails, use the nightly version of <code>yt-dlp</code> in the same preferences - it usually receives fixes before the stable channel.</p>
-<p>If the YouTube Music session expires or the player asks for authentication again, export the browser cookies as described in the <a href="#youtube-music-session">YouTube Music session</a> section and reconnect the account.</p>
-<p>To investigate other problems, enable log recording in <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Log recording</strong>. With <strong>Record diagnostic logs</strong> enabled and the level set to <em>Debug</em>, the player writes detailed information to <code>keytune.log</code> in the data folder. Use <strong>Open logs folder</strong> to locate the file and, if you need to report a problem, attach it to the issue.</p>
+<p><strong>The app doesn't open properly.</strong> Check that the installation finished without errors (reinstalling with the latest installer fixes most cases) and that the system has permission to access the files or folders you tried to open.</p>
+<p><strong>The player can't find the MPV runtime.</strong> Check that it is in one of these places: an <code>mpv/</code> folder next to the executable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, the cache saved from the previous run or a compatible Chocolatey installation.</p>
+<p><strong>File association doesn't work as expected.</strong> There are two separate steps. First, KeyTune must be registered as an option (during installation, or later in <strong>Settings &gt; Preferences &gt; General &gt; Register as default player</strong>). Second, it must be chosen as the default app for those formats in the Windows default apps settings. Registering alone doesn't make KeyTune the default.</p>
+<p><strong>KeyTube doesn't load or shows dependency errors.</strong> Open <code>Ctrl+,</code> &gt; <strong>Additional resources</strong> and confirm that <strong>Enable the YouTube and YouTube Music integration</strong> is checked. The initial download may take a few minutes and requires internet. If the dependencies are already installed but the search or loading fails, use the nightly version of <code>yt-dlp</code>, in the same preferences: it usually gets fixes before the stable channel.</p>
+<p><strong>A conversion failed.</strong> Confirm that the file opens normally in the player and that the destination folder accepts writing. FFmpeg's message is shown and announced; corrupted files or files in unusual formats may not be converted.</p>
+<p><strong>A download or a live broadcast doesn't work.</strong> Confirm that <strong>Additional resources</strong> are turned on and up to date (<code>yt-dlp</code> changes often to keep up with YouTube). For a download, also confirm that the folder exists and accepts writing. Error 429 indicates a temporary YouTube block for too many requests: wait a few minutes and try again.</p>
+<p><strong>An online radio station doesn't play or the list doesn't open.</strong> The Radio Browser directory and the stations themselves are sometimes offline. Try another station from the list, or go back to the list and open it again.</p>
+<p><strong>The YouTube session expired, or the player asks for authentication again.</strong> Export the browser's cookies as described in <a href="#connect-your-account">Connect your account</a> and reconnect.</p>
+<p><strong>Other problems.</strong> Turn on log recording in <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Log recording</strong>. With <strong>Record diagnostic logs</strong> on and the level set to <em>Debug</em>, the player writes detailed information to <code>keytune.log</code>, in the data folder. <strong>Open log folder</strong> takes you to the file. If you report the problem, attach the log to the issue.</p>
 <h2 id="plugins-and-marketplace">Plugins and marketplace</h2>
-<p>Open <strong>Settings &gt; Manage plugins</strong> to install a <code>.ktplugin</code> file or choose <strong>Open marketplace</strong>. Select a plugin, review its author, version, origin, permissions, and isolation, then confirm <strong>Install and enable</strong>. The manager also lets you enable, disable, and uninstall plugins; use <code>Tab</code> to move between controls and arrow keys to select an item.</p>
-<p>Plugin actions appear under <strong>Settings &gt; Plugin actions</strong>. Plugins may also provide tabs and views. Install only code from trusted authors: a separate process is not a security sandbox. Verified status means provenance was reviewed, not that security is guaranteed.</p>
-<p>The <a href="plugins.en.html">developer guide and API 2.0 reference</a> covers manifests, permissions, methods, events, and publishing. It ships with the player for offline reading; external links require internet access.</p>
+<p>Open <strong>Settings &gt; Manage plugins...</strong> to install a <code>.ktplugin</code> file or choose <strong>Open marketplace</strong>. Select a plugin, check the author, version, source, permissions and isolation and confirm with <strong>Install and enable</strong>. The manager also enables, disables and uninstalls plugins.</p>
+<p>The actions plugins add are in <strong>Settings &gt; Plugin actions</strong>. Plugins can also offer tabs and screens. Install only code from authors you trust: running in a separate process is not a security sandbox. The verification badge indicates a provenance review, not a security guarantee.</p>
+<p>The <a href="plugins.en.html">development and API 2.0 guide</a> covers the manifest, permissions, methods, events and publishing. It ships with the player and can be read offline; external links require internet.</p>
 <h2 id="for-developers">For developers</h2>
-<p>KeyTune is an open source project. The repository, issues, pull requests, and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md">docs/manual.md</a>.</p>
+<p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
+<p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 24/09/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 04/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>
