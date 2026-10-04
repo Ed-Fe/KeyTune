@@ -165,7 +165,7 @@ class SearchMixin:
         def on_error(exc):
             wx.MessageBox(
                 _("Não foi possível carregar as faixas para baixar.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -352,7 +352,7 @@ class SearchMixin:
         def on_error(exc):
             wx.MessageBox(
                 _("Não foi possível abrir a seleção em uma nova playlist.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -400,7 +400,7 @@ class SearchMixin:
         def on_error(exc):
             wx.MessageBox(
                 _("Não foi possível adicionar a seleção à playlist escolhida.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -522,7 +522,7 @@ class SearchMixin:
         def on_error(exc):
             wx.MessageBox(
                 _("Não foi possível adicionar a seleção à playlist atual.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

@@ -74,7 +74,7 @@ class AuthMixin:
         if auth_mode == "browser" and not selected_browser:
             wx.MessageBox(
                 _("Selecione um navegador na lista antes de conectar."),
-                _("YouTube Music"),
+                "KeyTube",
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -82,7 +82,7 @@ class AuthMixin:
         if auth_mode != "browser" and not headers_raw and not browser_json_path:
             wx.MessageBox(
                 _("Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."),
-                _("YouTube Music"),
+                "KeyTube",
                 wx.OK | wx.ICON_INFORMATION,
                 self,
             )
@@ -110,7 +110,7 @@ class AuthMixin:
                 error_message
                 + "\n\n"
                 + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                _("YouTube Music"),
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -141,7 +141,7 @@ class AuthMixin:
         self.on_refresh_youtube_music_library(None, announce=False)
         wx.MessageBox(
             _("Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}").format(path=saved_path, name=account_name),
-            _("YouTube Music"),
+            "KeyTube",
             wx.OK | wx.ICON_INFORMATION,
             self,
         )
@@ -156,7 +156,7 @@ class AuthMixin:
         with wx.MessageDialog(
             self,
             _("Deseja remover a autenticação salva do YouTube neste computador?"),
-            "YouTube Music",
+            "KeyTube",
             wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
         ) as dialog:
             if dialog.ShowModal() != wx.ID_YES:
@@ -174,7 +174,7 @@ class AuthMixin:
             self._set_status_message(_("YouTube desconectado."))
         wx.MessageBox(
             _("A autenticação salva do YouTube foi removida."),
-            "YouTube Music",
+            "KeyTube",
             wx.OK | wx.ICON_INFORMATION,
             self,
         )

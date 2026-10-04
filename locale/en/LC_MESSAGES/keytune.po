@@ -2682,11 +2682,11 @@ msgstr "Could not refresh the YouTube Music library."
 msgid "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
 msgstr "Could not automatically update the additional YouTube Music resources."
 
-msgid "Não foi possível avaliar a mídia atual no YouTube Music."
-msgstr "Could not rate the current media on YouTube Music."
+msgid "Não foi possível avaliar a mídia atual no YouTube."
+msgstr "Could not rate the current media on YouTube."
 
-msgid "Não foi possível avaliar a seleção atual no YouTube Music."
-msgstr "Could not rate the current selection on YouTube Music."
+msgid "Não foi possível avaliar a seleção atual no YouTube."
+msgstr "Could not rate the current selection on YouTube."
 
 msgid "Não foi possível avaliar os itens selecionados."
 msgstr "The selected items could not be rated."

@@ -82,8 +82,8 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                _("Não foi possível avaliar a mídia atual no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                _("Não foi possível avaliar a mídia atual no YouTube.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -538,8 +538,8 @@ class PlaylistEditMixin:
 
         def on_error(exc):
             wx.MessageBox(
-                _("Não foi possível avaliar a seleção atual no YouTube Music.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                _("Não foi possível avaliar a seleção atual no YouTube.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

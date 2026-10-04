@@ -171,7 +171,7 @@ class ResultsNavigationMixin:
         def on_error(exc):
             wx.MessageBox(
                 error_message + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
@@ -300,7 +300,7 @@ class ResultsNavigationMixin:
         def on_error(exc):
             wx.MessageBox(
                 _("Não foi possível carregar mais resultados agora.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

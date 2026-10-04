@@ -30,7 +30,7 @@ class AudioTrackMixin:
                 _("Não foi possível listar as faixas de áudio agora.")
                 + "\n\n"
                 + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
-                "YouTube Music",
+                "KeyTube",
                 wx.OK | wx.ICON_ERROR,
                 self,
             )

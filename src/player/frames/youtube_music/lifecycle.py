@@ -236,7 +236,7 @@ class LifecycleMixin:
 
         wx.MessageBox(
             _("Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube."),
-            "YouTube Music",
+            "KeyTube",
             wx.OK | wx.ICON_INFORMATION,
             self,
         )

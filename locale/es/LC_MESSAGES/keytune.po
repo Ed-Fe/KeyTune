@@ -2682,11 +2682,11 @@ msgstr "No se pudo actualizar la biblioteca de YouTube Music."
 msgid "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
 msgstr "No se pudieron actualizar automáticamente los recursos adicionales de YouTube Music."
 
-msgid "Não foi possível avaliar a mídia atual no YouTube Music."
-msgstr "No se pudo valorar el medio actual en YouTube Music."
+msgid "Não foi possível avaliar a mídia atual no YouTube."
+msgstr "No se pudo valorar el medio actual en YouTube."
 
-msgid "Não foi possível avaliar a seleção atual no YouTube Music."
-msgstr "No se pudo valorar la selección actual en YouTube Music."
+msgid "Não foi possível avaliar a seleção atual no YouTube."
+msgstr "No se pudo valorar la selección actual en YouTube."
 
 msgid "Não foi possível avaliar os itens selecionados."
 msgstr "No se pudieron valorar los elementos seleccionados."

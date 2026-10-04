@@ -4646,11 +4646,11 @@ msgid "Não foi possível atualizar automaticamente os recursos adicionais do Yo
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
-msgid "Não foi possível avaliar a mídia atual no YouTube Music."
+msgid "Não foi possível avaliar a mídia atual no YouTube."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
-msgid "Não foi possível avaliar a seleção atual no YouTube Music."
+msgid "Não foi possível avaliar a seleção atual no YouTube."
 msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
@@ -7299,7 +7299,6 @@ msgstr ""
 msgid "YT Music"
 msgstr ""
 
-#: src/player/frames/youtube_music/auth.py
 #: src/player/smart_library/history_dialog.py
 msgid "YouTube Music"
 msgstr ""
