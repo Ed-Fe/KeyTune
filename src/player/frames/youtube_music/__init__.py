@@ -23,6 +23,7 @@ from .auth import AuthMixin
 from .browse import BrowseMixin
 from .comments import CommentsMixin
 from .dependencies import DependencyMixin
+from .details import DetailsMixin
 from .lifecycle import LifecycleMixin
 from .navigation import ResultsNavigationMixin
 from .playlists import PlaylistEditMixin
@@ -41,6 +42,7 @@ class FrameYouTubeMusicMixin(
     PlaylistEditMixin,
     BrowseMixin,
     CommentsMixin,
+    DetailsMixin,
     AudioTrackMixin,
     LifecycleMixin,
 ):

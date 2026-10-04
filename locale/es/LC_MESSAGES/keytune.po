@@ -6283,3 +6283,54 @@ msgid "Item curtido no YouTube."
 msgid_plural "{count} itens curtidos no YouTube."
 msgstr[0] "Elemento marcado con me gusta en YouTube."
 msgstr[1] "{count} elementos marcados con me gusta en YouTube."
+
+msgid "O yt-dlp não conseguiu trazer os detalhes."
+msgstr "yt-dlp no pudo obtener los detalles."
+
+msgid "Canal: {name}"
+msgstr "Canal: {name}"
+
+msgid "Transmissão ao vivo"
+msgstr "Transmisión en vivo"
+
+msgid "Duração: {duration}"
+msgstr "Duración: {duration}"
+
+msgid "Publicado: {date}"
+msgstr "Publicado: {date}"
+
+msgid "Descrição:"
+msgstr "Descripción:"
+
+msgid "Sem descrição."
+msgstr "Sin descripción."
+
+msgid "Este item não tem detalhes para mostrar."
+msgstr "Este elemento no tiene detalles para mostrar."
+
+msgid "A mídia atual não é do YouTube: não há detalhes para mostrar."
+msgstr "El medio actual no es de YouTube: no hay detalles para mostrar."
+
+msgid "Detalhes de {title}"
+msgstr "Detalles de {title}"
+
+msgid "Detalhes"
+msgstr "Detalles"
+
+msgid "Não foi possível carregar os detalhes agora."
+msgstr "No se pudieron cargar los detalles ahora."
+
+msgid "Carregando os detalhes."
+msgstr "Cargando los detalles."
+
+msgid "Ver detalhes"
+msgstr "Ver detalles"
+
+msgid "Ver &detalhes da mídia atual"
+msgstr "Ver &detalles del medio actual"
+
+msgid "Fechou {title}. Nova playlist vazia."
+msgstr "Cerró {title}. Nueva playlist vacía."
+
+msgid "Fechou {title}."
+msgstr "Cerró {title}."

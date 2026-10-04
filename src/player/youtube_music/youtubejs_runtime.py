@@ -137,6 +137,11 @@ def audio_tracks(media_url, *, names=True):
     return list(response.get("tracks") or [])
 
 
+def media_details(media_url):
+    """Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data."""
+    return _request_action("details", media_url=str(media_url or "").strip())
+
+
 def subscription_videos_page(cookie_header, *, start, count):
     """Uma página dos vídeos novos das inscrições da conta dona de *cookie_header*."""
     response = _request_action("subscription_videos", cookie=str(cookie_header or "").strip(), start=start, count=count)

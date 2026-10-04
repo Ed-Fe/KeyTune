@@ -1,7 +1,5 @@
 """Comentários de vídeos e músicas na lista da aba do YouTube Music."""
 
-import wx
-
 from player.youtube_music import comments as youtube_comments
 from player.youtube_music.playlists import extract_video_id_from_text
 
@@ -65,30 +63,8 @@ class CommentsMixin:
 
     def _read_youtube_music_comment(self, comment):
         """Mostra o comentário inteiro numa caixa de leitura; a linha da lista corta os longos."""
-        dialog = wx.Dialog(
-            self,
+        return self._show_youtube_music_reading_dialog(
             title=_("Comentário de {author}").format(author=comment.author),
-            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
+            text=youtube_comments.comment_reading_text(comment),
+            name=_("Comentário"),
         )
-        try:
-            text_ctrl = wx.TextCtrl(
-                dialog,
-                value=youtube_comments.comment_reading_text(comment),
-                style=wx.TE_MULTILINE | wx.TE_READONLY,
-                size=(520, 260),
-            )
-            text_ctrl.SetName(_("Comentário"))
-            close_button = wx.Button(dialog, wx.ID_CLOSE, _("&Fechar"))
-            close_button.Bind(wx.EVT_BUTTON, lambda _event: dialog.EndModal(wx.ID_CLOSE))
-            dialog.SetEscapeId(wx.ID_CLOSE)
-
-            sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(text_ctrl, 1, wx.ALL | wx.EXPAND, 10)
-            sizer.Add(close_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 10)
-            dialog.SetSizerAndFit(sizer)
-            text_ctrl.SetInsertionPoint(0)
-            dialog.CentreOnParent()
-            dialog.ShowModal()
-        finally:
-            dialog.Destroy()
-        return True

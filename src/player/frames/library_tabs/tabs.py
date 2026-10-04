@@ -429,7 +429,7 @@ class TabManagementMixin:
                     self._unload_player()
                 self._reset_playlist_tabs()
                 self._refresh_playlist_browser()
-                self._announce(_("Aba fechada: {title}. Nova playlist vazia criada.").format(title=current_state.title))
+                self._announce(_("Fechou {title}. Nova playlist vazia.").format(title=current_state.title))
                 return True
 
             # Uma tela (YouTube Music, equalizador...) ficou sozinha: ela dá lugar a
@@ -487,10 +487,10 @@ class TabManagementMixin:
         if next_state:
             closed_name = current_state.title if current_state else _("sem nome")
             if isinstance(next_state, PlaylistState):
-                suffix = f'{_("Agora em {title}.").format(title=next_state.title)} {self._describe_playlist_position(next_state)}'.strip()
+                suffix = f"{next_state.title}. {self._describe_playlist_position(next_state)}".strip()
             else:
-                suffix = _("Agora em {title}.").format(title=next_state.title)
-            self._announce(_("Aba fechada: {name}.").format(name=closed_name) + " " + suffix)
+                suffix = f"{next_state.title}."
+            self._announce(_("Fechou {title}.").format(title=closed_name) + " " + suffix)
         else:
             self._announce(_("Aba fechada."))
 

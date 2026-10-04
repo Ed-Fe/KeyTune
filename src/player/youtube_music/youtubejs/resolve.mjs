@@ -496,6 +496,34 @@ async function audioTracks(request) {
   };
 }
 
+// Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data.
+async function details(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  const innertube = await clientFor(request);
+  const info = await innertube.getInfo(videoId);
+  const basic = info.basic_info || {};
+  const primary = info.primary_info;
+  const owner = info.secondary_info?.owner;
+  return {
+    title: basic.title || textOf(primary?.title),
+    channel: basic.author || textOf(owner?.author?.name) || basic.channel?.name || "",
+    channel_id: basic.channel_id || basic.channel?.id || owner?.author?.id || "",
+    subscribers: textOf(owner?.subscriber_count),
+    description: basic.short_description || textOf(info.secondary_info?.description),
+    duration: Number(basic.duration) || 0,
+    is_live: Boolean(basic.is_live),
+    view_count: Number(basic.view_count) || 0,
+    view_count_text: textOf(primary?.view_count?.view_count) || textOf(primary?.view_count?.original_view_count),
+    like_count: Number(basic.like_count) || 0,
+    published: textOf(primary?.published),
+    relative_date: textOf(primary?.relative_date),
+    category: basic.category || "",
+  };
+}
+
 async function resolve(request) {
   const videoId = videoIdFrom(request.media_url);
   if (!videoId) {
@@ -561,6 +589,7 @@ const HANDLERS = {
   comments,
   comment_replies: commentReplies,
   audio_tracks: audioTracks,
+  details,
   subscription_videos: subscriptionVideos,
   subscribed_channels: subscribedChannels,
 };

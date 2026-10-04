@@ -9,6 +9,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
+- **Detalhes de vídeos e músicas**: **Ver detalhes**, no menu **Ações...** do KeyTube, e **Reprodução > Ver detalhes da mídia atual** abrem uma caixa de leitura com título, canal e inscritos, duração, visualizações, curtidas, data de publicação e a descrição inteira.
 - **Ir para o canal ou artista**: num vídeo ou numa faixa da aba do YouTube Music (busca, vídeos das inscrições, em alta...), o menu **Ações...** ganhou **Ir para o canal** (YouTube) ou **Ir para o artista** (YouTube Music).
 - **Inscrições do YouTube**: o **Início** da aba do YouTube Music ganhou **Vídeos das inscrições** (os vídeos novos dos canais que você segue) e **Canais inscritos**. Usam a conta já conectada e o YouTube.js; são só para leitura.
 - **Idioma do áudio em vídeos dublados**: **Reprodução > Idioma do áudio da mídia atual...** lista a faixa original e as dublagens do vídeo do YouTube que está tocando e troca na hora, do mesmo ponto. Em **Preferências > Recursos adicionais**, **Idioma de áudio dos vídeos dublados** define o padrão: o que o YouTube entregar, o original do vídeo ou um idioma.
@@ -44,6 +45,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Copiar da playlist**: `Ctrl+C` copia a seleção como texto e também como arquivos, então dá para colar em outra playlist, em um campo de texto ou no Explorador do Windows. `Ctrl+Shift+C` passa a copiar sempre o caminho da mídia atual (no explorador, o da seleção).
 - **A aba do YouTube Music agora se chama KeyTube**: ela passou a reunir também o YouTube comum (vídeos, canais, inscrições, comentários). O atalho continua `Ctrl+Shift+Y`, e os textos de conexão falam em "conta do YouTube", já que a mesma conta serve aos dois.
 - **Curtir vários itens** anuncia "no YouTube" quando a seleção tem vídeos do YouTube comum.
+- **Anúncio ao fechar uma aba mais curto**: "Fechou KeyTube. Playlist 1." em vez de "Aba fechada: KeyTube. Agora em Playlist 1.".
 - **Limpar a fila pede confirmação**: o botão **Limpar tudo** do gerenciador da fila (`Ctrl+Shift+Q`) confirma antes de esvaziar.
 - **Lives fora de recursos que exigem uma faixa com fim**: não entram no AutoDJ nem no crossfade, não buscam letra e não geram ponto de retomada.
 

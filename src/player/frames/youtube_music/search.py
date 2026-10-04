@@ -52,6 +52,12 @@ class SearchMixin:
                 self.show_youtube_music_comments,
                 single_result is not None and bool(self._youtube_music_comments_url(single_result)),
             )
+        if single_result is not None and getattr(single_result, "result_type", "") != "comment":
+            append(
+                _("Ver detalhes"),
+                self.show_youtube_music_details,
+                bool(self._youtube_music_comments_url(single_result)),
+            )
         owner = single_result.owner_result() if hasattr(single_result, "owner_result") else None
         if owner is not None:
             owner_label = _("Ir para o canal {name}") if owner.result_type == "channel" else _("Ir para o artista {name}")
