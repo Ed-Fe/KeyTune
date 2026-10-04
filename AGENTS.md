@@ -53,5 +53,5 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - `instructions/player-ui-a11y.instructions.md` — wxPython UI, dialogs, menus, shortcuts, focus, screen reader.
 - `instructions/i18n.instructions.md` — localization: wrapping strings in `_()`, catalogs under `locale/`, translating the manual/credits/installer.
 - `instructions/update-release.instructions.md` — updater, Windows packaging, release notes, CHANGELOG.
-- `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes.
+- `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes. Commits in English; manual and changelog wording rules in `instructions/writing.instructions.md`.
 - `prompts/accessibility-smoke-test.prompt.md`, `prompts/release-readiness.prompt.md` — verification checklists.
