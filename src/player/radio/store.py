@@ -55,6 +55,14 @@ class RadioLibraryStore:
             return None
         return library.toggle_favorite(station.media_path, label=station.name)
 
+    def set_favorite(self, station, favorite):
+        """Marca (ou desmarca) direto, sem alternar o estado atual."""
+        library = self._library()
+        if library is None or not self.remember(station):
+            return False
+        library.set_favorite(station.media_path, favorite, label=station.name)
+        return True
+
     def find(self, media_path):
         library = self._library()
         if library is None:

@@ -26,6 +26,7 @@ class RadioTabPanel(wx.Panel):
         on_toggle_favorite,
         on_copy_stream_url,
         on_show_actions_menu,
+        on_add_manually,
     ):
         super().__init__(parent, style=wx.TAB_TRAVERSAL)
 
@@ -42,6 +43,7 @@ class RadioTabPanel(wx.Panel):
         self._on_toggle_favorite = on_toggle_favorite
         self._on_copy_stream_url = on_copy_stream_url
         self._on_show_actions_menu = on_show_actions_menu
+        self._on_add_manually = on_add_manually
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -60,6 +62,12 @@ class RadioTabPanel(wx.Panel):
         search_row.Add(self.search_query_ctrl, 1, wx.RIGHT, 12)
         search_row.Add(search_scope_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
         search_row.Add(self.search_scope_choice, 0)
+
+        self.add_manually_button = wx.Button(self, label=_("Adicionar rádio &manualmente..."))
+        self.add_manually_button.SetName(_("Adicionar rádio manualmente"))
+        self.add_manually_button.SetToolTip(
+            _("Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas.")
+        )
 
         self.results_label = wx.StaticText(self, label="")
         self.results_label.SetName(_("Lista atual das rádios online"))
@@ -90,6 +98,7 @@ class RadioTabPanel(wx.Panel):
         help_label.Wrap(620)
 
         root_sizer.Add(search_row, 0, wx.ALL | wx.EXPAND, 10)
+        root_sizer.Add(self.add_manually_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
         root_sizer.Add(self.results_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         root_sizer.Add(self.results_list, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         root_sizer.Add(self.actions_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
@@ -97,6 +106,7 @@ class RadioTabPanel(wx.Panel):
         self.SetSizer(root_sizer)
 
         self.search_query_ctrl.Bind(wx.EVT_TEXT_ENTER, self._on_search_query_enter)
+        self.add_manually_button.Bind(wx.EVT_BUTTON, self._on_add_manually_button)
         self.actions_button.Bind(wx.EVT_BUTTON, self._on_actions_button)
         self.results_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self._on_selection_changed)
         self.results_list.Bind(wx.EVT_LIST_ITEM_DESELECTED, self._on_selection_changed)
@@ -216,6 +226,9 @@ class RadioTabPanel(wx.Panel):
 
     def _on_actions_button(self, event):
         self._on_show_actions_menu(event.GetEventObject())
+
+    def _on_add_manually_button(self, _event):
+        self._on_add_manually()
 
     def _on_list_context_menu(self, _event):
         self._on_show_actions_menu(self.results_list)

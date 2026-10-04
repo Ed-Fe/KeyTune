@@ -105,6 +105,10 @@ class RadioService:
         """Devolve o novo estado do favorito, ou ``None`` sem a biblioteca disponível."""
         return self._store.toggle_favorite(station)
 
+    def set_favorite(self, station, favorite):
+        """Marca (ou desmarca) direto, sem alternar o estado atual. Devolve se deu certo."""
+        return self._store.set_favorite(station, favorite)
+
     def remember(self, station):
         """Guarda os dados da estação na biblioteca, onde o favorito e o histórico a acham."""
         return self._store.remember(station)
@@ -135,6 +139,15 @@ class RadioService:
         if not build_radio_media_path(normalized_url):
             return None
         return RadioStation(name=normalized_url, stream_url=normalized_url)
+
+    @staticmethod
+    def build_manual_station(name, stream_url):
+        """Uma rádio digitada à mão (nome e endereço); ``None`` com o endereço inválido."""
+        normalized_url = radio_stream_url(stream_url)
+        if not build_radio_media_path(normalized_url):
+            return None
+        station_name = str(name or "").strip() or normalized_url
+        return RadioStation(name=station_name, stream_url=normalized_url)
 
     def count_click(self, station):
         if not station.station_uuid:

@@ -257,6 +257,7 @@ def _build_screens():
     from player.preferences.audio_output_dialog import AudioOutputDialog
     from player.preferences.dialog import PreferencesDialog
     from player.preferences.models import AppSettings
+    from player.radio.manual_dialog import AddRadioManuallyDialog
     from player.radio.panel import RadioTabPanel
     from player.sleep_timer.dialog import SleepTimerDialog
     from player.smart_library.history_dialog import PlaybackHistoryDialog
@@ -284,6 +285,7 @@ def _build_screens():
 
     return {
         "AboutDialog": lambda parent: AboutDialog(parent),
+        "AddRadioManuallyDialog": lambda parent: AddRadioManuallyDialog(parent),
         "AudioOutputDialog": lambda parent: AudioOutputDialog(parent, [], ""),
         "AutoDJSessionPanel": lambda parent: AutoDJSessionPanel(
             parent, on_replace_next=_noop, on_recalculate=_noop, on_toggle_preparation=_noop, on_stop=_noop
@@ -329,6 +331,7 @@ def _build_screens():
             on_toggle_favorite=_noop,
             on_copy_stream_url=_noop,
             on_show_actions_menu=_noop,
+            on_add_manually=_noop,
         ),
         "ReadingDialog": reading_dialog,
         "SleepTimerDialog": lambda parent: SleepTimerDialog(parent),

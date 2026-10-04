@@ -116,6 +116,7 @@ msgstr ""
 #: src/player/plugins/dialog.py
 #: src/player/preferences/audio_output_dialog.py
 #: src/player/preferences/dialog.py
+#: src/player/radio/manual_dialog.py
 #: src/player/sleep_timer/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 #: src/player/update/dialog.py
@@ -190,6 +191,10 @@ msgstr ""
 
 #: src/player/frames/autodj_panel.py
 msgid "&Encerrar AutoDJ"
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "&Endereço do stream ou M3U"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -315,6 +320,10 @@ msgstr ""
 msgid "&Nome da playlist:"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "&Nome da rádio"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Nova playlist\tCtrl+T"
 msgstr ""
@@ -329,6 +338,10 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "&Novo..."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "&OK"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -1009,6 +1022,19 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Adicionar músicas à sessão AutoDJ"
+msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Adicionar rádio &manualmente..."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+#: src/player/radio/panel.py
+msgid "Adicionar rádio manualmente"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Adicionar rádio manualmente..."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -1936,6 +1962,10 @@ msgstr ""
 msgid "Cada playlist ou álbum fica em uma subpasta com o nome dele."
 msgstr ""
 
+#: src/player/radio/panel.py
+msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
+msgstr ""
+
 #: src/player/frames/commands/open_commands.py
 #: src/player/frames/explorer.py
 msgid "Caminho copiado."
@@ -2632,6 +2662,10 @@ msgstr ""
 msgid "Digite algo para pesquisar no YouTube Music ou no YouTube."
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "Digite o endereço do stream ou do arquivo M3U."
+msgstr ""
+
 #: src/player/radio/panel.py
 msgid "Digite o nome da rádio e pressione Enter. O endereço de um stream colado aqui toca direto."
 msgstr ""
@@ -2642,6 +2676,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Digite o que procura e pressione Enter. Um link de playlist, mix ou vídeo colado aqui é aberto direto."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Digite um nome para a rádio."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -2885,6 +2923,18 @@ msgstr ""
 
 #: src/player/frames/radio/actions.py
 msgid "Endereço do stream copiado."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Endereço do stream ou M3U da rádio"
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Endereço em branco"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Endereço inválido"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -4548,12 +4598,20 @@ msgstr ""
 msgid "Nome da playlist inteligente"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "Nome da rádio"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Nome do preset"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Nome do preset:"
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Nome em branco"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -4956,6 +5014,10 @@ msgstr ""
 
 #: src/player/frames/playback/live.py
 msgid "Não foi possível reconectar à transmissão ao vivo."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Não foi possível reconhecer este endereço como um stream de rádio válido."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7301,6 +7363,10 @@ msgstr ""
 
 #: src/player/preferences/audio_output_dialog.py
 msgid "Use as setas para escolher a saída de áudio."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr ""
 
 #: src/player/equalizer/dialog.py

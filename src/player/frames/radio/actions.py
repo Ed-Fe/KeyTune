@@ -6,6 +6,7 @@ import wx
 
 from player.radio.client import RadioBrowserError
 from player.radio.folders import FOLDER_COUNTRY
+from player.radio.manual_dialog import AddRadioManuallyDialog
 from player.radio.media import is_radio_media
 
 from ...i18n import _, ngettext
@@ -152,6 +153,39 @@ class RadioActionsMixin:
         self._toggle_radio_favorite(station)
         return True
 
+    def _add_radio_manually(self):
+        """Cadastra pelo nome e pelo endereço uma rádio fora do diretório e a favorita."""
+        panel = self._get_radio_panel()
+        dialog = AddRadioManuallyDialog(panel or self)
+        try:
+            if dialog.ShowModal() != wx.ID_OK:
+                return False
+            name = dialog.get_name()
+            stream_url = dialog.get_stream_url()
+        finally:
+            dialog.Destroy()
+
+        service = self._get_radio_service()
+        station = service.build_manual_station(name, stream_url)
+        if station is None:
+            wx.MessageBox(
+                _("Não foi possível reconhecer este endereço como um stream de rádio válido."),
+                _("Endereço inválido"),
+                wx.OK | wx.ICON_WARNING,
+                panel or self,
+            )
+            return False
+
+        if not service.set_favorite(station, True):
+            self._announce_smart_library_unavailable()
+            return False
+
+        self._sync_radio_local_views()
+        self._refresh_radio_screen()
+        self._refresh_marks_after_change()
+        self._announce(_("{name} adicionada às rádios favoritas.").format(name=station.name))
+        return True
+
     def _copy_selected_radio_stream_url(self):
         stations = self._selected_radio_stations()
         if len(stations) != 1:
@@ -246,6 +280,7 @@ class RadioActionsMixin:
             single_result is not None and getattr(single_result, "can_browse", False),
         )
         append(_("Voltar à lista anterior (Backspace)"), self.on_radio_results_back, can_go_back)
+        append(_("Adicionar rádio manualmente..."), self._add_radio_manually, True)
         if single_result is not None and getattr(single_result, "kind", "") == FOLDER_COUNTRY:
             country_code, country_name = single_result.payload
             append(

@@ -75,6 +75,7 @@ class RadioLifecycleMixin:
             on_toggle_favorite=self._toggle_selected_radio_favorite,
             on_copy_stream_url=self._copy_selected_radio_stream_url,
             on_show_actions_menu=self._show_radio_actions_menu,
+            on_add_manually=self._add_radio_manually,
         )
 
     def _get_radio_panel(self):

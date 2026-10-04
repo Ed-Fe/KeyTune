@@ -524,13 +524,17 @@ Além das teclas de [Como as listas funcionam](#como-as-listas-funcionam):
 
 - `Ctrl+D`: adiciona a rádio às favoritas ou a tira delas. É o mesmo favorito das playlists, e a lista marca a rádio como "favorita".
 - `Ctrl+C`: copia o endereço do stream da rádio selecionada.
-- O botão **Ações...** abre o menu com **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Adicionar às favoritas** (ou **Remover das favoritas**), **Ver detalhes da rádio**, **Abrir o site da rádio no navegador**, **Copiar o endereço do stream** e **Votar nesta rádio no diretório**. Com uma rádio tocando, o menu também deixa favoritá-la mesmo que ela não esteja selecionada.
+- O botão **Ações...** abre o menu com **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Adicionar rádio manualmente...**, **Adicionar às favoritas** (ou **Remover das favoritas**), **Ver detalhes da rádio**, **Abrir o site da rádio no navegador**, **Copiar o endereço do stream** e **Votar nesta rádio no diretório**. Com uma rádio tocando, o menu também deixa favoritá-la mesmo que ela não esteja selecionada.
 
 **Ver detalhes da rádio** abre uma caixa de leitura com nome, país, estado ou região, idioma, gêneros, qualidade (codec e taxa de bits), votos, ouvintes nas últimas 24 horas, site e endereço do stream, com um botão para abrir o site. **Votar nesta rádio no diretório** registra o seu voto no Radio Browser.
 
 ### Buscar e colar endereços
 
-Digite o nome de uma rádio no campo de busca e pressione `Enter`. A caixa **Em** escolhe onde procurar: **Todo o mundo** ou só o seu país. Se você colar no campo o endereço de um stream, ele toca direto, sem busca.
+Digite o nome de uma rádio no campo de busca e pressione `Enter`. A caixa **Em** escolhe onde procurar: **Todo o mundo** ou só o seu país. Se você colar no campo o endereço de um stream, ele toca direto, sem busca, mas sem ir para as favoritas.
+
+### Adicionar rádio manualmente
+
+Quando uma rádio não estiver no diretório do Radio Browser, o botão **Adicionar rádio manualmente...** (alcançável com `Tab`, logo após o campo de busca, ou pelo menu **Ações...**) abre uma caixa com dois campos: o **nome** da rádio e o **endereço do stream ou de um arquivo M3U**. Ao confirmar com **OK**, a rádio é cadastrada e vai direto para as **Rádios favoritas**, e o KeyTune avisa com um anúncio de status.
 
 ### Como a rádio toca
 
