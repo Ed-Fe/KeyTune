@@ -346,7 +346,8 @@ def _format_duration(duration_seconds):
 
 
 def _localized_short_count(value):
-    """``"1.1M plays"`` ou ``"2B"``, como o YouTube Music conta em inglês, vira ``"1,1 mi"`` ou ``"2 bi"``."""
+    """``"1.1M plays"`` ou ``"2B"``, como o YouTube Music conta em inglês, vira ``"1,1 mi de"`` ou ``"2 bi de"``,
+    pronto para receber "reproduções" ou "visualizações" em seguida."""
     match = re.fullmatch(r"([\d.,]+)\s*([KMB]?)(?:\s+\w+)?", str(value or "").strip())
     if not match:
         return ""
@@ -354,8 +355,8 @@ def _localized_short_count(value):
     number = match.group(1).replace(".", _(","))
     pattern = {
         "K": _("{number} mil"),
-        "M": _("{number} mi"),
-        "B": _("{number} bi"),
+        "M": _("{number} mi de"),
+        "B": _("{number} bi de"),
     }.get(match.group(2), "{number}")
     return pattern.format(number=number)
 

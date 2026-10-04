@@ -6347,10 +6347,10 @@ msgstr "."
 msgid "{number} mil"
 msgstr "{number}K"
 
-msgid "{number} mi"
+msgid "{number} mi de"
 msgstr "{number}M"
 
-msgid "{number} bi"
+msgid "{number} bi de"
 msgstr "{number}B"
 
 msgid "Ir para o &artista"

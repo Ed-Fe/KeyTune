@@ -155,5 +155,20 @@ class YouTubeMusicSearchHelperTests(unittest.TestCase):
         self.assertIn("Canal de teste", result.choice_label)
 
 
+class ShortCountTests(unittest.TestCase):
+    def test_english_short_counts_are_written_in_portuguese(self):
+        from player.youtube_music.search import normalize_music_search_results
+
+        song, video = normalize_music_search_results(
+            [
+                {"resultType": "song", "videoId": "v1", "title": "Faixa", "duration": "3:34", "views": "2B"},
+                {"resultType": "video", "videoId": "v2", "title": "Vídeo", "views": "163K plays"},
+            ]
+        )
+
+        self.assertEqual(song.detail_text, "3:34 · 2 bi de reproduções")
+        self.assertEqual(video.detail_text, "163 mil visualizações")
+
+
 if __name__ == "__main__":
     unittest.main()

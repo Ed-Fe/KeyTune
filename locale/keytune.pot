@@ -8049,11 +8049,11 @@ msgid "{name}: {value} dB."
 msgstr ""
 
 #: src/player/youtube_music/search.py
-msgid "{number} bi"
+msgid "{number} bi de"
 msgstr ""
 
 #: src/player/youtube_music/search.py
-msgid "{number} mi"
+msgid "{number} mi de"
 msgstr ""
 
 #: src/player/youtube_music/search.py

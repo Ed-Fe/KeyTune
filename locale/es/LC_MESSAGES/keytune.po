@@ -6347,11 +6347,11 @@ msgstr ","
 msgid "{number} mil"
 msgstr "{number} mil"
 
-msgid "{number} mi"
-msgstr "{number} M"
+msgid "{number} mi de"
+msgstr "{number} M de"
 
-msgid "{number} bi"
-msgstr "{number} mil M"
+msgid "{number} bi de"
+msgstr "{number} mil M de"
 
 msgid "Ir para o &artista"
 msgstr "Ir al &artista"
