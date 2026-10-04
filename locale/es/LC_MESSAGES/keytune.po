@@ -1291,11 +1291,11 @@ msgstr "Confirmar salida"
 msgid "Conta conectada: {name}."
 msgstr "Cuenta conectada: {name}."
 
-msgid "Conta do YouTube Music conectada: {name}."
-msgstr "Cuenta de YouTube Music conectada: {name}."
+msgid "Conta do YouTube conectada: {name}."
+msgstr "Cuenta de YouTube conectada: {name}."
 
-msgid "Conta do YouTube Music desconectada."
-msgstr "Cuenta de YouTube Music desconectada."
+msgid "Conta do YouTube desconectada."
+msgstr "Cuenta de YouTube desconectada."
 
 msgid "Conta e biblioteca"
 msgstr "Cuenta y biblioteca"

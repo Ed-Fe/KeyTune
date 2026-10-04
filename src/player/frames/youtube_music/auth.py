@@ -135,7 +135,7 @@ class AuthMixin:
         self._clear_youtube_music_library_cache(loaded=False, status_message=self._youtube_music_status_message())
         self._refresh_youtube_music_menu_state()
         self._refresh_pending_restored_youtube_music_tabs()
-        self._announce(_("Conta do YouTube Music conectada: {name}.").format(name=account_name))
+        self._announce(_("Conta do YouTube conectada: {name}.").format(name=account_name))
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("YouTube conectado como {name}.").format(name=account_name))
         self.on_refresh_youtube_music_library(None, announce=False)
@@ -169,7 +169,7 @@ class AuthMixin:
             status_message=_("A conta do YouTube foi desconectada desta instalação."),
         )
         self._refresh_youtube_music_menu_state()
-        self._announce(_("Conta do YouTube Music desconectada."))
+        self._announce(_("Conta do YouTube desconectada."))
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("YouTube desconectado."))
         wx.MessageBox(

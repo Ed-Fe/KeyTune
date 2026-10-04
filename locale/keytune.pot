@@ -2168,11 +2168,11 @@ msgid "Conta conectada: {name}."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conta do YouTube Music conectada: {name}."
+msgid "Conta do YouTube conectada: {name}."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conta do YouTube Music desconectada."
+msgid "Conta do YouTube desconectada."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
