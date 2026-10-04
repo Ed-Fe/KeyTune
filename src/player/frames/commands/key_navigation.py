@@ -277,6 +277,10 @@ class KeyNavigationMixin:
             self.on_open_youtube_music(None)
             return
 
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("M"), ord("m")):
+            self.on_show_media_comments(None)
+            return
+
         if key_code == wx.WXK_ESCAPE and isinstance(current_tab, ScreenTabState):
             self._close_current_tab()
             return

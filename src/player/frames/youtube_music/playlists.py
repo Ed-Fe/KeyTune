@@ -5,6 +5,7 @@ from player.youtube_music.dialog import YouTubeMusicCreatePlaylistDialog
 from player.youtube_music.playlists import (
     extract_playlist_id_from_source,
     extract_video_id_from_text,
+    is_music_youtube_url,
     is_watch_playlist_id,
     is_youtube_music_media,
 )
@@ -39,10 +40,19 @@ class PlaylistEditMixin:
         current_status = self._get_youtube_music_media_feedback_status(media_path, force_refresh=True)
         normalized_rating = str(rating or "").strip().upper()
         if current_status == normalized_rating:
+            from_music = is_music_youtube_url(media_path)
             if normalized_rating == "DISLIKE":
-                normalized_message = _("A mídia atual já está marcada como não gostei no YouTube Music.")
+                normalized_message = (
+                    _("A mídia atual já está marcada como não gostei no YouTube Music.")
+                    if from_music
+                    else _("A mídia atual já está marcada como não gostei no YouTube.")
+                )
             else:
-                normalized_message = _("A mídia atual já está curtida no YouTube Music.")
+                normalized_message = (
+                    _("A mídia atual já está curtida no YouTube Music.")
+                    if from_music
+                    else _("A mídia atual já está curtida no YouTube.")
+                )
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
