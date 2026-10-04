@@ -41,14 +41,14 @@ class YouTubeMusicAuthValidationError(RuntimeError):
 class InvalidYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
     def __init__(self, message=None):
         if message is None:
-            message = _("A autenticação salva do YouTube Music não é mais válida.")
+            message = _("A autenticação salva do YouTube não é mais válida.")
         super().__init__(message, should_disconnect=True)
 
 
 class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
     def __init__(self, message=None):
         if message is None:
-            message = _("Não foi possível validar a autenticação do YouTube Music agora.")
+            message = _("Não foi possível validar a autenticação do YouTube agora.")
         super().__init__(message, should_disconnect=False)
 
 
@@ -335,7 +335,7 @@ class YouTubeMusicService:
 
             ytmusicapi.setup(filepath=staged_auth_path, headers_raw=normalized_headers_raw)
             if not os.path.isfile(staged_auth_path) or os.path.getsize(staged_auth_path) == 0:
-                raise RuntimeError(_("Não foi possível preparar a autenticação do YouTube Music."))
+                raise RuntimeError(_("Não foi possível preparar a autenticação do YouTube."))
 
             written_cookie_path = write_browser_auth_cookie_file(
                 raw_auth_input,
@@ -349,7 +349,7 @@ class YouTubeMusicService:
             candidate_client = ytmusicapi.YTMusic(staged_auth_path)
             account_info = candidate_client.get_account_info()
             if not isinstance(account_info, dict):
-                raise RuntimeError(_("A resposta da conta do YouTube Music veio em formato inválido."))
+                raise RuntimeError(_("A resposta da conta do YouTube veio em formato inválido."))
 
             harden_sensitive_file_permissions(staged_auth_path)
             harden_sensitive_file_permissions(staged_cookie_path)
@@ -412,7 +412,7 @@ class YouTubeMusicService:
 
         if not isinstance(account_info, dict):
             raise TemporaryYouTubeMusicAuthError(
-                _("A resposta da conta do YouTube Music veio em formato inválido.")
+                _("A resposta da conta do YouTube veio em formato inválido.")
             )
 
         self._account_info = account_info

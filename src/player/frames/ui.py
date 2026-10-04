@@ -116,7 +116,7 @@ class FrameUIMixin:
             "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · "
             "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · "
             "Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · "
-            "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+            "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
         )
 
     def _player_overlay_hint_text(self):
@@ -127,7 +127,7 @@ class FrameUIMixin:
             "Ctrl+E abre o explorador de pastas\n"
             "Espaço reproduz ou pausa\n"
             "Tab alterna entre itens e player\n"
-            "Ctrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\n"
+            "Ctrl+Shift+Y abre a central do KeyTube quando a integração opcional estiver ativada\n"
             "F1 mostra a ajuda rápida de atalhos"
         )
 
@@ -224,7 +224,7 @@ class FrameUIMixin:
             "Navegação\n"
             "Tab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\n"
             "Ctrl+B — Alternar foco entre a lista de itens e o player\n"
-            "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\n"
+            "Ctrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\n"
             "Ctrl+F — Localizar item na playlist ou pasta atual\n"
             "F3 / Shift+F3 — Próximo ou anterior resultado da busca\n"
             "Ctrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\n"
@@ -509,7 +509,7 @@ class FrameUIMixin:
         self.menu_playlist_browser_id = wx.NewIdRef()
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
-        view_menu.Append(self.menu_open_youtube_music_id, _("YouTube &Music por aba\tCtrl+Shift+Y"))
+        view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
         view_menu.AppendSeparator()
         self.menu_find_item_id = wx.NewIdRef()
         self.menu_find_next_item_id = wx.NewIdRef()

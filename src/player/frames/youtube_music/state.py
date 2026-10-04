@@ -283,7 +283,7 @@ class LibraryStateMixin:
 
         if open_playlist_item is not None:
             open_playlist_item.SetItemLabel(
-                _("Abrir &central do YouTube Music...\tCtrl+Shift+Y")
+                _("Abrir &central do KeyTube...\tCtrl+Shift+Y")
                 if integration_enabled
                 else _("Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y")
             )
@@ -294,9 +294,9 @@ class LibraryStateMixin:
 
         if open_tab_item is not None:
             open_tab_item.SetItemLabel(
-                _("YouTube &Music por aba\tCtrl+Shift+Y")
+                _("&KeyTube por aba\tCtrl+Shift+Y")
                 if integration_enabled
-                else _("YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y")
+                else _("&KeyTube por aba (ative em Preferências)\tCtrl+Shift+Y")
             )
             open_tab_item.Enable(integration_enabled and not operation_in_progress)
 

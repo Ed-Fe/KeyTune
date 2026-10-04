@@ -1,6 +1,6 @@
 """Inscrições da conta do YouTube: os vídeos novos e os canais.
 
-Só o YouTube.js lê isso, com os cookies que a conta do YouTube Music já salvou.
+Só o YouTube.js lê isso, com os cookies que a conta do YouTube já salvou.
 É só leitura: inscrever-se ou cancelar continua sendo feito no YouTube.
 """
 
@@ -21,7 +21,7 @@ def _account_cookie():
         )
     cookie_header = load_saved_playback_auth().cookie_header
     if not cookie_header:
-        raise RuntimeError(_("Conecte a conta do YouTube Music para ver as inscrições."))
+        raise RuntimeError(_("Conecte a conta do YouTube para ver as inscrições."))
     return cookie_header
 
 

@@ -154,11 +154,11 @@ class LifecycleMixin:
 
         self._open_screen_tab(
             YOUTUBE_MUSIC_SCREEN_ID,
-            "YouTube Music",
+            "KeyTube",
             self._create_youtube_music_page,
             select=True,
             activation_message=_(
-                "Aba YouTube Music. Navegue pela lista, faça uma busca ou cole um link."
+                "Central do KeyTube. Navegue pela lista, faça uma busca ou cole um link."
             ),
             on_activate=self._refresh_youtube_music_screen_later,
             on_close=self._on_youtube_music_screen_closed,
@@ -321,9 +321,9 @@ class LifecycleMixin:
                 self._youtube_music_library_status_message = _("Conta conectada: {name}.").format(name=account_name)
             self._refresh_youtube_music_menu_state()
             if account_name:
-                self._announce(_("YouTube Music reconectado: {name}.").format(name=account_name))
+                self._announce(_("YouTube reconectado: {name}.").format(name=account_name))
                 if hasattr(self, "_set_status_message"):
-                    self._set_status_message(_("YouTube Music conectado como {name}.").format(name=account_name))
+                    self._set_status_message(_("YouTube conectado como {name}.").format(name=account_name))
             self._refresh_pending_restored_youtube_music_tabs()
 
         def on_error(_error):

@@ -471,12 +471,22 @@ class PlaylistEditMixin:
         if not service.has_saved_browser_auth() and not self._ensure_youtube_music_authenticated():
             return False
 
+        # A curtida é uma só na conta; o anúncio só fala em YouTube Music se tudo veio de lá.
+        from_music = all(is_music_youtube_url(media_path) for media_path in youtube_media_paths)
         rateable_media_paths = self._selected_youtube_music_media_paths_to_rate(youtube_media_paths, rating)
         if not rateable_media_paths:
             if str(rating or "").strip().upper() == "DISLIKE":
-                normalized_message = _("Os itens selecionados já estão marcados como não gostei no YouTube Music.")
+                normalized_message = (
+                    _("Os itens selecionados já estão marcados como não gostei no YouTube Music.")
+                    if from_music
+                    else _("Os itens selecionados já estão marcados como não gostei no YouTube.")
+                )
             else:
-                normalized_message = _("Os itens selecionados já estão curtidos no YouTube Music.")
+                normalized_message = (
+                    _("Os itens selecionados já estão curtidos no YouTube Music.")
+                    if from_music
+                    else _("Os itens selecionados já estão curtidos no YouTube.")
+                )
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
             self._announce(normalized_message)
@@ -493,16 +503,32 @@ class PlaylistEditMixin:
 
         def on_success(rated_count):
             if str(rating or "").strip().upper() == "DISLIKE":
-                normalized_message = ngettext(
-                    "Item marcado como não gostei no YouTube Music.",
-                    "{count} itens marcados como não gostei no YouTube Music.",
-                    rated_count,
+                normalized_message = (
+                    ngettext(
+                        "Item marcado como não gostei no YouTube Music.",
+                        "{count} itens marcados como não gostei no YouTube Music.",
+                        rated_count,
+                    )
+                    if from_music
+                    else ngettext(
+                        "Item marcado como não gostei no YouTube.",
+                        "{count} itens marcados como não gostei no YouTube.",
+                        rated_count,
+                    )
                 ).format(count=rated_count)
             else:
-                normalized_message = ngettext(
-                    "Item curtido no YouTube Music.",
-                    "{count} itens curtidos no YouTube Music.",
-                    rated_count,
+                normalized_message = (
+                    ngettext(
+                        "Item curtido no YouTube Music.",
+                        "{count} itens curtidos no YouTube Music.",
+                        rated_count,
+                    )
+                    if from_music
+                    else ngettext(
+                        "Item curtido no YouTube.",
+                        "{count} itens curtidos no YouTube.",
+                        rated_count,
+                    )
                 ).format(count=rated_count)
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()

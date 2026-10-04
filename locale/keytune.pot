@@ -267,6 +267,15 @@ msgstr ""
 msgid "&Instalar pacote..."
 msgstr ""
 
+#: src/player/frames/ui.py
+#: src/player/frames/youtube_music/state.py
+msgid "&KeyTube por aba\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "&KeyTube por aba (ative em Preferências)\tCtrl+Shift+Y"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "&Lembrar a posição de mídias longas"
 msgstr ""
@@ -486,11 +495,11 @@ msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "A autenticação salva do YouTube Music foi removida."
+msgid "A autenticação salva do YouTube foi removida."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "A autenticação salva do YouTube Music não é mais válida."
+msgid "A autenticação salva do YouTube não é mais válida."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
@@ -518,7 +527,7 @@ msgid "A conexão com a transmissão ao vivo foi perdida. Reconectando."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "A conta do YouTube Music foi desconectada desta instalação."
+msgid "A conta do YouTube foi desconectada desta instalação."
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -708,7 +717,7 @@ msgid "A release instalada do KeyTune não publicou o pacote opcional {name}."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "A resposta da conta do YouTube Music veio em formato inválido."
+msgid "A resposta da conta do YouTube veio em formato inválido."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -804,10 +813,6 @@ msgstr ""
 msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
 msgstr ""
 
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "Aba YouTube Music. Navegue pela lista, faça uma busca ou cole um link."
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Aba alvo: nenhuma"
 msgstr ""
@@ -869,7 +874,7 @@ msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Abre o diálogo para conectar uma conta do YouTube Music ou atualizar a autenticação salva."
+msgid "Abre o diálogo para conectar uma conta do YouTube ou atualizar a autenticação salva."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -890,7 +895,7 @@ msgid "Abrindo {title}."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
-msgid "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+msgid "Abrir &central do KeyTube...\tCtrl+Shift+Y"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1088,7 +1093,7 @@ msgid "Ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1365,7 +1370,7 @@ msgid "Atalhos e ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2007,6 +2012,10 @@ msgstr ""
 msgid "Categorias de preferências"
 msgstr ""
 
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "Central do KeyTube. Navegue pela lista, faça uma busca ou cole um link."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Chile"
 msgstr ""
@@ -2090,7 +2099,7 @@ msgid "Concluir"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conectando a conta do YouTube Music..."
+msgid "Conectando a conta do YouTube..."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -2098,15 +2107,15 @@ msgid "Conectar &conta..."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Conectar ao YouTube Music"
+msgid "Conectar ao YouTube"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Conectar ou atualizar acesso do YouTube Music"
+msgid "Conectar ou atualizar acesso do YouTube"
 msgstr ""
 
 #: src/player/youtube_music/subscriptions.py
-msgid "Conecte a conta do YouTube Music para ver as inscrições."
+msgid "Conecte a conta do YouTube para ver as inscrições."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -2495,7 +2504,7 @@ msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução.
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Desconectar conta do YouTube Music"
+msgid "Desconectar conta do YouTube"
 msgstr ""
 
 #: src/player/lyrics/service.py
@@ -2544,7 +2553,7 @@ msgid "Deseja realmente sair do KeyTune?"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Deseja remover a autenticação salva do YouTube Music neste computador?"
+msgid "Deseja remover a autenticação salva do YouTube neste computador?"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -2957,7 +2966,7 @@ msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -3156,7 +3165,7 @@ msgid "Explorador de pastas fechado."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3679,8 +3688,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/player/frames/youtube_music/playlists.py
+msgid "Item curtido no YouTube."
+msgid_plural "{count} itens curtidos no YouTube."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/frames/youtube_music/playlists.py
 msgid "Item marcado como não gostei no YouTube Music."
 msgid_plural "{count} itens marcados como não gostei no YouTube Music."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "Item marcado como não gostei no YouTube."
+msgid_plural "{count} itens marcados como não gostei no YouTube."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -4003,7 +4024,7 @@ msgid "Melhor disponível"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Mensagem da central do YouTube Music"
+msgid "Mensagem da central do KeyTube"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -4324,7 +4345,7 @@ msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Nenhuma conta do YouTube Music está conectada."
+msgid "Nenhuma conta do YouTube está conectada."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -4702,7 +4723,7 @@ msgid "Não foi possível concluir a busca agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível conectar a conta do YouTube Music."
+msgid "Não foi possível conectar a conta do YouTube."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -4844,7 +4865,7 @@ msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "Não foi possível preparar a autenticação do YouTube Music."
+msgid "Não foi possível preparar a autenticação do YouTube."
 msgstr ""
 
 #: src/player/youtube_music/dependencies.py
@@ -4900,15 +4921,15 @@ msgid "Não foi possível usar a pasta de download escolhida."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "Não foi possível validar a autenticação do YouTube Music agora."
+msgid "Não foi possível validar a autenticação do YouTube agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
+msgid "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."
+msgid "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."
 msgstr ""
 
 #: src/player/update/service.py
@@ -5018,7 +5039,7 @@ msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, 
 msgstr ""
 
 #: src/player/welcome/dialog.py
-msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
 msgstr ""
 
 #: src/player/youtube_music/youtubejs_runtime.py
@@ -5460,7 +5481,15 @@ msgid "Os itens selecionados já estão curtidos no YouTube Music."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
+msgid "Os itens selecionados já estão curtidos no YouTube."
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
 msgid "Os itens selecionados já estão marcados como não gostei no YouTube Music."
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "Os itens selecionados já estão marcados como não gostei no YouTube."
 msgstr ""
 
 #: src/player/frames/commands/app_commands.py
@@ -6220,7 +6249,7 @@ msgid "Reinstalando yt-dlp na versão {channel}..."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Remove a autenticação salva da conta do YouTube Music nesta instalação."
+msgid "Remove a autenticação salva da conta do YouTube nesta instalação."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -6612,7 +6641,7 @@ msgid "Sem mídia"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Sem mídia carregada\n\nCtrl+O abre arquivos ou uma playlist\nCtrl+V cola links, arquivos ou pastas copiados\nCtrl+E abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgid "Sem mídia carregada\n\nCtrl+O abre arquivos ou uma playlist\nCtrl+V cola links, arquivos ou pastas copiados\nCtrl+E abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do KeyTube quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/download.py
@@ -6733,7 +6762,7 @@ msgid "Somente já reproduzidos"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Status da conta do YouTube Music"
+msgid "Status da conta do YouTube"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -7270,31 +7299,9 @@ msgstr ""
 msgid "YT Music"
 msgstr ""
 
-#: src/player/frames/ui.py
-#: src/player/frames/youtube_music/state.py
-msgid "YouTube &Music por aba\tCtrl+Shift+Y"
-msgstr ""
-
-#: src/player/frames/youtube_music/state.py
-msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
-msgstr ""
-
 #: src/player/frames/youtube_music/auth.py
 #: src/player/smart_library/history_dialog.py
 msgid "YouTube Music"
-msgstr ""
-
-#: src/player/frames/youtube_music/auth.py
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "YouTube Music conectado como {name}."
-msgstr ""
-
-#: src/player/frames/youtube_music/auth.py
-msgid "YouTube Music desconectado."
-msgstr ""
-
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "YouTube Music reconectado: {name}."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -7315,6 +7322,19 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "YouTube Music — álbuns"
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "YouTube conectado como {name}."
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "YouTube desconectado."
+msgstr ""
+
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "YouTube reconectado: {name}."
 msgstr ""
 
 #: src/player/youtube_music/models.py

@@ -131,7 +131,8 @@ class TabManagementMixin:
         return tab_index
 
     def _create_empty_playlist_tab(self, select=False):
-        tab_number = len(self.playlists) + 1
+        # Só as playlists contam: uma tela aberta (KeyTube, equalizador) não gasta número.
+        tab_number = sum(isinstance(state, PlaylistState) for state in self.playlists) + 1
         title = default_playlist_title(tab_number)
         page = self._create_playlist_page()
         state = PlaylistState(

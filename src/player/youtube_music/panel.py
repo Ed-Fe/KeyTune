@@ -53,16 +53,16 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		status_box = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Conta e biblioteca")), wx.VERTICAL)
 		self.connection_label = wx.StaticText(self, label=_("Conta: não conectada"))
-		self.connection_label.SetName(_("Status da conta do YouTube Music"))
+		self.connection_label.SetName(_("Status da conta do YouTube"))
 		self.library_summary_label = wx.StaticText(self, label=_("Biblioteca: nenhuma playlist carregada."))
 		self.library_summary_label.SetName(_("Resumo da biblioteca do YouTube Music"))
 		self.status_message_label = wx.StaticText(self, label="")
-		self.status_message_label.SetName(_("Mensagem da central do YouTube Music"))
+		self.status_message_label.SetName(_("Mensagem da central do KeyTube"))
 		self.status_message_label.Wrap(620)
 
 		attach_named_accessible(
 			self.connection_label,
-			name=_("Status da conta do YouTube Music"),
+			name=_("Status da conta do YouTube"),
 			value_provider=lambda: self.connection_label.GetLabel(),
 		)
 		attach_named_accessible(
@@ -72,7 +72,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		)
 		attach_named_accessible(
 			self.status_message_label,
-			name=_("Mensagem da central do YouTube Music"),
+			name=_("Mensagem da central do KeyTube"),
 			value_provider=lambda: self.status_message_label.GetLabel(),
 		)
 
@@ -89,13 +89,13 @@ class YouTubeMusicTabPanel(wx.Panel):
 		for button, name, description in (
 			(
 				self.connect_button,
-				_("Conectar ou atualizar acesso do YouTube Music"),
-				_("Abre o diálogo para conectar uma conta do YouTube Music ou atualizar a autenticação salva."),
+				_("Conectar ou atualizar acesso do YouTube"),
+				_("Abre o diálogo para conectar uma conta do YouTube ou atualizar a autenticação salva."),
 			),
 			(
 				self.disconnect_button,
-				_("Desconectar conta do YouTube Music"),
-				_("Remove a autenticação salva da conta do YouTube Music nesta instalação."),
+				_("Desconectar conta do YouTube"),
+				_("Remove a autenticação salva da conta do YouTube nesta instalação."),
 			),
 			(
 				self.refresh_button,
@@ -150,7 +150,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		)
 
 		self.search_results_list = VirtualItemsListCtrl(self, self._get_search_result_label)
-		self.search_results_list.SetName("YouTube Music")
+		self.search_results_list.SetName("KeyTube")
 		self.search_results_list.SetMinSize((-1, 180))
 
 		self.search_actions_button = wx.Button(self, label=_("&Ações..."))

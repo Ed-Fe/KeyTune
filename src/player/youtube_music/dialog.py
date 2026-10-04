@@ -20,7 +20,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     def __init__(self, parent):
         super().__init__(
             parent,
-            title=_("Conectar ao YouTube Music"),
+            title=_("Conectar ao YouTube"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
         self._auth_mode = AUTH_MODE_BROWSER
@@ -42,7 +42,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         instructions = wx.StaticText(
             self,
             label=_(
-                "Escolha como deseja conectar sua conta do YouTube Music.\n\n"
+                "Escolha como deseja conectar sua conta do YouTube.\n\n"
                 "Opção 1 — Navegador instalado: selecione o navegador na lista e clique em "
                 "\"Conectar\". O player importará os cookies automaticamente.\n\n"
                 "Opção 2 — Manual: cole os dados do navegador ou escolha um arquivo "
@@ -167,10 +167,10 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         ok_button = self.FindWindow(wx.ID_OK)
         if ok_button is not None:
             ok_button.SetLabel(_("&Conectar"))
-            ok_button.SetName(_("Conectar ao YouTube Music"))
+            ok_button.SetName(_("Conectar ao YouTube"))
             ok_button.SetToolTip(
                 _("Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado "
-                  "e conecta sua conta do YouTube Music.")
+                  "e conecta sua conta do YouTube.")
             )
         cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:

@@ -42,6 +42,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Lista da playlist sem numeração**: os itens aparecem só com o nome, sem "1.", "2." no início; o item em reprodução continua marcado com `▶`.
 - **Explorador e colagem sem travar a janela**: pastas indisponíveis (unidade de rede fora do ar, pen drive removido) e pastas grandes coladas com `Ctrl+V` são lidas em segundo plano. A conferência dos arquivos ao abrir, adicionar ou colar muitos itens de uma vez também saiu da thread da interface.
 - **Copiar da playlist**: `Ctrl+C` copia a seleção como texto e também como arquivos, então dá para colar em outra playlist, em um campo de texto ou no Explorador do Windows. `Ctrl+Shift+C` passa a copiar sempre o caminho da mídia atual (no explorador, o da seleção).
+- **A aba do YouTube Music agora se chama KeyTube**: ela passou a reunir também o YouTube comum (vídeos, canais, inscrições, comentários). O atalho continua `Ctrl+Shift+Y`, e os textos de conexão falam em "conta do YouTube", já que a mesma conta serve aos dois.
+- **Curtir vários itens** anuncia "no YouTube" quando a seleção tem vídeos do YouTube comum.
 - **Limpar a fila pede confirmação**: o botão **Limpar tudo** do gerenciador da fila (`Ctrl+Shift+Q`) confirma antes de esvaziar.
 - **Lives fora de recursos que exigem uma faixa com fim**: não entram no AutoDJ nem no crossfade, não buscam letra e não geram ponto de retomada.
 

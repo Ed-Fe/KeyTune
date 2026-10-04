@@ -101,7 +101,7 @@ class WelcomeDialog(wx.Dialog):
                 "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado "
                 "e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\n"
                 "Você pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, "
-                "opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\n"
+                "opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\n"
                 "As próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis "
                 "e onde encontrar ajuda sempre que precisar."
             ),
