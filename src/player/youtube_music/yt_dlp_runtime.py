@@ -313,6 +313,7 @@ def extract_info(
     ignore_no_formats_error: bool = False,
     playlist_end: int | None = None,
     playlist_items: str = "",
+    write_comments: bool = False,
     quiet: bool = True,
     no_warnings: bool = False,
 ) -> YtDlpJsonResponse:
@@ -341,6 +342,7 @@ def extract_info(
         ignore_no_formats_error=ignore_no_formats_error,
         playlist_end=playlist_end,
         playlist_items=playlist_items,
+        write_comments=write_comments,
         quiet=quiet,
         no_warnings=no_warnings,
     )
@@ -500,6 +502,7 @@ def _build_yt_dlp_command(
     quiet: bool,
     no_warnings: bool,
     playlist_items: str = "",
+    write_comments: bool = False,
 ) -> list[str]:
     command = [
         str(executable_path),
@@ -510,6 +513,8 @@ def _build_yt_dlp_command(
         "--dump-single-json",
         "--no-call-home",
     ]
+    if write_comments:
+        command.append("--write-comments")
 
     if quiet:
         command.append("--quiet")

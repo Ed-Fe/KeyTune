@@ -6138,3 +6138,54 @@ msgstr "País usado en las búsquedas de YouTube y YouTube Music. En Automática
 
 msgid "Automática"
 msgstr "Automática"
+
+msgid "fixado"
+msgstr "fijado"
+
+msgid "{count} curtidas"
+msgstr "{count} me gusta"
+
+msgid "{count} respostas"
+msgstr "{count} respuestas"
+
+msgid "Autor desconhecido"
+msgstr "Autor desconocido"
+
+msgid "As respostas dos comentários precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Las respuestas de los comentarios necesitan YouTube.js, activado en Preferencias > Recursos adicionales."
+
+msgid "O yt-dlp não conseguiu trazer os comentários."
+msgstr "yt-dlp no pudo obtener los comentarios."
+
+msgid "Comentários de {title}"
+msgstr "Comentarios de {title}"
+
+msgid "Comentários"
+msgstr "Comentarios"
+
+msgid "Respostas a {author}"
+msgstr "Respuestas a {author}"
+
+msgid "Este item não tem comentários para mostrar."
+msgstr "Este elemento no tiene comentarios para mostrar."
+
+msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
+msgstr "El contenido actual no es de YouTube: no hay comentarios para mostrar."
+
+msgid "Não foi possível carregar os comentários agora."
+msgstr "No se pudieron cargar los comentarios ahora."
+
+msgid "Comentário de {author}"
+msgstr "Comentario de {author}"
+
+msgid "Comentário"
+msgstr "Comentario"
+
+msgid "Ler o comentário inteiro (Enter)"
+msgstr "Leer el comentario completo (Enter)"
+
+msgid "Ver comentários"
+msgstr "Ver comentarios"
+
+msgid "Ver &comentários da mídia atual"
+msgstr "Ver &comentarios del contenido actual"

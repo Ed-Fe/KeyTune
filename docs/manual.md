@@ -540,6 +540,17 @@ A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem 
 
 Logo acima da lista, uma linha diz onde você está e quantos itens há (por exemplo, *Em alta — Europa: 24 itens*). O leitor de telas anuncia a mesma informação a cada vez que a lista muda.
 
+### Comentários
+
+Num vídeo ou numa música, **Ver comentários**, no menu **Ações...**, abre os comentários na própria lista, por cima do que você estava vendo; `Backspace` volta. Para a mídia que está tocando, use **Reprodução > Ver comentários da mídia atual**, que abre a aba do YouTube Music já nos comentários.
+
+- Cada linha traz o autor, o texto, a data, as curtidas e quantas respostas há; o comentário fixado pelo canal vem marcado como *fixado*.
+- `Enter` abre o comentário inteiro numa caixa de leitura (a linha da lista corta os textos longos); `Esc` fecha.
+- `Seta para a direita` num comentário com respostas abre as respostas.
+- Descer além do último item carrega mais comentários, como nas outras listas.
+
+Com o YouTube.js ativado (em **Preferências > Recursos adicionais**), os comentários chegam em menos de um segundo, no idioma do conteúdo, com paginação e respostas. Sem ele, o KeyTune usa o yt-dlp: mais lento, só os 20 primeiros comentários, sem respostas e com datas em inglês. Vídeos com os comentários desativados mostram a lista vazia. Os comentários são só para leitura.
+
 ### Buscar e abrir links
 
 - **Buscar ou colar link**: digite o que deseja procurar e pressione `Enter`. Quando a busca traz resultados, o foco vai direto para a lista; sem resultados, ele fica no campo para você corrigir o texto. Os resultados entram por cima do **Início**: `Backspace` volta para ele.

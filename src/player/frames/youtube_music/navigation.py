@@ -225,6 +225,8 @@ class ResultsNavigationMixin:
             if result.requires_auth and not self._ensure_youtube_music_authenticated():
                 return False
             view = self._build_youtube_music_folder_view(result)
+        elif getattr(result, "result_type", "") == "comment":
+            view = self._build_youtube_music_replies_view(result)
         else:
             view = self._build_youtube_music_container_view(result)
         if view is None:

@@ -445,6 +445,7 @@ class FrameUIMixin:
         self.menu_next_track_id = wx.NewIdRef()
         self.menu_start_radio_id = wx.NewIdRef()
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
+        self.menu_show_media_comments_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
@@ -476,6 +477,7 @@ class FrameUIMixin:
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_start_radio_id, _("Iniciar &rádio desta faixa\tCtrl+R"))
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
+        playback_menu.Append(self.menu_show_media_comments_id, _("Ver &comentários da mídia atual"))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
         playback_menu.AppendSeparator()
@@ -773,6 +775,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_next_track, id=self.menu_next_track_id)
         self.Bind(wx.EVT_MENU, self.on_start_radio_from_current, id=self.menu_start_radio_id)
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_comments, id=self.menu_show_media_comments_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
         self.Bind(wx.EVT_MENU, self.on_download_current_media, id=self.menu_download_media_id)
@@ -927,6 +930,9 @@ class FrameUIMixin:
 
     def on_add_to_youtube_playlist(self, _event):
         self._add_current_media_to_youtube_playlist()
+
+    def on_show_media_comments(self, _event):
+        self.show_current_media_comments()
 
     def on_enqueue_item(self, _event):
         self._enqueue_selected_item()

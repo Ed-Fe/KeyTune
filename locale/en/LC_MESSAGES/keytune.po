@@ -6138,3 +6138,54 @@ msgstr "Country used for YouTube and YouTube Music searches. With Automatic, You
 
 msgid "Automática"
 msgstr "Automatic"
+
+msgid "fixado"
+msgstr "pinned"
+
+msgid "{count} curtidas"
+msgstr "{count} likes"
+
+msgid "{count} respostas"
+msgstr "{count} replies"
+
+msgid "Autor desconhecido"
+msgstr "Unknown author"
+
+msgid "As respostas dos comentários precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Comment replies need YouTube.js, enabled in Preferences > Additional resources."
+
+msgid "O yt-dlp não conseguiu trazer os comentários."
+msgstr "yt-dlp could not fetch the comments."
+
+msgid "Comentários de {title}"
+msgstr "Comments on {title}"
+
+msgid "Comentários"
+msgstr "Comments"
+
+msgid "Respostas a {author}"
+msgstr "Replies to {author}"
+
+msgid "Este item não tem comentários para mostrar."
+msgstr "This item has no comments to show."
+
+msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
+msgstr "The current media is not from YouTube: there are no comments to show."
+
+msgid "Não foi possível carregar os comentários agora."
+msgstr "The comments could not be loaded right now."
+
+msgid "Comentário de {author}"
+msgstr "Comment by {author}"
+
+msgid "Comentário"
+msgstr "Comment"
+
+msgid "Ler o comentário inteiro (Enter)"
+msgstr "Read the whole comment (Enter)"
+
+msgid "Ver comentários"
+msgstr "View comments"
+
+msgid "Ver &comentários da mídia atual"
+msgstr "View &comments on the current media"

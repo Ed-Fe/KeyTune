@@ -210,6 +210,7 @@ msgid "&Favoritar ou desfavoritar seleção\tCtrl+D"
 msgstr ""
 
 #: src/player/about/dialog.py
+#: src/player/frames/youtube_music/comments.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/smart_library/search_dialog.py
@@ -612,6 +613,10 @@ msgstr ""
 msgid "A mídia atual não veio do YouTube Music ou do YouTube."
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
+msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
+msgstr ""
+
 #: src/player/frames/library_tabs/station_radio.py
 msgid "A mídia atual não é uma faixa compatível do YouTube Music."
 msgstr ""
@@ -859,6 +864,7 @@ msgstr ""
 msgid "Abrindo manual: {name}"
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
 #: src/player/frames/youtube_music/navigation.py
 msgid "Abrindo {title}."
 msgstr ""
@@ -1306,6 +1312,10 @@ msgstr ""
 msgid "As notas desta versão ainda não foram publicadas na release do GitHub."
 msgstr ""
 
+#: src/player/youtube_music/comments.py
+msgid "As respostas dos comentários precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Associação de arquivos"
 msgstr ""
@@ -1559,6 +1569,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Automático (seguir o sistema)"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Autor desconhecido"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -2000,6 +2014,22 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Colômbia"
+msgstr ""
+
+#: src/player/frames/youtube_music/comments.py
+msgid "Comentário"
+msgstr ""
+
+#: src/player/frames/youtube_music/comments.py
+msgid "Comentário de {author}"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Comentários"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Comentários de {title}"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3011,6 +3041,10 @@ msgstr ""
 msgid "Este item já está na fila de reprodução."
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
+msgid "Este item não tem comentários para mostrar."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Este plugin será executado dentro do processo do KeyTune e terá o mesmo acesso do aplicativo ao computador. Ative somente código de um autor em quem você confia plenamente."
 msgstr ""
@@ -3679,6 +3713,10 @@ msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Ler a faixa, a posição e o estado de reprodução"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ler o comentário inteiro (Enter)"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -4582,6 +4620,10 @@ msgstr ""
 msgid "Não foi possível carregar o marketplace: {error}"
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
+msgid "Não foi possível carregar os comentários agora."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível concluir a busca agora."
 msgstr ""
@@ -5214,6 +5256,10 @@ msgstr ""
 
 #: src/player/youtube_music/search.py
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "O yt-dlp não conseguiu trazer os comentários."
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -6220,6 +6266,10 @@ msgstr ""
 msgid "Resolvendo {label}..."
 msgstr ""
 
+#: src/player/youtube_music/comments.py
+msgid "Respostas a {author}"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Restaurar &Tom Original (Shift+\\)"
 msgstr ""
@@ -6974,6 +7024,10 @@ msgstr ""
 msgid "Velocidade de reprodução: {rate}."
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Ver &comentários da mídia atual"
+msgstr ""
+
 #: src/player/about/dialog.py
 msgid "Ver &créditos completos"
 msgstr ""
@@ -6988,6 +7042,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Ver ajuda rápida de atalhos (&F1)"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ver comentários"
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -7286,6 +7344,10 @@ msgstr ""
 msgid "favorito"
 msgstr ""
 
+#: src/player/youtube_music/comments.py
+msgid "fixado"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "formatos SABR sem URL direta"
 msgstr ""
@@ -7471,6 +7533,10 @@ msgstr ""
 msgid "{count} batidas"
 msgstr ""
 
+#: src/player/youtube_music/comments.py
+msgid "{count} curtidas"
+msgstr ""
+
 #: src/player/frames/smart_library/marks.py
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
@@ -7630,6 +7696,10 @@ msgid "{count} reprodução no histórico."
 msgid_plural "{count} reproduções no histórico."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/youtube_music/comments.py
+msgid "{count} respostas"
+msgstr ""
 
 #: src/player/frames/youtube_music/search.py
 msgid "{count} resultado salvo no YouTube Music."

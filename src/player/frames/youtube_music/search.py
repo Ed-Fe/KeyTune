@@ -44,6 +44,14 @@ class SearchMixin:
             single_result is not None and getattr(single_result, "can_browse", False),
         )
         append(_("Voltar à lista anterior (Backspace)"), self.on_youtube_music_results_back, can_go_back)
+        if single_result is not None and getattr(single_result, "result_type", "") == "comment":
+            append(_("Ler o comentário inteiro (Enter)"), lambda: self._read_youtube_music_comment(single_result))
+        else:
+            append(
+                _("Ver comentários"),
+                self.show_youtube_music_comments,
+                single_result is not None and bool(self._youtube_music_comments_url(single_result)),
+            )
         menu.AppendSeparator()
 
         add_menu = wx.Menu()
@@ -457,6 +465,9 @@ class SearchMixin:
         if not search_results:
             self._announce(_("Selecione ao menos um resultado da busca para adicionar à playlist atual."))
             return False
+
+        if len(search_results) == 1 and getattr(search_results[0], "result_type", "") == "comment":
+            return self._read_youtube_music_comment(search_results[0])
 
         if play and len(search_results) == 1 and getattr(search_results[0], "library_playlist", False):
             # Uma playlist da sua biblioteca abre na aba dela, de onde dá para editá-la na conta.

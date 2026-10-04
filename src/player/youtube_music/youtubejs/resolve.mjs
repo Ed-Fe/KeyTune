@@ -152,7 +152,8 @@ function clientFor(request = {}) {
     }
     const options = {
       cache: new UniversalCache(true, process.argv[2]),
-      generate_session_locally: true,
+      // A reprodução gera a sessão aqui, como sempre fez; as listas pedem a sessão ao YouTube.
+      generate_session_locally: !request.lang,
       lang,
     };
     if (location) {
@@ -263,6 +264,89 @@ async function search(request) {
   return listingPage(listing, start, count, listing.feed?.has_continuation);
 }
 
+function commentEntry(thread, listing) {
+  const comment = thread.comment || thread;
+  if (!comment?.comment_id) {
+    return null;
+  }
+  listing.threads?.set(comment.comment_id, thread);
+  return {
+    id: comment.comment_id,
+    author: textOf(comment.author?.name),
+    text: textOf(comment.content),
+    likes: textOf(comment.like_count),
+    published: textOf(comment.published_time),
+    reply_count: textOf(comment.reply_count),
+    // Só os comentários principais guardam a conversa de onde saem as respostas.
+    has_replies: Boolean(listing.threads && thread.has_replies),
+    pinned: Boolean(comment.is_pinned),
+    title: "-",
+  };
+}
+
+async function comments(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify(["comments", request.lang, request.location, videoId]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const innertube = await clientFor(request);
+    listing = { entries: [], seen: new Set(), threads: new Map(), feed: null };
+    try {
+      listing.feed = await innertube.getComments(videoId);
+    } catch (error) {
+      // É assim que a biblioteca avisa que o vídeo está com os comentários desativados.
+      if (!String(error?.message).includes("did not have any content")) {
+        throw error;
+      }
+    }
+    collectEntries(listing, listing.feed?.contents, (thread) => commentEntry(thread, listing));
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, listing.feed.contents, (thread) => commentEntry(thread, listing));
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
+
+async function commentReplies(request) {
+  const videoId = videoIdFrom(request.media_url);
+  const commentId = String(request.comment_id || "");
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify(["replies", request.lang, request.location, videoId, commentId]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const parent = listings.get(JSON.stringify(["comments", request.lang, request.location, videoId]));
+    const thread = parent?.threads.get(commentId);
+    if (!thread) {
+      throw new Error("Os comentários deste vídeo precisam ser abertos de novo.");
+    }
+    listing = { entries: [], seen: new Set(), innertube: await clientFor(request), next: null };
+    // O YouTube manda as respostas em dois formatos, conforme a sessão; os dois chegam aqui.
+    const replyData = thread.comment_replies_data;
+    takeReplyNodes(listing, [...(replyData?.sub_threads || []), ...(replyData?.contents || [])]);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.next) {
+    const endpoint = listing.next.button?.endpoint || listing.next.endpoint;
+    listing.next = null;
+    const response = await endpoint.call(listing.innertube.actions, { parse: true });
+    for (const action of response.on_response_received_endpoints || []) {
+      takeReplyNodes(listing, [...(action.contents || [])]);
+    }
+  }
+  return listingPage(listing, start, count, listing.next);
+}
+
+function takeReplyNodes(listing, nodes) {
+  collectEntries(listing, nodes.filter((node) => node.type !== "ContinuationItem"), (reply) => commentEntry(reply, listing));
+  listing.next = nodes.find((node) => node.type === "ContinuationItem") || listing.next;
+}
+
 async function resolve(request) {
   const videoId = videoIdFrom(request.media_url);
   if (!videoId) {
@@ -322,7 +406,7 @@ async function resolve(request) {
   };
 }
 
-const HANDLERS = { resolve, search };
+const HANDLERS = { resolve, search, comments, comment_replies: commentReplies };
 
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of input) {

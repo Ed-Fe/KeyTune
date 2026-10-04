@@ -113,6 +113,24 @@ def search_page(query, kind, *, start, count):
     return list(response.get("entries") or []), bool(response.get("has_more"))
 
 
+def comments_page(media_url, *, start, count):
+    """Uma página dos comentários de um vídeo e se há mais."""
+    response = _request_action("comments", media_url=str(media_url or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def comment_replies_page(media_url, comment_id, *, start, count):
+    """Uma página das respostas a um comentário aberto por :func:`comments_page`."""
+    response = _request_action(
+        "comment_replies",
+        media_url=str(media_url or "").strip(),
+        comment_id=str(comment_id or "").strip(),
+        start=start,
+        count=count,
+    )
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
 def _request_action(action, **fields):
     """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
     response = _request_worker({"action": action, **youtubejs_locale(), **fields})

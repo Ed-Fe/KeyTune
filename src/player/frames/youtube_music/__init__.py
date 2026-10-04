@@ -20,6 +20,7 @@ from ._helpers import (
 )
 from .auth import AuthMixin
 from .browse import BrowseMixin
+from .comments import CommentsMixin
 from .dependencies import DependencyMixin
 from .lifecycle import LifecycleMixin
 from .navigation import ResultsNavigationMixin
@@ -38,6 +39,7 @@ class FrameYouTubeMusicMixin(
     ResultsNavigationMixin,
     PlaylistEditMixin,
     BrowseMixin,
+    CommentsMixin,
     LifecycleMixin,
 ):
     """Aggregate YouTube Music mixin composed from focused sub-mixins."""
