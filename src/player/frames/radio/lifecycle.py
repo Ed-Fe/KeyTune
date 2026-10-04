@@ -48,12 +48,20 @@ class RadioLifecycleMixin:
         self.settings.radio_country_code = str(country_code or "").strip().upper()
         self.settings.radio_country_name = str(country_name or "").strip()
         self._save_settings()
+        self._apply_radio_region_change()
+        self._announce(_("{country} definido como o seu país nas rádios online.").format(country=country_name))
+
+    def _apply_radio_region_change(self):
+        """O país mudou: o início e as opções de busca da aba acompanham."""
         self._sync_radio_local_views()
         panel = self._get_radio_panel()
         if panel is not None:
             panel.set_search_scope_labels([label for _code, label in self._radio_search_scopes()])
         self._refresh_radio_screen()
-        self._announce(_("{country} definido como o seu país nas rádios online.").format(country=country_name))
+
+    def _handle_radio_preferences_change(self, previous_settings):
+        if self.settings.radio_country_code != getattr(previous_settings, "radio_country_code", ""):
+            self._apply_radio_region_change()
 
     def _create_radio_page(self, parent):
         return _radio_tab_panel_class()(

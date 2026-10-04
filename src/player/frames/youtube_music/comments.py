@@ -66,8 +66,8 @@ class CommentsMixin:
 
     def _read_youtube_music_comment(self, comment):
         """Mostra o comentário inteiro numa caixa de leitura; a linha da lista corta os longos."""
-        return self._show_youtube_music_reading_dialog(
+        return self._show_reading_dialog(
             title=_("Comentário de {author}").format(author=comment.author),
             text=youtube_comments.comment_reading_text(comment),
-            name=_("Comentário"),
+            label=_("Comentário"),
         )

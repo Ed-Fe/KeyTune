@@ -93,7 +93,7 @@ class _Frame(DetailsMixin, CommentsMixin):
         on_success(worker())
         return True
 
-    def _show_youtube_music_reading_dialog(self, **kwargs):
+    def _show_reading_dialog(self, **kwargs):
         self.dialogs.append(kwargs)
 
 

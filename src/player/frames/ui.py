@@ -8,6 +8,7 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..radio.media import is_radio_media
+from ..reading_dialog import show_reading_dialog
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
@@ -315,6 +316,10 @@ class FrameUIMixin:
         # owns this area, so suppressing the default background erase avoids
         # flicker during resizes without touching focus or the video output.
         return
+
+    def _show_reading_dialog(self, *, title, label, text, actions=()):
+        """Caixa só de leitura para detalhes de um item; ver ``reading_dialog``."""
+        return show_reading_dialog(self, title=title, label=label, text=text, actions=actions)
 
     def _show_keyboard_help_dialog(self):
         dialog = wx.Dialog(

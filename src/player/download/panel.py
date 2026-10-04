@@ -43,38 +43,28 @@ class DownloadOptionsPanel(wx.Panel):
             self,
             sizer,
             kind_label,
-            _("Escolha se o download será apenas o áudio ou o vídeo completo."),
+            _("Só o áudio ou o vídeo completo."),
             [download_kind_label(kind) for kind in DOWNLOAD_KINDS],
         )
         self.audio_quality_choice = add_choice_row(
             self,
             sizer,
             _("Qualidade do áudio"),
-            _(
-                "Original mantém o áudio exatamente como o YouTube o entrega, sem converter. "
-                "MP3 e FLAC convertem o áudio e exigem o FFmpeg. Se a qualidade escolhida "
-                "não existir, o áudio é baixado na qualidade original."
-            ),
+            _("Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."),
             [audio_quality_label(quality) for quality in AUDIO_QUALITIES],
         )
         self.sample_rate_choice = add_choice_row(
             self,
             sizer,
             _("Taxa de amostragem do áudio"),
-            _(
-                "Só vale quando o áudio é convertido para MP3 ou FLAC. "
-                "Original mantém a taxa do arquivo baixado."
-            ),
+            _("Só vale quando o áudio é convertido para MP3 ou FLAC."),
             [sample_rate_label(rate) for rate in SAMPLE_RATES],
         )
         self.video_quality_choice = add_choice_row(
             self,
             sizer,
             _("Qualidade do vídeo"),
-            _(
-                "Altura máxima do vídeo. Se a qualidade escolhida não existir, "
-                "o vídeo é baixado na melhor qualidade disponível."
-            ),
+            _("Altura máxima do vídeo; sem ela, vem a melhor disponível."),
             [video_quality_label(quality) for quality in VIDEO_QUALITIES],
         )
 

@@ -3,6 +3,7 @@ import wx
 from ..accessibility import attach_named_accessible
 from ..library.browser import VirtualItemsListCtrl
 from ..i18n import _, ngettext
+from ..widgets import create_group
 from .models import YOUTUBE_SEARCH_SOURCE_LABELS, get_search_scope_options_for_source
 
 
@@ -51,12 +52,12 @@ class YouTubeMusicTabPanel(wx.Panel):
 
 		root_sizer = wx.BoxSizer(wx.VERTICAL)
 
-		status_box = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Conta e biblioteca")), wx.VERTICAL)
-		self.connection_label = wx.StaticText(self, label=_("Conta: não conectada"))
+		box, status_box = create_group(self, _("Conta e biblioteca"))
+		self.connection_label = wx.StaticText(box, label=_("Conta: não conectada"))
 		self.connection_label.SetName(_("Status da conta do YouTube"))
-		self.library_summary_label = wx.StaticText(self, label=_("Biblioteca: nenhuma playlist carregada."))
+		self.library_summary_label = wx.StaticText(box, label=_("Biblioteca: nenhuma playlist carregada."))
 		self.library_summary_label.SetName(_("Resumo da biblioteca do YouTube Music"))
-		self.status_message_label = wx.StaticText(self, label="")
+		self.status_message_label = wx.StaticText(box, label="")
 		self.status_message_label.SetName(_("Mensagem da central do KeyTube"))
 		self.status_message_label.Wrap(620)
 
@@ -81,10 +82,10 @@ class YouTubeMusicTabPanel(wx.Panel):
 		status_box.Add(self.status_message_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
 		button_sizer = wx.BoxSizer(wx.HORIZONTAL)
-		self.connect_button = wx.Button(self, label=_("&Conectar conta..."))
-		self.disconnect_button = wx.Button(self, label=_("&Desconectar conta"))
-		self.refresh_button = wx.Button(self, label=_("Atuali&zar biblioteca"))
-		self.new_playlist_button = wx.Button(self, label=_("&Nova playlist..."))
+		self.connect_button = wx.Button(box, label=_("&Conectar conta..."))
+		self.disconnect_button = wx.Button(box, label=_("&Desconectar conta"))
+		self.refresh_button = wx.Button(box, label=_("Atuali&zar biblioteca"))
+		self.new_playlist_button = wx.Button(box, label=_("&Nova playlist..."))
 
 		for button, name, description in (
 			(

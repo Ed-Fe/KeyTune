@@ -47,10 +47,10 @@ class DetailsMixin:
             if owner is not None:
                 label = _("Ir para o &artista") if owner.result_type == "artist" else _("Ir para o &canal")
                 actions.append((label, lambda: self._open_youtube_music_details_owner(owner)))
-            self._show_youtube_music_reading_dialog(
+            self._show_reading_dialog(
                 title=_("Detalhes de {title}").format(title=details.title) if details.title else _("Detalhes"),
                 text=youtube_details.details_reading_text(details),
-                name=_("Detalhes"),
+                label=_("Detalhes"),
                 actions=actions,
             )
 
@@ -94,42 +94,3 @@ class DetailsMixin:
         if self._get_youtube_music_panel() is None:
             return False
         return self.on_browse_youtube_music_search_result(owner, focus_results=True)
-
-    def _show_youtube_music_reading_dialog(self, *, title, text, name, actions=()):
-        """Caixa só de leitura, com o cursor no começo do texto; Esc fecha.
-
-        *actions*: pares ``(rótulo, função)``; cada um vira um botão que fecha a
-        caixa e só então chama a função.
-        """
-        chosen = []
-        dialog = wx.Dialog(self, title=title, style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
-        try:
-            text_ctrl = wx.TextCtrl(dialog, value=text, style=wx.TE_MULTILINE | wx.TE_READONLY, size=(520, 260))
-            text_ctrl.SetName(name)
-            buttons = wx.BoxSizer(wx.HORIZONTAL)
-            for label, callback in actions:
-                action_button = wx.Button(dialog, wx.ID_ANY, label)
-
-                def on_action(_event, callback=callback):
-                    chosen.append(callback)
-                    dialog.EndModal(wx.ID_OK)
-
-                action_button.Bind(wx.EVT_BUTTON, on_action)
-                buttons.Add(action_button, 0, wx.RIGHT, 8)
-            close_button = wx.Button(dialog, wx.ID_CLOSE, _("&Fechar"))
-            close_button.Bind(wx.EVT_BUTTON, lambda _event: dialog.EndModal(wx.ID_CLOSE))
-            buttons.Add(close_button, 0)
-            dialog.SetEscapeId(wx.ID_CLOSE)
-
-            sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(text_ctrl, 1, wx.ALL | wx.EXPAND, 10)
-            sizer.Add(buttons, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 10)
-            dialog.SetSizerAndFit(sizer)
-            text_ctrl.SetInsertionPoint(0)
-            dialog.CentreOnParent()
-            dialog.ShowModal()
-        finally:
-            dialog.Destroy()
-        for callback in chosen:
-            callback()
-        return True

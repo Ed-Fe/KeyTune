@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import wx
 
+from .accessibility import attach_named_accessible
 from .i18n import _
 
 
@@ -22,6 +23,7 @@ class TaskFailuresDialog(wx.Dialog):
 
         self.list_ctrl = wx.ListCtrl(self, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         self.list_ctrl.SetName(_("Itens que falharam"))
+        attach_named_accessible(self.list_ctrl, name=_("Itens que falharam"))
         self.list_ctrl.InsertColumn(0, _("Item"), width=260)
         self.list_ctrl.InsertColumn(1, _("Motivo"), width=380)
         for row, (name, reason) in enumerate(self._failures):

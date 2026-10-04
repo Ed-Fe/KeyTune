@@ -1,6 +1,7 @@
 import wx
 
 from ..i18n import _
+from ..widgets import create_group
 from .models import (
     DEFAULT_EQUALIZER_PREAMP_DB,
     EQUALIZER_GAIN_MAX_DB,
@@ -42,13 +43,13 @@ class EqualizerPresetDialog(wx.Dialog):
         self.intro_label = intro_label
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
-        name_box = wx.StaticBoxSizer(wx.StaticBox(panel, label=_("Identificação do preset")), wx.VERTICAL)
-        name_label = wx.StaticText(panel, label=_("Nome do preset:"))
-        self.name_ctrl = wx.TextCtrl(panel)
+        box, name_box = create_group(panel, _("Identificação do preset"))
+        name_label = wx.StaticText(box, label=_("Nome do preset:"))
+        self.name_ctrl = wx.TextCtrl(box)
         self.name_ctrl.SetName(_("Nome do preset"))
         self.name_ctrl.SetToolTip(_("Digite um nome único e fácil de reconhecer para o preset."))
         name_help = wx.StaticText(
-            panel,
+            box,
             label=_("Use um nome curto e claro. Exemplo: Graves profundos personalizados."),
         )
         name_help.Wrap(540)
@@ -57,29 +58,30 @@ class EqualizerPresetDialog(wx.Dialog):
         name_box.Add(name_help, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         root_sizer.Add(name_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        preamp_box = wx.StaticBoxSizer(wx.StaticBox(panel, label=_("Pré-amplificação")), wx.VERTICAL)
+        box, preamp_box = create_group(panel, _("Pré-amplificação"))
         preamp_group, self.preamp_ctrl = self._build_gain_control_group(
-            panel,
+            box,
             label_text=_("Pré-amplificação"),
             help_text=_("Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."),
         )
         preamp_box.Add(preamp_group, 0, wx.ALL | wx.EXPAND, 6)
         root_sizer.Add(preamp_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
-        bands_box = wx.StaticBoxSizer(wx.StaticBox(panel, label=_("Bandas do equalizador")), wx.VERTICAL)
+        box, bands_box = create_group(panel, _("Bandas do equalizador"))
         bands_help = wx.StaticText(
-            panel,
+            box,
             label=_("Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."),
         )
         bands_help.Wrap(540)
         bands_box.Add(bands_help, 0, wx.ALL | wx.EXPAND, 6)
 
         bands_grid = wx.FlexGridSizer(cols=2, hgap=10, vgap=8)
+        bands_grid.AddGrowableCol(0, 1)
         bands_grid.AddGrowableCol(1, 1)
         for frequency_hz in self._band_frequencies_hz:
             frequency_label = format_frequency_label(frequency_hz)
             group, control = self._build_gain_control_group(
-                panel,
+                box,
                 label_text=_("Banda {freq}").format(freq=frequency_label),
                 help_text=_(
                     "Ajusta o ganho da banda de {freq}. Aceita valores de -20,0 dB até 20,0 dB."

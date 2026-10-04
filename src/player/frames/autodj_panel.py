@@ -4,6 +4,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _
+from ..widgets import create_group
 
 
 class AutoDJSessionPanel(wx.Panel):
@@ -18,8 +19,10 @@ class AutoDJSessionPanel(wx.Panel):
     ):
         super().__init__(parent, style=wx.TAB_TRAVERSAL)
 
+        box, sizer = create_group(self, _("Sessão AutoDJ"))
+
         self.info_ctrl = wx.TextCtrl(
-            self,
+            box,
             value="",
             style=wx.TE_READONLY | wx.TE_MULTILINE,
         )
@@ -32,10 +35,10 @@ class AutoDJSessionPanel(wx.Panel):
         )
         self.info_ctrl.SetMinSize((-1, 88))
 
-        self.replace_next_button = wx.Button(self, label=_("Trocar pró&xima"))
-        self.recalculate_button = wx.Button(self, label=_("&Recalcular sequência"))
-        self.toggle_preparation_button = wx.Button(self, label=_("&Pausar preparação"))
-        self.stop_button = wx.Button(self, label=_("&Encerrar AutoDJ"))
+        self.replace_next_button = wx.Button(box, label=_("Trocar pró&xima"))
+        self.recalculate_button = wx.Button(box, label=_("&Recalcular sequência"))
+        self.toggle_preparation_button = wx.Button(box, label=_("&Pausar preparação"))
+        self.stop_button = wx.Button(box, label=_("&Encerrar AutoDJ"))
 
         for button, name, description in (
             (self.replace_next_button, _("Trocar próxima faixa do AutoDJ"), _("Escolhe outra faixa preparada para a próxima transição.")),
@@ -55,7 +58,6 @@ class AutoDJSessionPanel(wx.Panel):
         for button in self.action_controls():
             controls.Add(button, 0, wx.EXPAND)
 
-        sizer = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Sessão AutoDJ")), wx.VERTICAL)
         sizer.Add(self.info_ctrl, 0, wx.ALL | wx.EXPAND, 6)
         sizer.Add(controls, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.SetSizer(sizer)

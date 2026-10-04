@@ -331,7 +331,7 @@ A biblioteca guarda também metadados já resolvidos e análises de áudio, para
 
 ## Configurações
 
-As preferências ficam em `Ctrl+,` e são divididas em seis abas: **Geral**, **Reprodução**, **Acessibilidade**, **Biblioteca**, **Download** e **Recursos adicionais**.
+As preferências ficam em `Ctrl+,` e são divididas em oito abas: **Geral**, **Reprodução**, **Acessibilidade**, **Biblioteca**, **Download**, **KeyTube**, **Rádios online** e **Recursos adicionais**. Dentro de cada aba, as opções ficam em grupos, e o leitor de tela anuncia o nome do grupo ao entrar nele.
 
 ### Geral
 
@@ -410,34 +410,46 @@ A aba **Download** define os padrões do `Ctrl+Shift+B`:
 - **Pasta de download**: onde os arquivos são salvos. Por padrão, a pasta **Downloads\KeyTune** do seu usuário.
 - **Sempre mostrar o diálogo ao baixar**: ligado (padrão), cada download abre o diálogo de confirmação; desligado, o download começa direto com as opções desta aba.
 
+### KeyTube
+
+A aba **KeyTube** reúne as opções de uso do YouTube e do YouTube Music. Elas só têm efeito com a integração ativada em **Recursos adicionais**.
+
+#### Biblioteca
+
+- **Playlists carregadas por vez**: quantas playlists da biblioteca são trazidas em cada carregamento (5–200). Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais.
+- **Mixes personalizadas para descobrir**: limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas (5–200). Valores menores deixam a sincronização mais rápida.
+
+#### Reprodução
+
+- **Tocar faixas relacionadas ao fim da playlist**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução. Faixas que já estão na playlist não são adicionadas de novo, e quando a rádio devolve só repetidas o player busca a partir de uma faixa anterior antes de encerrar.
+- **Salvar o que ouvi no histórico do YouTube Music**: ligada por padrão. Ao escutar uma faixa do YouTube Music por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player marca essa faixa como assistida no histórico da sua conta do YouTube Music. Desative para tocar faixas do YouTube Music sem registrar nada no histórico.
+
+#### Idioma e região
+
+- **Idioma do conteúdo**: o idioma pedido ao YouTube nas buscas e nos textos que ele devolve (contagens, datas). Por padrão é **O mesmo do KeyTune**. Vale para as buscas do YouTube quando o YouTube.js está ativado; as buscas do YouTube Music usam só a região.
+- **Região do conteúdo**: o país usado nas buscas do YouTube e do YouTube Music. Em **Automática**, o YouTube decide pela sua conexão.
+- **Áudio dos vídeos dublados**: alguns vídeos do YouTube trazem o áudio original e dublagens. Aqui você escolhe o que toca neles: **A que o YouTube entregar** (padrão), **Original do vídeo** ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão é resolvida pelo yt-dlp e leva alguns segundos a mais para começar.
+
+### Rádios online
+
+- **Meu país**: o país que abre o início da aba **Rádios online** e que aparece como opção de busca. Em **Automático (seguir o sistema)**, vale o país configurado no sistema. Um país fora da lista pode ser definido na própria aba, pelo menu de ações do país.
+
 ### Recursos adicionais
 
 A aba **Recursos adicionais** concentra as integrações e bibliotecas opcionais do YouTube e do AutoDJ. Antes do primeiro download, o KeyTune mostra um diálogo com todos os componentes que serão instalados.
 
-#### Integração com YouTube Music e YouTube
+#### Componentes do YouTube
 
-- **Ativar recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)**: baixa e mantém um executável `yt-dlp`, os pacotes Python necessários e, quando não houver um compatível, um Node.js portátil para o resolvedor EJS. Sem isso, a aba do YouTube Music não funciona. Na primeira execução, o download pode levar alguns minutos e exige internet. Ao desativar, os arquivos já baixados não são removidos.
-- **Atualizar automaticamente as dependências do YouTube Music**: verifica e aplica atualizações no intervalo definido abaixo. Só aparece quando a opção acima está ativada.
-- **Usar versão nightly do yt-dlp (recomendado)**: baixa builds nightly do `yt-dlp`. Recomendado porque o YouTube e o YouTube Music mudam os mecanismos de extração com frequência e a nightly costuma receber correções antes do canal estável. Só aparece quando a integração está ativada.
-- **Usar YouTube.js para melhorar a resolução e a reprodução (recomendado)**: instala o YouTube.js e usa o mesmo Node.js 24 ou superior preparado para o `yt-dlp`. O `yt-dlp` permanece como fallback, e o pacote YouTube.js participa da verificação periódica de atualizações.
+- **Ativar a integração com YouTube e YouTube Music**: baixa e mantém um executável `yt-dlp`, os pacotes Python necessários e, quando não houver um compatível, um Node.js portátil para o resolvedor EJS. Sem isso, a aba do YouTube Music não funciona. Na primeira execução, o download pode levar alguns minutos e exige internet. Ao desativar, os arquivos já baixados não são removidos.
+- **Atualizar os componentes automaticamente**: verifica e aplica atualizações no intervalo definido abaixo. Só fica disponível quando a opção acima está ativada.
+- **Usar versão nightly do yt-dlp (recomendado)**: baixa builds nightly do `yt-dlp`. Recomendado porque o YouTube e o YouTube Music mudam os mecanismos de extração com frequência e a nightly costuma receber correções antes do canal estável. Só fica disponível quando a integração está ativada.
+- **Usar YouTube.js (recomendado)**: melhora a resolução e a reprodução; instala o YouTube.js e usa o mesmo Node.js 24 ou superior preparado para o `yt-dlp`. O `yt-dlp` permanece como fallback, e o pacote YouTube.js participa da verificação periódica de atualizações.
 - **Intervalo de atualização (horas)**: de quanto em quanto tempo o player tenta atualizar as dependências quando a aba YouTube Music é aberta (1–720 h). Só fica disponível quando a atualização automática está ativada.
 
-#### AutoDJ avançado
+#### AutoDJ
 
 - **Baixar recursos e ativar AutoDJ**: baixa separadamente `librosa`, NumPy, SciPy, Numba e PyAV. Essas bibliotecas não fazem parte do instalador principal. Ao desativar, os arquivos já baixados são preservados.
 - **Tocar efeitos de DJ**, **Perfil do AutoDJ** e **Duração da transição** ficam disponíveis quando o AutoDJ está ativado.
-
-#### Biblioteca do YouTube Music
-
-Essa seção só aparece quando a integração está ativada.
-
-- **Playlists carregadas por vez**: quantas playlists da biblioteca são trazidas em cada carregamento (5–200). Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais.
-- **Mixes personalizadas para descobrir**: limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas (5–200). Valores menores deixam a sincronização mais rápida.
-- **Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução. Faixas que já estão na playlist não são adicionadas de novo, e quando a rádio devolve só repetidas o player busca a partir de uma faixa anterior antes de encerrar.
-- **Idioma do conteúdo do YouTube**: o idioma pedido ao YouTube nas buscas e nos textos que ele devolve (contagens, datas). Por padrão é **O mesmo do KeyTune**. Vale para as buscas do YouTube quando o YouTube.js está ativado; as buscas do YouTube Music usam só a região.
-- **Região do conteúdo do YouTube**: o país usado nas buscas do YouTube e do YouTube Music. Em **Automática**, o YouTube decide pela sua conexão.
-- **Idioma de áudio dos vídeos dublados**: alguns vídeos do YouTube trazem o áudio original e dublagens. Aqui você escolhe o que toca neles: **A que o YouTube entregar** (padrão), **Original do vídeo** ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão é resolvida pelo yt-dlp e leva alguns segundos a mais para começar.
-- **Salvar músicas escutadas no histórico do YouTube Music**: ligada por padrão. Ao escutar uma faixa do YouTube Music por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player marca essa faixa como assistida no histórico da sua conta do YouTube Music. Desative para tocar faixas do YouTube Music sem registrar nada no histórico.
 
 ## Equalizador
 

@@ -192,10 +192,10 @@ class RadioActionsMixin:
         if station.homepage:
             actions.append((_("Abrir o &site"), lambda: self._open_radio_homepage(station)))
         # A mesma caixa de leitura dos detalhes do KeyTube: dá para reler linha a linha e copiar.
-        self._show_youtube_music_reading_dialog(
+        self._show_reading_dialog(
             title=_("Detalhes de {title}").format(title=station.name),
             text="\n".join(lines),
-            name=_("Detalhes"),
+            label=_("Detalhes"),
             actions=actions,
         )
 
