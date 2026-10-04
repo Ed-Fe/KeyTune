@@ -9,6 +9,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
+- **Inscrições do YouTube**: o **Início** da aba do YouTube Music ganhou **Vídeos das inscrições** (os vídeos novos dos canais que você segue) e **Canais inscritos**. Usam a conta já conectada e o YouTube.js; são só para leitura.
 - **Idioma do áudio em vídeos dublados**: **Reprodução > Idioma do áudio da mídia atual...** lista a faixa original e as dublagens do vídeo do YouTube que está tocando e troca na hora, do mesmo ponto. Em **Preferências > Recursos adicionais**, **Idioma de áudio dos vídeos dublados** define o padrão: o que o YouTube entregar, o original do vídeo ou um idioma.
 - **Comentários de vídeos e músicas**: **Ver comentários**, no menu **Ações...** da aba do YouTube Music, e **Reprodução > Ver comentários da mídia atual** abrem os comentários na lista da aba. `Enter` lê o comentário inteiro, `Seta para a direita` abre as respostas e descer além do fim carrega mais. Com o YouTube.js ativado vêm paginados e com respostas; só com o yt-dlp, os 20 primeiros, sem respostas.
 - **Idioma e região do conteúdo do YouTube**: em **Preferências > Recursos adicionais**, escolha o idioma e o país usados nas buscas. O idioma segue o do KeyTune por padrão; a região fica em **Automática**. Com o YouTube.js ativado, a busca do YouTube (vídeos, canais e playlists) passa por ele, mais rápida e com "carregar mais" de verdade; se ele falhar, o KeyTune volta ao yt-dlp sozinho.

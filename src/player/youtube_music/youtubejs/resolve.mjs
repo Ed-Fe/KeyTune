@@ -1,5 +1,5 @@
 import { Innertube, UniversalCache } from "youtubei.js";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 
@@ -166,6 +166,99 @@ function clientFor(request = {}) {
   return clients.get(key);
 }
 clientFor();
+
+// O cliente da conta: os mesmos cookies do YouTube Music. Fica separado dos anônimos
+// porque, com os cookies, o YouTube recusa a reprodução pelos clientes que o KeyTune usa.
+let accountClient = { key: "", client: null };
+
+function accountKey(request) {
+  const cookie = String(request.cookie || "").trim();
+  if (!cookie) {
+    throw new Error("A conta do YouTube não está conectada.");
+  }
+  return [createHash("sha256").update(cookie).digest("hex"), request.lang, request.location].join("|");
+}
+
+function accountClientFor(request) {
+  const key = accountKey(request);
+  if (accountClient.key !== key) {
+    const options = { cookie: String(request.cookie).trim(), lang: String(request.lang || "").trim() || "en" };
+    const location = String(request.location || "").trim().toUpperCase();
+    if (location) {
+      options.location = location;
+    }
+    const client = Innertube.create(options);
+    client.catch(() => {
+      accountClient = { key: "", client: null };
+    });
+    accountClient = { key, client };
+  }
+  return accountClient.client;
+}
+
+function findBadgeText(node, depth = 0) {
+  if (!node || typeof node !== "object" || depth > 6) {
+    return "";
+  }
+  if (node.type === "ThumbnailBadgeView") {
+    return textOf(node.text);
+  }
+  for (const value of Array.isArray(node) ? node : Object.values(node)) {
+    const text = findBadgeText(value, depth + 1);
+    if (text) {
+      return text;
+    }
+  }
+  return "";
+}
+
+function feedVideoEntry(node) {
+  if (node.type === "Video") {
+    return searchEntry(node);
+  }
+  if (node.type !== "LockupView" || node.content_type !== "VIDEO") {
+    return null;
+  }
+  const parts = (node.metadata?.metadata?.metadata_rows || []).flatMap((row) =>
+    (row.metadata_parts || []).map((part) => textOf(part.text)),
+  );
+  // A linha de baixo traz o canal (ou os canais), depois as visualizações e a data;
+  // a duração vem no selo da miniatura.
+  const tail = parts.length >= 3 ? 2 : Math.max(0, parts.length - 1);
+  const details = parts.slice(parts.length - tail);
+  return {
+    id: node.content_id,
+    title: textOf(node.metadata?.title),
+    channel: parts.slice(0, parts.length - tail).join(" "),
+    duration_text: findBadgeText(node.content_image),
+    view_count_number_text: details.length > 1 ? details[0] : "",
+    published: details[details.length - 1] || "",
+  };
+}
+
+async function accountListing(request, name, fetchFeed, nodesOf, toEntry) {
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify([name, accountKey(request)]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    listing = { entries: [], seen: new Set(), feed: await fetchFeed(await accountClientFor(request)) };
+    collectEntries(listing, nodesOf(listing.feed), toEntry);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, nodesOf(listing.feed), toEntry);
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
+
+function subscriptionVideos(request) {
+  return accountListing(request, "subscription_videos", (innertube) => innertube.getSubscriptionsFeed(), (feed) => feed.videos, feedVideoEntry);
+}
+
+function subscribedChannels(request) {
+  return accountListing(request, "subscribed_channels", (innertube) => innertube.getChannelsFeed(), (feed) => feed.channels, searchEntry);
+}
 
 function rememberListing(key, listing) {
   listings.delete(key);
@@ -443,7 +536,15 @@ async function resolve(request) {
   };
 }
 
-const HANDLERS = { resolve, search, comments, comment_replies: commentReplies, audio_tracks: audioTracks };
+const HANDLERS = {
+  resolve,
+  search,
+  comments,
+  comment_replies: commentReplies,
+  audio_tracks: audioTracks,
+  subscription_videos: subscriptionVideos,
+  subscribed_channels: subscribedChannels,
+};
 
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of input) {

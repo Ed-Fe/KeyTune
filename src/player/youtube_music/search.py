@@ -113,13 +113,18 @@ def normalize_youtube_entry(entry, *, show_owner=True):
     detail_parts = []
     if str(entry.get("live_status") or "").strip() == "is_live":
         detail_parts.append(_("ao vivo"))
-    duration_text = _format_duration(entry.get("duration"))
+    duration_text = str(entry.get("duration_text") or "").strip() or _format_duration(entry.get("duration"))
     if duration_text:
         detail_parts.append(duration_text)
     # O YouTube.js já traz a contagem escrita no idioma do conteúdo.
     view_count_text = str(entry.get("view_count_text") or "").strip() or _format_view_count(entry.get("view_count"))
+    if not view_count_text and str(entry.get("view_count_number_text") or "").strip():
+        # Só o número, já abreviado ("652 mil"): falta dizer do que ele é.
+        view_count_text = _("{count} visualizações").format(count=str(entry.get("view_count_number_text")).strip())
     if view_count_text:
         detail_parts.append(view_count_text)
+    if str(entry.get("published") or "").strip():
+        detail_parts.append(str(entry.get("published")).strip())
 
     return YouTubeMediaSearchResult(
         source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,

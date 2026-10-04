@@ -612,7 +612,15 @@ class HomeListTests(unittest.TestCase):
 
         self.assertEqual(
             [item.title for item in frame._youtube_music_search_results()],
-            ["Suas playlists e mixes", "Curtidas", "Histórico", "Em alta", "Moods e gêneros"],
+            [
+                "Suas playlists e mixes",
+                "Curtidas",
+                "Histórico",
+                "Vídeos das inscrições",
+                "Canais inscritos",
+                "Em alta",
+                "Moods e gêneros",
+            ],
         )
         self.assertTrue(all(item.opens_on_enter for item in frame._youtube_music_search_results()))
         self.assertTrue(frame._youtube_music_search_summary().startswith("Início"))

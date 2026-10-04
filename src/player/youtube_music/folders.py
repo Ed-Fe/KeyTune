@@ -1,7 +1,7 @@
 """Itens da lista do YouTube Music que só servem para entrar.
 
 A aba mostra tudo numa lista só: o início traz a biblioteca, as curtidas, o
-histórico, o que está em alta e os moods e gêneros, e cada um abre por cima,
+histórico, as inscrições, o que está em alta e os moods e gêneros, e cada um abre por cima,
 como uma pasta. Aqui ficam esses itens; quem busca o conteúdo é a janela.
 """
 
@@ -14,6 +14,8 @@ from .models import get_chart_country_groups
 FOLDER_LIBRARY = "library"
 FOLDER_LIKED = "liked"
 FOLDER_HISTORY = "history"
+FOLDER_SUBSCRIPTION_VIDEOS = "subscription_videos"
+FOLDER_SUBSCRIBED_CHANNELS = "subscribed_channels"
 FOLDER_CHARTS = "charts"
 FOLDER_CHART_GROUP = "chart_group"
 FOLDER_CHART_COUNTRY = "chart_country"
@@ -63,6 +65,8 @@ def home_folder_items():
         YouTubeFolderItem(FOLDER_LIBRARY, _("Suas playlists e mixes"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIKED, _("Curtidas"), requires_auth=True),
         YouTubeFolderItem(FOLDER_HISTORY, _("Histórico"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SUBSCRIPTION_VIDEOS, _("Vídeos das inscrições"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SUBSCRIBED_CHANNELS, _("Canais inscritos"), requires_auth=True),
         YouTubeFolderItem(FOLDER_CHARTS, _("Em alta")),
         YouTubeFolderItem(FOLDER_MOODS, _("Moods e gêneros")),
     ]

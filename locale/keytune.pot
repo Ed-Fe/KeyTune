@@ -1316,6 +1316,10 @@ msgstr ""
 msgid "As faixas selecionadas não foram encontradas nesta playlist."
 msgstr ""
 
+#: src/player/youtube_music/subscriptions.py
+msgid "As inscrições precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player."
 msgstr ""
@@ -1927,6 +1931,10 @@ msgstr ""
 msgid "Canais"
 msgstr ""
 
+#: src/player/youtube_music/folders.py
+msgid "Canais inscritos"
+msgstr ""
+
 #: src/player/frames/youtube_music/navigation.py
 msgid "Canal {name}"
 msgstr ""
@@ -2083,6 +2091,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Conectar ou atualizar acesso do YouTube Music"
+msgstr ""
+
+#: src/player/youtube_music/subscriptions.py
+msgid "Conecte a conta do YouTube Music para ver as inscrições."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -7218,6 +7230,10 @@ msgstr ""
 msgid "Vídeos"
 msgstr ""
 
+#: src/player/youtube_music/folders.py
+msgid "Vídeos das inscrições"
+msgstr ""
+
 #: src/player/convert/options.py
 msgid "WAV (sem compressão)"
 msgstr ""
@@ -7765,6 +7781,10 @@ msgid "{count} vez"
 msgid_plural "{count} vezes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/youtube_music/search.py
+msgid "{count} visualizações"
+msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "{criteria}; {sort}; até {limit} itens"

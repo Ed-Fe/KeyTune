@@ -6231,3 +6231,18 @@ msgstr "Audio language"
 
 msgid "Áudio em {name}."
 msgstr "Audio in {name}."
+
+msgid "Vídeos das inscrições"
+msgstr "Videos from subscriptions"
+
+msgid "Canais inscritos"
+msgstr "Subscribed channels"
+
+msgid "As inscrições precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Subscriptions need YouTube.js, enabled in Preferences > Additional resources."
+
+msgid "Conecte a conta do YouTube Music para ver as inscrições."
+msgstr "Connect the YouTube Music account to see the subscriptions."
+
+msgid "{count} visualizações"
+msgstr "{count} views"

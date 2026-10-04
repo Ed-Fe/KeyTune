@@ -519,11 +519,13 @@ As ações **Curtir** e **Não gostei** são enviadas à conta conectada, portan
 
 ### A lista
 
-A lista funciona como o explorador de pastas: você entra nos itens e volta. Ela começa no **Início**, com cinco itens:
+A lista funciona como o explorador de pastas: você entra nos itens e volta. Ela começa no **Início**, com sete itens:
 
 - **Suas playlists e mixes**: as playlists e mixes da conta conectada. `Enter` numa delas abre a playlist em uma aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista; `Shift+Enter` adiciona as faixas à playlist atual sem tocar. **Excluir playlist do YouTube Music...**, no menu **Ações...**, exclui da conta a playlist selecionada, com confirmação — só funciona em playlists que você criou. Quando houver mais playlists para carregar, desça além do último item. Exige conta conectada.
 - **Curtidas**: as faixas curtidas (a playlist *Curtidas/Liked Music* da sua conta). Exige conta conectada.
 - **Histórico**: seu histórico de reprodução do YouTube Music, da faixa mais recente para a mais antiga. Exige conta conectada.
+- **Vídeos das inscrições**: os vídeos novos dos canais do YouTube em que você está inscrito, do mais recente para o mais antigo, com duração, visualizações e data. Exige conta conectada e o YouTube.js ativado.
+- **Canais inscritos**: os canais do YouTube em que você está inscrito; cada um abre como qualquer canal, para escolher entre vídeos, Shorts, transmissões ao vivo e playlists. Exige conta conectada e o YouTube.js ativado. As duas listas são só para leitura: inscrever-se ou cancelar uma inscrição continua sendo feito no YouTube.
 - **Em alta**: *Global* e os continentes. Entre num continente, escolha o país e as paradas e os destaques em alta aparecem como playlists que você pode tocar, abrir ou salvar na biblioteca. Não exige conta conectada.
 - **Moods e gêneros**: as categorias de climas e gêneros do YouTube Music (por exemplo *Foco*, *Treino*, *Pop*, *Rock*). Entre numa categoria para ver as playlists dela. Não exige conta conectada.
 

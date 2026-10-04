@@ -137,6 +137,18 @@ def audio_tracks(media_url, *, names=True):
     return list(response.get("tracks") or [])
 
 
+def subscription_videos_page(cookie_header, *, start, count):
+    """Uma página dos vídeos novos das inscrições da conta dona de *cookie_header*."""
+    response = _request_action("subscription_videos", cookie=str(cookie_header or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def subscribed_channels_page(cookie_header, *, start, count):
+    """Uma página dos canais em que a conta dona de *cookie_header* está inscrita."""
+    response = _request_action("subscribed_channels", cookie=str(cookie_header or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
 def _request_action(action, **fields):
     """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
     response = _request_worker({"action": action, **youtubejs_locale(), **fields})
