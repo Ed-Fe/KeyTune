@@ -25,6 +25,7 @@ YT_DLP_DETAILS_SOCKET_TIMEOUT_SECONDS = 30
 class YouTubeMediaDetails:
     title: str
     channel: str = ""
+    channel_id: str = ""
     subscribers: str = ""
     description: str = ""
     duration: str = ""
@@ -58,6 +59,7 @@ def _details_from_youtubejs(data):
     return YouTubeMediaDetails(
         title=str(data.get("title") or "").strip(),
         channel=str(data.get("channel") or "").strip(),
+        channel_id=str(data.get("channel_id") or "").strip(),
         subscribers=str(data.get("subscribers") or "").strip(),
         description=str(data.get("description") or "").strip(),
         duration=_format_duration(data.get("duration")),
@@ -91,6 +93,7 @@ def _details_from_yt_dlp(media_url):
     return YouTubeMediaDetails(
         title=str(data.get("title") or "").strip(),
         channel=str(data.get("channel") or data.get("uploader") or "").strip(),
+        channel_id=str(data.get("channel_id") or "").strip(),
         subscribers=_format_count(data.get("channel_follower_count"), _(" inscritos")),
         description=str(data.get("description") or "").strip(),
         duration=_format_duration(data.get("duration")),

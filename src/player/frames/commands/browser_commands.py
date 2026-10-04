@@ -74,12 +74,16 @@ class BrowserCommandsMixin:
         dislike_item = menu.Append(wx.ID_ANY, _("Não gostei no YouTube Music"))
         add_to_playlist_item = menu.Append(wx.ID_ANY, _("Adicionar à playlist do YouTube Music..."))
         remove_from_youtube_playlist_item = menu.Append(wx.ID_ANY, _("Remover da playlist do YouTube Music"))
+        details_item = menu.Append(wx.ID_ANY, _("Ver detalhes"))
+        comments_item = menu.Append(wx.ID_ANY, _("Ver comentários"))
 
         can_edit_playlist = bool(current_state and not current_state.is_folder_tab and not current_state.is_loading)
         has_youtube_items = any(is_remote_media_path(path) and "youtube" in path.lower() for path in selected_paths)
         like_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "LIKE")
         dislike_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "DISLIKE")
         youtube_music_video_ids = self._youtube_music_video_ids_from_paths(selected_paths)
+        # Detalhes e comentários são de um vídeo só.
+        single_youtube_path = selected_paths[0] if selected_count == 1 and youtube_music_video_ids else ""
         on_editable_youtube_playlist = bool(self._current_tab_youtube_music_playlist_id())
 
         copy_item.Enable(selected_count > 0)
@@ -104,6 +108,8 @@ class BrowserCommandsMixin:
         remove_from_youtube_playlist_item.Enable(
             bool(youtube_music_video_ids) and on_editable_youtube_playlist
         )
+        details_item.Enable(bool(single_youtube_path))
+        comments_item.Enable(bool(single_youtube_path))
 
         if current_state and current_state.autodj_session:
             menu.AppendSeparator()
@@ -202,6 +208,17 @@ class BrowserCommandsMixin:
                 browser_panel.get_selected_indexes()
             ): self._remove_selected_media_from_youtube_playlist(media_paths, item_indexes),
             id=remove_from_youtube_playlist_item.GetId(),
+        )
+
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._open_youtube_music_details(single_youtube_path),
+            id=details_item.GetId(),
+        )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self.show_media_comments(single_youtube_path),
+            id=comments_item.GetId(),
         )
 
         popup_parent = anchor_window or browser_panel

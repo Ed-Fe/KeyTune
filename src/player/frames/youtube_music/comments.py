@@ -33,7 +33,10 @@ class CommentsMixin:
         if not media_path or not extract_video_id_from_text(media_path):
             self._announce(_("A mídia atual não é do YouTube: não há comentários para mostrar."))
             return False
+        return self.show_media_comments(media_path)
 
+    def show_media_comments(self, media_path):
+        """Abre a aba do KeyTube nos comentários de *media_path*, um item de playlist."""
         media_title = self._media_label(media_path)
         self.on_open_youtube_music(None)
         if self._get_youtube_music_panel() is None:

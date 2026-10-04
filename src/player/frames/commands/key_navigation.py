@@ -281,6 +281,10 @@ class KeyNavigationMixin:
             self.on_show_media_comments(None)
             return
 
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("I"), ord("i")):
+            self.on_show_media_details(None)
+            return
+
         if key_code == wx.WXK_ESCAPE and isinstance(current_tab, ScreenTabState):
             self._close_current_tab()
             return

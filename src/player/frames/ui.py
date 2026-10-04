@@ -202,6 +202,7 @@ class FrameUIMixin:
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+M — Ver os comentários da mídia atual\n"
+            "Ctrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
             "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
             "Ctrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\n"
@@ -481,7 +482,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_start_radio_id, _("Iniciar &rádio desta faixa\tCtrl+R"))
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.Append(self.menu_show_media_comments_id, _("Ver &comentários da mídia atual\tCtrl+Shift+M"))
-        playback_menu.Append(self.menu_show_media_details_id, _("Ver &detalhes da mídia atual"))
+        playback_menu.Append(self.menu_show_media_details_id, _("Ver &detalhes da mídia atual\tCtrl+Shift+I"))
         playback_menu.Append(self.menu_choose_audio_track_id, _("&Idioma do áudio da mídia atual..."))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))

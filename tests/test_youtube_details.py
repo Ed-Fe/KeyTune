@@ -110,6 +110,23 @@ class DetailsFrameTests(unittest.TestCase):
         self.assertEqual(frame.dialogs[0]["title"], "Detalhes de Clipe")
         self.assertEqual(frame.dialogs[0]["text"], "Clipe\n\nSem descrição.")
 
+    def test_the_details_offer_to_go_to_the_channel(self):
+        frame = _Frame()
+        frame.on_open_youtube_music = Mock()
+        frame._get_youtube_music_panel = Mock(return_value=object())
+        frame.on_browse_youtube_music_search_result = Mock(return_value=True)
+        found = details.YouTubeMediaDetails(title="Clipe", channel="Canal", channel_id="UC" + "a" * 22)
+        with patch.object(details, "media_details", return_value=found):
+            frame._open_youtube_music_details(URL)
+
+        ((label, go_to_channel),) = frame.dialogs[0]["actions"]
+        self.assertEqual(label, "Ir para o &canal")
+        go_to_channel()
+        frame.on_open_youtube_music.assert_called_once_with(None)
+        channel = frame.on_browse_youtube_music_search_result.call_args.args[0]
+        self.assertEqual((channel.result_type, channel.browse_id, channel.title), ("channel", "UC" + "a" * 22, "Canal"))
+        self.assertTrue(frame.on_browse_youtube_music_search_result.call_args.kwargs["focus_results"])
+
     def test_a_playlist_and_a_local_file_have_no_details(self):
         frame = _Frame()
         playlist = YouTubeMediaSearchResult(
