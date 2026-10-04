@@ -1283,6 +1283,10 @@ msgid "Artista {name}"
 msgstr ""
 
 #: src/player/youtube_music/models.py
+msgid "Artistas"
+msgstr ""
+
+#: src/player/youtube_music/models.py
 msgid "Artistas parecidos"
 msgstr ""
 
@@ -1810,12 +1814,12 @@ msgstr ""
 msgid "Busca \"{query}\": resultado {position} de {total}."
 msgstr ""
 
-#: src/player/frames/youtube_music/search.py
-msgid "Busca em {scope} por {query}"
-msgstr ""
-
 #: src/player/youtube_music/panel.py
 msgid "Busca novamente as playlists e mixes disponíveis na conta conectada."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Busca por {query}"
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
@@ -1887,6 +1891,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Canadá"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "Canais"
 msgstr ""
 
 #: src/player/frames/youtube_music/navigation.py
@@ -5509,7 +5517,7 @@ msgid "Peru"
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
-msgid "Pesquisando em {scope}: {query}."
+msgid "Pesquisando {query}."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -6726,11 +6734,16 @@ msgid "Texto a procurar"
 msgstr ""
 
 #: src/player/frames/explorer.py
+#: src/player/youtube_music/panel.py
 msgid "Tipo"
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Tipo de download padrão"
+msgstr ""
+
+#: src/player/youtube_music/panel.py
+msgid "Tipo:"
 msgstr ""
 
 #: src/player/preferences/dialog.py

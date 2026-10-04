@@ -541,13 +541,13 @@ class SearchMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce(_("Pesquisando em {scope}: {query}.").format(scope=scope_option.label, query=query))
+        self._announce(_("Pesquisando {query}.").format(query=query))
 
         def fetch_page(start, count):
             return service.fetch_search_page(query, search_scope=search_scope_id, start=start, count=count)
 
         view = YouTubeResultsView(
-            title=_("Busca em {scope} por {query}").format(scope=scope_option.label, query=query),
+            title=_("Busca por {query}").format(query=query),
             fetch_page=fetch_page,
         )
         return self._load_youtube_music_results_view(

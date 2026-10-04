@@ -33,12 +33,20 @@ class YouTubeSearchScopeOption:
     music_filter: str = ""
     limit: int = YOUTUBE_RESULTS_PAGE_SIZE
     youtube_kind: str = ""
+    # O nome só do tipo ("Músicas"), para a caixa que fica ao lado da de onde buscar.
+    type_label: str = ""
+
+    @property
+    def kind(self):
+        """O tipo de resultado, igual nas duas fontes quando ambas o têm (vídeos, playlists)."""
+        return self.music_filter or self.youtube_kind
 
 
 YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
         label=_("YouTube Music — músicas"),
+        type_label=_("Músicas"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="songs",
@@ -46,6 +54,7 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS,
         label=_("YouTube Music — vídeos"),
+        type_label=_("Vídeos"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="videos",
@@ -53,18 +62,21 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_ALBUMS,
         label=_("YouTube Music — álbuns"),
+        type_label=_("Álbuns"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         music_filter="albums",
     ),
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_ARTISTS,
         label=_("YouTube Music — artistas"),
+        type_label=_("Artistas"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         music_filter="artists",
     ),
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS,
         label=_("YouTube Music — playlists"),
+        type_label=_("Playlists"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="playlists",
@@ -72,6 +84,7 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS,
         label=_("YouTube — vídeos"),
+        type_label=_("Vídeos"),
         source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
         requires_auth=False,
         youtube_kind=YOUTUBE_KIND_VIDEOS,
@@ -79,12 +92,14 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_CHANNELS,
         label=_("YouTube — canais"),
+        type_label=_("Canais"),
         source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
         youtube_kind=YOUTUBE_KIND_CHANNELS,
     ),
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_PLAYLISTS,
         label=_("YouTube — playlists"),
+        type_label=_("Playlists"),
         source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
         youtube_kind=YOUTUBE_KIND_PLAYLISTS,
     ),
@@ -93,6 +108,18 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
 YOUTUBE_SEARCH_SCOPE_OPTIONS_BY_ID = {
     option.scope_id: option for option in YOUTUBE_SEARCH_SCOPE_OPTIONS
 }
+
+
+# As fontes da busca, na ordem da caixa "Em".
+YOUTUBE_SEARCH_SOURCE_LABELS = (
+    (YOUTUBE_SEARCH_SOURCE_MUSIC, "YouTube Music"),
+    (YOUTUBE_SEARCH_SOURCE_YOUTUBE, "YouTube"),
+)
+
+
+def get_search_scope_options_for_source(source):
+    """Os tipos de resultado que dá para buscar numa fonte."""
+    return tuple(option for option in YOUTUBE_SEARCH_SCOPE_OPTIONS if option.source == source)
 
 
 def get_search_scope_option(scope_id):

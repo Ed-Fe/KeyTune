@@ -3,7 +3,7 @@ import wx
 from ..accessibility import attach_named_accessible
 from ..library.browser import VirtualItemsListCtrl
 from ..i18n import _, ngettext
-from .models import YOUTUBE_SEARCH_SCOPE_OPTIONS
+from .models import YOUTUBE_SEARCH_SOURCE_LABELS, get_search_scope_options_for_source
 
 
 class YouTubeMusicTabPanel(wx.Panel):
@@ -122,17 +122,24 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.search_query_ctrl.SetToolTip(
 			_("Digite o que procura e pressione Enter. Um link de playlist, mix ou vídeo colado aqui é aberto direto.")
 		)
-		search_scope_label = wx.StaticText(self, label=_("Em:"))
-		self.search_scope_choice = wx.Choice(
+		search_source_label = wx.StaticText(self, label=_("Em:"))
+		self.search_source_choice = wx.Choice(
 			self,
-			choices=[option.label for option in YOUTUBE_SEARCH_SCOPE_OPTIONS],
+			choices=[label for _source, label in YOUTUBE_SEARCH_SOURCE_LABELS],
 		)
-		self.search_scope_choice.SetSelection(0)
-		self.search_scope_choice.SetName(_("Onde buscar"))
+		self.search_source_choice.SetSelection(0)
+		self.search_source_choice.SetName(_("Onde buscar"))
+		search_type_label = wx.StaticText(self, label=_("Tipo:"))
+		self.search_type_choice = wx.Choice(self)
+		self.search_type_choice.SetName(_("Tipo"))
+		self._search_type_options = ()
+		self._fill_search_type_choice()
 		search_row.Add(search_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
 		search_row.Add(self.search_query_ctrl, 1, wx.RIGHT, 12)
-		search_row.Add(search_scope_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
-		search_row.Add(self.search_scope_choice, 0)
+		search_row.Add(search_source_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
+		search_row.Add(self.search_source_choice, 0, wx.RIGHT, 12)
+		search_row.Add(search_type_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
+		search_row.Add(self.search_type_choice, 0)
 
 		self.search_results_label = wx.StaticText(self, label="")
 		self.search_results_label.SetName(_("Lista atual do YouTube Music"))
@@ -177,6 +184,7 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.search_actions_button.Bind(wx.EVT_BUTTON, self._on_search_actions_button)
 
 		self.search_query_ctrl.Bind(wx.EVT_TEXT_ENTER, self._on_search_query_enter)
+		self.search_source_choice.Bind(wx.EVT_CHOICE, self._on_search_source_changed)
 		self.search_results_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self._on_search_selection_changed)
 		self.search_results_list.Bind(wx.EVT_LIST_ITEM_DESELECTED, self._on_search_selection_changed)
 		self.search_results_list.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_open_search_result_event)
@@ -340,10 +348,24 @@ class YouTubeMusicTabPanel(wx.Panel):
 		return str(self.search_query_ctrl.GetValue() or "").strip()
 
 	def get_search_scope_id(self):
-		selection = self.search_scope_choice.GetSelection()
-		if selection == wx.NOT_FOUND or not 0 <= selection < len(YOUTUBE_SEARCH_SCOPE_OPTIONS):
-			return YOUTUBE_SEARCH_SCOPE_OPTIONS[0].scope_id
-		return YOUTUBE_SEARCH_SCOPE_OPTIONS[selection].scope_id
+		selection = self.search_type_choice.GetSelection()
+		if selection == wx.NOT_FOUND or not 0 <= selection < len(self._search_type_options):
+			selection = 0
+		return self._search_type_options[selection].scope_id
+
+	def _fill_search_type_choice(self):
+		"""Mostra os tipos da fonte escolhida, mantendo o tipo atual quando ela também o tem."""
+		selection = self.search_type_choice.GetSelection()
+		current_kind = self._search_type_options[selection].kind if 0 <= selection < len(self._search_type_options) else ""
+		source_index = max(self.search_source_choice.GetSelection(), 0)
+		self._search_type_options = get_search_scope_options_for_source(YOUTUBE_SEARCH_SOURCE_LABELS[source_index][0])
+		self.search_type_choice.Set([option.type_label for option in self._search_type_options])
+		kinds = [option.kind for option in self._search_type_options]
+		self.search_type_choice.SetSelection(kinds.index(current_kind) if current_kind in kinds else 0)
+
+	def _on_search_source_changed(self, event):
+		self._fill_search_type_choice()
+		event.Skip()
 
 	def _on_search_query_enter(self, _event):
 		if self.get_search_query():

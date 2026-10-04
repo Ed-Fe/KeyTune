@@ -542,15 +542,19 @@ Logo acima da lista, uma linha diz onde você está e quantos itens há (por exe
 
 - **Buscar ou colar link**: digite o que deseja procurar e pressione `Enter`. Quando a busca traz resultados, o foco vai direto para a lista; sem resultados, ele fica no campo para você corrigir o texto. Os resultados entram por cima do **Início**: `Backspace` volta para ele.
 - **Colar um link**: um link de playlist, mix ou vídeo do YouTube Music ou do YouTube colado no mesmo campo é aberto direto com `Enter`, em vez de ser pesquisado.
-- **Em**: escolhe onde a busca será feita. As opções disponíveis são:
-    - *YouTube Music — músicas*: faixas do catálogo do YouTube Music.
-    - *YouTube Music — vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
-    - *YouTube Music — álbuns*: álbuns, singles e EPs do catálogo.
-    - *YouTube Music — artistas*: artistas, que você abre para escolher entre músicas, álbuns, singles, vídeos e artistas parecidos.
-    - *YouTube Music — playlists*: playlists do catálogo do YouTube Music.
-    - *YouTube — vídeos*: vídeos do YouTube em geral, sem exigir conta.
-    - *YouTube — canais*: canais do YouTube, que você abre para escolher entre vídeos, Shorts, transmissões ao vivo e playlists.
-    - *YouTube — playlists*: playlists do YouTube em geral.
+- **Em** e **Tipo**: duas caixas ao lado do campo. **Em** escolhe onde buscar (*YouTube Music* ou *YouTube*) e **Tipo**, o que buscar ali. Nas duas, digitar a primeira letra pula para a opção:
+    - Em *YouTube Music*:
+        - *Músicas*: faixas do catálogo do YouTube Music.
+        - *Vídeos*: videoclipes e conteúdo em vídeo do YouTube Music.
+        - *Álbuns*: álbuns, singles e EPs do catálogo.
+        - *Artistas*: artistas, que você abre para escolher entre músicas, álbuns, singles, vídeos e artistas parecidos.
+        - *Playlists*: playlists do catálogo do YouTube Music.
+    - Em *YouTube*:
+        - *Vídeos*: vídeos do YouTube em geral, sem exigir conta.
+        - *Canais*: canais do YouTube, que você abre para escolher entre vídeos, Shorts, transmissões ao vivo e playlists.
+        - *Playlists*: playlists do YouTube em geral.
+
+    Ao trocar de *YouTube Music* para *YouTube* (ou o contrário), o tipo escolhido continua o mesmo quando existe nos dois (*Vídeos* e *Playlists*); senão, volta para o primeiro da lista.
 - **Dentro de um canal ou artista**: ao entrar, a lista mostra primeiro o que há para ver. Num canal do YouTube: *Vídeos*, *Shorts*, *Ao vivo* e *Playlists*. Num artista do YouTube Music: *Músicas*, *Álbuns*, *Singles e EPs*, *Vídeos* e *Artistas parecidos*. Entre no que quiser para ver os itens; `Backspace` volta para escolher outro.
 
 ### Transmissões ao vivo

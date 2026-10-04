@@ -6105,3 +6105,18 @@ msgstr "Cada playlist o álbum queda en una subcarpeta con su nombre."
 
 msgid "A seleção atual não tem faixas que possam ser baixadas."
 msgstr "La selección actual no tiene pistas que se puedan descargar."
+
+msgid "Artistas"
+msgstr "Artistas"
+
+msgid "Canais"
+msgstr "Canales"
+
+msgid "Pesquisando {query}."
+msgstr "Buscando {query}."
+
+msgid "Busca por {query}"
+msgstr "Búsqueda de {query}"
+
+msgid "Tipo:"
+msgstr "Tipo:"

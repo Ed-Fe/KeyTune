@@ -6105,3 +6105,18 @@ msgstr "Each playlist or album goes into a subfolder named after it."
 
 msgid "A seleção atual não tem faixas que possam ser baixadas."
 msgstr "The current selection has no tracks that can be downloaded."
+
+msgid "Artistas"
+msgstr "Artists"
+
+msgid "Canais"
+msgstr "Channels"
+
+msgid "Pesquisando {query}."
+msgstr "Searching for {query}."
+
+msgid "Busca por {query}"
+msgstr "Search for {query}"
+
+msgid "Tipo:"
+msgstr "Type:"
