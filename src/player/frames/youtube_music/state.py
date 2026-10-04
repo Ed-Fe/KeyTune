@@ -309,6 +309,7 @@ class LibraryStateMixin:
                 getattr(self, "menu_start_radio_id", None),
                 getattr(self, "menu_add_to_youtube_playlist_id", None),
                 getattr(self, "menu_show_media_comments_id", None),
+                getattr(self, "menu_choose_audio_track_id", None),
             ):
                 if item_id is None:
                     continue

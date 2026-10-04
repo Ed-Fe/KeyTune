@@ -436,6 +436,7 @@ Essa seção só aparece quando a integração está ativada.
 - **Reproduzir conteúdo relacionado ao fim da playlist (rádio automática)**: quando a última faixa do YouTube Music termina naturalmente — ou quando você pede a próxima faixa estando na última —, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Para uma transição contínua, a busca começa pouco antes do fim da última faixa e o link da próxima já é resolvido com antecedência, evitando pausa enquanto o conteúdo é descoberto. Também pode ser ligado ou desligado com a tecla `A` durante a reprodução. Faixas que já estão na playlist não são adicionadas de novo, e quando a rádio devolve só repetidas o player busca a partir de uma faixa anterior antes de encerrar.
 - **Idioma do conteúdo do YouTube**: o idioma pedido ao YouTube nas buscas e nos textos que ele devolve (contagens, datas). Por padrão é **O mesmo do KeyTune**. Vale para as buscas do YouTube quando o YouTube.js está ativado; as buscas do YouTube Music usam só a região.
 - **Região do conteúdo do YouTube**: o país usado nas buscas do YouTube e do YouTube Music. Em **Automática**, o YouTube decide pela sua conexão.
+- **Idioma de áudio dos vídeos dublados**: alguns vídeos do YouTube trazem o áudio original e dublagens. Aqui você escolhe o que toca neles: **A que o YouTube entregar** (padrão), **Original do vídeo** ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão é resolvida pelo yt-dlp e leva alguns segundos a mais para começar.
 - **Salvar músicas escutadas no histórico do YouTube Music**: ligada por padrão. Ao escutar uma faixa do YouTube Music por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player marca essa faixa como assistida no histórico da sua conta do YouTube Music. Desative para tocar faixas do YouTube Music sem registrar nada no histórico.
 
 ## Equalizador
@@ -539,6 +540,10 @@ As teclas são as mesmas em qualquer nível:
 A lista permite **seleção múltipla**: use `Ctrl+Setas` para mover o foco sem alterar a seleção, `Ctrl+Espaço` para marcar ou desmarcar o item em foco e `Shift+Setas` para selecionar um intervalo.
 
 Logo acima da lista, uma linha diz onde você está e quantos itens há (por exemplo, *Em alta — Europa: 24 itens*). O leitor de telas anuncia a mesma informação a cada vez que a lista muda.
+
+### Idioma do áudio
+
+**Reprodução > Idioma do áudio da mídia atual...** lista as faixas de áudio do vídeo do YouTube que está tocando (a original e as dublagens) e passa a tocar a escolhida a partir do mesmo ponto. A escolha vale para aquela mídia até você fechar o KeyTune; para todas as mídias, use **Idioma de áudio dos vídeos dublados** nas preferências. Vídeos com uma faixa só avisam que não há o que escolher.
 
 ### Comentários
 

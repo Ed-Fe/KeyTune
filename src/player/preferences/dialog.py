@@ -808,7 +808,20 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
 
+        from ..youtube_music.audio_tracks import AUDIO_CHOICE_ORIGINAL, AUDIO_LANGUAGES
         from ..youtube_music.content_locale import CONTENT_LANGUAGES, CONTENT_REGIONS
+
+        self._youtube_audio_language_codes = ["", AUDIO_CHOICE_ORIGINAL] + [code for code, _label in AUDIO_LANGUAGES]
+        audio_language_group, self.youtube_audio_language_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Idioma de áudio dos vídeos dublados"),
+            help_text=_(
+                "Nos vídeos do YouTube com mais de uma faixa de áudio, escolhe a que toca: a que o YouTube entrega, "
+                "a original do vídeo ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. "
+                "Uma faixa que não é a padrão demora alguns segundos a mais para começar."
+            ),
+            choices=[_("A que o YouTube entregar"), _("Original do vídeo")] + [label for _code, label in AUDIO_LANGUAGES],
+        )
 
         self._youtube_content_language_codes = [""] + [code for code, _label in CONTENT_LANGUAGES]
         content_language_group, self.youtube_content_language_choice = self._build_choice_control_group(
@@ -840,6 +853,7 @@ class PreferencesDialog(wx.Dialog):
         )
         self.youtube_music_library_box.Add(content_language_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(content_region_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_library_box.Add(audio_language_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
             wx.EVT_CHECKBOX,
@@ -1072,6 +1086,9 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_content_region_choice.SetSelection(
             self._choice_index(self._youtube_content_region_codes, settings.youtube_content_region)
         )
+        self.youtube_audio_language_choice.SetSelection(
+            self._choice_index(self._youtube_audio_language_codes, settings.youtube_audio_language)
+        )
         self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
         try:
             logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
@@ -1155,6 +1172,9 @@ class PreferencesDialog(wx.Dialog):
         ]
         settings.youtube_content_region = self._youtube_content_region_codes[
             max(self.youtube_content_region_choice.GetSelection(), 0)
+        ]
+        settings.youtube_audio_language = self._youtube_audio_language_codes[
+            max(self.youtube_audio_language_choice.GetSelection(), 0)
         ]
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):

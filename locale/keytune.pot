@@ -243,6 +243,10 @@ msgstr ""
 msgid "&Histórico de reprodução...\tCtrl+Shift+H"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "&Idioma do áudio da mídia atual..."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "&Indexar pasta na biblioteca"
 msgstr ""
@@ -617,6 +621,10 @@ msgstr ""
 msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
 msgstr ""
 
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
+msgstr ""
+
 #: src/player/frames/library_tabs/station_radio.py
 msgid "A mídia atual não é uma faixa compatível do YouTube Music."
 msgstr ""
@@ -669,6 +677,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A que o YouTube entregar"
 msgstr ""
 
 #: src/player/optional_resources.py
@@ -2557,6 +2569,7 @@ msgid "Detalhes técnicos: {detail}."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py
+#: src/player/frames/youtube_music/audio_tracks.py
 #: src/player/frames/youtube_music/auth.py
 #: src/player/frames/youtube_music/browse.py
 #: src/player/frames/youtube_music/dependencies.py
@@ -3009,6 +3022,10 @@ msgstr ""
 msgid "Esta mídia já está no seu computador."
 msgstr ""
 
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Esta mídia tem só uma faixa de áudio."
+msgstr ""
+
 #: src/player/youtube_music/live_streams.py
 msgid "Esta transmissão ao vivo ainda não começou."
 msgstr ""
@@ -3136,6 +3153,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Faixa &Anterior\tCtrl+PageUp"
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Faixa de áudio desta mídia:"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -3383,7 +3404,15 @@ msgid "Idioma da interface"
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Idioma de áudio dos vídeos dublados"
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Idioma do conteúdo do YouTube"
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Idioma do áudio"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4421,6 +4450,10 @@ msgstr ""
 msgid "Noruega"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Nos vídeos do YouTube com mais de uma faixa de áudio, escolhe a que toca: a que o YouTube entrega, a original do vídeo ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão demora alguns segundos a mais para começar."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Nova Zelândia"
 msgstr ""
@@ -4740,6 +4773,10 @@ msgstr ""
 #: src/player/frames/smart_library/history.py
 #: src/player/smart_library/history_dialog.py
 msgid "Não foi possível limpar o histórico."
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Não foi possível listar as faixas de áudio agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -5250,6 +5287,10 @@ msgstr ""
 msgid "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
 msgstr ""
 
+#: src/player/youtube_music/audio_tracks.py
+msgid "O yt-dlp não conseguiu listar as faixas de áudio."
+msgstr ""
+
 #: src/player/youtube_music/catalog.py
 msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
 msgstr ""
@@ -5344,6 +5385,10 @@ msgstr ""
 
 #: src/player/download/options.py
 msgid "Original (sem conversão)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Original do vídeo"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -5887,6 +5932,10 @@ msgstr ""
 
 #: src/player/smart_library/search_dialog.py
 msgid "Procura em tudo que já foi indexado na biblioteca."
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Procurando as faixas de áudio desta mídia."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -7820,6 +7869,10 @@ msgstr ""
 msgid "{mode}: “{name}”"
 msgstr ""
 
+#: src/player/youtube_music/audio_tracks.py
+msgid "{name} (audiodescrição)"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "{name} (dB)"
 msgstr ""
@@ -7952,6 +8005,10 @@ msgstr ""
 
 #: src/player/download/options.py
 msgid "Áudio"
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Áudio em {name}."
 msgstr ""
 
 #: src/player/convert/options.py

@@ -6189,3 +6189,45 @@ msgstr "View comments"
 
 msgid "Ver &comentários da mídia atual"
 msgstr "View &comments on the current media"
+
+msgid "O yt-dlp não conseguiu listar as faixas de áudio."
+msgstr "yt-dlp could not list the audio tracks."
+
+msgid "{name} (audiodescrição)"
+msgstr "{name} (audio description)"
+
+msgid "Idioma de áudio dos vídeos dublados"
+msgstr "Audio language of dubbed videos"
+
+msgid "Nos vídeos do YouTube com mais de uma faixa de áudio, escolhe a que toca: a que o YouTube entrega, a original do vídeo ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão demora alguns segundos a mais para começar."
+msgstr "On YouTube videos with more than one audio track, chooses which one plays: the one YouTube delivers, the video's original, or the dub in a language. Videos without the requested track play normally. A track that is not the default takes a few more seconds to start."
+
+msgid "A que o YouTube entregar"
+msgstr "Whatever YouTube delivers"
+
+msgid "Original do vídeo"
+msgstr "The video's original"
+
+msgid "&Idioma do áudio da mídia atual..."
+msgstr "Audio &language of the current media..."
+
+msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
+msgstr "The current media is not from YouTube: there are no audio tracks to choose."
+
+msgid "Procurando as faixas de áudio desta mídia."
+msgstr "Looking for this media's audio tracks."
+
+msgid "Não foi possível listar as faixas de áudio agora."
+msgstr "The audio tracks could not be listed right now."
+
+msgid "Esta mídia tem só uma faixa de áudio."
+msgstr "This media has only one audio track."
+
+msgid "Faixa de áudio desta mídia:"
+msgstr "Audio track of this media:"
+
+msgid "Idioma do áudio"
+msgstr "Audio language"
+
+msgid "Áudio em {name}."
+msgstr "Audio in {name}."

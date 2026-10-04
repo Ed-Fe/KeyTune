@@ -6189,3 +6189,45 @@ msgstr "Ver comentarios"
 
 msgid "Ver &comentários da mídia atual"
 msgstr "Ver &comentarios del contenido actual"
+
+msgid "O yt-dlp não conseguiu listar as faixas de áudio."
+msgstr "yt-dlp no pudo listar las pistas de audio."
+
+msgid "{name} (audiodescrição)"
+msgstr "{name} (audiodescripción)"
+
+msgid "Idioma de áudio dos vídeos dublados"
+msgstr "Idioma de audio de los videos doblados"
+
+msgid "Nos vídeos do YouTube com mais de uma faixa de áudio, escolhe a que toca: a que o YouTube entrega, a original do vídeo ou a dublagem em um idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão demora alguns segundos a mais para começar."
+msgstr "En los videos de YouTube con más de una pista de audio, elige cuál suena: la que YouTube entrega, la original del video o el doblaje en un idioma. Los videos sin la pista pedida suenan normalmente. Una pista que no es la predeterminada tarda unos segundos más en empezar."
+
+msgid "A que o YouTube entregar"
+msgstr "La que YouTube entregue"
+
+msgid "Original do vídeo"
+msgstr "Original del video"
+
+msgid "&Idioma do áudio da mídia atual..."
+msgstr "&Idioma del audio del contenido actual..."
+
+msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
+msgstr "El contenido actual no es de YouTube: no hay pistas de audio para elegir."
+
+msgid "Procurando as faixas de áudio desta mídia."
+msgstr "Buscando las pistas de audio de este contenido."
+
+msgid "Não foi possível listar as faixas de áudio agora."
+msgstr "No se pudieron listar las pistas de audio ahora."
+
+msgid "Esta mídia tem só uma faixa de áudio."
+msgstr "Este contenido tiene una sola pista de audio."
+
+msgid "Faixa de áudio desta mídia:"
+msgstr "Pista de audio de este contenido:"
+
+msgid "Idioma do áudio"
+msgstr "Idioma del audio"
+
+msgid "Áudio em {name}."
+msgstr "Audio en {name}."

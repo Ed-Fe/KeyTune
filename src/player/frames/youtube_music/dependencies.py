@@ -6,6 +6,7 @@ import time
 
 import wx
 
+from player.youtube_music.audio_tracks import configure_audio_preference
 from player.youtube_music.content_locale import configure_content_locale
 from player.youtube_music.dialog import YouTubeMusicJavascriptRuntimeDialog
 
@@ -153,6 +154,11 @@ class DependencyMixin:
             language=getattr(self.settings, "youtube_content_language", ""),
             region=getattr(self.settings, "youtube_content_region", ""),
         )
+        if configure_audio_preference(getattr(self.settings, "youtube_audio_language", "")):
+            # O que já estava resolvido (e o que foi adiantado) ainda é da faixa de áudio anterior.
+            service = getattr(self, "_youtube_music_service", None)
+            if service is not None:
+                service.clear_stream_cache()
 
     def _youtube_music_dependency_update_interval_hours(self):
         try:

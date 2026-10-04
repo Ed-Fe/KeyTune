@@ -11,6 +11,7 @@ from .auth import (
     read_auth_file_text,
     write_browser_auth_cookie_file,
 )
+from .audio_tracks import yt_dlp_selector_for_playback
 from .client_provider import YouTubeMusicClientProvider
 from .content_locale import content_region
 from .dependencies import import_ytmusicapi_module
@@ -248,7 +249,12 @@ class YouTubeMusicService:
             use_account_cookies=False,
             anonymous_player_client=self._stream_playback_profile,
             prefer_video=prefer_video,
+            audio_track=yt_dlp_selector_for_playback(media_path),
         )
+
+    def clear_stream_cache(self):
+        """Esquece os streams já resolvidos, para valer uma nova escolha de faixa de áudio."""
+        self._stream_cache_manager.clear()
 
     def resolve_analysis_fallback(self, media_path):
         """Resolve a fresh alternative for analysis without changing playback preferences."""

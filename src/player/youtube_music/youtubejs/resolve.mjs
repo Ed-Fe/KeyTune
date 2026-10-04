@@ -347,6 +347,43 @@ function takeReplyNodes(listing, nodes) {
   listing.next = nodes.find((node) => node.type === "ContinuationItem") || listing.next;
 }
 
+async function audioTrackFormats(innertube, videoId) {
+  const info = await innertube.getBasicInfo(videoId, { client: "IOS" });
+  const formats = new Map();
+  for (const format of info.streaming_data?.adaptive_formats || []) {
+    if (format.has_audio && !format.has_video && format.audio_track?.id && !formats.has(format.audio_track.id)) {
+      formats.set(format.audio_track.id, format);
+    }
+  }
+  return formats;
+}
+
+// As faixas de áudio de um vídeo dublado. O YouTube.js só as lista: a URL que ele
+// consegue para uma faixa que não é a padrão para de responder depois do começo.
+async function audioTracks(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  // O que é "padrão" vale para o cliente que toca; os nomes vêm no idioma do conteúdo.
+  const [formats, named] = await Promise.all([
+    audioTrackFormats(await clientFor(), videoId),
+    request.names
+      ? clientFor(request).then((innertube) => audioTrackFormats(innertube, videoId)).catch(() => new Map())
+      : new Map(),
+  ]);
+  return {
+    tracks: [...formats.values()].map((format) => ({
+      id: format.audio_track.id,
+      name: named.get(format.audio_track.id)?.audio_track.display_name || format.audio_track.display_name || "",
+      language: format.language || "",
+      default: Boolean(format.audio_track.audio_is_default),
+      original: Boolean(format.is_original),
+      descriptive: Boolean(format.is_descriptive),
+    })),
+  };
+}
+
 async function resolve(request) {
   const videoId = videoIdFrom(request.media_url);
   if (!videoId) {
@@ -406,7 +443,7 @@ async function resolve(request) {
   };
 }
 
-const HANDLERS = { resolve, search, comments, comment_replies: commentReplies };
+const HANDLERS = { resolve, search, comments, comment_replies: commentReplies, audio_tracks: audioTracks };
 
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of input) {

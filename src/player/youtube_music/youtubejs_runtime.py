@@ -131,6 +131,12 @@ def comment_replies_page(media_url, comment_id, *, start, count):
     return list(response.get("entries") or []), bool(response.get("has_more"))
 
 
+def audio_tracks(media_url, *, names=True):
+    """As faixas de áudio de um vídeo dublado; com *names*, os nomes vêm no idioma do conteúdo."""
+    response = _request_action("audio_tracks", media_url=str(media_url or "").strip(), names=bool(names))
+    return list(response.get("tracks") or [])
+
+
 def _request_action(action, **fields):
     """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
     response = _request_worker({"action": action, **youtubejs_locale(), **fields})

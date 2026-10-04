@@ -18,6 +18,7 @@ from ._helpers import (
     find_all_available_javascript_runtimes,
     is_missing_javascript_runtime_error_message,
 )
+from .audio_tracks import AudioTrackMixin
 from .auth import AuthMixin
 from .browse import BrowseMixin
 from .comments import CommentsMixin
@@ -40,6 +41,7 @@ class FrameYouTubeMusicMixin(
     PlaylistEditMixin,
     BrowseMixin,
     CommentsMixin,
+    AudioTrackMixin,
     LifecycleMixin,
 ):
     """Aggregate YouTube Music mixin composed from focused sub-mixins."""
