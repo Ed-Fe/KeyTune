@@ -178,6 +178,40 @@ class YouTubePageTests(unittest.TestCase):
             for index in range(count)
         ]
 
+    def setUp(self):
+        # Cada teste diz se o YouTube.js está ligado; desligado, a listagem é do yt-dlp.
+        self._youtubejs_enabled = self._patch("player.youtube_music.catalog.youtubejs_resolver_enabled", False)
+
+    def _patch(self, target, return_value):
+        patcher = patch(target, return_value=return_value)
+        self.addCleanup(patcher.stop)
+        return patcher.start()
+
+    def test_with_youtubejs_on_the_search_does_not_go_through_yt_dlp(self):
+        self._youtubejs_enabled.return_value = True
+        entries = [{"id": "video000001", "title": "Vídeo", "channel": "Canal", "view_count_text": "2 mi de visualizações"}]
+        with patch("player.youtube_music.catalog.extract_yt_dlp_info") as extract, patch(
+            "player.youtube_music.catalog.youtubejs_runtime.search_page", return_value=(entries, True)
+        ) as search_page:
+            page = catalog.youtube_search_page("rock", YOUTUBE_KIND_VIDEOS, 20, 20)
+
+        search_page.assert_called_once_with("rock", YOUTUBE_KIND_VIDEOS, start=20, count=20)
+        extract.assert_not_called()
+        self.assertEqual([result.detail_text for result in page.results], ["2 mi de visualizações"])
+        self.assertTrue(page.has_more)
+
+    def test_when_youtubejs_fails_the_search_falls_back_to_yt_dlp(self):
+        self._youtubejs_enabled.return_value = True
+        with patch("player.youtube_music.catalog.extract_yt_dlp_info") as extract, patch(
+            "player.youtube_music.catalog.youtubejs_runtime.search_page", side_effect=RuntimeError("sem Node")
+        ):
+            extract.return_value = SimpleNamespace(data={"entries": self._entries(3)})
+
+            page = catalog.youtube_search_page("rock", YOUTUBE_KIND_VIDEOS, 0, 20)
+
+        self.assertEqual(extract.call_args.args[0], "ytsearch20:rock")
+        self.assertEqual(len(page.results), 3)
+
     def test_the_second_page_of_a_video_search_asks_only_for_its_own_items(self):
         with patch("player.youtube_music.catalog.extract_yt_dlp_info") as extract:
             extract.return_value = SimpleNamespace(data={"entries": self._entries(20)})

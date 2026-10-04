@@ -6120,3 +6120,21 @@ msgstr "Search for {query}"
 
 msgid "Tipo:"
 msgstr "Type:"
+
+msgid "Idioma do conteúdo do YouTube"
+msgstr "YouTube content language"
+
+msgid "Idioma pedido ao YouTube nas buscas, nos comentários e nos nomes das faixas de áudio. As buscas do YouTube Music usam só a região."
+msgstr "Language requested from YouTube for searches, comments and audio track names. YouTube Music searches use only the region."
+
+msgid "O mesmo do KeyTune"
+msgstr "Same as KeyTune"
+
+msgid "Região do conteúdo do YouTube"
+msgstr "YouTube content region"
+
+msgid "País usado nas buscas do YouTube e do YouTube Music. Em Automática, o YouTube decide pela sua conexão."
+msgstr "Country used for YouTube and YouTube Music searches. With Automatic, YouTube decides from your connection."
+
+msgid "Automática"
+msgstr "Automatic"

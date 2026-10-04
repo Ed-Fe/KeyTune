@@ -12,6 +12,7 @@ from .auth import (
     write_browser_auth_cookie_file,
 )
 from .client_provider import YouTubeMusicClientProvider
+from .content_locale import content_region
 from .dependencies import import_ytmusicapi_module
 from .feedback_manager import YouTubeMusicFeedbackManager
 from .library_manager import YouTubeMusicLibraryManager
@@ -428,6 +429,7 @@ class YouTubeMusicService:
             require_auth=require_auth,
             auth_file_path=self.browser_auth_file_path,
             has_saved_auth=self.has_saved_browser_auth(),
+            location=content_region(),
         )
 
     # -- Library (delegated) ---------------------------------------------------

@@ -1554,6 +1554,10 @@ msgid "AutoDJ: {status}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Automática"
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Automático (seguir o sistema)"
 msgstr ""
 
@@ -3344,6 +3348,14 @@ msgstr ""
 msgid "Idioma da interface"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Idioma do conteúdo do YouTube"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idioma pedido ao YouTube nas buscas, nos comentários e nos nomes das faixas de áudio. As buscas do YouTube Music usam só a região."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
 msgstr ""
@@ -5055,6 +5067,10 @@ msgstr ""
 msgid "O manifesto do recurso adicional está incompleto."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "O mesmo do KeyTune"
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O modelo do nome do arquivo não pode conter pastas."
 msgstr ""
@@ -5490,6 +5506,10 @@ msgstr ""
 
 #: src/player/frames/autodj_panel.py
 msgid "Pausar preparação do AutoDJ"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "País usado nas buscas do YouTube e do YouTube Music. Em Automática, o YouTube decide pela sua conexão."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -6042,6 +6062,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Registro de logs desativado. Nível de detalhe indisponível."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Região do conteúdo do YouTube"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py

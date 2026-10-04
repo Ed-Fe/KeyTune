@@ -135,10 +135,133 @@ function videoIdFrom(value) {
   return url.searchParams.get("v") || "";
 }
 
-const innertubePromise = Innertube.create({
-  cache: new UniversalCache(true, process.argv[2]),
-  generate_session_locally: true,
-});
+const MAX_CLIENTS = 3;
+const MAX_LISTINGS = 12;
+const clients = new Map();
+const listings = new Map();
+
+// Um cliente anônimo por idioma e região. A reprodução usa sempre o padrão
+// (sem idioma nem região), para não mudar com as preferências de conteúdo.
+function clientFor(request = {}) {
+  const lang = String(request.lang || "").trim() || "en";
+  const location = String(request.location || "").trim().toUpperCase();
+  const key = `${lang}|${location}`;
+  if (!clients.has(key)) {
+    if (clients.size >= MAX_CLIENTS) {
+      clients.delete(clients.keys().next().value);
+    }
+    const options = {
+      cache: new UniversalCache(true, process.argv[2]),
+      generate_session_locally: true,
+      lang,
+    };
+    if (location) {
+      options.location = location;
+    }
+    const client = Innertube.create(options);
+    client.catch(() => clients.delete(key));
+    clients.set(key, client);
+  }
+  return clients.get(key);
+}
+clientFor();
+
+function rememberListing(key, listing) {
+  listings.delete(key);
+  listings.set(key, listing);
+  if (listings.size > MAX_LISTINGS) {
+    listings.delete(listings.keys().next().value);
+  }
+  return listing;
+}
+
+function pageBounds(request) {
+  return {
+    start: Math.max(0, Number(request.start) || 0),
+    count: Math.max(1, Number(request.count) || 20),
+  };
+}
+
+function textOf(value) {
+  return value ? String(value.toString() || "").trim() : "";
+}
+
+const SEARCH_TYPES = { videos: "video", channels: "channel", playlists: "playlist" };
+
+// As entradas saem no formato da listagem do yt-dlp, para o KeyTune tratar as duas fontes igual.
+function searchEntry(node) {
+  if (node.type === "Video") {
+    return {
+      id: node.video_id,
+      title: textOf(node.title),
+      channel: textOf(node.author?.name),
+      duration: Number(node.duration?.seconds) || 0,
+      view_count_text: textOf(node.short_view_count) || textOf(node.view_count),
+      live_status: node.is_live ? "is_live" : "",
+    };
+  }
+  if (node.type === "Channel") {
+    // O YouTube pôs o @ do canal onde ficavam os inscritos; os inscritos vêm no outro campo.
+    const counts = [textOf(node.subscriber_count), textOf(node.video_count)];
+    return {
+      id: node.id,
+      title: textOf(node.author?.name),
+      url: `https://www.youtube.com/channel/${node.id}`,
+      channel_id: node.id,
+      detail_text: counts.find((text) => text && !text.startsWith("@")) || "",
+    };
+  }
+  if (node.type === "LockupView" && ["PLAYLIST", "SHOW", "PODCAST"].includes(node.content_type)) {
+    const owner = node.metadata?.metadata?.metadata_rows?.[0]?.metadata_parts?.[0]?.text;
+    return {
+      id: node.content_id,
+      title: textOf(node.metadata?.title),
+      url: `https://www.youtube.com/playlist?list=${node.content_id}`,
+      channel: textOf(owner),
+    };
+  }
+  return null;
+}
+
+function collectEntries(listing, nodes, toEntry) {
+  for (const node of nodes || []) {
+    const entry = toEntry(node);
+    if (entry?.id && entry.title && !listing.seen.has(entry.id)) {
+      listing.seen.add(entry.id);
+      listing.entries.push(entry);
+    }
+  }
+}
+
+function listingPage(listing, start, count, hasContinuation) {
+  return {
+    entries: listing.entries.slice(start, start + count),
+    has_more: listing.entries.length > start + count || Boolean(hasContinuation),
+  };
+}
+
+async function search(request) {
+  const query = String(request.query || "").trim();
+  const type = SEARCH_TYPES[request.kind] || SEARCH_TYPES.videos;
+  const { start, count } = pageBounds(request);
+  if (!query) {
+    return { entries: [], has_more: false };
+  }
+
+  const key = JSON.stringify(["search", request.lang, request.location, type, query]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const innertube = await clientFor(request);
+    listing = { entries: [], seen: new Set(), feed: await innertube.search(query, { type }) };
+    collectEntries(listing, listing.feed.results, searchEntry);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, listing.feed.results, searchEntry);
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
 
 async function resolve(request) {
   const videoId = videoIdFrom(request.media_url);
@@ -146,7 +269,7 @@ async function resolve(request) {
     throw new Error("URL do YouTube sem identificador de vídeo.");
   }
 
-  const innertube = await innertubePromise;
+  const innertube = await clientFor();
   let info;
   let format;
   let streamUrl = "";
@@ -199,10 +322,17 @@ async function resolve(request) {
   };
 }
 
+const HANDLERS = { resolve, search };
+
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of input) {
   try {
-    const response = await resolve(JSON.parse(line));
+    const request = JSON.parse(line);
+    const handler = HANDLERS[request.action || "resolve"];
+    if (!handler) {
+      throw new Error(`Ação desconhecida: ${request.action}`);
+    }
+    const response = await handler(request);
     process.stdout.write(RESULT_PREFIX + JSON.stringify(response) + "\n");
   } catch (error) {
     process.stdout.write(RESULT_PREFIX + JSON.stringify({

@@ -11,8 +11,10 @@ from __future__ import annotations
 from urllib.parse import urlencode
 
 from ..i18n import _
+from ..log import get_logger
+from . import youtubejs_runtime
 from .browse import normalize_track_items, tolerant_watch_playlist_parsing
-from .dependencies import ensure_yt_dlp_executable_available
+from .dependencies import ensure_yt_dlp_executable_available, youtubejs_resolver_enabled
 from .models import (
     YOUTUBE_ARTIST_SECTION_ALBUMS,
     YOUTUBE_ARTIST_SECTION_RELATED,
@@ -37,6 +39,8 @@ from .search import (
 )
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 
+
+_logger = get_logger(__name__)
 
 YOUTUBE_LISTING_SOCKET_TIMEOUT_SECONDS = 20
 WATCH_PLAYLIST_LIMIT = 200
@@ -65,6 +69,27 @@ def _slice_page(items, start, count):
 # -- YouTube (yt-dlp) -----------------------------------------------------------
 
 
+def _normalized_entries_page(entries, has_more, *, show_owner=True):
+    results = []
+    for entry in entries:
+        result = normalize_youtube_entry(entry, show_owner=show_owner)
+        if result is not None:
+            results.append(result)
+    return YouTubeResultPage(results=tuple(results), has_more=has_more)
+
+
+def _youtubejs_page(fetch, *, show_owner=True):
+    """A página pelo YouTube.js, ou ``None`` quando ele está desligado ou falha (aí vale o yt-dlp)."""
+    if not youtubejs_resolver_enabled():
+        return None
+    try:
+        entries, has_more = fetch()
+    except Exception as exc:
+        _logger.warning("O YouTube.js não listou; usando o yt-dlp: %s", exc)
+        return None
+    return _normalized_entries_page(entries, has_more, show_owner=show_owner)
+
+
 def _youtube_listing_page(target, start, count, *, show_owner=True):
     ensure_yt_dlp_executable_available()
     try:
@@ -82,12 +107,7 @@ def _youtube_listing_page(target, start, count, *, show_owner=True):
         ) from exc
 
     entries = (response.data or {}).get("entries") or []
-    results = []
-    for entry in entries:
-        result = normalize_youtube_entry(entry, show_owner=show_owner)
-        if result is not None:
-            results.append(result)
-    return YouTubeResultPage(results=tuple(results), has_more=len(entries) >= count)
+    return _normalized_entries_page(entries, len(entries) >= count, show_owner=show_owner)
 
 
 def youtube_search_page(query, kind, start, count):
@@ -96,6 +116,10 @@ def youtube_search_page(query, kind, start, count):
         return YouTubeResultPage()
 
     start, count = _page_bounds(start, count)
+    page = _youtubejs_page(lambda: youtubejs_runtime.search_page(normalized_query, kind, start=start, count=count))
+    if page is not None:
+        return page
+
     if kind in _YOUTUBE_SEARCH_FILTERS:
         target = "https://www.youtube.com/results?" + urlencode(
             {"search_query": normalized_query, "sp": _YOUTUBE_SEARCH_FILTERS[kind]}

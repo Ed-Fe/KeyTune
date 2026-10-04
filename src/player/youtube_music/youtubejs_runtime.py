@@ -11,6 +11,7 @@ from pathlib import Path
 from dataclasses import dataclass
 
 from .auth import sanitize_sensitive_text
+from .content_locale import youtubejs_locale
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from ..i18n import _
 from ..optional_resources import (
@@ -104,6 +105,20 @@ def resolve_stream(media_url, *, cookie_header="", user_agent=""):
         display_title=str(response.get("title") or "").strip(),
         display_artist=str(response.get("artist") or "").strip(),
     )
+
+
+def search_page(query, kind, *, start, count):
+    """Uma página da busca do YouTube: entradas no formato da listagem do yt-dlp e se há mais."""
+    response = _request_action("search", query=str(query or "").strip(), kind=str(kind or ""), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def _request_action(action, **fields):
+    """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
+    response = _request_worker({"action": action, **youtubejs_locale(), **fields})
+    if response.get("error"):
+        raise RuntimeError(sanitize_sensitive_text(response["error"]))
+    return response
 
 
 def validate_youtubejs_dependencies() -> None:

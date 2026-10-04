@@ -808,6 +808,28 @@ class PreferencesDialog(wx.Dialog):
             ),
         )
 
+        from ..youtube_music.content_locale import CONTENT_LANGUAGES, CONTENT_REGIONS
+
+        self._youtube_content_language_codes = [""] + [code for code, _label in CONTENT_LANGUAGES]
+        content_language_group, self.youtube_content_language_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Idioma do conteúdo do YouTube"),
+            help_text=_(
+                "Idioma pedido ao YouTube nas buscas, nos comentários e nos nomes das faixas de áudio. "
+                "As buscas do YouTube Music usam só a região."
+            ),
+            choices=[_("O mesmo do KeyTune")] + [label for _code, label in CONTENT_LANGUAGES],
+        )
+        self._youtube_content_region_codes = [""] + [code for code, _label in CONTENT_REGIONS]
+        content_region_group, self.youtube_content_region_choice = self._build_choice_control_group(
+            page,
+            label_text=_("Região do conteúdo do YouTube"),
+            help_text=_(
+                "País usado nas buscas do YouTube e do YouTube Music. Em Automática, o YouTube decide pela sua conexão."
+            ),
+            choices=[_("Automática")] + [label for _code, label in CONTENT_REGIONS],
+        )
+
         self.youtube_music_library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         self.youtube_music_library_box.Add(
@@ -816,6 +838,8 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_library_box.Add(
             self.youtube_music_save_history_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
         )
+        self.youtube_music_library_box.Add(content_language_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+        self.youtube_music_library_box.Add(content_region_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
             wx.EVT_CHECKBOX,
@@ -868,6 +892,14 @@ class PreferencesDialog(wx.Dialog):
     def _configure_control(self, control, name, help_text):
         control.SetName(name)
         control.SetToolTip(help_text)
+
+    @staticmethod
+    def _choice_index(codes, code):
+        """A posição de *code* na lista da caixa; a primeira (o padrão) quando ele não está lá."""
+        try:
+            return codes.index(code or "")
+        except ValueError:
+            return 0
 
     def _build_spin_control_group(self, parent, label_text, help_text, min_value, max_value):
         label = wx.StaticText(parent, label=f"{label_text}:")
@@ -1034,6 +1066,12 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
+        self.youtube_content_language_choice.SetSelection(
+            self._choice_index(self._youtube_content_language_codes, settings.youtube_content_language)
+        )
+        self.youtube_content_region_choice.SetSelection(
+            self._choice_index(self._youtube_content_region_codes, settings.youtube_content_region)
+        )
         self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
         try:
             logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
@@ -1112,6 +1150,12 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
+        settings.youtube_content_language = self._youtube_content_language_codes[
+            max(self.youtube_content_language_choice.GetSelection(), 0)
+        ]
+        settings.youtube_content_region = self._youtube_content_region_codes[
+            max(self.youtube_content_region_choice.GetSelection(), 0)
+        ]
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]

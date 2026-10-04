@@ -6,6 +6,7 @@ import time
 
 import wx
 
+from player.youtube_music.content_locale import configure_content_locale
 from player.youtube_music.dialog import YouTubeMusicJavascriptRuntimeDialog
 
 from ._helpers import (
@@ -147,6 +148,10 @@ class DependencyMixin:
                 managed_dependencies
                 and bool(getattr(self.settings, "youtube_music_use_youtubejs", True))
             ),
+        )
+        configure_content_locale(
+            language=getattr(self.settings, "youtube_content_language", ""),
+            region=getattr(self.settings, "youtube_content_region", ""),
         )
 
     def _youtube_music_dependency_update_interval_hours(self):

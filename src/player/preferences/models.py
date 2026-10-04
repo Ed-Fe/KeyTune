@@ -113,6 +113,9 @@ class AppSettings:
     youtube_music_use_youtubejs: bool = DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS
     youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_save_history: bool = DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY
+    # Vazio: o idioma segue o do KeyTune e a região fica a cargo do YouTube.
+    youtube_content_language: str = ""
+    youtube_content_region: str = ""
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
     youtube_music_dependency_last_auto_update_epoch: int = 0
     youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
@@ -197,6 +200,8 @@ class AppSettings:
             "youtube_music_use_youtubejs": self.youtube_music_use_youtubejs,
             "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_save_history": self.youtube_music_save_history,
+            "youtube_content_language": self.youtube_content_language,
+            "youtube_content_region": self.youtube_content_region,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "youtube_music_library_page_size": self.youtube_music_library_page_size,
@@ -306,6 +311,8 @@ class AppSettings:
         settings.youtube_music_save_history = bool(
             data.get("youtube_music_save_history", settings.youtube_music_save_history)
         )
+        settings.youtube_content_language = str(data.get("youtube_content_language") or "").strip()
+        settings.youtube_content_region = str(data.get("youtube_content_region") or "").strip().upper()
         settings.youtube_music_dependency_update_interval_hours = _clamp_int(
             data.get(
                 "youtube_music_dependency_update_interval_hours",

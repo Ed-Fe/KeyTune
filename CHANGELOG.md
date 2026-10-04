@@ -9,6 +9,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
+- **Idioma e região do conteúdo do YouTube**: em **Preferências > Recursos adicionais**, escolha o idioma e o país usados nas buscas. O idioma segue o do KeyTune por padrão; a região fica em **Automática**. Com o YouTube.js ativado, a busca do YouTube (vídeos, canais e playlists) passa por ele, mais rápida e com "carregar mais" de verdade; se ele falhar, o KeyTune volta ao yt-dlp sozinho.
 - **Explorador de pastas na janela principal**: `Ctrl+E` abre, ao lado das abas, uma lista com as pastas e os arquivos de mídia do computador, a partir de **Este computador**. `Enter` entra na pasta ou toca o arquivo, `Shift+Enter` adiciona à playlist sem tocar, `Ctrl+Shift+F` põe na fila, `Ctrl+Shift+K` converte e `Shift+F10` abre o menu com todas as ações (tocar, adicionar, abrir em nova playlist, adicionar a pasta inteira, converter, indexar na biblioteca, copiar, mostrar no Explorador do Windows, classificar e atualizar). Pastas selecionadas entram com as subpastas. A pasta atual e a classificação são lembradas entre sessões.
 - **Adicionar sem tocar**: `Ctrl+Shift+O` (**Arquivo > Abrir sem tocar...**) e `Ctrl+Shift+V` (**Colar sem tocar**) põem itens no fim da playlist sem interromper o que está tocando.
 - **Colar arquivos e pastas do Windows**: `Ctrl+V` agora aceita arquivos e pastas copiados no Explorador de Arquivos do Windows, além de links e caminhos em texto. Uma pasta colada entra com todas as mídias, inclusive das subpastas.

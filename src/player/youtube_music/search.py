@@ -87,7 +87,9 @@ def normalize_youtube_entry(entry, *, show_owner=True):
     owner = str(entry.get("channel") or entry.get("uploader") or "").strip() if show_owner else ""
 
     if "/channel/" in entry_url or (not entry_url and entry_id.startswith("UC")):
-        followers_text = _format_count(entry.get("channel_follower_count"), _(" inscritos"))
+        followers_text = str(entry.get("detail_text") or "").strip() or _format_count(
+            entry.get("channel_follower_count"), _(" inscritos")
+        )
         return YouTubeMediaSearchResult(
             source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
             result_type="channel",
@@ -114,7 +116,8 @@ def normalize_youtube_entry(entry, *, show_owner=True):
     duration_text = _format_duration(entry.get("duration"))
     if duration_text:
         detail_parts.append(duration_text)
-    view_count_text = _format_view_count(entry.get("view_count"))
+    # O YouTube.js já traz a contagem escrita no idioma do conteúdo.
+    view_count_text = str(entry.get("view_count_text") or "").strip() or _format_view_count(entry.get("view_count"))
     if view_count_text:
         detail_parts.append(view_count_text)
 
