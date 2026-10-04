@@ -53,6 +53,8 @@ class CommentsMixin:
             YouTubeResultsView(title=title, fetch_page=fetch_page),
             mode="push",
             error_message=_("Não foi possível carregar os comentários agora."),
+            # Aberta pelo menu ou pelo atalho: sem isto o foco fica no campo de busca.
+            focus_results=True,
         )
 
     def _build_youtube_music_replies_view(self, comment):

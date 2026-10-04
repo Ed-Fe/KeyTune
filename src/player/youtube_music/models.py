@@ -416,6 +416,21 @@ class YouTubeMediaSearchResult:
     in_library: bool = False
     # Veio da biblioteca da conta: Enter abre numa aba própria e ela pode ser excluída.
     library_playlist: bool = False
+    # O canal (YouTube) ou o artista (YouTube Music) de um vídeo ou faixa, para ir até ele.
+    owner_browse_id: str = ""
+    owner_title: str = ""
+
+    def owner_result(self):
+        """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""
+        if not self.owner_browse_id or self.result_type not in ("song", "video"):
+            return None
+        return YouTubeMediaSearchResult(
+            source=self.source,
+            result_type="channel" if self.source == YOUTUBE_SEARCH_SOURCE_YOUTUBE else "artist",
+            title=self.owner_title or self.subtitle,
+            browse_id=self.owner_browse_id,
+            source_badge=self.source_badge,
+        )
 
     @property
     def result_kind_label(self):

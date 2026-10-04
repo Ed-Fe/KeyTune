@@ -144,18 +144,19 @@ class ResultsNavigationMixin:
 
         return YouTubeResultsView(title=container_title(result, section_id), fetch_page=fetch_page)
 
-    def _load_youtube_music_results_view(self, view, *, mode, error_message=None):
+    def _load_youtube_music_results_view(self, view, *, mode, error_message=None, focus_results=False):
         """Carrega a primeira página de *view* e a mostra.
 
         *mode*: ``"reset"`` recomeça a navegação a partir do início (nova busca) e
-        ``"push"`` abre por cima da lista atual.
+        ``"push"`` abre por cima da lista atual. *focus_results* leva o foco à lista
+        quando ela chega, para o que é aberto de fora dela (menu, atalho).
         """
         if error_message is None:
             error_message = _("Não foi possível carregar esta lista agora.")
 
         if view.fetch_page is None:
             # Lista que já vem pronta (continentes, países, a biblioteca em cache).
-            self._install_youtube_music_results_view(view, mode)
+            self._install_youtube_music_results_view(view, mode, focus_results=focus_results)
             return True
 
         def worker():
@@ -165,7 +166,7 @@ class ResultsNavigationMixin:
             view.results = list(page.results)
             view.has_more = bool(page.has_more and page.results)
             view.next_start = YOUTUBE_RESULTS_PAGE_SIZE
-            self._install_youtube_music_results_view(view, mode)
+            self._install_youtube_music_results_view(view, mode, focus_results=focus_results)
 
         def on_error(exc):
             wx.MessageBox(
@@ -180,11 +181,13 @@ class ResultsNavigationMixin:
             self._refresh_youtube_music_screen_later()
         return started
 
-    def _install_youtube_music_results_view(self, view, mode):
+    def _install_youtube_music_results_view(self, view, mode, *, focus_results=False):
         views = self._youtube_music_results_views()
         if mode == "push":
             views[-1].selected_id = self._youtube_music_selected_result_id()
             views.append(view)
+            if focus_results:
+                self._youtube_music_pending_results_focus = bool(view.results)
         else:
             self._reset_youtube_music_results_views(view)
             # Depois de pesquisar, o foco vai do campo de busca para a lista.
@@ -210,7 +213,7 @@ class ResultsNavigationMixin:
         if announce:
             self._announce(results_view_summary(view, with_hint=False))
 
-    def on_browse_youtube_music_search_result(self, result=None):
+    def on_browse_youtube_music_search_result(self, result=None, *, focus_results=False):
         """Abre a pasta, canal, artista, álbum ou playlist selecionado para ver o que há dentro."""
         if result is None:
             result = self._selected_youtube_music_search_result()
@@ -239,6 +242,7 @@ class ResultsNavigationMixin:
             view,
             mode="push",
             error_message=_("Não foi possível abrir este resultado agora."),
+            focus_results=focus_results,
         )
         if started and getattr(result, "kind", "") == FOLDER_LIBRARY:
             # Aberta antes de a biblioteca chegar: a lista se preenche quando ela carregar.

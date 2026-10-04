@@ -6261,3 +6261,9 @@ msgstr "The current media is already liked on YouTube."
 
 msgid "A mídia atual já está marcada como não gostei no YouTube."
 msgstr "The current media is already marked as disliked on YouTube."
+
+msgid "Ir para o canal {name}"
+msgstr "Go to the channel {name}"
+
+msgid "Ir para o artista {name}"
+msgstr "Go to the artist {name}"

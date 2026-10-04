@@ -43,6 +43,7 @@ class SubscriptionsTests(unittest.TestCase):
                 "duration_text": "14:15",
                 "view_count_number_text": "652 mil",
                 "published": "há 2 dias",
+                "channel_id": CHANNEL_ID,
             }
         ]
         with patch.object(subscriptions.youtubejs_runtime, "subscription_videos_page", return_value=(entries, True)) as page_fn:
@@ -54,6 +55,38 @@ class SubscriptionsTests(unittest.TestCase):
         self.assertEqual(video.subtitle, "Canal Um e Canal Dois")
         self.assertEqual(video.detail_text, "14:15 · 652 mil visualizações · há 2 dias")
         self.assertTrue(page.has_more)
+        # Do vídeo dá para ir ao canal dele.
+        owner = video.owner_result()
+        self.assertEqual((owner.result_type, owner.browse_id, owner.title), ("channel", CHANNEL_ID, "Canal Um e Canal Dois"))
+        self.assertTrue(owner.can_browse)
+
+    def test_a_music_track_leads_to_its_first_artist(self):
+        from player.youtube_music.search import normalize_music_search_results
+
+        track, orphan = normalize_music_search_results(
+            [
+                {"resultType": "song", "videoId": "v1", "title": "Faixa", "artists": [{"name": "Ana", "id": "UCana"}, {"name": "Bia", "id": "UCbia"}]},
+                {"resultType": "video", "videoId": "v2", "title": "Vídeo", "artists": [{"name": "Sem página", "id": None}]},
+            ]
+        )
+
+        owner = track.owner_result()
+        self.assertEqual((owner.result_type, owner.browse_id, owner.title), ("artist", "UCana", "Ana"))
+        self.assertIsNone(orphan.owner_result())
+        self.assertIsNone(owner.owner_result())
+
+    def test_opening_from_the_menu_takes_the_focus_to_the_list(self):
+        from player.frames.youtube_music.navigation import ResultsNavigationMixin, YouTubeResultsView
+
+        frame = ResultsNavigationMixin()
+        frame._youtube_music_selected_result_id = Mock(return_value="")
+        frame._show_youtube_music_results_view = Mock()
+
+        frame._install_youtube_music_results_view(YouTubeResultsView(title="A", results=[object()]), "push")
+        self.assertFalse(getattr(frame, "_youtube_music_pending_results_focus", False))
+
+        frame._install_youtube_music_results_view(YouTubeResultsView(title="B", results=[object()]), "push", focus_results=True)
+        self.assertTrue(frame._youtube_music_pending_results_focus)
 
     def test_the_subscribed_channels_open_like_any_channel(self):
         entries = [

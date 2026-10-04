@@ -9,6 +9,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
+- **Ir para o canal ou artista**: num vídeo ou numa faixa da aba do YouTube Music (busca, vídeos das inscrições, em alta...), o menu **Ações...** ganhou **Ir para o canal** (YouTube) ou **Ir para o artista** (YouTube Music).
 - **Inscrições do YouTube**: o **Início** da aba do YouTube Music ganhou **Vídeos das inscrições** (os vídeos novos dos canais que você segue) e **Canais inscritos**. Usam a conta já conectada e o YouTube.js; são só para leitura.
 - **Idioma do áudio em vídeos dublados**: **Reprodução > Idioma do áudio da mídia atual...** lista a faixa original e as dublagens do vídeo do YouTube que está tocando e troca na hora, do mesmo ponto. Em **Preferências > Recursos adicionais**, **Idioma de áudio dos vídeos dublados** define o padrão: o que o YouTube entregar, o original do vídeo ou um idioma.
 - **Comentários de vídeos e músicas**: **Ver comentários**, no menu **Ações...** da aba do YouTube Music, e **Reprodução > Ver comentários da mídia atual** (`Ctrl+Shift+M`) abrem os comentários na lista da aba. `Enter` lê o comentário inteiro, `Seta para a direita` abre as respostas e descer além do fim carrega mais. Com o YouTube.js ativado vêm paginados e com respostas; só com o yt-dlp, os 20 primeiros, sem respostas.
@@ -46,6 +47,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Corrigido
 
+- **Fechar a aba do YouTube Music quando ela é a única**: em vez de recusar ("Não é possível fechar a última aba"), a aba fecha e dá lugar a uma playlist vazia.
 - **Copiar e colar entre listas**: arquivos copiados com `Ctrl+C` não eram reconhecidos por `Ctrl+V`, que só lia texto e respondia que a área de transferência estava vazia.
 
 ## [2.0.6] - 2026-09-21

@@ -212,6 +212,23 @@ function findBadgeText(node, depth = 0) {
   return "";
 }
 
+// O canal de um vídeo do feed vem só dentro dos comandos de toque do cartão.
+function findChannelId(node, depth = 0) {
+  if (typeof node === "string") {
+    return /^UC[\w-]{22}$/.test(node) ? node : "";
+  }
+  if (!node || typeof node !== "object" || depth > 12) {
+    return "";
+  }
+  for (const value of Array.isArray(node) ? node : Object.values(node)) {
+    const channelId = findChannelId(value, depth + 1);
+    if (channelId) {
+      return channelId;
+    }
+  }
+  return "";
+}
+
 function feedVideoEntry(node) {
   if (node.type === "Video") {
     return searchEntry(node);
@@ -230,6 +247,7 @@ function feedVideoEntry(node) {
     id: node.content_id,
     title: textOf(node.metadata?.title),
     channel: parts.slice(0, parts.length - tail).join(" "),
+    channel_id: findChannelId(node.metadata),
     duration_text: findBadgeText(node.content_image),
     view_count_number_text: details.length > 1 ? details[0] : "",
     published: details[details.length - 1] || "",
@@ -289,6 +307,7 @@ function searchEntry(node) {
       id: node.video_id,
       title: textOf(node.title),
       channel: textOf(node.author?.name),
+      channel_id: /^UC[\w-]{22}$/.test(node.author?.id || "") ? node.author.id : "",
       duration: Number(node.duration?.seconds) || 0,
       view_count_text: textOf(node.short_view_count) || textOf(node.view_count),
       live_status: node.is_live ? "is_live" : "",

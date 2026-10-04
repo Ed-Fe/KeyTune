@@ -3619,6 +3619,14 @@ msgstr ""
 msgid "Início: escolha uma lista, faça uma busca ou cole um link."
 msgstr ""
 
+#: src/player/frames/youtube_music/search.py
+msgid "Ir para o artista {name}"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ir para o canal {name}"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Irlanda"
 msgstr ""
@@ -4963,10 +4971,6 @@ msgstr ""
 #: src/player/download/runner.py
 #: src/player/frames/download.py
 msgid "Não é possível baixar uma transmissão ao vivo."
-msgstr ""
-
-#: src/player/frames/library_tabs/tabs.py
-msgid "Não é possível fechar a última aba."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py

@@ -6261,3 +6261,9 @@ msgstr "El medio actual ya está marcado con me gusta en YouTube."
 
 msgid "A mídia atual já está marcada como não gostei no YouTube."
 msgstr "El medio actual ya está marcado como no me gusta en YouTube."
+
+msgid "Ir para o canal {name}"
+msgstr "Ir al canal {name}"
+
+msgid "Ir para o artista {name}"
+msgstr "Ir al artista {name}"

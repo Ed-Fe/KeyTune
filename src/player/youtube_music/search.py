@@ -135,6 +135,8 @@ def normalize_youtube_entry(entry, *, show_owner=True):
         video_id=video_id,
         playback_url=build_youtube_watch_url(video_id),
         source_badge="YouTube",
+        owner_browse_id=str(entry.get("channel_id") or "").strip() if owner else "",
+        owner_title=owner,
     )
 
 
@@ -203,6 +205,7 @@ def _normalize_music_track_result(item, *, result_type):
         return None
 
     subtitle = _artists_text(item) or str(item.get("artist") or "").strip()
+    first_artist = next((artist for artist in item.get("artists") or [] if isinstance(artist, dict)), {})
     detail_parts = []
     duration_text = str(item.get("duration") or "").strip()
     if duration_text:
@@ -238,6 +241,8 @@ def _normalize_music_track_result(item, *, result_type):
         feedback_remove_token=feedback_remove_token,
         like_status=str(item.get("likeStatus") or "").strip(),
         in_library=bool(item.get("inLibrary")) or bool(feedback_remove_token and not feedback_add_token),
+        owner_browse_id=str(first_artist.get("id") or "").strip(),
+        owner_title=str(first_artist.get("name") or "").strip(),
     )
 
 

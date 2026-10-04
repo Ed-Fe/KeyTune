@@ -431,8 +431,10 @@ class TabManagementMixin:
                 self._announce(_("Aba fechada: {title}. Nova playlist vazia criada.").format(title=current_state.title))
                 return True
 
-            self._announce(_("Não é possível fechar a última aba."))
-            return False
+            # Uma tela (YouTube Music, equalizador...) ficou sozinha: ela dá lugar a
+            # uma playlist vazia, criada antes para a janela nunca ficar sem aba.
+            self._create_empty_playlist_tab(select=False)
+            total_tabs = self.notebook.GetPageCount()
 
         if isinstance(current_state, ScreenTabState):
             self._capture_active_playlist_state()
