@@ -12,7 +12,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Player rápido**: `Enter` num arquivo de áudio no Explorador de Arquivos abre uma janela pequena que toca na hora, sem carregar abas, playlists nem a sessão anterior.
   - `Enter` em outro arquivo troca o que está tocando, na mesma janela. `Esc` fecha.
   - As teclas e os anúncios são os mesmos da janela principal.
-  - `Ctrl+Enter` continua no KeyTune completo, com a mídia numa playlist nova. O som não para na passagem.
+  - `Ctrl+Enter` continua no KeyTune completo, com a mídia numa playlist nova.
   - Ele não grava recentes, histórico nem sessão.
 - **`Enter` no player**: com o foco no player, toca a playlist da aba à vista, de onde ela tinha parado.
 
