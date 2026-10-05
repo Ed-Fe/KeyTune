@@ -9,21 +9,19 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
-- **Player rápido para arquivos abertos pelo Windows**: `Enter` num arquivo de áudio no Explorador de Arquivos agora abre uma janela pequena que toca na hora, sem carregar abas, playlists nem a sessão anterior. `Enter` em outro arquivo troca o que está tocando, e `Esc` ou `Alt+F4` fecham.
-  - As teclas e os anúncios são os mesmos do player da janela principal: `Espaço` pausa, as setas avançam e mudam o volume, `T`, `V` e `S` falam o tempo, o volume e o status.
-  - `Ctrl+Enter` continua no KeyTune completo, com a mídia numa playlist nova. O som não para na passagem.
-  - O player rápido não grava recentes, histórico nem sessão.
+- **Player rápido**: `Enter` num arquivo de áudio no Explorador de Arquivos abre uma janela pequena que toca na hora.
+  - `Enter` em outro arquivo troca o que está tocando.
+  - `Ctrl+Enter` continua no KeyTune completo, sem cortar o som.
+  - Para desligar: `Ctrl+,` > **Geral** > **Usar o player rápido ao abrir arquivos pelo Windows**.
+- **`Enter` no player**: toca a playlist da aba à vista, de onde ela tinha parado.
 
 ### Alterado
 
-- **Anúncios de tempo e volume mais curtos**: `T` e `V` agora falam só o valor, como "1:20 de 3:40. 36%." e "80%.". Antes começavam com "Tempo atual:" e "Volume atual:".
-- **Status (`S`) mais direto**: começa pelo que está tocando e pelo tempo, por exemplo "Música.mp3, tocando. 1:20 de 3:40. 36%. Item 3 de 12. Volume 80%.". Velocidade, tom, aleatório e repetição só são falados quando estão fora do padrão, e a aba só quando não é a da mídia que toca.
-- **Trocar de aba não muda mais o que está tocando**: antes, passar para outra playlist parava a música ou carregava a faixa daquela aba. Agora o que toca continua tocando enquanto você olha as outras abas ou cria uma nova com `Ctrl+T`.
-  - Uma playlist assume a reprodução quando você toca algo nela. `Enter` na faixa em que ela tinha parado retoma daquele ponto.
-  - `Espaço`, as setas, **Próxima**, **Anterior**, aleatório e repetição valem sempre para o que está tocando, seja qual for a aba à vista.
-  - `Enter`, com o foco no player, toca a playlist da aba à vista, de onde ela tinha parado.
-  - O título da janela e o status (`S`) dizem o que está tocando.
-- **Abrir um arquivo pelo Windows com o KeyTune fechado**: antes, o arquivo abria a janela principal, restaurava a sessão e entrava na playlist atual. Agora ele toca no player rápido. Se o KeyTune já está aberto, nada muda: o arquivo vai para a playlist atual. Para voltar ao comportamento antigo, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
+- **Trocar de aba não muda mais o que está tocando**: antes, a música parava ou trocava pela faixa da outra aba.
+  - Uma playlist assume a reprodução quando você toca algo nela.
+  - As teclas de reprodução, aleatório e repetição valem para o que está tocando.
+- **`T` e `V` mais curtos**: falam só o valor, sem "Tempo atual:" e "Volume atual:".
+- **Status (`S`) mais direto**: começa pela mídia e pelo tempo, e só fala velocidade, tom, aleatório e repetição quando estão fora do padrão.
 
 ## [2.1.0] - 2026-10-04
 
