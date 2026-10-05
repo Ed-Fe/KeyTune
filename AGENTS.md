@@ -9,7 +9,7 @@ Runtime instructions for coding agents — every line is loaded into each sessio
 - Syntax check after Python changes: `python -m compileall src`.
 - Tests (backend/services/parsing changes): `python -m unittest discover -s tests`.
 - Windows release build: `scripts/build_windows_release.ps1` (validate via `docs/update-testing.md`).
-- UI has no automated coverage — manually walk the affected keyboard flows, dialogs, playlist behavior, and screen-reader announcements.
+- Screen audit after any dialog/panel/tab change: `uv run python scripts/audit_ui_accessibility.py` (Windows; checks the accessible name of every control and that groups are real; also runs with the tests). Beyond that the UI has no automated coverage — manually walk the affected keyboard flows, dialogs, playlist behavior, and screen-reader announcements.
 - Playback needs the MPV runtime (system or bundled). Windows-only integrations must degrade gracefully when unavailable.
 
 ## Boundaries
@@ -17,6 +17,7 @@ Runtime instructions for coding agents — every line is loaded into each sessio
 **Always**
 - User-facing text (labels, menus, status, screen-reader announcements) in **Portuguese**, wrapped in `_()` (gettext). Portuguese is the source language; see `instructions/i18n.instructions.md`. After changing wrapped strings, run `python scripts/i18n.py extract` then `compile`.
 - Keyboard-first and accessibility-first: preserve existing shortcuts; no mouse-only flows.
+- **Before creating or changing a screen** (dialog, panel, tab, preferences page, group of controls), read `instructions/ui-screens.instructions.md` and build it with the helpers in `src/player/widgets.py` and `reading_dialog.py`. The screen is not done until the audit above passes; register every new `wx.Dialog`/`wx.Panel` class in its `SCREENS`.
 - Route screen-reader work through `src/player/accessibility.py`; keep `accessible-output2` defensive.
 - Keep Windows-only modules (`single_instance.py`, `file_associations.py`, `smtc/service.py`) isolated from cross-platform core.
 - Keep `preferences/` (durable settings) and `session.py` (restorable state) separate.
@@ -48,8 +49,9 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 ## Detailed rules (`.github/`)
 
 - `instructions/player-architecture.instructions.md` — module map, splitting modules, new integrations.
+- `instructions/ui-screens.instructions.md` — **required before building a screen**: labels, groups, help text, layout, where options live, the audit.
 - `instructions/player-ui-a11y.instructions.md` — wxPython UI, dialogs, menus, shortcuts, focus, screen reader.
 - `instructions/i18n.instructions.md` — localization: wrapping strings in `_()`, catalogs under `locale/`, translating the manual/credits/installer.
 - `instructions/update-release.instructions.md` — updater, Windows packaging, release notes, CHANGELOG.
-- `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes.
+- `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes. Commits in English; manual and changelog wording rules in `instructions/writing.instructions.md`.
 - `prompts/accessibility-smoke-test.prompt.md`, `prompts/release-readiness.prompt.md` — verification checklists.

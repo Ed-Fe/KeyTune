@@ -13,19 +13,23 @@ class FrameItemSearchMixin:
     busca sem reabrir a caixa.
     """
 
+    def _item_search_in_explorer(self):
+        explorer_has_focus = getattr(self, "_explorer_has_focus", None)
+        return bool(callable(explorer_has_focus) and explorer_has_focus())
+
     def _item_search_browser(self):
-        browser = self._get_browser_panel()
+        browser = self.explorer_panel if self._item_search_in_explorer() else self._get_browser_panel()
         if browser is None or not browser.has_searchable_items():
             return None
         return browser
 
     def _item_search_context_label(self):
+        if self._item_search_in_explorer():
+            return _("Localiza itens da pasta aberta no explorador.")
+
         state = self._get_playlist_state()
         if state is None:
             return _("Localiza itens da lista ativa.")
-
-        if getattr(state, "is_folder_tab", False):
-            return _("Localiza itens da pasta aberta em {title}.").format(title=state.title)
 
         return _("Localiza itens da playlist {title}.").format(title=state.title)
 

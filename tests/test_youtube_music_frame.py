@@ -243,15 +243,15 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertFalse(frame._youtube_music_library_has_more_playlists())
         self.assertEqual(
             frame._youtube_music_status_message(),
-            "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente.",
+            "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente.",
         )
         self.assertEqual(
             frame.announcements,
-            ["Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."],
+            ["Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."],
         )
         self.assertEqual(
             frame.status_updates,
-            ["Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."],
+            ["Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."],
         )
         self.assertGreaterEqual(frame.menu_refresh_calls, 1)
 
@@ -305,15 +305,15 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertTrue(frame._youtube_music_library_has_more_playlists())
         self.assertEqual(
             frame._youtube_music_status_message(),
-            "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes.",
+            "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes.",
         )
         self.assertEqual(
             frame.announcements,
-            ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
+            ["Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."],
         )
         self.assertEqual(
             frame.status_updates,
-            ["Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."],
+            ["Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."],
         )
 
     def test_missing_youtube_library_explains_that_resources_are_unavailable(self):

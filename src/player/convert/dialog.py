@@ -16,6 +16,7 @@ from .options import (
     AUDIO_TO_VIDEO_FORMATS,
     DEFAULT_AUDIO_BITRATE,
     DEFAULT_AUDIO_FORMAT,
+    DEFAULT_VIDEO_FORMAT,
     DEFAULT_VIDEO_HEIGHT,
     MODE_AUDIO_TO_VIDEO,
     MODE_VIDEO_TO_VIDEO,
@@ -47,13 +48,15 @@ def target_formats_for(mode: str, source_path: str, *, exclude_source: bool = Tr
 
 
 class ConvertDialog(wx.Dialog):
-    def __init__(self, parent, mode, source_path, *, other_directory="", item_count=1):
+    def __init__(self, parent, mode, source_path, *, other_directory="", item_count=1, settings=None):
         super().__init__(
             parent,
             title=_("Converter mídia"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
         self._mode = mode
+        # Preferências com a última escolha de cada opção; sem elas valem os padrões.
+        self._settings = settings
         self._source_path = str(source_path)
         self._item_count = max(1, int(item_count))
         # Numa fila, os arquivos com o mesmo formato do destino são simplesmente pulados.
@@ -102,7 +105,9 @@ class ConvertDialog(wx.Dialog):
                 _("Taxa de bits dos formatos com perdas (MP3, M4A, OGG e Opus). FLAC e WAV não usam esta opção."),
                 [bitrate_label(bitrate) for bitrate in AUDIO_BITRATES],
             )
-            self.bitrate_choice.SetSelection(AUDIO_BITRATES.index(DEFAULT_AUDIO_BITRATE))
+            self.bitrate_choice.SetSelection(
+                self._remembered_index("convert_audio_bitrate", AUDIO_BITRATES, DEFAULT_AUDIO_BITRATE)
+            )
             self.sample_rate_choice = add_choice_row(
                 panel,
                 options_sizer,
@@ -110,7 +115,7 @@ class ConvertDialog(wx.Dialog):
                 _("Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."),
                 [sample_rate_label(rate) for rate in SAMPLE_RATES],
             )
-            self.sample_rate_choice.SetSelection(0)
+            self.sample_rate_choice.SetSelection(self._remembered_index("convert_sample_rate", SAMPLE_RATES, 0))
         elif self._mode == MODE_AUDIO_TO_VIDEO:
             self.height_choice = add_choice_row(
                 panel,
@@ -119,13 +124,15 @@ class ConvertDialog(wx.Dialog):
                 _("Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."),
                 [video_height_label(height) for height in VIDEO_HEIGHTS],
             )
-            self.height_choice.SetSelection(VIDEO_HEIGHTS.index(DEFAULT_VIDEO_HEIGHT))
-            self.cover_checkbox = wx.CheckBox(panel, label=_("Usar a &capa do álbum como imagem, se houver"))
+            self.height_choice.SetSelection(
+                self._remembered_index("convert_video_height", VIDEO_HEIGHTS, DEFAULT_VIDEO_HEIGHT)
+            )
+            self.cover_checkbox = wx.CheckBox(panel, label=_("&Usar a capa do álbum como imagem, se houver"))
             self.cover_checkbox.SetName(_("Usar a capa do álbum como imagem"))
             self.cover_checkbox.SetToolTip(
                 _("Marcado, o vídeo mostra a capa embutida no áudio. Sem capa, ou desmarcado, o fundo é preto.")
             )
-            self.cover_checkbox.SetValue(True)
+            self.cover_checkbox.SetValue(bool(self._remembered("convert_use_cover", True)))
             options_sizer.Add(self.cover_checkbox, 0, wx.ALL | wx.EXPAND, 6)
 
         self.destination_choice = add_choice_row(
@@ -138,7 +145,6 @@ class ConvertDialog(wx.Dialog):
             ),
             [_("Mesma pasta do arquivo original"), _("Outra pasta")],
         )
-        self.destination_choice.SetSelection(0)
         self.directory_ctrl = add_directory_row(
             panel,
             options_sizer,
@@ -148,12 +154,15 @@ class ConvertDialog(wx.Dialog):
             _("Escolher pasta de destino"),
         )
         self.directory_ctrl.SetValue(str(other_directory or "").strip())
+        # «Outra pasta» só volta selecionada se houver uma pasta lembrada para usar.
+        other_folder = not self._remembered("convert_same_folder", True) and bool(self.directory_ctrl.GetValue())
+        self.destination_choice.SetSelection(1 if other_folder else 0)
         self.destination_choice.Bind(wx.EVT_CHOICE, self._on_destination_changed)
 
         root_sizer.Add(options_sizer, 1, wx.LEFT | wx.RIGHT | wx.EXPAND, 4)
 
         button_sizer = wx.StdDialogButtonSizer()
-        self.convert_button = wx.Button(panel, wx.ID_OK, _("&Converter"))
+        self.convert_button = wx.Button(panel, wx.ID_OK, _("Con&verter"))
         self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
         self.convert_button.SetDefault()
         self.convert_button.Bind(wx.EVT_BUTTON, self._on_confirm)
@@ -185,10 +194,41 @@ class ConvertDialog(wx.Dialog):
             "e as demais são recodificadas."
         )
 
+    def _remembered(self, name, fallback):
+        return getattr(self._settings, name, fallback) if self._settings is not None else fallback
+
+    def _remembered_index(self, name, values, fallback):
+        value = self._remembered(name, fallback)
+        return values.index(value if value in values else fallback)
+
+    def _format_setting_name(self):
+        # Cada tipo de conversão lembra o próprio formato de destino.
+        if self._audio_target:
+            return "convert_audio_format"
+        if self._mode == MODE_AUDIO_TO_VIDEO:
+            return "convert_video_format"
+        return "convert_container_format"
+
     def _default_format_index(self):
-        if self._audio_target and DEFAULT_AUDIO_FORMAT in self._target_formats:
-            return self._target_formats.index(DEFAULT_AUDIO_FORMAT)
+        fallback = DEFAULT_AUDIO_FORMAT if self._audio_target else DEFAULT_VIDEO_FORMAT
+        for candidate in (self._remembered(self._format_setting_name(), fallback), fallback):
+            if candidate in self._target_formats:
+                return self._target_formats.index(candidate)
         return 0
+
+    def store_choices(self, settings):
+        """Guarda em *settings* o que foi escolhido, para o próximo diálogo abrir igual."""
+        setattr(settings, self._format_setting_name(), self._selected_format())
+        if self.bitrate_choice is not None:
+            settings.convert_audio_bitrate = AUDIO_BITRATES[self.bitrate_choice.GetSelection()]
+        if self.sample_rate_choice is not None:
+            settings.convert_sample_rate = SAMPLE_RATES[self.sample_rate_choice.GetSelection()]
+        if self.height_choice is not None:
+            settings.convert_video_height = VIDEO_HEIGHTS[self.height_choice.GetSelection()]
+        if self.cover_checkbox is not None:
+            settings.convert_use_cover = self.cover_checkbox.GetValue()
+        settings.convert_same_folder = self.saves_in_same_folder()
+        settings.convert_directory = self.other_directory() or settings.convert_directory
 
     def _selected_format(self):
         return self._target_formats[self.format_choice.GetSelection()]

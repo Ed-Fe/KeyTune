@@ -1,5 +1,5 @@
 from ..constants import DEFAULT_VOLUME
-from ..playlists import PlaylistState
+from ..playlists import TAB_TYPE_FOLDER, PlaylistState
 from ..i18n import _
 from ..session import load_session, save_session
 
@@ -36,11 +36,25 @@ class FrameSessionMixin:
 
         self._reset_playlist_tabs()
 
+        # Sessões antigas guardavam pastas como abas; hoje elas vivem no
+        # explorador, então a última pasta aberta vira o ponto de partida dele.
+        legacy_folder_path = None
+        folder_tab_positions = []
         restored_states = []
-        for payload in playlist_payloads:
+        for position, payload in enumerate(playlist_payloads):
+            if payload.get("tab_type") == TAB_TYPE_FOLDER:
+                legacy_folder_path = payload.get("folder_current_path") or legacy_folder_path
+                folder_tab_positions.append(position)
+                continue
             state = PlaylistState.from_dict(payload)
             state.playback_gain_db = 0.0
             restored_states.append(state)
+
+        restore_explorer_session = getattr(self, "_restore_explorer_session", None)
+        if callable(restore_explorer_session):
+            restore_explorer_session(session_payload.get("explorer"), fallback_folder=legacy_folder_path)
+        if not restored_states:
+            return False
 
         remember_restored_youtube_music_states = getattr(self, "_remember_restored_youtube_music_states", None)
         if callable(remember_restored_youtube_music_states):
@@ -91,6 +105,7 @@ class FrameSessionMixin:
         if not isinstance(selected_tab, int):
             selected_tab = 0
 
+        selected_tab -= sum(1 for position in folder_tab_positions if position < selected_tab)
         selected_tab = max(0, min(selected_tab, len(self.playlists) - 1))
         if selected_tab == self._get_current_tab_index():
             self._activate_tab(selected_tab, announce=False)
@@ -103,7 +118,7 @@ class FrameSessionMixin:
             refresh_autodj_ui(current_state)
         if current_state and current_state.current_media_path:
             self._announce(
-                _("Sessão restaurada com {count} abas. {title}. {position}").format(count=len(self.playlists), title=current_state.title, position=self._describe_playlist_position(current_state))
+                _("Sessão restaurada com {count} abas. {title}.").format(count=len(self.playlists), title=current_state.title)
             )
         else:
             self._announce(_("Sessão restaurada com {count} abas.").format(count=len(self.playlists)))
@@ -137,6 +152,9 @@ class FrameSessionMixin:
             "pitch_semitones": self.current_pitch_semitones,
             "playlists": playlist_states,
         }
+        explorer_session_payload = getattr(self, "_explorer_session_payload", None)
+        if callable(explorer_session_payload):
+            payload["explorer"] = explorer_session_payload()
         radio_recent_for_session = getattr(self, "_youtube_music_radio_recent_for_session", None)
         if callable(radio_recent_for_session):
             payload["youtube_music_radio_recent_video_ids"] = radio_recent_for_session()

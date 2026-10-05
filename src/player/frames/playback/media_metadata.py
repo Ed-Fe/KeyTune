@@ -8,6 +8,7 @@ from ...i18n import _
 
 from ...library import is_remote_media_path
 from ...playlists import PlaylistState
+from ...radio.media import is_radio_media, radio_stream_url
 from ...remote_media_metadata import resolve_remote_media_metadata, resolve_remote_media_playback
 from .helpers import _should_apply_runtime_stream_title, is_youtube_music_media
 
@@ -32,6 +33,11 @@ class MediaMetadataMixin:
         Callers must tolerate a 4-item result (no ``is_live``): only the YouTube
         path can report a live broadcast.
         """
+        if is_radio_media(media_path):
+            # A radio is already a direct stream: nothing to resolve, and it is
+            # always live (no duration, reconnects when the connection drops).
+            return radio_stream_url(media_path), {}, "", "", True
+
         if is_remote_media_path(media_path) and not is_youtube_music_media(media_path):
             resolved_playback = resolve_remote_media_playback(media_path)
             return (
@@ -166,7 +172,7 @@ class MediaMetadataMixin:
         normalized_media_path = str(media_path or "").strip()
         if not normalized_media_path or not is_remote_media_path(normalized_media_path):
             return
-        if is_youtube_music_media(normalized_media_path):
+        if is_youtube_music_media(normalized_media_path) or is_radio_media(normalized_media_path):
             return
 
         self._remote_media_metadata_request_serial += 1
@@ -212,6 +218,15 @@ class MediaMetadataMixin:
             runtime_title = ""
 
         if not runtime_title or runtime_title == getattr(self, "_last_runtime_stream_title", ""):
+            return
+
+        if is_radio_media(media_path):
+            # The playlist keeps the station name; the song it announces goes
+            # to the status bar instead.
+            self._last_runtime_stream_title = runtime_title
+            handle_radio_title = getattr(self, "_handle_radio_stream_title", None)
+            if callable(handle_radio_title):
+                handle_radio_title(media_path, runtime_title)
             return
 
         current_label = self._media_label_from_playlist_state(state, media_path) if state else ""

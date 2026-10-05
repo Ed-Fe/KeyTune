@@ -43,6 +43,8 @@ _PROGRESS_TEMPLATE = (
 _RESULT_TEMPLATE = "after_move:" + RESULT_PREFIX + "%(filepath)s|%(height)s|%(abr)s"
 _ANSI_PATTERN = re.compile(r"\x1b\[[0-9;]*m")
 _ERROR_TAIL_LINES = 12
+# Trecho da mensagem do yt-dlp quando um item é barrado pelo --match-filter.
+_FILTERED_OUT_MARKER = "does not pass filter"
 
 
 class DownloadCancelled(RuntimeError):
@@ -99,6 +101,8 @@ def build_command(
         "--paths", str(output_directory),
         "--output", output_template(file_stem),
         "--force-overwrites",
+        # Uma transmissão ao vivo não termina: numa fila, prenderia os demais itens.
+        "--match-filter", "!is_live",
         "--format", plan.format_selector,
     ]
     if ffmpeg_directory:
@@ -259,6 +263,8 @@ def run_download(
 
     if cancel_token is not None and cancel_token.cancelled:
         raise DownloadCancelled(_("Download cancelado."))
+    if not downloaded_paths and any(_FILTERED_OUT_MARKER in line for line in output_tail):
+        raise RuntimeError(_("Não é possível baixar uma transmissão ao vivo."))
     if return_code != 0 or not downloaded_paths:
         raise RuntimeError(_error_message_from_output(output_tail))
     return DownloadResult(paths=tuple(downloaded_paths), height=downloaded_height)

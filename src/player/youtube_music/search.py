@@ -27,6 +27,10 @@ def normalize_music_search_results(raw_results):
             normalized_result = _normalize_music_playlist_result(item)
         elif result_type in {"song", "video"}:
             normalized_result = _normalize_music_track_result(item, result_type=result_type)
+        elif result_type == "album":
+            normalized_result = normalize_music_album_result(item)
+        elif result_type == "artist":
+            normalized_result = normalize_music_artist_result(item)
         else:
             normalized_result = None
 
@@ -62,36 +66,135 @@ def search_youtube_videos(query, *, limit=15):
 
     results = []
     for entry in (info or {}).get("entries") or []:
-        if not isinstance(entry, dict):
-            continue
+        result = normalize_youtube_entry(entry)
+        if result is not None and result.result_type == "video":
+            results.append(result)
 
-        video_id = str(entry.get("id") or entry.get("url") or "").strip()
-        title = str(entry.get("title") or "").strip()
-        if not video_id or not title:
-            continue
+    return results
 
-        subtitle = str(entry.get("channel") or entry.get("uploader") or "").strip()
-        detail_parts = []
-        duration_text = _format_duration(entry.get("duration"))
-        if duration_text:
-            detail_parts.append(duration_text)
-        view_count_text = _format_view_count(entry.get("view_count"))
-        if view_count_text:
-            detail_parts.append(view_count_text)
 
-        results.append(
-            YouTubeMediaSearchResult(
-                source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
-                result_type="video",
-                title=title,
-                subtitle=subtitle,
-                detail_text=" · ".join(detail_parts),
-                video_id=video_id,
-                playback_url=build_youtube_watch_url(video_id),
-                source_badge="YouTube",
-            )
+def normalize_youtube_entry(entry, *, show_owner=True):
+    """Converte uma entrada da listagem do yt-dlp em vídeo, canal ou playlist do YouTube."""
+    if not isinstance(entry, dict):
+        return None
+
+    entry_id = str(entry.get("id") or "").strip()
+    entry_url = str(entry.get("url") or "").strip()
+    title = str(entry.get("title") or "").strip()
+    if not title or not (entry_id or entry_url):
+        return None
+
+    owner = str(entry.get("channel") or entry.get("uploader") or "").strip() if show_owner else ""
+
+    if "/channel/" in entry_url or (not entry_url and entry_id.startswith("UC")):
+        followers_text = str(entry.get("detail_text") or "").strip() or _format_count(
+            entry.get("channel_follower_count"), _(" inscritos")
+        )
+        return YouTubeMediaSearchResult(
+            source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+            result_type="channel",
+            title=title,
+            detail_text=followers_text,
+            browse_id=str(entry.get("channel_id") or entry_id).strip(),
+            source_badge="YouTube",
         )
 
+    if "list=" in entry_url:
+        return YouTubeMediaSearchResult(
+            source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+            result_type="playlist",
+            title=title,
+            subtitle=owner,
+            playlist_id=entry_id,
+            source_badge="YouTube",
+        )
+
+    video_id = entry_id or entry_url
+    detail_parts = []
+    if str(entry.get("live_status") or "").strip() == "is_live":
+        detail_parts.append(_("ao vivo"))
+    duration_text = str(entry.get("duration_text") or "").strip() or _format_duration(entry.get("duration"))
+    if duration_text:
+        detail_parts.append(duration_text)
+    # O YouTube.js já traz a contagem escrita no idioma do conteúdo.
+    view_count_text = str(entry.get("view_count_text") or "").strip() or _format_view_count(entry.get("view_count"))
+    if not view_count_text and str(entry.get("view_count_number_text") or "").strip():
+        # Só o número, já abreviado ("652 mil"): falta dizer do que ele é.
+        view_count_text = _("{count} visualizações").format(count=str(entry.get("view_count_number_text")).strip())
+    if view_count_text:
+        detail_parts.append(view_count_text)
+    if str(entry.get("published") or "").strip():
+        detail_parts.append(str(entry.get("published")).strip())
+
+    return YouTubeMediaSearchResult(
+        source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+        result_type="video",
+        title=title,
+        subtitle=owner,
+        detail_text=" · ".join(detail_parts),
+        video_id=video_id,
+        playback_url=build_youtube_watch_url(video_id),
+        source_badge="YouTube",
+        owner_browse_id=str(entry.get("channel_id") or "").strip() if owner else "",
+        owner_title=owner,
+    )
+
+
+def normalize_music_album_result(item, *, artist_name=""):
+    """Álbum, single ou EP do YouTube Music; toca pela playlist do álbum."""
+    title = str(item.get("title") or "").strip()
+    playlist_id = str(item.get("playlistId") or item.get("audioPlaylistId") or "").strip()
+    browse_id = str(item.get("browseId") or "").strip()
+    if not title or not (playlist_id or browse_id):
+        return None
+
+    detail_parts = []
+    for value in (item.get("type"), item.get("year")):
+        normalized_value = str(value or "").strip()
+        if normalized_value:
+            detail_parts.append(normalized_value)
+
+    return YouTubeMediaSearchResult(
+        source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+        result_type="album",
+        title=title,
+        subtitle=_artists_text(item) or str(artist_name or "").strip(),
+        detail_text=" · ".join(detail_parts),
+        playlist_id=playlist_id,
+        browse_id=browse_id,
+        source_badge="YouTube Music",
+    )
+
+
+def normalize_music_artist_result(item):
+    name = str(item.get("artist") or item.get("title") or "").strip()
+    browse_id = str(item.get("browseId") or "").strip()
+    if not name or not browse_id:
+        return None
+
+    subscribers = str(item.get("subscribers") or "").strip()
+    return YouTubeMediaSearchResult(
+        source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+        result_type="artist",
+        title=name,
+        detail_text=_("{count} inscritos").format(count=subscribers) if subscribers else "",
+        browse_id=browse_id,
+        source_badge="YouTube Music",
+    )
+
+
+def normalize_music_video_items(raw_items):
+    """Vídeos de um artista: como faixas, mas anunciados como vídeo."""
+    results = []
+    seen_video_ids = set()
+    for item in raw_items or []:
+        if not isinstance(item, dict):
+            continue
+        result = _normalize_music_track_result(item, result_type="video")
+        if result is None or result.video_id in seen_video_ids:
+            continue
+        seen_video_ids.add(result.video_id)
+        results.append(result)
     return results
 
 
@@ -102,6 +205,7 @@ def _normalize_music_track_result(item, *, result_type):
         return None
 
     subtitle = _artists_text(item) or str(item.get("artist") or "").strip()
+    first_artist = next((artist for artist in item.get("artists") or [] if isinstance(artist, dict)), {})
     detail_parts = []
     duration_text = str(item.get("duration") or "").strip()
     if duration_text:
@@ -114,9 +218,11 @@ def _normalize_music_track_result(item, *, result_type):
     if album_name and result_type == "song":
         detail_parts.append(album_name)
 
-    views_text = str(item.get("views") or "").strip()
-    if views_text and result_type == "video":
-        detail_parts.append(views_text)
+    count_text = _localized_short_count(item.get("views"))
+    if count_text:
+        # Faixas contam reproduções; vídeos, visualizações.
+        label = _("{count} reproduções") if result_type == "song" else _("{count} visualizações")
+        detail_parts.append(label.format(count=count_text))
 
     feedback_tokens = item.get("feedbackTokens") or {}
     if not isinstance(feedback_tokens, dict):
@@ -137,6 +243,8 @@ def _normalize_music_track_result(item, *, result_type):
         feedback_remove_token=feedback_remove_token,
         like_status=str(item.get("likeStatus") or "").strip(),
         in_library=bool(item.get("inLibrary")) or bool(feedback_remove_token and not feedback_add_token),
+        owner_browse_id=str(first_artist.get("id") or "").strip(),
+        owner_title=str(first_artist.get("name") or "").strip(),
     )
 
 
@@ -237,15 +345,35 @@ def _format_duration(duration_seconds):
     return f"{minutes}:{seconds:02}"
 
 
+def _localized_short_count(value):
+    """``"1.1M plays"`` ou ``"2B"``, como o YouTube Music conta em inglês, vira ``"1,1 mi de"`` ou ``"2 bi de"``,
+    pronto para receber "reproduções" ou "visualizações" em seguida."""
+    match = re.fullmatch(r"([\d.,]+)\s*([KMB]?)(?:\s+\w+)?", str(value or "").strip())
+    if not match:
+        return ""
+    # A vírgula decimal é traduzida: em inglês volta a ser ponto.
+    number = match.group(1).replace(".", _(","))
+    pattern = {
+        "K": _("{number} mil"),
+        "M": _("{number} mi de"),
+        "B": _("{number} bi de"),
+    }.get(match.group(2), "{number}")
+    return pattern.format(number=number)
+
+
 def _format_view_count(view_count):
+    return _format_count(view_count, _(" visualizações"))
+
+
+def _format_count(value, suffix):
     try:
-        normalized_view_count = int(view_count)
+        normalized_value = int(value)
     except (TypeError, ValueError):
         return ""
 
-    if normalized_view_count <= 0:
+    if normalized_value <= 0:
         return ""
-    return f"{normalized_view_count:,}".replace(",", ".") + _(" visualizações")
+    return f"{normalized_value:,}".replace(",", ".") + suffix
 
 
 def _clean_external_tool_error(error):

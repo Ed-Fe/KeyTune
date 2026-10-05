@@ -7,6 +7,8 @@ from ..accessibility import attach_named_accessible
 from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
+from ..radio.media import is_radio_media
+from ..reading_dialog import show_reading_dialog
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
@@ -113,21 +115,21 @@ class FrameUIMixin:
 
     def _primary_shortcuts_hint_text(self):
         return _(
-            "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · "
+            "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · "
             "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · "
             "Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · "
-            "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
+            "Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
         )
 
     def _player_overlay_hint_text(self):
         return _(
             "Sem mídia carregada\n\n"
-            "Ctrl+Alt+O abre mídia, playlist ou pasta\n"
-            "Ctrl+O abre arquivos ou playlist\n"
-            "Ctrl+Shift+O abre uma pasta no navegador\n"
+            "Ctrl+O abre arquivos ou uma playlist\n"
+            "Ctrl+V cola links, arquivos ou pastas copiados\n"
+            "Ctrl+E abre o explorador de pastas\n"
             "Espaço reproduz ou pausa\n"
             "Tab alterna entre itens e player\n"
-            "Ctrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\n"
+            "Ctrl+Shift+Y abre a central do KeyTube quando a integração opcional estiver ativada\n"
             "F1 mostra a ajuda rápida de atalhos"
         )
 
@@ -153,6 +155,7 @@ class FrameUIMixin:
             not self._live_video_enabled()
             and state is self._get_active_playlist_state()
             and is_live_media(self.player.get_media())
+            and not is_radio_media(state.current_media_path)
         ):
             return self._player_live_audio_only_text()
 
@@ -168,16 +171,17 @@ class FrameUIMixin:
         return _(
             "Ajuda rápida de atalhos\n\n"
             "Arquivos e playlists\n"
-            "Ctrl+Alt+O — Abrir mídia, playlist ou pasta\n"
-            "Ctrl+O — Abrir arquivos de mídia ou uma playlist local\n"
-            "Ctrl+Shift+O — Abrir pasta no navegador\n"
-            "Ctrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\n"
-            "Ctrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\n"
-            "Ctrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\n"
-            "Ctrl+Shift+V — Colar e abrir em uma nova playlist\n"
+            "Ctrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\n"
+            "Ctrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\n"
+            "Ctrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\n"
+            "Ctrl+Shift+V — Colar sem tocar\n"
+            "Ctrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\n"
+            "Ctrl+T — Nova playlist (abra ou cole nela para começar outra lista)\n"
+            "Ctrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\n"
+            "Ctrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
-            "Ctrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\n"
-            "Ctrl+T — Nova playlist\n"
+            "Ctrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\n"
+            "Ctrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\n"
             "Ctrl+W — Fechar aba ou playlist atual\n"
             "Ctrl+Shift+W — Fechar mídia atual\n\n"
             "Reprodução\n"
@@ -200,9 +204,10 @@ class FrameUIMixin:
             "Ctrl+Alt+V — Alternar o vídeo das transmissões ao vivo\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
+            "Ctrl+Shift+M — Ver os comentários da mídia atual\n"
+            "Ctrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\n"
             "Ctrl+Shift+F — Adicionar o item selecionado à fila de reprodução\n"
             "Ctrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\n"
-            "Ctrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\n"
             "Ctrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\n"
             "E — Alternar modo aleatório\n"
             "R — Alternar modo de repetição\n"
@@ -210,10 +215,21 @@ class FrameUIMixin:
             "T — Anunciar tempo\n"
             "V — Anunciar volume\n"
             "S — Anunciar status\n\n"
+            "Explorador de pastas\n"
+            "Enter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\n"
+            "Shift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\n"
+            "Ctrl+Shift+F — Adicionar a seleção à fila de reprodução\n"
+            "Ctrl+Shift+K — Converter a seleção\n"
+            "Backspace — Voltar para a pasta acima\n"
+            "Ctrl+Espaço — Classificar a pasta\n"
+            "F5 — Atualizar a pasta\n"
+            "Shift+F10 — Todas as ações da seleção\n"
+            "Tab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\n"
             "Navegação\n"
-            "Tab — Alternar entre a lista de itens e o player\n"
+            "Tab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\n"
             "Ctrl+B — Alternar foco entre a lista de itens e o player\n"
-            "Ctrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\n"
+            "Ctrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\n"
+            "Ctrl+Shift+N — Abrir as rádios online em uma aba\n"
             "Ctrl+F — Localizar item na playlist ou pasta atual\n"
             "F3 / Shift+F3 — Próximo ou anterior resultado da busca\n"
             "Ctrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\n"
@@ -222,9 +238,8 @@ class FrameUIMixin:
             "Ctrl+Shift+H — Histórico de reprodução\n"
             "Ctrl+Shift+R — Continuar ouvindo o que ficou pela metade\n"
             "Menu Biblioteca > Playlists inteligentes — Abrir uma regra salva\n"
-            "Enter — Tocar ou abrir o item selecionado no navegador\n"
+            "Enter — Tocar o item selecionado\n"
             "Delete — Remover item da playlist\n"
-            "Backspace — Voltar de pasta no navegador\n"
             "Digite letras ou números — Ir rapidamente para itens com esse início\n"
             "Ctrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\n"
             "F1 — Mostrar esta ajuda"
@@ -302,6 +317,10 @@ class FrameUIMixin:
         # flicker during resizes without touching focus or the video output.
         return
 
+    def _show_reading_dialog(self, *, title, label, text, actions=()):
+        """Caixa só de leitura para detalhes de um item; ver ``reading_dialog``."""
+        return show_reading_dialog(self, title=title, label=label, text=text, actions=actions)
+
     def _show_keyboard_help_dialog(self):
         dialog = wx.Dialog(
             self,
@@ -376,37 +395,38 @@ class FrameUIMixin:
         self.menu_new_playlist_id = wx.NewIdRef()
         self.menu_open_file_id = wx.ID_OPEN
         self.menu_open_folder_id = wx.NewIdRef()
-        self.menu_open_source_id = wx.NewIdRef()
         self.menu_youtube_music_login_id = wx.NewIdRef()
         self.menu_youtube_music_disconnect_id = wx.NewIdRef()
         self.menu_youtube_music_refresh_library_id = wx.NewIdRef()
         self.menu_open_youtube_music_id = wx.NewIdRef()
+        self.menu_open_radio_id = wx.NewIdRef()
         self.menu_save_playlist_id = wx.NewIdRef()
         self.menu_close_media_id = wx.NewIdRef()
         self.menu_close_tab_id = wx.NewIdRef()
         self.menu_convert_current_id = wx.NewIdRef()
         self.menu_convert_selection_id = wx.NewIdRef()
-        self.menu_convert_audio_to_video_id = wx.NewIdRef()
-        self.menu_convert_video_to_audio_id = wx.NewIdRef()
-        self.menu_convert_audio_to_audio_id = wx.NewIdRef()
-        self.menu_convert_video_to_video_id = wx.NewIdRef()
+        self.menu_download_media_id = wx.NewIdRef()
+        self.menu_download_selection_id = wx.NewIdRef()
+        self.menu_download_playlist_id = wx.NewIdRef()
+        # Ctrl+Shift+K e Ctrl+Shift+B não pertencem a um item só: agem na seleção
+        # da lista em foco ou, fora de uma lista, na mídia atual.
+        self.menu_convert_shortcut_id = wx.NewIdRef()
+        self.menu_download_shortcut_id = wx.NewIdRef()
         self.menu_copy_current_item_path_id = wx.NewIdRef()
         self.menu_paste_open_from_clipboard_id = wx.NewIdRef()
-        self.menu_paste_open_from_clipboard_new_playlist_id = wx.NewIdRef()
+        self.menu_paste_without_playing_id = wx.NewIdRef()
+        self.menu_add_files_without_playing_id = wx.NewIdRef()
         self.recent_menu = wx.Menu()
         self.recent_files_menu = wx.Menu()
         self.recent_folders_menu = wx.Menu()
         self.recent_playlists_menu = wx.Menu()
-        file_menu.Append(self.menu_open_source_id, _("Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"))
-        file_menu.Append(self.menu_open_file_id, _("Abrir &Arquivos ou Playlist...\tCtrl+O"))
-        file_menu.Append(self.menu_open_folder_id, _("Abrir &Pasta...\tCtrl+Shift+O"))
+        file_menu.Append(self.menu_open_file_id, _("&Abrir...\tCtrl+O"))
+        file_menu.Append(self.menu_add_files_without_playing_id, _("Abrir sem &tocar...\tCtrl+Shift+O"))
+        file_menu.Append(self.menu_open_folder_id, _("&Explorador de Pastas\tCtrl+E"))
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_copy_current_item_path_id, _("&Copiar seleção (Ctrl+C)"))
-        file_menu.Append(self.menu_paste_open_from_clipboard_id, _("Co&lar na playlist atual / abrir... (Ctrl+V)"))
-        file_menu.Append(
-            self.menu_paste_open_from_clipboard_new_playlist_id,
-            _("Colar e abrir em &nova playlist... (Ctrl+Shift+V)"),
-        )
+        file_menu.Append(self.menu_paste_open_from_clipboard_id, _("Co&lar (Ctrl+V)"))
+        file_menu.Append(self.menu_paste_without_playing_id, _("Colar se&m tocar (Ctrl+Shift+V)"))
         file_menu.AppendSeparator()
         self.recent_menu.AppendSubMenu(self.recent_files_menu, _("Arquivos recentes"))
         self.recent_menu.AppendSubMenu(self.recent_folders_menu, _("Pastas recentes"))
@@ -414,15 +434,14 @@ class FrameUIMixin:
         file_menu.AppendSubMenu(self.recent_menu, _("&Recentes"))
         file_menu.AppendSeparator()
         convert_menu = wx.Menu()
-        convert_menu.Append(self.menu_convert_current_id, _("Converter &mídia atual...\tCtrl+Shift+K"))
-        convert_menu.AppendSeparator()
-        convert_menu.Append(self.menu_convert_audio_to_video_id, _("Áudio para &vídeo..."))
-        convert_menu.Append(self.menu_convert_video_to_audio_id, _("Vídeo para &áudio..."))
-        convert_menu.Append(self.menu_convert_audio_to_audio_id, _("Áudio para outro &formato de áudio..."))
-        convert_menu.Append(self.menu_convert_video_to_video_id, _("Vídeo para outro f&ormato de vídeo..."))
-        convert_menu.AppendSeparator()
-        convert_menu.Append(self.menu_convert_selection_id, _("Converter arquivos &selecionados na lista..."))
+        convert_menu.Append(self.menu_convert_current_id, _("Converter &mídia atual... (Ctrl+Shift+K no player)"))
+        convert_menu.Append(self.menu_convert_selection_id, _("Converter &seleção... (Ctrl+Shift+K na lista)"))
         file_menu.AppendSubMenu(convert_menu, _("Con&verter"))
+        download_menu = wx.Menu()
+        download_menu.Append(self.menu_download_media_id, _("Baixar &mídia atual... (Ctrl+Shift+B no player)"))
+        download_menu.Append(self.menu_download_selection_id, _("Baixar &seleção... (Ctrl+Shift+B na lista)"))
+        download_menu.Append(self.menu_download_playlist_id, _("Baixar &playlist inteira..."))
+        file_menu.AppendSubMenu(download_menu, _("&Baixar do YouTube"))
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_save_playlist_id, _("Salvar Playli&st\tCtrl+Shift+S"))
         file_menu.Append(self.menu_close_media_id, _("Fechar Mí&dia\tCtrl+Shift+W"))
@@ -437,11 +456,11 @@ class FrameUIMixin:
         self.menu_next_track_id = wx.NewIdRef()
         self.menu_start_radio_id = wx.NewIdRef()
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
+        self.menu_show_media_comments_id = wx.NewIdRef()
+        self.menu_show_media_details_id = wx.NewIdRef()
+        self.menu_choose_audio_track_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
-        self.menu_download_media_id = wx.NewIdRef()
-        self.menu_download_selection_id = wx.NewIdRef()
-        self.menu_download_playlist_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
         self.menu_toggle_shuffle_id = wx.NewIdRef()
         self.menu_cycle_repeat_id = wx.NewIdRef()
@@ -471,11 +490,11 @@ class FrameUIMixin:
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_start_radio_id, _("Iniciar &rádio desta faixa\tCtrl+R"))
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
+        playback_menu.Append(self.menu_show_media_comments_id, _("Ver &comentários da mídia atual\tCtrl+Shift+M"))
+        playback_menu.Append(self.menu_show_media_details_id, _("Ver &detalhes da mídia atual\tCtrl+Shift+I"))
+        playback_menu.Append(self.menu_choose_audio_track_id, _("&Idioma do áudio da mídia atual..."))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
-        playback_menu.Append(self.menu_download_media_id, _("&Baixar mídia atual...\tCtrl+Shift+B"))
-        playback_menu.Append(self.menu_download_selection_id, _("Baixar &seleção da lista..."))
-        playback_menu.Append(self.menu_download_playlist_id, _("Baixar playlist &inteira..."))
         playback_menu.AppendSeparator()
         playback_menu.Append(self.menu_toggle_shuffle_id, _("Em&baralhar (E)"))
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
@@ -502,7 +521,8 @@ class FrameUIMixin:
         self.menu_playlist_browser_id = wx.NewIdRef()
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
-        view_menu.Append(self.menu_open_youtube_music_id, _("YouTube &Music por aba\tCtrl+Shift+Y"))
+        view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
+        view_menu.Append(self.menu_open_radio_id, _("&Rádios online por aba\tCtrl+Shift+N"))
         view_menu.AppendSeparator()
         self.menu_find_item_id = wx.NewIdRef()
         self.menu_find_next_item_id = wx.NewIdRef()
@@ -649,6 +669,8 @@ class FrameUIMixin:
         panel = wx.Panel(self)
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # Criado antes das abas para vir primeiro na ordem de leitura da janela.
+        explorer_panel = self._create_explorer_panel(panel)
         self.notebook = wx.Notebook(panel)
         self.progress_panel = wx.Panel(panel)
         self.progress_label = wx.StaticText(self.progress_panel, label=_("Tempo: nenhuma mídia carregada."))
@@ -704,7 +726,10 @@ class FrameUIMixin:
             value_provider=lambda: self.shortcuts_hint_label.GetLabel(),
         )
 
-        root_sizer.Add(self.notebook, 1, wx.EXPAND)
+        content_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        content_sizer.Add(explorer_panel, 0, wx.EXPAND | wx.ALL, 4)
+        content_sizer.Add(self.notebook, 1, wx.EXPAND)
+        root_sizer.Add(content_sizer, 1, wx.EXPAND)
         root_sizer.Add(self.progress_panel, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 4)
         panel.SetSizer(root_sizer)
 
@@ -737,13 +762,13 @@ class FrameUIMixin:
         accelerators = wx.AcceleratorTable(
             [
                 (wx.ACCEL_CTRL, ord("O"), self.menu_open_file_id),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("O"), int(self.menu_open_folder_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_ALT, ord("O"), int(self.menu_open_source_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("O"), int(self.menu_add_files_without_playing_id)),
+                (wx.ACCEL_CTRL, ord("E"), int(self.menu_open_folder_id)),
                 (wx.ACCEL_ALT, ord("D"), int(self.menu_cycle_audio_output_device_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("F"), int(self.menu_enqueue_item_id)),
                 (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("Q"), int(self.menu_manage_queue_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("B"), int(self.menu_download_media_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("K"), int(self.menu_convert_current_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("B"), int(self.menu_download_shortcut_id)),
+                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("K"), int(self.menu_convert_shortcut_id)),
             ]
         )
         self.SetAcceleratorTable(accelerators)
@@ -751,18 +776,15 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_new_playlist, id=self.menu_new_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_open, id=self.menu_open_file_id)
         self.Bind(wx.EVT_MENU, self.on_open_folder, id=self.menu_open_folder_id)
-        self.Bind(wx.EVT_MENU, self.on_open_source, id=self.menu_open_source_id)
         self.Bind(wx.EVT_MENU, self.on_copy_current_item, id=self.menu_copy_current_item_path_id)
         self.Bind(wx.EVT_MENU, self.on_paste_open_from_clipboard, id=self.menu_paste_open_from_clipboard_id)
-        self.Bind(
-            wx.EVT_MENU,
-            self.on_paste_open_from_clipboard_new_playlist,
-            id=self.menu_paste_open_from_clipboard_new_playlist_id,
-        )
+        self.Bind(wx.EVT_MENU, self.on_paste_without_playing, id=self.menu_paste_without_playing_id)
+        self.Bind(wx.EVT_MENU, self.on_add_files_without_playing, id=self.menu_add_files_without_playing_id)
         self.Bind(wx.EVT_MENU, self.on_connect_youtube_music, id=self.menu_youtube_music_login_id)
         self.Bind(wx.EVT_MENU, self.on_disconnect_youtube_music, id=self.menu_youtube_music_disconnect_id)
         self.Bind(wx.EVT_MENU, self.on_refresh_youtube_music_library, id=self.menu_youtube_music_refresh_library_id)
         self.Bind(wx.EVT_MENU, self.on_open_youtube_music, id=self.menu_open_youtube_music_id)
+        self.Bind(wx.EVT_MENU, self.on_open_radio, id=self.menu_open_radio_id)
         self.Bind(wx.EVT_MENU, self.on_save_playlist, id=self.menu_save_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_previous_track, id=self.menu_previous_track_id)
         self.Bind(wx.EVT_MENU, self.on_play_pause, id=self.menu_play_pause_id)
@@ -770,17 +792,18 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_next_track, id=self.menu_next_track_id)
         self.Bind(wx.EVT_MENU, self.on_start_radio_from_current, id=self.menu_start_radio_id)
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_comments, id=self.menu_show_media_comments_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_details, id=self.menu_show_media_details_id)
+        self.Bind(wx.EVT_MENU, self.on_choose_audio_track, id=self.menu_choose_audio_track_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
         self.Bind(wx.EVT_MENU, self.on_download_current_media, id=self.menu_download_media_id)
-        self.Bind(wx.EVT_MENU, self.on_download_selection, id=self.menu_download_selection_id)
+        self.Bind(wx.EVT_MENU, self.on_download_focused_selection, id=self.menu_download_selection_id)
         self.Bind(wx.EVT_MENU, self.on_download_playlist, id=self.menu_download_playlist_id)
-        self.Bind(wx.EVT_MENU, self.on_convert_selection, id=self.menu_convert_selection_id)
+        self.Bind(wx.EVT_MENU, self.on_download_shortcut, id=self.menu_download_shortcut_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_focused_selection, id=self.menu_convert_selection_id)
         self.Bind(wx.EVT_MENU, self.on_convert_current_media, id=self.menu_convert_current_id)
-        self.Bind(wx.EVT_MENU, self.on_convert_audio_to_video, id=self.menu_convert_audio_to_video_id)
-        self.Bind(wx.EVT_MENU, self.on_convert_video_to_audio, id=self.menu_convert_video_to_audio_id)
-        self.Bind(wx.EVT_MENU, self.on_convert_audio_to_audio, id=self.menu_convert_audio_to_audio_id)
-        self.Bind(wx.EVT_MENU, self.on_convert_video_to_video, id=self.menu_convert_video_to_video_id)
+        self.Bind(wx.EVT_MENU, self.on_convert_shortcut, id=self.menu_convert_shortcut_id)
         self.Bind(wx.EVT_MENU, self.on_open_equalizer, id=self.menu_open_equalizer_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_shuffle, id=self.menu_toggle_shuffle_id)
         self.Bind(wx.EVT_MENU, self.on_cycle_repeat_mode, id=self.menu_cycle_repeat_id)
@@ -860,8 +883,6 @@ class FrameUIMixin:
             page,
             on_activate_item=self.on_playlist_browser_activate_item,
             on_remove_item=self.on_playlist_browser_remove_item,
-            on_preview_item=self.on_playlist_browser_preview_item,
-            on_go_back=self.on_playlist_browser_go_back,
             on_toggle_navigation_mode=self.on_toggle_playlist_browser,
             on_tab=self.on_playlist_browser_tab,
             on_show_context_menu=self.on_playlist_browser_show_context_menu,
@@ -928,6 +949,15 @@ class FrameUIMixin:
 
     def on_add_to_youtube_playlist(self, _event):
         self._add_current_media_to_youtube_playlist()
+
+    def on_show_media_comments(self, _event):
+        self.show_current_media_comments()
+
+    def on_show_media_details(self, _event):
+        self.show_current_media_details()
+
+    def on_choose_audio_track(self, _event):
+        self.choose_current_media_audio_track()
 
     def on_enqueue_item(self, _event):
         self._enqueue_selected_item()

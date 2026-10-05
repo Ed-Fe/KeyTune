@@ -1,5 +1,5 @@
 import { Innertube, UniversalCache } from "youtubei.js";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 
@@ -135,10 +135,395 @@ function videoIdFrom(value) {
   return url.searchParams.get("v") || "";
 }
 
-const innertubePromise = Innertube.create({
-  cache: new UniversalCache(true, process.argv[2]),
-  generate_session_locally: true,
-});
+const MAX_CLIENTS = 3;
+const MAX_LISTINGS = 12;
+const clients = new Map();
+const listings = new Map();
+
+// Um cliente anônimo por idioma e região. A reprodução usa sempre o padrão
+// (sem idioma nem região), para não mudar com as preferências de conteúdo.
+function clientFor(request = {}) {
+  const lang = String(request.lang || "").trim() || "en";
+  const location = String(request.location || "").trim().toUpperCase();
+  const key = `${lang}|${location}`;
+  if (!clients.has(key)) {
+    if (clients.size >= MAX_CLIENTS) {
+      clients.delete(clients.keys().next().value);
+    }
+    const options = {
+      cache: new UniversalCache(true, process.argv[2]),
+      // A reprodução gera a sessão aqui, como sempre fez; as listas pedem a sessão ao YouTube.
+      generate_session_locally: !request.lang,
+      lang,
+    };
+    if (location) {
+      options.location = location;
+    }
+    const client = Innertube.create(options);
+    client.catch(() => clients.delete(key));
+    clients.set(key, client);
+  }
+  return clients.get(key);
+}
+clientFor();
+
+// O cliente da conta: os mesmos cookies do YouTube Music. Fica separado dos anônimos
+// porque, com os cookies, o YouTube recusa a reprodução pelos clientes que o KeyTune usa.
+let accountClient = { key: "", client: null };
+
+function accountKey(request) {
+  const cookie = String(request.cookie || "").trim();
+  if (!cookie) {
+    throw new Error("A conta do YouTube não está conectada.");
+  }
+  return [createHash("sha256").update(cookie).digest("hex"), request.lang, request.location].join("|");
+}
+
+function accountClientFor(request) {
+  const key = accountKey(request);
+  if (accountClient.key !== key) {
+    const options = { cookie: String(request.cookie).trim(), lang: String(request.lang || "").trim() || "en" };
+    const location = String(request.location || "").trim().toUpperCase();
+    if (location) {
+      options.location = location;
+    }
+    const client = Innertube.create(options);
+    client.catch(() => {
+      accountClient = { key: "", client: null };
+    });
+    accountClient = { key, client };
+  }
+  return accountClient.client;
+}
+
+function findBadgeText(node, depth = 0) {
+  if (!node || typeof node !== "object" || depth > 6) {
+    return "";
+  }
+  if (node.type === "ThumbnailBadgeView") {
+    return textOf(node.text);
+  }
+  for (const value of Array.isArray(node) ? node : Object.values(node)) {
+    const text = findBadgeText(value, depth + 1);
+    if (text) {
+      return text;
+    }
+  }
+  return "";
+}
+
+// O canal de um vídeo do feed vem só dentro dos comandos de toque do cartão.
+function findChannelId(node, depth = 0) {
+  if (typeof node === "string") {
+    return /^UC[\w-]{22}$/.test(node) ? node : "";
+  }
+  if (!node || typeof node !== "object" || depth > 12) {
+    return "";
+  }
+  for (const value of Array.isArray(node) ? node : Object.values(node)) {
+    const channelId = findChannelId(value, depth + 1);
+    if (channelId) {
+      return channelId;
+    }
+  }
+  return "";
+}
+
+function feedVideoEntry(node) {
+  if (node.type === "Video") {
+    return searchEntry(node);
+  }
+  if (node.type !== "LockupView" || node.content_type !== "VIDEO") {
+    return null;
+  }
+  const parts = (node.metadata?.metadata?.metadata_rows || []).flatMap((row) =>
+    (row.metadata_parts || []).map((part) => textOf(part.text)),
+  );
+  // A linha de baixo traz o canal (ou os canais), depois as visualizações e a data;
+  // a duração vem no selo da miniatura.
+  const tail = parts.length >= 3 ? 2 : Math.max(0, parts.length - 1);
+  const details = parts.slice(parts.length - tail);
+  return {
+    id: node.content_id,
+    title: textOf(node.metadata?.title),
+    channel: parts.slice(0, parts.length - tail).join(" "),
+    channel_id: findChannelId(node.metadata),
+    duration_text: findBadgeText(node.content_image),
+    view_count_number_text: details.length > 1 ? details[0] : "",
+    published: details[details.length - 1] || "",
+  };
+}
+
+async function accountListing(request, name, fetchFeed, nodesOf, toEntry) {
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify([name, accountKey(request)]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    listing = { entries: [], seen: new Set(), feed: await fetchFeed(await accountClientFor(request)) };
+    collectEntries(listing, nodesOf(listing.feed), toEntry);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, nodesOf(listing.feed), toEntry);
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
+
+function subscriptionVideos(request) {
+  return accountListing(request, "subscription_videos", (innertube) => innertube.getSubscriptionsFeed(), (feed) => feed.videos, feedVideoEntry);
+}
+
+function subscribedChannels(request) {
+  return accountListing(request, "subscribed_channels", (innertube) => innertube.getChannelsFeed(), (feed) => feed.channels, searchEntry);
+}
+
+function rememberListing(key, listing) {
+  listings.delete(key);
+  listings.set(key, listing);
+  if (listings.size > MAX_LISTINGS) {
+    listings.delete(listings.keys().next().value);
+  }
+  return listing;
+}
+
+function pageBounds(request) {
+  return {
+    start: Math.max(0, Number(request.start) || 0),
+    count: Math.max(1, Number(request.count) || 20),
+  };
+}
+
+function textOf(value) {
+  return value ? String(value.toString() || "").trim() : "";
+}
+
+const SEARCH_TYPES = { videos: "video", channels: "channel", playlists: "playlist" };
+
+// As entradas saem no formato da listagem do yt-dlp, para o KeyTune tratar as duas fontes igual.
+function searchEntry(node) {
+  if (node.type === "Video") {
+    return {
+      id: node.video_id,
+      title: textOf(node.title),
+      channel: textOf(node.author?.name),
+      channel_id: /^UC[\w-]{22}$/.test(node.author?.id || "") ? node.author.id : "",
+      duration: Number(node.duration?.seconds) || 0,
+      view_count_text: textOf(node.short_view_count) || textOf(node.view_count),
+      published: textOf(node.published),
+      live_status: node.is_live ? "is_live" : "",
+    };
+  }
+  if (node.type === "Channel") {
+    // O YouTube pôs o @ do canal onde ficavam os inscritos; os inscritos vêm no outro campo.
+    const counts = [textOf(node.subscriber_count), textOf(node.video_count)];
+    return {
+      id: node.id,
+      title: textOf(node.author?.name),
+      url: `https://www.youtube.com/channel/${node.id}`,
+      channel_id: node.id,
+      detail_text: counts.find((text) => text && !text.startsWith("@")) || "",
+    };
+  }
+  if (node.type === "LockupView" && ["PLAYLIST", "SHOW", "PODCAST"].includes(node.content_type)) {
+    const owner = node.metadata?.metadata?.metadata_rows?.[0]?.metadata_parts?.[0]?.text;
+    return {
+      id: node.content_id,
+      title: textOf(node.metadata?.title),
+      url: `https://www.youtube.com/playlist?list=${node.content_id}`,
+      channel: textOf(owner),
+    };
+  }
+  return null;
+}
+
+function collectEntries(listing, nodes, toEntry) {
+  for (const node of nodes || []) {
+    const entry = toEntry(node);
+    if (entry?.id && entry.title && !listing.seen.has(entry.id)) {
+      listing.seen.add(entry.id);
+      listing.entries.push(entry);
+    }
+  }
+}
+
+function listingPage(listing, start, count, hasContinuation) {
+  return {
+    entries: listing.entries.slice(start, start + count),
+    has_more: listing.entries.length > start + count || Boolean(hasContinuation),
+  };
+}
+
+async function search(request) {
+  const query = String(request.query || "").trim();
+  const type = SEARCH_TYPES[request.kind] || SEARCH_TYPES.videos;
+  const { start, count } = pageBounds(request);
+  if (!query) {
+    return { entries: [], has_more: false };
+  }
+
+  const key = JSON.stringify(["search", request.lang, request.location, type, query]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const innertube = await clientFor(request);
+    listing = { entries: [], seen: new Set(), feed: await innertube.search(query, { type }) };
+    collectEntries(listing, listing.feed.results, searchEntry);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, listing.feed.results, searchEntry);
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
+
+function commentEntry(thread, listing) {
+  const comment = thread.comment || thread;
+  if (!comment?.comment_id) {
+    return null;
+  }
+  listing.threads?.set(comment.comment_id, thread);
+  return {
+    id: comment.comment_id,
+    author: textOf(comment.author?.name),
+    text: textOf(comment.content),
+    likes: textOf(comment.like_count),
+    published: textOf(comment.published_time),
+    reply_count: textOf(comment.reply_count),
+    // Só os comentários principais guardam a conversa de onde saem as respostas.
+    has_replies: Boolean(listing.threads && thread.has_replies),
+    pinned: Boolean(comment.is_pinned),
+    title: "-",
+  };
+}
+
+async function comments(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify(["comments", request.lang, request.location, videoId]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const innertube = await clientFor(request);
+    listing = { entries: [], seen: new Set(), threads: new Map(), feed: null };
+    try {
+      listing.feed = await innertube.getComments(videoId);
+    } catch (error) {
+      // É assim que a biblioteca avisa que o vídeo está com os comentários desativados.
+      if (!String(error?.message).includes("did not have any content")) {
+        throw error;
+      }
+    }
+    collectEntries(listing, listing.feed?.contents, (thread) => commentEntry(thread, listing));
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
+    listing.feed = await listing.feed.getContinuation();
+    collectEntries(listing, listing.feed.contents, (thread) => commentEntry(thread, listing));
+  }
+  return listingPage(listing, start, count, listing.feed?.has_continuation);
+}
+
+async function commentReplies(request) {
+  const videoId = videoIdFrom(request.media_url);
+  const commentId = String(request.comment_id || "");
+  const { start, count } = pageBounds(request);
+  const key = JSON.stringify(["replies", request.lang, request.location, videoId, commentId]);
+  let listing = listings.get(key);
+  if (!listing || start === 0) {
+    const parent = listings.get(JSON.stringify(["comments", request.lang, request.location, videoId]));
+    const thread = parent?.threads.get(commentId);
+    if (!thread) {
+      throw new Error("Os comentários deste vídeo precisam ser abertos de novo.");
+    }
+    listing = { entries: [], seen: new Set(), innertube: await clientFor(request), next: null };
+    // O YouTube manda as respostas em dois formatos, conforme a sessão; os dois chegam aqui.
+    const replyData = thread.comment_replies_data;
+    takeReplyNodes(listing, [...(replyData?.sub_threads || []), ...(replyData?.contents || [])]);
+  }
+  rememberListing(key, listing);
+  while (listing.entries.length < start + count && listing.next) {
+    const endpoint = listing.next.button?.endpoint || listing.next.endpoint;
+    listing.next = null;
+    const response = await endpoint.call(listing.innertube.actions, { parse: true });
+    for (const action of response.on_response_received_endpoints || []) {
+      takeReplyNodes(listing, [...(action.contents || [])]);
+    }
+  }
+  return listingPage(listing, start, count, listing.next);
+}
+
+function takeReplyNodes(listing, nodes) {
+  collectEntries(listing, nodes.filter((node) => node.type !== "ContinuationItem"), (reply) => commentEntry(reply, listing));
+  listing.next = nodes.find((node) => node.type === "ContinuationItem") || listing.next;
+}
+
+async function audioTrackFormats(innertube, videoId) {
+  const info = await innertube.getBasicInfo(videoId, { client: "IOS" });
+  const formats = new Map();
+  for (const format of info.streaming_data?.adaptive_formats || []) {
+    if (format.has_audio && !format.has_video && format.audio_track?.id && !formats.has(format.audio_track.id)) {
+      formats.set(format.audio_track.id, format);
+    }
+  }
+  return formats;
+}
+
+// As faixas de áudio de um vídeo dublado. O YouTube.js só as lista: a URL que ele
+// consegue para uma faixa que não é a padrão para de responder depois do começo.
+async function audioTracks(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  // O que é "padrão" vale para o cliente que toca; os nomes vêm no idioma do conteúdo.
+  const [formats, named] = await Promise.all([
+    audioTrackFormats(await clientFor(), videoId),
+    request.names
+      ? clientFor(request).then((innertube) => audioTrackFormats(innertube, videoId)).catch(() => new Map())
+      : new Map(),
+  ]);
+  return {
+    tracks: [...formats.values()].map((format) => ({
+      id: format.audio_track.id,
+      name: named.get(format.audio_track.id)?.audio_track.display_name || format.audio_track.display_name || "",
+      language: format.language || "",
+      default: Boolean(format.audio_track.audio_is_default),
+      original: Boolean(format.is_original),
+      descriptive: Boolean(format.is_descriptive),
+    })),
+  };
+}
+
+// Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data.
+async function details(request) {
+  const videoId = videoIdFrom(request.media_url);
+  if (!videoId) {
+    throw new Error("URL do YouTube sem identificador de vídeo.");
+  }
+  const innertube = await clientFor(request);
+  const info = await innertube.getInfo(videoId);
+  const basic = info.basic_info || {};
+  const primary = info.primary_info;
+  const owner = info.secondary_info?.owner;
+  return {
+    title: basic.title || textOf(primary?.title),
+    channel: basic.author || textOf(owner?.author?.name) || basic.channel?.name || "",
+    channel_id: basic.channel_id || basic.channel?.id || owner?.author?.id || "",
+    subscribers: textOf(owner?.subscriber_count),
+    description: basic.short_description || textOf(info.secondary_info?.description),
+    duration: Number(basic.duration) || 0,
+    is_live: Boolean(basic.is_live),
+    view_count: Number(basic.view_count) || 0,
+    view_count_text: textOf(primary?.view_count?.view_count) || textOf(primary?.view_count?.original_view_count),
+    like_count: Number(basic.like_count) || 0,
+    published: textOf(primary?.published),
+    relative_date: textOf(primary?.relative_date),
+    category: basic.category || "",
+  };
+}
 
 async function resolve(request) {
   const videoId = videoIdFrom(request.media_url);
@@ -146,7 +531,7 @@ async function resolve(request) {
     throw new Error("URL do YouTube sem identificador de vídeo.");
   }
 
-  const innertube = await innertubePromise;
+  const innertube = await clientFor();
   let info;
   let format;
   let streamUrl = "";
@@ -199,10 +584,26 @@ async function resolve(request) {
   };
 }
 
+const HANDLERS = {
+  resolve,
+  search,
+  comments,
+  comment_replies: commentReplies,
+  audio_tracks: audioTracks,
+  details,
+  subscription_videos: subscriptionVideos,
+  subscribed_channels: subscribedChannels,
+};
+
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of input) {
   try {
-    const response = await resolve(JSON.parse(line));
+    const request = JSON.parse(line);
+    const handler = HANDLERS[request.action || "resolve"];
+    if (!handler) {
+      throw new Error(`Ação desconhecida: ${request.action}`);
+    }
+    const response = await handler(request);
     process.stdout.write(RESULT_PREFIX + JSON.stringify(response) + "\n");
   } catch (error) {
     process.stdout.write(RESULT_PREFIX + JSON.stringify({

@@ -78,6 +78,11 @@ class _Frame(FrameConvertMixin):
         self.statuses.append(message)
 
 
+def _run_inline(_owner, work, on_done):
+    on_done(work())
+
+
+@patch("player.frames.convert.run_in_background", _run_inline)
 class SelectionFlowTests(unittest.TestCase):
     def setUp(self):
         self._temp = tempfile.TemporaryDirectory()

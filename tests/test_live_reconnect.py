@@ -305,7 +305,7 @@ class LiveStartSuccessTests(unittest.TestCase):
 
         frame.run(is_live=True)
 
-        self.assertEqual(frame._announce.call_args.args[0], "Transmissão ao vivo. Item 1 de 1.")
+        self.assertEqual(frame._announce.call_args.args[0], "Transmissão ao vivo.")
         self.assertEqual(frame._set_status_message.call_args.args[0], "Ao vivo: Jornal")
 
     def test_a_live_start_clears_the_watched_time_baseline(self):

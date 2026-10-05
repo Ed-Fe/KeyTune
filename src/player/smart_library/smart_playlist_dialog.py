@@ -10,6 +10,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _, ngettext
+from ..widgets import ROW_BORDER, add_labeled_row, create_group, equalize_row_controls
 from .smart_playlists import (
     DEFAULT_SMART_PLAYLIST_LIMIT,
     MAX_NOT_PLAYED_DAYS,
@@ -116,41 +117,41 @@ class SmartPlaylistEditorDialog(wx.Dialog):
         self.name_text = wx.TextCtrl(self, value=self._rule.name)
         self.name_text.SetName(_("Nome da playlist inteligente"))
 
-        criteria_box = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Critérios")), wx.VERTICAL)
+        box, criteria_box = create_group(self, _("Critérios"))
 
-        self.favorites_checkbox = wx.CheckBox(self, label=_("Somente &favoritos"))
+        self.favorites_checkbox = wx.CheckBox(box, label=_("Somente &favoritos"))
         self.favorites_checkbox.SetValue(self._rule.favorites_only)
         self.favorites_checkbox.SetName(_("Somente favoritos"))
 
-        self.remote_checkbox = wx.CheckBox(self, label=_("Incluir mídias &remotas"))
+        self.remote_checkbox = wx.CheckBox(box, label=_("Incluir mídias &remotas"))
         self.remote_checkbox.SetValue(not self._rule.exclude_remote)
         self.remote_checkbox.SetName(_("Incluir mídias remotas"))
 
-        self.never_played_checkbox = wx.CheckBox(self, label=_("Incluir mídias &nunca tocadas"))
+        self.never_played_checkbox = wx.CheckBox(box, label=_("Incluir mídias &nunca tocadas"))
         self.never_played_checkbox.SetValue(self._rule.include_never_played)
         self.never_played_checkbox.SetName(_("Incluir mídias nunca tocadas"))
 
-        rating_label = wx.StaticText(self, label=_("A&valiação mínima (0 ignora)"))
-        self.rating_ctrl = wx.SpinCtrl(self, min=0, max=5, initial=self._rule.minimum_rating)
+        rating_label = wx.StaticText(box, label=_("A&valiação mínima (0 ignora)"))
+        self.rating_ctrl = wx.SpinCtrl(box, min=0, max=5, initial=self._rule.minimum_rating)
         self.rating_ctrl.SetName(_("Avaliação mínima"))
 
-        days_label = wx.StaticText(self, label=_("Sem tocar há pelo menos (&dias, 0 ignora)"))
+        days_label = wx.StaticText(box, label=_("Sem tocar há pelo menos (&dias, 0 ignora)"))
         self.days_ctrl = wx.SpinCtrl(
-            self,
+            box,
             min=0,
             max=MAX_NOT_PLAYED_DAYS,
             initial=self._rule.not_played_for_days,
         )
         self.days_ctrl.SetName(_("Dias sem tocar"))
 
-        play_count_label = wx.StaticText(self, label=_("Reproduções &mínimas (0 ignora)"))
-        self.play_count_ctrl = wx.SpinCtrl(self, min=0, max=100000, initial=self._rule.minimum_play_count)
+        play_count_label = wx.StaticText(box, label=_("Reproduções &mínimas (0 ignora)"))
+        self.play_count_ctrl = wx.SpinCtrl(box, min=0, max=100000, initial=self._rule.minimum_play_count)
         self.play_count_ctrl.SetName(_("Reproduções mínimas"))
 
-        folder_label = wx.StaticText(self, label=_("Limitar à &pasta (vazio ignora)"))
-        self.folder_text = wx.TextCtrl(self, value=self._rule.folder_path)
+        folder_label = wx.StaticText(box, label=_("Limitar à &pasta (vazio ignora)"))
+        self.folder_text = wx.TextCtrl(box, value=self._rule.folder_path)
         self.folder_text.SetName(_("Pasta da playlist inteligente"))
-        self.folder_button = wx.Button(self, wx.ID_ANY, _("&Escolher pasta..."))
+        self.folder_button = wx.Button(box, wx.ID_ANY, _("&Escolher pasta..."))
 
         folder_sizer = wx.BoxSizer(wx.HORIZONTAL)
         folder_sizer.Add(self.folder_text, 1, wx.RIGHT | wx.ALIGN_CENTER_VERTICAL, 8)
@@ -161,39 +162,37 @@ class SmartPlaylistEditorDialog(wx.Dialog):
             self.remote_checkbox,
             self.never_played_checkbox,
         ):
-            criteria_box.Add(control, 0, wx.ALL | wx.EXPAND, 6)
-        criteria_box.Add(rating_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        criteria_box.Add(self.rating_ctrl, 0, wx.ALL, 6)
-        criteria_box.Add(days_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        criteria_box.Add(self.days_ctrl, 0, wx.ALL, 6)
-        criteria_box.Add(play_count_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        criteria_box.Add(self.play_count_ctrl, 0, wx.ALL, 6)
-        criteria_box.Add(folder_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        criteria_box.Add(folder_sizer, 0, wx.ALL | wx.EXPAND, 6)
+            criteria_box.Add(control, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        for label, control in (
+            (rating_label, self.rating_ctrl),
+            (days_label, self.days_ctrl),
+            (play_count_label, self.play_count_ctrl),
+        ):
+            self._add_named_row(criteria_box, label, control)
+        criteria_box.Add(folder_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
+        criteria_box.Add(folder_sizer, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
 
-        output_box = wx.StaticBoxSizer(wx.StaticBox(self, label=_("Resultado")), wx.VERTICAL)
+        box, output_box = create_group(self, _("Resultado"))
 
-        sort_label = wx.StaticText(self, label=_("&Ordenar por"))
-        self.sort_choice = wx.Choice(self, choices=[label for _value, label in sort_order_labels()])
+        sort_label = wx.StaticText(box, label=_("&Ordenar por"))
+        self.sort_choice = wx.Choice(box, choices=[label for _value, label in sort_order_labels()])
         try:
             self.sort_choice.SetSelection(self._sort_values.index(self._rule.sort_order))
         except ValueError:
             self.sort_choice.SetSelection(0)
         self.sort_choice.SetName(_("Ordenação da playlist inteligente"))
 
-        limit_label = wx.StaticText(self, label=_("Número máximo de &itens"))
+        limit_label = wx.StaticText(box, label=_("Número máximo de &itens"))
         self.limit_ctrl = wx.SpinCtrl(
-            self,
+            box,
             min=MIN_SMART_PLAYLIST_LIMIT,
             max=MAX_SMART_PLAYLIST_LIMIT,
             initial=self._rule.limit or DEFAULT_SMART_PLAYLIST_LIMIT,
         )
         self.limit_ctrl.SetName(_("Número máximo de itens"))
 
-        output_box.Add(sort_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        output_box.Add(self.sort_choice, 0, wx.ALL, 6)
-        output_box.Add(limit_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 6)
-        output_box.Add(self.limit_ctrl, 0, wx.ALL, 6)
+        self._add_named_row(output_box, sort_label, self.sort_choice)
+        self._add_named_row(output_box, limit_label, self.limit_ctrl)
 
         self.summary_label = wx.StaticText(self, label="")
         self.summary_label.SetName(_("Resumo da regra"))
@@ -222,6 +221,7 @@ class SmartPlaylistEditorDialog(wx.Dialog):
             root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
 
         self.SetSizer(root_sizer)
+        equalize_row_controls(self)
         self.SetMinSize((560, 620))
         self.Fit()
         self.SetEscapeId(wx.ID_CANCEL)
@@ -245,6 +245,14 @@ class SmartPlaylistEditorDialog(wx.Dialog):
         self.name_text.SelectAll()
 
     # ------------------------------------------------------------------
+    def _add_named_row(self, sizer, label, control):
+        """Rótulo à esquerda, controle à direita; o rótulo vira o nome acessível do controle.
+
+        Um campo numérico não herda sozinho o nome do rótulo ao lado.
+        """
+        attach_named_accessible(control, name=wx.StripMenuCodes(label.GetLabel()))
+        add_labeled_row(sizer, label, control)
+
     def get_rule(self):
         rule = SmartPlaylistRule()
         rule.name = str(self.name_text.GetValue() or "").strip()

@@ -73,22 +73,6 @@ class ConvertSourceValidationTests(unittest.TestCase):
             path = self._file(name)
             self.assertEqual(_Frame(path)._validated_convert_source(), path)
 
-    def test_a_mode_for_the_other_kind_of_media_is_explained_and_not_started(self):
-        frame = _Frame(self._file("faixa.mp3"))
-
-        with patch.object(convert_frame, "ConvertDialog") as dialog:
-            frame.on_convert_video_to_audio()
-
-        dialog.assert_not_called()
-        self.assertEqual(len(frame.announcements), 1)
-
-        frame = _Frame(self._file("filme.mp4"))
-        with patch.object(convert_frame, "ConvertDialog") as dialog:
-            frame.on_convert_audio_to_video()
-
-        dialog.assert_not_called()
-        self.assertEqual(len(frame.announcements), 1)
-
     def test_the_shortcut_offers_only_the_modes_that_fit_the_media(self):
         offered = {}
 

@@ -215,6 +215,12 @@ class KeyNavigationMixin:
                 event.Skip()
                 return
 
+        # O explorador de pastas tem os próprios atalhos com Ctrl (adicionar sem
+        # tocar, fila, copiar, classificar) enquanto o foco está nele.
+        explorer_has_focus = getattr(self, "_explorer_has_focus", None)
+        if callable(explorer_has_focus) and explorer_has_focus() and self._handle_explorer_key_down(event):
+            return
+
         # Bare keys (no Ctrl/Alt) drive playback only while focus is on the
         # player surface — the frame or the playlist list. On any other control
         # (buttons, checkboxes, screen-tab widgets, the lyrics copy button) let
@@ -271,6 +277,18 @@ class KeyNavigationMixin:
             self.on_open_youtube_music(None)
             return
 
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("N"), ord("n")):
+            self.on_open_radio(None)
+            return
+
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("M"), ord("m")):
+            self.on_show_media_comments(None)
+            return
+
+        if event.ControlDown() and event.ShiftDown() and not event.AltDown() and key_code in (ord("I"), ord("i")):
+            self.on_show_media_details(None)
+            return
+
         if key_code == wx.WXK_ESCAPE and isinstance(current_tab, ScreenTabState):
             self._close_current_tab()
             return
@@ -279,31 +297,16 @@ class KeyNavigationMixin:
             self._cycle_tabs(-1 if event.ShiftDown() else 1)
             return
 
-        if (
-            event.ControlDown()
-            and not event.ShiftDown()
-            and not event.AltDown()
-            and key_code == wx.WXK_SPACE
-            and getattr(current_tab, "is_folder_tab", False)
-            and browser is not None
-            and browser.is_item_navigation_active()
-        ):
-            self.on_show_folder_sort_menu(browser, browser.items_list)
-            return
-
-        # Em abas de pasta, Ctrl+Shift+C copia o caminho textual da seleção.
-        # Nas demais abas, a mídia em execução pertence à playlist ativa mesmo
-        # quando uma tela auxiliar está aberta, então o atalho continua global.
+        # Ctrl+Shift+C copia o caminho da mídia em execução. Ela pertence à
+        # playlist ativa mesmo quando uma tela auxiliar está aberta, então o
+        # atalho continua global.
         if (
             event.ControlDown()
             and event.ShiftDown()
             and not event.AltDown()
             and key_code in (ord("C"), ord("c"))
         ):
-            if getattr(current_tab, "is_folder_tab", False):
-                self.on_copy_current_item_path(None)
-            else:
-                self.on_copy_playing_media_path(None)
+            self.on_copy_playing_media_path(None)
             return
 
         if (
@@ -316,8 +319,9 @@ class KeyNavigationMixin:
             return
 
         if event.ControlDown() and not event.AltDown() and key_code in (ord("V"), ord("v")):
+            # Shift é sempre "sem tocar": vale para abrir, colar e para o explorador.
             if event.ShiftDown():
-                self.on_paste_open_from_clipboard_new_playlist(None)
+                self.on_paste_without_playing(None)
             else:
                 self.on_paste_open_from_clipboard(None)
             return
@@ -389,10 +393,6 @@ class KeyNavigationMixin:
             self.on_new_playlist(None)
             return
 
-        if event.ControlDown() and event.AltDown() and not event.ShiftDown() and key_code in (ord("O"), ord("o")):
-            self.on_open_source(None)
-            return
-
         if event.ControlDown() and event.ShiftDown() and key_code in (ord("E"), ord("e")):
             self.on_open_equalizer(None)
             return
@@ -437,6 +437,10 @@ class KeyNavigationMixin:
 
         if key_code == wx.WXK_TAB:
             if self._focus_autodj_controls_from_player(backward=event.ShiftDown()):
+                return
+            # Com o explorador aberto, Tab percorre explorador, playlist e player.
+            focus_explorer = getattr(self, "_focus_explorer_if_visible", None)
+            if not event.ShiftDown() and callable(focus_explorer) and focus_explorer():
                 return
             self._toggle_navigation_mode()
             return

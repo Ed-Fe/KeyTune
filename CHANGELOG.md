@@ -9,19 +9,94 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Adicionado
 
-- **Conversão de mídia**: o novo submenu **Arquivo > Converter** (atalho `Ctrl+Shift+K`) converte o arquivo aberto de áudio para vídeo (imagem parada, com a capa do álbum quando existir), de vídeo para áudio, de áudio para outro formato de áudio (MP3, M4A, OGG, Opus, FLAC ou WAV) e de vídeo para outro formato de vídeo (MP4, MKV, WebM, AVI ou MOV, copiando sem recodificar as faixas compatíveis). O arquivo convertido é salvo na mesma pasta do original ou em outra pasta à escolha, lembrada na próxima conversão. O arquivo original nunca é alterado, a conversão roda em segundo plano com andamento anunciado e pode ser cancelada.
-- **Nome do arquivo e barra de progresso**: o arquivo baixado leva o mesmo nome que o KeyTune mostra para a faixa (`Artista — Título`), e a barra de status ganhou uma barra de progresso, à direita, durante downloads e conversões; numa fila, ela avança pelo conjunto de itens.
-- **Download e conversão em lote**: o menu de contexto da lista ganhou **Baixar seleção do YouTube**, **Baixar playlist inteira do YouTube** (numa subpasta com o nome da playlist) e **Converter seleção**, também disponíveis nos menus **Reprodução** e **Arquivo > Converter**; a busca do YouTube Music ganhou **Baixar seleção** no menu **Ações**. O KeyTune confirma a quantidade e a pasta antes de baixar, processa um item por vez (no máximo 200), anuncia o resumo com o que deu certo e o que falhou, e a fila pode ser cancelada com `Ctrl+Shift+B` ou `Ctrl+Shift+K`. Na conversão em lote, cada arquivo vai para a pasta do original ou todos para a pasta escolhida.
-- **Download da mídia atual**: `Ctrl+Shift+B` (ou **Reprodução > Baixar mídia atual**) baixa a música ou o vídeo do YouTube e do YouTube Music que está tocando, em segundo plano e pelo `yt-dlp`. O diálogo permite escolher áudio ou vídeo, a qualidade, a taxa de amostragem (44100 ou 48000 Hz, ou a original) e a pasta. Se a qualidade escolhida não existir, o arquivo é baixado na qualidade original e o player avisa. Pressionar o atalho durante um download informa o andamento e permite cancelá-lo.
-- **Aba Download nas Preferências**: qualidade do áudio (original, MP3 de 128 a 320 kbps ou FLAC), qualidade do vídeo (de 144p a 2160p), taxa de amostragem, pasta de download, tipo padrão e a opção **Sempre mostrar o diálogo ao baixar**, que, desmarcada, começa o download direto com as configurações salvas.
-- **FFmpeg sob demanda**: converter o áudio e unir vídeo e áudio em alta resolução exigem o FFmpeg. Se ele não for encontrado, o KeyTune oferece baixá-lo das versões oficiais, com verificação de integridade; recusando, o download segue na qualidade original, sem conversão.
-- **Transmissões ao vivo do YouTube**: cole o link de uma live em **Abrir playlist ou vídeo** e o KeyTune toca no momento atual, com áudio e vídeo opcional. A barra de tempo mostra um rótulo fixo de transmissão ao vivo, `T` informa há quanto tempo você assiste e saltos de posição são recusados com aviso.
-- **Vídeo das lives**: nova opção em **Preferências > Reprodução** (**Mostrar o vídeo das transmissões ao vivo**, ligada por padrão) que funciona mesmo com **Desativar saída de vídeo** marcado. `Ctrl+Alt+V` alterna a opção durante a transmissão.
-- **Reconexão automática**: se a conexão cair, o player tenta reconectar até três vezes e anuncia a perda e o restabelecimento. Se a transmissão já tiver terminado, avisa em vez de tocar a gravação desde o começo.
+- **Explorador de pastas**: `Ctrl+E` abre, ao lado das abas, uma lista com as pastas e os arquivos de mídia do computador, a partir de **Este computador**.
+  - Ele substitui o antigo navegador de pastas, o modo pasta que transformava uma aba em lista de arquivos ao abrir uma pasta com `Ctrl+Shift+O` ou `Ctrl+Alt+O`.
+  - `Enter` entra na pasta ou toca o arquivo.
+  - `Shift+Enter` adiciona à playlist sem tocar, e `Ctrl+Shift+F` põe na fila.
+  - `Shift+F10` abre o menu com todas as ações: tocar, adicionar, abrir em nova playlist, converter, indexar na biblioteca, copiar, mostrar no Explorador do Windows e classificar.
+  - Pastas selecionadas entram com as subpastas.
+  - A pasta atual e a classificação são lembradas entre sessões.
+
+- **KeyTube, a central do YouTube**: o KeyTube substitui a aba do YouTube Music das versões até a 2.0.6 e também reúne o YouTube comum.
+  - Atalho `Ctrl+Shift+Y`, ou **Exibir > KeyTube por aba**.
+  - Conecte sua conta do YouTube em **Conta e biblioteca**. A mesma conta serve ao YouTube e ao YouTube Music.
+  - Tudo fica numa lista só, como no explorador de pastas: `Enter` ou `Seta para a direita` entram no item e `Backspace` volta.
+  - O **Início** mostra suas playlists e mixes, curtidas, histórico, vídeos das inscrições, canais inscritos, em alta e moods e gêneros.
+  - A busca tem as caixas **Em** (YouTube Music ou YouTube) e **Tipo** (músicas, vídeos, álbuns, artistas, canais e playlists).
+  - Um link de playlist, mix ou vídeo colado no campo de busca abre com `Enter`.
+  - Dentro de um canal ou artista, você escolhe o que ver: vídeos, Shorts, ao vivo e playlists, ou músicas, álbuns, singles e artistas parecidos.
+  - Os resultados vêm de 20 em 20. Descer além do último item carrega os próximos, sem tirar o foco do lugar.
+  - **Ver detalhes** (`Ctrl+Shift+I`) mostra título, canal, duração, visualizações, curtidas, data e descrição.
+  - **Ver comentários** (`Ctrl+Shift+M`) abre os comentários na própria lista, com respostas quando o YouTube.js está ativado.
+  - Em vídeos dublados, **Reprodução > Idioma do áudio da mídia atual...** troca a dublagem na hora, do mesmo ponto.
+  - Em **Preferências > KeyTube** e **Recursos adicionais** você escolhe o idioma e a região do conteúdo e o idioma de áudio padrão.
+
+- **Transmissões ao vivo do YouTube**: cole o link de uma live no KeyTube e o KeyTune toca no momento atual.
+  - A barra de tempo mostra um rótulo fixo de transmissão ao vivo. `T` informa há quanto tempo você assiste.
+  - Saltos de posição são recusados com aviso.
+  - Se a conexão cair, o player tenta reconectar até três vezes e anuncia a perda e o restabelecimento.
+  - Se a transmissão já tiver terminado, o KeyTune avisa em vez de tocar a gravação desde o começo.
+  - **Mostrar o vídeo das transmissões ao vivo**, em **Preferências > Reprodução**, funciona mesmo com a saída de vídeo desativada. `Ctrl+Alt+V` alterna durante a transmissão.
+
+- **Rádios online**: `Ctrl+Shift+N`, ou **Exibir > Rádios online por aba**, abre uma aba com rádios do mundo todo, a partir do diretório aberto Radio Browser.
+  - O início traz as favoritas, as ouvidas recentemente, as rádios do seu país, as mais ouvidas no mundo e as listas por país, gênero e idioma.
+  - Digite um nome no campo de busca, no mundo todo ou só no seu país, ou cole o endereço de um stream para tocá-lo direto.
+  - `Enter` toca a rádio e `Shift+Enter` adiciona sem tocar. `Ctrl+D` favorita.
+  - O menu **Ações...** mostra os detalhes (país, idioma, gêneros, qualidade, votos), abre o site, copia o endereço do stream e vota na rádio.
+  - A rádio toca como transmissão ao vivo só de áudio. A música que o stream anuncia aparece na barra de status e no anúncio de status (`S`).
+
+- **Adicionar sem tocar e colar arquivos do Windows**: itens entram no fim da playlist sem interromper o que está tocando.
+  - `Ctrl+Shift+O` (**Arquivo > Abrir sem tocar...**) abre arquivos sem tocar.
+  - `Ctrl+Shift+V` (**Colar sem tocar**) cola sem tocar.
+  - `Ctrl+V` agora aceita arquivos e pastas copiados no Explorador de Arquivos do Windows, além de links e caminhos em texto.
+
+- **Download do YouTube**: `Ctrl+Shift+B`, ou **Arquivo > Baixar do YouTube**, baixa músicas e vídeos do YouTube e do YouTube Music, em segundo plano e pelo `yt-dlp`.
+  - Escolha áudio ou vídeo, a qualidade, a taxa de amostragem e a pasta.
+  - Se a qualidade escolhida não existir, o arquivo é baixado na original e o player avisa.
+  - Um download nunca substitui um arquivo que já está na pasta, e transmissões ao vivo não são baixadas.
+  - Com uma playlist ou álbum selecionado, **Baixar seleção** e **Baixar playlist inteira** baixam todas as faixas, cada playlist numa subpasta com o nome dela. O limite é de 200 itens por vez.
+  - Durante um download, `Ctrl+Shift+B` informa o andamento e permite cancelar.
+  - **Preferências > Download** guarda a qualidade, a pasta e o tipo padrão, e a opção de começar direto sem mostrar o diálogo.
+  - Se faltar o FFmpeg, o KeyTune oferece baixá-lo das versões oficiais.
+
+- **Conversão de mídia**: `Ctrl+Shift+K`, ou **Arquivo > Converter**, converte arquivos do computador.
+  - Áudio para vídeo (imagem parada, com a capa do álbum quando existir) e vídeo para áudio.
+  - Áudio para MP3, M4A, OGG, Opus, FLAC ou WAV, e vídeo para MP4, MKV, WebM, AVI ou MOV.
+  - O KeyTune oferece só os modos que servem ao tipo do arquivo.
+  - O arquivo convertido vai para a pasta do original ou para outra à escolha. O original nunca é alterado.
+  - A conversão roda em segundo plano, com andamento anunciado, e pode ser cancelada.
+  - Em lote, o KeyTune processa um item por vez e, no fim, oferece a lista dos que falharam, com o motivo.
+
+- **Uma regra para converter e baixar**: `Ctrl+Shift+K` e `Ctrl+Shift+B` agem na seleção quando o foco está numa lista (playlist, explorador ou resultados da busca) e na mídia atual quando o foco está no player.
 
 ### Alterado
 
-- **Lives fora de recursos que exigem uma faixa com fim**: não entram no AutoDJ nem no crossfade, não buscam letra e não geram ponto de retomada.
+- **Abrir e colar ficaram iguais**: `Ctrl+O`, `Ctrl+V` e o `Enter` do explorador põem a mídia na playlist atual e tocam.
+  - `Shift` sempre significa "sem tocar".
+  - Antes, `Ctrl+O` trocava a playlist pelos arquivos escolhidos e `Ctrl+Shift+V` colava numa nova playlist. Para uma lista separada, use `Ctrl+T` e abra ou cole nela.
+  - Um arquivo de **Arquivo > Recentes** também entra na playlist atual e toca.
+  - Na busca do YouTube Music, `Enter` toca a seleção e `Shift+Enter` adiciona. **Abrir em nova playlist** continua no menu **Ações...**.
+  - O diálogo "Abrir Mídia, Playlist ou Pasta" (`Ctrl+Alt+O`) foi removido. Para abrir um link, copie-o e use `Ctrl+V`.
+
+- **Pastas saem das abas**: abrir uma pasta não transforma mais a aba num navegador de pastas, ela aparece no explorador. Sessões antigas com abas de pasta reabrem a última pasta no explorador.
+
+- **Preferências em oito abas, com grupos**: **Geral**, **Reprodução**, **Acessibilidade**, **Biblioteca**, **Download**, **KeyTube**, **Rádios online** e **Recursos adicionais**.
+  - Dentro de cada aba as opções ficam em grupos, e o leitor de tela anuncia o nome do grupo ao entrar.
+  - Os textos de ajuda ficaram mais curtos.
+
+- **Anúncio mais curto ao trocar de item**: ao trocar de faixa ou de aba, o KeyTune fala só o nome e a posição ("Nome. Item 3 de 10."), sem o "Item atual:" de antes. Também não anuncia mais "Pasta atual: ..." no explorador.
+
+- **Menos texto lido ao abrir diálogos**: ajudas repetidas deixaram de ser lidas na entrada. Elas continuam nas dicas (tooltips).
+
+- **Copiar da playlist**: `Ctrl+C` copia a seleção como texto e como arquivos, então dá para colar em outra playlist, num campo de texto ou no Explorador do Windows. `Ctrl+Shift+C` copia sempre o caminho da mídia atual.
+
+- **Lista da playlist sem numeração**: os itens aparecem só com o nome, sem "1.", "2." no início. O item em reprodução continua marcado com `▶`.
+
+### Corrigido
+
+- **Fechar uma tela que é a única aba**: o KeyTube, o equalizador e as outras telas fecham e dão lugar a uma playlist vazia, em vez de recusar com "Não é possível fechar a última aba".
+- **Leitor de tela nos grupos e campos**: o equalizador, o editor de preset, o AutoDJ, o KeyTube e o editor de playlist inteligente passaram a agrupar os controles, e os campos numéricos ganharam nome.
+- **Janela travando ao colar**: pastas grandes coladas com `Ctrl+V` são lidas em segundo plano.
 
 ## [2.0.6] - 2026-09-21
 

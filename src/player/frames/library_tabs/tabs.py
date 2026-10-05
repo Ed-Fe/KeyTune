@@ -3,7 +3,6 @@ import os
 import wx
 
 from ...i18n import _
-from ...library import folder_display_name
 from ...playlists import (
     PlaylistState,
     ScreenTabState,
@@ -132,7 +131,8 @@ class TabManagementMixin:
         return tab_index
 
     def _create_empty_playlist_tab(self, select=False):
-        tab_number = len(self.playlists) + 1
+        # Só as playlists contam: uma tela aberta (KeyTube, equalizador) não gasta número.
+        tab_number = sum(isinstance(state, PlaylistState) for state in self.playlists) + 1
         title = default_playlist_title(tab_number)
         page = self._create_playlist_page()
         state = PlaylistState(
@@ -387,12 +387,7 @@ class TabManagementMixin:
             self._update_title()
             self._refresh_playlist_browser()
             if announce:
-                if state.is_folder_tab and state.folder_current_path:
-                    self._announce(
-                        _("Aba {num}: {title}. Pasta atual: {folder}.").format(num=index + 1, title=state.title, folder=folder_display_name(state.folder_current_path))
-                    )
-                else:
-                    self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
+                self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
             return
 
         if previous_active_playlist_index == index and self._player_has_loaded_media(state.current_media_path):
@@ -401,14 +396,14 @@ class TabManagementMixin:
             self._update_time_bar()
             self._refresh_playlist_browser()
             if announce:
-                self._announce(_("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state))
+                self._announce(f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip())
             return
 
         pause_after_restore = not state.was_playing
         self._update_title()
         self._refresh_playlist_browser()
         announce_message = (
-            _("Aba {num}: {title}.").format(num=index + 1, title=state.title) + " " + self._describe_playlist_position(state)
+            f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip()
             if announce
             else None
         )
@@ -434,11 +429,13 @@ class TabManagementMixin:
                     self._unload_player()
                 self._reset_playlist_tabs()
                 self._refresh_playlist_browser()
-                self._announce(_("Aba fechada: {title}. Nova playlist vazia criada.").format(title=current_state.title))
+                self._announce(_("Fechou {title}. Nova playlist vazia.").format(title=current_state.title))
                 return True
 
-            self._announce(_("Não é possível fechar a última aba."))
-            return False
+            # Uma tela (YouTube Music, equalizador...) ficou sozinha: ela dá lugar a
+            # uma playlist vazia, criada antes para a janela nunca ficar sem aba.
+            self._create_empty_playlist_tab(select=False)
+            total_tabs = self.notebook.GetPageCount()
 
         if isinstance(current_state, ScreenTabState):
             self._capture_active_playlist_state()
@@ -490,10 +487,10 @@ class TabManagementMixin:
         if next_state:
             closed_name = current_state.title if current_state else _("sem nome")
             if isinstance(next_state, PlaylistState):
-                suffix = _("Agora em {title}.").format(title=next_state.title) + " " + self._describe_playlist_position(next_state)
+                suffix = f"{next_state.title}. {self._describe_playlist_position(next_state)}".strip()
             else:
-                suffix = _("Agora em {title}.").format(title=next_state.title)
-            self._announce(_("Aba fechada: {name}.").format(name=closed_name) + " " + suffix)
+                suffix = f"{next_state.title}."
+            self._announce(_("Fechou {title}.").format(title=closed_name) + " " + suffix)
         else:
             self._announce(_("Aba fechada."))
 

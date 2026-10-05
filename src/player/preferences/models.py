@@ -58,6 +58,17 @@ from ..constants import (
     SEEK_STEP_MS,
     VOLUME_STEP,
 )
+from ..convert.options import (
+    AUDIO_BITRATES,
+    AUDIO_FORMAT_IDS,
+    AUDIO_TO_VIDEO_FORMATS,
+    DEFAULT_AUDIO_BITRATE,
+    DEFAULT_AUDIO_FORMAT,
+    DEFAULT_VIDEO_FORMAT,
+    DEFAULT_VIDEO_HEIGHT,
+    VIDEO_CONTAINER_FORMATS,
+    VIDEO_HEIGHTS as CONVERT_VIDEO_HEIGHTS,
+)
 from ..download.options import (
     DEFAULT_DOWNLOAD_ALWAYS_ASK,
     DEFAULT_DOWNLOAD_AUDIO_QUALITY,
@@ -102,6 +113,14 @@ class AppSettings:
     youtube_music_use_youtubejs: bool = DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS
     youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_save_history: bool = DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY
+    # Vazio: o idioma segue o do KeyTune e a região fica a cargo do YouTube.
+    youtube_content_language: str = ""
+    youtube_content_region: str = ""
+    # País das rádios online; vazio segue o país configurado no sistema.
+    radio_country_code: str = ""
+    radio_country_name: str = ""
+    # Vazio: a faixa de áudio que o YouTube entrega; "original" ou um idioma para os vídeos dublados.
+    youtube_audio_language: str = ""
     youtube_music_dependency_update_interval_hours: int = DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS
     youtube_music_dependency_last_auto_update_epoch: int = 0
     youtube_music_library_page_size: int = DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE
@@ -113,6 +132,16 @@ class AppSettings:
     # Vazio significa a pasta padrão (Downloads/KeyTune), resolvida na hora do download.
     download_directory: str = ""
     download_always_ask: bool = DEFAULT_DOWNLOAD_ALWAYS_ASK
+    # Última escolha feita no diálogo de conversão, oferecida de novo na próxima.
+    convert_audio_format: str = DEFAULT_AUDIO_FORMAT
+    convert_audio_bitrate: int = DEFAULT_AUDIO_BITRATE
+    convert_sample_rate: int = DEFAULT_DOWNLOAD_SAMPLE_RATE
+    convert_video_format: str = DEFAULT_VIDEO_FORMAT
+    convert_container_format: str = DEFAULT_VIDEO_FORMAT
+    convert_video_height: int = DEFAULT_VIDEO_HEIGHT
+    convert_use_cover: bool = True
+    convert_same_folder: bool = True
+    convert_directory: str = ""
     smart_library_enabled: bool = DEFAULT_SMART_LIBRARY_ENABLED
     smart_library_index_opened_folders: bool = DEFAULT_SMART_LIBRARY_INDEX_OPENED_FOLDERS
     smart_library_history_enabled: bool = DEFAULT_SMART_LIBRARY_HISTORY_ENABLED
@@ -176,6 +205,11 @@ class AppSettings:
             "youtube_music_use_youtubejs": self.youtube_music_use_youtubejs,
             "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_save_history": self.youtube_music_save_history,
+            "youtube_content_language": self.youtube_content_language,
+            "youtube_content_region": self.youtube_content_region,
+            "radio_country_code": self.radio_country_code,
+            "radio_country_name": self.radio_country_name,
+            "youtube_audio_language": self.youtube_audio_language,
             "youtube_music_dependency_update_interval_hours": self.youtube_music_dependency_update_interval_hours,
             "youtube_music_dependency_last_auto_update_epoch": self.youtube_music_dependency_last_auto_update_epoch,
             "youtube_music_library_page_size": self.youtube_music_library_page_size,
@@ -186,6 +220,15 @@ class AppSettings:
             "download_sample_rate": self.download_sample_rate,
             "download_directory": self.download_directory,
             "download_always_ask": self.download_always_ask,
+            "convert_audio_format": self.convert_audio_format,
+            "convert_audio_bitrate": self.convert_audio_bitrate,
+            "convert_sample_rate": self.convert_sample_rate,
+            "convert_video_format": self.convert_video_format,
+            "convert_container_format": self.convert_container_format,
+            "convert_video_height": self.convert_video_height,
+            "convert_use_cover": self.convert_use_cover,
+            "convert_same_folder": self.convert_same_folder,
+            "convert_directory": self.convert_directory,
             "smart_library_enabled": self.smart_library_enabled,
             "smart_library_index_opened_folders": self.smart_library_index_opened_folders,
             "smart_library_history_enabled": self.smart_library_history_enabled,
@@ -276,6 +319,11 @@ class AppSettings:
         settings.youtube_music_save_history = bool(
             data.get("youtube_music_save_history", settings.youtube_music_save_history)
         )
+        settings.youtube_content_language = str(data.get("youtube_content_language") or "").strip()
+        settings.youtube_content_region = str(data.get("youtube_content_region") or "").strip().upper()
+        settings.radio_country_code = str(data.get("radio_country_code") or "").strip().upper()
+        settings.radio_country_name = str(data.get("radio_country_name") or "").strip()
+        settings.youtube_audio_language = str(data.get("youtube_audio_language") or "").strip()
         settings.youtube_music_dependency_update_interval_hours = _clamp_int(
             data.get(
                 "youtube_music_dependency_update_interval_hours",
@@ -319,6 +367,21 @@ class AppSettings:
         )
         settings.download_directory = str(data.get("download_directory") or "").strip()
         settings.download_always_ask = bool(data.get("download_always_ask", settings.download_always_ask))
+        for name, choices in (
+            ("convert_audio_format", AUDIO_FORMAT_IDS),
+            ("convert_audio_bitrate", AUDIO_BITRATES),
+            ("convert_video_format", AUDIO_TO_VIDEO_FORMATS),
+            ("convert_container_format", VIDEO_CONTAINER_FORMATS),
+            ("convert_video_height", CONVERT_VIDEO_HEIGHTS),
+        ):
+            if data.get(name) in choices:
+                setattr(settings, name, data[name])
+        settings.convert_sample_rate = normalize_sample_rate(
+            data.get("convert_sample_rate"), settings.convert_sample_rate
+        )
+        settings.convert_use_cover = bool(data.get("convert_use_cover", settings.convert_use_cover))
+        settings.convert_same_folder = bool(data.get("convert_same_folder", settings.convert_same_folder))
+        settings.convert_directory = str(data.get("convert_directory") or "").strip()
 
         settings.smart_library_enabled = bool(data.get("smart_library_enabled", settings.smart_library_enabled))
         settings.smart_library_index_opened_folders = bool(

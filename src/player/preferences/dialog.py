@@ -1,10 +1,11 @@
 from dataclasses import replace
 import wx
 
-from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 import os
 import subprocess
 import sys
+
+from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 
 from ..constants import (
     AUTODJ_BEAT_COUNTS,
@@ -31,6 +32,14 @@ from ..download.ffmpeg import ffmpeg_available
 from ..download.panel import DownloadOptionsPanel
 from ..i18n import _, available_languages, language_display_name
 from ..log import get_log_dir
+from ..widgets import (
+    ROW_BORDER,
+    add_choice_row,
+    add_labeled_row,
+    create_group,
+    describe_control,
+    equalize_row_controls,
+)
 
 
 AUTODJ_PROFILE_LABELS = {
@@ -58,19 +67,10 @@ class PreferencesDialog(wx.Dialog):
         panel = wx.Panel(self)
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        intro_label = wx.StaticText(
-            panel,
-            label=_(
-                "Ajuste como o player inicia, salva estado e responde aos atalhos. "
-                "Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
-            ),
-        )
-        intro_label.Wrap(540)
-        intro_label.Hide()
-
-        root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
-
-        self.notebook = wx.Notebook(panel)
+        # Várias linhas de guias: se os nomes não couberem (fonte maior, tradução
+        # mais longa), as guias quebram em outra linha em vez de ficarem escondidas
+        # atrás de setas de rolagem.
+        self.notebook = wx.Notebook(panel, style=wx.NB_MULTILINE)
         self.notebook.SetName(_("Categorias de preferências"))
 
         self._build_general_tab()
@@ -78,9 +78,12 @@ class PreferencesDialog(wx.Dialog):
         self._build_accessibility_tab()
         self._build_smart_library_tab()
         self._build_download_tab()
+        self._build_keytube_tab()
+        self._build_radio_tab()
         self._build_additional_resources_tab()
+        equalize_row_controls(self.notebook)
 
-        root_sizer.Add(self.notebook, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        root_sizer.Add(self.notebook, 1, wx.ALL | wx.EXPAND, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
         self.save_button = wx.Button(panel, wx.ID_OK, _("&Salvar"))
@@ -96,8 +99,13 @@ class PreferencesDialog(wx.Dialog):
 
         frame_sizer = wx.BoxSizer(wx.VERTICAL)
         frame_sizer.Add(panel, 1, wx.EXPAND)
-        self.SetSizerAndFit(frame_sizer)
-        self.SetMinSize((620, 480))
+        self.SetSizer(frame_sizer)
+        self.SetMinSize(self.FromDIP(wx.Size(620, 480)))
+        # As guias rolam, então o diálogo tem um tamanho próprio em vez de
+        # crescer até caber a guia mais longa.
+        display_size = wx.Display(max(wx.Display.GetFromWindow(parent) if parent else 0, 0)).GetClientArea().GetSize()
+        wanted_size = self.FromDIP(wx.Size(720, 600))
+        self.SetSize((min(wanted_size.width, display_size.width), min(wanted_size.height, display_size.height)))
         self.SetEscapeId(wx.ID_CANCEL)
         self.CentreOnParent()
 
@@ -106,442 +114,220 @@ class PreferencesDialog(wx.Dialog):
         # an extra EVT_CHAR_HOOK would duplicate that behavior.
 
     def _build_general_tab(self):
-        page, page_sizer = self._create_tab_page(_("Geral"))
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_("Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."),
-        )
-        info_label.Wrap(520)
-        info_label.Hide()
-
-        language_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Idioma")), wx.VERTICAL)
+        box, sizer = self._create_group(page, page_sizer, _("Idioma"))
         self._language_choice_codes = [""]
         language_labels = [_("Automático (seguir o sistema)")]
         for code in available_languages():
             self._language_choice_codes.append(code)
             language_labels.append(language_display_name(code))
-
-        language_group, self.language_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Idioma da interface"),
-            help_text=_(
-                "Define o idioma de menus, diálogos e anúncios do leitor de tela. "
-                "Use Automático para seguir o idioma do sistema operacional."
-            ),
-            choices=language_labels,
-        )
-        language_box.Add(language_group, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-
-        language_note = wx.StaticText(
-            page,
-            label=_("A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."),
-        )
-        language_note.Wrap(520)
-        language_box.Add(language_note, 0, wx.ALL | wx.EXPAND, 6)
-
-        general_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Inicialização e sessão")), wx.VERTICAL)
-        self.restore_session_checkbox = wx.CheckBox(page, label=_("&Restaurar sessão ao iniciar"))
-        self.remember_window_size_checkbox = wx.CheckBox(page, label=_("Lembrar tamanho da &janela"))
-        self.remember_last_folder_checkbox = wx.CheckBox(page, label=_("Lembrar última &pasta usada"))
-        self.confirm_on_exit_checkbox = wx.CheckBox(page, label=_("Con&firmar ao sair"))
-
-        self._configure_checkbox(
-            self.restore_session_checkbox,
-            _("Restaurar sessão ao iniciar"),
-            _("Reabre as abas e tenta retomar a última sessão salva ao iniciar o player."),
-        )
-        self._configure_checkbox(
-            self.remember_window_size_checkbox,
-            _("Lembrar tamanho da janela"),
-            _("Salva e restaura o tamanho da janela principal entre execuções."),
-        )
-        self._configure_checkbox(
-            self.remember_last_folder_checkbox,
-            _("Lembrar última pasta usada"),
-            _("Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."),
-        )
-        self._configure_checkbox(
-            self.confirm_on_exit_checkbox,
-            _("Confirmar ao sair"),
-            _("Pede confirmação antes de fechar o player."),
+        self.language_choice = self._add_choice(
+            box, sizer, _("Idioma da interface"), _("Aplicado na próxima vez que o KeyTune for aberto."), language_labels
         )
 
-        for control in (
-            self.restore_session_checkbox,
-            self.remember_window_size_checkbox,
-            self.remember_last_folder_checkbox,
-            self.confirm_on_exit_checkbox,
-        ):
-            general_box.Add(control, 0, wx.ALL | wx.EXPAND, 6)
-
-        note_label = wx.StaticText(
-            page,
-            label=_("As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player."),
+        box, sizer = self._create_group(page, page_sizer, _("Inicialização e sessão"))
+        self.restore_session_checkbox = self._add_checkbox(
+            box, sizer, _("&Restaurar sessão ao iniciar"), _("Reabre as abas da última sessão.")
         )
-        note_label.Wrap(520)
+        self.remember_window_size_checkbox = self._add_checkbox(
+            box, sizer, _("Lembrar tamanho da &janela"), _("Restaura o tamanho da janela principal.")
+        )
+        self.remember_last_folder_checkbox = self._add_checkbox(
+            box, sizer, _("Lembrar última &pasta usada"), _("Abre os diálogos de arquivo na última pasta usada.")
+        )
+        self.confirm_on_exit_checkbox = self._add_checkbox(
+            box, sizer, _("Con&firmar ao sair"), _("Pede confirmação antes de fechar.")
+        )
 
         if sys.platform == "win32":
-            assoc_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Associação de arquivos")), wx.VERTICAL)
-            assoc_help = wx.StaticText(
-                page,
-                label=_(
-                    "Registra o player no menu Abrir Com do Windows para formatos de áudio, "
-                    "vídeo e playlists. Depois, defina o player como padrão nas configurações do Windows."
-                ),
+            box, sizer = self._create_group(page, page_sizer, _("Associação de arquivos"))
+            self._register_assoc_button = wx.Button(box, label=_("Re&gistrar como player padrão"))
+            self._unregister_assoc_button = wx.Button(box, label=_("&Desregistrar associações"))
+            describe_control(
+                self._register_assoc_button,
+                self._register_assoc_button.GetLabelText(),
+                _("Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."),
             )
-            assoc_help.Wrap(500)
-            self._register_assoc_button = wx.Button(page, label=_("&Registrar como player padrão"))
-            self._register_assoc_button.SetName(_("Registrar como player padrão"))
-            self._unregister_assoc_button = wx.Button(page, label=_("&Desregistrar associações"))
-            self._unregister_assoc_button.SetName(_("Desregistrar associações"))
-
             self._register_assoc_button.Bind(wx.EVT_BUTTON, self._on_register_associations)
             self._unregister_assoc_button.Bind(wx.EVT_BUTTON, self._on_unregister_associations)
 
             button_row = wx.BoxSizer(wx.HORIZONTAL)
             button_row.Add(self._register_assoc_button, 0, wx.RIGHT, 6)
             button_row.Add(self._unregister_assoc_button, 0, 0)
+            sizer.Add(button_row, 0, wx.ALL, ROW_BORDER)
 
-            assoc_box.Add(assoc_help, 0, wx.ALL | wx.EXPAND, 6)
-            assoc_box.Add(button_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 6)
-        else:
-            assoc_box = None
-
-        log_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Registro de logs")), wx.VERTICAL)
-        self.logging_enabled_checkbox = wx.CheckBox(page, label=_("Registrar &logs de diagnóstico"))
-        self._configure_checkbox(
-            self.logging_enabled_checkbox,
-            _("Registrar logs de diagnóstico"),
-            _(
-                "Quando ligado, o player grava um arquivo de log rotativo em disco. "
-                "Útil para depurar problemas e anexar ao relato de bugs."
-            ),
+        box, sizer = self._create_group(page, page_sizer, _("Registro de logs"))
+        self.logging_enabled_checkbox = self._add_checkbox(
+            box, sizer, _("Registrar &logs de diagnóstico"), _("Grava um arquivo de log, útil para relatar problemas.")
         )
         self.logging_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_logging_enabled)
-
-        log_level_group, self.logging_level_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Nível de detalhe"),
-            help_text=_(
-                "Controla quanta informação é registrada. "
-                '"Apenas erros" é o mais silencioso; "Depuração" é o mais detalhado e pode gerar arquivos grandes.'
-            ),
-            choices=[LOGGING_LEVEL_LABELS[lvl] for lvl in LOGGING_LEVELS],
+        self.logging_level_choice = self._add_choice(
+            box,
+            sizer,
+            _("Nível de detalhe"),
+            _("Quanto mais detalhado, maior o arquivo."),
+            [LOGGING_LEVEL_LABELS[lvl] for lvl in LOGGING_LEVELS],
         )
-
-        open_log_folder_button = wx.Button(page, label=_("Abrir pasta de &logs"))
-        open_log_folder_button.SetName(_("Abrir pasta de logs"))
+        open_log_folder_button = wx.Button(box, label=_("Abrir pasta de l&ogs"))
         open_log_folder_button.Bind(wx.EVT_BUTTON, self._on_open_log_folder)
-
-        rotation_note = wx.StaticText(
-            page,
-            label=_(
-                "Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. "
-                "Os logs de sessões anteriores ficam em keytune.log.1, .2 e .3 na mesma pasta."
-            ),
-        )
-        rotation_note.Wrap(520)
-
-        log_box.Add(self.logging_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        log_box.Add(log_level_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        log_box.Add(open_log_folder_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 6)
-        log_box.Add(rotation_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(language_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(general_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        if assoc_box:
-            page_sizer.Add(assoc_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(log_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        sizer.Add(open_log_folder_button, 0, wx.ALL, ROW_BORDER)
 
         self.notebook.AddPage(page, _("Geral"), select=True)
 
     def _build_playback_tab(self):
-        page, page_sizer = self._create_tab_page(_("Reprodução"))
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_("Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."),
+        box, sizer = self._create_group(page, page_sizer, _("Volume"))
+        self.default_volume_ctrl = self._add_spin(
+            box, sizer, _("Volume padrão"), _("Volume inicial, de 0 a 100."), 0, 100
         )
-        info_label.Wrap(520)
-        info_label.Hide()
-
-        playback_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Controles de reprodução")), wx.VERTICAL)
-        self.shuffle_new_playlists_checkbox = wx.CheckBox(page, label=_("Ativar e&mbaralhamento em novas playlists"))
-        self.disable_video_output_checkbox = wx.CheckBox(page, label=_("Desativar saída de &vídeo (tocar só o áudio)"))
-        self.live_video_checkbox = wx.CheckBox(page, label=_("Mostrar o vídeo das &transmissões ao vivo"))
-        self._configure_checkbox(
-            self.shuffle_new_playlists_checkbox,
-            _("Ativar embaralhamento em novas playlists"),
-            _("Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."),
-        )
-        self._configure_checkbox(
-            self.disable_video_output_checkbox,
-            _("Desativar saída de vídeo"),
-            _(
-                "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. "
-                "Útil para evitar a abertura de janelas externas de vídeo no Windows."
-            ),
-        )
-        self._configure_checkbox(
-            self.live_video_checkbox,
-            _("Mostrar o vídeo das transmissões ao vivo"),
-            _(
-                "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo "
-                "desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. "
-                "Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
-            ),
+        self.volume_step_ctrl = self._add_spin(
+            box, sizer, _("Passo de volume"), _("Quanto o volume muda a cada seta para cima ou para baixo."), 1, 25
         )
 
-        volume_group, self.default_volume_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Volume padrão"),
-            help_text=_("Define o volume inicial do player. 0 é mudo e 100 é o máximo."),
-            min_value=0,
-            max_value=100,
+        box, sizer = self._create_group(page, page_sizer, _("Avanço e transição entre faixas"))
+        self.seek_step_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Passo de busca (segundos)"),
+            _("Quanto a mídia avança ou volta a cada seta esquerda ou direita."),
+            1,
+            120,
         )
-        volume_step_group, self.volume_step_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Passo de volume"),
-            help_text=_("Valor usado ao aumentar ou diminuir o volume com as setas para cima e para baixo."),
-            min_value=1,
-            max_value=25,
+        self.crossfade_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Crossfade (segundos, 0 desativa)"),
+            _("Sobreposição entre duas faixas de áudio."),
+            0,
+            MAX_CROSSFADE_SECONDS,
         )
-        crossfade_group, self.crossfade_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Crossfade (segundos, 0 desativa)"),
-            help_text=_(
-                "Define por quantos segundos duas faixas de áudio se sobrepõem na transição. "
-                "Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio e "
-                "acontece automaticamente no final de cada faixa."
-            ),
-            min_value=0,
-            max_value=MAX_CROSSFADE_SECONDS,
-        )
-        self.crossfade_on_manual_change_checkbox = wx.CheckBox(
-            page, label=_("Aplicar crossfade ao trocar de faixa &manualmente")
-        )
-        self._configure_checkbox(
-            self.crossfade_on_manual_change_checkbox,
-            _("Aplicar crossfade ao trocar de faixa manualmente"),
-            _(
-                "Quando ligado, o crossfade também é usado ao avançar ou voltar com os controles. "
-                "Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
-            ),
-        )
-        seek_step_group, self.seek_step_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Passo de busca (segundos)"),
-            help_text=_("Valor usado para avançar ou retroceder na mídia com as setas esquerda e direita."),
-            min_value=1,
-            max_value=120,
-        )
-        repeat_group, self.repeat_mode_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Repetição padrão"),
-            help_text=_("Modo de repetição aplicado automaticamente às playlists novas."),
-            choices=[REPEAT_MODE_LABELS[mode] for mode in REPEAT_MODES],
-        )
-        audio_output_group, self.audio_output_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Dispositivo de áudio"),
-            help_text=_(
-                "Escolhe a saída de áudio usada na reprodução. "
-                "Use Padrão do sistema para seguir o dispositivo principal do Windows."
-            ),
-            choices=self._audio_output_choice_labels(),
+        self.crossfade_on_manual_change_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Aplicar crossfade ao trocar de fai&xa manualmente"),
+            _("Usa o crossfade também ao avançar ou voltar pelos controles."),
         )
 
-        for group in (
-            volume_group,
-            volume_step_group,
-            crossfade_group,
-            seek_step_group,
-            repeat_group,
-            audio_output_group,
-        ):
-            playback_box.Add(group, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
+        box, sizer = self._create_group(page, page_sizer, _("Playlists novas"))
+        self.repeat_mode_choice = self._add_choice(
+            box,
+            sizer,
+            _("Repetição padrão"),
+            _("Modo de repetição das playlists novas."),
+            [REPEAT_MODE_LABELS[mode] for mode in REPEAT_MODES],
+        )
+        self.shuffle_new_playlists_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ativar e&mbaralhamento em novas playlists"),
+            _("Playlists novas já começam em modo aleatório."),
+        )
 
-        playback_box.Add(self.shuffle_new_playlists_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.crossfade_on_manual_change_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.disable_video_output_checkbox, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        playback_box.Add(self.live_video_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(playback_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        box, sizer = self._create_group(page, page_sizer, _("Saída de áudio e vídeo"))
+        self.audio_output_choice = self._add_choice(
+            box,
+            sizer,
+            _("Dispositivo de áudio"),
+            _("Saída de áudio usada na reprodução."),
+            self._audio_output_choice_labels(),
+        )
+        self.disable_video_output_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Desativar saída de &vídeo (tocar só o áudio)"),
+            _("Toca só o áudio, mesmo em arquivos de vídeo."),
+        )
+        self.live_video_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Mostrar o vídeo das &transmissões ao vivo"),
+            _("Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."),
+        )
 
         self.notebook.AddPage(page, _("Reprodução"))
 
     def _build_accessibility_tab(self):
-        page, page_sizer = self._create_tab_page(_("Acessibilidade"))
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_("Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."),
+        box, sizer = self._create_group(page, page_sizer, _("Leitor de tela"))
+        self.announcements_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ativar a&núncios de acessibilidade"),
+            _("Anuncia mudanças como tempo, volume e troca de abas."),
         )
-        info_label.Wrap(520)
-        info_label.Hide()
-
-        accessibility_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Leitor de tela")), wx.VERTICAL)
-        self.announcements_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a&núncios de acessibilidade"))
-        self._configure_checkbox(
-            self.announcements_enabled_checkbox,
-            _("Ativar anúncios de acessibilidade"),
-            _("Liga ou desliga os anúncios enviados ao leitor de tela."),
-        )
-        accessibility_box.Add(self.announcements_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-
-        help_label = wx.StaticText(
-            page,
-            label=_("Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."),
-        )
-        help_label.Hide()
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(accessibility_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, _("Acessibilidade"))
 
     def _build_smart_library_tab(self):
-        page, page_sizer = self._create_tab_page(_("Biblioteca"))
-        self._smart_library_page = page
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_(
-                "A biblioteca inteligente guarda, no seu computador, um índice das mídias que você abre, "
-                "os favoritos, as avaliações, o histórico de reprodução e o ponto onde cada mídia longa parou. "
-                "Nada é enviado para fora do computador."
-            ),
+        box, sizer = self._create_group(page, page_sizer, _("Índice da biblioteca"))
+        self.smart_library_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ativar a &biblioteca inteligente"),
+            _("Busca global (Ctrl+G), favoritos, avaliações, histórico e retomada. Tudo fica no seu computador."),
         )
-        info_label.Wrap(520)
-
-        self.smart_library_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Índice da biblioteca")), wx.VERTICAL)
-        self.smart_library_enabled_checkbox = wx.CheckBox(page, label=_("Ativar a &biblioteca inteligente"))
-        self.smart_library_index_opened_folders_checkbox = wx.CheckBox(
-            page,
-            label=_("Indexar automaticamente as &pastas abertas no navegador"),
-        )
-        self._configure_checkbox(
-            self.smart_library_enabled_checkbox,
-            _("Ativar a biblioteca inteligente"),
-            _("Liga a busca global (Ctrl+G), os favoritos, as avaliações, o histórico e a retomada por arquivo."),
-        )
-        self._configure_checkbox(
-            self.smart_library_index_opened_folders_checkbox,
-            _("Indexar automaticamente as pastas abertas"),
-            _("Ao abrir uma pasta no navegador, suas mídias entram no índice em segundo plano."),
-        )
-        self.smart_library_box.Add(self.smart_library_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        self.smart_library_box.Add(
-            self.smart_library_index_opened_folders_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        self.smart_library_index_opened_folders_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Indexar automaticamente as &pastas abertas no navegador"),
+            _("As mídias da pasta entram no índice em segundo plano."),
         )
 
-        self.smart_library_history_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("Histórico de reprodução")),
-            wx.VERTICAL,
+        box, sizer = self._create_group(page, page_sizer, _("Histórico de reprodução"))
+        self.smart_library_history_enabled_checkbox = self._add_checkbox(
+            box, sizer, _("Guardar um &histórico local de reprodução"), _("Registra as faixas ouvidas.")
         )
-        self.smart_library_history_enabled_checkbox = wx.CheckBox(
-            page,
-            label=_("Guardar um &histórico local de reprodução"),
-        )
-        self._configure_checkbox(
-            self.smart_library_history_enabled_checkbox,
-            _("Guardar um histórico local de reprodução"),
-            _("Registra cada faixa que tocar tempo suficiente para contar como ouvida."),
-        )
-        self.smart_library_history_limit_group, self.smart_library_history_limit_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Reproduções guardadas no histórico"),
-            help_text=_("Quando o histórico passa desse número, as entradas mais antigas são descartadas."),
-            min_value=MIN_SMART_LIBRARY_HISTORY_LIMIT,
-            max_value=MAX_SMART_LIBRARY_HISTORY_LIMIT,
-        )
-        self.smart_library_history_box.Add(
-            self.smart_library_history_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6
-        )
-        self.smart_library_history_box.Add(
-            self.smart_library_history_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        self.smart_library_history_limit_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Reproduções guardadas no histórico"),
+            _("Acima desse número, as mais antigas saem."),
+            MIN_SMART_LIBRARY_HISTORY_LIMIT,
+            MAX_SMART_LIBRARY_HISTORY_LIMIT,
         )
 
-        self.smart_library_resume_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("Retomar de onde parou")),
-            wx.VERTICAL,
+        box, sizer = self._create_group(page, page_sizer, _("Retomar de onde parou"))
+        self.smart_library_resume_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("&Lembrar a posição de mídias longas"),
+            _("Podcasts, audiolivros e vídeos longos voltam do ponto onde pararam."),
         )
-        self.smart_library_resume_enabled_checkbox = wx.CheckBox(
-            page,
-            label=_("&Lembrar a posição de mídias longas"),
+        self.smart_library_resume_minimum_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Duração mínima para lembrar a posição (minutos)"),
+            _("Mídias mais curtas sempre recomeçam do início."),
+            MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
+            MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
         )
-        self._configure_checkbox(
-            self.smart_library_resume_enabled_checkbox,
-            _("Lembrar a posição de mídias longas"),
-            _("Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam."),
-        )
-        self.smart_library_resume_minimum_group, self.smart_library_resume_minimum_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Duração mínima para lembrar a posição (minutos)"),
-            help_text=_("Mídias mais curtas que isso sempre recomeçam do início."),
-            min_value=MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
-            max_value=MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
-        )
-        self.smart_library_resume_edge_group, self.smart_library_resume_edge_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Margem ignorada no início e no fim (segundos)"),
-            help_text=_(
-                "Parar dentro dessa margem não cria ponto de retomada: no início a mídia mal começou, "
-                "no fim ela já terminou."
-            ),
-            min_value=MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
-            max_value=MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
-        )
-        self.smart_library_resume_box.Add(self.smart_library_resume_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        self.smart_library_resume_box.Add(
-            self.smart_library_resume_minimum_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
-        )
-        self.smart_library_resume_box.Add(
-            self.smart_library_resume_edge_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        self.smart_library_resume_edge_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Margem ignorada no início e no fim (segundos)"),
+            _("Parar dentro dessa margem não cria ponto de retomada."),
+            MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
+            MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
         )
 
-        self.smart_library_cache_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("Cache de metadados e análises")),
-            wx.VERTICAL,
+        box, sizer = self._create_group(page, page_sizer, _("Cache de metadados e análises"))
+        self.smart_library_cache_limit_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Entradas guardadas no cache"),
+            _("Ao atingir o limite, as mais antigas saem."),
+            MIN_SMART_LIBRARY_CACHE_LIMIT,
+            MAX_SMART_LIBRARY_CACHE_LIMIT,
         )
-        self.smart_library_cache_limit_group, self.smart_library_cache_limit_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Entradas guardadas no cache"),
-            help_text=_(
-                "Guarda metadados já resolvidos e análises de áudio para não repetir trabalho caro. "
-                "As entradas mais antigas saem quando o limite é atingido."
-            ),
-            min_value=MIN_SMART_LIBRARY_CACHE_LIMIT,
-            max_value=MAX_SMART_LIBRARY_CACHE_LIMIT,
-        )
-        self.smart_library_cache_box.Add(
-            self.smart_library_cache_limit_group, 0, wx.ALL | wx.EXPAND, 6
-        )
-
-        management_label = wx.StaticText(
-            page,
-            label=_(
-                "Use o menu Biblioteca para indexar pastas, consultar o histórico, apagar as posições de "
-                "retomada ou limpar tudo."
-            ),
-        )
-        management_label.Wrap(520)
 
         self.smart_library_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_enabled)
         self.smart_library_history_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_history)
         self.smart_library_resume_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_smart_library_resume)
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(self.smart_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(self.smart_library_history_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(self.smart_library_resume_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(self.smart_library_cache_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(management_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         self.notebook.AddPage(page, _("Biblioteca"))
 
@@ -572,249 +358,168 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_cache_limit_ctrl.Enable(library_enabled)
 
     def _build_download_tab(self):
-        page, page_sizer = self._create_tab_page(_("Download"))
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_(
-                "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp "
-                "e vale para mídias do YouTube e do YouTube Music."
-            ),
+        box, sizer = self._create_group(page, page_sizer, _("Opções de download"))
+        self.download_options_panel = DownloadOptionsPanel(box, kind_label=_("Tipo de download padrão"))
+        sizer.Add(self.download_options_panel, 0, wx.EXPAND)
+        self.download_always_ask_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Sempre &mostrar o diálogo ao baixar"),
+            _("Confirma formato e qualidade a cada download (Ctrl+Shift+B)."),
         )
-        info_label.Wrap(520)
-        info_label.Hide()
-
-        download_box = wx.StaticBoxSizer(wx.StaticBox(page, label=_("Opções de download")), wx.VERTICAL)
-        self.download_options_panel = DownloadOptionsPanel(page, kind_label=_("Tipo de download padrão"))
-        self.download_always_ask_checkbox = wx.CheckBox(page, label=_("Sempre &mostrar o diálogo ao baixar"))
-        self._configure_checkbox(
-            self.download_always_ask_checkbox,
-            _("Sempre mostrar o diálogo ao baixar"),
-            _(
-                "Ligado, cada download abre um diálogo para confirmar formato e qualidade. "
-                "Desligado, o download começa direto com as opções desta guia."
-            ),
-        )
-        download_box.Add(self.download_options_panel, 0, wx.EXPAND)
-        download_box.Add(self.download_always_ask_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-
-        ffmpeg_note = wx.StaticText(
-            page,
-            label=(
-                _("O FFmpeg já está disponível para converter áudio e unir vídeo e áudio.")
-                if ffmpeg_available()
-                else _(
-                    "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. "
-                    "O KeyTune oferece instalá-lo na primeira vez que precisar."
-                )
-            ),
-        )
-        ffmpeg_note.Wrap(520)
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(download_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(ffmpeg_note, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        if not ffmpeg_available():
+            self._add_note(
+                box,
+                sizer,
+                _("Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg; o KeyTune oferece instalá-lo quando precisar."),
+            )
 
         self.notebook.AddPage(page, _("Download"))
 
+    def _build_keytube_tab(self):
+        page, page_sizer = self._create_tab_page()
+
+        from ..youtube_music.audio_tracks import AUDIO_CHOICE_ORIGINAL, AUDIO_LANGUAGES
+        from ..youtube_music.content_locale import CONTENT_LANGUAGES, CONTENT_REGIONS
+
+        box, sizer = self._create_group(page, page_sizer, _("Biblioteca"))
+        self.youtube_music_library_page_size_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Playlists carregadas por vez"),
+            _("Valores menores abrem a biblioteca mais rápido."),
+            MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+            MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
+        )
+        self.youtube_music_home_discovery_limit_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Mixes personalizadas para descobrir"),
+            _("Itens da página inicial varridos em busca de mixes."),
+            MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+            MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
+        )
+        box, sizer = self._create_group(page, page_sizer, _("Reprodução"))
+        self.youtube_music_autoplay_related_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Tocar faixas relacionadas ao fim da &playlist"),
+            _("A rádio automática do YouTube Music. A tecla A alterna."),
+        )
+        self.youtube_music_save_history_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Salvar o que ouvi no &histórico do YouTube Music"),
+            _("Marca as faixas ouvidas no histórico da sua conta."),
+        )
+
+        box, sizer = self._create_group(page, page_sizer, _("Idioma e região"))
+        self._youtube_content_language_codes = [""] + [code for code, _label in CONTENT_LANGUAGES]
+        self.youtube_content_language_choice = self._add_choice(
+            box,
+            sizer,
+            _("Idioma do conteúdo"),
+            _("Usado nas buscas, nos comentários e nos nomes das faixas de áudio."),
+            [_("O mesmo do KeyTune")] + [label for _code, label in CONTENT_LANGUAGES],
+        )
+        self._youtube_content_region_codes = [""] + [code for code, _label in CONTENT_REGIONS]
+        self.youtube_content_region_choice = self._add_choice(
+            box,
+            sizer,
+            _("Região do conteúdo"),
+            _("País usado nas buscas do YouTube e do YouTube Music."),
+            [_("Automática")] + [label for _code, label in CONTENT_REGIONS],
+        )
+        self._youtube_audio_language_codes = ["", AUDIO_CHOICE_ORIGINAL] + [code for code, _label in AUDIO_LANGUAGES]
+        self.youtube_audio_language_choice = self._add_choice(
+            box,
+            sizer,
+            _("Áudio dos vídeos dublados"),
+            _("Faixa tocada nos vídeos com mais de um áudio."),
+            [_("A que o YouTube entregar"), _("Original do vídeo")] + [label for _code, label in AUDIO_LANGUAGES],
+        )
+
+        self.notebook.AddPage(page, _("KeyTube"))
+
+    def _build_radio_tab(self):
+        page, page_sizer = self._create_tab_page()
+
+        from ..youtube_music.content_locale import CONTENT_REGIONS
+
+        box, sizer = self._create_group(page, page_sizer, _("Região"))
+        self._radio_country_choices = [("", _("Automático (seguir o sistema)"))] + list(CONTENT_REGIONS)
+        saved_radio_code = str(getattr(self._settings, "radio_country_code", "") or "").strip().upper()
+        if saved_radio_code and saved_radio_code not in {code for code, _label in self._radio_country_choices}:
+            # Escolhido na própria aba de rádios, fora da lista curta daqui.
+            saved_radio_name = str(getattr(self._settings, "radio_country_name", "") or "").strip()
+            self._radio_country_choices.append((saved_radio_code, saved_radio_name or saved_radio_code))
+        self.radio_country_choice = self._add_choice(
+            box,
+            sizer,
+            _("Meu país"),
+            _("País do início da aba e da busca. Outros países: menu de ações do país, na aba."),
+            [label for _code, label in self._radio_country_choices],
+        )
+
+        self.notebook.AddPage(page, _("Rádios online"))
+
     def _build_additional_resources_tab(self):
-        page, page_sizer = self._create_tab_page(_("Recursos adicionais"))
-        self._additional_resources_page = page
+        page, page_sizer = self._create_tab_page()
 
-        info_label = wx.StaticText(
-            page,
-            label=_(
-                "Configure integrações e componentes opcionais do player. "
-                "Novos recursos adicionais poderão aparecer aqui no futuro, sem misturar essas opções com as preferências gerais."
-            ),
+        box, sizer = self._create_group(page, page_sizer, _("Componentes do YouTube"))
+        self.youtube_music_manage_dependencies_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ativar a integração com &YouTube e YouTube Music"),
+            _("Baixa e mantém o yt-dlp, o ytmusicapi e o Node.js. Necessário para o KeyTube."),
         )
-        info_label.Wrap(520)
-        info_label.Hide()
-
-        self.youtube_music_resources_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("Integração com YouTube Music e YouTube")),
-            wx.VERTICAL,
+        self.youtube_music_use_nightly_yt_dlp_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Usar versão &nightly do yt-dlp (recomendado)"),
+            _("Recebe correções do YouTube antes da versão estável."),
         )
-        self.youtube_music_manage_dependencies_checkbox = wx.CheckBox(
-            page,
-            label=_("Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"),
+        self.youtube_music_use_youtubejs_checkbox = self._add_checkbox(
+            box, sizer, _("Usar YouTube.&js (recomendado)"), _("Melhora a resolução e a reprodução.")
         )
-        self.youtube_music_auto_update_dependencies_checkbox = wx.CheckBox(
-            page,
-            label=_("Atualizar automaticamente as dependências do YouTube Music"),
+        self.youtube_music_auto_update_dependencies_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Atualizar os componentes a&utomaticamente"),
+            _("Verifica atualizações ao abrir o KeyTube, no intervalo a seguir."),
         )
-        self.youtube_music_use_nightly_yt_dlp_checkbox = wx.CheckBox(
-            page,
-            label=_("Usar versão &nightly do yt-dlp (recomendado)"),
-        )
-        self.youtube_music_use_youtubejs_checkbox = wx.CheckBox(
-            page,
-            label=_("Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"),
+        self.youtube_music_dependency_update_interval_ctrl = self._add_spin(
+            box, sizer, _("Intervalo de atualização (horas)"), _("Horas entre as verificações."), 1, 720
         )
 
-        self._configure_checkbox(
-            self.youtube_music_manage_dependencies_checkbox,
-            _("Ativar integração com YouTube Music e YouTube"),
-            _(
-                "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do "
-                "YouTube Music em uma pasta local de recursos adicionais."
-            ),
+        box, sizer = self._create_group(page, page_sizer, _("AutoDJ"))
+        self.autodj_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Baixar recursos e ativar &AutoDJ"),
+            _("Baixa as bibliotecas de análise de áudio: librosa, NumPy, SciPy, Numba e PyAV."),
         )
-        self._configure_checkbox(
-            self.youtube_music_auto_update_dependencies_checkbox,
-            _("Atualizar automaticamente dependências do YouTube Music"),
-            _("Verifica e aplica atualização automática das dependências no intervalo definido abaixo."),
+        self.autodj_profile_choice = self._add_choice(
+            box,
+            sizer,
+            _("Perfil do AutoDJ"),
+            _("Estilo da sequência e das transições."),
+            [AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
         )
-        self._configure_checkbox(
-            self.youtube_music_use_nightly_yt_dlp_checkbox,
-            _("Usar versão nightly do yt-dlp"),
-            _(
-                "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram "
-                "extractors com frequência e o nightly costuma receber correções antes do canal estável."
-            ),
+        self.autodj_beats_choice = self._add_choice(
+            box,
+            sizer,
+            _("Duração da transição do AutoDJ"),
+            _("Batidas de sobreposição entre duas faixas."),
+            [_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
         )
-        self._configure_checkbox(
-            self.youtube_music_use_youtubejs_checkbox,
-            _("Usar YouTube.js"),
-            _(
-                "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
-            ),
-        )
-
-        self.youtube_music_dependency_interval_group, self.youtube_music_dependency_update_interval_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Intervalo de atualização (horas)"),
-            help_text=_(
-                "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python "
-                "quando a aba YouTube Music é aberta."
-            ),
-            min_value=1,
-            max_value=720,
-        )
-
-        self.youtube_music_resources_box.Add(self.youtube_music_manage_dependencies_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        self.youtube_music_resources_box.Add(self.youtube_music_auto_update_dependencies_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.youtube_music_resources_box.Add(self.youtube_music_use_nightly_yt_dlp_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.youtube_music_resources_box.Add(self.youtube_music_use_youtubejs_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.youtube_music_resources_box.Add(self.youtube_music_dependency_interval_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-
-        self.youtube_music_dependencies_note_label = wx.StaticText(
-            page,
-            label=_(
-                "Na primeira execução, o download pode levar alguns minutos e exige internet. "
-                "Ao desativar esta opção, o player apenas para de gerenciar esses recursos automaticamente; "
-                "os arquivos já baixados não são removidos."
-            ),
-        )
-        self.youtube_music_dependencies_note_label.Wrap(520)
-        self.youtube_music_resources_box.Add(self.youtube_music_dependencies_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-
-        self.autodj_resources_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("AutoDJ avançado")),
-            wx.VERTICAL,
-        )
-        self.autodj_enabled_checkbox = wx.CheckBox(page, label=_("Baixar recursos e ativar &AutoDJ"))
-        self._configure_checkbox(
-            self.autodj_enabled_checkbox,
-            _("Baixar recursos e ativar AutoDJ"),
-            _(
-                "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
-            ),
-        )
-        self.autodj_transition_sounds_checkbox = wx.CheckBox(page, label=_("Tocar efeitos de &DJ nas transições"))
-        self._configure_checkbox(
-            self.autodj_transition_sounds_checkbox,
-            _("Tocar efeitos de DJ nas transições"),
-            _("Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."),
-        )
-        self.autodj_profile_group, self.autodj_profile_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Perfil do AutoDJ"),
-            help_text=_("Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."),
-            choices=[AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
-        )
-        self.autodj_beats_group, self.autodj_beats_choice = self._build_choice_control_group(
-            page,
-            label_text=_("Duração da transição do AutoDJ"),
-            help_text=_("Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."),
-            choices=[_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
-        )
-        self.autodj_resources_note_label = wx.StaticText(
-            page,
-            label=_(
-                "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
-            ),
-        )
-        self.autodj_resources_note_label.Wrap(520)
-        self.autodj_resources_box.Add(self.autodj_enabled_checkbox, 0, wx.ALL | wx.EXPAND, 6)
-        self.autodj_resources_box.Add(self.autodj_transition_sounds_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.autodj_resources_box.Add(self.autodj_profile_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.autodj_resources_box.Add(self.autodj_beats_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.autodj_resources_box.Add(self.autodj_resources_note_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.autodj_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_autodj_resource)
-
-        self.youtube_music_library_box = wx.StaticBoxSizer(
-            wx.StaticBox(page, label=_("Biblioteca do YouTube Music")),
-            wx.VERTICAL,
-        )
-
-        page_size_group, self.youtube_music_library_page_size_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Playlists carregadas por vez"),
-            help_text=_(
-                "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. "
-                "Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
-            ),
-            min_value=MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
-            max_value=MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
-        )
-
-        home_limit_group, self.youtube_music_home_discovery_limit_ctrl = self._build_spin_control_group(
-            page,
-            label_text=_("Mixes personalizadas para descobrir"),
-            help_text=_(
-                "Limite máximo de itens varridos na página inicial do YouTube Music para encontrar "
-                "mixes personalizadas. Valores menores deixam a sincronização mais rápida."
-            ),
-            min_value=MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
-            max_value=MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
-        )
-
-        self.youtube_music_autoplay_related_checkbox = wx.CheckBox(
-            page,
-            label=_("Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)"),
-        )
-        self._configure_checkbox(
-            self.youtube_music_autoplay_related_checkbox,
-            _("Reproduzir conteúdo relacionado ao fim da playlist"),
-            _(
-                "Quando a playlist termina e a última faixa é do YouTube Music, o player busca faixas "
-                "relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. "
-                "Também pode ser ligado ou desligado com a tecla A durante a reprodução."
-            ),
-        )
-
-        self.youtube_music_save_history_checkbox = wx.CheckBox(
-            page,
-            label=_("Salvar músicas escutadas no &histórico do YouTube Music"),
-        )
-        self._configure_checkbox(
-            self.youtube_music_save_history_checkbox,
-            _("Salvar músicas escutadas no histórico do YouTube Music"),
-            _(
-                "Quando ligada, ao escutar uma faixa do YouTube Music por tempo suficiente o player "
-                "marca essa faixa como assistida no seu histórico do YouTube Music. Desligue para "
-                "tocar sem registrar nada no histórico da sua conta."
-            ),
-        )
-
-        self.youtube_music_library_box.Add(page_size_group, 0, wx.ALL | wx.EXPAND, 6)
-        self.youtube_music_library_box.Add(home_limit_group, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        self.youtube_music_library_box.Add(
-            self.youtube_music_autoplay_related_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
-        )
-        self.youtube_music_library_box.Add(
-            self.youtube_music_save_history_checkbox, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6
+        self.autodj_transition_sounds_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Tocar efeitos de &DJ nas transições"),
+            _("Um efeito curto no início de cada transição."),
         )
 
         self.youtube_music_manage_dependencies_checkbox.Bind(
@@ -825,20 +530,47 @@ class PreferencesDialog(wx.Dialog):
             wx.EVT_CHECKBOX,
             self._on_toggle_youtube_music_auto_update_dependencies,
         )
-
-        page_sizer.Add(info_label, 0, wx.ALL | wx.EXPAND, 10)
-        page_sizer.Add(self.youtube_music_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(self.autodj_resources_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
-        page_sizer.Add(self.youtube_music_library_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
+        self.autodj_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_autodj_resource)
 
         self.notebook.AddPage(page, _("Recursos adicionais"))
 
-    def _create_tab_page(self, name):
-        page = wx.Panel(self.notebook)
-        page.SetName(name)
+    def _create_tab_page(self):
+        # Rolável: uma guia longa não empurra os botões do diálogo para fora da
+        # tela, e o controle que recebe o foco é trazido para a área visível.
+        page = wx.ScrolledWindow(self.notebook, style=wx.TAB_TRAVERSAL | wx.VSCROLL)
+        page.SetScrollRate(0, 16)
         page_sizer = wx.BoxSizer(wx.VERTICAL)
+        page_sizer.AddSpacer(8)
         page.SetSizer(page_sizer)
         return page, page_sizer
+
+    def _create_group(self, page, page_sizer, label):
+        """Abre um grupo na página; os controles dele têm a caixa devolvida como pai."""
+        box, sizer = create_group(page, label)
+        page_sizer.Add(sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 8)
+        return box, sizer
+
+    def _add_checkbox(self, box, sizer, label, help_text):
+        checkbox = wx.CheckBox(box, label=label)
+        describe_control(checkbox, checkbox.GetLabelText(), help_text)
+        sizer.Add(checkbox, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        return checkbox
+
+    def _add_spin(self, box, sizer, label_text, help_text, min_value, max_value):
+        label = wx.StaticText(box, label=f"{label_text}:")
+        control = wx.SpinCtrl(box, min=min_value, max=max_value, name=label_text)
+        describe_control(control, label_text, help_text)
+        add_labeled_row(sizer, label, control)
+        return control
+
+    def _add_choice(self, box, sizer, label_text, help_text, choices):
+        return add_choice_row(box, sizer, label_text, help_text, choices)
+
+    def _add_note(self, box, sizer, text):
+        note = wx.StaticText(box, label=text)
+        note.Wrap(560)
+        sizer.Add(note, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        return note
 
     def _on_toggle_logging_enabled(self, _event):
         self._refresh_logging_controls()
@@ -852,8 +584,6 @@ class PreferencesDialog(wx.Dialog):
         self.logging_level_choice.Enable(enabled)
 
     def _on_open_log_folder(self, _event):
-        import os
-
         log_dir = get_log_dir()
         os.makedirs(log_dir, exist_ok=True)
         if sys.platform == "win32":
@@ -861,42 +591,13 @@ class PreferencesDialog(wx.Dialog):
         else:
             subprocess.Popen(["xdg-open", log_dir])
 
-    def _configure_checkbox(self, checkbox, name, help_text):
-        checkbox.SetName(name)
-        checkbox.SetToolTip(help_text)
-
-    def _configure_control(self, control, name, help_text):
-        control.SetName(name)
-        control.SetToolTip(help_text)
-
-    def _build_spin_control_group(self, parent, label_text, help_text, min_value, max_value):
-        label = wx.StaticText(parent, label=f"{label_text}:")
-        control = wx.SpinCtrl(parent, min=min_value, max=max_value, name=label_text)
-        self._configure_control(control, label_text, help_text)
-        return self._build_labeled_control_group(parent, label_text, label, control, help_text), control
-
-    def _build_choice_control_group(self, parent, label_text, help_text, choices):
-        label = wx.StaticText(parent, label=f"{label_text}:")
-        control = wx.Choice(parent, choices=choices, name=label_text)
-        self._configure_control(control, label_text, help_text)
-        return self._build_labeled_control_group(parent, label_text, label, control, help_text), control
-
-    def _build_labeled_control_group(self, parent, label_text, visible_label, control, help_text):
-        # A plain vertical sizer, not a per-control StaticBox: each control here
-        # already lives inside a section StaticBox (e.g. "Controles de
-        # reprodução"), so wrapping every single field in its own box repeated
-        # the same caption as a third copy of the label (box caption == visible
-        # label == accessible name) and nested groupings the screen reader
-        # announces on entry. The visible label and accessible name remain.
-        box_sizer = wx.BoxSizer(wx.VERTICAL)
-        help_label = wx.StaticText(parent, label=help_text)
-        visible_label.Wrap(500)
-        help_label.Hide()
-
-        box_sizer.Add(visible_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
-        box_sizer.Add(control, 0, wx.ALL | wx.EXPAND, 6)
-        box_sizer.Add(help_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
-        return box_sizer
+    @staticmethod
+    def _choice_index(codes, code):
+        """A posição de *code* na lista da caixa; a primeira (o padrão) quando ele não está lá."""
+        try:
+            return codes.index(code or "")
+        except ValueError:
+            return 0
 
     def _announce_from_parent(self, message):
         if not message:
@@ -909,9 +610,9 @@ class PreferencesDialog(wx.Dialog):
     def _on_toggle_youtube_music_manage_dependencies(self, _event):
         self._refresh_additional_resources_controls()
         if self.youtube_music_manage_dependencies_checkbox.GetValue():
-            self._announce_from_parent(_("Integração com YouTube Music ativada. Opções adicionais disponíveis."))
+            self._announce_from_parent(_("Integração com o YouTube ativada. Opções dos componentes disponíveis."))
         else:
-            self._announce_from_parent(_("Integração com YouTube Music desativada. Opções adicionais ocultadas."))
+            self._announce_from_parent(_("Integração com o YouTube desativada. Opções dos componentes indisponíveis."))
 
     def _on_toggle_autodj_resource(self, _event):
         self._refresh_additional_resources_controls()
@@ -928,56 +629,23 @@ class PreferencesDialog(wx.Dialog):
             self._announce_from_parent(_("Atualização automática desativada. Intervalo de atualização indisponível."))
 
     def _refresh_additional_resources_controls(self):
+        # Só habilita ou desabilita, e só o que está nesta guia: as opções da
+        # guia KeyTube ficam sempre ao alcance do teclado, mesmo antes de a
+        # integração ser ativada.
         managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()
         auto_update_enabled = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
-        self.youtube_music_auto_update_dependencies_checkbox.Enable(managed_dependencies_enabled)
-        self.youtube_music_use_nightly_yt_dlp_checkbox.Enable(managed_dependencies_enabled)
-        self.youtube_music_use_youtubejs_checkbox.Enable(managed_dependencies_enabled)
-        self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
-        self._set_additional_resources_item_visibility(
-            self.youtube_music_resources_box,
-            self.youtube_music_auto_update_dependencies_checkbox,
-            managed_dependencies_enabled,
-        )
-        self._set_additional_resources_item_visibility(
-            self.youtube_music_resources_box,
+        for control in (
             self.youtube_music_use_nightly_yt_dlp_checkbox,
-            managed_dependencies_enabled,
-        )
-        self._set_additional_resources_item_visibility(
-            self.youtube_music_resources_box,
             self.youtube_music_use_youtubejs_checkbox,
-            managed_dependencies_enabled,
-        )
-        self._set_additional_resources_item_visibility(
-            self.youtube_music_resources_box,
-            self.youtube_music_dependency_interval_group,
-            managed_dependencies_enabled,
-        )
-        self._set_additional_resources_item_visibility(
-            self.youtube_music_resources_box,
-            self.youtube_music_dependencies_note_label,
-            managed_dependencies_enabled,
-        )
-        self._set_additional_resources_item_visibility(
-            self._additional_resources_page.GetSizer(),
-            self.youtube_music_library_box,
-            managed_dependencies_enabled,
-        )
-        self._additional_resources_page.Layout()
-        self.notebook.Layout()
-        self.Layout()
+            self.youtube_music_auto_update_dependencies_checkbox,
+        ):
+            control.Enable(managed_dependencies_enabled)
+        self.youtube_music_dependency_update_interval_ctrl.Enable(managed_dependencies_enabled and auto_update_enabled)
 
         autodj_enabled = self.autodj_enabled_checkbox.GetValue()
         self.autodj_transition_sounds_checkbox.Enable(autodj_enabled)
         self.autodj_profile_choice.Enable(autodj_enabled)
         self.autodj_beats_choice.Enable(autodj_enabled)
-
-    def _set_additional_resources_item_visibility(self, sizer, item, visible):
-        try:
-            sizer.Show(item, visible, True)
-        except TypeError:
-            sizer.Show(item, visible)
 
     def _audio_output_choice_labels(self):
         self._audio_output_choice_ids = [""]
@@ -1034,6 +702,15 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
+        self.youtube_content_language_choice.SetSelection(
+            self._choice_index(self._youtube_content_language_codes, settings.youtube_content_language)
+        )
+        self.youtube_content_region_choice.SetSelection(
+            self._choice_index(self._youtube_content_region_codes, settings.youtube_content_region)
+        )
+        self.youtube_audio_language_choice.SetSelection(
+            self._choice_index(self._youtube_audio_language_codes, settings.youtube_audio_language)
+        )
         self.logging_enabled_checkbox.SetValue(settings.logging_enabled)
         try:
             logging_level_index = list(LOGGING_LEVELS).index(settings.logging_level)
@@ -1053,6 +730,10 @@ class PreferencesDialog(wx.Dialog):
         except ValueError:
             audio_output_index = 0
         self.audio_output_choice.SetSelection(audio_output_index)
+
+        self.radio_country_choice.SetSelection(
+            self._choice_index([code for code, _label in self._radio_country_choices], settings.radio_country_code)
+        )
 
         self.smart_library_enabled_checkbox.SetValue(settings.smart_library_enabled)
         self.smart_library_index_opened_folders_checkbox.SetValue(settings.smart_library_index_opened_folders)
@@ -1112,6 +793,15 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
+        settings.youtube_content_language = self._youtube_content_language_codes[
+            max(self.youtube_content_language_choice.GetSelection(), 0)
+        ]
+        settings.youtube_content_region = self._youtube_content_region_codes[
+            max(self.youtube_content_region_choice.GetSelection(), 0)
+        ]
+        settings.youtube_audio_language = self._youtube_audio_language_codes[
+            max(self.youtube_audio_language_choice.GetSelection(), 0)
+        ]
         selected_audio_output_index = self.audio_output_choice.GetSelection()
         if 0 <= selected_audio_output_index < len(self._audio_output_choice_ids):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]
@@ -1120,6 +810,14 @@ class PreferencesDialog(wx.Dialog):
 
         if not settings.remember_last_folder:
             settings.last_open_dir = ""
+
+        radio_country_code, radio_country_name = self._radio_country_choices[
+            max(self.radio_country_choice.GetSelection(), 0)
+        ]
+        # Sem mudança de país, o nome escolhido na aba de rádios fica como está.
+        if radio_country_code != settings.radio_country_code:
+            settings.radio_country_code = radio_country_code
+            settings.radio_country_name = radio_country_name if radio_country_code else ""
 
         settings.smart_library_enabled = self.smart_library_enabled_checkbox.GetValue()
         settings.smart_library_index_opened_folders = self.smart_library_index_opened_folders_checkbox.GetValue()
@@ -1214,8 +912,6 @@ class PreferencesDialog(wx.Dialog):
 
     def _open_default_apps_settings(self):
         try:
-            import os
-
             os.startfile("ms-settings:defaultapps")
         except OSError:
             wx.MessageBox(

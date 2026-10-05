@@ -26,7 +26,7 @@ RESOURCE_MANIFEST_NAME = "keytune-resource.json"
 RESOURCE_REVISIONS = {
     "node": 1,
     "youtube": 2,
-    "youtubejs": 2,
+    "youtubejs": 3,
     "autodj": 2,
 }
 # These resources predate resource revisions and are safe to reuse across

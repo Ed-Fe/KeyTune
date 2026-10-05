@@ -1,696 +1,745 @@
 # Manual de KeyTune
 
-KeyTune es un reproductor multimedia creado para usarse con teclado y con foco en la accesibilidad. Está pensado para funcionar bien con playlists, navegación por carpetas y para conservar lo que estabas haciendo entre una apertura y otra.
+KeyTune es un reproductor de medios pensado para usarse con el teclado, con la accesibilidad en primer lugar. Funciona bien con playlists, con la navegación por carpetas y con la vuelta al punto en el que lo dejaste la última vez.
 
-Este proyecto fue desarrollado con asistencia de IA, incluyendo GitHub Copilot, Codex de OpenAI y Claude Code de Anthropic.
+Este proyecto se desarrolló con asistencia de IA, incluidos GitHub Copilot, Codex de OpenAI y Claude Code de Anthropic.
 
-Este manual presenta las funciones principales de la aplicación y las acciones más comunes para empezar a usar el reproductor con rapidez.
+Aquí encontrarás las funciones de la aplicación y el paso a paso de las tareas más comunes. Si solo quieres empezar a escuchar, lee [Primeros pasos](#primeros-pasos) y [Cómo abrir medios](#como-abrir-medios). El resto sirve de consulta.
 
 ## Qué ofrece KeyTune
 
-- Reproducción multimedia con control por teclado
-- Playlists en pestañas
-- Una cola de reproducción para organizar lo que sonará después
-- Búsqueda dentro de la playlist o carpeta actual, con navegación entre los resultados por teclado
-- Biblioteca inteligente con búsqueda global, favoritos, valoraciones, historial y reanudación por archivo
+- Reproducción de audio y vídeo controlada con el teclado
+- Playlists en pestañas, con una cola de reproducción independiente
+- Explorador de carpetas junto a las pestañas
+- Búsqueda en la playlist o en la carpeta actual, con navegación entre los resultados
+- Biblioteca inteligente: búsqueda global, favoritos, valoraciones, historial y reanudación por archivo
 - Temporizador con duraciones predefinidas o pausa al final de la pista
-- Navegación por carpetas con vista previa
-- Ecualizador por pestaña con predefinidos y presets personalizados
-- Un panel de letras con búsqueda automática y copia del texto
-- Pestaña dedicada de YouTube Music, abierta con `Ctrl+Shift+Y`
-- Transmisiones en vivo de YouTube, con audio y video opcional
-- Descarga del medio actual de YouTube (audio o video) con `Ctrl+Shift+B`
-- Conversión de audio y video entre formatos, con `Ctrl+Shift+K` o **Archivo > Convertir**
-- Carga y guardado de playlists
+- Ecualizador por pestaña, con preajustes y presets propios
+- Panel de letras con búsqueda automática
+- Pestaña KeyTube, con YouTube Music y YouTube (`Ctrl+Shift+Y`)
+- Transmisiones en vivo de YouTube, con audio y vídeo opcional
+- Radios en línea de todo el mundo (`Ctrl+Shift+N`)
+- Descarga de canciones y vídeos de YouTube (`Ctrl+Shift+B`)
+- Conversión de audio y vídeo entre formatos (`Ctrl+Shift+K`)
+- AutoDJ, que mezcla las pistas de la playlist
+- Plugins y marketplace
 - Restauración de lo que estaba abierto en la última sesión
-- Lista de archivos, carpetas y playlists recientes
-- Anuncios de accesibilidad cuando hay lectores de pantalla disponibles
+- Anuncios para lectores de pantalla
 
 ## Primeros pasos
 
-1. Descarga el instalador `KeyTune-Setup.exe` más reciente en la página de [lanzamientos](https://github.com/ed-fe/KeyTune/releases).
-2. Ejecuta el instalador y sigue los pasos. En la página de tareas adicionales puedes marcar la creación de un acceso directo en el escritorio y elegir qué formatos de audio, video y playlist quieres asociar con KeyTune; todo es opcional y está desmarcado de forma predeterminada. Asociar un formato registra KeyTune como opción en el menú *Abrir con*; para que abra esos archivos automáticamente, todavía debes confirmarlo como predeterminado en la configuración de Windows.
-3. Al final, el instalador ofrece iniciar KeyTune y abrir este manual.
-4. En ejecuciones futuras, cuando haya una actualización disponible, la propia aplicación muestra un diálogo con las novedades y pide confirmación antes de descargarla e instalarla (consulta [Actualizaciones](#actualizaciones)).
+1. Descarga el `KeyTune-Setup.exe` más reciente desde la página de [releases](https://github.com/ed-fe/KeyTune/releases).
+2. Ejecuta el instalador y sigue los pasos. En la página de tareas adicionales puedes crear un acceso directo en el escritorio y elegir qué formatos de audio, vídeo y playlist asociar a KeyTune. Todo es opcional y viene sin marcar. Asociar un formato añade KeyTune al menú *Abrir con*; para que abra esos archivos por sí solo, aún hay que definirlo como predeterminado en la configuración de Windows.
+3. A partir de ahí, cuando haya una versión nueva, KeyTune muestra las novedades y pide confirmación antes de descargar e instalar (consulta [Actualizaciones](#actualizaciones)).
 
-KeyTune depende del runtime de MPV para reproducir medios. El instalador ya incluye ese runtime; si el reproductor abre pero no reproduce nada, consulta la sección [Solución de problemas](#solución-de-problemas).
+KeyTune reproduce los medios con el runtime de MPV, y el instalador ya lo incluye. Si el reproductor se abre pero no reproduce nada, consulta [Solución de problemas](#solucion-de-problemas).
 
 ## Interfaz
 
-Al abrir KeyTune por primera vez, la ventana principal muestra una sola pestaña de playlist vacía, sin nada para reproducir todavía. La ventana se divide en cuatro áreas:
+La primera vez que lo abres, la ventana muestra una pestaña de playlist vacía. Tiene estas áreas:
 
-- **Barra de menús**, en la parte superior: **Archivo** (abrir medios/carpeta/playlist, recientes, guardar), **Reproducción** (reproducir/pausar, pista anterior/siguiente, aleatorio, repetición, dispositivo de audio, anuncios), **Ver** (alternar foco, ecualizador, YouTube Music), **Pestañas** (nueva pestaña, navegación entre pestañas, cerrar), **Configuración** (preferencias) y **Ayuda** (manual, atajos, buscar actualizaciones).
-- **Área de pestañas**, que ocupa la mayor parte de la ventana: cada pestaña representa una playlist o una carpeta abierta (consulta [Playlist, carpetas y pestañas](#playlist-carpetas-y-pestañas)). Dentro de cada pestaña, el espacio se divide en dos partes lado a lado:
-    - a la **izquierda**, el navegador de elementos: la lista de la playlist o el contenido de la carpeta actual;
-    - a la **derecha**, el área del reproductor. Cuando el medio actual es un video, esta área muestra el cuadro de video; para audio, o cuando no hay nada cargado, muestra un texto de apoyo con los atajos más usados para empezar.
-- **Panel de tiempo**, debajo del área de pestañas: muestra el tiempo transcurrido y la duración del medio actual, una barra de progreso visual y un resumen de los atajos principales.
-- **Barra de estado**, en el borde inferior de la ventana: muestra mensajes breves y temporales sobre la última acción realizada (por ejemplo, al abrir un archivo o guardar una playlist).
+- **Barra de menús**, arriba: **Archivo**, **Reproducción**, **Ver**, **Biblioteca**, **Pestañas**, **Configuración** y **Ayuda**.
+- **Área de pestañas**, que ocupa casi toda la ventana. Cada pestaña es una playlist (consulta [Playlists, carpetas y pestañas](#playlists-carpetas-y-pestanas)) y se divide en dos partes lado a lado: a la izquierda, el navegador de elementos, que es la lista de la playlist; a la derecha, el área del reproductor. Para un vídeo, el área del reproductor muestra el cuadro de vídeo. Para audio, o sin nada cargado, muestra un texto de apoyo con los atajos más usados.
+- **Explorador de carpetas**, a la izquierda de las pestañas cuando se abre con `Ctrl+E`. Muestra las carpetas y los archivos de medios del equipo (consulta [Explorador de carpetas](#explorador-de-carpetas)).
+- **Panel de tiempo**, debajo de las pestañas: tiempo transcurrido, duración, barra de progreso y un resumen de los atajos principales.
+- **Barra de estado**, en el borde inferior: el resultado de la última acción.
 
-Usa `Tab` o `Ctrl+B` para mover el foco entre el navegador de elementos y el reproductor dentro de la pestaña activa, y `F1` en cualquier momento para abrir la ayuda rápida de atajos.
+`Tab` o `Ctrl+B` alternan el foco entre el navegador de elementos y el reproductor (con el explorador abierto, `Tab` también pasa por él). `F1`, en cualquier momento, abre la ayuda rápida de atajos.
 
 ## Cómo abrir medios
 
-Puedes abrir archivos multimedia, una playlist local, una carpeta o una ruta y enlace compatible usando los atajos o el menú **Archivo**:
+Hay tres formas de poner medios en KeyTune: abrir, pegar y usar el explorador de carpetas. Las tres funcionan igual: lo que entra va a la **playlist actual** y empieza a sonar. Con `Shift`, entra **sin reproducir**, al final de la lista, y lo que sonaba continúa.
 
-- `Ctrl+Alt+O` - diálogo unificado que acepta cualquier tipo: archivo, carpeta, playlist, enlace o ID de YouTube Music.
-- `Ctrl+O` - abre archivos multimedia o una playlist `.m3u`/`.m3u8`.
-- `Ctrl+Shift+O` - abre una carpeta directamente en el navegador de carpetas.
-- `Ctrl+V` - pega una ruta o enlace desde el portapapeles en la playlist actual.
-- `Ctrl+Shift+V` - pega y abre en una nueva playlist.
+| Para | Reproduciendo | Sin reproducir |
+| --- | --- | --- |
+| Elegir archivos | `Ctrl+O` (**Archivo > Abrir...**) | `Ctrl+Shift+O` (**Archivo > Abrir sin reproducir...**) |
+| Pegar del portapapeles | `Ctrl+V` | `Ctrl+Shift+V` |
+| Usar el explorador de carpetas | `Enter` | `Shift+Enter` |
 
-Formatos multimedia compatibles directamente:
+- Un archivo `.m3u` o `.m3u8` abierto con `Ctrl+O` se convierte en una playlist.
+- `Ctrl+V` acepta enlaces, rutas en texto y archivos o carpetas copiados en el Explorador de archivos de Windows. De una carpeta entran todos los medios, incluidos los de las subcarpetas. Los enlaces de playlist de YouTube Music se reconocen por el parámetro `list=` y se abren como la playlist completa.
+
+Para empezar una lista aparte, crea una playlist nueva con `Ctrl+T` y abre o pega en ella. Para abrir un enlace, cópialo y usa `Ctrl+V`.
+
+Formatos de medios compatibles directamente:
 
 - Audio: `.mp3`, `.wav`, `.flac`, `.aac`, `.ogg`, `.oga`, `.m4a`, `.opus`, `.wma`, `.aiff`, `.aif`, `.ac3`, `.mka`, `.wv`, `.ape`.
-- Video: `.mp4`, `.m4v`, `.mkv`, `.avi`, `.mov`, `.webm`, `.flv`, `.wmv`, `.mpg`, `.mpeg`, `.3gp`, `.ts`, `.m2ts`, `.mts`, `.ogv`.
+- Vídeo: `.mp4`, `.m4v`, `.mkv`, `.avi`, `.mov`, `.webm`, `.flv`, `.wmv`, `.mpg`, `.mpeg`, `.3gp`, `.ts`, `.m2ts`, `.mts`, `.ogv`.
 
-El menú **Archivo > Recientes** guarda por separado los últimos **Archivos recientes**, **Carpetas recientes** y **Playlists recientes**, lo que facilita volver a abrir lo que usaste antes sin tener que navegar de nuevo.
+**Archivo > Recientes** guarda, en listas separadas, los últimos archivos, carpetas y playlists que usaste.
 
-## Playlist, carpetas y pestañas
-
-Cada playlist queda en una pestaña separada. Esto ayuda a separar contextos, como una lista de canciones para escuchar ahora, una carpeta con archivos locales o una colección que quieres mantener organizada.
-
-La pestaña activa define lo que se está reproduciendo y lo que aparece en el navegador lateral. Puedes mantener una pestaña para una playlist guardada, otra para una carpeta completa y otras para listas temporales, sin mezclar todo en el mismo contexto. Las pestañas se pueden abrir, alternar y cerrar sin afectar a las demás.
-
-### Atajos de pestañas y elementos
-
-Los atajos para abrir medios, carpetas, playlists y enlaces están en la sección [Cómo abrir medios](#cómo-abrir-medios), más arriba. Los atajos siguientes son específicos de las pestañas y de la playlist actual:
-
-- `Ctrl+T`: abrir una nueva pestaña de playlist
-- `Ctrl+W`: cerrar la pestaña o playlist actual
-- `Ctrl+Shift+W`: cerrar el medio actual
-- `Ctrl+Tab` / `Ctrl+Shift+Tab`: navegar a la pestaña siguiente o anterior
-- `Ctrl+Shift+E`: abrir el ecualizador de la pestaña activa
-- `Ctrl+C`: copiar la selección; en el navegador de carpetas, copia archivos o carpetas para poder pegarlos en el Explorador de archivos de Windows
-- `Ctrl+Shift+C`: copiar la ruta seleccionada en el navegador de carpetas o el enlace/ruta del medio en reproducción en las demás pestañas
-- `Ctrl+Espacio`: abrir el menú de clasificación en el navegador de carpetas
-- `Ctrl+Shift+S`: guardar la playlist actual
-- `Ctrl+B`: alternar foco entre el navegador de elementos y el reproductor
-- `Ctrl+F`: localizar un elemento en la playlist o carpeta actual
-- `Ctrl+G`: buscar en toda la biblioteca (listas, carpetas e historial)
-- `Ctrl+D`: marcar o desmarcar la selección como favorita
-- `Ctrl+0` a `Ctrl+5`: valorar la selección de cero a cinco estrellas
-- `Ctrl+Shift+H`: abrir el historial de reproducción
-- `Ctrl+Shift+R`: continuar escuchando lo que quedó a medias
-- `F3` / `Shift+F3`: siguiente o anterior resultado de la búsqueda
-
-### Cola de reproducción
-
-La cola de reproducción organiza lo que debe sonar después de la pista actual, sin depender del orden de la playlist que estés navegando. Siempre pertenece a la playlist que está sonando en ese momento.
-
-Usa `Ctrl+Shift+F` o el menú **Reproducción > Agregar a la Cola de Reproducción** para agregar o quitar elementos de la cola. Para ver, quitar, reordenar o vaciar toda la cola, usa `Ctrl+Shift+Q` o el menú **Reproducción > Administrar la Cola de Reproducción**.
-
-Si la cola está vacía, el administrador te lo indica y te pide que primero agregues elementos.
-
-### Temporizador
-
-El temporizador pausa la reproducción por sí solo después del tiempo acordado, útil para escuchar algo antes de dormir sin dejar el reproductor sonando toda la noche. **Pausa** en lugar de detener, así que la posición del archivo se conserva y basta con `Espacio` para continuar donde quedó.
-
-Usa `Ctrl+Shift+D` o el menú **Reproducción > Temporizador** para configurarlo. Las opciones son:
-
-- **Duraciones predefinidas**: 5, 10, 15, 30, 45, 60, 90 o 120 minutos, disponibles directamente en el submenú.
-- **Tiempo personalizado**: cualquier valor de 1 a 720 minutos, en el cuadro de configuración.
-- **Al final de la pista actual**: la reproducción termina cuando acabe la pista, sin avanzar a la siguiente, sin repetir y sin traer contenido relacionado.
-- **No usar temporizador**: cancela la programación.
-
-El submenú también incluye **Tiempo restante**, que anuncia cuánto falta, y **Cancelar temporizador**, activo solo cuando hay un temporizador programado.
-
-Mientras corre la cuenta regresiva, el reproductor avisa cuando faltan 5 minutos y cuando falta 1 minuto. El estado del temporizador también entra en el anuncio de estado de la tecla `S`.
-
-### Descargar el medio actual
-
-Con una canción o un video de YouTube o YouTube Music en reproducción, pulsa `Ctrl+Shift+B` (o usa **Reproducción > Descargar medio actual**) para descargarlo. La descarga usa `yt-dlp`, la misma herramienta que ya reproduce estos medios, y se hace en segundo plano: la reproducción continúa con normalidad.
-
-- **Diálogo de descarga**: elige **Audio** o **Video**, la calidad, la frecuencia de muestreo (solo para audio convertido) y la carpeta. Tu última elección pasa a ser la predeterminada en las Preferencias. Desmarca **Mostrar siempre este diálogo al descargar** para que las siguientes descargas empiecen directamente, con las opciones de la pestaña **Descarga** de las Preferencias.
-- **Calidad no disponible**: si la calidad elegida no existe para ese medio, KeyTune lo descarga en la calidad original y te avisa, por ejemplo, de que el video salió en 720p en lugar de 1080p.
-- **Nombre del archivo**: el archivo recibe el mismo nombre que KeyTune muestra para la pista (por ejemplo, `Artista — Título.mp3`), con los caracteres que Windows no acepta sustituidos por `_`. Si el mismo nombre se repite en una cola, el siguiente recibe " (2)"; descargar de nuevo el mismo elemento reemplaza el archivo anterior.
-- **Seguimiento**: el reproductor anuncia cuándo empieza y termina la descarga, y la barra de estado muestra el avance, junto con una barra de progreso a su derecha (en una cola, la barra avanza por el conjunto de elementos). Pulsa `Ctrl+Shift+B` de nuevo durante una descarga para oír el avance y, si quieres, cancelarla.
-- **FFmpeg**: convertir el audio (MP3 o FLAC, u otra frecuencia de muestreo) y descargar video en alta resolución requieren FFmpeg. Si no se encuentra, KeyTune pregunta si debe descargarlo (unos 90 MB, de las versiones oficiales recomendadas por `yt-dlp`, con verificación de integridad) a la carpeta de recursos de KeyTune. Si lo rechazas, la descarga sigue en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.
-- **Selección y playlist completa**: en el menú contextual de la lista (`Shift+F10` o la tecla Aplicaciones), **Descargar la selección de YouTube** descarga los elementos seleccionados y **Descargar la playlist completa de YouTube** descarga todos los elementos de la pestaña, en una subcarpeta con el nombre de la playlist. Los mismos comandos están en **Reproducción > Descargar la selección de la lista** y **Descargar la playlist completa**, y la búsqueda de YouTube Music tiene **Descargar selección** en el menú **Acciones** (solo canciones y vídeos; las playlists de los resultados no se descargan). Antes de empezar, KeyTune muestra cuántos elementos se descargarán y la carpeta de destino, y pide confirmación.
-- **Cómo funciona la cola**: los elementos se descargan de uno en uno, con las mismas opciones. El reproductor anuncia el inicio y un resumen final (cuántos se descargaron y cuántos fallaron), la barra de estado muestra "elemento 3 de 20" y `Ctrl+Shift+B` informa la posición y permite cancelar. Un elemento que falla no detiene a los demás. Los elementos repetidos se descargan una vez, los que no son de YouTube se omiten, y una cola admite como máximo 200 elementos; el excedente queda fuera, con un aviso.
-- **Límites**: solo se descargan medios de YouTube y YouTube Music, y solo corre una descarga a la vez. Las transmisiones en vivo y los archivos que ya están en el equipo no se descargan.
-
-### Convertir medios
-
-KeyTune convierte un archivo de audio o de video que está en el equipo sin salir del reproductor. Abre el archivo, elige **Archivo > Convertir** y usa una de las opciones:
-
-- **Audio a video**: genera un video a partir del audio, con una imagen fija. Elige MP4, MKV o WebM y la resolución (480p, 720p o 1080p). Si el audio tiene una carátula de álbum incrustada, esa será la imagen; sin carátula, el fondo es negro.
-- **Video a audio**: extrae el sonido del video a MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC o WAV.
-- **Audio a otro formato de audio**: convierte entre MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC y WAV. La carátula y la información de la pista acompañan la conversión a MP3, M4A y FLAC.
-- **Video a otro formato de video**: cambia solo el formato (MP4, MKV, WebM, AVI o MOV). Las pistas compatibles con el nuevo formato se copian sin pérdida de calidad y sin recodificar, lo que es rápido; las incompatibles se recodifican. Los subtítulos solo se conservan en MKV.
-
-El atajo `Ctrl+Shift+K` (o **Archivo > Convertir > Convertir medio actual**) pregunta qué hacer entre las opciones que sirven al tipo del medio abierto. Elegir en el menú una opción que no corresponde al medio abierto (por ejemplo, convertir audio con un video abierto) solo muestra un aviso.
-
-Para convertir varios archivos a la vez, selecciónalos en la lista (una carpeta o una playlist local) y usa **Convertir selección** en el menú contextual o **Archivo > Convertir > Convertir los archivos seleccionados de la lista**. KeyTune pregunta el modo, mostrando cuántos archivos atiende cada uno. Solo se convierten los archivos del tipo correcto y los demás se omiten; al cambiar solo el formato de vídeos, también se omiten los que ya están en el formato de destino. Las opciones valen para todos. Con **Misma carpeta del archivo original**, cada archivo va a la carpeta de su propio original; con **Otra carpeta**, todos van a la carpeta elegida. Los archivos se convierten de uno en uno, con el avance "archivo 2 de 8" y un resumen al final, y un error en un archivo no detiene a los otros.
-
-En el diálogo, además del formato, defines la calidad de los formatos con pérdidas (128, 192, 256 o 320 kbps), la frecuencia de muestreo (original, 44100 o 48000 Hz; Opus siempre usa 48000 Hz) y dónde guardar: **Misma carpeta del archivo original** (el valor predeterminado) u **Otra carpeta**, que habilita el campo de carpeta y el botón **Elegir carpeta** para indicar el destino; la última carpeta elegida se sugiere en la siguiente conversión, y una carpeta que no existe se crea. El archivo original nunca se modifica ni se sobrescribe: si ya existe un archivo con el mismo nombre, el nuevo recibe " (1)", " (2)", y así sucesivamente.
-
-La conversión se ejecuta en segundo plano y la reproducción continúa. El reproductor anuncia cuándo empieza y termina, y la barra de estado muestra el avance, junto con una barra de progreso a su derecha. Pulsa `Ctrl+Shift+K` durante una conversión para oír el avance y, si quieres, cancelarla; nunca queda un archivo incompleto.
-
-La conversión usa FFmpeg. Si no se encuentra, KeyTune pregunta si debe descargarlo (unos 90 MB, de las versiones oficiales recomendadas por `yt-dlp`, con verificación de integridad) a la carpeta de recursos de KeyTune; el mismo FFmpeg sirve para las descargas. Solo se convierten archivos del equipo: para medios de YouTube, usa `Ctrl+Shift+B`.
+## Reproducción
 
 ### Atajos de reproducción
 
-- `Espacio`: reproducir o pausar
-- `Flecha izquierda` / `Flecha derecha`: retroceder o avanzar en el medio actual
-- `Shift+Flecha izquierda` / `Shift+Flecha derecha`: retroceder o avanzar 1 minuto en el medio actual
-- `Home` / `End`: ir al inicio o al final del medio
-- `Flecha arriba` / `Flecha abajo`: subir o bajar el volumen
-- `Ctrl+.`: detener la reproducción
-- `Ctrl+PageUp` / `Ctrl+PageDown`: pista anterior o siguiente en la playlist
-- `Alt+Flecha izquierda` / `Alt+Flecha derecha`: pista anterior o siguiente en la playlist (alternativa a `Ctrl+PageUp`/`Ctrl+PageDown`)
-- `Alt+Flecha arriba` / `Alt+Flecha abajo`: mover el elemento actual hacia arriba o hacia abajo en la playlist
-- `Alt+Home` / `Alt+End`: ir al primer o al último elemento de la playlist
-- `E`: alternar modo aleatorio
-- `R`: alternar modo de repetición
-- `Ctrl+R`: iniciar una nueva radio de YouTube Music desde la pista actual
-- `A`: alternar la reproducción de contenido relacionado de YouTube Music (radio automática al final de la playlist)
-- `]` / `[`: aumentar o disminuir la velocidad de reproducción
-- `Shift+]` / `Shift+[`: aumentar o disminuir el tono de la reproducción en semitonos
-- `Shift+\`: restaurar el tono original
-- `Alt+D`: abrir el selector de salida de audio
-- `Ctrl+Alt+L`: alternar el panel de letras
-- `Ctrl+Alt+V`: alternar el video de las transmisiones en vivo
-- `Ctrl+Shift+F`: agregar el elemento seleccionado a la cola de reproducción
-- `Ctrl+Shift+Q`: administrar la cola de reproducción
-- `Ctrl+Shift+B`: descargar el medio actual de YouTube
-- `Ctrl+Shift+K`: convertir el medio abierto (audio o video)
-- `Ctrl+Shift+D`: configurar el temporizador
-- `T`: anunciar el tiempo actual del medio
-- `V`: anunciar el volumen actual
-- `S`: anunciar el estado del reproductor
-- `Ctrl+L`: marcar con me gusta el medio actual en YouTube Music
-- `Ctrl+Shift+L`: marcar el medio actual como no me gusta en YouTube Music (y pasar a la siguiente pista)
+| Tecla | Qué hace |
+| --- | --- |
+| `Espacio` | Reproducir o pausar |
+| `Flecha izquierda` / `Flecha derecha` | Retroceder o avanzar en el medio (el paso se configura en **Preferencias > Reproducción**) |
+| `Shift+Flecha izquierda` / `Shift+Flecha derecha` | Retroceder o avanzar 1 minuto |
+| `Inicio` / `Fin` | Ir al principio o al final del medio |
+| `Flecha arriba` / `Flecha abajo` | Subir o bajar el volumen |
+| `Ctrl+.` | Detener |
+| `Ctrl+RePág` / `Ctrl+AvPág` | Pista anterior o siguiente |
+| `Alt+Flecha izquierda` / `Alt+Flecha derecha` | Lo mismo, como alternativa |
+| `Alt+Flecha arriba` / `Alt+Flecha abajo` | Mover el elemento actual hacia arriba o hacia abajo en la playlist |
+| `Alt+Inicio` / `Alt+Fin` | Ir al primer o al último elemento de la playlist |
+| `E` | Alternar el modo aleatorio |
+| `R` | Alternar el modo de repetición |
+| `]` / `[` | Subir o bajar la velocidad |
+| `\` | Volver a la velocidad normal |
+| `Shift+]` / `Shift+[` | Subir o bajar el tono, en semitonos |
+| `Shift+\` | Volver al tono original |
+| `Alt+D` | Elegir la salida de audio |
+| `Ctrl+Alt+L` | Mostrar u ocultar el panel de letras |
+| `Ctrl+Alt+V` | Alternar el vídeo de las transmisiones en vivo |
+| `Ctrl+Shift+F` | Poner el elemento seleccionado en la cola |
+| `Ctrl+Shift+Q` | Gestionar la cola |
+| `Ctrl+Shift+D` | Configurar el temporizador |
+| `T`, `V`, `S` | Anunciar el tiempo, el volumen y el estado |
 
-El atajo `Ctrl+W` cierra directamente la pestaña activa; el atajo `Ctrl+Shift+W` cierra o descarga el medio actual en la pestaña activa.
+Los atajos de YouTube Music, de descargar y de convertir están en [KeyTube](#keytube-youtube-y-youtube-music), [Descargar de YouTube](#descargar-de-youtube) y [Convertir medios](#convertir-medios).
+
+`Ctrl+W` cierra la pestaña activa. `Ctrl+Shift+W` cierra, o descarga de memoria, solo el medio actual.
+
+### Cola de reproducción
+
+La cola define qué suena después de la pista actual, sin depender del orden de la playlist que estás viendo. Siempre pertenece a la playlist que está sonando.
+
+`Ctrl+Shift+F` (o **Reproducción > Agregar a la cola de reproducción**) pone un elemento en la cola o lo quita. `Ctrl+Shift+Q` (o **Reproducción > Gestionar cola de reproducción**) muestra la cola y deja quitar, reordenar o vaciar.
+
+### Temporizador
+
+El temporizador pausa la reproducción pasado un tiempo acordado, útil para escuchar algo antes de dormir. **Pausa** en lugar de detener: la posición queda guardada y `Espacio` continúa desde donde se quedó.
+
+Ábrelo con `Ctrl+Shift+D` o **Reproducción > Temporizador**. Las opciones:
+
+- **Duraciones predefinidas**: 5, 10, 15, 30, 45, 60, 90 o 120 minutos, directamente en el submenú.
+- **Tiempo personalizado**: de 1 a 720 minutos, en el cuadro de configuración.
+- **Al final de la pista actual**: la reproducción termina cuando acabe la pista, sin avanzar, sin repetir y sin traer contenido relacionado. No vale para transmisiones en vivo.
+- **No usar temporizador**: cancela la programación.
+
+El submenú también tiene **Tiempo restante** y **Cancelar temporizador**. El reproductor avisa cuando faltan 5 minutos y cuando falta 1.
+
+### Letras
+
+`Ctrl+Alt+L`, o la casilla **Letras** del panel de tiempo, muestra u oculta el panel de letras. Al cambiar de pista, KeyTune busca la letra por sí solo, primero en LRCLIB y después en YouTube Music. El botón **Copiar letra completa** lleva el texto al portapapeles.
+
+## Playlists, carpetas y pestañas
+
+Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña activa decide qué suena y qué aparece en el navegador de elementos.
+
+### Atajos de pestañas y elementos
+
+- `Ctrl+T`: nueva pestaña de playlist
+- `Ctrl+W`: cerrar la pestaña actual
+- `Ctrl+Tab` / `Ctrl+Shift+Tab`: pestaña siguiente o anterior
+- `Ctrl+Shift+E`: ecualizador de la pestaña activa
+- `Ctrl+C`: copiar la selección como texto y, en el caso de archivos del equipo, también como archivos. Se puede pegar en otra playlist, en un campo de texto o en el Explorador de Windows
+- `Ctrl+Shift+C`: copiar el enlace o la ruta del medio actual (en el explorador de carpetas, la ruta de la selección)
+- `Ctrl+Shift+S`: guardar la playlist actual
+- `Ctrl+B`: alternar el foco entre el navegador de elementos y el reproductor
+- `Ctrl+F`: buscar un elemento en la playlist o en la carpeta actual
+- `Ctrl+G`: buscar en toda la biblioteca
+- `Ctrl+D`: marcar o desmarcar como favorita la selección
+- `Ctrl+0` a `Ctrl+5`: valorar la selección de cero a cinco estrellas
+- `Ctrl+Shift+H`: historial de reproducción
+- `Ctrl+Shift+R`: seguir escuchando lo que quedó a medias
+- `F3` / `Shift+F3`: resultado siguiente o anterior de la búsqueda
 
 ### Navegador de elementos
 
-El navegador está a la izquierda de la ventana y opera en dos modos distintos según lo que haya en la pestaña activa: **modo playlist** y **modo carpeta**. Usa `Tab` o `Ctrl+B` para alternar el foco entre el navegador y el reproductor.
+El navegador está a la izquierda de cada pestaña y lista los elementos de la playlist. Lo que está sonando lleva `▶` al principio de la línea.
 
-#### Modo playlist
+- `Enter`: reproduce el elemento seleccionado.
+- `Delete`: quita el elemento de la playlist.
+- `Shift+F10`: abre el menú contextual del elemento o de la selección. Además de copiar, pegar (reproduciendo o no) y quitar, el menú trae las acciones de YouTube cuando la selección tiene elementos de ese origen: **Me gusta**, **No me gusta**, **Ver detalles**, **Ver comentarios** y **Agregar a la playlist de YouTube Music...**. Cuando la pestaña es una playlist tuya de YouTube Music, también aparece **Quitar de la playlist de YouTube Music**. Consulta [Gestionar playlists de YouTube Music](#gestionar-playlists-de-youtube-music).
+- `Tab` o `Esc`: devuelve el foco al reproductor.
 
-Cuando la pestaña contiene una playlist, el navegador muestra todos los elementos de la secuencia. El elemento en reproducción queda marcado con `▶` al inicio de la línea. Los atajos disponibles son:
+### Cómo funcionan las listas
 
-- `Enter`: reproduce el elemento seleccionado inmediatamente.
-- `Delete`: elimina el elemento seleccionado de la playlist.
-- `Shift+F10`: abre el menú contextual con acciones adicionales sobre el elemento o sobre toda la selección (la lista acepta selección múltiple). Además de copiar, pegar y eliminar, el menú trae las acciones de YouTube Music cuando la selección contiene pistas de ese origen: **Me gusta**/**No me gusta**, **Agregar a playlist de YouTube Music...** y, cuando la pestaña actual es una playlist tuya de YouTube Music, **Quitar de la playlist de YouTube Music**. Consulta [Administrar playlists de YouTube Music](#administrar-playlists-de-youtube-music).
-- `Tab` / `Esc`: devuelve el foco al reproductor.
+El explorador de carpetas, KeyTube y las radios en línea se recorren del mismo modo: entras en los elementos, ves lo que hay dentro y vuelves. Las teclas son las mismas en los tres.
 
-#### Modo carpeta
+- `Enter`: entra en el elemento cuando contiene otros elementos (una carpeta, un canal, un artista, un país) y **reproduce** cuando es algo que suena (un archivo, una pista, un vídeo, una radio). Los álbumes y las playlists entran completos en la playlist actual.
+- `Shift+Enter`: añade a la playlist actual **sin reproducir**.
+- `Flecha derecha`: muestra lo que hay dentro del elemento, en la misma lista, incluso cuando `Enter` reproduciría.
+- `Retroceso`: vuelve a la lista anterior, con la selección en el elemento que habías abierto. En KeyTube y en las radios, `Flecha izquierda` y `Alt+Flecha izquierda` también vuelven.
+- `Flecha abajo` o `AvPág` en el último elemento: carga más, en KeyTube y en las radios.
+- Letras: saltan al elemento que empieza por ellas.
+- `Shift+F10`, la tecla Aplicaciones o el botón derecho del ratón: abren el menú de acciones del elemento.
+- Selección múltiple: `Shift+Flechas` seleccionan un intervalo y `Ctrl+Flechas` mueven el foco sin cambiar la selección. `Ctrl+Espacio` marca o desmarca el elemento con el foco (en el explorador, `Ctrl+Espacio` abre la ordenación).
 
-Cuando la pestaña proviene de una carpeta abierta con `Ctrl+Shift+O`, el navegador muestra el contenido del directorio actual: subcarpetas y archivos multimedia. A medida que avanza la reproducción, el elemento correspondiente al medio actual se resalta automáticamente. Al mover la selección a un archivo multimedia, el reproductor ya inicia la reproducción de ese archivo. Los atajos disponibles son:
+### Explorador de carpetas
 
-- `Enter`: entra en la subcarpeta seleccionada o reproduce el archivo multimedia.
-- `Backspace`: vuelve a la carpeta superior (equivale a seleccionar `..`).
-- `Ctrl+C`: copia los archivos o carpetas seleccionados para poder pegarlos en el Explorador de archivos de Windows.
-- `Ctrl+Shift+C`: copia las rutas de los elementos seleccionados como texto.
-- `Ctrl+Espacio`: abre el menú de clasificación. Los elementos se pueden ordenar por nombre, fecha de modificación, fecha de creación, tipo o tamaño, en orden ascendente o descendente. La carpeta superior permanece al principio y las carpetas siguen agrupadas antes de los archivos. La elección se recuerda para esta pestaña al restaurar la sesión.
-- `Shift+F10`: abre el menú contextual.
-- `Tab` / `Esc`: devuelve el foco al reproductor.
+`Ctrl+E` (o **Archivo > Explorador de carpetas**) abre, a la izquierda de las pestañas, la lista de carpetas y de archivos de medios del equipo. No ocupa una pestaña: se queda junto a cualquier playlist y sirve para montarla poco a poco, sin interrumpir lo que suena. Con el foco en él, `Ctrl+E` cierra la lista; con el foco en otro sitio, lleva el foco hasta ella.
 
-#### Localización rápida por escritura
+Empieza en **Este equipo**, con las carpetas Música, Vídeos, Descargas, Escritorio y Documentos y las unidades de disco. La carpeta en la que te quedaste y la ordenación elegida quedan guardadas para la próxima vez, y las carpetas de **Archivo > Recientes > Carpetas recientes** también se abren aquí.
 
-En ambos modos, escribir letras o números mueve la selección al primer elemento cuyo nombre comienza con los caracteres escritos. La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas. Después de un segundo sin escribir, el acumulador de caracteres se reinicia y la siguiente letra inicia una nueva búsqueda.
+Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas):
 
-#### Búsqueda en la playlist o carpeta actual
+- `Enter` entra en la carpeta o reproduce el archivo, añadiéndolo a la playlist actual. Con `Shift+Enter`, de una carpeta entran todos los medios, incluidos los de las subcarpetas.
+- `Ctrl+Shift+F` añade la selección a la cola, y `Ctrl+Shift+K` convierte los archivos seleccionados (consulta [Convertir medios](#convertir-medios)).
+- `Retroceso` sube a la carpeta superior.
+- `Ctrl+C` copia los archivos o carpetas seleccionados, para pegar en una playlist o en el Explorador de Windows. `Ctrl+Shift+C` copia las rutas como texto.
+- `Ctrl+Espacio` abre el menú de ordenación: por nombre, fecha de modificación, fecha de creación, tipo o tamaño, en orden ascendente o descendente.
+- `F5` actualiza la carpeta.
+- `Shift+F10` abre el menú con todas las acciones: **Reproducir ahora**, **Añadir a la playlist sin reproducir**, **Añadir a la cola de reproducción**, **Abrir en una playlist nueva**, **Añadir toda la carpeta actual a la playlist**, **Convertir selección...**, **Indexar carpeta en la biblioteca**, **Copiar**, **Copiar ruta**, **Mostrar en el Explorador de archivos de Windows**, la ordenación, **Actualizar** y **Cerrar explorador**.
+- `Esc` devuelve el foco a donde estaba antes de que abrieras el explorador.
 
-Para buscar en listas grandes, usa la búsqueda completa en lugar de la escritura rápida. Encuentra el texto en **cualquier parte** del nombre del elemento, no solo al comienzo.
+### Buscar elementos
 
-- `Ctrl+F`: abre el cuadro **Localizar elemento**. Escribe el texto y confirma con `Enter` o con el botón **Localizar**.
-- `F3`: va al siguiente resultado.
-- `Shift+F3`: vuelve al resultado anterior.
+**Escritura rápida.** En la playlist y en el explorador, escribir letras o números lleva la selección al primer elemento cuyo nombre empieza por lo que escribiste. La búsqueda ignora los acentos y las mayúsculas. Tras un segundo sin escribir, la siguiente letra empieza una búsqueda nueva.
 
-La búsqueda también se abre desde el menú **Ver > Localizar elemento**, que igualmente ofrece **Siguiente resultado** y **Resultado anterior**.
+**Búsqueda completa.** Para listas grandes, usa `Ctrl+F` (o **Ver > Localizar elemento...**), que encuentra el texto en **cualquier parte** del nombre, y no solo al principio.
 
-Detalles útiles:
+- `Ctrl+F` abre el cuadro **Localizar elemento**. Escribe el texto y confirma con `Enter` o con el botón **Localizar**.
+- `F3` va al resultado siguiente y `Shift+F3`, al anterior. El menú **Ver** tiene los mismos comandos.
+- La búsqueda recorre los elementos de la pestaña activa: playlists, carpetas y listas de KeyTube.
+- `F3` repite la última búsqueda sin abrir el cuadro. Si todavía no hubo ninguna búsqueda, abre el cuadro.
 
-- La búsqueda ignora acentos y diferencias entre mayúsculas y minúsculas, igual que la escritura rápida.
-- Recorre los elementos mostrados en la pestaña activa, así que funciona tanto en playlists locales como en carpetas y en listas provenientes de YouTube Music.
-- La primera búsqueda considera el elemento ya seleccionado; a partir de ahí, `F3` y `Shift+F3` avanzan o retroceden.
-- El lector de pantalla lee el nombre del elemento encontrado. La posición en la búsqueda aparece en la barra de estado, como en «Búsqueda "rock": resultado 2 de 7.», junto con un aviso cuando la búsqueda da la vuelta a la lista.
-- El texto buscado se guarda durante la sesión: `F3` repite la última búsqueda sin reabrir el cuadro. Si aún no hay texto, `F3` abre el cuadro de búsqueda.
-- Si nada coincide, se mantiene la selección actual y el reproductor informa que no hay elementos correspondientes.
+## Descargar y convertir
 
-Para tareas de organización, conviene pensar en las pestañas como espacios de trabajo independientes: una pestaña para reproducir algo ahora, otra para revisar la biblioteca y otra para pruebas o colecciones temporales.
+### Descargar de YouTube
+
+`Ctrl+Shift+B` descarga canciones y vídeos de YouTube y de YouTube Music. Sigue la misma regla que `Ctrl+Shift+K` (convertir): con el foco en una lista (la playlist o los resultados de KeyTube), descarga la **selección**; con el foco en el reproductor, descarga el **medio actual**. Los mismos comandos están en **Archivo > Descargar de YouTube**: **Descargar medio actual**, **Descargar selección** y **Descargar playlist completa**. La descarga usa `yt-dlp`, el mismo que ya reproduce esos medios, y ocurre en segundo plano: la reproducción continúa con normalidad.
+
+1. Selecciona lo que quieres descargar, o deja el foco en el reproductor para descargar el medio actual.
+2. Pulsa `Ctrl+Shift+B`.
+3. En el diálogo, elige **Audio** o **Vídeo**, la calidad, la frecuencia de muestreo (solo para audio convertido) y la carpeta. Tu última elección pasa a ser el valor predeterminado de las Preferencias.
+4. Confirma.
+
+Cosas que conviene saber:
+
+- **Sin diálogo.** Desmarca **Mostrar siempre este diálogo al descargar** para que las próximas descargas empiecen directamente, con las opciones de la pestaña **Descarga** de las Preferencias.
+- **Calidad no disponible.** Si la calidad elegida no existe para ese medio, KeyTune descarga en la original y te avisa.
+- **Nombre del archivo.** El archivo recibe el mismo nombre que KeyTune muestra para la pista (`Artista — Título.mp3`). Una descarga nunca reemplaza un archivo que ya está en la carpeta: si el nombre existe, el nuevo recibe « (2)», « (3)» y así sucesivamente.
+- **Progreso.** Pulsa `Ctrl+Shift+B` otra vez durante una descarga para oír el progreso o cancelar.
+- **FFmpeg.** Convertir el audio (MP3, FLAC u otra frecuencia de muestreo) y descargar vídeo en alta resolución exigen FFmpeg. Si no se encuentra, KeyTune pregunta si puede descargarlo (unos 90 MB). Si lo rechazas, la descarga continúa en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.
+
+**Varios elementos a la vez.** **Descargar selección** descarga los elementos seleccionados, y **Descargar playlist completa** descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en **Archivo > Descargar de YouTube** y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.
+
+Los elementos se descargan de uno en uno, con las mismas opciones. Al final, el reproductor resume cuántos salieron bien y cuántos fallaron, y `Ctrl+Shift+B` informa de la posición y permite cancelar. Un elemento que falla no interrumpe a los demás, y KeyTune ofrece una lista con cada fallo y su motivo, con el botón **Copiar lista**. Una cola admite como máximo 200 elementos.
+
+Solo se pueden descargar medios de YouTube y de YouTube Music, de uno en uno.
+
+### Convertir medios
+
+KeyTune convierte archivos de audio y de vídeo del equipo sin salir del reproductor. `Ctrl+Shift+K` sigue la misma regla que `Ctrl+Shift+B`: con el foco en una lista (la playlist o el explorador de carpetas), convierte la **selección**; con el foco en el reproductor, convierte el **medio actual**. Los mismos comandos están en **Archivo > Convertir** (**Convertir medio actual** y **Convertir selección**) y en el menú contextual de las listas.
+
+KeyTune pregunta qué hacer y muestra solo las opciones que sirven para el tipo de archivo:
+
+- **Audio a vídeo**: genera un vídeo a partir del audio, con una imagen fija. Elige MP4, MKV o WebM y la resolución (480p, 720p o 1080p). Si el audio tiene una carátula de álbum incrustada, esta se convierte en la imagen; sin carátula, el fondo es negro.
+- **Vídeo a audio**: extrae el sonido del vídeo a MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC o WAV.
+- **Audio a otro formato de audio**: convierte entre MP3, M4A (AAC), OGG (Vorbis), Opus, FLAC y WAV. La carátula y la información de la pista acompañan la conversión a MP3, M4A y FLAC.
+- **Vídeo a otro formato de vídeo**: cambia solo el formato (MP4, MKV, WebM, AVI o MOV). Las pistas compatibles con el nuevo formato se copian sin recodificar, lo cual es rápido y no pierde calidad; las incompatibles se recodifican. Los subtítulos solo se conservan en MKV.
+
+En el diálogo, además del formato, defines:
+
+- la calidad de los formatos con pérdida (128, 192, 256 o 320 kbps);
+- la frecuencia de muestreo (original, 44100 o 48000 Hz; Opus siempre usa 48000 Hz);
+- dónde guardar: **Misma carpeta del archivo original** (el valor predeterminado) u **Otra carpeta**, que habilita el campo de la carpeta y el botón **Elegir carpeta**.
+
+El diálogo recuerda tus últimas elecciones. El archivo original nunca se modifica ni se sobrescribe: si ya existe un archivo con el mismo nombre, el nuevo recibe « (1)», « (2)» y así sucesivamente.
+
+**Varios archivos.** Selecciónalos en la playlist o en el explorador y pulsa `Ctrl+Shift+K`. KeyTune pregunta el modo y muestra a cuántos archivos se aplica cada uno. Solo se convierten los del tipo correcto. Las opciones valen para todos. Con **Misma carpeta del archivo original**, cada archivo va a la carpeta de su propio original; con **Otra carpeta**, todos van a la carpeta elegida. Los archivos se convierten de uno en uno, con un resumen al final. Un error en un archivo no interrumpe a los demás, y la lista de fallos se puede abrir y copiar, como en las descargas.
+
+La conversión se ejecuta en segundo plano, y la reproducción continúa. Pulsa `Ctrl+Shift+K` durante una conversión para oír el progreso o cancelar; nunca se deja un archivo incompleto.
+
+La conversión usa FFmpeg, el mismo de la descarga. Si no se encuentra, KeyTune pregunta si puede descargarlo, como se describe en [Descargar de YouTube](#descargar-de-youtube). Solo se convierten archivos del equipo; para medios de YouTube, usa `Ctrl+Shift+B`.
 
 ## Biblioteca inteligente
 
-Mientras `Ctrl+F` busca en la lista que está abierta, la **biblioteca inteligente** recuerda lo que ya abriste y escuchaste, y lo deja todo consultable de una vez. También guarda favoritos, valoraciones, el historial de reproducción y el punto donde se detuvo cada medio largo.
+Mientras `Ctrl+F` busca en la lista que está abierta, la **biblioteca inteligente** recuerda lo que ya abriste y escuchaste y lo deja todo disponible para buscar de una vez. También guarda favoritos, valoraciones, el historial de reproducción y el punto en el que se quedó cada medio largo.
 
-Todo vive en una base de datos local (`smart_library.db`) en la misma carpeta de datos que las preferencias. Nada sale de tu equipo, y la función entera se puede desactivar en `Ctrl+,` > **Biblioteca**.
-
-El menú **Biblioteca** reúne todos los comandos.
+Todo queda en una base de datos local (`smart_library.db`), en la misma carpeta de datos de las preferencias. Nada sale de tu equipo, y la función entera se puede desactivar en `Ctrl+,` > **Biblioteca**. El menú **Biblioteca** reúne los comandos.
 
 ### Qué entra en el índice
 
-- Los medios de cualquier playlist o carpeta que abras entran en el índice en segundo plano.
-- **Biblioteca > Indexar una carpeta en la biblioteca...** elige una carpeta y recorre también sus subcarpetas, sin frenar la reproducción. El reproductor avisa al terminar.
+- Los medios de cualquier playlist o carpeta que abres entran en el índice, en segundo plano.
+- **Biblioteca > Indexar una carpeta en la biblioteca...** recorre una carpeta y sus subcarpetas.
 - **Biblioteca > Actualizar las carpetas indexadas** vuelve a recorrer las carpetas ya indexadas y descarta los archivos que ya no existen.
 - **Biblioteca > Resumen de la biblioteca** anuncia cuántos medios, carpetas, favoritos y reproducciones hay guardados.
-- **Biblioteca > Vaciar la biblioteca...** borra todo (índice, favoritos, valoraciones, historial y puntos de reanudación), con confirmación.
+- **Biblioteca > Vaciar la biblioteca...** borra todo (índice, favoritos, valoraciones, historial y reanudación), con confirmación.
 
-Si prefieres que solo entren las carpetas que elijas tú, desactiva **Indexar automáticamente las carpetas abiertas en el navegador** en las preferencias.
+Si prefieres que solo las carpetas que elijas entren en el índice, desactiva **Indexar automáticamente las carpetas abiertas en el navegador** en las preferencias. Navegar por el explorador no indexa nada por sí solo: entran en el índice las carpetas abiertas desde Recientes y las que indexes desde el menú contextual del explorador.
 
 ### Búsqueda global
 
-- `Ctrl+G` abre el cuadro **Buscar en la biblioteca**.
-- Escribe el texto y confirma con `Intro` o con el botón **Buscar**. La búsqueda ignora acentos y mayúsculas, y cada palabra que escribas debe aparecer en algún lugar del nombre del elemento o de la carpeta.
-- El campo **Filtrar** restringe la búsqueda a **Todo en la biblioteca**, **Solo favoritos**, **Solo valorados** o **Solo ya reproducidos**. Los tres últimos funcionan incluso con el campo de texto vacío.
-- Los resultados aparecen en una lista con columnas de elemento, valoración y carpeta, así que el lector de pantalla lee las tres al recorrerla con las flechas. El foco pasa a la lista en cuanto termina la búsqueda.
-- La búsqueda se resuelve con un índice de texto completo, así que sigue siendo instantánea incluso con decenas de miles de archivos. Casa el principio de cada palabra («estrad» encuentra «Estrada»); cuando así no aparece nada, el reproductor todavía hace un recorrido que encuentra fragmentos en medio de la palabra («onita» encuentra «Bonita»).
-- `Intro` (o el botón **Reproducir**) abre **todos** los resultados en una lista nueva y empieza por la pista seleccionada: así una búsqueda se convierte en una lista utilizable, no en una pista suelta.
-- **Añadir a la cola** encola solo el elemento seleccionado en la lista que está sonando.
+`Ctrl+G` abre el cuadro **Buscar en la biblioteca**. Escribe el texto y confirma con `Enter` o con el botón **Buscar**.
+
+- La búsqueda ignora los acentos y las mayúsculas, y cada palabra escrita debe aparecer en algún lugar del nombre del elemento o de la carpeta.
+- El campo **Filtrar** limita la búsqueda a **Todo en la biblioteca**, **Solo favoritos**, **Solo valorados** o **Solo ya reproducidos**. Los tres últimos funcionan incluso con el texto vacío.
+- Los resultados llegan en una lista con columnas de elemento, valoración y carpeta.
+- La búsqueda es instantánea incluso con decenas de miles de archivos. Coincide con el principio de cada palabra («estrad» encuentra «Estrada») y, si no aparece nada, también busca en medio de la palabra («onita» encuentra «Bonita»).
+- `Enter` (o el botón **Reproducir**) abre **todos** los resultados en una playlist nueva y empieza por la pista seleccionada, de modo que una búsqueda se convierte en una lista utilizable.
+- **Agregar a la cola** pone en cola solo el elemento seleccionado, en la playlist que está sonando.
 
 ### Favoritos y valoraciones
 
-Los dos comandos actúan sobre lo que esté seleccionado en la lista de elementos; sin selección, actúan sobre el medio que está sonando.
+Los comandos actúan sobre lo que esté seleccionado en la lista; sin selección, actúan sobre el medio que está sonando.
 
-- `Ctrl+D`: marca o desmarca como favorito. Con varios elementos seleccionados, los marca todos.
+- `Ctrl+D`: marca o desmarca como favorito.
 - `Ctrl+0` a `Ctrl+5`: da de cero a cinco estrellas.
-- **Biblioteca > Anunciar las marcas de la selección**: lee si el elemento es favorito, su valoración y cuántas veces se reprodujo.
-- **Biblioteca > Abrir favoritos en una lista nueva**: arma una lista con todo lo que marcaste.
+- **Biblioteca > Anunciar las marcas de la selección**: lee el favorito, la valoración y el número de reproducciones del elemento.
+- **Biblioteca > Abrir favoritos en una lista nueva**: monta una playlist con todo lo que marcaste como favorito.
 
-Los mismos comandos están en el menú contextual de la lista de elementos (`Shift+F10`).
+Los mismos comandos están en el menú contextual de la lista (`Shift+F10`).
 
-Los favoritos y las valoraciones aparecen junto al nombre en la propia lista de elementos —por ejemplo `2. Estrada — favorito, 5 estrellas`—, tanto en las listas como en el navegador de carpetas. Así el lector de pantalla anuncia la marca junto con el elemento, sin necesidad de ningún comando. El sufijo es solo visual: la búsqueda `Ctrl+F`, los nombres de las pestañas y la sesión guardada siguen usando el nombre puro.
+El favorito y la valoración aparecen junto al nombre, en la propia lista, por ejemplo `Estrada — favorito, 5 estrellas`, tanto en las playlists como en el explorador de carpetas. Así el lector de pantalla dice la marca junto con el elemento.
 
 ### Historial de reproducción
 
-- `Ctrl+Shift+H` abre el **Historial de reproducción**.
-- El campo **Ver** elige entre tres vistas, y las columnas cambian con ella:
-  - **Todas las reproducciones**: una fila por cada vez que el medio sonó, con cuándo sonó, en qué punto se detuvo y su origen (lista local, carpeta, medio remoto o YouTube Music).
-  - **Agrupado por medio**: una fila por medio, con cuántas veces sonó, la última vez y sus marcas. Escuchar la misma pista cuarenta veces deja de llenar la lista.
-  - **Más reproducidas**: la misma agrupación, de la más reproducida a la menos reproducida.
-- El campo **Filtrar por texto** reduce la lista; `Intro` (o **Reproducir**) la reproduce de nuevo y **Añadir a la cola** la encola.
-- **Quitar la entrada** saca una reproducción de la lista sin borrar el medio del índice. En las vistas agrupadas el botón pasa a ser **Quitar del historial** y borra todas las reproducciones de ese medio. **Vaciar el historial** lo borra todo, con confirmación.
-- Una pista solo entra en el historial después de sonar lo suficiente para contar como escuchada (alrededor del 25% de su duración, como máximo 20 segundos).
-- El historial se recorta al límite fijado en las preferencias, descartando las entradas más antiguas.
+`Ctrl+Shift+H` abre el **Historial de reproducción**. El campo **Ver** elige entre tres vistas, y las columnas cambian con ella:
 
-Este historial es local e independiente de **Guardar las canciones escuchadas en el historial de YouTube Music**, que registra en tu cuenta de YouTube Music.
+- **Todas las reproducciones**: una línea por cada vez que sonó el medio, con cuándo sonó, dónde se detuvo y el origen (playlist local, carpeta, medio remoto o YouTube Music).
+- **Agrupado por medio**: una línea por medio, con cuántas veces sonó, la última vez y las marcas.
+- **Más reproducidas**: la misma agrupación, de la más reproducida a la menos reproducida.
+
+**Filtrar por texto** reduce la lista. `Enter` (o **Reproducir**) vuelve a reproducir, y **Agregar a la cola** pone en cola. **Quitar la entrada** saca una reproducción de la lista sin borrar el medio del índice; en las vistas agrupadas el botón pasa a ser **Quitar del historial** y borra todas las reproducciones de ese medio. **Vaciar el historial** borra todo, con confirmación.
+
+Una pista solo entra en el historial después de sonar lo bastante para contar como escuchada, y las entradas más antiguas salen cuando el historial supera el límite de las preferencias.
+
+Este historial es local y no tiene relación con **Guardar lo que escuché en el historial de YouTube Music**, que se registra en tu cuenta de YouTube Music.
 
 ### Reanudar donde lo dejaste
 
-Los pódcast, audiolibros y vídeos largos vuelven a sonar desde donde se detuvieron, y la barra de estado muestra «Reanudando … en …». La regla es conservadora a propósito:
+Los podcasts, audiolibros y vídeos largos vuelven a sonar desde el punto en el que se detuvieron. La regla es conservadora a propósito:
 
-- vale solo para archivos locales: los streams no tienen una línea de tiempo estable entre sesiones;
-- solo para medios por encima de la **duración mínima** configurada (10 minutos por defecto);
-- detenerse dentro del **margen** configurado (30 segundos por defecto) al principio o al final no crea punto de reanudación;
-- llegar al final de la pista borra la marca, así que la próxima vez empieza desde el principio.
+- vale solo para archivos locales, porque los streams no tienen una línea de tiempo estable entre sesiones;
+- vale solo para medios que superan la **duración mínima** configurada (10 minutos, por defecto);
+- detenerse dentro del **margen** configurado (30 segundos, por defecto) del principio o del final no crea un punto de reanudación;
+- llegar al final de la pista borra la marca, y la próxima vez empieza desde el principio.
 
-**Biblioteca > Continuar escuchando** (`Ctrl+Shift+R`) abre una lista con todo lo que está a medias, de lo más reciente a lo más antiguo, y cada elemento muestra dónde se detuvo: así reencuentras el pódcast que dejaste por la mitad sin tener que recordar dónde estaba.
-
-**Biblioteca > Borrar las posiciones de reanudación** las limpia todas de una vez.
+**Biblioteca > Continuar escuchando** (`Ctrl+Shift+R`) abre una playlist con todo lo que quedó a medias, del más reciente al más antiguo, y cada elemento muestra dónde se detuvo. **Biblioteca > Borrar las posiciones de reanudación** las borra todas de una vez.
 
 ### Listas inteligentes
 
-Una lista inteligente es una regla guardada, no una lista fija: se arma cada vez que la abres, así que sigue tus cambios de valoración y de historial. «Cinco estrellas que no suenan desde hace 30 días» sigue siendo correcta un mes después, sola.
+Una lista inteligente es una regla guardada, no una lista fija. Se monta cada vez que la abres, así que sigue los cambios de valoración y de historial: «cinco estrellas que no escucho desde hace 30 días» sigue siendo correcta un mes después, por sí sola.
 
-**Biblioteca > Listas inteligentes** enumera las reglas guardadas para abrirlas con un solo comando, y **Gestionar listas inteligentes...** crea, edita y quita.
-
-En el editor todo son campos de teclado, sin constructor visual de reglas:
+**Biblioteca > Listas inteligentes** muestra las reglas guardadas, para abrir con un solo comando, y **Gestionar listas inteligentes...** crea, edita y elimina. En el editor, todo son campos de teclado, sin constructor visual:
 
 - **Solo favoritos** y **Valoración mínima** filtran por tus marcas.
-- **Sin sonar desde hace al menos (días)** encuentra lo que quedó olvidado; **Incluir medios nunca reproducidos** decide si lo que nunca sonó entra también.
-- **Reproducciones mínimas** va por el otro lado: solo lo que ya escuchaste bastante.
-- **Limitar a la carpeta** restringe a una carpeta y a todo lo que hay debajo.
+- **Sin reproducir desde hace al menos (días)** encuentra lo que anda olvidado, e **Incluir medios nunca reproducidos** decide si lo que nunca sonó entra también.
+- **Reproducciones mínimas** va por el otro lado: solo lo que ya escuchaste mucho.
+- **Limitar a la carpeta** restringe a una carpeta y a todo lo que está debajo de ella.
 - **Incluir medios remotos** trae también enlaces de YouTube Music y radios, que por defecto quedan fuera.
-- **Ordenar por** y **Número máximo de elementos** deciden qué sale y en qué orden.
+- **Ordenar por** y **Número máximo de elementos** definen qué sale y en qué orden.
 
-Cada cambio actualiza el **Resumen de la regla** al final del cuadro, en una frase: para quien usa lector de pantalla es la forma más rápida de comprobar qué reunirá la regla antes de guardar. Las reglas con nombre repetido reciben un sufijo numérico automático, y los cambios se guardan aunque cierres el cuadro con `Esc`.
+Cada cambio actualiza el **Resumen de la regla**, al final del cuadro, en una frase: la forma más rápida de comprobar qué reunirá la regla antes de guardar.
 
-### Caché de metadatos y análisis
+## KeyTube: YouTube y YouTube Music
 
-La biblioteca guarda también los metadatos ya resueltos y los análisis de audio, para no repetir trabajo costoso en cada apertura. Una entrada se descarta automáticamente cuando el archivo cambia de tamaño o de fecha, y el número de entradas guardadas se ajusta en las preferencias.
+KeyTube es la central de KeyTune para YouTube Music y el YouTube normal. En las versiones hasta la 2.0.6 se llamaba YouTube Music y se ocupaba solo de la música; hoy reúne también vídeos, canales, suscripciones y comentarios de YouTube. Ábrela con `Ctrl+Shift+Y` (o **Ver > KeyTube por pestaña**). Es una pestaña aparte, así que puedes dejar la biblioteca local en una y KeyTube en otra.
 
-## Configuración
+Para que la pestaña funcione, activa la integración en `Ctrl+,` > **Recursos adicionales** y conecta una cuenta de YouTube. La misma cuenta sirve para YouTube y para YouTube Music.
 
-Las preferencias están en `Ctrl+,` y se dividen en seis pestañas: **General**, **Reproducción**, **Accesibilidad**, **Biblioteca**, **Descarga** y **Recursos adicionales**.
+La integración depende de cómo cambia el sitio y de cómo `yt-dlp` lee esas páginas. Por eso pueden producirse errores, fallos temporales y paradas sin explicación aparente. Cuando ocurre, normalmente basta con actualizar las dependencias o intentarlo más tarde.
 
-### General
+### Cuenta y biblioteca
 
-La pestaña **General** reúne las opciones que controlan cómo KeyTune vuelve a funcionar en la próxima apertura:
+La pestaña tiene dos partes. Arriba, la sección **Cuenta y biblioteca**; abajo, el campo de búsqueda y **una sola lista**, por la que pasa todo lo demás: tu biblioteca, la búsqueda y lo que hay dentro de cada elemento.
 
-- **Restaurar sesión al iniciar**: reabre las pestañas e intenta retomar el estado de la ejecución anterior.
-- **Recordar tamaño de la ventana**: guarda y restaura el tamaño de la ventana principal entre ejecuciones.
-- **Recordar última carpeta usada**: usa la última carpeta abierta como directorio inicial en los diálogos de abrir y guardar.
-- **Confirmar al salir**: pide confirmación antes de cerrar el reproductor.
+**Cuenta y biblioteca** muestra la cuenta conectada, el resumen de la biblioteca cargada y el último mensaje de operación. Los botones:
 
-En esta misma pestaña está la sección **Asociación de archivos** (Windows). El botón **Registrar como reproductor predeterminado** agrega KeyTune al menú *Abrir con* para formatos de audio, video y playlists. Después de registrar, define la app como predeterminada en la configuración de Windows si quieres que esos archivos se abran directamente en KeyTune. El botón **Anular registro de asociaciones** deshace ese registro.
+- **Conectar cuenta...**: abre el diálogo para conectar una cuenta o renovar la autenticación guardada.
+- **Desconectar cuenta**: quita la autenticación guardada en esta instalación.
+- **Actualizar biblioteca**: vuelve a buscar las playlists y mixes de la cuenta y actualiza las valoraciones de canciones visibles en la cuenta.
+- **Nueva playlist...**: crea una playlist en tu cuenta. El reproductor pide el nombre y la privacidad (consulta [Gestionar playlists de YouTube Music](#gestionar-playlists-de-youtube-music)).
 
-La pestaña **General** también incluye la sección **Registro de logs**:
+**Me gusta** y **No me gusta** se envían a la cuenta conectada, así que aparecen también en YouTube Music del móvil y de otros dispositivos. KeyTune quita las pistas marcadas como «no me gusta» de las playlists y radios de la cuenta. Una valoración hecha fuera de KeyTune solo se detecta cuando la pista vuelve a aparecer; **Actualizar biblioteca** fuerza la comprobación.
 
-- **Registrar logs de diagnóstico**: cuando está activado, el reproductor graba un archivo de log rotativo en disco. Útil para depurar problemas y adjuntarlo al reporte de errores. Los logs se graban en inglés.
-- **Nivel de detalle**: controla cuánta información se registra. *Solo errores* es el más silencioso; *Depuración* es el más detallado y puede generar archivos grandes. Solo está disponible cuando el registro está activado.
-- **Abrir carpeta de logs**: abre en el explorador de archivos la carpeta donde se guardan los archivos de log.
+### La lista
 
-Los logs se rotan automáticamente cada 2 MB y se conservan hasta 3 archivos anteriores. Los archivos de sesiones anteriores quedan en `keytune.log.1`, `.2` y `.3` en la misma carpeta.
+La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las listas](#como-funcionan-las-listas)) y empieza en **Inicio**, con siete elementos:
 
-### Reproducción
+- **Tus playlists y mixes**: las de la cuenta conectada. `Enter` abre la playlist en una pestaña propia, desde donde se puede editar en la cuenta; `Flecha derecha` muestra las pistas en la propia lista. Requiere cuenta conectada.
+- **Me gusta**: las pistas con «me gusta» (la playlist *Me gusta* de tu cuenta). Requiere cuenta conectada.
+- **Historial**: tu historial de reproducción de YouTube Music. Requiere cuenta conectada.
+- **Videos de las suscripciones**: los vídeos nuevos de los canales a los que estás suscrito, con duración, visualizaciones y fecha. Requiere cuenta conectada y YouTube.js activado.
+- **Canales suscritos**: los canales a los que estás suscrito. Cada uno se abre como cualquier canal, para elegir entre vídeos, Shorts, transmisiones en vivo y playlists. Requiere cuenta conectada y YouTube.js activado. Las dos listas de suscripciones son de solo lectura: suscribirse y cancelar la suscripción se siguen haciendo en YouTube.
+- **Tendencias**: *Global* y los continentes. Entra en un continente, elige el país, y las listas y destacados en tendencia aparecen como playlists que puedes reproducir, abrir o guardar en la biblioteca. No requiere cuenta.
+- **Estados de ánimo y géneros**: las categorías de estados de ánimo y géneros de YouTube Music (*Concentración*, *Entrenamiento*, *Pop*, *Rock*...). Entra en una categoría para ver sus playlists. No requiere cuenta.
 
-La pestaña **Reproducción** controla el comportamiento de audio y el estado inicial de nuevas playlists:
+En KeyTube, además:
 
-- **Volumen predeterminado**: volumen al iniciar el reproductor (0-100).
-- **Paso de volumen**: cuánto aumenta o disminuye el volumen cada pulsación de `Flecha arriba`/`Flecha abajo` (1-25).
-- **Crossfade (segundos)**: superposición de audio entre pistas en la transición automática (0-12 s). Usa 0 para desactivarlo. El crossfade solo se aplica entre archivos de audio.
-- **Activar AutoDJ**: en **Recursos adicionales**, descarga las bibliotecas opcionales después de una confirmación y analiza en segundo plano la pista actual y hasta seis opciones siguientes. Una vez instalado, también se puede activar desde **Reproducción > Activar AutoDJ**. Evita artistas recientes y elige por energía local de la transición, tonalidad mayor/menor, diferencia de volumen percibido y compatibilidad de tempo. Cuando la cuadrícula de beats es fiable, estima el primer tiempo del compás y los cambios de sección, alinea frases de cuatro compases y sincroniza ambas pistas. La cola manual siempre tiene prioridad. Si el análisis falla o no tiene suficiente confianza, el reproductor usa el crossfade normal configurado o avanza con normalidad.
-- **Reproducir playlist con AutoDJ**: crea una pestaña dinámica separada sin modificar la playlist original, inicia inmediatamente la pista actual y mantiene hasta cinco canciones preparadas por adelantado. Un campo de solo lectura disponible mediante el foco normal de NVDA muestra la fuente, las cantidades preparadas y restantes, la actividad del análisis y los detalles de la próxima transición. Informa BPM, confianza rítmica, ajuste de tempo y el motivo cuando se requiere una transición normal; cada elemento también se marca como reproducido, en reproducción, próximo o preparado. Sus controles permiten cambiar la próxima pista, recalcular la secuencia futura, añadir archivos, pausar o reanudar la preparación y finalizar la sesión conservando el tramo preparado. `Tab` recorre el reproductor, la lista, la información y los controles de AutoDJ; `Shift+Tab` sigue el camino inverso. Las mismas acciones están disponibles con `Shift+F10` sobre la lista. La secuencia considera varias transiciones, evita choques probables de voces, acorta la superposición cuando es necesario y atenúa gradualmente una pista entrante más alta. La sesión, la fuente, el historial, el estado pausado y las pistas aún no planificadas se restauran con el reproductor.
-- **Perfil de AutoDJ**: *Suave* usa una mezcla larga y equilibrada; *Fiesta* concentra el intercambio de graves en el centro y aumenta gradualmente la energía; *Electrónica* usa cortes más fuertes y un intercambio más rápido para ritmos marcados.
-- **Duración de la transición de AutoDJ**: define una superposición de 8, 16 o 32 beats. Este valor es independiente de la duración del crossfade normal.
-- **Paso de búsqueda (segundos)**: cuánto avanza o retrocede en el medio cada pulsación de `Flecha izquierda`/`Flecha derecha` (1-120 s).
-- **Repetición predeterminada**: modo de repetición aplicado automáticamente a playlists nuevas. Las opciones son *Repetición desactivada*, *Repetir pista actual* y *Repetir playlist*.
-- **Dispositivo de audio**: salida de sonido usada en la reproducción. *Predeterminado del sistema* sigue el dispositivo principal de Windows.
-- **Activar aleatorio en nuevas playlists**: activa automáticamente el modo aleatorio en playlists creadas después de guardar.
-- **Aplicar crossfade al cambiar de pista manualmente**: cuando está activado, el crossfade también se usa al avanzar o retroceder manualmente; de forma predeterminada solo vale al final natural de cada pista. Cuando hay una transición de AutoDJ preparada, avanzar usa ese plan aunque esta opción esté desactivada.
-- **Desactivar salida de video (reproducir solo audio)**: mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar ventanas externas de video.
-- **Mostrar el video de las transmisiones en vivo**: muestra la imagen de las transmisiones en vivo de YouTube en el área del reproductor, incluso con la salida de video desactivada para el resto de la aplicación. Si se desmarca, la transmisión reproduce solo el audio. `Ctrl+Alt+V` alterna esta opción durante una transmisión.
+- `Retroceso` vuelve un nivel cada vez, hasta **Inicio**. Se puede encadenar: de un artista a un álbum, de un canal a una playlist suya.
+- Cada lista trae 20 elementos cada vez.
+- El botón **Acciones...** abre el menú del elemento: **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Ver comentarios**, **Ver detalles**, **Ir al canal** (o **Ir al artista**, seguido del nombre), **Agregar selección...** (en una playlist nueva o en una abierta), **Descargar selección...** y **Guardar en YouTube Music** (playlists o pistas compatibles). En una de tus playlists, el menú también trae **Eliminar playlist de YouTube Music...**, que la elimina de la cuenta, con confirmación, y solo vale para playlists que creaste. En un comentario, trae **Leer el comentario completo**.
+- `Shift+Enter` en una de tus playlists añade las pistas a la playlist actual sin reproducir.
+- `Ctrl+Shift+B` (o **Descargar selección...**) descarga lo que está seleccionado. Con una **playlist o un álbum**, KeyTune busca todas las pistas de dentro y lo descarga todo. Tú eliges la carpeta de destino; cada playlist o álbum se convierte en una **subcarpeta con su nombre**, y las pistas y vídeos sueltos quedan en la propia carpeta, incluso en una selección mixta. Dos listas con el mismo nombre reciben carpetas separadas (*Mix* y *Mix (2)*), y una pista que está en dos playlists se descarga en las dos, para que cada carpeta quede completa.
 
-### Accesibilidad
+Justo encima de la lista, una línea indica dónde estás y cuántos elementos hay (por ejemplo, *Tendencias — Europa: 24 elementos*).
 
-La pestaña **Accesibilidad** tiene una sola opción: **Activar anuncios de accesibilidad**. Cuando está activada, el reproductor anuncia cambios de tiempo, volumen, cambio de pestañas y estado al lector de pantalla. Cuando está desactivada, esos anuncios se suprimen. Los atajos de anuncio bajo demanda (`T`, `V`, `S`) siguen funcionando independientemente de esta configuración; consulta [Recursos de accesibilidad](#recursos-de-accesibilidad) para ver detalles.
+### Buscar y abrir enlaces
 
-### Biblioteca
+- **Buscar o pegar un enlace**: escribe lo que buscas y pulsa `Enter`. Los resultados entran encima de **Inicio**, y `Retroceso` vuelve a él.
+- **Pegar un enlace**: un enlace de playlist, mix o vídeo de YouTube Music o de YouTube pegado en ese campo se abre con `Enter`, en lugar de buscarse.
+- **En** y **Tipo**: dos cuadros junto al campo. **En** elige dónde buscar (*YouTube Music* o *YouTube*) y **Tipo**, qué buscar allí. En ambos, la primera letra salta a la opción.
+    - En *YouTube Music*: *Canciones* (pistas del catálogo), *Vídeos* (videoclips y vídeos de YouTube Music), *Álbumes* (álbumes, sencillos y EP), *Artistas* y *Playlists* (del catálogo de YouTube Music).
+    - En *YouTube*: *Vídeos* (en general, sin exigir cuenta), *Canales* y *Playlists*.
+- **Dentro de un canal o artista**: al entrar, la lista muestra primero lo que hay para ver. En un canal de YouTube: *Vídeos*, *Shorts*, *En vivo* y *Playlists*. En un artista de YouTube Music: *Canciones*, *Álbumes*, *Sencillos y EP*, *Vídeos* y *Artistas similares*. Entra en lo que quieras; `Retroceso` vuelve para elegir otro.
 
-La pestaña **Biblioteca** controla la [biblioteca inteligente](#biblioteca-inteligente). Desactivar la primera opción desactiva la función entera y deshabilita las demás.
+### Detalles de vídeos y canciones
 
-#### Índice de la biblioteca
+**Ver detalles**, en el menú **Acciones...** (o en el menú contextual de la playlist, para un elemento de YouTube), abre un cuadro de lectura con título, canal y suscriptores, duración, visualizaciones, «me gusta», fecha de publicación y la descripción completa. Para el medio que está sonando, usa `Ctrl+Shift+I` (**Reproducción > Ver detalles del medio actual**). El botón **Ir al canal**, o **Ir al artista** en una pista de YouTube Music, abre el canal o el artista en KeyTube; el mismo comando está en el menú **Acciones...**.
 
-- **Activar la biblioteca inteligente**: activa la búsqueda global (`Ctrl+G`), los favoritos, las valoraciones, el historial y la reanudación por archivo.
-- **Indexar automáticamente las carpetas abiertas en el navegador**: al abrir una carpeta, sus medios entran en el índice en segundo plano.
+### Comentarios
 
-#### Historial de reproducción
+**Ver comentarios**, en el menú **Acciones...** de un vídeo o de una canción, abre los comentarios en la propia lista, encima de lo que veías; `Retroceso` vuelve. Para el medio que está sonando, usa `Ctrl+Shift+M` (**Reproducción > Ver comentarios del contenido actual**), que abre la pestaña ya en los comentarios.
 
-- **Guardar un historial local de reproducción**: registra cada pista que suene lo suficiente para contar como escuchada.
-- **Reproducciones guardadas en el historial**: cuántas entradas mantiene el historial (50-20000). Al superarlo, se descartan las más antiguas.
+- Cada línea trae el autor, el texto, la fecha, los «me gusta» y cuántas respuestas hay. El comentario fijado por el canal aparece marcado como *fijado*.
+- `Enter` abre el comentario completo en un cuadro de lectura; `Esc` lo cierra.
+- `Flecha derecha`, en un comentario con respuestas, abre las respuestas.
 
-#### Reanudar donde lo dejaste
+Con YouTube.js activado (**Preferencias > Recursos adicionales**), los comentarios llegan en menos de un segundo, en el idioma del contenido, con paginación y respuestas. Sin él, KeyTune usa yt-dlp, que es más lento, trae solo los 20 primeros comentarios, sin respuestas, y con las fechas en inglés.
 
-- **Recordar la posición de los medios largos**: activa la reanudación por archivo.
-- **Duración mínima para recordar la posición (minutos)**: los medios más cortos que eso siempre empiezan desde el principio (1-240 min).
-- **Margen ignorado al principio y al final (segundos)**: detenerse dentro de ese margen no crea punto de reanudación (5-300 s).
+### Idioma del audio
 
-#### Caché de metadatos y análisis
+**Reproducción > Idioma del audio del contenido actual...** lista las pistas de audio del vídeo de YouTube que está sonando (la original y los doblajes) y pasa a reproducir la elegida desde el mismo punto. La elección vale para ese medio hasta que cierres KeyTune. Para que valga para todos, usa **Audio de los vídeos doblados** en las preferencias.
 
-- **Entradas guardadas en la caché**: cuántos metadatos resueltos y análisis de audio se guardan (100-100000). Las entradas más antiguas se descartan al alcanzar el límite.
+### Transmisiones en vivo
 
-### Descarga
+Pega el enlace de una transmisión en vivo de YouTube en el campo **Buscar o pegar un enlace** (o usa `Ctrl+V`, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo.
 
-La pestaña **Descarga** define los valores predeterminados de `Ctrl+Shift+B`:
+- Suena en el momento actual, sin reanudar desde una posición guardada. La barra de tiempo muestra una etiqueta fija en lugar de la duración, y `T` informa de cuánto tiempo llevas viéndola.
+- Con **Mostrar el video de las transmisiones en vivo** activado (el valor predeterminado), la imagen aparece en el área del reproductor incluso con **Desactivar salida de video** marcado. El vídeo se limita a 720p. Desactivado, la transmisión suena solo en audio, en la variante más ligera. `Ctrl+Alt+V` alterna la opción y reinicia la transmisión en el nuevo modo.
+- No se puede avanzar, retroceder ni ir al principio o al final. Pausar y reanudar continúa desde donde se quedó.
+- Si la conexión se corta, el reproductor intenta reconectar hasta tres veces y te avisa. Si la transmisión ya terminó, el reproductor avisa en lugar de reproducir la grabación desde el principio.
+- Una transmisión programada que aún no empezó avisa; inténtalo de nuevo cuando empiece.
+- Las transmisiones en vivo quedan fuera de AutoDJ y del crossfade, no tienen letra y no generan punto de reanudación.
 
-- **Tipo de descarga predeterminado**: **Audio** o **Video**.
-- **Calidad del audio**: **Original (sin conversión)** mantiene el audio como lo entrega YouTube; **MP3** (128, 192, 256 o 320 kbps) y **FLAC (sin pérdidas)** convierten el audio y requieren FFmpeg.
-- **Frecuencia de muestreo del audio**: **Original**, 44100 Hz o 48000 Hz. Solo se aplica cuando el audio se convierte; YouTube entrega 44,1 o 48 kHz, así que frecuencias mayores no aportarían calidad.
-- **Calidad del video**: **Mejor disponible** o una altura máxima de 2160p a 144p. Si la altura elegida no existe, el video se descarga en la mejor calidad disponible.
-- **Carpeta de descarga**: dónde se guardan los archivos. De forma predeterminada, la carpeta **Downloads\KeyTune** de tu usuario.
-- **Mostrar siempre el diálogo al descargar**: activado (predeterminado), cada descarga abre el diálogo de confirmación; desactivado, la descarga empieza directamente con las opciones de esta pestaña.
+### Radio a partir de la pista actual
 
-### Recursos adicionales
+Con una canción de YouTube Music sonando, pulsa `Ctrl+R` (o usa **Reproducción > Iniciar radio desde esta pista**). KeyTune abre una pestaña nueva, mantiene la posición de la reproducción y pone la pista actual como elemento 1, sin continuar la cola de la radio anterior.
 
-La pestaña **Recursos adicionales** concentra las integraciones opcionales de YouTube y las bibliotecas de AutoDJ. Antes de la primera descarga, KeyTune muestra un diálogo con todos los componentes que se instalarán.
+KeyTune evita repetir pistas de la playlist de origen y de las últimas radios que abriste. Como quien elige los candidatos es YouTube Music, no hay garantía de canciones distintas; si no hay novedades, la pestaña nueva se queda solo con la pista inicial.
 
-#### Integración con YouTube Music y YouTube
+No lo confundas con las [radios en línea](#radios-en-linea), que son emisoras de radio de verdad.
 
-- **Activar recursos adicionales para YouTube Music y YouTube (yt-dlp, ytmusicapi y Node.js)**: descarga y mantiene un ejecutable `yt-dlp`, los paquetes Python necesarios y, cuando no existe uno compatible, un Node.js portátil para el resolvedor EJS. Sin esto, la pestaña de YouTube Music no funciona. En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar, los archivos ya descargados no se eliminan.
-- **Actualizar automáticamente las dependencias de YouTube Music**: verifica y aplica actualizaciones en el intervalo definido abajo. Solo aparece cuando la opción anterior está activada.
-- **Usar versión nightly de yt-dlp (recomendado)**: descarga builds nightly de `yt-dlp`. Recomendado porque YouTube y YouTube Music cambian los mecanismos de extracción con frecuencia y la nightly suele recibir correcciones antes que el canal estable. Solo aparece cuando la integración está activada.
-- **Usar YouTube.js para mejorar la resolución y la reproducción (recomendado)**: instala YouTube.js y usa el mismo Node.js 24 o superior preparado para `yt-dlp`. `yt-dlp` permanece como alternativa y el paquete YouTube.js participa en las verificaciones periódicas de actualizaciones.
-- **Intervalo de actualización (horas)**: cada cuánto tiempo el reproductor intenta actualizar las dependencias cuando se abre la pestaña YouTube Music (1-720 h). Solo está disponible cuando la actualización automática está activada.
+### Gestionar playlists de YouTube Music
 
-#### AutoDJ avanzado
+Además de abrir y guardar playlists, KeyTune edita tus playlists directamente en la cuenta conectada. Todo esto requiere cuenta conectada y cambia la playlist **en tu cuenta de YouTube Music**. Eliminar no se puede deshacer desde el reproductor.
 
-- **Descargar recursos y activar AutoDJ**: descarga por separado `librosa`, NumPy, SciPy, Numba y PyAV. Estas bibliotecas no forman parte del instalador principal. Al desactivar la opción, se conservan los archivos descargados.
-- **Reproducir efectos de DJ**, **Perfil de AutoDJ** y **Duración de la transición** quedan disponibles cuando AutoDJ está activado.
+**Agregar pistas.** Selecciona una o más pistas de YouTube Music (en la playlist actual o en los resultados de la búsqueda) y usa **Agregar a la playlist de YouTube Music...** en el menú contextual (`Shift+F10`). Para agregar la pista que está sonando, pulsa `Ctrl+Shift+A`. Aparece la lista de tus playlists editables; los mixes y las radios personalizadas no entran porque no admiten edición. Arriba hay **Crear nueva playlist...**, que crea una playlist ya con la selección.
 
-#### Biblioteca de YouTube Music
+**Quitar pistas.** Con una playlist tuya abierta en la pestaña actual, selecciona las pistas y usa **Quitar de la playlist de YouTube Music** en el menú contextual. El reproductor pide confirmación. La eliminación solo se ofrece en playlists que creaste o en las que eres colaborador.
 
-Esta sección solo aparece cuando la integración está activada.
+**Crear una playlist.** Usa **Nueva playlist...** (en la sección *Playlists y mixes*) para crear una vacía, o **Crear nueva playlist...** en el diálogo de agregar pistas para crearla ya con la selección. En ambos casos el reproductor pide el **nombre** y la **privacidad**: *Privada* (solo tú la ves), *No listada* (visible para quien tenga el enlace) o *Pública* (aparece en tu perfil y puede salir en búsquedas). El valor predeterminado es Privada.
 
-- **Playlists cargadas por vez**: cuántas playlists de la biblioteca se traen en cada carga (5-200). Valores menores aceleran la apertura; al llegar al final de la lista el reproductor ofrece cargar más.
-- **Mixes personalizadas para descubrir**: límite máximo de elementos recorridos en la página inicial de YouTube Music para encontrar mixes personalizadas (5-200). Valores menores hacen que la sincronización sea más rápida.
-- **Reproducir contenido relacionado al final de la playlist (radio automática)**: cuando la última pista de YouTube Music termina naturalmente - o cuando pides la siguiente pista estando en la última -, el reproductor busca pistas relacionadas (la radio de YouTube Music) y continúa reproduciendo automáticamente. Para una transición continua, la búsqueda empieza poco antes del final de la última pista y el enlace de la siguiente ya se resuelve con anticipación, evitando una pausa mientras se descubre el contenido. También se puede activar o desactivar con la tecla `A` durante la reproducción. Las pistas que ya están en la playlist no se agregan de nuevo, y cuando la radio devuelve solo repetidas el reproductor busca a partir de una pista anterior antes de terminar.
-- **Guardar canciones escuchadas en el historial de YouTube Music**: activada de forma predeterminada. Al escuchar una pista de YouTube Music durante el tiempo suficiente (cerca del 30% de la duración, entre 15 y 30 segundos), el reproductor marca esa pista como vista en el historial de tu cuenta de YouTube Music. Desactívala para reproducir pistas de YouTube Music sin registrar nada en el historial.
+**Eliminar una playlist.** Selecciona la playlist en *Playlists y mixes* y usa **Eliminar playlist...**. Solo se pueden eliminar playlists que creaste.
+
+### Conectar tu cuenta
+
+Para usar tu biblioteca (playlists guardadas, historial, «me gusta» y valoraciones), conecta una cuenta. El diálogo **Conectar cuenta** ofrece dos modos:
+
+1. **Extraer del navegador instalado**: elige Firefox, Google Chrome, Microsoft Edge, Brave u Opera en la lista y haz clic en **Conectar**. KeyTune extrae la sesión del perfil del navegador con `yt-dlp`. Firefox es el más recomendado, por funcionar mejor en Windows.
+2. **Importar archivo o texto manual**: para navegadores que no están en la lista, o configuraciones personalizadas, importa un archivo `cookies.txt` o pega las cabeceras HTTP de la sesión.
+
+En Windows, Chrome, Edge y Brave pueden exigir que el navegador esté completamente cerrado y, en algunas versiones, la propia protección del navegador impide la extracción. Si ocurre, usa Firefox o la importación manual.
+
+#### Qué son las cookies
+
+Las cookies son pequeños archivos de texto que los navegadores guardan para recordar preferencias e inicios de sesión. Cuando entras en YouTube Music, el navegador guarda cookies con tu autenticación. Al conectar la cuenta en KeyTune, la aplicación usa esa sesión para acceder a tu biblioteca sin pedirte la contraseña.
+
+#### Conectar desde el navegador
+
+1. Entra en tu cuenta de [YouTube Music](https://music.youtube.com/) en el navegador (Chrome, Edge, Firefox, Brave u Opera).
+2. En KeyTune, abre KeyTube (`Ctrl+Shift+Y`).
+3. En la sección **Cuenta y biblioteca**, haz clic en **Conectar cuenta...**.
+4. Elige **Extraer del navegador instalado**.
+5. Elige el navegador en la lista y haz clic en **Conectar**.
+
+#### Alternativa: exportar el cookies.txt
+
+Usa este camino si eliges el modo manual o tienes un navegador que no es compatible directamente.
+
+**Antes de empezar**, instala en el navegador la extensión [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc).
+
+**1. Activar la extensión en pestañas de incógnito.** En una pestaña de incógnito, Google no renueva las cookies a cada rato durante el uso normal del navegador.
+
+1. Pulsa `Ctrl+L` para enfocar la barra de direcciones.
+2. Pulsa `Escape` para salir del cuadro de edición de la barra de direcciones.
+3. Pulsa `Alt+F` para abrir el menú del navegador.
+4. Con las flechas, ve hasta **Extensiones**, abre el submenú con `Enter` y elige **Administrar extensiones**.
+5. Busca **Get cookies.txt LOCALLY** y haz clic en **Detalles** (o «Más información»).
+6. En la página de detalles, activa **Permitir en pestañas privadas** (o **Permitir en incógnito**).
+7. Cierra la página y vuelve al navegador.
+
+**2. Iniciar sesión y exportar las cookies.**
+
+1. Abre una pestaña de incógnito (`Ctrl+Shift+N` o `Ctrl+Shift+P`).
+2. Ve a [music.youtube.com](https://music.youtube.com/).
+3. Inicia sesión con tu cuenta de Google.
+4. Abre la extensión **Get cookies.txt LOCALLY** y haz clic en **Exportar** (o **Download**) para guardar el `cookies.txt`.
+5. Cierra la pestaña de incógnito sin visitar otros sitios.
+
+**3. Importar en KeyTune.**
+
+1. En el diálogo **Conectar cuenta...**, elige **Importar archivo o texto manual**.
+2. Selecciona el `cookies.txt` descargado (o pega el texto de las cabeceras) y haz clic en **Conectar**.
+
+#### Seguridad
+
+El `cookies.txt` guarda la autenticación de tu cuenta. Por eso:
+
+- usa el archivo solo en tu propio equipo;
+- no lo compartas con nadie;
+- bórralo después de importarlo, si quieres: la copia interna de KeyTune tiene solo las cookies de YouTube necesarias para la conexión;
+- al desconectar la cuenta en KeyTune, se eliminan las cookies guardadas.
+
+### Atajos de KeyTube
+
+- `Ctrl+Shift+Y`: abrir KeyTube
+- `Ctrl+R`: iniciar una radio a partir de la pista actual
+- `Ctrl+Shift+A`: agregar el medio actual a una playlist de YouTube Music
+- `Ctrl+Shift+I`: ver los detalles del medio actual
+- `Ctrl+Shift+M`: ver los comentarios del medio actual
+- `Ctrl+L`: dar «me gusta» al medio actual
+- `Ctrl+Shift+L`: marcar el medio actual como «no me gusta» (y pasar a la siguiente pista)
+- `A`: activar o desactivar el contenido relacionado al final de la playlist
+- `Enter` en el campo de búsqueda: buscar; con resultados, el foco pasa a la lista
+- `Esc`: cerrar la pestaña, cuando tiene el foco
+
+## Radios en línea
+
+`Ctrl+Shift+N` (o **Ver > Radios en línea en una pestaña**) abre una pestaña para escuchar radios de todo el mundo. Las emisoras vienen de [Radio Browser](https://www.radio-browser.info/), un directorio abierto mantenido por la comunidad. No hace falta cuenta ni activar nada en **Recursos adicionales**: las radios suenan directamente, sin pasar por `yt-dlp`.
+
+La pestaña tiene un campo de búsqueda y, debajo, una sola lista que funciona como el explorador de carpetas y como la lista de KeyTube: entras en los elementos y vuelves.
+
+### El inicio
+
+La lista empieza en **Inicio**, con estos elementos:
+
+- **Radios favoritas**: las que marcaste con `Ctrl+D`.
+- **Escuchadas recientemente**: las últimas radios que reprodujiste.
+- **Radios de tu país**: las del país que KeyTune usa como el tuyo. Por defecto es el de Windows; puedes elegir otro en **Preferencias > Radios en línea**, en **Mi país**, o en el menú de acciones del país, dentro de la pestaña (**Establecer ... como mi país**).
+- **Más escuchadas en el mundo**.
+- **Países**: elige un país y mira las **Más escuchadas**, **Todas, en orden alfabético** o **Por estado o región**.
+- **Géneros**: elige un género para ver sus radios.
+- **Idiomas**: elige un idioma para ver sus radios.
+
+### Teclas y acciones
+
+Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas):
+
+- `Ctrl+D`: añade la radio a favoritas o la quita. Es el mismo favorito de las playlists, y la lista marca la radio como «favorita».
+- `Ctrl+C`: copia la dirección del stream de la radio seleccionada.
+- El botón **Acciones...** abre el menú con **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Añadir a favoritas** (o **Quitar de favoritas**), **Ver detalles de la radio**, **Abrir el sitio web de la radio en el navegador**, **Copiar la dirección del stream** y **Votar por esta radio en el directorio**. Con una radio sonando, el menú también permite marcarla como favorita aunque no esté seleccionada.
+
+**Ver detalles de la radio** abre un cuadro de lectura con nombre, país, estado o región, idioma, géneros, calidad (códec y tasa de bits), votos, oyentes en las últimas 24 horas, sitio web y dirección del stream, con un botón para abrir el sitio. **Votar por esta radio en el directorio** registra tu voto en Radio Browser.
+
+### Buscar y pegar direcciones
+
+Escribe el nombre de una radio en el campo de búsqueda y pulsa `Enter`. El cuadro **En** elige dónde buscar: **Todo el mundo** o solo tu país. Si pegas en el campo la dirección de un stream, suena directamente, sin búsqueda.
+
+### Cómo suena la radio
+
+La radio entra en la playlist actual con el nombre de la emisora. Suena como una transmisión en vivo solo de audio: no se puede avanzar ni retroceder, y queda fuera de AutoDJ y del crossfade.
+
+La canción que anuncia la emisora aparece en la barra de estado, con el formato *Emisora: título*, y entra en el anuncio de estado (`S`). Las recientes salen del historial de reproducción.
 
 ## Ecualizador
 
-El ecualizador se abre por pestaña con `Ctrl+Shift+E`, así que cada playlist puede tener su propio ajuste.
+`Ctrl+Shift+E` (o **Ver > Ecualizador por pestaña**) abre el ecualizador de la pestaña activa, así que cada playlist puede tener su propio ajuste. Eso permite, por ejemplo, dejar una playlist con los graves reforzados y otra con un ajuste neutro, sin rehacerlo todo en cada cambio.
 
-En la práctica, esto permite dejar una playlist con graves reforzados y otra con un ajuste más neutro sin tener que rehacer todo cada vez que cambias de contexto.
+### Cómo usarlo
 
-### Cómo usar
+El campo **Pestaña destino** muestra qué playlist recibe los ajustes. La casilla **Activar ecualizador en esta pestaña** activa o desactiva el efecto solo en ella.
 
-Al abrir el ecualizador, el campo **Pestaña destino** muestra qué playlist recibirá los ajustes. Usa la casilla **Activar ecualizador en esta pestaña** para activar o desactivar el efecto solo en esa pestaña.
+El campo **Preset** lista todos los presets. Los integrados llevan el sufijo *(integrado)*. Al elegir uno, **Descripción** muestra una nota sobre el perfil sonoro y **Resumen del preset** trae la preamplificación y el valor de cada banda, para que lo compruebes antes de aplicar.
 
-El campo **Preset** lista todos los presets disponibles. Los integrados aparecen con el sufijo *(integrado)*. Al seleccionar uno, el campo **Descripción** muestra una nota sobre el perfil sonoro y la sección **Resumen del preset** muestra los valores de preamplificación y de cada banda para revisarlos antes de aplicar.
+#### Botones de gestión
 
-#### Botones de gestión de presets
+- **Nuevo...**: crea un preset personalizado desde cero. El editor pide el nombre, la preamplificación y la ganancia de cada banda. Úsalo cuando quieras una curva que no existe entre los integrados.
+- **Editar...**: edita un preset personalizado. Solo aparece así cuando el seleccionado es personalizado.
+- **Guardar copia...**: cuando el seleccionado es integrado, este es el botón que aparece. Crea una versión editable basada en él, el camino correcto para partir de un preset listo y ajustar.
+- **Duplicar...**: copia un preset personalizado con otro nombre, sin tocar el original. No vale para los integrados.
+- **Eliminar**: elimina de forma definitiva el preset personalizado seleccionado. No vale para los integrados.
+- **Aplicar en todas las pestañas**: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.
 
-- **Nuevo...**: crea un preset personalizado desde cero. Abre el editor para que definas el nombre, la preamplificación y la ganancia de cada banda. Usa este botón cuando quieras una curva que no existe entre los presets integrados.
-- **Editar...**: edita un preset personalizado ya existente. Este botón solo aparece así cuando el preset seleccionado es personalizado.
-- **Guardar copia...**: cuando el preset seleccionado es integrado, el botón cambia de nombre a **Guardar copia...** y crea una versión editable basada en él. Usa este camino para partir de un preset integrado y ajustarlo.
-- **Duplicar...**: crea una copia de un preset personalizado con un nuevo nombre, manteniendo el original intacto. No disponible para presets integrados.
-- **Eliminar**: elimina permanentemente el preset personalizado seleccionado. No disponible para presets integrados.
-- **Aplicar a todas las pestañas**: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.
+#### Editor de presets
 
-#### Editor de preset
-
-El editor muestra el campo de nombre, el control de preamplificación y un control por banda de frecuencia. Cada banda acepta valores de -12,0 dB a +12,0 dB. Los valores positivos refuerzan la frecuencia; los valores negativos atenúan. La preamplificación ajusta la ganancia general antes de todas las bandas.
+El editor tiene el campo del nombre, la preamplificación y un control por banda de frecuencia. Cada banda va de -12,0 dB a +12,0 dB: los valores positivos refuerzan la frecuencia y los negativos la atenúan. La preamplificación ajusta la ganancia general antes de todas las bandas.
 
 ### Presets integrados
 
-KeyTune incluye 18 presets listos para usar:
+KeyTune trae 18 presets:
 
 | Preset | Perfil |
 |---|---|
 | Predeterminado | Curva neutra, mantiene el sonido original |
-| Clásico | Realza definición y brillo sin exagerar los graves |
+| Clásica | Realza la definición y el brillo sin exagerar los graves |
 | Club | Graves y agudos más animados |
-| Dance | Más impacto en los graves y brillo en la parte alta |
-| Graves profundos | Prioriza subgraves y graves para dar peso al beat |
-| Graves y agudos | Curva en V con graves fuertes y agudos brillantes |
+| Dance | Más impacto en el grave y brillo arriba |
+| Graves profundos | Prioriza subgraves y graves, para dar peso al ritmo |
+| Graves y agudos | Curva en V, con graves fuertes y agudos brillantes |
 | Agudos realzados | Destaca detalles, voces y brillo general |
-| Auriculares | Equilibrio pensado para auriculares con sensación de claridad |
+| Auriculares | Equilibrio pensado para auriculares, con sensación de claridad |
 | Sala amplia | Crea una sensación más abierta y amplia |
 | En vivo | Presencia de escenario y ambiente |
 | Fiesta | Curva para volúmenes casuales y música animada |
 | Pop | Voz, brillo y graves limpios |
-| Reggae | Más cuerpo en los graves con medios relajados |
+| Reggae | Más cuerpo en los graves, con medios relajados |
 | Rock | Ataque de guitarras, caja y presencia general |
-| Ska | Bajo firme con medios y agudos vivos |
-| Suave | Escucha suave, reduce agresividad |
-| Rock suave | Equilibrio con leve presencia de voz y brillo |
-| Techno | Beat, subgrave y brillo electrónico |
+| Ska | Bajo firme, con medios y agudos vivos |
+| Suave | Escucha tranquila, reduce la agresividad |
+| Rock suave | Equilibrio con ligera presencia de voz y brillo |
+| Techno | Ritmo, subgrave y brillo electrónico |
 
 ### Consejos
 
 - Reduce la preamplificación si el sonido empieza a distorsionar.
-- Haz ajustes pequeños en las bandas para evitar exageraciones.
-- Usa **Guardar copia...** sobre un preset integrado para partir de una curva lista y ajustar solo lo necesario.
-- Usa **Duplicar...** en vez de editar directamente cuando quieras experimentar sin perder la versión anterior.
+- Para ajustar una curva lista, usa **Guardar copia...** sobre el preset integrado. Para experimentar sin perder la versión actual, usa **Duplicar...**.
 
-## YouTube Music
+## AutoDJ
 
-KeyTune incluye una pestaña dedicada a YouTube Music. Usa `Ctrl+Shift+Y` para abrirla. Funciona como una pestaña separada, así que puedes dejar la biblioteca local en una pestaña y YouTube Music en otra.
+AutoDJ mezcla las pistas de la playlist como lo haría un DJ, en lugar de cortar de una a otra. No forma parte del instalador: KeyTune descarga las bibliotecas de análisis (`librosa`, NumPy, SciPy, Numba y PyAV) después de que confirmes, en **Preferencias > Recursos adicionales**. Una vez instalado, **Reproducción > Activar AutoDJ** lo activa y desactiva.
 
-Para que la pestaña funcione, es necesario activar la integración en `Ctrl+,` > **Recursos adicionales** y conectar una cuenta.
+Analiza la pista actual y las siguientes opciones en segundo plano y elige la siguiente por la energía, la tonalidad, el volumen y el tempo, evitando repetir artistas recientes. Cuando el ritmo es fiable, alinea los tiempos de las dos pistas durante el solapamiento. La cola manual siempre tiene prioridad. Si el análisis se retrasa, falla o no tiene confianza, el reproductor usa el crossfade normal o pasa a la siguiente pista con normalidad.
 
-La integración de YouTube Music depende de la forma en que cambia el sitio y de cómo `yt-dlp` interpreta esas páginas. Por eso, puede haber errores, fallas temporales e incluso paradas sin explicación aparente; cuando eso ocurra, normalmente es necesario actualizar las dependencias o intentar de nuevo más tarde.
+**Reproducir playlist con AutoDJ** crea una pestaña aparte, sin tocar la playlist original. La pista actual empieza al instante, y KeyTune mantiene hasta cinco canciones preparadas por delante. La pestaña tiene un campo de lectura con el origen, cuántas pistas están preparadas, la actividad del análisis y la próxima transición: BPM, ajuste de tempo y, cuando hace falta una transición normal, el motivo. Cada elemento aparece como reproducido, sonando, siguiente o preparado.
 
-### Cuenta y biblioteca
+Los controles de la sesión cambian la siguiente pista, recalculan la secuencia, añaden archivos, pausan o reanudan la preparación y finalizan la sesión conservando el tramo ya preparado. Las mismas acciones están en `Shift+F10`, sobre la lista. La sesión se restaura junto con el reproductor.
 
-La sección **Cuenta y biblioteca** muestra el estado de la cuenta conectada, el resumen de la biblioteca cargada y el último mensaje de operación. Tiene tres botones:
+Las opciones de AutoDJ están en **Preferencias > Reproducción** y **Recursos adicionales**; consulta [Configuración](#configuracion).
 
-- **Conectar cuenta...**: abre el diálogo para conectar una cuenta de YouTube Music o renovar la autenticación guardada.
-- **Desconectar cuenta**: elimina la autenticación guardada de esta instalación.
-- **Actualizar biblioteca**: vuelve a buscar las playlists y mixes disponibles en la cuenta conectada y actualiza las valoraciones de las canciones visibles en la cuenta.
+## Configuración
 
-Las acciones **Me gusta** y **No me gusta** se envían a la cuenta conectada, por lo que también aparecen en YouTube Music en el móvil y otros dispositivos. KeyTune mantiene, por cuenta, una caché persistente de las pistas marcadas como no me gusta y la actualiza desde el historial, las canciones con me gusta y las listas devueltas por YouTube Music. Esas pistas se eliminan de las playlists y radios cargadas mediante la cuenta y se omiten si reaparecen en una cola restaurada. Como YouTube Music no ofrece una lista completa de canciones marcadas como no me gusta, una valoración hecha fuera de KeyTune solo se puede importar cuando la pista vuelve a aparecer en una de esas respuestas de la cuenta; **Actualizar biblioteca** fuerza esta comprobación.
+Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General**, **Reproducción**, **Accesibilidad**, **Biblioteca**, **Descarga**, **KeyTube**, **Radios en línea** y **Recursos adicionales**.
 
-Debajo de la sección de cuenta queda la lista **Playlists y mixes** con todas las playlists y mixes de la biblioteca. Usa el campo **Filtro** para localizar elementos por nombre. El contador sobre la lista muestra cuántos elementos están visibles después del filtro. Debajo de la lista están las acciones:
+### General
 
-- **Abrir selección**: abre la playlist o mix seleccionado en una nueva pestaña (`Enter` en la lista hace lo mismo).
-- **Nueva playlist...**: crea una playlist nueva en tu cuenta. El reproductor pide el nombre y la privacidad (Privada, No listada o Pública). Consulta [Administrar playlists de YouTube Music](#administrar-playlists-de-youtube-music).
-- **Eliminar playlist...**: elimina la playlist seleccionada de tu cuenta, con confirmación. Solo funciona en playlists que creaste; mixes, listas de éxitos y playlists de terceros no se pueden eliminar.
-- **Cargar más playlists**: trae el siguiente lote cuando hay más playlists para cargar. También puedes presionar `Page Down` estando al final de la lista.
+**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre.
 
-### Búsqueda en el catálogo y en YouTube
+La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú *Abrir con* para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro.
 
-La sección **Búsqueda en el catálogo y en YouTube** está contraída de forma predeterminada. Expándela para buscar. Tiene:
+La sección **Registro de logs** ayuda a investigar problemas. **Registrar logs de diagnóstico** escribe un archivo de registro, en inglés, en la carpeta de datos, útil para adjuntar a un informe de errores. **Nivel de detalle** va de *Solo errores*, el más silencioso, a *Depuración*, que genera archivos grandes. **Abrir la carpeta de logs** te lleva hasta ellos.
 
-- **Campo de búsqueda**: escribe lo que quieres buscar y presiona `Enter` o haz clic en **Buscar**.
-- **Alcance**: elige dónde se hará la búsqueda. Las opciones disponibles son:
-    - *YouTube Music - canciones*: pistas del catálogo de YouTube Music.
-    - *YouTube Music - videos*: videoclips y contenido en video de YouTube Music.
-    - *YouTube Music - playlists*: playlists del catálogo de YouTube Music.
-    - *YouTube - videos*: videos de YouTube en general, sin exigir cuenta.
-- **Explorar**: cuatro botones traen más contenido a la misma lista de resultados:
-    - **En tendencia...**: abre un menú con *Global* en la parte superior y los demás países agrupados en submenús por continente. Al elegir un país, las listas de éxitos y los destacados en tendencia de YouTube Music aparecen en la lista, como playlists que puedes abrir o guardar en la biblioteca. No exige cuenta conectada.
-    - **Moods y géneros...**: abre un menú con las categorías de moods y géneros de YouTube Music (por ejemplo *Enfoque*, *Entrenamiento*, *Pop*, *Rock*). Al elegir una categoría, sus playlists aparecen en la lista. No exige cuenta conectada.
-    - **Me gusta**: carga las pistas marcadas con me gusta (la playlist *Liked Music* de tu cuenta). Exige cuenta conectada.
-    - **Historial**: carga tu historial de reproducción de YouTube Music, desde la pista más reciente hasta la más antigua. Exige cuenta conectada.
-- **Lista de resultados**: muestra los elementos encontrados (de la búsqueda, de las listas en tendencia, de moods y géneros, de los me gusta o del historial). La lista permite **selección múltiple**: usa `Ctrl+Flechas` para mover el foco sin alterar la selección, `Ctrl+Espacio` para marcar o desmarcar el elemento enfocado y `Shift+Flechas` para seleccionar un intervalo. `Enter` agrega la selección a la playlist actual; `Ctrl+Enter` abre la selección en una nueva playlist; `Shift+F10` o el botón **Acciones...** abre el menú contextual con opciones adicionales.
-- **Guardar en Music**: guarda la selección en la biblioteca de YouTube Music cuando el resultado es compatible (playlists o pistas).
+### Reproducción
 
-### Abrir playlist o video
+- **Crossfade (segundos)**: el solapamiento de audio entre pistas en el cambio automático (0 a 12 s). Usa 0 para desactivarlo. Solo vale entre archivos de audio.
+- **Aplicar el crossfade al cambiar de pista manualmente**: con la opción activada, el crossfade también se aplica al avanzar o retroceder con los controles; por defecto, solo en el final natural de la pista. Cuando hay una transición de AutoDJ lista, avanzar usa ese plan incluso con la opción desactivada.
+- **Dispositivo de audio**: la salida de sonido. *Predeterminado del sistema* sigue el dispositivo principal de Windows.
+- **Desactivar salida de video (reproducir solo el audio)**: reproduce solo el audio, incluso de archivos de vídeo. Evita ventanas externas de vídeo.
+- **Mostrar el video de las transmisiones en vivo**: muestra la imagen de las transmisiones de YouTube en el área del reproductor incluso con la salida de vídeo desactivada para el resto de la aplicación. Desmarcado, la transmisión suena solo en audio. `Ctrl+Alt+V` lo alterna durante una transmisión.
 
-La sección **Abrir playlist o video** también está contraída de forma predeterminada. Expándela para pegar un enlace de playlist, mix o video de YouTube Music o de YouTube. Haz clic en **Abrir enlace** o presiona `Enter` en el campo para abrir.
+El **volumen predeterminado**, los pasos de **volumen** y de **búsqueda** (cuánto cambia cada flecha), la **repetición predeterminada** y el **modo aleatorio** de las playlists nuevas completan la pestaña y también hacen lo que dice su nombre.
 
-### Transmisiones en vivo
+Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace una mezcla larga y equilibrada; *Fiesta* concentra el cambio de graves en el centro y sube la energía poco a poco; *Electrónica* usa cortes más fuertes y un cambio más rápido, pensado para ritmos marcados) y **Duración de la transición de AutoDJ** (8, 16 o 32 pulsos, independiente del crossfade normal).
 
-Pega el enlace de una transmisión en vivo de YouTube en **Abrir playlist o video** (o usa `Ctrl+V` / `Ctrl+Shift+V`, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo:
+### Accesibilidad
 
-- Se reproduce en el momento actual, sin retomar desde una posición guardada. El reproductor anuncia "Transmisión en vivo", la barra de tiempo muestra una etiqueta fija en lugar de la duración y `T` indica cuánto tiempo llevas viéndola.
-- Con **Mostrar el video de las transmisiones en vivo** activado (predeterminado), la imagen aparece en el área del reproductor aunque **Desactivar salida de video** esté marcado. El video se limita a 720p. Desactivado, la transmisión reproduce solo el audio, con la variante más ligera. `Ctrl+Alt+V` alterna la opción y reinicia la transmisión en el nuevo modo.
-- No es posible avanzar, retroceder ni ir al inicio o al final: el reproductor lo avisa. Pausar y reanudar continúa desde donde se detuvo.
-- Si la conexión se interrumpe, el reproductor intenta reconectar hasta tres veces (tras 2, 5 y 10 segundos) y anuncia la pérdida y el restablecimiento. Si la transmisión ya terminó, avisa "La transmisión en vivo ha terminado" en lugar de reproducir la grabación desde el principio.
-- Una transmisión programada que aún no ha comenzado avisa "Esta transmisión en vivo aún no ha comenzado."; inténtalo de nuevo cuando empiece.
-- Las transmisiones en vivo quedan fuera de AutoDJ y del crossfade, no tienen letra y no generan un punto de reanudación. El historial de reproducción las registra tras el tiempo mínimo de escucha. El temporizador de **fin de la pista** no se aplica a una transmisión en vivo; usa una duración predefinida.
+Tiene una sola opción: **Activar anuncios de accesibilidad**. Activada, el reproductor anuncia al lector de pantalla los cambios de tiempo, volumen, cambio de pestañas y estado. Desactivada, esos anuncios se detienen. Los atajos de anuncio bajo demanda (`T`, `V` y `S`) funcionan en cualquier caso. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
 
-### Radio desde la pista actual
+### Biblioteca
 
-Presiona `Ctrl+R` o usa **Reproducción > Iniciar radio desde esta pista** mientras se reproduce una canción de YouTube Music. KeyTune abre una pestaña nueva, conserva la posición de reproducción y coloca la pista actual como elemento 1, sin continuar la cola de la radio anterior.
+Controla la [biblioteca inteligente](#biblioteca-inteligente). Desactivar **Activar la biblioteca inteligente** desactiva la función entera y deshabilita las demás opciones.
 
-Para reducir repeticiones entre radios, el reproductor excluye las pistas ya recorridas en la playlist de origen y mantiene un historial de las 200 canciones más recientes de YouTube Music, restaurado junto con la sesión. KeyTune puede realizar hasta tres búsquedas y solo agrega IDs nuevos. Como YouTube Music elige los candidatos, no es posible garantizar canciones diferentes; si no hay novedades, la pestaña nueva permanece únicamente con la pista inicial.
+- **Indexar automáticamente las carpetas abiertas en el navegador**: al abrir una carpeta, sus medios entran en el índice en segundo plano.
+- **Guardar un historial local de reproducción** y **Reproducciones guardadas en el historial** (50 a 20000): al pasar del límite, salen las más antiguas.
+- **Recordar la posición de los medios largos**, **Duración mínima para recordar la posición** (1 a 240 minutos) y **Margen ignorado al principio y al final** (5 a 300 segundos): consulta [Reanudar donde lo dejaste](#reanudar-donde-lo-dejaste).
+- **Entradas guardadas en la caché** (100 a 100000): cuántos metadatos y análisis de audio se guardan.
 
-### Administrar playlists de YouTube Music
+### Descarga
 
-Además de abrir y guardar playlists, KeyTune permite editar tus playlists directamente en la cuenta conectada. Todas estas acciones exigen cuenta conectada y modifican la playlist **en tu cuenta de YouTube Music**; lo que involucra eliminar se confirma antes y el reproductor no puede deshacerlo.
+Define los valores predeterminados de `Ctrl+Shift+B`:
 
-**Agregar pistas a una playlist.** Selecciona una o más pistas de YouTube Music (en la playlist actual o en la lista de resultados de búsqueda) y usa **Agregar a playlist de YouTube Music...** en el menú contextual (`Shift+F10`), o presiona `Ctrl+Shift+A` para agregar la pista que está sonando. Aparece una lista de tus playlists editables; mixes y radios personalizadas no entran en esa lista porque no aceptan edición. En la parte superior de la lista está la opción **Crear nueva playlist...**, que crea una playlist nueva ya con la selección actual (el mismo comportamiento de la app de YouTube Music).
+- **Tipo de descarga predeterminado**: **Audio** o **Vídeo**.
+- **Calidad del audio**: **Original (sin conversión)** mantiene el audio como lo entrega YouTube; **MP3** (128, 192, 256 o 320 kbps) y **FLAC (sin pérdida)** convierten el audio y exigen FFmpeg.
+- **Frecuencia de muestreo del audio**: **Original**, 44100 Hz o 48000 Hz. Solo vale cuando el audio se convierte. YouTube entrega 44,1 o 48 kHz, así que frecuencias mayores no aportarían ganancia de calidad.
+- **Calidad del vídeo**: **Mejor disponible** o una altura máxima de 2160p a 144p. Si la altura elegida no existe, el vídeo se descarga en la mejor calidad disponible.
+- **Carpeta de descarga**: dónde se guardan los archivos. Por defecto, **Descargas\KeyTune**, en la carpeta de tu usuario.
+- **Mostrar siempre el diálogo al descargar**: activado (el valor predeterminado), cada descarga abre el diálogo de confirmación; desactivado, la descarga empieza directamente con las opciones de esta pestaña.
 
-**Quitar pistas de una playlist.** Con una playlist tuya de YouTube Music abierta en la pestaña actual, selecciona las pistas y usa **Quitar de la playlist de YouTube Music** en el menú contextual. El reproductor pide confirmación y, al concluir, también quita las pistas de la pestaña abierta para que la lista siga reflejando la cuenta. La eliminación solo se ofrece en playlists que creaste o donde eres colaborador.
+### KeyTube
 
-**Crear una playlist.** Usa **Nueva playlist...** en la sección *Playlists y mixes* para crear una playlist vacía, o **Crear nueva playlist...** en el diálogo de agregar pistas para crearla ya con la selección. En ambos casos el reproductor abre un diálogo donde informas el **nombre** y eliges la **privacidad**: *Privada* (solo tú la ves), *No listada* (visible para quien tenga el enlace) o *Pública* (aparece en tu perfil y puede aparecer en búsquedas). El valor predeterminado es Privada. Después de crearla, la biblioteca se actualiza para que la nueva playlist aparezca en la lista.
+Reúne las opciones de YouTube y de YouTube Music. Solo tienen efecto con la integración activada en **Recursos adicionales**.
 
-**Eliminar una playlist.** Selecciona la playlist en la lista *Playlists y mixes* y usa **Eliminar playlist...**. Solo se pueden eliminar playlists que creaste; el reproductor confirma antes y actualiza la biblioteca enseguida.
+**Biblioteca**
 
-### Sesión de YouTube Music
+- **Playlists cargadas por vez**: cuántas playlists de la biblioteca llegan en cada carga (5 a 200). Los valores menores abren más rápido; al llegar al final de la lista, el reproductor ofrece cargar más.
+- **Mixes personalizados para descubrir**: el máximo de elementos revisados en el inicio de YouTube Music para encontrar mixes personalizados (5 a 200). Los valores menores hacen la sincronización más rápida.
 
-1. **Extraer del navegador instalado:** Selecciona Firefox, Google Chrome, Microsoft Edge, Brave u Opera de la lista y haz clic en **Conectar**. KeyTune extraerá la sesión directamente del perfil mediante `yt-dlp`. Se recomienda Firefox porque ofrece mayor compatibilidad en Windows.
-2. **Importación de archivo o texto manual:** Para navegadores no listados o configuraciones personalizadas, puedes importar un archivo `cookies.txt` exportado o pegar los encabezados HTTP de la sesión.
+**Reproducción**
 
-En Windows, Chrome, Edge y Brave pueden requerir que el navegador esté completamente cerrado y, en algunas versiones, la protección del propio navegador puede impedir la extracción. Si eso ocurre, usa Firefox o la importación manual.
+- **Reproducir pistas relacionadas al final de la playlist**: cuando termina la última pista de YouTube Music, o cuando pides la siguiente estando en la última, el reproductor busca pistas relacionadas (la radio de YouTube Music) y sigue sonando, sin pausa entre una y otra. La tecla `A` lo activa y desactiva durante la reproducción. Las pistas que ya están en la playlist no entran de nuevo.
+- **Guardar lo que escuché en el historial de YouTube Music**: activada por defecto. Al escuchar una pista el tiempo suficiente (alrededor del 30% de la duración, entre 15 y 30 segundos), el reproductor la marca como vista en el historial de tu cuenta. Desactívala para reproducir sin registrar nada.
 
-#### Qué son las cookies
+**Idioma y región**
 
-Las cookies son pequeños archivos de texto que los navegadores almacenan para recordar tus preferencias e información de inicio de sesión en sitios web. Cuando inicias sesión en YouTube Music, el navegador guarda cookies que contienen tu autenticación. Al conectar tu cuenta en KeyTune, la aplicación utiliza esa información de sesión iniciada para acceder a tu biblioteca sin pedir tu contraseña.
+- **Idioma del contenido**: el idioma que se pide a YouTube en las búsquedas y en los textos que devuelve (recuentos, fechas). El valor predeterminado es **El mismo de KeyTune**. Vale para las búsquedas de YouTube con YouTube.js activado; las búsquedas de YouTube Music usan solo la región.
+- **Región del contenido**: el país que se usa en las búsquedas de YouTube y de YouTube Music. Con **Automática**, YouTube decide según tu conexión.
+- **Audio de los vídeos doblados**: algunos vídeos traen el audio original y doblajes. Aquí eliges qué suena: **La que YouTube entregue** (el valor predeterminado), **Original del video** o el doblaje en un idioma. Los vídeos sin la pista pedida suenan con normalidad. Una pista que no es la predeterminada pasa por yt-dlp y tarda unos segundos más en empezar.
 
-#### Cómo conectar mediante extracción directa del navegador
+### Radios en línea
 
-1. Asegúrate de tener la sesión iniciada en tu cuenta de [YouTube Music](https://music.youtube.com/) en tu navegador (Chrome, Edge, Firefox, Brave o Opera).
-2. En KeyTune, abre la pestaña de YouTube Music (`Ctrl+Shift+Y`).
-3. En la sección **Cuenta y biblioteca**, haz clic en **Conectar cuenta...**.
-4. En el diálogo que se abre, selecciona la opción **Extraer del navegador instalado**.
-5. Elige tu navegador en la lista y haz clic en el botón **Conectar**.
+- **Mi país**: el país con el que se abre el inicio de la pestaña **Radios en línea** y que aparece como opción de búsqueda. Con **Automático (seguir el sistema)**, vale el país configurado en Windows. Un país que no está en la lista se puede definir en la propia pestaña, en el menú de acciones del país.
 
-#### Paso a paso alternativo: exportación manual de cookies.txt
+### Recursos adicionales
 
-Si optas por el modo manual o usas un navegador no compatible directamente:
+Reúne las integraciones y las bibliotecas opcionales de YouTube y de AutoDJ. Antes de la primera descarga, KeyTune muestra un diálogo con todos los componentes que se instalarán.
 
-**Requisito previo:** instala la extensión [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) en tu navegador.
+**Componentes de YouTube**
 
-**1. Activar la extensión en pestañas de incógnito**
+- **Activar la integración con YouTube y YouTube Music**: descarga y mantiene el ejecutable `yt-dlp`, los paquetes de Python necesarios y, si no hay uno compatible, un Node.js portátil para el resolutor EJS. Sin esto, KeyTube no funciona. La primera vez la descarga puede tardar unos minutos y requiere internet. Al desactivarla, los archivos ya descargados se quedan donde están.
+- **Actualizar los componentes automáticamente**: busca y aplica actualizaciones en el intervalo definido abajo. Solo está disponible con la integración activada.
+- **Usar la versión nightly de yt-dlp (recomendado)**: descarga las builds nightly de `yt-dlp`. YouTube cambia sus mecanismos de extracción con frecuencia, y la nightly suele recibir las correcciones antes que el canal estable.
+- **Usar YouTube.js (recomendado)**: mejora la resolución y la reproducción. Instala YouTube.js y usa el mismo Node.js 24 o superior preparado para `yt-dlp`, que sigue como alternativa. El paquete entra en la comprobación periódica de actualizaciones.
+- **Intervalo de actualización (horas)**: cada cuánto intenta el reproductor actualizar las dependencias cuando se abre KeyTube (1 a 720 h). Solo está disponible con la actualización automática activada.
 
-Usar una pestaña de incógnito/privada evita que Google renueve las cookies con frecuencia durante el uso normal del navegador.
+**AutoDJ**
 
-1. Presiona `Ctrl+L` para enfocar la barra de direcciones.
-2. Presiona `Esc` para salir del cuadro de edición de la barra de direcciones.
-3. Presiona `Alt+F` para abrir el menú del navegador.
-4. Navega con las flechas hasta **Extensiones**, expande el submenú presionando `Enter` y elige **Administrar extensiones**.
-5. Localiza **Get cookies.txt LOCALLY** y haz clic en **Detalles** (o "Más información").
-6. En la página de detalles, localiza la opción **Permitir en pestañas privadas** o **Permitir en incógnito** y actívala.
-7. Cierra la página y vuelve a tu navegador.
+- **Descargar recursos y activar AutoDJ**: descarga aparte `librosa`, NumPy, SciPy, Numba y PyAV, que no vienen en el instalador. Al desactivarlo, los archivos descargados se quedan donde están.
+- **Reproducir efectos de DJ durante las transiciones**, **Perfil de AutoDJ** y **Duración de la transición de AutoDJ** quedan disponibles con AutoDJ activado.
 
-**2. Iniciar sesión y exportar cookies**
+## Funciones de accesibilidad
 
-1. Abre una nueva pestaña de incógnito/privada (`Ctrl+Shift+N` o `Ctrl+Shift+P`).
-2. Navega a [music.youtube.com](https://music.youtube.com/).
-3. Inicia sesión con tu cuenta de Google.
-4. Abre la extensión **Get cookies.txt LOCALLY** y haz clic en **Exportar** o **Download** para guardar el archivo `cookies.txt`.
-5. Cierra la pestaña de incógnito sin navegar a otros sitios.
+KeyTune se pensó para lectores de pantalla y para usarse solo con el teclado:
 
-**3. Importar en KeyTune**
+- el foco evita saltos innecesarios al área nativa de vídeo;
+- los estados y la navegación se anuncian cuando hay soporte de accesibilidad disponible;
+- los campos, botones, listas y grupos tienen nombres y descripciones legibles por los lectores de pantalla.
 
-1. En el diálogo **Conectar cuenta...** de KeyTune, selecciona **Importar archivo o texto manual**.
-2. Selecciona el archivo `cookies.txt` descargado (o pega el texto de los encabezados) y haz clic en **Conectar**.
+Si usas un lector de pantalla, `T`, `V` y `S` (consulta [Atajos de reproducción](#atajos-de-reproduccion)) y la ayuda rápida `F1` te ayudan a orientarte sin depender de los anuncios automáticos. Esos anuncios, como el cambio de pista, el cambio de pestaña y el cambio de volumen, se pueden activar o desactivar en `Ctrl+,` > **Accesibilidad**.
 
-#### Información de seguridad
-
-El archivo `cookies.txt` exportado contiene información de autenticación de tu cuenta. Por seguridad:
-
-- Usa el archivo solo en tu propio equipo.
-- No compartas el archivo con otras personas.
-- Elimina el archivo después de importarlo en KeyTune si lo deseas. La copia interna contiene únicamente las cookies de YouTube necesarias para la conexión.
-- Si desconectas la cuenta en KeyTune, las cookies almacenadas se eliminarán.
-
-### Atajos
-
-- `Ctrl+Shift+Y`: abrir la pestaña de YouTube Music
-- `Ctrl+R`: iniciar una nueva radio desde la pista actual
-- `Ctrl+Shift+A`: agregar el medio actual a una playlist de YouTube Music
-- `Enter` en el campo de búsqueda: ejecutar la búsqueda
-- `Enter` en la lista de resultados: agregar el elemento a la playlist actual
-- `Ctrl+Enter` en la lista de resultados: abrir el elemento en una nueva playlist
-- `Ctrl+Espacio` en la lista de resultados: marcar o desmarcar el elemento enfocado (selección múltiple)
-- `Ctrl+Flechas` en la lista de resultados: mover el foco sin alterar la selección
-- `Shift+Flechas` en la lista de resultados: seleccionar un intervalo de elementos
-- `Shift+F10` en la lista de resultados: abrir el menú de acciones
-- `Enter` en la lista de playlists de la biblioteca: abrir la selección
-- `Page Down` al final de la lista de playlists: cargar más playlists
-- `Esc`: cerrar la pestaña cuando esté enfocada
-
-## Recursos de accesibilidad
-
-La aplicación fue diseñada para lectores de pantalla y uso por teclado. En general:
-
-- el foco evita saltos innecesarios al área nativa de video;
-- los anuncios de estado y de navegación se hacen cuando el soporte de accesibilidad está disponible;
-- los campos, botones y listas tienen nombres y descripciones legibles por lectores de pantalla.
-
-Si usas lector de pantalla, los atajos de anuncio bajo demanda `T`, `V` y `S` (descritos en [Atajos de reproducción](#atajos-de-reproducción)) y la ayuda rápida `F1` ayudan a orientarte sin depender de los eventos automáticos.
-
-Los anuncios automáticos, como cambio de pista, cambio de pestaña y alteración de volumen, se pueden activar o desactivar en `Ctrl+,` > **Accesibilidad**.
-
-La búsqueda de elementos evita anuncios redundantes: como `Ctrl+F`, `F3` y `Shift+F3` mueven la selección al elemento encontrado, quien lee la pista es el propio lector de pantalla, y la posición en la búsqueda queda solo en la barra de estado. La biblioteca inteligente sigue la misma idea: las listas de resultados y del historial tienen columnas con nombre, el foco pasa a la lista en cuanto termina la búsqueda, y los favoritos y las valoraciones, que nunca aparecen en la etiqueta del elemento, siempre se anuncian al cambiar. El temporizador, a su vez, avisa al programarse, cuando faltan 5 minutos, cuando falta 1 minuto y al pausar la reproducción; su estado también aparece en el anuncio de la tecla `S`.
-
-El panel de letras también está pensado para ese uso: `Ctrl+Alt+L` o la casilla **Letras** en el área de tiempo muestran u ocultan el panel, y el texto se puede leer, navegar con las flechas y copiar con el botón **Copiar letra completa**. Cuando cambia la pista, el reproductor intenta buscar la letra automáticamente primero en LRCLIB y después en YouTube Music.
+Los favoritos y las valoraciones se dicen junto con el elemento, y los detalles, los comentarios y los permisos de los plugins aparecen en campos de lectura con etiqueta. El lector de pantalla también anuncia el nombre del grupo cuando el foco entra en él.
 
 ## Actualizaciones
 
-Al iniciar, KeyTune puede verificar actualizaciones automáticamente. Para verificar manualmente en cualquier momento, usa el menú **Ayuda > Buscar actualizaciones**.
+Al iniciar, KeyTune puede comprobar las actualizaciones por sí solo. Para comprobarlas en cualquier momento, usa **Ayuda > Comprobar actualizaciones**.
 
-Cuando haya una versión nueva, la aplicación muestra un diálogo con las notas del lanzamiento, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, la aplicación descarga el paquete, muestra el avance de la descarga y pide permiso para instalar después de que el archivo esté listo. Si cancelas o cierras el diálogo, no se instala nada y el reproductor continúa funcionando normalmente.
+Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo.
 
 ## Solución de problemas
 
-Si la aplicación no abre correctamente, primero confirma si la instalación se completó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y si el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.
+**La aplicación no se abre bien.** Comprueba que la instalación terminó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y que el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.
 
-Si el reproductor no encuentra el runtime de MPV, verifica si está en una de estas rutas: una carpeta `mpv/` junto al ejecutable, `MPV_HOME`, `MPV_DLL_DIR`, la caché guardada de la ejecución anterior o una instalación de Chocolatey compatible.
+**El reproductor no encuentra el runtime de MPV.** Comprueba que está en uno de estos lugares: una carpeta `mpv/` junto al ejecutable, `MPV_HOME`, `MPV_DLL_DIR`, la caché guardada de la ejecución anterior o una instalación compatible de Chocolatey.
 
-Si un medio no abre, prueba otro archivo local para separar un problema de ruta inválida, permiso o tipo de archivo incompatible.
+**La asociación de archivos no funciona como esperabas.** Son dos pasos separados. Primero, KeyTune debe estar registrado como opción (durante la instalación, o después en **Configuración > Preferencias > General > Registrar como reproductor predeterminado**). Segundo, debe estar elegido como aplicación predeterminada para esos formatos en la configuración de aplicaciones predeterminadas de Windows. Registrar no basta para que KeyTune sea el predeterminado.
 
-Si la asociación de archivos no funciona como se esperaba, hay dos pasos separados que confirmar: primero, que KeyTune fue registrado como opción (durante la instalación o después en **Configuración > General > Registrar como reproductor predeterminado**); segundo, que fue elegido como aplicación predeterminada para esos formatos en la configuración de apps predeterminadas de Windows. El registro por sí solo no convierte a KeyTune automáticamente en el predeterminado.
+**KeyTube no carga o muestra errores de dependencias.** Abre `Ctrl+,` > **Recursos adicionales** y comprueba que **Activar la integración con YouTube y YouTube Music** está marcada. La descarga inicial puede tardar unos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de `yt-dlp`, en las mismas preferencias: suele recibir correcciones antes que el canal estable.
 
-Si la restauración de sesión falla, abre la app una vez sin depender de la sesión anterior y verifica si la configuración de ventana y carpeta se está guardando normalmente.
+**Una conversión falló.** Comprueba que el archivo se abre con normalidad en el reproductor y que la carpeta de destino admite escritura. El mensaje de FFmpeg se muestra y se anuncia; los archivos dañados o en formatos poco comunes pueden no convertirse.
 
-Si una conversión falla, confirma que el archivo se abre con normalidad en el reproductor y que la carpeta de destino permite escritura. El mensaje de FFmpeg se muestra y se anuncia; los archivos dañados o en formatos poco comunes pueden no convertirse.
+**Una descarga o una transmisión en vivo no funciona.** Comprueba que los **Recursos adicionales** están activados y actualizados (`yt-dlp` cambia con frecuencia para seguir a YouTube). En una descarga, comprueba también que la carpeta existe y admite escritura. El error 429 indica un bloqueo temporal de YouTube por exceso de peticiones: espera unos minutos e inténtalo de nuevo.
 
-Si una descarga falla, confirma que los **Recursos adicionales** estén activados y actualizados y que la carpeta de descarga exista y permita escritura. Para convertir el audio hace falta FFmpeg; sin él, KeyTune descarga en la calidad original. El error 429 indica un bloqueo temporal de YouTube por exceso de solicitudes: espera unos minutos.
+**Una radio en línea no suena o la lista no se abre.** El directorio de Radio Browser y las propias emisoras a veces están fuera de servicio. Prueba otra radio de la lista, o vuelve a la lista y ábrela de nuevo.
 
-Si una transmisión en vivo no se abre, confirma que los **Recursos adicionales** estén activados y actualizados (`yt-dlp` cambia con frecuencia para seguir a YouTube). Muchas solicitudes seguidas a YouTube pueden causar un bloqueo temporal (error 429); espera unos minutos e inténtalo de nuevo.
+**La sesión de YouTube caducó, o el reproductor pide autenticación otra vez.** Exporta las cookies del navegador como se describe en [Conectar tu cuenta](#conectar-tu-cuenta) y vuelve a conectar.
 
-Si la pestaña de YouTube Music no carga o muestra errores de dependencias, abre `Ctrl+,` > **Recursos adicionales** y confirma que la opción **Activar recursos adicionales para YouTube Music y YouTube** esté marcada. La descarga inicial puede tardar algunos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de `yt-dlp` en las mismas preferencias; suele recibir correcciones antes que el canal estable.
-
-Si la sesión de YouTube Music expira o el reproductor pide autenticación de nuevo, exporta las cookies del navegador como se describe en la sección [Sesión de YouTube Music](#sesión-de-youtube-music) y reconecta la cuenta.
-
-Para investigar otros problemas, activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel ajustado a *Depuración*, el reproductor graba información detallada en `keytune.log` en la carpeta de datos. Usa **Abrir carpeta de logs** para localizar el archivo y, si necesitas reportar un problema, adjúntalo a la issue.
+**Otros problemas.** Activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel en *Depuración*, el reproductor escribe información detallada en `keytune.log`, en la carpeta de datos. **Abrir la carpeta de logs** te lleva hasta el archivo. Si vas a informar del problema, adjunta el log a la issue.
 
 ## Plugins y marketplace
 
-Abre **Configuración > Gestionar plugins** para instalar un archivo `.ktplugin` o elige **Abrir marketplace**. Selecciona un plugin, revisa autor, versión, origen, permisos y aislamiento y confirma **Instalar y activar**. El gestor también permite activar, desactivar y desinstalar plugins; usa `Tab` para recorrer los controles y las flechas para seleccionar un elemento.
+Abre **Configuración > Gestionar plugins...** para instalar un archivo `.ktplugin` o elegir **Abrir marketplace**. Selecciona un plugin, comprueba autor, versión, origen, permisos y aislamiento y confirma con **Instalar y activar**. El gestor también activa, desactiva y desinstala plugins.
 
-Las acciones aparecen en **Configuración > Acciones de plugins**. Los plugins también pueden ofrecer pestañas y pantallas. Instala solo código de autores confiables: el proceso separado no es una sandbox de seguridad. La verificación indica revisión de procedencia, no una garantía de seguridad.
+Las acciones que añaden los plugins están en **Configuración > Acciones de plugins**. Los plugins también pueden ofrecer pestañas y pantallas. Instala solo código de autores en quienes confíes: ejecutarse en un proceso aparte no es un sandbox de seguridad. El sello de verificación indica una revisión de procedencia, no una garantía de seguridad.
 
-La [guía de desarrollo y API 2.0](plugins.es.md) cubre manifiestos, permisos, métodos, eventos y publicación. Se incluye con el reproductor para leer sin conexión; los enlaces externos requieren internet.
+La [guía de desarrollo y API 2.0](plugins.es.md) incluye el manifiesto, los permisos, los métodos, los eventos y la publicación. Acompaña al reproductor y se puede leer sin conexión; los enlaces externos requieren internet.
 
 ## Para desarrolladores
 
-KeyTune es un proyecto de código abierto. El repositorio, issues, pull requests y releases están en [github.com/ed-fe/KeyTune](https://github.com/ed-fe/KeyTune). El fuente de este manual está en [docs/manual.md](https://github.com/ed-fe/KeyTune/blob/main/docs/manual.md).
+KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en [github.com/ed-fe/KeyTune](https://github.com/ed-fe/KeyTune). El código fuente de este manual está en [docs/manual.es.md](https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md).
+
+Para ejecutar el proyecto desde el código, instala las dependencias con `uv sync` y abre el reproductor con `uv run keytune`. Las reglas de redacción del manual, el changelog y los commits están en `.github/instructions/writing.instructions.md`.

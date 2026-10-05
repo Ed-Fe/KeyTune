@@ -1,56 +1,24 @@
-import os
-
 import wx
 
 from ...convert.options import media_kind
 from ...download.plan import download_source_url
 from ...i18n import _
-from ...library import (
-    FOLDER_SORT_CREATED,
-    FOLDER_SORT_MODIFIED,
-    FOLDER_SORT_NAME,
-    FOLDER_SORT_SIZE,
-    FOLDER_SORT_TYPE,
-    is_remote_media_path,
-    sort_folder_entries,
-)
+from ...library import is_remote_media_path
 
 
 class BrowserCommandsMixin:
-    _FOLDER_SORT_LABELS = {
-        FOLDER_SORT_NAME: _("Nome"),
-        FOLDER_SORT_MODIFIED: _("Data de modificação"),
-        FOLDER_SORT_CREATED: _("Data de criação"),
-        FOLDER_SORT_TYPE: _("Tipo"),
-        FOLDER_SORT_SIZE: _("Tamanho"),
-    }
-
     def on_toggle_playlist_browser(self, _event=None):
         self._toggle_navigation_mode()
 
     def on_playlist_browser_tab(self, *, backward=False):
-        return self._focus_autodj_controls_from_list(backward=backward)
+        if self._focus_autodj_controls_from_list(backward=backward):
+            return True
+        # Com o explorador aberto, Shift+Tab na playlist volta para ele.
+        return backward and self._focus_explorer_if_visible()
 
     def on_playlist_browser_activate_item(self, item_index):
         state = self._get_playlist_state()
         if not state:
-            return
-
-        if state.is_folder_tab:
-            entries = self._get_folder_entries(state)
-            if not 0 <= item_index < len(entries):
-                return
-
-            target_entry = entries[item_index]
-            previous_path = state.folder_current_path
-            state.folder_selected_path = target_entry.path
-            if target_entry.is_directory:
-                selected_path = previous_path if target_entry.is_parent else None
-                self._enter_folder_directory(target_entry.path, selected_path=selected_path, announce=True)
-            else:
-                if self._block_sensitive_action_during_youtube_music("track-selection"):
-                    return
-                self._preview_folder_file(target_entry.path, announce=True)
             return
 
         if not 0 <= item_index < len(state.items):
@@ -74,16 +42,15 @@ class BrowserCommandsMixin:
         menu = wx.Menu()
 
         current_state = self._get_playlist_state()
-        is_folder_tab = bool(current_state and current_state.is_folder_tab)
-        copy_item = menu.Append(wx.ID_ANY, _("Copiar seleção"))
-        copy_path_item = menu.Append(wx.ID_ANY, _("Copiar caminho da seleção")) if is_folder_tab else None
-        paste_item = menu.Append(wx.ID_ANY, _("Colar na playlist atual"))
-        paste_new_item = menu.Append(wx.ID_ANY, _("Colar em nova playlist"))
+        copy_item = menu.Append(wx.ID_ANY, _("Copiar seleção\tCtrl+C"))
+        copy_path_item = menu.Append(wx.ID_ANY, _("Copiar caminho da seleção"))
+        paste_item = menu.Append(wx.ID_ANY, _("Colar\tCtrl+V"))
+        paste_silent_item = menu.Append(wx.ID_ANY, _("Colar sem tocar\tCtrl+Shift+V"))
         menu.AppendSeparator()
         enqueue_item = menu.Append(wx.ID_ANY, _("Adicionar à &Fila\tCtrl+Shift+F"))
-        download_selection_item = menu.Append(wx.ID_ANY, _("Baixar seleção do YouTube..."))
-        download_playlist_item = menu.Append(wx.ID_ANY, _("Baixar playlist inteira do YouTube..."))
-        convert_selection_item = menu.Append(wx.ID_ANY, _("Converter seleção..."))
+        download_selection_item = menu.Append(wx.ID_ANY, _("Baixar seleção...\tCtrl+Shift+B"))
+        download_playlist_item = menu.Append(wx.ID_ANY, _("Baixar playlist inteira..."))
+        convert_selection_item = menu.Append(wx.ID_ANY, _("Converter seleção...\tCtrl+Shift+K"))
         start_autodj_item = menu.Append(wx.ID_ANY, _("Reproduzir playlist com AutoDJ"))
         menu.AppendSeparator()
         remove_item = menu.Append(wx.ID_ANY, _("Remover seleção"))
@@ -107,17 +74,20 @@ class BrowserCommandsMixin:
         dislike_item = menu.Append(wx.ID_ANY, _("Não gostei no YouTube Music"))
         add_to_playlist_item = menu.Append(wx.ID_ANY, _("Adicionar à playlist do YouTube Music..."))
         remove_from_youtube_playlist_item = menu.Append(wx.ID_ANY, _("Remover da playlist do YouTube Music"))
+        details_item = menu.Append(wx.ID_ANY, _("Ver detalhes"))
+        comments_item = menu.Append(wx.ID_ANY, _("Ver comentários"))
 
         can_edit_playlist = bool(current_state and not current_state.is_folder_tab and not current_state.is_loading)
         has_youtube_items = any(is_remote_media_path(path) and "youtube" in path.lower() for path in selected_paths)
         like_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "LIKE")
         dislike_rateable_paths = self._selected_youtube_music_media_paths_to_rate(selected_paths, "DISLIKE")
         youtube_music_video_ids = self._youtube_music_video_ids_from_paths(selected_paths)
+        # Detalhes e comentários são de um vídeo só.
+        single_youtube_path = selected_paths[0] if selected_count == 1 and youtube_music_video_ids else ""
         on_editable_youtube_playlist = bool(self._current_tab_youtube_music_playlist_id())
 
         copy_item.Enable(selected_count > 0)
-        if copy_path_item is not None:
-            copy_path_item.Enable(selected_count > 0)
+        copy_path_item.Enable(selected_count > 0)
         enqueue_item.Enable(selected_count > 0)
         download_selection_item.Enable(any(download_source_url(path) for path in selected_paths))
         download_playlist_item.Enable(
@@ -138,6 +108,8 @@ class BrowserCommandsMixin:
         remove_from_youtube_playlist_item.Enable(
             bool(youtube_music_video_ids) and on_editable_youtube_playlist
         )
+        details_item.Enable(bool(single_youtube_path))
+        comments_item.Enable(bool(single_youtube_path))
 
         if current_state and current_state.autodj_session:
             menu.AppendSeparator()
@@ -170,17 +142,16 @@ class BrowserCommandsMixin:
             menu.Bind(wx.EVT_MENU, self.on_stop_autodj_session, id=stop_autodj_item.GetId())
 
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_copy_current_item(None), id=copy_item.GetId())
-        if copy_path_item is not None:
-            menu.Bind(
-                wx.EVT_MENU,
-                lambda _event: self.on_copy_current_item_path(None),
-                id=copy_path_item.GetId(),
-            )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self.on_copy_current_item_path(None),
+            id=copy_path_item.GetId(),
+        )
         menu.Bind(wx.EVT_MENU, lambda _event: self.on_paste_open_from_clipboard(None), id=paste_item.GetId())
         menu.Bind(
             wx.EVT_MENU,
-            lambda _event: self.on_paste_open_from_clipboard_new_playlist(None),
-            id=paste_new_item.GetId(),
+            lambda _event: self.on_paste_without_playing(None),
+            id=paste_silent_item.GetId(),
         )
         menu.Bind(
             wx.EVT_MENU,
@@ -239,117 +210,20 @@ class BrowserCommandsMixin:
             id=remove_from_youtube_playlist_item.GetId(),
         )
 
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self._open_youtube_music_details(single_youtube_path),
+            id=details_item.GetId(),
+        )
+        menu.Bind(
+            wx.EVT_MENU,
+            lambda _event: self.show_media_comments(single_youtube_path),
+            id=comments_item.GetId(),
+        )
+
         popup_parent = anchor_window or browser_panel
         try:
             popup_parent.PopupMenu(menu)
         finally:
             menu.Destroy()
         return True
-
-    def on_show_folder_sort_menu(self, browser_panel=None, anchor_window=None):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab or state.is_loading:
-            return False
-
-        browser_panel = browser_panel or self._get_browser_panel()
-        if browser_panel is None:
-            return False
-
-        selected_paths = tuple(browser_panel.get_selected_item_paths())
-        menu = wx.Menu()
-        criterion_menu = wx.Menu()
-        direction_menu = wx.Menu()
-
-        for sort_by, label in self._FOLDER_SORT_LABELS.items():
-            item = criterion_menu.AppendRadioItem(wx.ID_ANY, label)
-            item.Check(sort_by == state.folder_sort_by)
-            criterion_menu.Bind(
-                wx.EVT_MENU,
-                lambda _event, value=sort_by: self._apply_folder_sort(
-                    value,
-                    state.folder_sort_descending,
-                    browser_panel,
-                    selected_paths,
-                ),
-                id=item.GetId(),
-            )
-
-        for descending, label in ((False, _("Crescente")), (True, _("Decrescente"))):
-            item = direction_menu.AppendRadioItem(wx.ID_ANY, label)
-            item.Check(descending == state.folder_sort_descending)
-            direction_menu.Bind(
-                wx.EVT_MENU,
-                lambda _event, value=descending: self._apply_folder_sort(
-                    state.folder_sort_by,
-                    value,
-                    browser_panel,
-                    selected_paths,
-                ),
-                id=item.GetId(),
-            )
-
-        menu.AppendSubMenu(criterion_menu, _("Classificar por"))
-        menu.AppendSubMenu(direction_menu, _("Ordem"))
-        popup_parent = anchor_window or browser_panel.items_list
-        try:
-            popup_parent.PopupMenu(menu)
-        finally:
-            menu.Destroy()
-        return True
-
-    def _apply_folder_sort(self, sort_by, descending, browser_panel, selected_paths=()):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab:
-            return False
-
-        state.folder_sort_by = sort_by
-        state.folder_sort_descending = bool(descending)
-        sorted_entries = sort_folder_entries(
-            state.folder_entries,
-            sort_by=state.folder_sort_by,
-            descending=state.folder_sort_descending,
-        )
-        entry_index_map = {
-            os.path.normcase(os.path.normpath(entry.path)): index
-            for index, entry in enumerate(sorted_entries)
-            if getattr(entry, "path", None)
-        }
-        state.set_folder_entries(sorted_entries, entry_index_map=entry_index_map)
-
-        media_files = [entry.path for entry in sorted_entries if getattr(entry, "is_file", False)]
-        state.reorder_items(
-            media_files,
-            [os.path.basename(path) or path for path in media_files],
-        )
-        self._refresh_playlist_browser()
-        browser_panel.restore_selected_item_paths(selected_paths)
-
-        criterion_label = self._FOLDER_SORT_LABELS.get(sort_by, self._FOLDER_SORT_LABELS[FOLDER_SORT_NAME])
-        direction_label = _("decrescente") if descending else _("crescente")
-        self._announce(
-            _("Pasta classificada por {criterion}, em ordem {direction}.").format(
-                criterion=criterion_label,
-                direction=direction_label,
-            )
-        )
-        return True
-
-    def on_playlist_browser_preview_item(self, item_index):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab:
-            return
-
-        entries = self._get_folder_entries(state)
-        if not 0 <= item_index < len(entries):
-            return
-
-        target_entry = entries[item_index]
-        state.folder_selected_path = target_entry.path
-        if target_entry.is_file:
-            self._preview_folder_file(target_entry.path, announce=False)
-            return
-
-        self._refresh_playlist_browser()
-
-    def on_playlist_browser_go_back(self):
-        self._go_back_folder()

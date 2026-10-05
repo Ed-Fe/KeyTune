@@ -210,7 +210,7 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             results = service.search("teste", search_scope="music_songs")
 
         self.assertEqual(len(results), 1)
-        public_client.search.assert_called_once_with("teste", filter="songs", limit=15)
+        public_client.search.assert_called_once_with("teste", filter="songs", limit=20)
         fake_ytmusic_cls.assert_called_once_with()
 
     def test_get_playlist_content_uses_public_client_when_auth_is_not_required(self):
@@ -599,6 +599,22 @@ class YouTubeMusicServiceTests(unittest.TestCase):
         authenticated_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
         authenticated_client.get_song.assert_not_called()
 
+
+    def test_rate_media_feedback_names_youtube_for_a_plain_youtube_video(self):
+        fake_client = Mock()
+        fake_module = SimpleNamespace(
+            YTMusic=Mock(return_value=fake_client),
+            LikeStatus=SimpleNamespace(LIKE="LIKE", DISLIKE="DISLIKE", INDIFFERENT="INDIFFERENT"),
+        )
+        service = YouTubeMusicService()
+
+        with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module), patch.object(
+            service, "get_client", return_value=fake_client
+        ):
+            message = service.rate_media_feedback("https://www.youtube.com/watch?v=abc123DEF45", "LIKE")
+
+        self.assertEqual(message, "Mídia atual curtida no YouTube.")
+        fake_client.rate_song.assert_called_once_with("abc123DEF45", "LIKE")
 
     def test_rate_media_feedback_calls_rate_song_for_dislike(self):
         authenticated_client = Mock()

@@ -23,6 +23,12 @@ def is_youtube_music_media(filename):
     return classifier(filename)
 
 
+def is_radio_media(filename):
+    from ..radio.media import is_radio_media as classifier
+
+    return classifier(filename)
+
+
 def is_supported_media(filename):
     return os.path.splitext(filename)[1].lower() in SUPPORTED_MEDIA_EXTENSIONS
 
@@ -32,7 +38,7 @@ def is_audio_only_media(filename):
 
 
 def is_audio_playback_media(filename):
-    return is_audio_only_media(filename) or is_youtube_music_media(filename)
+    return is_audio_only_media(filename) or is_youtube_music_media(filename) or is_radio_media(filename)
 
 
 def folder_display_name(folder_path):

@@ -10,6 +10,18 @@ YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS = "music_songs"
 YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS = "music_videos"
 YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS = "music_playlists"
 YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS = "youtube_videos"
+YOUTUBE_SEARCH_SCOPE_MUSIC_ALBUMS = "music_albums"
+YOUTUBE_SEARCH_SCOPE_MUSIC_ARTISTS = "music_artists"
+YOUTUBE_SEARCH_SCOPE_YOUTUBE_CHANNELS = "youtube_channels"
+YOUTUBE_SEARCH_SCOPE_YOUTUBE_PLAYLISTS = "youtube_playlists"
+
+# Tipos de resultado do YouTube comum (``YouTubeSearchScopeOption.youtube_kind``).
+YOUTUBE_KIND_VIDEOS = "videos"
+YOUTUBE_KIND_CHANNELS = "channels"
+YOUTUBE_KIND_PLAYLISTS = "playlists"
+
+# Quantos itens cada página das listas de resultados traz.
+YOUTUBE_RESULTS_PAGE_SIZE = 20
 
 
 @dataclass(frozen=True)
@@ -19,13 +31,22 @@ class YouTubeSearchScopeOption:
     source: str
     requires_auth: bool = False
     music_filter: str = ""
-    limit: int = 15
+    limit: int = YOUTUBE_RESULTS_PAGE_SIZE
+    youtube_kind: str = ""
+    # O nome só do tipo ("Músicas"), para a caixa que fica ao lado da de onde buscar.
+    type_label: str = ""
+
+    @property
+    def kind(self):
+        """O tipo de resultado, igual nas duas fontes quando ambas o têm (vídeos, playlists)."""
+        return self.music_filter or self.youtube_kind
 
 
 YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
         label=_("YouTube Music — músicas"),
+        type_label=_("Músicas"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="songs",
@@ -33,13 +54,29 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS,
         label=_("YouTube Music — vídeos"),
+        type_label=_("Vídeos"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="videos",
     ),
     YouTubeSearchScopeOption(
+        scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_ALBUMS,
+        label=_("YouTube Music — álbuns"),
+        type_label=_("Álbuns"),
+        source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+        music_filter="albums",
+    ),
+    YouTubeSearchScopeOption(
+        scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_ARTISTS,
+        label=_("YouTube Music — artistas"),
+        type_label=_("Artistas"),
+        source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+        music_filter="artists",
+    ),
+    YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS,
         label=_("YouTube Music — playlists"),
+        type_label=_("Playlists"),
         source=YOUTUBE_SEARCH_SOURCE_MUSIC,
         requires_auth=False,
         music_filter="playlists",
@@ -47,8 +84,24 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS = (
     YouTubeSearchScopeOption(
         scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS,
         label=_("YouTube — vídeos"),
+        type_label=_("Vídeos"),
         source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
         requires_auth=False,
+        youtube_kind=YOUTUBE_KIND_VIDEOS,
+    ),
+    YouTubeSearchScopeOption(
+        scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_CHANNELS,
+        label=_("YouTube — canais"),
+        type_label=_("Canais"),
+        source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+        youtube_kind=YOUTUBE_KIND_CHANNELS,
+    ),
+    YouTubeSearchScopeOption(
+        scope_id=YOUTUBE_SEARCH_SCOPE_YOUTUBE_PLAYLISTS,
+        label=_("YouTube — playlists"),
+        type_label=_("Playlists"),
+        source=YOUTUBE_SEARCH_SOURCE_YOUTUBE,
+        youtube_kind=YOUTUBE_KIND_PLAYLISTS,
     ),
 )
 
@@ -57,12 +110,67 @@ YOUTUBE_SEARCH_SCOPE_OPTIONS_BY_ID = {
 }
 
 
+# As fontes da busca, na ordem da caixa "Em".
+YOUTUBE_SEARCH_SOURCE_LABELS = (
+    (YOUTUBE_SEARCH_SOURCE_MUSIC, "YouTube Music"),
+    (YOUTUBE_SEARCH_SOURCE_YOUTUBE, "YouTube"),
+)
+
+
+def get_search_scope_options_for_source(source):
+    """Os tipos de resultado que dá para buscar numa fonte."""
+    return tuple(option for option in YOUTUBE_SEARCH_SCOPE_OPTIONS if option.source == source)
+
+
 def get_search_scope_option(scope_id):
     normalized_scope_id = str(scope_id or "").strip()
     return YOUTUBE_SEARCH_SCOPE_OPTIONS_BY_ID.get(
         normalized_scope_id,
         YOUTUBE_SEARCH_SCOPE_OPTIONS_BY_ID[YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS],
     )
+
+
+@dataclass(frozen=True)
+class YouTubeBrowseSection:
+    """Um filtro do conteúdo de um canal ou artista (vídeos, playlists, álbuns...)."""
+
+    section_id: str
+    label: str
+
+
+YOUTUBE_CHANNEL_SECTION_VIDEOS = "videos"
+YOUTUBE_CHANNEL_SECTION_SHORTS = "shorts"
+YOUTUBE_CHANNEL_SECTION_STREAMS = "streams"
+YOUTUBE_CHANNEL_SECTION_PLAYLISTS = "playlists"
+
+YOUTUBE_CHANNEL_SECTIONS = (
+    YouTubeBrowseSection(YOUTUBE_CHANNEL_SECTION_VIDEOS, _("Vídeos")),
+    YouTubeBrowseSection(YOUTUBE_CHANNEL_SECTION_SHORTS, _("Shorts")),
+    YouTubeBrowseSection(YOUTUBE_CHANNEL_SECTION_STREAMS, _("Ao vivo")),
+    YouTubeBrowseSection(YOUTUBE_CHANNEL_SECTION_PLAYLISTS, _("Playlists")),
+)
+
+YOUTUBE_ARTIST_SECTION_SONGS = "songs"
+YOUTUBE_ARTIST_SECTION_ALBUMS = "albums"
+YOUTUBE_ARTIST_SECTION_SINGLES = "singles"
+YOUTUBE_ARTIST_SECTION_VIDEOS = "videos"
+YOUTUBE_ARTIST_SECTION_RELATED = "related"
+
+YOUTUBE_ARTIST_SECTIONS = (
+    YouTubeBrowseSection(YOUTUBE_ARTIST_SECTION_SONGS, _("Músicas")),
+    YouTubeBrowseSection(YOUTUBE_ARTIST_SECTION_ALBUMS, _("Álbuns")),
+    YouTubeBrowseSection(YOUTUBE_ARTIST_SECTION_SINGLES, _("Singles e EPs")),
+    YouTubeBrowseSection(YOUTUBE_ARTIST_SECTION_VIDEOS, _("Vídeos")),
+    YouTubeBrowseSection(YOUTUBE_ARTIST_SECTION_RELATED, _("Artistas parecidos")),
+)
+
+
+@dataclass(frozen=True)
+class YouTubeResultPage:
+    """Uma página de resultados e se ainda há mais para carregar depois dela."""
+
+    results: tuple = ()
+    has_more: bool = False
 
 
 # Charts / "em alta" by country.  Codes are ISO 3166-1 alpha-2 as accepted by
@@ -269,6 +377,18 @@ class YouTubeMusicPlaylistSummary:
             return f"{self.title} — {' · '.join(details)}"
         return self.title
 
+    def as_result(self):
+        """A playlist da biblioteca como um item da lista da aba."""
+        return YouTubeMediaSearchResult(
+            source=YOUTUBE_SEARCH_SOURCE_MUSIC,
+            result_type="playlist",
+            title=self.title,
+            detail_text=self.track_count_text,
+            playlist_id=self.playlist_id,
+            source_badge=self.source_badge,
+            library_playlist=True,
+        )
+
 
 @dataclass(frozen=True)
 class YouTubeMusicPlaylistContent:
@@ -294,6 +414,23 @@ class YouTubeMediaSearchResult:
     feedback_remove_token: str = ""
     like_status: str = ""
     in_library: bool = False
+    # Veio da biblioteca da conta: Enter abre numa aba própria e ela pode ser excluída.
+    library_playlist: bool = False
+    # O canal (YouTube) ou o artista (YouTube Music) de um vídeo ou faixa, para ir até ele.
+    owner_browse_id: str = ""
+    owner_title: str = ""
+
+    def owner_result(self):
+        """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""
+        if not self.owner_browse_id or self.result_type not in ("song", "video"):
+            return None
+        return YouTubeMediaSearchResult(
+            source=self.source,
+            result_type="channel" if self.source == YOUTUBE_SEARCH_SOURCE_YOUTUBE else "artist",
+            title=self.owner_title or self.subtitle,
+            browse_id=self.owner_browse_id,
+            source_badge=self.source_badge,
+        )
 
     @property
     def result_kind_label(self):
@@ -301,6 +438,9 @@ class YouTubeMediaSearchResult:
             "song": _("faixa"),
             "video": _("vídeo"),
             "playlist": _("playlist"),
+            "album": _("álbum"),
+            "artist": _("artista"),
+            "channel": _("canal"),
         }.get(str(self.result_type or "").strip().lower(), _("resultado"))
 
     @property
@@ -333,12 +473,26 @@ class YouTubeMediaSearchResult:
         return bool(self.playlist_id or self.playback_url)
 
     @property
+    def can_browse(self):
+        """Se dá para abrir o resultado e ver o que há dentro dele."""
+        if self.result_type in ("artist", "channel"):
+            return bool(self.browse_id)
+        if self.result_type in ("playlist", "album"):
+            return bool(self.playlist_id or self.browse_id)
+        return False
+
+    @property
+    def opens_on_enter(self):
+        """Canais e artistas não tocam: Enter entra neles."""
+        return self.result_type in ("artist", "channel") and self.can_browse
+
+    @property
     def can_add_to_playlist(self):
         return bool(self.video_id)
 
     @property
     def can_save(self):
-        if self.source != YOUTUBE_SEARCH_SOURCE_MUSIC:
+        if self.source != YOUTUBE_SEARCH_SOURCE_MUSIC or self.library_playlist:
             return False
         if self.result_type == "playlist":
             return bool(self.playlist_id)

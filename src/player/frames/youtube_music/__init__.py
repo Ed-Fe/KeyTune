@@ -18,10 +18,14 @@ from ._helpers import (
     find_all_available_javascript_runtimes,
     is_missing_javascript_runtime_error_message,
 )
+from .audio_tracks import AudioTrackMixin
 from .auth import AuthMixin
 from .browse import BrowseMixin
+from .comments import CommentsMixin
 from .dependencies import DependencyMixin
+from .details import DetailsMixin
 from .lifecycle import LifecycleMixin
+from .navigation import ResultsNavigationMixin
 from .playlists import PlaylistEditMixin
 from .search import SearchMixin
 from .state import LibraryStateMixin
@@ -34,8 +38,12 @@ class FrameYouTubeMusicMixin(
     LibraryStateMixin,
     AuthMixin,
     SearchMixin,
+    ResultsNavigationMixin,
     PlaylistEditMixin,
     BrowseMixin,
+    CommentsMixin,
+    DetailsMixin,
+    AudioTrackMixin,
     LifecycleMixin,
 ):
     """Aggregate YouTube Music mixin composed from focused sub-mixins."""

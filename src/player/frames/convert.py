@@ -38,7 +38,8 @@ from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
 from ..task_failures_dialog import offer_task_failures
 from ..process_control import CancelToken
-from .selection import selected_list_entries
+from .background import run_in_background
+from .selection import SCOPE_EXPLORER, SCOPE_SEARCH, focused_list_scope, selected_list_entries
 from .task_progress import TaskProgressMixin
 
 
@@ -51,15 +52,6 @@ _MODES_BY_SOURCE_KIND = {
 }
 _ALL_MODES_IN_ORDER = (MODE_AUDIO_TO_AUDIO, MODE_AUDIO_TO_VIDEO, MODE_VIDEO_TO_AUDIO, MODE_VIDEO_TO_VIDEO)
 _STATUS_UPDATE_INTERVAL_SECONDS = 0.5
-
-
-def _is_convertible_local_file(path) -> bool:
-    return (
-        bool(path)
-        and not is_remote_media_path(path)
-        and os.path.isfile(path)
-        and bool(media_kind(path))
-    )
 
 
 class FrameConvertMixin(TaskProgressMixin):
@@ -82,20 +74,30 @@ class FrameConvertMixin(TaskProgressMixin):
 
     # -- Comandos de menu e atalho ---------------------------------------------
 
-    def on_convert_audio_to_video(self, _event=None):
-        self._begin_conversion(MODE_AUDIO_TO_VIDEO)
+    def on_convert_shortcut(self, _event=None):
+        """Ctrl+Shift+K: com o foco numa lista converte a seleção dela; fora, a mídia atual."""
+        if self._convert_in_progress():
+            self._offer_to_cancel_conversion()
+            return
 
-    def on_convert_video_to_audio(self, _event=None):
-        self._begin_conversion(MODE_VIDEO_TO_AUDIO)
+        if focused_list_scope(self):
+            self.on_convert_focused_selection()
+        else:
+            self.on_convert_current_media()
 
-    def on_convert_audio_to_audio(self, _event=None):
-        self._begin_conversion(MODE_AUDIO_TO_AUDIO)
-
-    def on_convert_video_to_video(self, _event=None):
-        self._begin_conversion(MODE_VIDEO_TO_VIDEO)
+    def on_convert_focused_selection(self, _event=None):
+        """Converte a seleção da lista que está com o foco; sem lista em foco, a da playlist."""
+        scope = focused_list_scope(self)
+        if scope == SCOPE_EXPLORER:
+            self._explorer_convert_paths(self._explorer_selected_paths())
+        elif scope == SCOPE_SEARCH:
+            # Os resultados da busca do YouTube não são arquivos do computador.
+            self._announce_convert_needs_local_file()
+        else:
+            self.on_convert_selection()
 
     def on_convert_current_media(self, _event=None):
-        """Atalho: oferece só os modos que servem ao tipo da mídia aberta."""
+        """Oferece só os modos que servem ao tipo da mídia atual."""
         if self._convert_in_progress():
             self._offer_to_cancel_conversion()
             return
@@ -111,13 +113,36 @@ class FrameConvertMixin(TaskProgressMixin):
 
     def on_convert_selection(self, _event=None):
         """Converte os arquivos de áudio e vídeo selecionados na lista da aba atual."""
+        self._convert_media_paths([path for path, _title in selected_list_entries(self)])
+
+    def _convert_media_paths(self, media_paths):
+        """Converte *media_paths* (da lista ou do explorador), um ou vários de uma vez."""
         if self._convert_in_progress():
             self._offer_to_cancel_conversion()
             return
 
-        paths = [path for path, _title in selected_list_entries(self) if _is_convertible_local_file(path)]
+        media_paths = [path for path in media_paths if path]
+        candidates = [path for path in media_paths if not is_remote_media_path(path) and media_kind(path)]
+        if not candidates:
+            if any(is_remote_media_path(path) for path in media_paths):
+                self._announce_convert_needs_local_file()
+            else:
+                self._announce(_("Nenhum arquivo de áudio ou vídeo do computador está selecionado."))
+            return
+
+        # Conferir cada arquivo no disco pode demorar numa pasta de rede.
+        run_in_background(
+            self,
+            lambda: [path for path in candidates if os.path.isfile(path)],
+            self._convert_existing_paths,
+        )
+
+    def _convert_existing_paths(self, paths):
+        if self._convert_in_progress():
+            self._offer_to_cancel_conversion()
+            return
         if not paths:
-            self._announce(_("Nenhum arquivo de áudio ou vídeo do computador está selecionado."))
+            self._announce(_("Os arquivos selecionados não foram encontrados."))
             return
 
         counts = modes_for_sources(paths)
@@ -155,16 +180,19 @@ class FrameConvertMixin(TaskProgressMixin):
         state = self._get_active_playlist_state()
         return str(getattr(state, "current_media_path", "") or "").strip() if state else ""
 
+    def _announce_convert_needs_local_file(self):
+        self._announce(
+            _("A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B).")
+        )
+
     def _validated_convert_source(self):
-        """Caminho da mídia aberta se ela puder ser convertida; vazio (com aviso) se não."""
+        """Caminho da mídia atual se ela puder ser convertida; vazio (com aviso) se não."""
         media_path = self._current_convert_media_path()
         if not media_path:
             self._announce(_("Nenhuma mídia está aberta para converter."))
             return ""
         if is_remote_media_path(media_path):
-            self._announce(
-                _("A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B).")
-            )
+            self._announce_convert_needs_local_file()
             return ""
         if not os.path.isfile(media_path):
             self._announce(_("O arquivo da mídia atual não foi encontrado."))
@@ -181,13 +209,6 @@ class FrameConvertMixin(TaskProgressMixin):
 
         source_path = source_path or self._validated_convert_source()
         if not source_path:
-            return
-
-        if media_kind(source_path) != MODE_SOURCE_KIND[mode]:
-            if media_kind(source_path) == KIND_AUDIO:
-                self._announce(_("Esta opção converte vídeo, mas a mídia atual é um áudio. Use as opções de áudio."))
-            else:
-                self._announce(_("Esta opção converte áudio, mas a mídia atual é um vídeo. Use as opções de vídeo."))
             return
 
         request = self._ask_conversion_options(mode, source_path)
@@ -208,15 +229,16 @@ class FrameConvertMixin(TaskProgressMixin):
             self,
             mode,
             source_paths[0],
-            other_directory=self._convert_other_directory,
+            other_directory=self._convert_dialog_directory(),
             item_count=len(source_paths),
+            settings=getattr(self, "settings", None),
         )
         try:
             if dialog.ShowModal() != wx.ID_OK:
                 return
             template = dialog.get_request()
             same_folder = dialog.saves_in_same_folder()
-            self._convert_other_directory = dialog.other_directory() or self._convert_other_directory
+            self._remember_convert_choices(dialog)
         finally:
             dialog.Destroy()
 
@@ -233,15 +255,34 @@ class FrameConvertMixin(TaskProgressMixin):
         self._start_conversion(requests, install_ffmpeg=install_ffmpeg, skipped=skipped)
 
     def _ask_conversion_options(self, mode, source_path):
-        dialog = ConvertDialog(self, mode, source_path, other_directory=self._convert_other_directory)
+        dialog = ConvertDialog(
+            self,
+            mode,
+            source_path,
+            other_directory=self._convert_dialog_directory(),
+            settings=getattr(self, "settings", None),
+        )
         try:
             if dialog.ShowModal() != wx.ID_OK:
                 return None
             request = dialog.get_request()
-            self._convert_other_directory = dialog.other_directory() or self._convert_other_directory
+            self._remember_convert_choices(dialog)
             return request
         finally:
             dialog.Destroy()
+
+    def _convert_dialog_directory(self):
+        remembered = getattr(getattr(self, "settings", None), "convert_directory", "")
+        return self._convert_other_directory or str(remembered or "")
+
+    def _remember_convert_choices(self, dialog):
+        # A última escolha fica nas preferências: o próximo diálogo abre como o usuário deixou.
+        self._convert_other_directory = dialog.other_directory() or self._convert_other_directory
+        settings = getattr(self, "settings", None)
+        if settings is None:
+            return
+        dialog.store_choices(settings)
+        self._save_settings()
 
     def _confirm_convert_ffmpeg(self):
         """True para instalar o FFmpeg antes de converter, False se já existe e

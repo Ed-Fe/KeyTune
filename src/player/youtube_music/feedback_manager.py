@@ -221,11 +221,17 @@ class YouTubeMusicFeedbackManager:
         self._feedback_cache[video_id] = normalized_rating
         self._feedback_store.record(video_id, normalized_rating)
 
+        # A curtida é uma só na conta; o anúncio diz de onde a mídia veio.
+        from_music = is_music_youtube_url(normalized_media_path)
         if like_status == LikeStatus.LIKE:
-            return _("Mídia atual curtida no YouTube Music.")
+            return _("Mídia atual curtida no YouTube Music.") if from_music else _("Mídia atual curtida no YouTube.")
         if like_status == LikeStatus.DISLIKE:
-            return _("Mídia atual marcada como não gostei no YouTube Music.")
-        return _("Avaliação da mídia atual removida no YouTube Music.")
+            if from_music:
+                return _("Mídia atual marcada como não gostei no YouTube Music.")
+            return _("Mídia atual marcada como não gostei no YouTube.")
+        if from_music:
+            return _("Avaliação da mídia atual removida no YouTube Music.")
+        return _("Avaliação da mídia atual removida no YouTube.")
 
     def report_playback_to_history(self, media_path):
         """Report a media item as played to the user's YouTube Music history."""

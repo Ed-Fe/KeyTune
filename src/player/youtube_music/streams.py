@@ -29,6 +29,7 @@ from .playlists import is_youtube_music_media
 from .yt_dlp_runtime import extract_info as extract_yt_dlp_info
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from .yt_dlp_runtime import find_incompatible_javascript_runtimes
+from .audio_tracks import yt_dlp_formats_for_selector
 from .youtubejs_runtime import resolve_stream as resolve_youtubejs_stream
 from ..log import get_logger
 from ..i18n import _
@@ -114,12 +115,17 @@ def resolve_stream_playback(
     anonymous_player_client="",
     allow_youtubejs=True,
     prefer_video=False,
+    audio_track="",
 ):
     """Resolve *media_path* to a playable stream.
 
     *prefer_video* only matters for live broadcasts, where it selects a muxed
     audio+video format instead of the lightest audio-capable one. Regular
     tracks keep resolving to audio.
+
+    *audio_track* asks for one audio track of a dubbed video ("original" or a
+    language). Only yt-dlp delivers the whole media of a non-default track, so
+    YouTube.js is skipped then.
     """
     global _PRERELEASE_SELF_HEAL_ATTEMPTED
 
@@ -135,7 +141,7 @@ def resolve_stream_playback(
     yt_dlp_http_headers = playback_auth.yt_dlp_http_headers if use_saved_auth else {}
     playback_http_headers = playback_auth.playback_http_headers if use_saved_auth else {}
 
-    if allow_youtubejs and youtubejs_resolver_enabled():
+    if allow_youtubejs and not audio_track and youtubejs_resolver_enabled():
         youtubejs_started_at = time.monotonic()
         try:
             youtubejs_stream = resolve_youtubejs_stream(
@@ -286,6 +292,7 @@ def resolve_stream_playback(
                         resolved_playback = _preferred_stream_from_info(
                             info,
                             playback_auth_headers=playback_http_headers,
+                            audio_track=audio_track,
                         )
                 except RuntimeError as exc:
                     local_last_error = _clean_external_tool_error(exc) or str(exc)
@@ -368,7 +375,7 @@ def _preferred_stream_url_from_info(info):
     return _preferred_stream_from_info(info).stream_url
 
 
-def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
+def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0, audio_track=""):
     direct_stream_urls = _iter_direct_stream_url_candidates(info)
     direct_url = direct_stream_urls[0] if direct_stream_urls else ""
     top_level_http_headers = _merge_playback_http_headers(
@@ -394,7 +401,9 @@ def _preferred_stream_from_info(info, *, playback_auth_headers=None, _depth=0):
             return nested_entry_stream_playback
         raise RuntimeError(_("O yt-dlp não retornou um stream de áudio compatível para esta faixa do YouTube Music."))
 
-    audio_only_formats = [fmt for fmt in formats if _is_audio_only_stream_format(fmt)]
+    audio_only_formats = yt_dlp_formats_for_selector(
+        [fmt for fmt in formats if _is_audio_only_stream_format(fmt)], audio_track
+    )
     audio_capable_formats = [fmt for fmt in formats if _is_audio_capable_stream_format(fmt)]
     requested_fallback_formats = [fmt for fmt in formats if _is_requested_stream_format(fmt)]
     preferred_formats = audio_only_formats or audio_capable_formats or requested_fallback_formats

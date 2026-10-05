@@ -187,6 +187,14 @@ def extract_video_id_from_text(source_text):
     return None
 
 
+LINK_PATTERN = re.compile(r"^(https?://|www\.|(music\.|m\.)?youtube\.com/|youtu\.be/)\S+$", re.IGNORECASE)
+
+
+def looks_like_link(text):
+    """Se o texto digitado na busca é um endereço para abrir, e não algo a pesquisar."""
+    return bool(LINK_PATTERN.match(str(text or "").strip()))
+
+
 def is_youtube_music_media(media_path):
     normalized_media_path = str(media_path or "").strip()
     if not normalized_media_path:

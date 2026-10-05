@@ -1,5 +1,6 @@
 import wx
 
+from ..accessibility import attach_named_accessible
 from ..constants import (
     SLEEP_TIMER_DEFAULT_MINUTES,
     SLEEP_TIMER_MAX_MINUTES,
@@ -67,6 +68,7 @@ class SleepTimerDialog(wx.Dialog):
             initial=int(current_minutes or SLEEP_TIMER_DEFAULT_MINUTES),
         )
         self.custom_spin.SetName(_("Minutos personalizados"))
+        attach_named_accessible(self.custom_spin, name=_("Minutos personalizados"))
 
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
         if button_sizer is not None:

@@ -14,9 +14,14 @@ from player.youtube_music.models import (
     YOUTUBE_SEARCH_SCOPE_MUSIC_PLAYLISTS,
     YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
     YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS,
+    YOUTUBE_SEARCH_SCOPE_OPTIONS,
     YOUTUBE_SEARCH_SCOPE_YOUTUBE_VIDEOS,
+    YOUTUBE_SEARCH_SOURCE_LABELS,
+    YOUTUBE_SEARCH_SOURCE_MUSIC,
+    YOUTUBE_SEARCH_SOURCE_YOUTUBE,
     YouTubeMediaSearchResult,
     get_search_scope_option,
+    get_search_scope_options_for_source,
 )
 from player.youtube_music.playlists import (
     build_watch_url,
@@ -108,6 +113,26 @@ class YouTubeMusicSearchHelperTests(unittest.TestCase):
             YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS,
         )
 
+    def test_each_source_lists_its_own_result_types(self):
+        self.assertEqual(
+            [option.kind for option in get_search_scope_options_for_source(YOUTUBE_SEARCH_SOURCE_MUSIC)],
+            ["songs", "videos", "albums", "artists", "playlists"],
+        )
+        self.assertEqual(
+            [option.kind for option in get_search_scope_options_for_source(YOUTUBE_SEARCH_SOURCE_YOUTUBE)],
+            ["videos", "channels", "playlists"],
+        )
+
+    def test_every_scope_belongs_to_a_listed_source_and_has_a_short_name(self):
+        listed = [
+            option.scope_id
+            for source, _label in YOUTUBE_SEARCH_SOURCE_LABELS
+            for option in get_search_scope_options_for_source(source)
+        ]
+
+        self.assertCountEqual(listed, [option.scope_id for option in YOUTUBE_SEARCH_SCOPE_OPTIONS])
+        self.assertTrue(all(option.type_label for option in YOUTUBE_SEARCH_SCOPE_OPTIONS))
+
     def test_public_search_scopes_do_not_require_authentication(self):
         self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_MUSIC_SONGS).requires_auth)
         self.assertFalse(get_search_scope_option(YOUTUBE_SEARCH_SCOPE_MUSIC_VIDEOS).requires_auth)
@@ -128,6 +153,21 @@ class YouTubeMusicSearchHelperTests(unittest.TestCase):
         self.assertIn("YouTube", result.choice_label)
         self.assertIn("vídeo", result.choice_label)
         self.assertIn("Canal de teste", result.choice_label)
+
+
+class ShortCountTests(unittest.TestCase):
+    def test_english_short_counts_are_written_in_portuguese(self):
+        from player.youtube_music.search import normalize_music_search_results
+
+        song, video = normalize_music_search_results(
+            [
+                {"resultType": "song", "videoId": "v1", "title": "Faixa", "duration": "3:34", "views": "2B"},
+                {"resultType": "video", "videoId": "v2", "title": "Vídeo", "views": "163K plays"},
+            ]
+        )
+
+        self.assertEqual(song.detail_text, "3:34 · 2 bi de reproduções")
+        self.assertEqual(video.detail_text, "163 mil visualizações")
 
 
 if __name__ == "__main__":

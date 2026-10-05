@@ -11,7 +11,9 @@ from .auth import (
     read_auth_file_text,
     write_browser_auth_cookie_file,
 )
+from .audio_tracks import yt_dlp_selector_for_playback
 from .client_provider import YouTubeMusicClientProvider
+from .content_locale import content_region
 from .dependencies import import_ytmusicapi_module
 from .feedback_manager import YouTubeMusicFeedbackManager
 from .library_manager import YouTubeMusicLibraryManager
@@ -39,14 +41,14 @@ class YouTubeMusicAuthValidationError(RuntimeError):
 class InvalidYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
     def __init__(self, message=None):
         if message is None:
-            message = _("A autenticação salva do YouTube Music não é mais válida.")
+            message = _("A autenticação salva do YouTube não é mais válida.")
         super().__init__(message, should_disconnect=True)
 
 
 class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
     def __init__(self, message=None):
         if message is None:
-            message = _("Não foi possível validar a autenticação do YouTube Music agora.")
+            message = _("Não foi possível validar a autenticação do YouTube agora.")
         super().__init__(message, should_disconnect=False)
 
 
@@ -247,7 +249,12 @@ class YouTubeMusicService:
             use_account_cookies=False,
             anonymous_player_client=self._stream_playback_profile,
             prefer_video=prefer_video,
+            audio_track=yt_dlp_selector_for_playback(media_path),
         )
+
+    def clear_stream_cache(self):
+        """Esquece os streams já resolvidos, para valer uma nova escolha de faixa de áudio."""
+        self._stream_cache_manager.clear()
 
     def resolve_analysis_fallback(self, media_path):
         """Resolve a fresh alternative for analysis without changing playback preferences."""
@@ -328,7 +335,7 @@ class YouTubeMusicService:
 
             ytmusicapi.setup(filepath=staged_auth_path, headers_raw=normalized_headers_raw)
             if not os.path.isfile(staged_auth_path) or os.path.getsize(staged_auth_path) == 0:
-                raise RuntimeError(_("Não foi possível preparar a autenticação do YouTube Music."))
+                raise RuntimeError(_("Não foi possível preparar a autenticação do YouTube."))
 
             written_cookie_path = write_browser_auth_cookie_file(
                 raw_auth_input,
@@ -342,7 +349,7 @@ class YouTubeMusicService:
             candidate_client = ytmusicapi.YTMusic(staged_auth_path)
             account_info = candidate_client.get_account_info()
             if not isinstance(account_info, dict):
-                raise RuntimeError(_("A resposta da conta do YouTube Music veio em formato inválido."))
+                raise RuntimeError(_("A resposta da conta do YouTube veio em formato inválido."))
 
             harden_sensitive_file_permissions(staged_auth_path)
             harden_sensitive_file_permissions(staged_cookie_path)
@@ -405,7 +412,7 @@ class YouTubeMusicService:
 
         if not isinstance(account_info, dict):
             raise TemporaryYouTubeMusicAuthError(
-                _("A resposta da conta do YouTube Music veio em formato inválido.")
+                _("A resposta da conta do YouTube veio em formato inválido.")
             )
 
         self._account_info = account_info
@@ -428,12 +435,22 @@ class YouTubeMusicService:
             require_auth=require_auth,
             auth_file_path=self.browser_auth_file_path,
             has_saved_auth=self.has_saved_browser_auth(),
+            location=content_region(),
         )
 
     # -- Library (delegated) ---------------------------------------------------
 
     def search(self, query, *, search_scope):
         return self._library.search(query, search_scope=search_scope)
+
+    def fetch_search_page(self, query, *, search_scope, start=0, count=None):
+        return self._library.fetch_search_page(query, search_scope=search_scope, start=start, count=count)
+
+    def fetch_browse_page(self, result, *, section_id="", start=0, count=20):
+        return self._library.fetch_browse_page(result, section_id=section_id, start=start, count=count)
+
+    def get_youtube_playlist_content(self, playlist_id, fallback_title=""):
+        return self._library.get_youtube_playlist_content(playlist_id, fallback_title)
 
     def get_charts(self, country_code):
         return self._library.get_charts(country_code)

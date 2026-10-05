@@ -10,6 +10,8 @@ Use the workspace instructions in [AGENTS](../../AGENTS.md) and the UI-specific 
 
 Scope the review to the user-provided target, such as a dialog, menu flow, playlist view, shortcut change, or accessibility helper.
 
+For any dialog, panel or tab, first run `uv run python scripts/audit_ui_accessibility.py -v`, read the names it prints, and check the screen against [ui-screens.instructions](../instructions/ui-screens.instructions.md).
+
 Check for these risks when relevant:
 - Forced focus changes or unexpected focus jumps
 - Missing, duplicated, or unclear labels for assistive technologies

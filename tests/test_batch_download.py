@@ -13,6 +13,7 @@ from player.download.plan import (
     DownloadPlan,
     safe_folder_name,
     select_download_items,
+    unique_folder_name,
 )
 from player.download.runner import DownloadCancelled, DownloadCancelToken, DownloadProgress, DownloadResult
 from player.frames import download as download_frame
@@ -47,6 +48,27 @@ class SelectDownloadItemsTests(unittest.TestCase):
 
         self.assertEqual(len(selection.items), MAX_BATCH_ITEMS)
         self.assertEqual(selection.truncated, 5)
+
+    def test_an_entry_may_say_which_subfolder_it_goes_to(self):
+        entries = [
+            (WATCH.format("a1"), "A", "Rock"),
+            (WATCH.format("a1"), "A", "Rock"),
+            (WATCH.format("a1"), "A", "Pop"),
+            (WATCH.format("a1"), "A"),
+        ]
+
+        selection = select_download_items(entries)
+
+        # A mesma faixa entra uma vez em cada pasta, para cada playlist ficar completa.
+        self.assertEqual([item.folder for item in selection.items], ["Rock", "Pop", ""])
+
+    def test_folder_names_do_not_repeat_within_a_queue(self):
+        used = set()
+
+        self.assertEqual(
+            [unique_folder_name(name, used) for name in ("Mix", "mix", "Mix", "Outra")],
+            ["Mix", "mix (2)", "Mix (3)", "Outra"],
+        )
 
     def test_safe_folder_name_removes_what_windows_refuses(self):
         self.assertEqual(safe_folder_name('Rock: "Hits" / 2024?'), "Rock_ _Hits_ _ 2024_")
@@ -173,7 +195,7 @@ class BatchEntryPointTests(unittest.TestCase):
 class _WorkerFrame(_Frame):
     """Roda o worker de verdade, com as chamadas de interface executadas na hora."""
 
-    def run_worker(self, items, run_download_side_effect, *, install_ffmpeg=False):
+    def run_worker(self, items, run_download_side_effect, *, install_ffmpeg=False, folder_name="Lista"):
         token = DownloadCancelToken()
         self._download_token = token
         self._download_batch_total = len(items)
@@ -186,7 +208,7 @@ class _WorkerFrame(_Frame):
         ), patch.object(download_frame, "find_ffmpeg_directory", return_value=Path("C:\\ffmpeg")), patch.object(
             download_frame, "run_download", side_effect=run_download_side_effect
         ) as run_download:
-            self._download_worker(tuple(items), choice, token, install_ffmpeg, "Lista")
+            self._download_worker(tuple(items), choice, token, install_ffmpeg, folder_name)
         return token, run_download
 
 
@@ -209,6 +231,26 @@ class BatchWorkerTests(unittest.TestCase):
         self.assertFalse(frame._download_in_progress())
         self.assertIn("3", frame.announcements[-1])
         self.assertNotIn("falharam", frame.announcements[-1])
+
+    def test_each_playlist_goes_to_its_subfolder_and_loose_items_to_the_chosen_folder(self):
+        frame = _WorkerFrame()
+        items = [
+            DownloadItem(WATCH.format("a1"), "Faixa a1", "Rock"),
+            DownloadItem(WATCH.format("b2"), "Faixa b2", "Pop"),
+            DownloadItem(WATCH.format("c3"), "Faixa c3"),
+        ]
+        results = [
+            DownloadResult(paths=("D:\Musicas\Rock\a.webm",)),
+            DownloadResult(paths=("D:\Musicas\Pop\b.webm",)),
+            DownloadResult(paths=("D:\Musicas\c.webm",)),
+        ]
+
+        _token, run_download = frame.run_worker(items, results, folder_name="")
+
+        directories = [call.args[1].directory for call in run_download.call_args_list]
+        self.assertEqual(directories, ["D:\Musicas\Rock", "D:\Musicas\Pop", "D:\Musicas"])
+        # O resumo cita a pasta escolhida, que contém as subpastas.
+        self.assertTrue(frame.announcements[-1].rstrip(".").endswith("D:\Musicas"), frame.announcements[-1])
 
     def test_a_failing_item_does_not_stop_the_rest(self):
         frame = _WorkerFrame()

@@ -7,6 +7,7 @@ from ...i18n import _
 import wx
 
 from ...library import is_audio_playback_media
+from ...radio.media import is_radio_media
 from ...youtube_music.live_streams import LiveEndedError
 from .helpers import is_youtube_music_media
 
@@ -92,7 +93,9 @@ class PlaybackEngineMixin:
                     if is_live:
                         # A live never resumes and can show its picture even when
                         # the rest of the app plays audio only.
-                        live_video = self._live_video_enabled()
+                        # A radio has no picture: asking for video would also mark
+                        # the slot to be rebuilt before the next media.
+                        live_video = self._live_video_enabled() and not is_radio_media(request["media_path"])
                         media_kwargs.update(is_live=True, video=live_video)
                     media = player_instance.media_new(playback_media_path, **media_kwargs)
                     player.stop()
@@ -325,6 +328,9 @@ class PlaybackEngineMixin:
         remember_radio_playback = getattr(self, "_remember_youtube_music_radio_playback", None)
         if callable(remember_radio_playback):
             remember_radio_playback(media_path)
+        remember_online_radio_playback = getattr(self, "_remember_online_radio_playback", None)
+        if callable(remember_online_radio_playback):
+            remember_online_radio_playback(media_path)
         self._last_runtime_stream_title = ""
         self._next_runtime_stream_title_refresh = 0.0
 
@@ -368,9 +374,7 @@ class PlaybackEngineMixin:
         if request.get("live_reconnect"):
             announce_message = _("Conexão com a transmissão ao vivo restabelecida.")
         elif request.get("is_live") and announce_message is None:
-            announce_message = _("Transmissão ao vivo. {position}").format(
-                position=self._describe_playlist_position(state)
-            )
+            announce_message = _("Transmissão ao vivo.")
         if hasattr(self, "_set_status_message"):
             now_playing_label = self._media_label(media_path)
             status_template = _("Ao vivo: {name}") if request.get("is_live") else _("Tocando: {name}")

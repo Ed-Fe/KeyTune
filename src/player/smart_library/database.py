@@ -69,6 +69,13 @@ _SCHEMA_STATEMENTS = (
     """,
     "CREATE INDEX IF NOT EXISTS metadata_cache_namespace ON metadata_cache(namespace)",
     "CREATE INDEX IF NOT EXISTS metadata_cache_updated ON metadata_cache(updated_epoch)",
+    """
+    CREATE TABLE IF NOT EXISTS radio_stations (
+        media_id INTEGER PRIMARY KEY REFERENCES media(id) ON DELETE CASCADE,
+        details TEXT NOT NULL DEFAULT '',
+        updated_epoch INTEGER NOT NULL DEFAULT 0
+    )
+    """,
 )
 
 

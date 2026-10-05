@@ -40,7 +40,7 @@ from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
 from ..task_failures_dialog import offer_task_failures
 from .playback.live import is_live_media
-from .selection import selected_list_entries
+from .selection import SCOPE_EXPLORER, SCOPE_SEARCH, focused_list_scope, selected_list_entries
 from .task_progress import TaskProgressMixin
 
 
@@ -49,6 +49,26 @@ _logger = get_logger(__name__)
 # Intervalo mínimo entre atualizações da barra de status, para o progresso não
 # disparar um redesenho a cada bloco baixado.
 _STATUS_UPDATE_INTERVAL_SECONDS = 0.5
+
+
+def _existing_file_stems(directory):
+    """Nomes (sem extensão) já usados em *directory*: um download nunca sobrescreve outro arquivo."""
+    try:
+        names = os.listdir(os.path.expanduser(str(directory)))
+    except OSError:
+        return set()
+    return {os.path.splitext(name)[0].casefold() for name in names}
+
+
+def _common_folder(results):
+    """A pasta dos arquivos baixados; com subpastas de playlists, a que contém todas."""
+    folders = [os.path.dirname(result.paths[0]) for result in results if result.paths]
+    if not folders:
+        return ""
+    try:
+        return os.path.commonpath(folders)
+    except ValueError:
+        return folders[0]
 
 
 class FrameDownloadMixin(TaskProgressMixin):
@@ -69,6 +89,32 @@ class FrameDownloadMixin(TaskProgressMixin):
             token.cancel()
 
     # -- Pontos de entrada -------------------------------------------------------
+
+    def on_download_shortcut(self, _event=None):
+        """Ctrl+Shift+B: com o foco numa lista baixa a seleção dela; fora, a mídia atual."""
+        if self._download_in_progress():
+            self._offer_to_cancel_download()
+            return
+
+        if focused_list_scope(self):
+            self.on_download_focused_selection()
+        else:
+            self.on_download_current_media()
+
+    def on_download_focused_selection(self, _event=None):
+        """Baixa a seleção da lista que está com o foco; sem lista em foco, a da playlist."""
+        if self._download_in_progress():
+            self._offer_to_cancel_download()
+            return
+
+        scope = focused_list_scope(self)
+        if scope == SCOPE_EXPLORER:
+            # O explorador só mostra arquivos do computador.
+            self._announce(_("Esta mídia já está no seu computador."))
+        elif scope == SCOPE_SEARCH:
+            self.download_youtube_music_search_selection()
+        else:
+            self.on_download_selection()
 
     def on_download_current_media(self, _event=None):
         if self._download_in_progress():
@@ -117,7 +163,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         self._begin_download(entries, folder_name=safe_folder_name(state.title))
 
     def download_media_entries(self, entries, *, folder_name=""):
-        """Baixa ``(caminho ou URL, título)`` vindos de outras telas, como a busca do YouTube."""
+        """Baixa ``(caminho ou URL, título[, subpasta])`` vindos de outras telas, como a aba do YouTube Music."""
         self._begin_download(list(entries), folder_name=folder_name)
 
     # -- Fluxo -------------------------------------------------------------------
@@ -210,6 +256,9 @@ class FrameDownloadMixin(TaskProgressMixin):
             _("Baixar {count} itens do YouTube para a pasta:").format(count=len(selection.items)),
             destination,
         ]
+        if any(item.folder for item in selection.items):
+            lines.append("")
+            lines.append(_("Cada playlist ou álbum fica em uma subpasta com o nome dele."))
         if selection.skipped:
             lines.append("")
             lines.append(
@@ -317,24 +366,28 @@ class FrameDownloadMixin(TaskProgressMixin):
             if playback_auth.cookie_header:
                 cookie_file_path = create_temporary_browser_auth_cookie_file(playback_auth.cookie_header)
 
-            item_choice = choice
-            if folder_name:
-                item_choice = dataclasses.replace(choice, directory=os.path.join(choice.directory, folder_name))
+            base_directory = os.path.join(choice.directory, folder_name) if folder_name else choice.directory
             js_runtimes = find_all_available_javascript_runtimes()
 
             results = []
             failures = []
             cancelled = False
-            used_stems = set()
+            # Nomes já usados em cada pasta de destino desta fila.
+            used_stems_by_directory = {}
             for position, item in enumerate(items, start=1):
                 if token.cancelled:
                     cancelled = True
                     break
                 wx.CallAfter(self._on_download_item_started, token, position)
+                # Um item de playlist ou álbum vai para a subpasta dela; os avulsos, para a pasta escolhida.
+                directory = os.path.join(base_directory, item.folder) if item.folder else base_directory
+                used_stems = used_stems_by_directory.get(directory)
+                if used_stems is None:
+                    used_stems = used_stems_by_directory[directory] = _existing_file_stems(directory)
                 try:
                     result = run_download(
                         item.url,
-                        item_choice,
+                        dataclasses.replace(choice, directory=directory),
                         plan,
                         ffmpeg_directory=str(ffmpeg_directory or ""),
                         cookie_file_path=cookie_file_path,
@@ -481,7 +534,7 @@ class FrameDownloadMixin(TaskProgressMixin):
                 total=total, reason=reason
             )
         else:
-            folder = os.path.dirname(results[0].paths[0]) if results[0].paths else ""
+            folder = _common_folder(results)
             if failures:
                 message = _("Download concluído: {done} de {total} itens em {folder}. {failed} falharam.").format(
                     done=done, total=total, folder=folder, failed=len(failures)

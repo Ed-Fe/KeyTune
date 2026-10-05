@@ -13,6 +13,12 @@ msgstr ""
 msgid " Há mais para carregar."
 msgstr ""
 
+#: src/player/youtube_music/details.py
+#: src/player/youtube_music/search.py
+msgid " inscritos"
+msgstr ""
+
+#: src/player/youtube_music/details.py
 #: src/player/youtube_music/search.py
 msgid " visualizações"
 msgstr ""
@@ -37,13 +43,16 @@ msgstr ""
 msgid "&5 estrelas\tCtrl+5"
 msgstr ""
 
-#: src/player/library/open_dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Abrir"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "&Abrir link"
+#: src/player/frames/ui.py
+msgid "&Abrir...\tCtrl+O"
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "&Adicionar à playlist sem tocar\tShift+Enter"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -75,16 +84,21 @@ msgstr ""
 msgid "&Avançar"
 msgstr ""
 
+#: src/player/radio/panel.py
+#: src/player/youtube_music/panel.py
+msgid "&Ações..."
+msgstr ""
+
 #: src/player/download/dialog.py
 msgid "&Baixar"
 msgstr ""
 
-#: src/player/update/dialog.py
-msgid "&Baixar e instalar"
+#: src/player/frames/ui.py
+msgid "&Baixar do YouTube"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "&Baixar mídia atual...\tCtrl+Shift+B"
+#: src/player/update/dialog.py
+msgid "&Baixar e instalar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -98,11 +112,11 @@ msgstr ""
 #: src/player/convert/dialog.py
 #: src/player/download/dialog.py
 #: src/player/equalizer/dialog.py
-#: src/player/library/open_dialog.py
 #: src/player/library/search_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/preferences/audio_output_dialog.py
 #: src/player/preferences/dialog.py
+#: src/player/radio/manual_dialog.py
 #: src/player/sleep_timer/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 #: src/player/update/dialog.py
@@ -134,8 +148,8 @@ msgstr ""
 msgid "&Continuar ouvindo\tCtrl+Shift+R"
 msgstr ""
 
-#: src/player/convert/dialog.py
-msgid "&Converter"
+#: src/player/frames/explorer.py
+msgid "&Copiar\tCtrl+C"
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
@@ -179,12 +193,20 @@ msgstr ""
 msgid "&Encerrar AutoDJ"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "&Endereço do stream ou M3U"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Escolher pasta..."
 msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Exibir"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Explorador de Pastas\tCtrl+E"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -198,10 +220,15 @@ msgstr ""
 #: src/player/about/dialog.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
+#: src/player/reading_dialog.py
 #: src/player/smart_library/search_dialog.py
 #: src/player/task_failures_dialog.py
 #: src/player/youtube_music/dialog.py
 msgid "&Fechar"
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "&Fechar explorador\tCtrl+E"
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
@@ -220,12 +247,16 @@ msgstr ""
 msgid "&Gerenciar playlists inteligentes..."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "&Histórico"
+#: src/player/frames/ui.py
+msgid "&Histórico de reprodução...\tCtrl+Shift+H"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "&Histórico de reprodução...\tCtrl+Shift+H"
+msgid "&Idioma do áudio da mídia atual..."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "&Indexar pasta na biblioteca"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -242,6 +273,15 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "&Instalar pacote..."
+msgstr ""
+
+#: src/player/frames/ui.py
+#: src/player/frames/youtube_music/state.py
+msgid "&KeyTube por aba\tCtrl+Shift+Y"
+msgstr ""
+
+#: src/player/frames/youtube_music/state.py
+msgid "&KeyTube por aba (ative em Preferências)\tCtrl+Shift+Y"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -280,6 +320,10 @@ msgstr ""
 msgid "&Nome da playlist:"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "&Nome da rádio"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Nova playlist\tCtrl+T"
 msgstr ""
@@ -296,20 +340,16 @@ msgstr ""
 msgid "&Novo..."
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "&OK"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Ordenar por"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "&Pasta..."
-msgstr ""
-
 #: src/player/frames/autodj_panel.py
 msgid "&Pausar preparação"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "&Pesquisar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -334,10 +374,6 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Recentes"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "&Registrar como player padrão"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -376,6 +412,10 @@ msgid "&Retomar preparação"
 msgstr ""
 
 #: src/player/frames/ui.py
+msgid "&Rádios online por aba\tCtrl+Shift+N"
+msgstr ""
+
+#: src/player/frames/ui.py
 msgid "&Sair\tAlt+F4"
 msgstr ""
 
@@ -387,18 +427,6 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "&Salvar cópia..."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "&Salvar no Music"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "&Salvar playlist na biblioteca"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "&Salvar seleção no Music"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -417,12 +445,24 @@ msgstr ""
 msgid "&Tempo restante"
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "&Tocar agora"
+msgstr ""
+
+#: src/player/convert/dialog.py
+msgid "&Usar a capa do álbum como imagem, se houver"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "&Ver"
 msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "&Voltar"
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid ","
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -475,11 +515,11 @@ msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "A autenticação salva do YouTube Music foi removida."
+msgid "A autenticação salva do YouTube foi removida."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "A autenticação salva do YouTube Music não é mais válida."
+msgid "A autenticação salva do YouTube não é mais válida."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
@@ -488,10 +528,6 @@ msgstr ""
 
 #: src/player/frames/smart_library/lifecycle.py
 msgid "A biblioteca inteligente está desligada. Ative em Preferências, aba Biblioteca."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "A biblioteca inteligente guarda, no seu computador, um índice das mídias que você abre, os favoritos, as avaliações, o histórico de reprodução e o ponto onde cada mídia longa parou. Nada é enviado para fora do computador."
 msgstr ""
 
 #: src/player/frames/smart_library/lifecycle.py
@@ -507,7 +543,7 @@ msgid "A conexão com a transmissão ao vivo foi perdida. Reconectando."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "A conta do YouTube Music foi desconectada desta instalação."
+msgid "A conta do YouTube foi desconectada desta instalação."
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -574,12 +610,12 @@ msgstr ""
 msgid "A janela principal é dividida em algumas áreas:\n\nAbas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab para alternar entre elas, e Ctrl+T para criar uma nova.\n\nLista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco entre a lista e o player.\n\nÁrea do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\nBarra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual e mensagens rápidas sobre as ações realizadas."
 msgstr ""
 
-#: src/player/smart_library/smart_playlist_dialog.py
-msgid "A lista é montada toda vez que você abre a playlist, então ela acompanha as mudanças de avaliação e de histórico."
+#: src/player/frames/explorer.py
+msgid "A lista de unidades não pode ser classificada."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."
+#: src/player/smart_library/smart_playlist_dialog.py
+msgid "A lista é montada toda vez que você abre a playlist, então ela acompanha as mudanças de avaliação e de histórico."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -591,7 +627,15 @@ msgid "A mídia atual já está curtida no YouTube Music."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
+msgid "A mídia atual já está curtida no YouTube."
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
 msgid "A mídia atual já está marcada como não gostei no YouTube Music."
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "A mídia atual já está marcada como não gostei no YouTube."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
@@ -600,6 +644,18 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "A mídia atual não veio do YouTube Music ou do YouTube."
+msgstr ""
+
+#: src/player/frames/youtube_music/comments.py
+msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
+msgstr ""
+
+#: src/player/frames/youtube_music/details.py
+msgid "A mídia atual não é do YouTube: não há detalhes para mostrar."
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
 msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
@@ -616,8 +672,8 @@ msgstr[1] ""
 msgid "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
 msgstr ""
 
-#: src/player/frames/library_navigation.py
-msgid "A pasta ainda está sendo carregada."
+#: src/player/frames/explorer.py
+msgid "A pasta não está mais disponível."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -641,10 +697,6 @@ msgid "A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
-msgid "A playlist selecionada não está mais disponível na lista atual."
-msgstr ""
-
-#: src/player/frames/youtube_music/lifecycle.py
 msgid "A playlist selecionada não tem faixas reproduzíveis no momento."
 msgstr ""
 
@@ -658,6 +710,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "A qualquer momento, pressione F1 para abrir uma ajuda rápida com a lista completa de atalhos de teclado do KeyTune.\n\nPara uma explicação mais detalhada de todos os recursos, abra o manual do usuário. Os dois também estão disponíveis pelo menu Ajuda."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A que o YouTube entregar"
 msgstr ""
 
 #: src/player/optional_resources.py
@@ -677,7 +733,7 @@ msgid "A release instalada do KeyTune não publicou o pacote opcional {name}."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "A resposta da conta do YouTube Music veio em formato inválido."
+msgid "A resposta da conta do YouTube veio em formato inválido."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -686,6 +742,10 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "A resposta dos recursos adicionais veio em formato inválido."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A rádio automática do YouTube Music. A tecla A alterna."
 msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
@@ -698,6 +758,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "A seleção atual não contém itens do YouTube Music ou do YouTube."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "A seleção atual não tem faixas que possam ser baixadas."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -741,10 +805,6 @@ msgstr ""
 msgid "A&bas"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "A&brir seleção"
-msgstr ""
-
 #: src/player/update/dialog.py
 msgid "A&gora não"
 msgstr ""
@@ -773,10 +833,6 @@ msgstr ""
 msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
 msgstr ""
 
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "Aba YouTube Music. Use os controles para conectar a conta, atualizar a biblioteca, pesquisar no catálogo e abrir playlists, mixes, músicas ou vídeos."
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Aba alvo: nenhuma"
 msgstr ""
@@ -802,19 +858,7 @@ msgid "Aba fechada."
 msgstr ""
 
 #: src/player/frames/library_tabs/tabs.py
-msgid "Aba fechada: {name}."
-msgstr ""
-
-#: src/player/frames/library_tabs/tabs.py
-msgid "Aba fechada: {title}. Nova playlist vazia criada."
-msgstr ""
-
-#: src/player/frames/library_tabs/tabs.py
 msgid "Aba {num}: {title}."
-msgstr ""
-
-#: src/player/frames/library_tabs/tabs.py
-msgid "Aba {num}: {title}. Pasta atual: {folder}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -823,10 +867,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abra sua central do YouTube Music em uma aba dedicada. Conecte ou atualize o acesso da conta, atualize a biblioteca, pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube para tocar sem sair do player."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -845,36 +885,20 @@ msgstr ""
 msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Abre a janela para escolher um arquivo de mídia ou playlist."
+#: src/player/youtube_music/panel.py
+msgid "Abre o diálogo para conectar uma conta do YouTube ou atualizar a autenticação salva."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Abre a janela para escolher uma pasta de mídias."
+#: src/player/radio/panel.py
+msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, favoritar, ver detalhes e outras."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music."
+msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, ver conteúdo, baixar, salvar e outras."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Abre a playlist, mix ou vídeo informado no campo acima."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Abre o arquivo, pasta ou link informado."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abre o diálogo para conectar uma conta do YouTube Music ou atualizar a autenticação salva."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abre um menu de contexto com ações para o resultado atual ou para toda a seleção da busca."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abre um menu para escolher o país e carrega as paradas e os destaques em alta nos resultados abaixo."
+#: src/player/preferences/dialog.py
+msgid "Abre os diálogos de arquivo na última pasta usada."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -885,20 +909,18 @@ msgstr ""
 msgid "Abrindo manual: {name}"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Abrir &Arquivos ou Playlist...\tCtrl+O"
+#: src/player/frames/radio/actions.py
+msgid "Abrindo o site de {name} no navegador."
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Abrir &Pasta...\tCtrl+Shift+O"
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/comments.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Abrindo {title}."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
-msgid "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
+msgid "Abrir &central do KeyTube...\tCtrl+Shift+Y"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -918,12 +940,8 @@ msgstr ""
 msgid "Abrir arquivos"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Abrir co&mo"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Abrir como"
+#: src/player/frames/explorer.py
+msgid "Abrir em &nova playlist"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -934,16 +952,16 @@ msgstr ""
 msgid "Abrir manual do usuário"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Abrir mídia, playlist ou pasta"
-msgstr ""
-
 #: src/player/file_associations.py
 msgid "Abrir no {app}"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Abrir origem informada"
+#: src/player/frames/radio/actions.py
+msgid "Abrir o &site"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Abrir o site da rádio no navegador"
 msgstr ""
 
 #: src/player/frames/library_loader.py
@@ -951,31 +969,19 @@ msgid "Abrir pasta como playlist"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Abrir pasta de &logs"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Abrir pasta de logs"
+msgid "Abrir pasta de l&ogs"
 msgstr ""
 
 #: src/player/frames/library_loader.py
 msgid "Abrir playlist"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Abrir playlist ou vídeo"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abrir playlist ou vídeo do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Abrir playlist selecionada do YouTube Music"
-msgstr ""
-
 #: src/player/frames/youtube_music/search.py
 msgid "Abrir seleção em nova playlist"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Abrir sem &tocar...\tCtrl+Shift+O"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -990,8 +996,16 @@ msgstr ""
 msgid "Acessibilidade"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Acima desse número, as mais antigas saem."
+msgstr ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "Adicionando {count} {label} à playlist {title}..."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Adicionar a &pasta atual inteira à playlist"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -1010,8 +1024,26 @@ msgstr ""
 msgid "Adicionar músicas à sessão AutoDJ"
 msgstr ""
 
+#: src/player/radio/panel.py
+msgid "Adicionar rádio &manualmente..."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+#: src/player/radio/panel.py
+msgid "Adicionar rádio manualmente"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Adicionar rádio manualmente..."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Adicionar seleção..."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/search.py
+msgid "Adicionar sem tocar (Shift+Enter)"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -1031,6 +1063,10 @@ msgstr ""
 msgid "Adicionar à &fila"
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "Adicionar à &fila de reprodução\tCtrl+Shift+F"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"
 msgstr ""
@@ -1039,8 +1075,12 @@ msgstr ""
 msgid "Adicionar à playlist do YouTube Music..."
 msgstr ""
 
-#: src/player/frames/library_tabs/tabs.py
-msgid "Agora em {title}."
+#: src/player/frames/radio/actions.py
+msgid "Adicionar às favoritas (Ctrl+D)"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Adicionar às favoritas a rádio que está tocando"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -1104,7 +1144,7 @@ msgid "Ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1121,10 +1161,6 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -1168,7 +1204,7 @@ msgid "Alternar foco entre &itens e player (Tab)"
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Altura máxima do vídeo. Se a qualidade escolhida não existir, o vídeo é baixado na melhor qualidade disponível."
+msgid "Altura máxima do vídeo; sem ela, vem a melhor disponível."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -1193,6 +1229,10 @@ msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Anuncia mudanças como tempo, volume e troca de abas."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1224,7 +1264,7 @@ msgid "Ao &fim da faixa atual"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ao abrir uma pasta no navegador, suas mídias entram no índice em segundo plano."
+msgid "Ao atingir o limite, as mais antigas saem."
 msgstr ""
 
 #: src/player/sleep_timer/dialog.py
@@ -1232,6 +1272,7 @@ msgid "Ao fim da faixa atual"
 msgstr ""
 
 #: src/player/equalizer/models.py
+#: src/player/youtube_music/models.py
 msgid "Ao vivo"
 msgstr ""
 
@@ -1252,11 +1293,11 @@ msgid "Aplica o dispositivo de áudio selecionado."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Aplicar crossfade ao trocar de faixa &manualmente"
+msgid "Aplicado na próxima vez que o KeyTune for aberto."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Aplicar crossfade ao trocar de faixa manualmente"
+msgid "Aplicar crossfade ao trocar de fai&xa manualmente"
 msgstr ""
 
 #: src/player/preferences/audio_output_dialog.py
@@ -1279,10 +1320,6 @@ msgstr ""
 msgid "Apresenta o player e o que é possível fazer com ele."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Ar&quivo..."
-msgstr ""
-
 #: src/player/youtube_music/models.py
 msgid "Argentina"
 msgstr ""
@@ -1299,18 +1336,6 @@ msgstr ""
 msgid "Arquivo de mídia — {app}"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Arquivo, pasta ou &link"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Arquivo, pasta ou link"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Arquivo, pasta, link de mídia ou lista .m3u/.m3u8."
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos JSON (*.json)"
 msgstr ""
@@ -1319,20 +1344,8 @@ msgstr ""
 msgid "Arquivos de autenticação (*.json;*.txt)"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Arquivos de mídia são abertos como playlist com um item."
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos de texto (*.txt)"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Arquivos e links .m3u/.m3u8 são abertos como playlist."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Arquivos existentes serão tentados como mídia."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -1347,6 +1360,18 @@ msgstr ""
 msgid "Arquivos recentes limpos."
 msgstr ""
 
+#: src/player/frames/youtube_music/navigation.py
+msgid "Artista {name}"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "Artistas"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "Artistas parecidos"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Arábia Saudita"
 msgstr ""
@@ -1355,12 +1380,24 @@ msgstr ""
 msgid "As faixas selecionadas não foram encontradas nesta playlist."
 msgstr ""
 
+#: src/player/youtube_music/subscriptions.py
+msgid "As inscrições precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr ""
+
 #: src/player/preferences/dialog.py
-msgid "As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player."
+msgid "As mídias da pasta entram no índice em segundo plano."
 msgstr ""
 
 #: src/player/update/dialog.py
 msgid "As notas desta versão ainda não foram publicadas na release do GitHub."
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "As respostas dos comentários precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "As rádios selecionadas já estavam em {title}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1375,6 +1412,10 @@ msgstr ""
 msgid "Associações removidas."
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "At&ualizar\tF5"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "At&ualizar acesso..."
 msgstr ""
@@ -1384,11 +1425,7 @@ msgid "Atalhos e ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
+msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1400,10 +1437,6 @@ msgstr ""
 msgid "Ativar &equalizador nesta aba"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Ativar Auto&DJ"
 msgstr ""
@@ -1413,7 +1446,7 @@ msgid "Ativar a &biblioteca inteligente"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ativar a biblioteca inteligente"
+msgid "Ativar a integração com &YouTube e YouTube Music"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1421,23 +1454,11 @@ msgid "Ativar a&núncios de acessibilidade"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ativar anúncios de acessibilidade"
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Ativar e&mbaralhamento em novas playlists"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ativar embaralhamento em novas playlists"
 msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Ativar equalizador nesta aba"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ativar integração com YouTube Music e YouTube"
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -1486,16 +1507,12 @@ msgstr[1] ""
 msgid "Atualizar autenticação..."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Atualizar automaticamente as dependências do YouTube Music"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Atualizar automaticamente dependências do YouTube Music"
-msgstr ""
-
 #: src/player/youtube_music/panel.py
 msgid "Atualizar biblioteca do YouTube Music"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Atualizar os componentes a&utomaticamente"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1562,12 +1579,12 @@ msgstr ""
 msgid "Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}"
 msgstr ""
 
-#: src/player/frames/autodj.py
-msgid "AutoDJ analisando a faixa atual e as próximas opções..."
+#: src/player/preferences/dialog.py
+msgid "AutoDJ"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "AutoDJ avançado"
+#: src/player/frames/autodj.py
+msgid "AutoDJ analisando a faixa atual e as próximas opções..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1607,7 +1624,15 @@ msgid "AutoDJ: {status}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Automática"
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Automático (seguir o sistema)"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Autor desconhecido"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -1627,6 +1652,10 @@ msgstr ""
 msgid "Avaliação da mídia atual removida no YouTube Music."
 msgstr ""
 
+#: src/player/youtube_music/feedback_manager.py
+msgid "Avaliação da mídia atual removida no YouTube."
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Avaliação mínima"
 msgstr ""
@@ -1637,6 +1666,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Avançar"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Avanço e transição entre faixas"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -1651,10 +1684,6 @@ msgstr ""
 msgid "Avisos (WARNING)"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Ações da seleção de resultados do YouTube"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Ações de p&lugins"
 msgstr ""
@@ -1663,20 +1692,17 @@ msgstr ""
 msgid "Ações do AutoDJ"
 msgstr ""
 
+#: src/player/radio/panel.py
 #: src/player/youtube_music/panel.py
-msgid "Ações..."
+msgid "Ações do item selecionado"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
+msgid "Baixa as bibliotecas de análise de áudio: librosa, NumPy, SciPy, Numba e PyAV."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram extractors com frequência e o nightly costuma receber correções antes do canal estável."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do YouTube Music em uma pasta local de recursos adicionais."
+msgid "Baixa e mantém o yt-dlp, o ytmusicapi e o Node.js. Necessário para o KeyTube."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -1716,7 +1742,15 @@ msgid "Baixar"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Baixar &seleção da lista..."
+msgid "Baixar &mídia atual... (Ctrl+Shift+B no player)"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Baixar &playlist inteira..."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Baixar &seleção... (Ctrl+Shift+B na lista)"
 msgstr ""
 
 #: src/player/download/dialog.py
@@ -1724,28 +1758,17 @@ msgstr ""
 msgid "Baixar mídia"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Baixar playlist &inteira..."
-msgstr ""
-
 #: src/player/frames/commands/browser_commands.py
-msgid "Baixar playlist inteira do YouTube..."
+msgid "Baixar playlist inteira..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Baixar recursos e ativar &AutoDJ"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Baixar recursos e ativar AutoDJ"
-msgstr ""
-
 #: src/player/frames/commands/browser_commands.py
-msgid "Baixar seleção do YouTube..."
-msgstr ""
-
 #: src/player/frames/youtube_music/search.py
-msgid "Baixar seleção..."
+msgid "Baixar seleção...\tCtrl+Shift+B"
 msgstr ""
 
 #: src/player/download/dialog.py
@@ -1772,16 +1795,16 @@ msgstr ""
 msgid "Barra de tempo"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Batidas de sobreposição entre duas faixas."
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Bem-vindo ao KeyTune"
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Biblioteca"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Biblioteca do YouTube Music"
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -1870,30 +1893,17 @@ msgstr ""
 msgid "Busca \"{query}\": resultado {position} de {total}."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Busca do YouTube Music e do YouTube"
-msgstr ""
-
-#: src/player/frames/youtube_music/search.py
-msgid "Busca em {scope}: nenhum resultado para {query}."
-msgstr ""
-
-#: src/player/frames/youtube_music/search.py
-msgid "Busca em {scope}: {count} resultado para {query}."
-msgid_plural "Busca em {scope}: {count} resultados para {query}."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/player/youtube_music/panel.py
-msgid "Busca no catálogo e no YouTube"
+#: src/player/preferences/dialog.py
+msgid "Busca global (Ctrl+G), favoritos, avaliações, histórico e retomada. Tudo fica no seu computador."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Busca novamente as playlists e mixes disponíveis na conta conectada."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Busca o próximo lote de playlists da biblioteca quando ainda existem mais a carregar."
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/search.py
+msgid "Busca por {query}"
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
@@ -1921,15 +1931,23 @@ msgid "Buscar na biblioteca"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Buscar por:"
+msgid "Buscar no YouTube Music e no YouTube, ou colar um link"
+msgstr ""
+
+#: src/player/youtube_music/panel.py
+msgid "Buscar ou colar link:"
+msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Buscar rádio ou colar endereço:"
+msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Buscar rádio pelo nome, ou colar o endereço de um stream"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Bélgica"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "C&urtidas"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1940,9 +1958,20 @@ msgstr ""
 msgid "Cache de metadados e análises"
 msgstr ""
 
-#: src/player/frames/commands/open_commands.py
-msgid "Caminho copiado."
+#: src/player/frames/download.py
+msgid "Cada playlist ou álbum fica em uma subpasta com o nome dele."
 msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+#: src/player/frames/explorer.py
+msgid "Caminho copiado."
+msgid_plural "{count} caminhos copiados."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/player/frames/commands/open_commands.py
 msgid "Caminho da mídia atual copiado."
@@ -1960,12 +1989,24 @@ msgstr ""
 msgid "Canadá"
 msgstr ""
 
-#: src/player/update/dialog.py
-msgid "Cancelando..."
+#: src/player/youtube_music/models.py
+msgid "Canais"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Cancelar abertura"
+#: src/player/youtube_music/folders.py
+msgid "Canais inscritos"
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+msgid "Canal {name}"
+msgstr ""
+
+#: src/player/youtube_music/details.py
+msgid "Canal: {name}"
+msgstr ""
+
+#: src/player/update/dialog.py
+msgid "Cancelando..."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -1976,8 +2017,12 @@ msgstr ""
 msgid "Cancelar seleção de dispositivo de áudio"
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Carregando as categorias de moods e gêneros do YouTube Music."
+#: src/player/frames/youtube_music/search.py
+msgid "Carregando as faixas das listas selecionadas para baixar."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Carregando as faixas de {title} para baixar."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -1988,16 +2033,17 @@ msgstr ""
 msgid "Carregando itens da pasta..."
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Carregando mais itens."
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Carregando mais playlists do YouTube Music."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Carregando o que está em alta em {country}."
-msgstr ""
-
-#: src/player/frames/library_navigation.py
-msgid "Carregando pasta: {name}."
+#: src/player/frames/youtube_music/details.py
+msgid "Carregando os detalhes."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -2008,39 +2054,15 @@ msgstr ""
 msgid "Carregando playlist..."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Carregando playlists de {category}."
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Carregando seu histórico do YouTube Music."
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Carregando suas músicas curtidas do YouTube Music."
-msgstr ""
-
 #: src/player/frames/library_tabs/tabs.py
 msgid "Carregando {title}."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Carregar &mais playlists"
+#: src/player/frames/radio/lifecycle.py
+msgid "Carregando…"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Carregar mais playlists do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Carregar seu histórico do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Carregar suas músicas curtidas do YouTube Music"
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
+#: src/player/youtube_music/folders.py
 msgid "Categorias"
 msgstr ""
 
@@ -2048,11 +2070,15 @@ msgstr ""
 msgid "Categorias de preferências"
 msgstr ""
 
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "Central do KeyTube. Navegue pela lista, faça uma busca ou cole um link."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Chile"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Classificar por"
 msgstr ""
 
@@ -2065,19 +2091,19 @@ msgid "Clássico"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Co&lar na playlist atual / abrir... (Ctrl+V)"
+msgid "Co&lar (Ctrl+V)"
+msgstr ""
+
+#: src/player/frames/commands/browser_commands.py
+msgid "Colar\tCtrl+V"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Colar e abrir em &nova playlist... (Ctrl+Shift+V)"
+msgid "Colar se&m tocar (Ctrl+Shift+V)"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
-msgid "Colar em nova playlist"
-msgstr ""
-
-#: src/player/frames/commands/browser_commands.py
-msgid "Colar na playlist atual"
+msgid "Colar sem tocar\tCtrl+Shift+V"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -2085,20 +2111,32 @@ msgstr ""
 msgid "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
 msgstr ""
 
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube."
-msgstr ""
-
 #: src/player/youtube_music/models.py
 msgid "Colômbia"
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
+msgid "Comentário"
+msgstr ""
+
+#: src/player/frames/youtube_music/comments.py
+msgid "Comentário de {author}"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Comentários"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "Comentários de {title}"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Como a interface é organizada"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Componentes do YouTube"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -2109,8 +2147,13 @@ msgstr ""
 msgid "Con&firmar ao sair"
 msgstr ""
 
+#: src/player/convert/dialog.py
 #: src/player/frames/ui.py
 msgid "Con&verter"
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Con&verter seleção...\tCtrl+Shift+K"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -2118,7 +2161,7 @@ msgid "Concluir"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conectando a conta do YouTube Music..."
+msgid "Conectando a conta do YouTube..."
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -2126,11 +2169,15 @@ msgid "Conectar &conta..."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Conectar ao YouTube Music"
+msgid "Conectar ao YouTube"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Conectar ou atualizar acesso do YouTube Music"
+msgid "Conectar ou atualizar acesso do YouTube"
+msgstr ""
+
+#: src/player/youtube_music/subscriptions.py
+msgid "Conecte a conta do YouTube para ver as inscrições."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -2142,23 +2189,7 @@ msgid "Conexão com o YouTube Music cancelada."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Configure integrações e componentes opcionais do player. Novos recursos adicionais poderão aparecer aqui no futuro, sem misturar essas opções com as preferências gerais."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Confirmar ao sair"
+msgid "Confirma formato e qualidade a cada download (Ctrl+Shift+B)."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -2183,11 +2214,11 @@ msgid "Conta conectada: {name}."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conta do YouTube Music conectada: {name}."
+msgid "Conta do YouTube conectada: {name}."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Conta do YouTube Music desconectada."
+msgid "Conta do YouTube desconectada."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -2212,10 +2243,6 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Conta: {name}."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Contagem de resultados do YouTube Music"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -2244,7 +2271,7 @@ msgid "Conteúdo relacionado do YouTube Music {status}."
 msgstr ""
 
 #: src/player/frames/library_tabs/related_autoplay.py
-msgid "Conteúdo relacionado. {position}"
+msgid "Conteúdo relacionado."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -2253,10 +2280,6 @@ msgstr ""
 
 #: src/player/frames/smart_library/resume.py
 msgid "Continuar ouvindo"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Controla quanta informação é registrada. \"Apenas erros\" é o mais silencioso; \"Depuração\" é o mais detalhado e pode gerar arquivos grandes."
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -2273,10 +2296,6 @@ msgstr ""
 
 #: src/player/smtc/service.py
 msgid "Controles de mídia do sistema indisponíveis. Instale o pacote 'winrt-Windows.Media.Playback' no Windows."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Controles de reprodução"
 msgstr ""
 
 #: src/player/convert/runner.py
@@ -2329,11 +2348,11 @@ msgid "Convertendo... {percent}%"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Converter &mídia atual...\tCtrl+Shift+K"
+msgid "Converter &mídia atual... (Ctrl+Shift+K no player)"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Converter arquivos &selecionados na lista..."
+msgid "Converter &seleção... (Ctrl+Shift+K na lista)"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -2342,15 +2361,19 @@ msgid "Converter mídia"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. O KeyTune oferece instalá-lo na primeira vez que precisar."
+msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg; o KeyTune oferece instalá-lo quando precisar."
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
-msgid "Converter seleção..."
+msgid "Converter seleção...\tCtrl+Shift+K"
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
 msgid "Copia toda a letra exibida para a área de transferência."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Copiar ca&minho\tCtrl+Shift+C"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -2361,8 +2384,12 @@ msgstr ""
 msgid "Copiar letra completa"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Copiar o endereço do stream (Ctrl+C)"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
-msgid "Copiar seleção"
+msgid "Copiar seleção\tCtrl+C"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2373,7 +2400,7 @@ msgstr ""
 msgid "Costa Rica"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Crescente"
 msgstr ""
 
@@ -2421,15 +2448,9 @@ msgstr ""
 msgid "Créditos do KeyTune"
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Curtidas: nenhuma faixa curtida encontrada."
+#: src/player/youtube_music/folders.py
+msgid "Curtidas"
 msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Curtidas: {count} faixa."
-msgid_plural "Curtidas: {count} faixas."
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/player/frames/commands/browser_commands.py
 msgid "Curtir no YouTube Music"
@@ -2459,40 +2480,20 @@ msgstr ""
 msgid "Dance"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Data de criação"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Data de modificação"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Decrescente"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python quando a aba YouTube Music é aberta."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Define o idioma de menus, diálogos e anúncios do leitor de tela. Use Automático para seguir o idioma do sistema operacional."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Define o volume inicial do player. 0 é mudo e 100 é o máximo."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Define por quantos segundos duas faixas de áudio se sobrepõem na transição. Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio e acontece automaticamente no final de cada faixa."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
+#: src/player/frames/radio/actions.py
+msgid "Definir {country} como o meu país"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -2516,16 +2517,12 @@ msgstr ""
 msgid "Desativar saída de &vídeo (tocar só o áudio)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Desativar saída de vídeo"
-msgstr ""
-
 #: src/player/frames/autodj_panel.py
 msgid "Descarta a sequência preparada e calcula uma nova ordem de reprodução."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Desconectar conta do YouTube Music"
+msgid "Desconectar conta do YouTube"
 msgstr ""
 
 #: src/player/lyrics/service.py
@@ -2546,6 +2543,10 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "Descrição do preset:"
+msgstr ""
+
+#: src/player/youtube_music/details.py
+msgid "Descrição:"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -2574,23 +2575,39 @@ msgid "Deseja realmente sair do KeyTune?"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Deseja remover a autenticação salva do YouTube Music neste computador?"
+msgid "Deseja remover a autenticação salva do YouTube neste computador?"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Deseja remover a playlist inteligente {name}?"
 msgstr ""
 
+#: src/player/playlists/queue_dialog.py
+msgid "Deseja remover todos os {count} itens da fila de reprodução?"
+msgstr ""
+
 #: src/player/download/dialog.py
 msgid "Desmarcado, o download começa direto com as opções da guia Download das Preferências, sem perguntar."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Desregistrar associações"
-msgstr ""
-
 #: src/player/equalizer/models.py
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/browse.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Desça até o fim da lista para carregar mais."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/details.py
+msgid "Detalhes"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/details.py
+msgid "Detalhes de {title}"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -2614,10 +2631,14 @@ msgid "Detalhes técnicos: {detail}."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/audio_tracks.py
 #: src/player/frames/youtube_music/auth.py
 #: src/player/frames/youtube_music/browse.py
 #: src/player/frames/youtube_music/dependencies.py
+#: src/player/frames/youtube_music/details.py
 #: src/player/frames/youtube_music/lifecycle.py
+#: src/player/frames/youtube_music/navigation.py
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/frames/youtube_music/search.py
 #: src/player/youtube_music/youtubejs_runtime.py
@@ -2639,6 +2660,26 @@ msgstr ""
 
 #: src/player/frames/youtube_music/search.py
 msgid "Digite algo para pesquisar no YouTube Music ou no YouTube."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Digite o endereço do stream ou do arquivo M3U."
+msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Digite o nome da rádio e pressione Enter. O endereço de um stream colado aqui toca direto."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+msgid "Digite o nome de uma rádio para pesquisar."
+msgstr ""
+
+#: src/player/youtube_music/panel.py
+msgid "Digite o que procura e pressione Enter. Um link de playlist, mix ou vídeo colado aqui é aberto direto."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Digite um nome para a rádio."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -2709,6 +2750,10 @@ msgstr ""
 msgid "Dispositivo salvo indisponível — {device}"
 msgstr ""
 
+#: src/player/library/explorer.py
+msgid "Documentos"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Download"
 msgstr ""
@@ -2754,6 +2799,10 @@ msgstr ""
 msgid "Download em andamento: {percent}%."
 msgstr ""
 
+#: src/player/library/explorer.py
+msgid "Downloads"
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Duplicar preset do equalizador"
 msgstr ""
@@ -2770,6 +2819,10 @@ msgstr ""
 msgid "Duração mínima para lembrar a posição (minutos)"
 msgstr ""
 
+#: src/player/youtube_music/details.py
+msgid "Duração: {duration}"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Dá mais corpo aos graves com médios mais relaxados."
 msgstr ""
@@ -2784,10 +2837,6 @@ msgstr ""
 
 #: src/player/equalizer/panel.py
 msgid "E&xcluir"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "E&xcluir playlist..."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -2810,19 +2859,13 @@ msgstr ""
 msgid "Eletrônica"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Em &alta..."
+#: src/player/youtube_music/folders.py
+msgid "Em alta"
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
-msgid "Em alta em {country}: nenhum destaque disponível."
+msgid "Em alta em {country}"
 msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Em alta em {country}: {count} lista de destaque."
-msgid_plural "Em alta em {country}: {count} listas de destaque."
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/player/youtube_music/charts.py
 msgid "Em alta · diário"
@@ -2840,8 +2883,17 @@ msgstr ""
 msgid "Em alta · vídeos"
 msgstr ""
 
+#: src/player/frames/youtube_music/browse.py
+msgid "Em alta — {group}"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Em&baralhar (E)"
+msgstr ""
+
+#: src/player/radio/panel.py
+#: src/player/youtube_music/panel.py
+msgid "Em:"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2869,12 +2921,28 @@ msgstr ""
 msgid "Encerrar sessão AutoDJ"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Endereço do stream copiado."
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Endereço do stream ou M3U da rádio"
+msgstr ""
+
+#: src/player/radio/manual_dialog.py
+msgid "Endereço em branco"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Endereço inválido"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Enfatiza batida, subgrave e brilho eletrônico."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Enter abre a seleção atual. Esc fecha a aba. Tab volta para a navegação padrão entre controles da tela. Page Down no fim da lista carrega mais playlists."
+#: src/player/frames/explorer.py
+msgid "Enter abre ou toca. Shift+Enter adiciona sem tocar. Shift+F10 abre as ações."
 msgstr ""
 
 #: src/player/library/browser.py
@@ -2889,8 +2957,16 @@ msgstr ""
 msgid "Enter entra na pasta ou toca o arquivo. Backspace volta. Ctrl+Espaço classifica. Digite letras para localizar. Tab volta ao player."
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "Enter entra na pasta ou toca o arquivo. Shift+Enter adiciona sem tocar. Ctrl+Shift+F põe na fila. Backspace volta. Shift+F10 abre ações. Tab vai para a playlist."
+msgstr ""
+
+#: src/player/radio/panel.py
+msgid "Enter entra no item ou toca a rádio; Shift+Enter adiciona sem tocar. Ctrl+D favorita. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
-msgid "Enter no campo de busca executa a pesquisa. Enter na lista adiciona a seleção à playlist atual. Ctrl+Enter abre a seleção em nova playlist. Use Shift+F10 ou o botão Ações para mais opções."
+msgid "Enter entra no item ou toca; Shift+Enter adiciona sem tocar. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2957,16 +3033,8 @@ msgstr ""
 msgid "Escolha a saída de áudio usada na reprodução."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp e vale para mídias do YouTube e do YouTube Music."
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
-msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
+msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -2977,6 +3045,10 @@ msgstr ""
 msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
 msgstr ""
 
+#: src/player/frames/commands/open_commands.py
+msgid "Escolha os arquivos para abrir sem tocar"
+msgstr ""
+
 #: src/player/sleep_timer/dialog.py
 msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
 msgstr ""
@@ -2985,28 +3057,8 @@ msgstr ""
 msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
 msgstr ""
 
-#: src/player/download/panel.py
-msgid "Escolha se o download será apenas o áudio ou o vídeo completo."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Escolha um arquivo de mídia ou playlist"
-msgstr ""
-
 #: src/player/frames/commands/open_commands.py
 msgid "Escolha um ou mais arquivos de mídia ou uma playlist"
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Escolha um país no menu para carregar o que está em alta."
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Escolha uma categoria de moods e gêneros no menu para carregar as playlists."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Escolha uma pasta"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -3023,20 +3075,8 @@ msgstr ""
 msgid "Escolha uma pasta para indexar na biblioteca"
 msgstr ""
 
-#: src/player/frames/commands/open_commands.py
-msgid "Escolha uma pasta para navegar"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Escolhe a saída de áudio usada na reprodução. Use Padrão do sistema para seguir o dispositivo principal do Windows."
-msgstr ""
-
 #: src/player/frames/autodj_panel.py
 msgid "Escolhe outra faixa preparada para a próxima transição."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -3055,14 +3095,6 @@ msgstr ""
 msgid "Escolher pasta de download"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Escopo da busca do YouTube"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Escopo:"
-msgstr ""
-
 #: src/player/equalizer/models.py
 msgid "Escuta suave para reduzir agressividade em faixas brilhantes."
 msgstr ""
@@ -3079,16 +3111,8 @@ msgstr ""
 msgid "Esta mídia já está no seu computador."
 msgstr ""
 
-#: src/player/frames/convert.py
-msgid "Esta opção converte vídeo, mas a mídia atual é um áudio. Use as opções de áudio."
-msgstr ""
-
-#: src/player/frames/convert.py
-msgid "Esta opção converte áudio, mas a mídia atual é um vídeo. Use as opções de vídeo."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Esta pasta pode abrir como playlist estática ou no navegador de pastas."
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Esta mídia tem só uma faixa de áudio."
 msgstr ""
 
 #: src/player/youtube_music/live_streams.py
@@ -3099,8 +3123,16 @@ msgstr ""
 msgid "Estado"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Estado ou região: {value}"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Estados Unidos"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Estados e regiões de {country}"
 msgstr ""
 
 #: src/player/convert/plan.py
@@ -3111,6 +3143,10 @@ msgstr ""
 msgid "Este arquivo não tem faixa de áudio para converter."
 msgstr ""
 
+#: src/player/library/explorer.py
+msgid "Este computador"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Atualize os recursos adicionais e tente novamente mais tarde."
 msgstr ""
@@ -3119,12 +3155,32 @@ msgstr ""
 msgid "Este item já está na fila de reprodução."
 msgstr ""
 
+#: src/player/frames/youtube_music/comments.py
+msgid "Este item não tem comentários para mostrar."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+msgid "Este item não tem conteúdo para abrir."
+msgstr ""
+
+#: src/player/frames/youtube_music/details.py
+msgid "Este item não tem detalhes para mostrar."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Este plugin será executado dentro do processo do KeyTune e terá o mesmo acesso do aplicativo ao computador. Ative somente código de um autor em quem você confia plenamente."
 msgstr ""
 
+#: src/player/frames/youtube_music/navigation.py
+msgid "Este resultado não tem conteúdo para abrir."
+msgstr ""
+
 #: src/player/frames/convert.py
 msgid "Este tipo de arquivo não pode ser convertido."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Estilo da sequência e das transições."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3139,10 +3195,6 @@ msgstr ""
 msgid "Europa"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
-msgstr ""
-
 #: src/player/frames/youtube_music/playlists.py
 msgid "Excluindo a playlist \"{title}\" do YouTube Music..."
 msgstr ""
@@ -3152,8 +3204,11 @@ msgid "Excluir a playlist \"{title}\" do YouTube Music?"
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
-#: src/player/youtube_music/panel.py
 msgid "Excluir playlist do YouTube Music"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Excluir playlist do YouTube Music..."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -3165,28 +3220,24 @@ msgstr ""
 msgid "Executa a ação: {label}."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Executa a busca usando o texto informado e o escopo selecionado."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
-msgstr ""
-
 #: src/player/welcome/dialog.py
 msgid "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Explorar moods e gêneros do YouTube Music"
+#: src/player/frames/explorer.py
+msgid "Explorador"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Explorar:"
+#: src/player/frames/explorer.py
+msgid "Explorador de pastas"
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Explorador de pastas fechado."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
-msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3209,12 +3260,20 @@ msgstr ""
 msgid "Faixa &Anterior\tCtrl+PageUp"
 msgstr ""
 
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Faixa de áudio desta mídia:"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Faixa marcada como não gostei ignorada: {name}."
 msgstr ""
 
 #: src/player/youtube_music/playlists.py
 msgid "Faixa sem título"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Faixa tocada nos vídeos com mais de um áudio."
 msgstr ""
 
 #: src/player/frames/youtube_music/tasks.py
@@ -3269,10 +3328,6 @@ msgstr ""
 msgid "Fecha esta janela sem abrir instaladores nem sites."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Fecha esta janela sem abrir uma origem."
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
 msgid "Fechar"
 msgstr ""
@@ -3293,6 +3348,14 @@ msgstr ""
 msgid "Feche o {browser} completamente e tente exportar novamente."
 msgstr ""
 
+#: src/player/frames/library_tabs/tabs.py
+msgid "Fechou {title}."
+msgstr ""
+
+#: src/player/frames/library_tabs/tabs.py
+msgid "Fechou {title}. Nova playlist vazia."
+msgstr ""
+
 #: src/player/equalizer/models.py
 #: src/player/preferences/dialog.py
 msgid "Festa"
@@ -3306,10 +3369,6 @@ msgstr ""
 msgid "Fila de reprodução esvaziada."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Filtro da biblioteca do YouTube Music"
-msgstr ""
-
 #: src/player/smart_library/search_dialog.py
 msgid "Filtro da busca"
 msgstr ""
@@ -3318,8 +3377,9 @@ msgstr ""
 msgid "Filtro do histórico"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Filtro:"
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Fim da lista: não há mais itens."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -3390,6 +3450,10 @@ msgstr ""
 msgid "Google Chrome"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Grava um arquivo de log, útil para relatar problemas."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Graves e agudos"
 msgstr ""
@@ -3399,21 +3463,26 @@ msgid "Graves profundos"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Guarda metadados já resolvidos e análises de áudio para não repetir trabalho caro. As entradas mais antigas saem quando o limite é atingido."
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Guardar um &histórico local de reprodução"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Guardar um histórico local de reprodução"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Guatemala"
 msgstr ""
 
+#: src/player/radio/folders.py
+msgid "Gênero {name}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Gêneros"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Gêneros: {value}"
+msgstr ""
+
+#: src/player/youtube_music/folders.py
 #: src/player/youtube_music/library_manager.py
 msgid "Histórico"
 msgstr ""
@@ -3428,22 +3497,16 @@ msgstr ""
 msgid "Histórico de reprodução apagado."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Histórico: nenhuma faixa recente encontrada."
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Histórico: {count} faixa recente."
-msgid_plural "Histórico: {count} faixas recentes."
-msgstr[0] ""
-msgstr[1] ""
-
 #: src/player/youtube_music/models.py
 msgid "Holanda"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Honduras"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Horas entre as verificações."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3468,6 +3531,30 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Idioma da interface"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idioma do conteúdo"
+msgstr ""
+
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Idioma do áudio"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idioma e região"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Idioma {name}"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Idioma: {value}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Idiomas"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -3498,10 +3585,6 @@ msgstr ""
 msgid "Indexar automaticamente as &pastas abertas no navegador"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Indexar automaticamente as pastas abertas"
-msgstr ""
-
 #: src/player/frames/smart_library/indexing.py
 msgid "Indexação concluída: {count} mídia adicionada à biblioteca."
 msgid_plural "Indexação concluída: {count} mídias adicionadas à biblioteca."
@@ -3528,15 +3611,6 @@ msgstr ""
 msgid "Informe o nome e a privacidade da nova playlist."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Informe um caminho local ou cole um link de mídia ou playlist."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
-#: src/player/library/open_dialog.py
-msgid "Informe um caminho local, uma pasta ou um link de mídia."
-msgstr ""
-
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube."
 msgstr ""
@@ -3544,10 +3618,6 @@ msgstr ""
 #: src/player/youtube_music/dialog.py
 #: src/player/youtube_music/library_manager.py
 msgid "Informe um nome para a nova playlist."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
-msgid "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -3576,10 +3646,6 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Iniciar &rádio desta faixa\tCtrl+R"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -3620,15 +3686,11 @@ msgid "Instância do backend de reprodução indisponível."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Integração com YouTube Music ativada. Opções adicionais disponíveis."
+msgid "Integração com o YouTube ativada. Opções dos componentes disponíveis."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Integração com YouTube Music desativada. Opções adicionais ocultadas."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Integração com YouTube Music e YouTube"
+msgid "Integração com o YouTube desativada. Opções dos componentes indisponíveis."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3643,12 +3705,41 @@ msgstr ""
 msgid "Intervalo de atualização (horas)"
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Início"
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+msgid "Início das rádios online: escolha uma lista, busque uma rádio ou cole o endereço de um stream."
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 msgid "Início do arquivo."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Início do item atual."
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+msgid "Início: escolha uma lista, faça uma busca ou cole um link."
+msgstr ""
+
+#: src/player/frames/youtube_music/details.py
+msgid "Ir para o &artista"
+msgstr ""
+
+#: src/player/frames/youtube_music/details.py
+msgid "Ir para o &canal"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ir para o artista {name}"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ir para o canal {name}"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3689,17 +3780,12 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-#: src/player/frames/library_tabs/playback_control.py
-msgid "Item atual: {name}."
-msgstr ""
-
-#: src/player/frames/library_tabs/playback_control.py
-msgid "Item atual: {name}. Item {current} de {total}."
-msgstr ""
-
 #: src/player/frames/commands/open_commands.py
+#: src/player/frames/explorer.py
 msgid "Item copiado."
-msgstr ""
+msgid_plural "{count} itens copiados."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "Item curtido no YouTube Music."
@@ -3708,8 +3794,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/player/frames/youtube_music/playlists.py
+msgid "Item curtido no YouTube."
+msgid_plural "{count} itens curtidos no YouTube."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/frames/youtube_music/playlists.py
 msgid "Item marcado como não gostei no YouTube Music."
 msgid_plural "{count} itens marcados como não gostei no YouTube Music."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "Item marcado como não gostei no YouTube."
+msgid_plural "{count} itens marcados como não gostei no YouTube."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3731,6 +3829,10 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Itens da página inicial varridos em busca de mixes."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -3765,6 +3867,10 @@ msgstr ""
 msgid "Já instalado"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "KeyTube"
+msgstr ""
+
 #: src/player/lyrics/service.py
 msgid "LRCLIB"
 msgstr ""
@@ -3774,27 +3880,27 @@ msgid "Leitor de tela"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Lembrar a posição de mídias longas"
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Lembrar tamanho da &janela"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Lembrar tamanho da janela"
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Lembrar última &pasta usada"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Lembrar última pasta usada"
+#: src/player/frames/commands/open_commands.py
+msgid "Lendo as pastas coladas..."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Lendo as pastas selecionadas..."
 msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Ler a faixa, a posição e o estado de reprodução"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Ler o comentário inteiro (Enter)"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -3842,32 +3948,20 @@ msgstr ""
 msgid "Licença: {license}"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Liga a busca global (Ctrl+G), os favoritos, as avaliações, o histórico e a retomada por arquivo."
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Liga ou desliga os anúncios enviados ao leitor de tela."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ligado, cada download abre um diálogo para confirmar formato e qualidade. Desligado, o download começa direto com as opções desta guia."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Limitar à &pasta (vazio ignora)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas. Valores menores deixam a sincronização mais rápida."
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Limpar &biblioteca..."
+msgstr ""
+
+#: src/player/playlists/queue_dialog.py
+msgid "Limpar a fila de reprodução"
 msgstr ""
 
 #: src/player/frames/recents.py
@@ -3899,16 +3993,12 @@ msgstr ""
 msgid "Link da mídia atual copiado."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Link da playlist, mix ou vídeo do YouTube Music"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Links remotos serão tentados como mídia, exceto quando forem playlists .m3u/.m3u8."
+#: src/player/radio/panel.py
+msgid "Lista atual das rádios online"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Lista as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida nos resultados abaixo."
+msgid "Lista atual do YouTube Music"
 msgstr ""
 
 #: src/player/library/browser.py
@@ -3917,10 +4007,6 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Lista de navegadores disponíveis"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Lista de playlists do YouTube Music"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -3933,7 +4019,7 @@ msgid "Localiza itens da lista ativa."
 msgstr ""
 
 #: src/player/frames/item_search.py
-msgid "Localiza itens da pasta aberta em {title}."
+msgid "Localiza itens da pasta aberta no explorador."
 msgstr ""
 
 #: src/player/frames/item_search.py
@@ -3972,14 +4058,29 @@ msgstr ""
 msgid "MP4"
 msgstr ""
 
+#: src/player/radio/folders.py
+msgid "Mais ouvidas"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Mais ouvidas de {country}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Mais ouvidas no mundo"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Mais tocadas"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar a abertura de janelas externas de vídeo no Windows."
-msgstr ""
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Mais {count} item. Total: {total}."
+msgid_plural "Mais {count} itens. Total: {total}."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/player/equalizer/models.py
 msgid "Mantém baixo firme com médios e agudos vivos."
@@ -3987,6 +4088,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Manual do KeyTune"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Marca as faixas ouvidas no histórico da sua conta."
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -4021,8 +4126,12 @@ msgstr ""
 msgid "Melhor disponível"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Melhora a resolução e a reprodução."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
-msgid "Mensagem da central do YouTube Music"
+msgid "Mensagem da central do KeyTube"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -4031,6 +4140,10 @@ msgstr ""
 
 #: src/player/convert/dialog.py
 msgid "Mesma pasta do arquivo original ou outra pasta à sua escolha. O arquivo original nunca é alterado."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Meu país"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -4075,7 +4188,7 @@ msgid "Modo de conexão com o YouTube Music"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Modo de repetição aplicado automaticamente às playlists novas."
+msgid "Modo de repetição das playlists novas."
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -4092,42 +4205,28 @@ msgstr ""
 msgid "Mood ou gênero"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Moods e &gêneros..."
+#: src/player/youtube_music/folders.py
+msgid "Moods e gêneros"
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
-msgid "Moods e gêneros — {category}: nenhuma playlist disponível."
+msgid "Moods e gêneros — {category}"
 msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Moods e gêneros — {category}: {count} playlist."
-msgid_plural "Moods e gêneros — {category}: {count} playlists."
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/player/equalizer/panel.py
 msgid "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Mostrando 0 de 0 resultados."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Mostrando {visible} de {total} playlists e mixes."
 msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Mostrar avisos e fazer anúncios pelo leitor de telas"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Mostrar o vídeo das &transmissões ao vivo"
+#: src/player/frames/explorer.py
+msgid "Mostrar no &Explorador de Arquivos do Windows"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Mostrar o vídeo das transmissões ao vivo"
+msgid "Mostrar o vídeo das &transmissões ao vivo"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -4159,7 +4258,15 @@ msgid "Mídia atual curtida no YouTube Music."
 msgstr ""
 
 #: src/player/youtube_music/feedback_manager.py
+msgid "Mídia atual curtida no YouTube."
+msgstr ""
+
+#: src/player/youtube_music/feedback_manager.py
 msgid "Mídia atual marcada como não gostei no YouTube Music."
+msgstr ""
+
+#: src/player/youtube_music/feedback_manager.py
+msgid "Mídia atual marcada como não gostei no YouTube."
 msgstr ""
 
 #: src/player/frames/playback/helpers.py
@@ -4183,7 +4290,12 @@ msgid "Mídia: {name}. Estado: {state}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Mídias mais curtas que isso sempre recomeçam do início."
+msgid "Mídias mais curtas sempre recomeçam do início."
+msgstr ""
+
+#: src/player/library/explorer.py
+#: src/player/youtube_music/models.py
+msgid "Músicas"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -4194,20 +4306,12 @@ msgstr ""
 msgid "Na fila, análise não confirmada"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Na primeira execução, o download pode levar alguns minutos e exige internet. Ao desativar esta opção, o player apenas para de gerenciar esses recursos automaticamente; os arquivos já baixados não são removidos."
-msgstr ""
-
 #: src/player/frames/download.py
 msgid "Nada para baixar: só mídias do YouTube e do YouTube Music podem ser baixadas."
 msgstr ""
 
 #: src/player/frames/smart_library/resume.py
 msgid "Nada para continuar ouvindo. Nenhuma mídia longa está pela metade."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Navegador de pasta"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -4270,6 +4374,10 @@ msgstr ""
 msgid "Nenhum item pôde ser adicionado à fila."
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "Nenhum item selecionado no explorador."
+msgstr ""
+
 #: src/player/frames/commands/app_commands.py
 msgid "Nenhum item selecionado para adicionar à fila."
 msgstr ""
@@ -4283,6 +4391,7 @@ msgid "Nenhum item selecionado para baixar."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
+#: src/player/frames/explorer.py
 msgid "Nenhum item selecionado para copiar."
 msgstr ""
 
@@ -4338,12 +4447,8 @@ msgstr ""
 msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Nenhuma categoria de moods e gêneros está disponível agora."
-msgstr ""
-
 #: src/player/frames/youtube_music/auth.py
-msgid "Nenhuma conta do YouTube Music está conectada."
+msgid "Nenhuma conta do YouTube está conectada."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -4361,6 +4466,19 @@ msgstr ""
 
 #: src/player/frames/library_loader.py
 msgid "Nenhuma mídia compatível foi encontrada na pasta selecionada."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Nenhuma mídia compatível foi encontrada na seleção."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+msgid "Nenhuma mídia compatível foi encontrada no conteúdo colado."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+#: src/player/frames/library_navigation.py
+msgid "Nenhuma mídia compatível para adicionar."
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -4443,6 +4561,10 @@ msgstr ""
 msgid "Nenhuma playlist recente."
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Nenhuma rádio tocando agora."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Nenhuma sessão AutoDJ está ativa nesta aba."
 msgstr ""
@@ -4463,7 +4585,7 @@ msgstr ""
 msgid "Node.js portátil (se não houver um compatível)"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Nome"
 msgstr ""
@@ -4476,6 +4598,10 @@ msgstr ""
 msgid "Nome da playlist inteligente"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "Nome da rádio"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Nome do preset"
 msgstr ""
@@ -4484,12 +4610,20 @@ msgstr ""
 msgid "Nome do preset:"
 msgstr ""
 
+#: src/player/radio/manual_dialog.py
+msgid "Nome em branco"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Nome obrigatório"
 msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Nome: {name}"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Nome: {value}"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -4538,23 +4672,7 @@ msgid "Não foi possível abrir a mídia da área de transferência."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
-msgid "Não foi possível abrir a mídia informada."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
-msgid "Não foi possível abrir a pasta da área de transferência."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
-msgid "Não foi possível abrir a pasta selecionada como playlist."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
 msgid "Não foi possível abrir a playlist da área de transferência."
-msgstr ""
-
-#: src/player/frames/commands/open_commands.py
-msgid "Não foi possível abrir a playlist ou link informado."
 msgstr ""
 
 #: src/player/library/playlist_io.py
@@ -4567,6 +4685,18 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Não foi possível abrir as configurações do Windows."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+msgid "Não foi possível abrir esta lista de rádios agora."
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+msgid "Não foi possível abrir este resultado agora."
+msgstr ""
+
+#: src/player/frames/explorer.py
+msgid "Não foi possível abrir o Explorador de Arquivos do Windows."
 msgstr ""
 
 #: src/player/update/service.py
@@ -4589,11 +4719,16 @@ msgstr ""
 msgid "Não foi possível abrir o repositório do GitHub no navegador padrão."
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Não foi possível abrir o site desta rádio."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
+#: src/player/frames/explorer.py
 msgid "Não foi possível acessar a área de transferência."
 msgstr ""
 
@@ -4634,11 +4769,11 @@ msgid "Não foi possível atualizar automaticamente os recursos adicionais do Yo
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
-msgid "Não foi possível avaliar a mídia atual no YouTube Music."
+msgid "Não foi possível avaliar a mídia atual no YouTube."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
-msgid "Não foi possível avaliar a seleção atual no YouTube Music."
+msgid "Não foi possível avaliar a seleção atual no YouTube."
 msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
@@ -4670,7 +4805,7 @@ msgstr ""
 msgid "Não foi possível baixar um recurso adicional do KeyTune."
 msgstr ""
 
-#: src/player/frames/library_loader.py
+#: src/player/frames/explorer.py
 msgid "Não foi possível carregar a pasta selecionada: {error}."
 msgstr ""
 
@@ -4678,20 +4813,24 @@ msgstr ""
 msgid "Não foi possível carregar a playlist do YouTube Music."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Não foi possível carregar as categorias de moods e gêneros agora."
+#: src/player/frames/youtube_music/search.py
+msgid "Não foi possível carregar as faixas para baixar."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Não foi possível carregar as paradas agora."
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Não foi possível carregar as playlists desta categoria agora."
+#: src/player/frames/youtube_music/navigation.py
+msgid "Não foi possível carregar esta lista agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
 msgid "Não foi possível carregar mais playlists do YouTube Music."
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+msgid "Não foi possível carregar mais resultados agora."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+msgid "Não foi possível carregar mais rádios agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -4702,20 +4841,24 @@ msgstr ""
 msgid "Não foi possível carregar o marketplace: {error}"
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Não foi possível carregar seu histórico agora."
+#: src/player/frames/youtube_music/comments.py
+msgid "Não foi possível carregar os comentários agora."
 msgstr ""
 
-#: src/player/frames/youtube_music/browse.py
-msgid "Não foi possível carregar suas músicas curtidas agora."
+#: src/player/frames/youtube_music/details.py
+msgid "Não foi possível carregar os detalhes agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível concluir a busca agora."
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
+msgid "Não foi possível concluir a busca de rádios agora."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível conectar a conta do YouTube Music."
+msgid "Não foi possível conectar a conta do YouTube."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -4732,6 +4875,10 @@ msgstr ""
 
 #: src/player/frames/convert.py
 msgid "Não foi possível converter nenhum dos {total} arquivos: {reason}"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Não foi possível copiar para a área de transferência."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -4795,10 +4942,6 @@ msgstr ""
 msgid "Não foi possível instalar o plugin: {error}"
 msgstr ""
 
-#: src/player/frames/commands/open_commands.py
-msgid "Não foi possível interpretar o link informado como mídia ou playlist."
-msgstr ""
-
 #: src/player/update/service.py
 msgid "Não foi possível ler a versão mais recente."
 msgstr ""
@@ -4832,6 +4975,10 @@ msgstr ""
 msgid "Não foi possível limpar o histórico."
 msgstr ""
 
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Não foi possível listar as faixas de áudio agora."
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Não foi possível listar as playlists do YouTube Music."
 msgstr ""
@@ -4852,12 +4999,13 @@ msgstr ""
 msgid "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
 msgstr ""
 
+#: src/player/frames/radio/actions.py
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "Não foi possível preparar a autenticação do YouTube Music."
+msgid "Não foi possível preparar a autenticação do YouTube."
 msgstr ""
 
 #: src/player/youtube_music/dependencies.py
@@ -4866,6 +5014,10 @@ msgstr ""
 
 #: src/player/frames/playback/live.py
 msgid "Não foi possível reconectar à transmissão ao vivo."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Não foi possível reconhecer este endereço como um stream de rádio válido."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4913,15 +5065,15 @@ msgid "Não foi possível usar a pasta de download escolhida."
 msgstr ""
 
 #: src/player/youtube_music/service.py
-msgid "Não foi possível validar a autenticação do YouTube Music agora."
+msgid "Não foi possível validar a autenticação do YouTube agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
+msgid "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."
+msgid "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."
 msgstr ""
 
 #: src/player/update/service.py
@@ -4935,6 +5087,10 @@ msgstr ""
 #: src/player/frames/update.py
 #: src/player/update/service.py
 msgid "Não foi possível verificar as atualizações."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Não foi possível votar nesta rádio agora."
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -4957,6 +5113,11 @@ msgstr ""
 msgid "Não há letra para copiar."
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "Não há lista anterior para voltar."
+msgstr ""
+
 #: src/player/frames/youtube_music/browse.py
 msgid "Não há mais playlists para carregar."
 msgstr ""
@@ -4977,12 +5138,9 @@ msgstr ""
 msgid "Não é possível avançar ou voltar em uma transmissão ao vivo."
 msgstr ""
 
+#: src/player/download/runner.py
 #: src/player/frames/download.py
 msgid "Não é possível baixar uma transmissão ao vivo."
-msgstr ""
-
-#: src/player/frames/library_tabs/tabs.py
-msgid "Não é possível fechar a última aba."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -5013,10 +5171,6 @@ msgstr ""
 msgid "O FFmpeg baixado não passou na validação de integridade."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "O FFmpeg já está disponível para converter áudio e unir vídeo e áudio."
-msgstr ""
-
 #: src/player/convert/runner.py
 msgid "O FFmpeg não conseguiu converter o arquivo."
 msgstr ""
@@ -5030,7 +5184,7 @@ msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, 
 msgstr ""
 
 #: src/player/welcome/dialog.py
-msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
 msgstr ""
 
 #: src/player/youtube_music/youtubejs_runtime.py
@@ -5113,16 +5267,12 @@ msgstr ""
 msgid "O arquivo não pôde ser lido. Ele pode estar corrompido ou em um formato sem suporte."
 msgstr ""
 
-#: src/player/frames/library_navigation.py
-msgid "O arquivo selecionado não está mais disponível."
-msgstr ""
-
-#: src/player/frames/library_navigation.py
-msgid "O arquivo selecionado não pertence à pasta atual."
-msgstr ""
-
 #: src/player/optional_resources.py
 msgid "O checksum do recurso adicional é inválido."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "O diretório não aceitou o voto: {detail}"
 msgstr ""
 
 #: src/player/autodj/service.py
@@ -5202,6 +5352,10 @@ msgstr ""
 msgid "O manifesto do recurso adicional está incompleto."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "O mesmo do KeyTune"
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O modelo do nome do arquivo não pode conter pastas."
 msgstr ""
@@ -5232,10 +5386,6 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O pacote do recurso adicional não possui um manifesto válido."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -5339,8 +5489,24 @@ msgstr ""
 msgid "O yt-dlp não conseguiu determinar uma URL de reprodução compatível para esta faixa."
 msgstr ""
 
+#: src/player/youtube_music/audio_tracks.py
+msgid "O yt-dlp não conseguiu listar as faixas de áudio."
+msgstr ""
+
+#: src/player/youtube_music/catalog.py
+msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
+msgstr ""
+
 #: src/player/youtube_music/search.py
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "O yt-dlp não conseguiu trazer os comentários."
+msgstr ""
+
+#: src/player/youtube_music/details.py
+msgid "O yt-dlp não conseguiu trazer os detalhes."
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -5379,6 +5545,11 @@ msgstr ""
 msgid "Oceania"
 msgstr ""
 
+#: src/player/radio/panel.py
+#: src/player/youtube_music/panel.py
+msgid "Onde buscar"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Onde encontrar ajuda"
 msgstr ""
@@ -5395,7 +5566,7 @@ msgstr ""
 msgid "Opções de download"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Ordem"
 msgstr ""
 
@@ -5423,16 +5594,28 @@ msgstr ""
 msgid "Original (sem conversão)"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Original do vídeo"
+msgstr ""
+
 #: src/player/convert/dialog.py
 msgid "Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Original mantém o áudio exatamente como o YouTube o entrega, sem converter. MP3 e FLAC convertem o áudio e exigem o FFmpeg. Se a qualidade escolhida não existir, o áudio é baixado na qualidade original."
+msgid "Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
+msgstr ""
+
+#: src/player/frames/convert.py
+msgid "Os arquivos selecionados não foram encontrados."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
+msgstr ""
+
+#: src/player/frames/library_navigation.py
+msgid "Os itens já estavam em {title}."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -5448,11 +5631,19 @@ msgid "Os itens selecionados já estão curtidos no YouTube Music."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
+msgid "Os itens selecionados já estão curtidos no YouTube."
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
 msgid "Os itens selecionados já estão marcados como não gostei no YouTube Music."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. Os logs de sessões anteriores ficam em keytune.log.1, .2 e .3 na mesma pasta."
+#: src/player/frames/youtube_music/playlists.py
+msgid "Os itens selecionados já estão marcados como não gostei no YouTube."
+msgstr ""
+
+#: src/player/frames/commands/app_commands.py
+msgid "Os itens selecionados já estão na fila de reprodução."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -5473,6 +5664,14 @@ msgstr ""
 
 #: src/player/convert/dialog.py
 msgid "Outra pasta"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Ouvidas recentemente"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Ouvintes nas últimas 24 horas: {value}"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -5513,10 +5712,6 @@ msgstr ""
 msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nRecomendamos o Node.js 24+, utilizado pelo yt-dlp e pelo YouTube.js. O KeyTune pode manter uma cópia portátil automaticamente quando os recursos adicionais do YouTube Music estão ativados.\n\n"
 msgstr ""
 
-#: src/player/frames/commands/open_commands.py
-msgid "Para abrir no navegador, informe uma pasta local válida."
-msgstr ""
-
 #: src/player/frames/convert.py
 msgid "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nDeseja instalar o FFmpeg e converter agora?"
 msgstr ""
@@ -5546,7 +5741,7 @@ msgid "Paraguai"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Parar dentro dessa margem não cria ponto de retomada: no início a mídia mal começou, no fim ela já terminou."
+msgid "Parar dentro dessa margem não cria ponto de retomada."
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -5565,13 +5760,8 @@ msgstr ""
 msgid "Pasta"
 msgstr ""
 
-#: src/player/frames/library_navigation.py
-msgid "Pasta aberta no navegador: {name}."
-msgstr ""
-
-#: src/player/frames/library_tabs/playback_control.py
-#: src/player/frames/playback/controls.py
-msgid "Pasta atual: {name}."
+#: src/player/frames/explorer.py
+msgid "Pasta atual do explorador"
 msgstr ""
 
 #: src/player/frames/library_loader.py
@@ -5580,7 +5770,7 @@ msgid_plural "Pasta carregada como playlist: {title}. {count} itens."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Pasta classificada por {criterion}, em ordem {direction}."
 msgstr ""
 
@@ -5602,10 +5792,6 @@ msgstr ""
 
 #: src/player/download/panel.py
 msgid "Pasta onde os arquivos baixados serão salvos."
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -5633,7 +5819,23 @@ msgid "Pausar preparação do AutoDJ"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Pede confirmação antes de fechar o player."
+msgid "País do início da aba e da busca. Outros países: menu de ações do país, na aba."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "País usado nas buscas do YouTube e do YouTube Music."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "País: {value}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Países"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Pede confirmação antes de fechar."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5656,16 +5858,9 @@ msgstr ""
 msgid "Peru"
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
 #: src/player/frames/youtube_music/search.py
-msgid "Pesquisando em {scope}: {query}."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Pesquisar no YouTube Music ou no YouTube"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube. Você pode salvar playlists ou faixas no Music e adicionar resultados a uma playlist do player."
+msgid "Pesquisando {query}."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -5677,7 +5872,6 @@ msgid "Player de áudio e vídeo pensado para ser usado inteiramente pelo teclad
 msgstr ""
 
 #: src/player/library/browser.py
-#: src/player/library/open_dialog.py
 msgid "Playlist"
 msgstr ""
 
@@ -5708,6 +5902,10 @@ msgid "Playlist carregada: {title}. {count} item."
 msgid_plural "Playlist carregada: {title}. {count} itens."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/youtube_music/library_manager.py
+msgid "Playlist do YouTube"
+msgstr ""
 
 #: src/player/frames/commands/open_commands.py
 #: src/player/youtube_music/library_manager.py
@@ -5740,6 +5938,10 @@ msgstr ""
 msgid "Playlist salva: {title}."
 msgstr ""
 
+#: src/player/frames/youtube_music/navigation.py
+msgid "Playlist {name}"
+msgstr ""
+
 #: src/player/playlists/titles.py
 msgid "Playlist {number}"
 msgstr ""
@@ -5758,6 +5960,7 @@ msgid "Playlist {title} finalizada. Não foi possível buscar conteúdo relacion
 msgstr ""
 
 #: src/player/constants.py
+#: src/player/youtube_music/models.py
 msgid "Playlists"
 msgstr ""
 
@@ -5767,10 +5970,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Playlists carregadas por vez"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Playlists e mixes"
 msgstr ""
 
 #: src/player/library/open_dialog.py
@@ -5783,6 +5982,14 @@ msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Playlists inteligentes salvas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Playlists novas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Playlists novas já começam em modo aleatório."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -5822,7 +6029,7 @@ msgid "Plugins instalados:"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam."
+msgid "Podcasts, audiolivros e vídeos longos voltam do ponto onde pararam."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -5831,6 +6038,10 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Pop"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Por estado ou região"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -5967,16 +6178,12 @@ msgstr ""
 msgid "Procura em tudo que já foi indexado na biblioteca."
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Procurar arquivo"
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Procurando as faixas de áudio desta mídia."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Procurar arquivo de conexão"
-msgstr ""
-
-#: src/player/library/open_dialog.py
-msgid "Procurar pasta"
 msgstr ""
 
 #: src/player/frames/task_progress.py
@@ -6051,6 +6258,10 @@ msgstr ""
 msgid "Pu&lar tutorial"
 msgstr ""
 
+#: src/player/youtube_music/details.py
+msgid "Publicado: {date}"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Pular tutorial"
 msgstr ""
@@ -6061,6 +6272,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Página: {homepage}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -6076,28 +6291,24 @@ msgstr ""
 msgid "Qualidade do áudio"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Qualidade: {value}"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "Quando"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Quando a playlist termina e a última faixa é do YouTube Music, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Também pode ser ligado ou desligado com a tecla A durante a reprodução."
+msgid "Quanto a mídia avança ou volta a cada seta esquerda ou direita."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Quando ligada, ao escutar uma faixa do YouTube Music por tempo suficiente o player marca essa faixa como assistida no seu histórico do YouTube Music. Desligue para tocar sem registrar nada no histórico da sua conta."
+msgid "Quanto mais detalhado, maior o arquivo."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Quando ligado, o crossfade também é usado ao avançar ou voltar com os controles. Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Quando ligado, o player grava um arquivo de log rotativo em disco. Útil para depurar problemas e anexar ao relato de bugs."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Quando o histórico passa desse número, as entradas mais antigas são descartadas."
+msgid "Quanto o volume muda a cada seta para cima ou para baixo."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -6105,7 +6316,11 @@ msgid "Quênia"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Reabre as abas e tenta retomar a última sessão salva ao iniciar o player."
+msgid "Re&gistrar como player padrão"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Reabre as abas da última sessão."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -6126,6 +6341,10 @@ msgstr ""
 
 #: src/player/frames/autodj_panel.py
 msgid "Recalcular sequência do AutoDJ"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Recebe correções do YouTube antes da versão estável."
 msgstr ""
 
 #: src/player/frames/playback/live.py
@@ -6165,23 +6384,11 @@ msgid "Reggae"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Registra cada faixa que tocar tempo suficiente para contar como ouvida."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Registra o player no menu Abrir Com do Windows para formatos de áudio, vídeo e playlists. Depois, defina o player como padrão nas configurações do Windows."
+msgid "Registra as faixas ouvidas."
 msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Registrar &logs de diagnóstico"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Registrar como player padrão"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Registrar logs de diagnóstico"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -6194,6 +6401,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Registro de logs desativado. Nível de detalhe indisponível."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Região"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Região do conteúdo"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -6217,7 +6432,7 @@ msgid "Reinstalando yt-dlp na versão {channel}..."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Remove a autenticação salva da conta do YouTube Music nesta instalação."
+msgid "Remove a autenticação salva da conta do YouTube nesta instalação."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -6231,6 +6446,14 @@ msgstr ""
 #: src/player/frames/commands/browser_commands.py
 #: src/player/frames/youtube_music/playlists.py
 msgid "Remover da playlist do YouTube Music"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Remover das favoritas (Ctrl+D)"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Remover das favoritas a rádio que está tocando"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -6291,14 +6514,6 @@ msgstr ""
 msgid "Reproduzir / Pa&usar (Espaço)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Reproduzir conteúdo relacionado ao fim da playlist"
-msgstr ""
-
 #: src/player/frames/commands/browser_commands.py
 #: src/player/frames/ui.py
 msgid "Reproduzir playlist com AutoDJ"
@@ -6348,16 +6563,20 @@ msgstr ""
 msgid "Resolvendo {label}..."
 msgstr ""
 
+#: src/player/youtube_music/comments.py
+msgid "Respostas a {author}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Restaura o tamanho da janela principal."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Restaurar &Tom Original (Shift+\\)"
 msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Restaurar Velocidade &Normal (\\)"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Restaurar sessão ao iniciar"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -6368,24 +6587,12 @@ msgstr ""
 msgid "Resultado &anterior\tShift+F3"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Resultado da origem informada"
-msgstr ""
-
 #: src/player/frames/smart_library/search.py
 msgid "Resultados da biblioteca"
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
 msgid "Resultados da busca"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Resultados da busca do YouTube"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Resultados da busca: nenhum ainda."
 msgstr ""
 
 #: src/player/frames/autodj_panel.py
@@ -6402,10 +6609,6 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Resumo da biblioteca do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Resumo da busca do YouTube"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -6464,6 +6667,37 @@ msgstr ""
 msgid "Rádio: {name}"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "Rádios ({count})"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Rádios de {country}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Rádios de {place}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Rádios do seu país"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Rádios favoritas"
+msgstr ""
+
+#: src/player/frames/radio/lifecycle.py
+#: src/player/frames/radio/navigation.py
+#: src/player/preferences/dialog.py
+#: src/player/radio/panel.py
+msgid "Rádios online"
+msgstr ""
+
+#: src/player/frames/radio/lifecycle.py
+msgid "Rádios online. Navegue pela lista, busque uma rádio ou cole o endereço de um stream."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Rússia"
 msgstr ""
@@ -6472,20 +6706,8 @@ msgstr ""
 msgid "Sala ampla"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Salva e restaura o tamanho da janela principal entre execuções."
-msgstr ""
-
 #: src/player/equalizer/dialog.py
 msgid "Salva o preset com o nome e os ajustes informados."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Salva playlists ou faixas na biblioteca do YouTube Music quando o resultado for compatível."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Salvar &faixa na biblioteca"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -6505,16 +6727,15 @@ msgid "Salvar em"
 msgstr ""
 
 #: src/player/youtube_music/models.py
-#: src/player/youtube_music/panel.py
 msgid "Salvar faixa na biblioteca"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Salvar músicas escutadas no &histórico do YouTube Music"
+#: src/player/frames/youtube_music/search.py
+msgid "Salvar no YouTube Music"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Salvar músicas escutadas no histórico do YouTube Music"
+msgid "Salvar o que ouvi no &histórico do YouTube Music"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -6522,7 +6743,6 @@ msgid "Salvar playlist"
 msgstr ""
 
 #: src/player/youtube_music/models.py
-#: src/player/youtube_music/panel.py
 msgid "Salvar playlist na biblioteca"
 msgstr ""
 
@@ -6530,20 +6750,16 @@ msgstr ""
 msgid "Salvar preset do equalizador"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Salvar resultado no YouTube Music"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Saída de vídeo desativada\n\nEsta mídia está tocando só o áudio.\nAbra Preferências > Reprodução para reativar o vídeo quando quiser."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."
+msgid "Saída de áudio e vídeo"
 msgstr ""
 
-#: src/player/library/open_dialog.py
-msgid "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia."
+#: src/player/preferences/dialog.py
+msgid "Saída de áudio usada na reprodução."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -6563,11 +6779,11 @@ msgid "Selecione a playlist para adicionar {count} {label}:"
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
-msgid "Selecione ao menos um resultado da busca para abrir em uma nova playlist."
+msgid "Selecione ao menos um item da lista para abrir o menu de ações."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
-msgid "Selecione ao menos um resultado da busca para abrir o menu de ações."
+msgid "Selecione ao menos um resultado da busca para abrir em uma nova playlist."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -6580,6 +6796,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/search.py
 msgid "Selecione ao menos um resultado da busca para salvar."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Selecione ao menos uma rádio."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -6606,8 +6826,12 @@ msgstr ""
 msgid "Selecione uma playlist do YouTube Music para excluir."
 msgstr ""
 
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "Selecione uma playlist ou mix do YouTube Music para abrir."
+#: src/player/frames/radio/actions.py
+msgid "Selecione uma rádio para copiar o endereço do stream."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Selecione uma rádio para favoritar."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -6633,13 +6857,17 @@ msgstr ""
 msgid "Sem avaliação"
 msgstr ""
 
+#: src/player/youtube_music/details.py
+msgid "Sem descrição."
+msgstr ""
+
 #: src/player/frames/playback/engine.py
 #: src/player/frames/playback/media_metadata.py
 msgid "Sem mídia"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre uma pasta no navegador\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgid "Sem mídia carregada\n\nCtrl+O abre arquivos ou uma playlist\nCtrl+V cola links, arquivos ou pastas copiados\nCtrl+E abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do KeyTube quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/download.py
@@ -6668,10 +6896,6 @@ msgstr ""
 
 #: src/player/download/dialog.py
 msgid "Sempre mostrar este diálogo ao baixar"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Sempre mostrar o diálogo ao baixar"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -6703,23 +6927,23 @@ msgid "Sessão restaurada com {count} abas."
 msgstr ""
 
 #: src/player/frames/session.py
-msgid "Sessão restaurada com {count} abas. {title}. {position}"
+msgid "Sessão restaurada com {count} abas. {title}."
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Seção de busca do YouTube Music e do YouTube"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Seção para abrir playlist ou vídeo por link"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Seção {label} {state}."
+#: src/player/youtube_music/models.py
+msgid "Shorts"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "Sinais detectados: {signals}."
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "Singles e EPs"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Site: {value}"
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
@@ -6746,6 +6970,10 @@ msgstr ""
 msgid "Sobre o {app}"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Sobreposição entre duas faixas de áudio."
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Somente &favoritos"
 msgstr ""
@@ -6764,7 +6992,7 @@ msgid "Somente já reproduzidos"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
-msgid "Status da conta do YouTube Music"
+msgid "Status da conta do YouTube"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -6773,6 +7001,15 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Status: {status}"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Stream: {value}"
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+#: src/player/youtube_music/folders.py
+msgid "Suas playlists e mixes"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -6792,15 +7029,19 @@ msgstr ""
 msgid "Suíça"
 msgstr ""
 
+#: src/player/download/panel.py
+msgid "Só o áudio ou o vídeo completo."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Só vale quando o áudio é convertido para MP3 ou FLAC. Original mantém a taxa do arquivo baixado."
+msgid "Só vale quando o áudio é convertido para MP3 ou FLAC."
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "Tamanho"
 msgstr ""
 
@@ -6918,7 +7159,8 @@ msgstr ""
 msgid "Texto a procurar"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
+#: src/player/youtube_music/panel.py
 msgid "Tipo"
 msgstr ""
 
@@ -6926,8 +7168,12 @@ msgstr ""
 msgid "Tipo de download padrão"
 msgstr ""
 
+#: src/player/youtube_music/panel.py
+msgid "Tipo:"
+msgstr ""
+
 #: src/player/preferences/dialog.py
-msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."
+msgid "Toca só o áudio, mesmo em arquivos de vídeo."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -6942,6 +7188,14 @@ msgstr ""
 msgid "Tocando"
 msgstr ""
 
+#: src/player/frames/radio/now_playing.py
+msgid "Tocando na rádio: {title}."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Tocando {name}."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Tocando, falha na análise"
 msgstr ""
@@ -6951,16 +7205,33 @@ msgstr ""
 msgid "Tocando: {name}"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/search.py
+msgid "Tocar (Enter)"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Tocar efeitos de &DJ nas transições"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Tocar efeitos de DJ nas transições"
+msgid "Tocar faixas relacionadas ao fim da &playlist"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Todas as reproduções"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Todas as rádios de {country}"
+msgstr ""
+
+#: src/player/radio/folders.py
+msgid "Todas, em ordem alfabética"
+msgstr ""
+
+#: src/player/frames/radio/lifecycle.py
+msgid "Todo o mundo"
 msgstr ""
 
 #: src/player/constants.py
@@ -6973,11 +7244,16 @@ msgstr ""
 msgid "Tom: {pitch}."
 msgstr ""
 
+#: src/player/youtube_music/details.py
+msgid "Transmissão ao vivo"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/frames/playback/engine.py
 msgid "Transmissão ao vivo."
 msgstr ""
 
@@ -6985,20 +7261,8 @@ msgstr ""
 msgid "Transmissão ao vivo. Você está assistindo há {time}."
 msgstr ""
 
-#: src/player/frames/playback/engine.py
-msgid "Transmissão ao vivo. {position}"
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "Transmissões ao vivo não podem ser analisadas pelo AutoDJ."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Traz para os resultados abaixo as faixas curtidas (Curtidas) da conta conectada."
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "Traz para os resultados abaixo o histórico de reprodução da conta conectada, da mais recente para a mais antiga."
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
@@ -7037,6 +7301,10 @@ msgstr ""
 msgid "Ucrânia"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Um efeito curto no início de cada transição."
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "Uma linha por mídia, da mais tocada para a menos tocada."
 msgstr ""
@@ -7049,24 +7317,24 @@ msgstr ""
 msgid "Uma transmissão ao vivo não pode entrar em crossfade."
 msgstr ""
 
+#: src/player/frames/explorer.py
+msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Uruguai"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."
+msgid "Usa o crossfade também ao avançar ou voltar pelos controles."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"
+msgid "Usado nas buscas, nos comentários e nos nomes das faixas de áudio."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Usar YouTube.js"
-msgstr ""
-
-#: src/player/convert/dialog.py
-msgid "Usar a &capa do álbum como imagem, se houver"
+msgid "Usar YouTube.&js (recomendado)"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -7089,14 +7357,6 @@ msgstr ""
 msgid "Usar versão &nightly do yt-dlp (recomendado)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Usar versão nightly do yt-dlp"
-msgstr ""
-
-#: src/player/frames/youtube_music/browse.py
-msgid "Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-msgstr ""
-
 #: src/player/frames/library_tabs/item_removal.py
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr ""
@@ -7105,8 +7365,8 @@ msgstr ""
 msgid "Use as setas para escolher a saída de áudio."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Use o menu Biblioteca para indexar pastas, consultar o histórico, apagar as posições de retomada ou limpar tudo."
+#: src/player/radio/manual_dialog.py
+msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -7117,16 +7377,16 @@ msgstr ""
 msgid "Vai reunir: {summary}"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
+msgstr ""
+
 #: src/player/update/service.py
 msgid "Validando integridade do pacote..."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Valor usado ao aumentar ou diminuir o volume com as setas para cima e para baixo."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Valor usado para avançar ou retroceder na mídia com as setas esquerda e direita."
+msgid "Valores menores abrem a biblioteca mais rápido."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -7141,8 +7401,16 @@ msgstr ""
 msgid "Velocidade de reprodução: {rate}."
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Ver &comentários da mídia atual\tCtrl+Shift+M"
+msgstr ""
+
 #: src/player/about/dialog.py
 msgid "Ver &créditos completos"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ver &detalhes da mídia atual\tCtrl+Shift+I"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -7157,6 +7425,16 @@ msgstr ""
 msgid "Ver ajuda rápida de atalhos (&F1)"
 msgstr ""
 
+#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/youtube_music/search.py
+msgid "Ver comentários"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/search.py
+msgid "Ver conteúdo (Seta para a direita)"
+msgstr ""
+
 #: src/player/about/dialog.py
 msgid "Ver créditos completos"
 msgstr ""
@@ -7169,12 +7447,17 @@ msgstr ""
 msgid "Ver código-fonte no GitHub"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "Ver o que está em alta no YouTube Music"
+#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/youtube_music/search.py
+msgid "Ver detalhes"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Ver detalhes da rádio"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Verifica e aplica atualização automática das dependências no intervalo definido abaixo."
+msgid "Verifica atualizações ao abrir o KeyTube, no intervalo a seguir."
 msgstr ""
 
 #: src/player/frames/update.py
@@ -7201,7 +7484,7 @@ msgstr ""
 msgid "Você está na versão mais recente."
 msgstr ""
 
-#: src/player/frames/library_navigation.py
+#: src/player/frames/explorer.py
 msgid "Você já está na pasta raiz."
 msgstr ""
 
@@ -7229,6 +7512,15 @@ msgstr ""
 msgid "Voltar"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+#: src/player/frames/youtube_music/search.py
+msgid "Voltar à lista anterior (Backspace)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Volume"
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 msgid "Volume atual: {volume}%."
 msgstr ""
@@ -7238,7 +7530,23 @@ msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Volume inicial, de 0 a 100."
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Volume padrão"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Votar nesta rádio no diretório"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Voto registrado para {name}."
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "Votos: {value}"
 msgstr ""
 
 #: src/player/download/options.py
@@ -7261,20 +7569,21 @@ msgstr ""
 msgid "Vídeo do YouTube aberto: {title}."
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Vídeo para &áudio..."
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Vídeo para outro f&ormato de vídeo..."
-msgstr ""
-
 #: src/player/convert/options.py
 msgid "Vídeo para outro formato de vídeo"
 msgstr ""
 
 #: src/player/convert/options.py
 msgid "Vídeo para áudio"
+msgstr ""
+
+#: src/player/library/explorer.py
+#: src/player/youtube_music/models.py
+msgid "Vídeos"
+msgstr ""
+
+#: src/player/youtube_music/folders.py
+msgid "Vídeos das inscrições"
 msgstr ""
 
 #: src/player/convert/options.py
@@ -7289,31 +7598,12 @@ msgstr ""
 msgid "YT Music"
 msgstr ""
 
-#: src/player/frames/ui.py
-#: src/player/frames/youtube_music/state.py
-msgid "YouTube &Music por aba\tCtrl+Shift+Y"
-msgstr ""
-
-#: src/player/frames/youtube_music/state.py
-msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
-msgstr ""
-
-#: src/player/frames/youtube_music/auth.py
 #: src/player/smart_library/history_dialog.py
 msgid "YouTube Music"
 msgstr ""
 
-#: src/player/frames/youtube_music/auth.py
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "YouTube Music conectado como {name}."
-msgstr ""
-
-#: src/player/frames/youtube_music/auth.py
-msgid "YouTube Music desconectado."
-msgstr ""
-
-#: src/player/frames/youtube_music/lifecycle.py
-msgid "YouTube Music reconectado: {name}."
+#: src/player/youtube_music/models.py
+msgid "YouTube Music — artistas"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -7326,6 +7616,31 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "YouTube Music — vídeos"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "YouTube Music — álbuns"
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "YouTube conectado como {name}."
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "YouTube desconectado."
+msgstr ""
+
+#: src/player/frames/youtube_music/lifecycle.py
+msgid "YouTube reconectado: {name}."
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "YouTube — canais"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "YouTube — playlists"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -7344,6 +7659,14 @@ msgstr ""
 msgid "análise incompatível"
 msgstr ""
 
+#: src/player/youtube_music/search.py
+msgid "ao vivo"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "artista"
+msgstr ""
+
 #: src/player/frames/autodj.py
 #: src/player/frames/library_tabs/playback_control.py
 msgid "ativado"
@@ -7351,6 +7674,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "autenticação/bloqueio do YouTube"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "canal"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -7361,7 +7688,7 @@ msgstr ""
 msgid "converter o áudio"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "crescente"
 msgstr ""
 
@@ -7369,7 +7696,7 @@ msgstr ""
 msgid "data desconhecida"
 msgstr ""
 
-#: src/player/frames/commands/browser_commands.py
+#: src/player/frames/explorer.py
 msgid "decrescente"
 msgstr ""
 
@@ -7404,10 +7731,6 @@ msgstr ""
 msgid "estável"
 msgstr ""
 
-#: src/player/youtube_music/panel.py
-msgid "expandida"
-msgstr ""
-
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/youtube_music/models.py
 msgid "faixa"
@@ -7421,11 +7744,19 @@ msgstr ""
 msgid "falha ao analisar as faixas"
 msgstr ""
 
+#: src/player/radio/panel.py
+msgid "favorita"
+msgstr ""
+
 #: src/player/frames/smart_library/marks.py
 #: src/player/frames/smart_library/ratings.py
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "favorito"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "fixado"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -7505,10 +7836,6 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "pública"
-msgstr ""
-
-#: src/player/youtube_music/panel.py
-msgid "recolhida"
 msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
@@ -7606,7 +7933,16 @@ msgid "{app} versão {version}"
 msgstr ""
 
 #: src/player/convert/options.py
+#: src/player/radio/models.py
 msgid "{bitrate} kbps"
+msgstr ""
+
+#: src/player/radio/models.py
+msgid "{codec} {bitrate} kbps"
+msgstr ""
+
+#: src/player/frames/radio/lifecycle.py
+msgid "{country} definido como o seu país nas rádios online."
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -7615,6 +7951,11 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "{count} batidas"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+#: src/player/youtube_music/details.py
+msgid "{count} curtidas"
 msgstr ""
 
 #: src/player/frames/smart_library/marks.py
@@ -7640,6 +7981,16 @@ msgstr[1] ""
 #: src/player/frames/smart_library/search.py
 msgid "{count} favorito aberto."
 msgid_plural "{count} favoritos abertos."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/youtube_music/search.py
+msgid "{count} inscritos"
+msgstr ""
+
+#: src/player/frames/library_navigation.py
+msgid "{count} item adicionado a {title}, sem tocar."
+msgid_plural "{count} itens adicionados a {title}, sem tocar."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -7767,6 +8118,14 @@ msgid_plural "{count} reproduções no histórico."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/youtube_music/search.py
+msgid "{count} reproduções"
+msgstr ""
+
+#: src/player/youtube_music/comments.py
+msgid "{count} respostas"
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "{count} resultado salvo no YouTube Music."
 msgid_plural "{count} resultados salvos no YouTube Music."
@@ -7777,11 +8136,27 @@ msgstr[1] ""
 msgid "{count} resultados abertos em uma nova lista."
 msgstr ""
 
+#: src/player/radio/folders.py
+msgid "{count} rádio"
+msgid_plural "{count} rádios"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/frames/radio/actions.py
+msgid "{count} rádio adicionada a {title}, sem tocar."
+msgid_plural "{count} rádios adicionadas a {title}, sem tocar."
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "{count} vez"
 msgid_plural "{count} vezes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/youtube_music/search.py
+msgid "{count} visualizações"
+msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "{criteria}; {sort}; até {limit} itens"
@@ -7886,8 +8261,16 @@ msgstr ""
 msgid "{mode}: “{name}”"
 msgstr ""
 
+#: src/player/youtube_music/audio_tracks.py
+msgid "{name} (audiodescrição)"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "{name} (dB)"
+msgstr ""
+
+#: src/player/frames/radio/actions.py
+msgid "{name} adicionada às rádios favoritas."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -7898,8 +8281,16 @@ msgstr ""
 msgid "{name} personalizado"
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+msgid "{name} removida das rádios favoritas."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "{name}. Item {current} de {total}."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -7918,6 +8309,18 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "{name}: {value} dB."
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} bi de"
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} mi de"
+msgstr ""
+
+#: src/player/youtube_music/search.py
+msgid "{number} mil"
 msgstr ""
 
 #: src/player/frames/smart_library/resume.py
@@ -7960,6 +8363,10 @@ msgstr ""
 msgid "{semitones:+d} semitons"
 msgstr ""
 
+#: src/player/frames/radio/now_playing.py
+msgid "{station}: {title}"
+msgstr ""
+
 #: src/player/library/browser.py
 msgid "{title} — carregando"
 msgstr ""
@@ -7978,12 +8385,36 @@ msgstr ""
 msgid "{title}. Nenhuma mídia tocando agora."
 msgstr ""
 
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "{title}: nenhum item."
+msgstr ""
+
+#: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/navigation.py
+msgid "{title}: {count} item."
+msgid_plural "{title}: {count} itens."
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/player/youtube_music/models.py
 msgid "África"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "África do Sul"
+msgstr ""
+
+#: src/player/frames/youtube_music/navigation.py
+msgid "Álbum {name}"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "Álbuns"
+msgstr ""
+
+#: src/player/library/explorer.py
+msgid "Área de trabalho"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -7998,12 +8429,12 @@ msgstr ""
 msgid "Áudio"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Áudio para &vídeo..."
+#: src/player/preferences/dialog.py
+msgid "Áudio dos vídeos dublados"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Áudio para outro &formato de áudio..."
+#: src/player/frames/youtube_music/audio_tracks.py
+msgid "Áudio em {name}."
 msgstr ""
 
 #: src/player/convert/options.py
@@ -8028,4 +8459,8 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Última vez"
+msgstr ""
+
+#: src/player/youtube_music/models.py
+msgid "álbum"
 msgstr ""

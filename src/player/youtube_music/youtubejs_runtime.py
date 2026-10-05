@@ -11,6 +11,7 @@ from pathlib import Path
 from dataclasses import dataclass
 
 from .auth import sanitize_sensitive_text
+from .content_locale import youtubejs_locale
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
 from ..i18n import _
 from ..optional_resources import (
@@ -104,6 +105,61 @@ def resolve_stream(media_url, *, cookie_header="", user_agent=""):
         display_title=str(response.get("title") or "").strip(),
         display_artist=str(response.get("artist") or "").strip(),
     )
+
+
+def search_page(query, kind, *, start, count):
+    """Uma página da busca do YouTube: entradas no formato da listagem do yt-dlp e se há mais."""
+    response = _request_action("search", query=str(query or "").strip(), kind=str(kind or ""), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def comments_page(media_url, *, start, count):
+    """Uma página dos comentários de um vídeo e se há mais."""
+    response = _request_action("comments", media_url=str(media_url or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def comment_replies_page(media_url, comment_id, *, start, count):
+    """Uma página das respostas a um comentário aberto por :func:`comments_page`."""
+    response = _request_action(
+        "comment_replies",
+        media_url=str(media_url or "").strip(),
+        comment_id=str(comment_id or "").strip(),
+        start=start,
+        count=count,
+    )
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def audio_tracks(media_url, *, names=True):
+    """As faixas de áudio de um vídeo dublado; com *names*, os nomes vêm no idioma do conteúdo."""
+    response = _request_action("audio_tracks", media_url=str(media_url or "").strip(), names=bool(names))
+    return list(response.get("tracks") or [])
+
+
+def media_details(media_url):
+    """Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data."""
+    return _request_action("details", media_url=str(media_url or "").strip())
+
+
+def subscription_videos_page(cookie_header, *, start, count):
+    """Uma página dos vídeos novos das inscrições da conta dona de *cookie_header*."""
+    response = _request_action("subscription_videos", cookie=str(cookie_header or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def subscribed_channels_page(cookie_header, *, start, count):
+    """Uma página dos canais em que a conta dona de *cookie_header* está inscrita."""
+    response = _request_action("subscribed_channels", cookie=str(cookie_header or "").strip(), start=start, count=count)
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def _request_action(action, **fields):
+    """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
+    response = _request_worker({"action": action, **youtubejs_locale(), **fields})
+    if response.get("error"):
+        raise RuntimeError(sanitize_sensitive_text(response["error"]))
+    return response
 
 
 def validate_youtubejs_dependencies() -> None:

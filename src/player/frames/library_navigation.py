@@ -3,7 +3,7 @@ import os
 import wx
 
 from ..i18n import _, ngettext
-from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name, scan_folder_contents
+from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name
 from ..playlists import PlaylistState, build_playlist_title
 
 
@@ -30,8 +30,11 @@ class FrameLibraryNavigationMixin:
 
         return None
 
-    def _append_media_paths_to_playlist(self, paths, state):
+    def _append_media_paths_to_playlist(self, paths, state, *, verified=False):
         """Append *paths* to *state*, deduping against existing items.
+
+        ``verified`` means the caller already confirmed, off the UI thread,
+        that the local files exist, so the disk is not consulted again here.
 
         Returns a tuple ``(added_count, first_play_path)`` where
         ``first_play_path`` is the path that should be focused/played next
@@ -50,7 +53,7 @@ class FrameLibraryNavigationMixin:
                 normalized_labels.append(os.path.basename(normalized_path) or normalized_path)
                 continue
             normalized_path = self._normalize_path(normalized_path)
-            if normalized_path and os.path.isfile(normalized_path):
+            if normalized_path and (verified or os.path.isfile(normalized_path)):
                 normalized_paths.append(normalized_path)
                 normalized_labels.append(os.path.basename(normalized_path) or normalized_path)
 
@@ -127,15 +130,15 @@ class FrameLibraryNavigationMixin:
         if target_index != wx.NOT_FOUND and hasattr(self, "notebook"):
             self.notebook.SetPageText(target_index, new_title)
 
-    def _open_external_media_paths(self, paths):
+    def _open_external_media_paths(self, paths, *, verified=False):
         target_state = self._playlist_state_for_external_media()
         if target_state is None:
-            opened = self._open_media_paths(paths)
+            opened = self._open_media_paths(paths, verified=verified)
             if opened:
                 self._suppress_next_auto_advance = True
             return opened
 
-        added_count, play_path = self._append_media_paths_to_playlist(paths, target_state)
+        added_count, play_path = self._append_media_paths_to_playlist(paths, target_state, verified=verified)
         if not play_path:
             return False
 
@@ -170,6 +173,39 @@ class FrameLibraryNavigationMixin:
 
         return True
 
+    def _add_media_paths_without_playing(self, paths, *, verified=False):
+        """Põe *paths* no fim da playlist sem mexer no que está tocando."""
+        target_state = self._playlist_state_for_external_media()
+        if target_state is None:
+            target_state = self._get_playlist_state(self._create_empty_playlist_tab(select=False))
+        if target_state is None:
+            return False
+
+        if target_state.autodj_session and target_state is self._get_playlist_state():
+            return self._add_media_to_autodj_session(paths)
+
+        added_count, first_path = self._append_media_paths_to_playlist(paths, target_state, verified=verified)
+        if not first_path:
+            self._announce(_("Nenhuma mídia compatível para adicionar."))
+            return False
+
+        target_state.sync_playback_order()
+        if self._is_current_playlist_state(target_state):
+            self._refresh_playlist_browser()
+
+        if added_count:
+            message = ngettext(
+                "{count} item adicionado a {title}, sem tocar.",
+                "{count} itens adicionados a {title}, sem tocar.",
+                added_count,
+            ).format(count=added_count, title=target_state.title)
+        else:
+            message = _("Os itens já estavam em {title}.").format(title=target_state.title)
+        self._announce(message)
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(message)
+        return added_count > 0
+
     def _show_loading_library_tab(self, target_index, state, announcement=None):
         self.notebook.SetPageText(target_index, state.title)
         self._select_tab(target_index, announce=False)
@@ -179,7 +215,7 @@ class FrameLibraryNavigationMixin:
         if announcement:
             self._announce(announcement)
 
-    def _open_media_paths(self, paths):
+    def _open_media_paths(self, paths, *, verified=False):
         normalized_paths = []
         for path in paths:
             normalized_path = str(path or "").strip()
@@ -189,7 +225,7 @@ class FrameLibraryNavigationMixin:
                 normalized_paths.append(normalized_path)
                 continue
             normalized_path = self._normalize_path(normalized_path)
-            if normalized_path and os.path.isfile(normalized_path):
+            if normalized_path and (verified or os.path.isfile(normalized_path)):
                 normalized_paths.append(normalized_path)
 
         if not normalized_paths:
@@ -201,153 +237,6 @@ class FrameLibraryNavigationMixin:
         tab_index = self._prepare_playlist_tab(normalized_paths, title)
         self._play_media(index=tab_index)
         self._add_recent_media_paths(normalized_paths)
-        return True
-
-    def _prepare_folder_tab(self, folder_path):
-        normalized_folder_path = self._normalize_path(folder_path)
-        if not normalized_folder_path or not os.path.isdir(normalized_folder_path):
-            return None
-
-        state, target_index = self._prepare_library_target_tab()
-        if not state:
-            return None
-
-        auto_index_folder = getattr(self, "_auto_index_opened_folder", None)
-        if callable(auto_index_folder):
-            auto_index_folder(normalized_folder_path)
-
-        self._begin_folder_load(state, normalized_folder_path, root_path=normalized_folder_path)
-        self._queue_library_request(
-            {
-                "kind": "folder",
-                "state": state,
-                "folder_path": normalized_folder_path,
-                "sort_by": state.folder_sort_by,
-                "sort_descending": state.folder_sort_descending,
-                "recent_path": normalized_folder_path,
-                "focus_items": True,
-                "completion_announcement": _("Pasta aberta no navegador: {name}.").format(name=folder_display_name(normalized_folder_path)),
-            }
-        )
-        self._show_loading_library_tab(target_index, state)
-        return target_index
-
-    def _enter_folder_directory(self, folder_path, selected_path=None, announce=True):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab:
-            return False
-
-        normalized_folder_path = self._normalize_path(folder_path)
-        if not normalized_folder_path or not os.path.isdir(normalized_folder_path):
-            return False
-
-        self._begin_folder_load(
-            state,
-            normalized_folder_path,
-            root_path=state.folder_root_path or normalized_folder_path,
-            selected_path=selected_path,
-        )
-        self._queue_library_request(
-            {
-                "kind": "folder",
-                "state": state,
-                "folder_path": normalized_folder_path,
-                "sort_by": state.folder_sort_by,
-                "sort_descending": state.folder_sort_descending,
-                "focus_items": True,
-                "completion_announcement": (
-                    f"Pasta atual: {folder_display_name(normalized_folder_path)}."
-                    if announce
-                    else None
-                ),
-            }
-        )
-        self._show_loading_library_tab(
-            self._get_current_tab_index(),
-            state,
-            announcement=(f"Carregando pasta: {folder_display_name(normalized_folder_path)}." if announce else None),
-        )
-
-        return True
-
-    def _preview_folder_file(self, media_path, announce=True):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab or not state.folder_current_path:
-            return
-
-        if state.is_loading:
-            self._announce(_("A pasta ainda está sendo carregada."))
-            return
-
-        normalized_media_path = self._normalize_path(media_path)
-        if not normalized_media_path or not os.path.isfile(normalized_media_path):
-            self._announce(_("O arquivo selecionado não está mais disponível."))
-            self._refresh_playlist_browser()
-            return
-
-        same_media_already_playing = (
-            state.current_media_path == normalized_media_path
-            and self.player.get_media() is not None
-            and self.player.is_playing()
-        )
-
-        state.folder_selected_path = normalized_media_path
-
-        if not state.contains_item(normalized_media_path):
-            try:
-                folder_entries, media_files = scan_folder_contents(
-                    state.folder_current_path,
-                    sort_by=state.folder_sort_by,
-                    descending=state.folder_sort_descending,
-                )
-            except OSError:
-                folder_entries = []
-                media_files = []
-            state.set_folder_entries(folder_entries)
-            state.set_items(media_files, auto_select=False)
-
-        media_index = state.index_of_item(normalized_media_path)
-        if media_index is None:
-            self._announce(_("O arquivo selecionado não pertence à pasta atual."))
-            self._refresh_playlist_browser()
-            return
-
-        if same_media_already_playing:
-            state.select_index(media_index)
-            self._refresh_playlist_browser()
-            return
-
-        state.select_index(media_index)
-        announce_message = ""
-        self._play_media(index=self._get_current_tab_index(), announce_message=announce_message)
-
-    def _go_back_folder(self):
-        state = self._get_playlist_state()
-        if not state or not state.is_folder_tab or not state.folder_current_path:
-            return
-
-        parent_path = os.path.dirname(state.folder_current_path)
-        if not parent_path or parent_path == state.folder_current_path:
-            self._announce(_("Você já está na pasta raiz."))
-            return
-
-        self._enter_folder_directory(
-            parent_path,
-            selected_path=state.folder_current_path,
-            announce=True,
-        )
-
-    def _open_folder_path(self, folder_path):
-        normalized_folder_path = self._normalize_path(folder_path)
-        if not normalized_folder_path or not os.path.isdir(normalized_folder_path):
-            return False
-
-        self._remember_directory(normalized_folder_path)
-
-        tab_index = self._prepare_folder_tab(normalized_folder_path)
-        if tab_index is None:
-            return False
-        self._announce(_("Carregando pasta: {name}.").format(name=folder_display_name(normalized_folder_path)))
         return True
 
     def _open_folder_as_playlist(self, folder_path):
@@ -457,19 +346,5 @@ class FrameLibraryNavigationMixin:
         refresh_autodj_ui = getattr(self, "_refresh_autodj_session_ui", None)
         if callable(refresh_autodj_ui):
             refresh_autodj_ui(current_state)
-
-        if current_state.is_folder_tab and current_state.folder_current_path:
-            browser.update_folder(
-                title=current_state.title,
-                current_path=current_state.folder_current_path,
-                entries=self._get_folder_entries(current_state),
-                selected_path=current_state.folder_selected_path,
-                current_media_path=current_state.current_media_path,
-                entries_revision=current_state.folder_entries_revision,
-                loading=current_state.is_loading,
-                loading_message=current_state.loading_message,
-                entry_index_map=current_state.folder_entry_index_map,
-            )
-            return
 
         browser.update_playlist(current_state)

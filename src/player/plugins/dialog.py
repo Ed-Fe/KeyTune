@@ -8,6 +8,7 @@ import threading
 import wx
 
 from ..i18n import _
+from ..reading_dialog import add_reading_field
 from .installer import InstallationError, download_package, inspect_archive, install_archive, uninstall_plugin
 from .manifest import PERMISSION_DESCRIPTIONS
 from .marketplace import fetch_catalog
@@ -69,8 +70,9 @@ class PermissionDialog(wx.Dialog):
             permissions=permission_summary(manifest),
             security_notice=security_notice(manifest),
         )
-        text = wx.TextCtrl(panel, value=warning, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP)
-        text.SetName(_("Permissões solicitadas e aviso de segurança"))
+        add_reading_field(
+            panel, root, _("Permissões solicitadas e aviso de segurança"), warning, style=wx.TE_BESTWRAP, border=12
+        )
         buttons = wx.StdDialogButtonSizer()
         ok_button = wx.Button(panel, wx.ID_OK, _("&Ativar"))
         cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
@@ -78,7 +80,6 @@ class PermissionDialog(wx.Dialog):
         buttons.AddButton(ok_button)
         buttons.AddButton(cancel_button)
         buttons.Realize()
-        root.Add(text, 1, wx.ALL | wx.EXPAND, 12)
         root.Add(buttons, 0, wx.ALL | wx.EXPAND, 12)
         panel.SetSizer(root)
         frame = wx.BoxSizer(wx.VERTICAL)
@@ -91,8 +92,9 @@ class InstallationConfirmationDialog(wx.Dialog):
         super().__init__(parent, title=_("Confirmar instalação do plugin"), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
-        text = wx.TextCtrl(panel, value=installation_summary(manifest, source), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP)
-        text.SetName(_("Detalhes do plugin"))
+        add_reading_field(
+            panel, root, _("Detalhes do plugin"), installation_summary(manifest, source), style=wx.TE_BESTWRAP, border=12
+        )
         buttons = wx.StdDialogButtonSizer()
         install_button = wx.Button(panel, wx.ID_OK, _("&Instalar e ativar"))
         cancel_button = wx.Button(panel, wx.ID_CANCEL, _("&Cancelar"))
@@ -100,7 +102,6 @@ class InstallationConfirmationDialog(wx.Dialog):
         buttons.AddButton(install_button)
         buttons.AddButton(cancel_button)
         buttons.Realize()
-        root.Add(text, 1, wx.ALL | wx.EXPAND, 12)
         root.Add(buttons, 0, wx.ALL | wx.EXPAND, 12)
         panel.SetSizer(root)
         frame = wx.BoxSizer(wx.VERTICAL)

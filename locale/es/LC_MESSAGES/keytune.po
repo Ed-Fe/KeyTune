@@ -33,9 +33,6 @@ msgstr "&5 estrellas\tCtrl+5"
 msgid "&Abrir"
 msgstr "&Abrir"
 
-msgid "&Abrir link"
-msgstr "&Abrir enlace"
-
 msgid "&Anunciar"
 msgstr "&Anunciar"
 
@@ -126,9 +123,6 @@ msgstr "&Gestionar cola de reproducción\tCtrl+Shift+Q"
 msgid "&Gerenciar playlists inteligentes..."
 msgstr "&Gestionar listas inteligentes..."
 
-msgid "&Histórico"
-msgstr "&Historial"
-
 msgid "&Histórico de reprodução...\tCtrl+Shift+H"
 msgstr "&Historial de reproducción...\tCtrl+Shift+H"
 
@@ -180,12 +174,6 @@ msgstr "&Nuevo..."
 msgid "&Ordenar por"
 msgstr "&Ordenar por"
 
-msgid "&Pasta..."
-msgstr "&Carpeta..."
-
-msgid "&Pesquisar"
-msgstr "&Buscar"
-
 msgid "&Preferências\tCtrl+,"
 msgstr "&Preferencias\tCtrl+,"
 
@@ -200,9 +188,6 @@ msgstr "&Examinar..."
 
 msgid "&Recentes"
 msgstr "&Recientes"
-
-msgid "&Registrar como player padrão"
-msgstr "&Registrar como reproductor predeterminado"
 
 msgid "&Remover"
 msgstr "&Quitar"
@@ -233,15 +218,6 @@ msgstr "&Guardar"
 
 msgid "&Salvar cópia..."
 msgstr "&Guardar copia..."
-
-msgid "&Salvar no Music"
-msgstr "&Guardar en Music"
-
-msgid "&Salvar playlist na biblioteca"
-msgstr "&Guardar playlist en la biblioteca"
-
-msgid "&Salvar seleção no Music"
-msgstr "&Guardar selección en Music"
 
 msgid "&Sem avaliação\tCtrl+0"
 msgstr "&Sin valoración\tCtrl+0"
@@ -288,11 +264,11 @@ msgstr "La apertura externa acepta solo una playlist por vez."
 msgid "A autenticação informada não contém cookies válidos do YouTube."
 msgstr "La autenticación proporcionada no contiene cookies válidas de YouTube."
 
-msgid "A autenticação salva do YouTube Music foi removida."
-msgstr "La autenticación guardada de YouTube Music fue eliminada."
+msgid "A autenticação salva do YouTube foi removida."
+msgstr "La autenticación guardada de YouTube fue eliminada."
 
-msgid "A autenticação salva do YouTube Music não é mais válida."
-msgstr "La autenticación guardada de YouTube Music ya no es válida."
+msgid "A autenticação salva do YouTube não é mais válida."
+msgstr "La autenticación guardada de YouTube ya no es válida."
 
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr "La valoración solicitada para el medio actual no es válida."
@@ -300,17 +276,14 @@ msgstr "La valoración solicitada para el medio actual no es válida."
 msgid "A biblioteca inteligente está desligada. Ative em Preferências, aba Biblioteca."
 msgstr "La biblioteca inteligente está desactivada. Actívala en Preferencias, pestaña Biblioteca."
 
-msgid "A biblioteca inteligente guarda, no seu computador, um índice das mídias que você abre, os favoritos, as avaliações, o histórico de reprodução e o ponto onde cada mídia longa parou. Nada é enviado para fora do computador."
-msgstr "La biblioteca inteligente guarda, en tu propio equipo, un índice de los medios que abres, los favoritos, las valoraciones, el historial de reproducción y el punto donde se detuvo cada medio largo. Nada sale de tu equipo."
-
 msgid "A biblioteca inteligente não está disponível agora."
 msgstr "La biblioteca inteligente no está disponible ahora."
 
 msgid "A busca ignora acentos e maiúsculas e encontra o texto em qualquer parte do nome. Use F3 para o próximo resultado e Shift+F3 para o anterior."
 msgstr "La búsqueda ignora acentos y mayúsculas y encuentra el texto en cualquier parte del nombre. Usa F3 para el siguiente resultado y Shift+F3 para el anterior."
 
-msgid "A conta do YouTube Music foi desconectada desta instalação."
-msgstr "La cuenta de YouTube Music fue desconectada de esta instalación."
+msgid "A conta do YouTube foi desconectada desta instalação."
+msgstr "La cuenta de YouTube fue desconectada de esta instalación."
 
 msgid "A dependência ytmusicapi foi baixada, mas não pôde ser carregada. Reinicie o aplicativo e tente novamente."
 msgstr "La dependencia ytmusicapi se descargó, pero no se pudo cargar. Reinicia la aplicación e inténtalo de nuevo."
@@ -348,9 +321,6 @@ msgstr "La ventana principal se divide en algunas áreas:\n\nPestañas, en la pa
 msgid "A lista é montada toda vez que você abre a playlist, então ela acompanha as mudanças de avaliação e de histórico."
 msgstr "La lista se arma cada vez que abres la playlist, así que sigue tus cambios de valoración y de historial."
 
-msgid "A mudança de idioma é aplicada na próxima vez que o KeyTune for aberto."
-msgstr "El cambio de idioma se aplica la próxima vez que se abra KeyTune."
-
 msgid "A mídia atual já está curtida no YouTube Music."
 msgstr "El medio actual ya tiene me gusta en YouTube Music."
 
@@ -371,9 +341,6 @@ msgstr[1] "La nueva playlist se creará con {count} pistas de la selección actu
 msgid "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
 msgstr "La operación de YouTube Music tardó más de lo esperado y se canceló para evitar un bloqueo."
 
-msgid "A pasta ainda está sendo carregada."
-msgstr "La carpeta todavía se está cargando."
-
 msgid "A playlist atual está vazia."
 msgstr "La playlist actual está vacía."
 
@@ -385,9 +352,6 @@ msgstr "La lista inteligente {name} no encontró ningún medio ahora."
 
 msgid "A playlist precisa de pelo menos dois itens para reordenar."
 msgstr "La playlist necesita al menos dos elementos para reordenar."
-
-msgid "A playlist selecionada não está mais disponível na lista atual."
-msgstr "La playlist seleccionada ya no está disponible en la lista actual."
 
 msgid "A playlist selecionada não tem faixas reproduzíveis no momento."
 msgstr "La playlist seleccionada no tiene pistas reproducibles en este momento."
@@ -404,8 +368,8 @@ msgstr "La versión de yt-dlp no publicó todos los archivos necesarios."
 msgid "A release do yt-dlp veio com metadados incompletos."
 msgstr "La versión de yt-dlp vino con metadatos incompletos."
 
-msgid "A resposta da conta do YouTube Music veio em formato inválido."
-msgstr "La respuesta de la cuenta de YouTube Music llegó en un formato no válido."
+msgid "A resposta da conta do YouTube veio em formato inválido."
+msgstr "La respuesta de la cuenta de YouTube llegó en un formato no válido."
 
 msgid "A resposta da release do yt-dlp veio em formato inválido."
 msgstr "La respuesta de la versión de yt-dlp vino en un formato no válido."
@@ -439,9 +403,6 @@ msgstr "El portapapeles está vacío."
 
 msgid "A&bas"
 msgstr "&Pestañas"
-
-msgid "A&brir seleção"
-msgstr "A&brir selección"
 
 msgid "A&gora não"
 msgstr "A&hora no"
@@ -479,29 +440,14 @@ msgstr "Pestaña Ecualizador. Ajustes de sonido disponibles para la pestaña de 
 msgid "Aba fechada."
 msgstr "Pestaña cerrada."
 
-msgid "Aba fechada: {name}."
-msgstr "Pestaña cerrada: {name}."
-
-msgid "Aba fechada: {title}. Nova playlist vazia criada."
-msgstr "Pestaña cerrada: {title}. Nueva playlist vacía creada."
-
-msgid "Aba YouTube Music. Use os controles para conectar a conta, atualizar a biblioteca, pesquisar no catálogo e abrir playlists, mixes, músicas ou vídeos."
-msgstr "Pestaña YouTube Music. Usa los controles para conectar la cuenta, actualizar la biblioteca, buscar en el catálogo y abrir playlists, mixes, canciones o videos."
-
 msgid "Aba {num}: {title}."
 msgstr "Pestaña {num}: {title}."
-
-msgid "Aba {num}: {title}. Pasta atual: {folder}."
-msgstr "Pestaña {num}: {title}. Carpeta actual: {folder}."
 
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
 msgstr "Abre manualmente: Configuración > Aplicaciones > Aplicaciones predeterminadas."
 
 msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
 msgstr "Abre al menos dos pestañas de medios para aplicar el ecualizador en lote."
-
-msgid "Abra sua central do YouTube Music em uma aba dedicada. Conecte ou atualize o acesso da conta, atualize a biblioteca, pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube para tocar sem sair do player."
-msgstr "Abre tu panel de YouTube Music en una pestaña dedicada. Conecta o actualiza el acceso de la cuenta, actualiza la biblioteca, busca canciones, videos y playlists de YouTube Music, o haz una búsqueda rápida de videos de YouTube para reproducir sin salir del reproductor."
 
 msgid "Abra uma playlist do YouTube Music para remover faixas dela."
 msgstr "Abre una playlist de YouTube Music para quitar pistas de ella."
@@ -512,20 +458,8 @@ msgstr "Abre la documentación oficial de yt-dlp sobre el uso de runtimes de Jav
 msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador."
 msgstr "Abre la ventana para elegir un archivo de conexión exportado del navegador."
 
-msgid "Abre a playlist ou mix atualmente selecionada na lista da aba do YouTube Music."
-msgstr "Abre la playlist o mix actualmente seleccionada en la lista de la pestaña de YouTube Music."
-
-msgid "Abre a playlist, mix ou vídeo informado no campo acima."
-msgstr "Abre la playlist, mix o video indicado en el campo de arriba."
-
-msgid "Abre o diálogo para conectar uma conta do YouTube Music ou atualizar a autenticação salva."
-msgstr "Abre el diálogo para conectar una cuenta de YouTube Music o actualizar la autenticación guardada."
-
-msgid "Abre um menu de contexto com ações para o resultado atual ou para toda a seleção da busca."
-msgstr "Abre un menú contextual con acciones para el resultado actual o para toda la selección de la búsqueda."
-
-msgid "Abre um menu para escolher o país e carrega as paradas e os destaques em alta nos resultados abaixo."
-msgstr "Abre un menú para elegir el país y carga las listas y los destacados en tendencia en los resultados de abajo."
+msgid "Abre o diálogo para conectar uma conta do YouTube ou atualizar a autenticação salva."
+msgstr "Abre el diálogo para conectar una cuenta de YouTube o actualizar la autenticación guardada."
 
 msgid "Abrindo créditos: {name}"
 msgstr "Abriendo créditos: {name}"
@@ -533,11 +467,8 @@ msgstr "Abriendo créditos: {name}"
 msgid "Abrindo manual: {name}"
 msgstr "Abriendo manual: {name}"
 
-msgid "Abrir &Arquivos ou Playlist...\tCtrl+O"
-msgstr "Abrir &archivos o playlist...\tCtrl+O"
-
-msgid "Abrir &central do YouTube Music...\tCtrl+Shift+Y"
-msgstr "Abrir &central de YouTube Music...\tCtrl+Shift+Y"
+msgid "Abrir &central do KeyTube...\tCtrl+Shift+Y"
+msgstr "Abrir &central de KeyTube...\tCtrl+Shift+Y"
 
 msgid "Abrir &favoritos em nova playlist"
 msgstr "Abrir &favoritos en una lista nueva"
@@ -545,20 +476,8 @@ msgstr "Abrir &favoritos en una lista nueva"
 msgid "Abrir &manual do usuário"
 msgstr "Abrir &manual del usuario"
 
-msgid "Abrir &Mídia, Playlist ou Pasta...\tCtrl+Alt+O"
-msgstr "Abrir &medio, playlist o carpeta...\tCtrl+Alt+O"
-
-msgid "Abrir &Pasta...\tCtrl+Shift+O"
-msgstr "Abrir &carpeta...\tCtrl+Shift+O"
-
 msgid "Abrir arquivos"
 msgstr "Abrir archivos"
-
-msgid "Abrir co&mo"
-msgstr "Abrir co&mo"
-
-msgid "Abrir como"
-msgstr "Abrir como"
 
 msgid "Abrir guia do &yt-dlp"
 msgstr "Abrir guía de &yt-dlp"
@@ -566,32 +485,14 @@ msgstr "Abrir guía de &yt-dlp"
 msgid "Abrir manual do usuário"
 msgstr "Abrir manual del usuario"
 
-msgid "Abrir mídia, playlist ou pasta"
-msgstr "Abrir medio, playlist o carpeta"
-
 msgid "Abrir no {app}"
 msgstr "Abrir en {app}"
 
 msgid "Abrir pasta como playlist"
 msgstr "Abrir carpeta como playlist"
 
-msgid "Abrir pasta de &logs"
-msgstr "Abrir carpeta de &registros"
-
-msgid "Abrir pasta de logs"
-msgstr "Abrir carpeta de registros"
-
 msgid "Abrir playlist"
 msgstr "Abrir playlist"
-
-msgid "Abrir playlist ou vídeo"
-msgstr "Abrir playlist o video"
-
-msgid "Abrir playlist ou vídeo do YouTube Music"
-msgstr "Abrir playlist o video de YouTube Music"
-
-msgid "Abrir playlist selecionada do YouTube Music"
-msgstr "Abrir playlist seleccionada de YouTube Music"
 
 msgid "Abrir seleção em nova playlist"
 msgstr "Abrir selección en una nueva playlist"
@@ -622,9 +523,6 @@ msgstr "Agregar a la playlist de &YouTube Music\tCtrl+Shift+A"
 
 msgid "Adicionar à playlist do YouTube Music..."
 msgstr "Agregar a la playlist de YouTube Music..."
-
-msgid "Agora em {title}."
-msgstr "Ahora en {title}."
 
 msgid "Agrupado por mídia"
 msgstr "Agrupado por medio"
@@ -677,9 +575,6 @@ msgstr "Ajusta la ganancia de la banda de {freq}. Acepta valores de -20,0 dB a 2
 msgid "Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."
 msgstr "Ajusta la ganancia general antes de las bandas. Si el sonido se distorsiona, reduce este valor."
 
-msgid "Ajuste como o player inicia, salva estado e responde aos atalhos. Use as guias para navegar entre as categorias. Pressione Esc para cancelar ou Enter em Salvar para confirmar."
-msgstr "Ajusta cómo el reproductor inicia, guarda el estado y responde a los atajos. Usa las pestañas para navegar entre las categorías. Presiona Esc para cancelar o Enter en Guardar para confirmar."
-
 msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
 msgstr "Ajusta el ecualizador de la pestaña de medios activa. Usa los botones para crear presets, editar o duplicar presets personalizados y guardar una copia editable de los presets integrados. Cuando quieras repetir la misma configuración en las pestañas abiertas, usa Aplicar en todas las pestañas."
 
@@ -725,9 +620,6 @@ msgstr "Anunciar &volumen (V)"
 msgid "Ao &fim da faixa atual"
 msgstr "Al &final de la pista actual"
 
-msgid "Ao abrir uma pasta no navegador, suas mídias entram no índice em segundo plano."
-msgstr "Al abrir una carpeta en el navegador, sus medios entran en el índice en segundo plano."
-
 msgid "Ao fim da faixa atual"
 msgstr "Al final de la pista actual"
 
@@ -739,12 +631,6 @@ msgstr "Borrar las &posiciones de reanudación"
 
 msgid "Apenas erros (ERROR)"
 msgstr "Solo errores (ERROR)"
-
-msgid "Aplicar crossfade ao trocar de faixa &manualmente"
-msgstr "Aplicar crossfade al cambiar de pista &manualmente"
-
-msgid "Aplicar crossfade ao trocar de faixa manualmente"
-msgstr "Aplicar crossfade al cambiar de pista manualmente"
 
 msgid "Aplicar em &todas as abas"
 msgstr "Aplicar en &todas las pestañas"
@@ -758,9 +644,6 @@ msgstr "Aplicaciones predeterminadas"
 msgid "Apresenta o player e o que é possível fazer com ele."
 msgstr "Presenta el reproductor y lo que puedes hacer con él."
 
-msgid "Ar&quivo..."
-msgstr "&Archivo..."
-
 msgid "Argentina"
 msgstr "Argentina"
 
@@ -770,26 +653,11 @@ msgstr "Archivo de conexión:"
 msgid "Arquivo de mídia — {app}"
 msgstr "Archivo multimedia — {app}"
 
-msgid "Arquivo, pasta ou &link"
-msgstr "Archivo, carpeta o &enlace"
-
-msgid "Arquivo, pasta ou link"
-msgstr "Archivo, carpeta o enlace"
-
 msgid "Arquivos de autenticação (*.json;*.txt)"
 msgstr "Archivos de autenticación (*.json;*.txt)"
 
-msgid "Arquivos de mídia são abertos como playlist com um item."
-msgstr "Los archivos de medios se abren como una playlist con un elemento."
-
 msgid "Arquivos de texto (*.txt)"
 msgstr "Archivos de texto (*.txt)"
-
-msgid "Arquivos e links .m3u/.m3u8 são abertos como playlist."
-msgstr "Los archivos y enlaces .m3u/.m3u8 se abren como playlist."
-
-msgid "Arquivos existentes serão tentados como mídia."
-msgstr "Los archivos existentes se intentarán como medio."
 
 msgid "Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."
 msgstr "No se abrieron archivos externos mezclados. Usa solo medios o una playlist."
@@ -809,9 +677,6 @@ msgstr "Arabia Saudita"
 msgid "As faixas selecionadas não foram encontradas nesta playlist."
 msgstr "Las pistas seleccionadas no se encontraron en esta playlist."
 
-msgid "As mudanças de restauração de sessão e de tamanho da janela afetam principalmente as próximas aberturas do player."
-msgstr "Los cambios de restauración de sesión y de tamaño de la ventana afectan principalmente las próximas aperturas del reproductor."
-
 msgid "As notas desta versão ainda não foram publicadas na release do GitHub."
 msgstr "Las notas de esta versión aún no se han publicado en la versión de GitHub."
 
@@ -830,12 +695,6 @@ msgstr "Act&ualizar acceso..."
 msgid "Atalhos e ajuda"
 msgstr "Atajos y ayuda"
 
-msgid "Atalhos principais: Ctrl+Alt+O abrir mídia, playlist ou pasta · Ctrl+O abrir arquivos ou playlist · Ctrl+Shift+O abrir pasta · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do YouTube Music (opcional) · F1 ajuda"
-msgstr "Atajos principales: Ctrl+Alt+O abrir medio, playlist o carpeta · Ctrl+O abrir archivos o playlist · Ctrl+Shift+O abrir carpeta · Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Tab elementos/reproductor · Ctrl+F localizar elemento (F3 siguiente) · Ctrl+G buscar en la biblioteca · Ctrl+D favorito · Ctrl+Shift+H historial · Ctrl+Shift+D temporizador · Ctrl+Shift+Y panel de YouTube Music (opcional) · F1 ayuda"
-
-msgid "Ativa o modo aleatório automaticamente em playlists criadas depois de salvar as preferências."
-msgstr "Activa el modo aleatorio automáticamente en las playlists creadas después de guardar las preferencias."
-
 msgid "Ativado"
 msgstr "Activado"
 
@@ -848,26 +707,14 @@ msgstr "Activar &ecualizador en esta pestaña"
 msgid "Ativar a &biblioteca inteligente"
 msgstr "Activar la &biblioteca inteligente"
 
-msgid "Ativar a biblioteca inteligente"
-msgstr "Activar la biblioteca inteligente"
-
 msgid "Ativar a&núncios de acessibilidade"
 msgstr "Activar a&nuncios de accesibilidad"
-
-msgid "Ativar anúncios de acessibilidade"
-msgstr "Activar anuncios de accesibilidad"
 
 msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr "Activar &modo aleatorio en playlists nuevas"
 
-msgid "Ativar embaralhamento em novas playlists"
-msgstr "Activar modo aleatorio en playlists nuevas"
-
 msgid "Ativar equalizador nesta aba"
 msgstr "Activar ecualizador en esta pestaña"
-
-msgid "Ativar integração com YouTube Music e YouTube"
-msgstr "Activar integración con YouTube Music y YouTube"
 
 msgid "Ativar integração nas &Preferências..."
 msgstr "Activar integración en &Preferencias..."
@@ -897,12 +744,6 @@ msgstr[1] "Actualizando {count} carpetas indexadas en segundo plano."
 
 msgid "Atualizar autenticação..."
 msgstr "Actualizar autenticación..."
-
-msgid "Atualizar automaticamente as dependências do YouTube Music"
-msgstr "Actualizar automáticamente las dependencias de YouTube Music"
-
-msgid "Atualizar automaticamente dependências do YouTube Music"
-msgstr "Actualizar automáticamente dependencias de YouTube Music"
 
 msgid "Atualizar biblioteca do YouTube Music"
 msgstr "Actualizar biblioteca de YouTube Music"
@@ -982,18 +823,6 @@ msgstr "Aviso sobre la validez de las cookies de YouTube Music"
 msgid "Avisos (WARNING)"
 msgstr "Advertencias (WARNING)"
 
-msgid "Ações da seleção de resultados do YouTube"
-msgstr "Acciones de la selección de resultados de YouTube"
-
-msgid "Ações..."
-msgstr "Acciones..."
-
-msgid "Baixa builds nightly oficiais do yt-dlp. Recomendado porque YouTube e YouTube Music quebram extractors com frequência e o nightly costuma receber correções antes do canal estável."
-msgstr "Descarga builds nightly oficiales de yt-dlp. Recomendado porque YouTube y YouTube Music rompen los extractores con frecuencia y el nightly suele recibir correcciones antes que el canal estable."
-
-msgid "Baixa e mantém um yt-dlp executável atualizado junto com os recursos Python do YouTube Music em uma pasta local de recursos adicionais."
-msgstr "Descarga y mantiene un yt-dlp ejecutable actualizado junto con los recursos de Python de YouTube Music en una carpeta local de recursos adicionales."
-
 msgid "Baixando atualização"
 msgstr "Descargando actualización"
 
@@ -1014,9 +843,6 @@ msgstr "Bienvenido a KeyTune"
 
 msgid "Biblioteca"
 msgstr "Biblioteca"
-
-msgid "Biblioteca do YouTube Music"
-msgstr "Biblioteca de YouTube Music"
 
 msgid "Biblioteca do YouTube Music atualizada: {count} playlist."
 msgid_plural "Biblioteca do YouTube Music atualizada: {count} playlists."
@@ -1085,25 +911,8 @@ msgstr "Búsqueda \"{query}\": resultado {position} de {total}, volviendo al ini
 msgid "Busca \"{query}\": resultado {position} de {total}."
 msgstr "Búsqueda \"{query}\": resultado {position} de {total}."
 
-msgid "Busca do YouTube Music e do YouTube"
-msgstr "Búsqueda de YouTube Music y YouTube"
-
-msgid "Busca em {scope}: nenhum resultado para {query}."
-msgstr "Búsqueda en {scope}: ningún resultado para {query}."
-
-msgid "Busca em {scope}: {count} resultado para {query}."
-msgid_plural "Busca em {scope}: {count} resultados para {query}."
-msgstr[0] "Búsqueda en {scope}: {count} resultado para {query}."
-msgstr[1] "Búsqueda en {scope}: {count} resultados para {query}."
-
-msgid "Busca no catálogo e no YouTube"
-msgstr "Búsqueda en el catálogo y en YouTube"
-
 msgid "Busca novamente as playlists e mixes disponíveis na conta conectada."
 msgstr "Vuelve a buscar las playlists y mixes disponibles en la cuenta conectada."
-
-msgid "Busca o próximo lote de playlists da biblioteca quando ainda existem mais a carregar."
-msgstr "Busca el siguiente lote de playlists de la biblioteca cuando todavía hay más por cargar."
 
 msgid "Busca: {query}"
 msgstr "Búsqueda: {query}"
@@ -1120,14 +929,8 @@ msgstr "Buscando letra..."
 msgid "Buscar na biblioteca"
 msgstr "Buscar en la biblioteca"
 
-msgid "Buscar por:"
-msgstr "Buscar por:"
-
 msgid "Bélgica"
 msgstr "Bélgica"
-
-msgid "C&urtidas"
-msgstr "&Me gusta"
 
 msgid "Ca&ncelar temporizador"
 msgstr "Ca&ncelar temporizador"
@@ -1136,7 +939,9 @@ msgid "Cache de metadados e análises"
 msgstr "Caché de metadatos y análisis"
 
 msgid "Caminho copiado."
-msgstr "Ruta copiada."
+msgid_plural "{count} caminhos copiados."
+msgstr[0] "Ruta copiada."
+msgstr[1] "{count} rutas copiadas."
 
 msgid "Caminho da mídia atual copiado."
 msgstr "Ruta del elemento actual copiada."
@@ -1156,9 +961,6 @@ msgstr "Cancelando..."
 msgid "Cancelar edição do preset do equalizador"
 msgstr "Cancelar la edición del preset del ecualizador"
 
-msgid "Carregando as categorias de moods e gêneros do YouTube Music."
-msgstr "Cargando las categorías de estados de ánimo y géneros de YouTube Music."
-
 msgid "Carregando conta e biblioteca do YouTube Music. Por favor, aguarde."
 msgstr "Cargando la cuenta y la biblioteca de YouTube Music. Por favor, espera."
 
@@ -1168,41 +970,14 @@ msgstr "Cargando elementos de la carpeta..."
 msgid "Carregando mais playlists do YouTube Music."
 msgstr "Cargando más playlists de YouTube Music."
 
-msgid "Carregando o que está em alta em {country}."
-msgstr "Cargando lo que es tendencia en {country}."
-
-msgid "Carregando pasta: {name}."
-msgstr "Cargando carpeta: {name}."
-
 msgid "Carregando playlist do YouTube Music: {title}."
 msgstr "Cargando playlist de YouTube Music: {title}."
 
 msgid "Carregando playlist..."
 msgstr "Cargando playlist..."
 
-msgid "Carregando playlists de {category}."
-msgstr "Cargando playlists de {category}."
-
-msgid "Carregando seu histórico do YouTube Music."
-msgstr "Cargando tu historial de YouTube Music."
-
-msgid "Carregando suas músicas curtidas do YouTube Music."
-msgstr "Cargando tus canciones con me gusta de YouTube Music."
-
 msgid "Carregando {title}."
 msgstr "Cargando {title}."
-
-msgid "Carregar &mais playlists"
-msgstr "Cargar &más playlists"
-
-msgid "Carregar mais playlists do YouTube Music"
-msgstr "Cargar más playlists de YouTube Music"
-
-msgid "Carregar seu histórico do YouTube Music"
-msgstr "Cargar tu historial de YouTube Music"
-
-msgid "Carregar suas músicas curtidas do YouTube Music"
-msgstr "Cargar tus canciones con me gusta de YouTube Music"
 
 msgid "Categorias"
 msgstr "Categorías"
@@ -1219,26 +994,8 @@ msgstr "Club"
 msgid "Clássico"
 msgstr "Clásico"
 
-msgid "Co&lar na playlist atual / abrir... (Ctrl+V)"
-msgstr "&Pegar en la playlist actual / abrir... (Ctrl+V)"
-
-msgid "Colar e abrir em &nova playlist... (Ctrl+Shift+V)"
-msgstr "Pegar y abrir en &nueva playlist... (Ctrl+Shift+V)"
-
-msgid "Colar em nova playlist"
-msgstr "Pegar en nueva playlist"
-
-msgid "Colar na playlist atual"
-msgstr "Pegar en la playlist actual"
-
 msgid "Cole os dados de conexão do navegador ou selecione um arquivo válido de browser.json, JSON de cookies ou cookies.txt."
 msgstr "Pega los datos de conexión del navegador o selecciona un archivo válido de browser.json, JSON de cookies o cookies.txt."
-
-msgid "Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube para abrir."
-msgstr "Pega un enlace de playlist, mix o video de YouTube Music/YouTube para abrir."
-
-msgid "Cole um link de playlist, mix ou vídeo do YouTube Music/YouTube."
-msgstr "Pega un enlace de playlist, mix o video de YouTube Music/YouTube."
 
 msgid "Colômbia"
 msgstr "Colombia"
@@ -1255,35 +1012,20 @@ msgstr "Con&firmar al salir"
 msgid "Concluir"
 msgstr "Finalizar"
 
-msgid "Conectando a conta do YouTube Music..."
-msgstr "Conectando la cuenta de YouTube Music..."
+msgid "Conectando a conta do YouTube..."
+msgstr "Conectando la cuenta de YouTube..."
 
 msgid "Conectar &conta..."
 msgstr "Conectar &cuenta..."
 
-msgid "Conectar ao YouTube Music"
-msgstr "Conectar a YouTube Music"
+msgid "Conectar ao YouTube"
+msgstr "Conectar a YouTube"
 
-msgid "Conectar ou atualizar acesso do YouTube Music"
-msgstr "Conectar o actualizar el acceso de YouTube Music"
+msgid "Conectar ou atualizar acesso do YouTube"
+msgstr "Conectar o actualizar el acceso de YouTube"
 
 msgid "Conexão com o YouTube Music cancelada."
 msgstr "Conexión con YouTube Music cancelada."
-
-msgid "Configurações ligadas ao volume, ao avanço na mídia e ao comportamento padrão de playlists novas."
-msgstr "Configuraciones relacionadas con el volumen, el avance en el medio y el comportamiento predeterminado de las playlists nuevas."
-
-msgid "Configurações ligadas aos anúncios enviados ao leitor de tela e à navegação das preferências."
-msgstr "Configuraciones relacionadas con los anuncios enviados al lector de pantalla y con la navegación de las preferencias."
-
-msgid "Configurações relacionadas ao idioma, ao início do player, à sessão salva, ao comportamento ao sair e ao registro de logs."
-msgstr "Configuraciones relacionadas con el idioma, el inicio del reproductor, la sesión guardada, el comportamiento al salir y el registro de logs."
-
-msgid "Configure integrações e componentes opcionais do player. Novos recursos adicionais poderão aparecer aqui no futuro, sem misturar essas opções com as preferências gerais."
-msgstr "Configura integraciones y componentes opcionales del reproductor. Nuevos recursos adicionales podrán aparecer aquí en el futuro, sin mezclar estas opciones con las preferencias generales."
-
-msgid "Confirmar ao sair"
-msgstr "Confirmar al salir"
 
 msgid "Confirmar saída"
 msgstr "Confirmar salida"
@@ -1291,11 +1033,11 @@ msgstr "Confirmar salida"
 msgid "Conta conectada: {name}."
 msgstr "Cuenta conectada: {name}."
 
-msgid "Conta do YouTube Music conectada: {name}."
-msgstr "Cuenta de YouTube Music conectada: {name}."
+msgid "Conta do YouTube conectada: {name}."
+msgstr "Cuenta de YouTube conectada: {name}."
 
-msgid "Conta do YouTube Music desconectada."
-msgstr "Cuenta de YouTube Music desconectada."
+msgid "Conta do YouTube desconectada."
+msgstr "Cuenta de YouTube desconectada."
 
 msgid "Conta e biblioteca"
 msgstr "Cuenta y biblioteca"
@@ -1315,9 +1057,6 @@ msgstr "Cuenta: no conectada."
 msgid "Conta: {name}."
 msgstr "Cuenta: {name}."
 
-msgid "Contagem de resultados do YouTube Music"
-msgstr "Recuento de resultados de YouTube Music"
-
 msgid "Contexto"
 msgstr "Contexto"
 
@@ -1336,17 +1075,11 @@ msgstr "Contenido relacionado agregado a la playlist."
 msgid "Conteúdo relacionado do YouTube Music {status}."
 msgstr "Contenido relacionado de YouTube Music {status}."
 
-msgid "Conteúdo relacionado. {position}"
-msgstr "Contenido relacionado. {position}"
-
 msgid "Conteúdo relacionado: {status}."
 msgstr "Contenido relacionado: {status}."
 
 msgid "Continuar ouvindo"
 msgstr "Continuar escuchando"
-
-msgid "Controla quanta informação é registrada. \"Apenas erros\" é o mais silencioso; \"Depuração\" é o mais detalhado e pode gerar arquivos grandes."
-msgstr "Controla cuánta información se registra. \"Solo errores\" es lo más silencioso; \"Depuración\" es lo más detallado y puede generar archivos grandes."
 
 msgid "Controle de ganho"
 msgstr "Control de ganancia"
@@ -1357,14 +1090,8 @@ msgstr "Controles multimedia del sistema no disponibles."
 msgid "Controles de mídia do sistema indisponíveis. Instale o pacote 'winrt-Windows.Media.Playback' no Windows."
 msgstr "Controles multimedia del sistema no disponibles. Instala el paquete 'winrt-Windows.Media.Playback' en Windows."
 
-msgid "Controles de reprodução"
-msgstr "Controles de reproducción"
-
 msgid "Copiar letra completa"
 msgstr "Copiar letra completa"
-
-msgid "Copiar seleção"
-msgstr "Copiar selección"
 
 msgid "Coreia do Sul"
 msgstr "Corea del Sur"
@@ -1405,14 +1132,6 @@ msgstr "Crossfade (segundos, 0 desactiva)"
 msgid "Créditos do KeyTune"
 msgstr "Créditos de KeyTune"
 
-msgid "Curtidas: nenhuma faixa curtida encontrada."
-msgstr "Me gusta: no se encontraron pistas con me gusta."
-
-msgid "Curtidas: {count} faixa."
-msgid_plural "Curtidas: {count} faixas."
-msgstr[0] "Me gusta: {count} pista."
-msgstr[1] "Me gusta: {count} pistas."
-
 msgid "Curtir no YouTube Music"
 msgstr "Dar me gusta en YouTube Music"
 
@@ -1437,21 +1156,6 @@ msgstr "Dance"
 msgid "data desconhecida"
 msgstr "fecha desconocida"
 
-msgid "Define de quanto em quanto tempo o player tenta atualizar o yt-dlp e os recursos Python quando a aba YouTube Music é aberta."
-msgstr "Define cada cuánto tiempo el reproductor intenta actualizar yt-dlp y los recursos de Python cuando se abre la pestaña de YouTube Music."
-
-msgid "Define o idioma de menus, diálogos e anúncios do leitor de tela. Use Automático para seguir o idioma do sistema operacional."
-msgstr "Define el idioma de los menús, los diálogos y los anuncios del lector de pantalla. Usa Automático para seguir el idioma del sistema operativo."
-
-msgid "Define o volume inicial do player. 0 é mudo e 100 é o máximo."
-msgstr "Define el volumen inicial del reproductor. 0 es silencio y 100 es el máximo."
-
-msgid "Define por quantos segundos duas faixas de áudio se sobrepõem na transição. Use 0 para desativar. O crossfade só é aplicado entre arquivos de áudio e acontece automaticamente no final de cada faixa."
-msgstr "Define durante cuántos segundos se superponen dos pistas de audio en la transición. Usa 0 para desactivar. El crossfade solo se aplica entre archivos de audio y ocurre automáticamente al final de cada pista."
-
-msgid "Define quantas playlists da sua biblioteca são trazidas em cada carregamento. Valores menores aceleram a abertura; ao chegar ao final da lista o player oferece carregar mais."
-msgstr "Define cuántas playlists de tu biblioteca se traen en cada carga. Los valores más bajos aceleran la apertura; al llegar al final de la lista el reproductor ofrece cargar más."
-
 msgid "Depois da instalação, feche e abra o player novamente para que o novo runtime seja encontrado no PATH do sistema."
 msgstr "Después de la instalación, cierra y vuelve a abrir el reproductor para que el nuevo runtime se encuentre en el PATH del sistema."
 
@@ -1470,11 +1174,8 @@ msgstr "desactivado"
 msgid "Desativar saída de &vídeo (tocar só o áudio)"
 msgstr "Desactivar salida de &video (reproducir solo el audio)"
 
-msgid "Desativar saída de vídeo"
-msgstr "Desactivar salida de video"
-
-msgid "Desconectar conta do YouTube Music"
-msgstr "Desconectar cuenta de YouTube Music"
+msgid "Desconectar conta do YouTube"
+msgstr "Desconectar cuenta de YouTube"
 
 msgid "desconhecida"
 msgstr "desconocida"
@@ -1503,17 +1204,14 @@ msgstr "¿Seguro que quieres eliminar el preset {name}?"
 msgid "Deseja realmente sair do KeyTune?"
 msgstr "¿Seguro que quieres salir de KeyTune?"
 
-msgid "Deseja remover a autenticação salva do YouTube Music neste computador?"
-msgstr "¿Quieres eliminar la autenticación guardada de YouTube Music en esta computadora?"
+msgid "Deseja remover a autenticação salva do YouTube neste computador?"
+msgstr "¿Quieres eliminar la autenticación guardada de YouTube en esta computadora?"
 
 msgid "Deseja remover a playlist inteligente {name}?"
 msgstr "¿Quieres quitar la lista inteligente {name}?"
 
 msgid "desligado"
 msgstr "desactivado"
-
-msgid "Desregistrar associações"
-msgstr "Anular registro de asociaciones"
 
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
 msgstr "Resalta detalles, platillos, voces y brillo general."
@@ -1611,9 +1309,6 @@ msgstr "Dale un nombre a la lista inteligente antes de guardar."
 msgid "E&xcluir"
 msgstr "E&liminar"
 
-msgid "E&xcluir playlist..."
-msgstr "E&liminar playlist..."
-
 msgid "Editar preset do equalizador"
 msgstr "Editar preset del ecualizador"
 
@@ -1625,17 +1320,6 @@ msgstr "Egipto"
 
 msgid "El Salvador"
 msgstr "El Salvador"
-
-msgid "Em &alta..."
-msgstr "En &tendencia..."
-
-msgid "Em alta em {country}: nenhum destaque disponível."
-msgstr "En tendencia en {country}: ningún destacado disponible."
-
-msgid "Em alta em {country}: {count} lista de destaque."
-msgid_plural "Em alta em {country}: {count} listas de destaque."
-msgstr[0] "En tendencia en {country}: {count} lista destacada."
-msgstr[1] "En tendencia en {country}: {count} listas destacadas."
 
 msgid "Em alta · diário"
 msgstr "Tendencias · diario"
@@ -1664,14 +1348,8 @@ msgstr "Finalizar la reproducción"
 msgid "Enfatiza batida, subgrave e brilho eletrônico."
 msgstr "Enfatiza el ritmo, el subgrave y el brillo electrónico."
 
-msgid "Enter abre a seleção atual. Esc fecha a aba. Tab volta para a navegação padrão entre controles da tela. Page Down no fim da lista carrega mais playlists."
-msgstr "Enter abre la selección actual. Esc cierra la pestaña. Tab vuelve a la navegación estándar entre los controles de la pantalla. Page Down al final de la lista carga más playlists."
-
 msgid "Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."
 msgstr "Enter activa. Delete quita. Shift+F10 abre acciones. Escribe letras para localizar. Tab vuelve al reproductor."
-
-msgid "Enter no campo de busca executa a pesquisa. Enter na lista adiciona a seleção à playlist atual. Ctrl+Enter abre a seleção em nova playlist. Use Shift+F10 ou o botão Ações para mais opções."
-msgstr "Enter en el campo de búsqueda ejecuta la búsqueda. Enter en la lista agrega la selección a la playlist actual. Ctrl+Enter abre la selección en una nueva playlist. Usa Shift+F10 o el botón Acciones para más opciones."
 
 msgid "Entradas guardadas no cache"
 msgstr "Entradas guardadas en la caché"
@@ -1712,8 +1390,8 @@ msgstr "Error inesperado al exportar cookies de {browser}: {detail}"
 msgid "Escolha a pasta da playlist inteligente"
 msgstr "Elige la carpeta de la lista inteligente"
 
-msgid "Escolha como deseja conectar sua conta do YouTube Music.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-msgstr "Elige cómo conectar tu cuenta de YouTube Music.\n\nOpción 1 — Navegador instalado: selecciona el navegador en la lista y haz clic en \"Conectar\". El reproductor importará las cookies automáticamente.\n\nOpción 2 — Manual: pega los datos del navegador o elige un archivo browser.json, JSON de cookies o cookies.txt exportado anteriormente."
+msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
+msgstr "Elige cómo conectar tu cuenta de YouTube.\n\nOpción 1 — Navegador instalado: selecciona el navegador en la lista y haz clic en \"Conectar\". El reproductor importará las cookies automáticamente.\n\nOpción 2 — Manual: pega los datos del navegador o elige un archivo browser.json, JSON de cookies o cookies.txt exportado anteriormente."
 
 msgid "Escolha o preset que será usado na aba de mídia ativa."
 msgstr "Elige el preset que se usará en la pestaña de medios activa."
@@ -1727,44 +1405,17 @@ msgstr "Elige cuándo KeyTune debe pausar la reproducción automáticamente."
 msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
 msgstr "Elige si quieres extraer las cookies directamente de un navegador instalado o proporcionar los datos manualmente mediante un archivo o texto."
 
-msgid "Escolha um arquivo de mídia ou playlist"
-msgstr "Elige un archivo de medios o una playlist"
-
 msgid "Escolha um ou mais arquivos de mídia ou uma playlist"
 msgstr "Elige uno o más archivos de medios o una playlist"
 
-msgid "Escolha um país no menu para carregar o que está em alta."
-msgstr "Elige un país en el menú para cargar lo que es tendencia."
-
-msgid "Escolha uma categoria de moods e gêneros no menu para carregar as playlists."
-msgstr "Elige una categoría de estados de ánimo y géneros en el menú para cargar las playlists."
-
-msgid "Escolha uma pasta"
-msgstr "Elige una carpeta"
-
 msgid "Escolha uma pasta para indexar na biblioteca"
 msgstr "Elige una carpeta para indexar en la biblioteca"
-
-msgid "Escolha uma pasta para navegar"
-msgstr "Elige una carpeta para navegar"
-
-msgid "Escolhe a saída de áudio usada na reprodução. Use Padrão do sistema para seguir o dispositivo principal do Windows."
-msgstr "Elige la salida de audio usada en la reproducción. Usa Predeterminado del sistema para seguir el dispositivo principal de Windows."
-
-msgid "Escopo da busca do YouTube"
-msgstr "Alcance de la búsqueda de YouTube"
-
-msgid "Escopo:"
-msgstr "Alcance:"
 
 msgid "Escuta suave para reduzir agressividade em faixas brilhantes."
 msgstr "Escucha suave para reducir la agresividad en pistas brillantes."
 
 msgid "Espanha"
 msgstr "España"
-
-msgid "Esta pasta pode abrir como playlist estática ou no navegador de pastas."
-msgstr "Esta carpeta puede abrirse como playlist estática o en el navegador de carpetas."
 
 msgid "Estados Unidos"
 msgstr "Estados Unidos"
@@ -1784,9 +1435,6 @@ msgstr "Vacía toda la cola de reproducción."
 msgid "Europa"
 msgstr "Europa"
 
-msgid "Exclui a playlist selecionada da conta. Só funciona em playlists que você criou e pede confirmação."
-msgstr "Elimina la playlist seleccionada de la cuenta. Solo funciona en playlists que creaste y pide confirmación."
-
 msgid "Excluindo a playlist \"{title}\" do YouTube Music..."
 msgstr "Eliminando la playlist \"{title}\" de YouTube Music..."
 
@@ -1802,23 +1450,11 @@ msgstr "Eliminar preset del ecualizador"
 msgid "Executa a ação: {label}."
 msgstr "Ejecuta la acción: {label}."
 
-msgid "Executa a busca usando o texto informado e o escopo selecionado."
-msgstr "Ejecuta la búsqueda usando el texto indicado y el alcance seleccionado."
-
-msgid "expandida"
-msgstr "expandida"
-
 msgid "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."
 msgstr "Explica cómo abrir la ayuda rápida de atajos y el manual completo de KeyTune."
 
-msgid "Explorar moods e gêneros do YouTube Music"
-msgstr "Explorar estados de ánimo y géneros de YouTube Music"
-
-msgid "Explorar:"
-msgstr "Explorar:"
-
-msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube Music."
-msgstr "Extrae las cookies del navegador seleccionado o valida el archivo o texto proporcionado y conecta tu cuenta de YouTube Music."
+msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube."
+msgstr "Extrae las cookies del navegador seleccionado o valida el archivo o texto proporcionado y conecta tu cuenta de YouTube."
 
 msgid "F&echar"
 msgstr "&Cerrar"
@@ -1880,17 +1516,11 @@ msgstr "Cola de reproducción"
 msgid "Fila de reprodução esvaziada."
 msgstr "Cola de reproducción vaciada."
 
-msgid "Filtro da biblioteca do YouTube Music"
-msgstr "Filtro de la biblioteca de YouTube Music"
-
 msgid "Filtro da busca"
 msgstr "Filtro de la búsqueda"
 
 msgid "Filtro do histórico"
 msgstr "Filtro del historial"
-
-msgid "Filtro:"
-msgstr "Filtro:"
 
 msgid "Fim do arquivo."
 msgstr "Fin del archivo."
@@ -1937,14 +1567,8 @@ msgstr "Graves y agudos"
 msgid "Graves profundos"
 msgstr "Graves profundos"
 
-msgid "Guarda metadados já resolvidos e análises de áudio para não repetir trabalho caro. As entradas mais antigas saem quando o limite é atingido."
-msgstr "Guarda metadatos ya resueltos y análisis de audio para no repetir trabajo costoso. Las entradas más antiguas se descartan al alcanzar el límite."
-
 msgid "Guardar um &histórico local de reprodução"
 msgstr "Guardar un &historial local de reproducción"
-
-msgid "Guardar um histórico local de reprodução"
-msgstr "Guardar un historial local de reproducción"
 
 msgid "Guatemala"
 msgstr "Guatemala"
@@ -1957,14 +1581,6 @@ msgstr "Historial de reproducción"
 
 msgid "Histórico de reprodução apagado."
 msgstr "Historial de reproducción borrado."
-
-msgid "Histórico: nenhuma faixa recente encontrada."
-msgstr "Historial: no se encontraron pistas recientes."
-
-msgid "Histórico: {count} faixa recente."
-msgid_plural "Histórico: {count} faixas recentes."
-msgstr[0] "Historial: {count} pista reciente."
-msgstr[1] "Historial: {count} pistas recientes."
 
 msgid "Holanda"
 msgstr "Países Bajos"
@@ -2011,9 +1627,6 @@ msgstr "Indexando {name} en la biblioteca. Esto continúa en segundo plano."
 msgid "Indexar automaticamente as &pastas abertas no navegador"
 msgstr "Indexar automáticamente las &carpetas abiertas en el navegador"
 
-msgid "Indexar automaticamente as pastas abertas"
-msgstr "Indexar automáticamente las carpetas abiertas"
-
 msgid "Indexação concluída: {count} mídia adicionada à biblioteca."
 msgid_plural "Indexação concluída: {count} mídias adicionadas à biblioteca."
 msgstr[0] "Indexación terminada: {count} medio añadido a la biblioteca."
@@ -2031,17 +1644,11 @@ msgstr "Información de la pista incompleta para buscar la letra."
 msgid "Informe o nome e a privacidade da nova playlist."
 msgstr "Indica el nombre y la privacidad de la nueva playlist."
 
-msgid "Informe um caminho local, uma pasta ou um link de mídia."
-msgstr "Indica una ruta local, una carpeta o un enlace de medios."
-
 msgid "Informe um link válido de playlist, mix ou vídeo do YouTube Music/YouTube."
 msgstr "Indica un enlace válido de playlist, mix o video de YouTube Music/YouTube."
 
 msgid "Informe um nome para a nova playlist."
 msgstr "Indica un nombre para la nueva playlist."
-
-msgid "Informe uma pasta local, um arquivo existente, uma playlist .m3u/.m3u8 ou um link de mídia."
-msgstr "Indica una carpeta local, un archivo existente, una playlist .m3u/.m3u8 o un enlace de medios."
 
 msgid "Inicialização e sessão"
 msgstr "Inicio y sesión"
@@ -2060,15 +1667,6 @@ msgstr "Instancia del backend de reproducción no disponible para el reproductor
 
 msgid "Instância do backend de reprodução indisponível."
 msgstr "Instancia del backend de reproducción no disponible."
-
-msgid "Integração com YouTube Music ativada. Opções adicionais disponíveis."
-msgstr "Integración con YouTube Music activada. Opciones adicionales disponibles."
-
-msgid "Integração com YouTube Music desativada. Opções adicionais ocultadas."
-msgstr "Integración con YouTube Music desactivada. Opciones adicionales ocultadas."
-
-msgid "Integração com YouTube Music e YouTube"
-msgstr "Integración con YouTube Music y YouTube"
 
 msgid "Interface"
 msgstr "Interfaz"
@@ -2102,12 +1700,6 @@ msgstr "Esto elimina la playlist entera de tu cuenta y no se puede deshacer desd
 
 msgid "Item"
 msgstr "Elemento"
-
-msgid "Item atual: {name}."
-msgstr "Elemento actual: {name}."
-
-msgid "Item atual: {name}. Item {current} de {total}."
-msgstr "Elemento actual: {name}. Elemento {current} de {total}."
 
 msgid "Item curtido no YouTube Music."
 msgid_plural "{count} itens curtidos no YouTube Music."
@@ -2152,20 +1744,11 @@ msgstr "Ya existe un preset con ese nombre. Elige otro nombre."
 msgid "Leitor de tela"
 msgstr "Lector de pantalla"
 
-msgid "Lembrar a posição de mídias longas"
-msgstr "Recordar la posición de los medios largos"
-
 msgid "Lembrar tamanho da &janela"
 msgstr "Recordar tamaño de la &ventana"
 
-msgid "Lembrar tamanho da janela"
-msgstr "Recordar tamaño de la ventana"
-
 msgid "Lembrar última &pasta usada"
 msgstr "Recordar última &carpeta usada"
-
-msgid "Lembrar última pasta usada"
-msgstr "Recordar última carpeta usada"
 
 msgid "Letra completa copiada."
 msgstr "Letra completa copiada."
@@ -2194,23 +1777,14 @@ msgstr "Licenciado bajo la licencia {license}."
 msgid "Licença do aplicativo"
 msgstr "Licencia de la aplicación"
 
-msgid "Liga a busca global (Ctrl+G), os favoritos, as avaliações, o histórico e a retomada por arquivo."
-msgstr "Activa la búsqueda global (Ctrl+G), los favoritos, las valoraciones, el historial y la reanudación por archivo."
-
 msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
 msgstr "Activa o desactiva el ecualizador solo para la pestaña de medios activa."
-
-msgid "Liga ou desliga os anúncios enviados ao leitor de tela."
-msgstr "Activa o desactiva los anuncios enviados al lector de pantalla."
 
 msgid "ligado"
 msgstr "activado"
 
 msgid "Limitar à &pasta (vazio ignora)"
 msgstr "Limitar a la &carpeta (vacío la ignora)"
-
-msgid "Limite máximo de itens varridos na página inicial do YouTube Music para encontrar mixes personalizadas. Valores menores deixam a sincronização mais rápida."
-msgstr "Límite máximo de elementos analizados en la página de inicio de YouTube Music para encontrar mixes personalizados. Los valores más bajos hacen la sincronización más rápida."
 
 msgid "Limpar &biblioteca..."
 msgstr "Vaciar la &biblioteca..."
@@ -2236,29 +1810,14 @@ msgstr "Enlace copiado."
 msgid "Link da mídia atual copiado."
 msgstr "Enlace del elemento actual copiado."
 
-msgid "Link da playlist, mix ou vídeo do YouTube Music"
-msgstr "Enlace de la playlist, mix o video de YouTube Music"
-
-msgid "Links remotos serão tentados como mídia, exceto quando forem playlists .m3u/.m3u8."
-msgstr "Los enlaces remotos se intentarán como medio, excepto cuando sean playlists .m3u/.m3u8."
-
-msgid "Lista as categorias de climas e gêneros do YouTube Music e carrega as playlists da categoria escolhida nos resultados abaixo."
-msgstr "Lista las categorías de estados de ánimo y géneros de YouTube Music y carga las playlists de la categoría elegida en los resultados de abajo."
-
 msgid "Lista de itens"
 msgstr "Lista de elementos"
 
 msgid "Lista de navegadores disponíveis"
 msgstr "Lista de navegadores disponibles"
 
-msgid "Lista de playlists do YouTube Music"
-msgstr "Lista de playlists de YouTube Music"
-
 msgid "Localiza itens da lista ativa."
 msgstr "Localiza elementos de la lista activa."
-
-msgid "Localiza itens da pasta aberta em {title}."
-msgstr "Localiza elementos de la carpeta abierta en {title}."
 
 msgid "Localiza itens da playlist {title}."
 msgstr "Localiza elementos de la playlist {title}."
@@ -2275,9 +1834,6 @@ msgstr "Luxemburgo"
 msgid "Mais tocadas"
 msgstr "Más reproducidas"
 
-msgid "Mantém a reprodução apenas em áudio, inclusive em arquivos de vídeo. Útil para evitar a abertura de janelas externas de vídeo no Windows."
-msgstr "Mantiene la reproducción solo en audio, incluso en archivos de video. Útil para evitar la apertura de ventanas externas de video en Windows."
-
 msgid "Mantém baixo firme com médios e agudos vivos."
 msgstr "Mantiene un bajo firme con medios y agudos vivos."
 
@@ -2293,8 +1849,8 @@ msgstr "Margen ignorado al principio y al final (segundos)"
 msgid "Melhor avaliadas"
 msgstr "Mejor valoradas"
 
-msgid "Mensagem da central do YouTube Music"
-msgstr "Mensaje del panel de YouTube Music"
+msgid "Mensagem da central do KeyTube"
+msgstr "Mensaje del panel de KeyTube"
 
 msgid "Microsoft Edge"
 msgstr "Microsoft Edge"
@@ -2326,9 +1882,6 @@ msgstr "Modo de conexión"
 msgid "Modo de conexão com o YouTube Music"
 msgstr "Modo de conexión con YouTube Music"
 
-msgid "Modo de repetição aplicado automaticamente às playlists novas."
-msgstr "Modo de repetición aplicado automáticamente a las playlists nuevas."
-
 msgid "Modo de visualização do histórico"
 msgstr "Modo de visualización del historial"
 
@@ -2338,25 +1891,8 @@ msgstr "Modo de navegación de elementos."
 msgid "Mood ou gênero"
 msgstr "Estado de ánimo o género"
 
-msgid "Moods e &gêneros..."
-msgstr "Estados de ánimo y &géneros..."
-
-msgid "Moods e gêneros — {category}: nenhuma playlist disponível."
-msgstr "Estados de ánimo y géneros — {category}: ninguna playlist disponible."
-
-msgid "Moods e gêneros — {category}: {count} playlist."
-msgid_plural "Moods e gêneros — {category}: {count} playlists."
-msgstr[0] "Estados de ánimo y géneros — {category}: {count} playlist."
-msgstr[1] "Estados de ánimo y géneros — {category}: {count} playlists."
-
 msgid "Mostra a descrição do preset atualmente selecionado. Campo somente leitura."
 msgstr "Muestra la descripción del preset actualmente seleccionado. Campo de solo lectura."
-
-msgid "Mostrando 0 de 0 resultados."
-msgstr "Mostrando 0 de 0 resultados."
-
-msgid "Mostrando {visible} de {total} playlists e mixes."
-msgstr "Mostrando {visible} de {total} playlists y mixes."
 
 msgid "Mostrar tela de &boas-vindas"
 msgstr "Mostrar pantalla de &bienvenida"
@@ -2397,20 +1933,11 @@ msgstr "Medios admitidos"
 msgid "Mídia: {name}. Estado: {state}."
 msgstr "Medio: {name}. Estado: {state}."
 
-msgid "Mídias mais curtas que isso sempre recomeçam do início."
-msgstr "Los medios más cortos que eso siempre empiezan desde el principio."
-
 msgid "na pasta {folder}"
 msgstr "en la carpeta {folder}"
 
-msgid "Na primeira execução, o download pode levar alguns minutos e exige internet. Ao desativar esta opção, o player apenas para de gerenciar esses recursos automaticamente; os arquivos já baixados não são removidos."
-msgstr "En la primera ejecución, la descarga puede tardar algunos minutos y requiere internet. Al desactivar esta opción, el reproductor solo deja de gestionar estos recursos automáticamente; los archivos ya descargados no se eliminan."
-
 msgid "Nada para continuar ouvindo. Nenhuma mídia longa está pela metade."
 msgstr "Nada que continuar escuchando. Ningún medio largo está a medias."
-
-msgid "Navegador de pasta"
-msgstr "Navegador de carpetas"
 
 msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
 msgstr "Navegador no reconocido: {browser}. Elige uno de la lista o usa la importación manual."
@@ -2502,11 +2029,8 @@ msgstr "Ninguna pestaña de medios activa para configurar el ecualizador."
 msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr "Ninguna pestaña de medios activa para copiar el ecualizador."
 
-msgid "Nenhuma categoria de moods e gêneros está disponível agora."
-msgstr "Ninguna categoría de estados de ánimo y géneros está disponible ahora."
-
-msgid "Nenhuma conta do YouTube Music está conectada."
-msgstr "Ninguna cuenta de YouTube Music está conectada."
+msgid "Nenhuma conta do YouTube está conectada."
+msgstr "Ninguna cuenta de YouTube está conectada."
 
 msgid "Nenhuma faixa válida do YouTube Music foi selecionada."
 msgstr "No se seleccionó ninguna pista válida de YouTube Music."
@@ -2610,20 +2134,8 @@ msgstr "No se pudo abrir la instalación automática de {runtime}."
 msgid "Não foi possível abrir a mídia da área de transferência."
 msgstr "No se pudo abrir el medio del portapapeles."
 
-msgid "Não foi possível abrir a mídia informada."
-msgstr "No se pudo abrir el medio indicado."
-
-msgid "Não foi possível abrir a pasta da área de transferência."
-msgstr "No se pudo abrir la carpeta del portapapeles."
-
-msgid "Não foi possível abrir a pasta selecionada como playlist."
-msgstr "No se pudo abrir la carpeta seleccionada como playlist."
-
 msgid "Não foi possível abrir a playlist da área de transferência."
 msgstr "No se pudo abrir la playlist del portapapeles."
-
-msgid "Não foi possível abrir a playlist ou link informado."
-msgstr "No se pudo abrir la playlist o el enlace indicado."
 
 msgid "Não foi possível abrir a playlist remota: {error}."
 msgstr "No se pudo abrir la playlist remota: {error}."
@@ -2682,11 +2194,11 @@ msgstr "No se pudo actualizar la biblioteca de YouTube Music."
 msgid "Não foi possível atualizar automaticamente os recursos adicionais do YouTube Music."
 msgstr "No se pudieron actualizar automáticamente los recursos adicionales de YouTube Music."
 
-msgid "Não foi possível avaliar a mídia atual no YouTube Music."
-msgstr "No se pudo valorar el medio actual en YouTube Music."
+msgid "Não foi possível avaliar a mídia atual no YouTube."
+msgstr "No se pudo valorar el medio actual en YouTube."
 
-msgid "Não foi possível avaliar a seleção atual no YouTube Music."
-msgstr "No se pudo valorar la selección actual en YouTube Music."
+msgid "Não foi possível avaliar a seleção atual no YouTube."
+msgstr "No se pudo valorar la selección actual en YouTube."
 
 msgid "Não foi possível avaliar os itens selecionados."
 msgstr "No se pudieron valorar los elementos seleccionados."
@@ -2703,32 +2215,17 @@ msgstr "No se pudo cargar la carpeta seleccionada: {error}."
 msgid "Não foi possível carregar a playlist do YouTube Music."
 msgstr "No se pudo cargar la playlist de YouTube Music."
 
-msgid "Não foi possível carregar as categorias de moods e gêneros agora."
-msgstr "No se pudieron cargar las categorías de estados de ánimo y géneros ahora."
-
-msgid "Não foi possível carregar as paradas agora."
-msgstr "No se pudieron cargar las listas ahora."
-
-msgid "Não foi possível carregar as playlists desta categoria agora."
-msgstr "No se pudieron cargar las playlists de esta categoría ahora."
-
 msgid "Não foi possível carregar mais playlists do YouTube Music."
 msgstr "No se pudieron cargar más playlists de YouTube Music."
 
 msgid "Não foi possível carregar mixes personalizadas."
 msgstr "No se pudieron cargar los mixes personalizados."
 
-msgid "Não foi possível carregar seu histórico agora."
-msgstr "No se pudo cargar tu historial ahora."
-
-msgid "Não foi possível carregar suas músicas curtidas agora."
-msgstr "No se pudieron cargar tus canciones con me gusta ahora."
-
 msgid "Não foi possível concluir a busca agora."
 msgstr "No se pudo completar la búsqueda ahora."
 
-msgid "Não foi possível conectar a conta do YouTube Music."
-msgstr "No se pudo conectar la cuenta de YouTube Music."
+msgid "Não foi possível conectar a conta do YouTube."
+msgstr "No se pudo conectar la cuenta de YouTube."
 
 msgid "Não foi possível consultar a release mais recente do yt-dlp."
 msgstr "No se pudo consultar la versión más reciente de yt-dlp."
@@ -2766,9 +2263,6 @@ msgstr "No se pudo iniciar el ejecutable de yt-dlp."
 msgid "Não foi possível iniciar uma instância do MPV."
 msgstr "No se pudo iniciar una instancia de MPV."
 
-msgid "Não foi possível interpretar o link informado como mídia ou playlist."
-msgstr "No se pudo interpretar el enlace indicado como medio o playlist."
-
 msgid "Não foi possível ler a versão mais recente."
 msgstr "No se pudo leer la versión más reciente."
 
@@ -2802,8 +2296,8 @@ msgstr "No se pudo localizar los créditos de KeyTune. Genera la versión HTML d
 msgid "Não foi possível localizar uma playlist de destino no player."
 msgstr "No se pudo localizar una playlist de destino en el reproductor."
 
-msgid "Não foi possível preparar a autenticação do YouTube Music."
-msgstr "No se pudo preparar la autenticación de YouTube Music."
+msgid "Não foi possível preparar a autenticação do YouTube."
+msgstr "No se pudo preparar la autenticación de YouTube."
 
 msgid "Não foi possível preparar a dependência ytmusicapi automaticamente. Detalhes: {detail}"
 msgstr "No se pudo preparar la dependencia ytmusicapi automáticamente. Detalles: {detail}"
@@ -2832,14 +2326,14 @@ msgstr "No se pudo guardar el resultado en YouTube Music."
 msgid "Não foi possível trocar o dispositivo de áudio: {error}."
 msgstr "No se pudo cambiar el dispositivo de audio: {error}."
 
-msgid "Não foi possível validar a autenticação do YouTube Music agora."
-msgstr "No se pudo validar la autenticación de YouTube Music en este momento."
+msgid "Não foi possível validar a autenticação do YouTube agora."
+msgstr "No se pudo validar la autenticación de YouTube en este momento."
 
-msgid "Não foi possível validar a autenticação salva do YouTube Music agora. Tente novamente em instantes."
-msgstr "No se pudo validar la autenticación guardada de YouTube Music ahora. Inténtalo de nuevo en unos instantes."
+msgid "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."
+msgstr "No se pudo validar la autenticación guardada de YouTube ahora. Inténtalo de nuevo en unos instantes."
 
-msgid "Não foi possível validar a autenticação salva do YouTube Music. Conecte a conta novamente."
-msgstr "No se pudo validar la autenticación guardada de YouTube Music. Conecta la cuenta de nuevo."
+msgid "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."
+msgstr "No se pudo validar la autenticación guardada de YouTube. Conecta la cuenta de nuevo."
 
 msgid "Não foi possível validar a integridade do arquivo."
 msgstr "No se pudo validar la integridad del archivo."
@@ -2871,9 +2365,6 @@ msgstr "No usar temporizador"
 msgid "não é favorito"
 msgstr "no es favorito"
 
-msgid "Não é possível fechar a última aba."
-msgstr "No se puede cerrar la última pestaña."
-
 msgid "Não é possível reordenar arquivos no navegador de pastas."
 msgstr "No se pueden reordenar los archivos en el navegador de carpetas."
 
@@ -2888,12 +2379,6 @@ msgstr "Número máximo de elementos"
 
 msgid "O arquivo baixado não pôde ser validado."
 msgstr "No se pudo validar el archivo descargado."
-
-msgid "O arquivo selecionado não está mais disponível."
-msgstr "El archivo seleccionado ya no está disponible."
-
-msgid "O arquivo selecionado não pertence à pasta atual."
-msgstr "El archivo seleccionado no pertenece a la carpeta actual."
 
 msgid "O equalizador não está disponível nesta instalação."
 msgstr "El ecualizador no está disponible en esta instalación."
@@ -2934,8 +2419,8 @@ msgstr "El elemento ya está al principio de la playlist."
 msgid "O item recente selecionado não está mais disponível."
 msgstr "El elemento reciente seleccionado ya no está disponible."
 
-msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube Music para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
-msgstr "KeyTune es un reproductor de audio y video pensado para usarse totalmente con el teclado y para funcionar bien con lectores de pantalla. No hace falta usar el ratón en ningún momento.\n\nPuedes abrir archivos de medios, carpetas y playlists, organizar todo en pestañas y, opcionalmente, conectar tu cuenta de YouTube Music para reproducir tus playlists y tu biblioteca.\n\nLas próximas páginas muestran cómo se organiza la interfaz, qué funciones están disponibles y dónde encontrar ayuda siempre que la necesites."
+msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgstr "KeyTune es un reproductor de audio y video pensado para usarse totalmente con el teclado y para funcionar bien con lectores de pantalla. No hace falta usar el ratón en ningún momento.\n\nPuedes abrir archivos de medios, carpetas y playlists, organizar todo en pestañas y, opcionalmente, conectar tu cuenta de YouTube para reproducir tus playlists y tu biblioteca.\n\nLas próximas páginas muestran cómo se organiza la interfaz, qué funciones están disponibles y dónde encontrar ayuda siempre que la necesites."
 
 msgid "O que mudou nesta versão:"
 msgstr "Qué cambió en esta versión:"
@@ -3036,9 +2521,6 @@ msgstr "Los elementos seleccionados ya tienen me gusta en YouTube Music."
 msgid "Os itens selecionados já estão marcados como não gostei no YouTube Music."
 msgstr "Los elementos seleccionados ya están marcados como no me gusta en YouTube Music."
 
-msgid "Os logs são rotacionados automaticamente a cada 2 MB e até 3 arquivos anteriores são mantidos. Os logs de sessões anteriores ficam em keytune.log.1, .2 e .3 na mesma pasta."
-msgstr "Los logs se rotan automáticamente cada 2 MB y se conservan hasta 3 archivos anteriores. Los logs de sesiones anteriores quedan en keytune.log.1, .2 y .3 en la misma carpeta."
-
 msgid "Os recursos adicionais do YouTube Music ainda estão sendo atualizados. Aguarde a conclusão para abrir a central."
 msgstr "Los recursos adicionales de YouTube Music todavía se están actualizando. Espera a que terminen para abrir el panel."
 
@@ -3066,9 +2548,6 @@ msgstr "Panel de tiempo"
 msgid "Panamá"
 msgstr "Panamá"
 
-msgid "Para abrir no navegador, informe uma pasta local válida."
-msgstr "Para abrir en el navegador, indica una carpeta local válida."
-
 msgid "Para definir o KeyTune como player padrão, abra as configurações de Aplicativos padrão do Windows. Deseja abri-las agora?"
 msgstr "Para definir KeyTune como reproductor predeterminado, abre la configuración de Aplicaciones predeterminadas de Windows. ¿Quieres abrirla ahora?"
 
@@ -3077,9 +2556,6 @@ msgstr "Detenido."
 
 msgid "Paraguai"
 msgstr "Paraguay"
-
-msgid "Parar dentro dessa margem não cria ponto de retomada: no início a mídia mal começou, no fim ela já terminou."
-msgstr "Detenerse dentro de ese margen no crea punto de reanudación: al principio el medio apenas había empezado y al final ya había terminado."
 
 msgid "Parou em"
 msgstr "Se detuvo en"
@@ -3096,12 +2572,6 @@ msgstr "Carpeta"
 msgid "pasta"
 msgstr "carpeta"
 
-msgid "Pasta aberta no navegador: {name}."
-msgstr "Carpeta abierta en el navegador: {name}."
-
-msgid "Pasta atual: {name}."
-msgstr "Carpeta actual: {name}."
-
 msgid "Pasta carregada como playlist: {title}. {count} item."
 msgid_plural "Pasta carregada como playlist: {title}. {count} itens."
 msgstr[0] "Carpeta cargada como playlist: {title}. {count} elemento."
@@ -3112,9 +2582,6 @@ msgstr "Carpeta de la lista inteligente"
 
 msgid "Pasta indisponível para indexar."
 msgstr "Esa carpeta no está disponible para indexar."
-
-msgid "Pastas podem abrir como playlist ou no navegador. Arquivos, links e playlists podem abrir para reprodução."
-msgstr "Las carpetas pueden abrirse como playlist o en el navegador. Los archivos, enlaces y playlists pueden abrirse para reproducción."
 
 msgid "Pastas recentes"
 msgstr "Carpetas recientes"
@@ -3131,9 +2598,6 @@ msgstr "Pausado."
 msgid "Pausado: {name}"
 msgstr "Pausado: {name}"
 
-msgid "Pede confirmação antes de fechar o player."
-msgstr "Pide confirmación antes de cerrar el reproductor."
-
 msgid "pelo menos {count} estrela"
 msgid_plural "pelo menos {count} estrelas"
 msgstr[0] "al menos {count} estrella"
@@ -3144,15 +2608,6 @@ msgstr "Perfiles probados: {count}."
 
 msgid "Peru"
 msgstr "Perú"
-
-msgid "Pesquisando em {scope}: {query}."
-msgstr "Buscando en {scope}: {query}."
-
-msgid "Pesquisar no YouTube Music ou no YouTube"
-msgstr "Buscar en YouTube Music o en YouTube"
-
-msgid "Pesquise músicas, vídeos e playlists do YouTube Music, ou faça uma busca rápida por vídeos do YouTube. Você pode salvar playlists ou faixas no Music e adicionar resultados a uma playlist do player."
-msgstr "Busca canciones, videos y playlists de YouTube Music, o haz una búsqueda rápida de videos de YouTube. Puedes guardar playlists o pistas en Music y agregar resultados a una playlist del reproductor."
 
 msgid "Player de reprodução indisponível."
 msgstr "Reproductor de reproducción no disponible."
@@ -3235,9 +2690,6 @@ msgstr "Listas &inteligentes"
 msgid "Playlists carregadas por vez"
 msgstr "Playlists cargadas por vez"
 
-msgid "Playlists e mixes"
-msgstr "Playlists y mixes"
-
 msgid "Playlists e mídias suportadas"
 msgstr "Playlists y medios admitidos"
 
@@ -3255,9 +2707,6 @@ msgstr "Playlists recientes borradas."
 
 msgid "PO Token ausente"
 msgstr "PO Token ausente"
-
-msgid "Podcasts, audiolivros e vídeos longos voltam a tocar do ponto onde pararam."
-msgstr "Los pódcast, audiolibros y vídeos largos vuelven a sonar desde donde se detuvieron."
 
 msgid "Polônia"
 msgstr "Polonia"
@@ -3388,35 +2837,14 @@ msgstr "pública"
 msgid "Quando"
 msgstr "Cuándo"
 
-msgid "Quando a playlist termina e a última faixa é do YouTube Music, o player busca faixas relacionadas (a rádio do YouTube Music) e continua tocando automaticamente. Também pode ser ligado ou desligado com a tecla A durante a reprodução."
-msgstr "Cuando la playlist termina y la última pista es de YouTube Music, el reproductor busca pistas relacionadas (la radio de YouTube Music) y sigue reproduciendo automáticamente. También se puede activar o desactivar con la tecla A durante la reproducción."
-
-msgid "Quando ligada, ao escutar uma faixa do YouTube Music por tempo suficiente o player marca essa faixa como assistida no seu histórico do YouTube Music. Desligue para tocar sem registrar nada no histórico da sua conta."
-msgstr "Cuando está activada, al escuchar una pista de YouTube Music el tiempo suficiente el reproductor marca esa pista como vista en tu historial de YouTube Music. Desactívala para reproducir sin registrar nada en el historial de tu cuenta."
-
-msgid "Quando ligado, o crossfade também é usado ao avançar ou voltar com os controles. Por padrão, o crossfade só é aplicado no fim natural de cada faixa."
-msgstr "Cuando está activado, el crossfade también se usa al avanzar o retroceder con los controles. De forma predeterminada, el crossfade solo se aplica al final natural de cada pista."
-
-msgid "Quando ligado, o player grava um arquivo de log rotativo em disco. Útil para depurar problemas e anexar ao relato de bugs."
-msgstr "Cuando está activado, el reproductor graba un archivo de log rotativo en el disco. Útil para depurar problemas y adjuntar al informe de errores."
-
-msgid "Quando o histórico passa desse número, as entradas mais antigas são descartadas."
-msgstr "Cuando el historial supera ese número, las entradas más antiguas se descartan."
-
 msgid "Quênia"
 msgstr "Kenia"
-
-msgid "Reabre as abas e tenta retomar a última sessão salva ao iniciar o player."
-msgstr "Reabre las pestañas e intenta retomar la última sesión guardada al iniciar el reproductor."
 
 msgid "Realça ataque de guitarras, caixa e presença geral."
 msgstr "Resalta el ataque de las guitarras, la caja y la presencia general."
 
 msgid "Realça definição e brilho sem exagerar nos graves."
 msgstr "Resalta la definición y el brillo sin exagerar en los graves."
-
-msgid "recolhida"
-msgstr "contraída"
 
 msgid "Recursos adicionais"
 msgstr "Recursos adicionales"
@@ -3439,20 +2867,8 @@ msgstr "Funciones principales de KeyTune"
 msgid "Reggae"
 msgstr "Reggae"
 
-msgid "Registra cada faixa que tocar tempo suficiente para contar como ouvida."
-msgstr "Registra cada pista que suene lo suficiente para contar como escuchada."
-
-msgid "Registra o player no menu Abrir Com do Windows para formatos de áudio, vídeo e playlists. Depois, defina o player como padrão nas configurações do Windows."
-msgstr "Registra el reproductor en el menú Abrir con de Windows para formatos de audio, video y playlists. Después, define el reproductor como predeterminado en la configuración de Windows."
-
 msgid "Registrar &logs de diagnóstico"
 msgstr "Registrar &logs de diagnóstico"
-
-msgid "Registrar como player padrão"
-msgstr "Registrar como reproductor predeterminado"
-
-msgid "Registrar logs de diagnóstico"
-msgstr "Registrar logs de diagnóstico"
 
 msgid "Registro de logs"
 msgstr "Registro de logs"
@@ -3478,8 +2894,8 @@ msgstr "Reino Unido"
 msgid "Reinstalando yt-dlp na versão {channel}..."
 msgstr "Reinstalando yt-dlp en la versión {channel}..."
 
-msgid "Remove a autenticação salva da conta do YouTube Music nesta instalação."
-msgstr "Elimina la autenticación guardada de la cuenta de YouTube Music en esta instalación."
+msgid "Remove a autenticação salva da conta do YouTube nesta instalação."
+msgstr "Elimina la autenticación guardada de la cuenta de YouTube en esta instalación."
 
 msgid "Remove o item selecionado da fila (Delete)."
 msgstr "Quita el elemento seleccionado de la cola (Delete)."
@@ -3503,9 +2919,6 @@ msgstr[1] "¿Quitar {count} pistas de la playlist \"{title}\" en YouTube Music?"
 
 msgid "Removido da playlist do YouTube Music"
 msgstr "Quitado de la playlist de YouTube Music"
-
-msgid "Repetindo faixa atual. {position}"
-msgstr "Repitiendo la pista actual. {position}"
 
 msgid "Repetir faixa atual"
 msgstr "Repetir la pista actual"
@@ -3532,12 +2945,6 @@ msgstr "Reproduciendo un elemento ya presente en {title}."
 
 msgid "Reproduzir / Pa&usar (Espaço)"
 msgstr "Reproducir / Pa&usar (Espacio)"
-
-msgid "Reproduzir conteúdo relacionado ao fim da &playlist (rádio automática)"
-msgstr "Reproducir contenido relacionado al final de la &playlist (radio automática)"
-
-msgid "Reproduzir conteúdo relacionado ao fim da playlist"
-msgstr "Reproducir contenido relacionado al final de la playlist"
 
 msgid "Reprodução"
 msgstr "Reproducción"
@@ -3572,9 +2979,6 @@ msgstr "Resolviendo {label}..."
 msgid "Restaurar &Tom Original (Shift+\\)"
 msgstr "Restaurar &tono original (Shift+\\)"
 
-msgid "Restaurar sessão ao iniciar"
-msgstr "Restaurar sesión al iniciar"
-
 msgid "Restaurar Velocidade &Normal (\\)"
 msgstr "Restaurar velocidad &normal (\\)"
 
@@ -3593,12 +2997,6 @@ msgstr "Resultados de la biblioteca"
 msgid "Resultados da busca"
 msgstr "Resultados de la búsqueda"
 
-msgid "Resultados da busca do YouTube"
-msgstr "Resultados de la búsqueda de YouTube"
-
-msgid "Resultados da busca: nenhum ainda."
-msgstr "Resultados de la búsqueda: ninguno aún."
-
 msgid "Resume os recursos do player além da reprodução básica: playlists, equalizador, YouTube Music e preferências."
 msgstr "Resume las funciones del reproductor más allá de la reproducción básica: playlists, ecualizador, YouTube Music y preferencias."
 
@@ -3607,9 +3005,6 @@ msgstr "Resumen de la actualización"
 
 msgid "Resumo da biblioteca do YouTube Music"
 msgstr "Resumen de la biblioteca de YouTube Music"
-
-msgid "Resumo da busca do YouTube"
-msgstr "Resumen de la búsqueda de YouTube"
 
 msgid "Resumo da regra"
 msgstr "Resumen de la regla"
@@ -3644,17 +3039,8 @@ msgstr "Rusia"
 msgid "Sala ampla"
 msgstr "Sala amplia"
 
-msgid "Salva e restaura o tamanho da janela principal entre execuções."
-msgstr "Guarda y restaura el tamaño de la ventana principal entre ejecuciones."
-
 msgid "Salva o preset com o nome e os ajustes informados."
 msgstr "Guarda el preset con el nombre y los ajustes indicados."
-
-msgid "Salva playlists ou faixas na biblioteca do YouTube Music quando o resultado for compatível."
-msgstr "Guarda playlists o pistas en la biblioteca de YouTube Music cuando el resultado sea compatible."
-
-msgid "Salvar &faixa na biblioteca"
-msgstr "Guardar &pista en la biblioteca"
 
 msgid "Salvar cópia do preset do equalizador"
 msgstr "Guardar copia del preset del ecualizador"
@@ -3664,12 +3050,6 @@ msgstr "Guardar copia del preset integrado"
 
 msgid "Salvar faixa na biblioteca"
 msgstr "Guardar pista en la biblioteca"
-
-msgid "Salvar músicas escutadas no &histórico do YouTube Music"
-msgstr "Guardar canciones escuchadas en el &historial de YouTube Music"
-
-msgid "Salvar músicas escutadas no histórico do YouTube Music"
-msgstr "Guardar canciones escuchadas en el historial de YouTube Music"
 
 msgid "Salvar Playli&st\tCtrl+Shift+S"
 msgstr "Guardar playli&st\tCtrl+Shift+S"
@@ -3683,17 +3063,8 @@ msgstr "Guardar playlist en la biblioteca"
 msgid "Salvar preset do equalizador"
 msgstr "Guardar preset del ecualizador"
 
-msgid "Salvar resultado no YouTube Music"
-msgstr "Guardar resultado en YouTube Music"
-
 msgid "Saída de vídeo desativada\n\nEsta mídia está tocando só o áudio.\nAbra Preferências > Reprodução para reativar o vídeo quando quiser."
 msgstr "Salida de video desactivada\n\nEste medio está reproduciendo solo el audio.\nAbre Preferencias > Reproducción para reactivar el video cuando quieras."
-
-msgid "Se essa opção estiver desligada, o player deixa de anunciar mudanças como tempo, volume e troca de abas."
-msgstr "Si esta opción está desactivada, el reproductor deja de anunciar cambios como el tiempo, el volumen y el cambio de pestañas."
-
-msgid "Se o caminho for uma pasta local, você pode escolher playlist ou navegador. Arquivos e links serão tentados como mídia."
-msgstr "Si la ruta es una carpeta local, puedes elegir playlist o navegador. Los archivos y enlaces se intentarán como medio."
 
 msgid "Se preferir entender o cenário técnico antes de instalar, abra a guia oficial do yt-dlp sobre EJS e desafios JavaScript."
 msgstr "Si prefieres entender el contexto técnico antes de instalar, abre la guía oficial de yt-dlp sobre EJS y los desafíos de JavaScript."
@@ -3703,9 +3074,6 @@ msgstr "Selecciona la playlist para agregar {count} {label}:"
 
 msgid "Selecione ao menos um resultado da busca para abrir em uma nova playlist."
 msgstr "Selecciona al menos un resultado de la búsqueda para abrir en una nueva playlist."
-
-msgid "Selecione ao menos um resultado da busca para abrir o menu de ações."
-msgstr "Selecciona al menos un resultado de la búsqueda para abrir el menú de acciones."
 
 msgid "Selecione ao menos um resultado da busca para adicionar à playlist atual."
 msgstr "Selecciona al menos un resultado de la búsqueda para agregar a la playlist actual."
@@ -3731,9 +3099,6 @@ msgstr "Selecciona un navegador de la lista antes de conectar."
 msgid "Selecione uma playlist do YouTube Music para excluir."
 msgstr "Selecciona una playlist de YouTube Music para eliminar."
 
-msgid "Selecione uma playlist ou mix do YouTube Music para abrir."
-msgstr "Selecciona una playlist o mix de YouTube Music para abrir."
-
 msgid "Selecione uma única playlist ou apenas arquivos de mídia."
 msgstr "Selecciona una sola playlist o solo archivos de medios."
 
@@ -3758,9 +3123,6 @@ msgstr "sin valoración"
 msgid "Sem mídia"
 msgstr "Sin medio"
 
-msgid "Sem mídia carregada\n\nCtrl+Alt+O abre mídia, playlist ou pasta\nCtrl+O abre arquivos ou playlist\nCtrl+Shift+O abre uma pasta no navegador\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do YouTube Music quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
-msgstr "Sin medio cargado\n\nCtrl+Alt+O abre medio, playlist o carpeta\nCtrl+O abre archivos o playlist\nCtrl+Shift+O abre una carpeta en el navegador\nEspacio reproduce o pausa\nTab alterna entre elementos y reproductor\nCtrl+Shift+Y abre el panel de YouTube Music cuando la integración opcional está activada\nF1 muestra la ayuda rápida de atajos"
-
 msgid "sem nome"
 msgstr "sin nombre"
 
@@ -3780,18 +3142,6 @@ msgstr "Sesión anterior restaurada con {count} pestañas."
 
 msgid "Sessão restaurada com {count} abas."
 msgstr "Sesión restaurada con {count} pestañas."
-
-msgid "Sessão restaurada com {count} abas. {title}. {position}"
-msgstr "Sesión restaurada con {count} pestañas. {title}. {position}"
-
-msgid "Seção de busca do YouTube Music e do YouTube"
-msgstr "Sección de búsqueda de YouTube Music y YouTube"
-
-msgid "Seção para abrir playlist ou vídeo por link"
-msgstr "Sección para abrir una playlist o video por enlace"
-
-msgid "Seção {label} {state}."
-msgstr "Sección {label} {state}."
 
 msgid "Sinais detectados: {signals}."
 msgstr "Señales detectadas: {signals}."
@@ -3829,8 +3179,8 @@ msgstr "solo formatos de imagen"
 msgid "Somente já reproduzidos"
 msgstr "Solo ya reproducidos"
 
-msgid "Status da conta do YouTube Music"
-msgstr "Estado de la cuenta de YouTube Music"
+msgid "Status da conta do YouTube"
+msgstr "Estado de la cuenta de YouTube"
 
 msgid "Status do download"
 msgstr "Estado de la descarga"
@@ -3955,12 +3305,6 @@ msgstr "tono original"
 msgid "Tom: {pitch}."
 msgstr "Tono: {pitch}."
 
-msgid "Traz para os resultados abaixo as faixas curtidas (Curtidas) da conta conectada."
-msgstr "Trae a los resultados de abajo las pistas con me gusta (Me gusta) de la cuenta conectada."
-
-msgid "Traz para os resultados abaixo o histórico de reprodução da conta conectada, da mais recente para a mais antiga."
-msgstr "Trae a los resultados de abajo el historial de reproducción de la cuenta conectada, de lo más reciente a lo más antiguo."
-
 msgid "Trecho da letra copiado."
 msgstr "Fragmento de la letra copiado."
 
@@ -3985,23 +3329,11 @@ msgstr "Una fila por medio, del que sonó más recientemente al más antiguo."
 msgid "Uruguai"
 msgstr "Uruguay"
 
-msgid "Usa a última pasta aberta como diretório inicial nos diálogos de abrir e salvar."
-msgstr "Usa la última carpeta abierta como directorio inicial en los diálogos de abrir y guardar."
-
 msgid "Usar versão &nightly do yt-dlp (recomendado)"
 msgstr "Usar la versión &nightly de yt-dlp (recomendado)"
 
-msgid "Usar versão nightly do yt-dlp"
-msgstr "Usar la versión nightly de yt-dlp"
-
-msgid "Use 'Carregar mais' ou desça até o final da lista para trazer mais."
-msgstr "Usa 'Cargar más' o baja hasta el final de la lista para traer más."
-
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr "Usa Ctrl+Shift+W para cerrar la vista previa actual o Backspace para volver a la carpeta anterior."
-
-msgid "Use o menu Biblioteca para indexar pastas, consultar o histórico, apagar as posições de retomada ou limpar tudo."
-msgstr "Usa el menú Biblioteca para indexar carpetas, consultar el historial, borrar las posiciones de reanudación o vaciarlo todo."
 
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
 msgstr "Usa un nombre corto y claro. Ejemplo: Graves profundos personalizados."
@@ -4011,12 +3343,6 @@ msgstr "Reunirá: {summary}"
 
 msgid "Validando integridade do pacote..."
 msgstr "Validando la integridad del paquete..."
-
-msgid "Valor usado ao aumentar ou diminuir o volume com as setas para cima e para baixo."
-msgstr "Valor usado al subir o bajar el volumen con las flechas arriba y abajo."
-
-msgid "Valor usado para avançar ou retroceder na mídia com as setas esquerda e direita."
-msgstr "Valor usado para avanzar o retroceder en el medio con las flechas izquierda y derecha."
 
 msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
 msgstr "Los valores positivos refuerzan la frecuencia. Los valores negativos la atenúan. Haz ajustes sutiles para evitar la distorsión."
@@ -4044,12 +3370,6 @@ msgstr "Ver código fuente en &GitHub"
 
 msgid "Ver código-fonte no GitHub"
 msgstr "Ver código fuente en GitHub"
-
-msgid "Ver o que está em alta no YouTube Music"
-msgstr "Ver lo que es tendencia en YouTube Music"
-
-msgid "Verifica e aplica atualização automática das dependências no intervalo definido abaixo."
-msgstr "Comprueba y aplica la actualización automática de las dependencias en el intervalo definido abajo."
 
 msgid "Verificando atualizações..."
 msgstr "Comprobando actualizaciones..."
@@ -4102,23 +3422,23 @@ msgstr "Video de YouTube ({id})"
 msgid "Vídeo do YouTube aberto: {title}."
 msgstr "Video de YouTube abierto: {title}."
 
-msgid "YouTube &Music por aba\tCtrl+Shift+Y"
-msgstr "YouTube &Music por pestaña\tCtrl+Shift+Y"
+msgid "&KeyTube por aba\tCtrl+Shift+Y"
+msgstr "&KeyTube por pestaña\tCtrl+Shift+Y"
 
-msgid "YouTube &Music por aba (ative em Preferências)\tCtrl+Shift+Y"
-msgstr "YouTube &Music por pestaña (actívalo en Preferencias)\tCtrl+Shift+Y"
+msgid "&KeyTube por aba (ative em Preferências)\tCtrl+Shift+Y"
+msgstr "&KeyTube por pestaña (actívalo en Preferencias)\tCtrl+Shift+Y"
 
 msgid "YouTube Music"
 msgstr "YouTube Music"
 
-msgid "YouTube Music conectado como {name}."
-msgstr "YouTube Music conectado como {name}."
+msgid "YouTube conectado como {name}."
+msgstr "YouTube conectado como {name}."
 
-msgid "YouTube Music desconectado."
-msgstr "YouTube Music desconectado."
+msgid "YouTube desconectado."
+msgstr "YouTube desconectado."
 
-msgid "YouTube Music reconectado: {name}."
-msgstr "YouTube Music reconectado: {name}."
+msgid "YouTube reconectado: {name}."
+msgstr "YouTube reconectado: {name}."
 
 msgid "YouTube Music — músicas"
 msgstr "YouTube Music — canciones"
@@ -4417,17 +3737,11 @@ msgstr "AutoDJ {status}."
 msgid "AutoDJ: {status}."
 msgstr "AutoDJ: {status}."
 
-msgid "Define o comportamento usado pelo AutoDJ ao planejar a sequência e as transições."
-msgstr "Define el comportamiento que usa AutoDJ al planificar la secuencia y las transiciones."
-
 msgid "Duração da transição do AutoDJ"
 msgstr "Duración de la transición de AutoDJ"
 
 msgid "Eletrônica"
 msgstr "Electrónica"
-
-msgid "Escolhe quantas batidas serão usadas na sobreposição entre duas faixas."
-msgstr "Selecciona cuántos pulsos se usarán en la superposición entre dos pistas."
 
 msgid "Perfil do AutoDJ"
 msgstr "Perfil de AutoDJ"
@@ -4621,9 +3935,6 @@ msgstr "Análisis rítmico: pista actual {outgoing_bpm:.1f} BPM, confianza {outg
 msgid "Tocar efeitos de &DJ nas transições"
 msgstr "Reproducir efectos de &DJ durante las transiciones"
 
-msgid "Tocar efeitos de DJ nas transições"
-msgstr "Reproducir efectos de DJ durante las transiciones"
-
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr "&Copiar selección (Ctrl+C)"
 
@@ -4637,7 +3948,9 @@ msgid "Faixa marcada como não gostei ignorada: {name}."
 msgstr "Pista marcada como no me gusta omitida: {name}."
 
 msgid "Item copiado."
-msgstr "Elemento copiado."
+msgid_plural "{count} itens copiados."
+msgstr[0] "Elemento copiado."
+msgstr[1] "{count} elementos copiados."
 
 msgid "Nenhuma faixa disponível: as músicas restantes estão marcadas como não gostei."
 msgstr "No hay pistas disponibles: las canciones restantes están marcadas como no me gusta."
@@ -4702,8 +4015,6 @@ msgstr "Nueva radio lista con {count} canciones sin repeticiones recientes."
 msgid "O serviço do YouTube Music não está disponível para iniciar a rádio."
 msgstr "El servicio de YouTube Music no está disponible para iniciar la radio."
 
-msgid "Rádio: {name}"
-msgstr "Radio: {name}"
 msgid "Resume o estado da sessão e informa como será a próxima transição."
 msgstr "Resume el estado de la sesión e indica cómo será la próxima transición."
 
@@ -4740,39 +4051,6 @@ msgstr "Enter activa. Delete elimina. Shift+F10 abre las acciones del elemento."
 msgid "Ajuda da lista de itens"
 msgstr "Ayuda de la lista de elementos"
 
-msgid "Informe um caminho local ou cole um link de mídia ou playlist."
-msgstr "Introduzca una ruta local o pegue un enlace de contenido o playlist."
-
-msgid "Procurar arquivo"
-msgstr "Buscar archivo"
-
-msgid "Abre a janela para escolher um arquivo de mídia ou playlist."
-msgstr "Abre la ventana para elegir un archivo multimedia o una playlist."
-
-msgid "Procurar pasta"
-msgstr "Buscar carpeta"
-
-msgid "Abre a janela para escolher uma pasta de mídias."
-msgstr "Abre la ventana para elegir una carpeta multimedia."
-
-msgid "Escolha entre abrir o conteúdo como playlist ou navegar pela pasta."
-msgstr "Elija entre abrir el contenido como playlist o explorar la carpeta."
-
-msgid "Resultado da origem informada"
-msgstr "Resultado del origen introducido"
-
-msgid "Abrir origem informada"
-msgstr "Abrir origen introducido"
-
-msgid "Abre o arquivo, pasta ou link informado."
-msgstr "Abre el archivo, la carpeta o el enlace introducido."
-
-msgid "Cancelar abertura"
-msgstr "Cancelar apertura"
-
-msgid "Fecha esta janela sem abrir uma origem."
-msgstr "Cierra esta ventana sin abrir un origen."
-
 msgid "A mídia ainda está carregando."
 msgstr "El contenido multimedia todavía se está cargando."
 
@@ -4791,29 +4069,17 @@ msgstr "Activa AutoDJ en Preferencias, Recursos adicionales, y espera a que term
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr "Activa AutoDJ en Preferencias, Recursos adicionales, para revisar e instalar las bibliotecas necesarias."
 
-msgid "AutoDJ avançado"
-msgstr "AutoDJ avanzado"
-
 msgid "AutoDJ desativado."
 msgstr "AutoDJ desactivado."
 
 msgid "AutoDJ selecionado. As bibliotecas serão baixadas após a confirmação."
 msgstr "AutoDJ seleccionado. Las bibliotecas se descargarán después de la confirmación."
 
-msgid "Baixa bibliotecas de análise de áudio para detectar BPM, batidas, tonalidade e pontos de transição."
-msgstr "Descarga bibliotecas de análisis de audio para detectar BPM, pulsos, tonalidad y puntos de transición."
-
 msgid "Baixando {name}..."
 msgstr "Descargando {name}..."
 
 msgid "Baixar recursos e ativar &AutoDJ"
 msgstr "Descargar recursos y activar &AutoDJ"
-
-msgid "Baixar recursos e ativar AutoDJ"
-msgstr "Descargar recursos y activar AutoDJ"
-
-msgid "Instala o YouTube.js e, quando necessário, um Node.js portátil usado também pelo resolvedor do yt-dlp."
-msgstr "Instala YouTube.js y, cuando sea necesario, un Node.js portátil que también utiliza el resolvedor de yt-dlp."
 
 msgid "Instalando {name}..."
 msgstr "Instalando {name}..."
@@ -4860,9 +4126,6 @@ msgstr "El paquete del recurso adicional está incompleto."
 msgid "O pacote do recurso adicional não possui um manifesto válido."
 msgstr "El paquete del recurso adicional no tiene un manifiesto válido."
 
-msgid "O pacote inclui librosa, NumPy, SciPy, Numba e PyAV. Ele não faz parte do instalador principal e só será baixado após sua confirmação."
-msgstr "El paquete incluye librosa, NumPy, SciPy, Numba y PyAV. No forma parte del instalador principal y solo se descargará después de tu confirmación."
-
 msgid "O pacote {name} não passou na validação de integridade."
 msgstr "El paquete {name} no superó la validación de integridad."
 
@@ -4872,18 +4135,8 @@ msgstr "Node.js portátil (si no hay una versión compatible)"
 msgid "AutoDJ: librosa, NumPy, SciPy, Numba e PyAV"
 msgstr "AutoDJ: librosa, NumPy, SciPy, Numba y PyAV"
 
-msgid ""
-"Para melhorar a reprodução e habilitar os recursos selecionados, o KeyTune instalará:\n"
-"\n"
-"{components}\n"
-"\n"
-"Os arquivos ficarão apenas na pasta de recursos do KeyTune. Deseja instalar e ativar agora?"
-msgstr ""
-"Para mejorar la reproducción y habilitar las funciones seleccionadas, KeyTune instalará:\n"
-"\n"
-"{components}\n"
-"\n"
-"Los archivos permanecerán únicamente en la carpeta de recursos de KeyTune. ¿Deseas instalarlos y activarlos ahora?"
+msgid "Para melhorar a reprodução e habilitar os recursos selecionados, o KeyTune instalará:\n\n{components}\n\nOs arquivos ficarão apenas na pasta de recursos do KeyTune. Deseja instalar e ativar agora?"
+msgstr "Para mejorar la reproducción y habilitar las funciones seleccionadas, KeyTune instalará:\n\n{components}\n\nLos archivos permanecerán únicamente en la carpeta de recursos de KeyTune. ¿Deseas instalarlos y activarlos ahora?"
 
 msgid "Preparando Node.js e YouTube.js..."
 msgstr "Preparando Node.js y YouTube.js..."
@@ -4897,23 +4150,11 @@ msgstr "Preparar recursos adicionales"
 msgid "Recursos do AutoDJ instalados e prontos para uso."
 msgstr "Recursos de AutoDJ instalados y listos para usar."
 
-msgid "Toca um efeito curto junto ao início de cada transição sincronizada do AutoDJ."
-msgstr "Reproduce un efecto corto al inicio de cada transición sincronizada de AutoDJ."
-
-msgid "Usar &YouTube.js para melhorar a resolução e a reprodução (recomendado)"
-msgstr "Usar &YouTube.js para mejorar la resolución y la reproducción (recomendado)"
-
-msgid "Usar YouTube.js"
-msgstr "Usar YouTube.js"
-
 msgid "Baixando yt-dlp..."
 msgstr "Descargando yt-dlp..."
 
 msgid "Instalando ytmusicapi..."
 msgstr "Instalando ytmusicapi..."
-
-msgid "Ativar &recursos adicionais para YouTube Music e YouTube (yt-dlp, ytmusicapi e Node.js)"
-msgstr "Activar &recursos adicionales para YouTube Music y YouTube (yt-dlp, ytmusicapi y Node.js)"
 
 msgid "Para abrir músicas e vídeos do YouTube com mais estabilidade, o player precisa de um runtime JavaScript.\n\nSem ele, o YouTube pode bloquear a preparação do áudio ou do vídeo e a reprodução não começa.\n\nRecomendamos o Node.js 24+, utilizado pelo yt-dlp e pelo YouTube.js. O KeyTune pode manter uma cópia portátil automaticamente quando os recursos adicionais do YouTube Music estão ativados.\n\n"
 msgstr "Para abrir música y videos de YouTube con mayor estabilidad, el reproductor necesita un runtime de JavaScript.\n\nSin él, YouTube puede bloquear la preparación del audio o del video y la reproducción no comenzará.\n\nRecomendamos Node.js 24+, que es utilizado por yt-dlp y YouTube.js. KeyTune puede mantener automáticamente una copia portátil cuando los recursos adicionales de YouTube Music están activados.\n\n"
@@ -5026,9 +4267,6 @@ msgstr "Video de las transmisiones en vivo desactivado."
 msgid "Conexão com a transmissão ao vivo restabelecida."
 msgstr "Conexión con la transmisión en vivo restablecida."
 
-msgid "Transmissão ao vivo. {position}"
-msgstr "Transmisión en vivo. {position}"
-
 msgid "Ao vivo: {name}"
 msgstr "En vivo: {name}"
 
@@ -5041,23 +4279,11 @@ msgstr "AutoDJ no puede analizar transmisiones en vivo."
 msgid "Mostrar o vídeo das &transmissões ao vivo"
 msgstr "Mostrar el video de las &transmisiones en vivo"
 
-msgid "Mostrar o vídeo das transmissões ao vivo"
-msgstr "Mostrar el video de las transmisiones en vivo"
-
-msgid "Exibe a imagem das transmissões ao vivo do YouTube na área do player, mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. Durante uma transmissão, Ctrl+Alt+V alterna esta opção."
-msgstr "Muestra la imagen de las transmisiones en vivo de YouTube en el área del reproductor, incluso con la salida de video desactivada para el resto de la aplicación. Si se desmarca, la transmisión reproduce solo el audio. Durante una transmisión, Ctrl+Alt+V alterna esta opción."
-
 msgid "Transmissão ao vivo só com áudio\n\nO vídeo das transmissões ao vivo está desativado.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
 msgstr "Transmisión en vivo solo con audio\n\nEl video de las transmisiones en vivo está desactivado.\nPresiona Ctrl+Alt+V, o abre Preferencias > Reproducción, para ver la imagen."
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+Alt+O — Abrir mídia, playlist ou pasta\nCtrl+O — Abrir arquivos de mídia ou uma playlist local\nCtrl+Shift+O — Abrir pasta no navegador\nCtrl+C — Copiar a seleção; em pastas, permite colar os arquivos no Explorador\nCtrl+Shift+C — Copiar o caminho da seleção em pastas ou da mídia atual nas demais abas\nCtrl+V — Colar e adicionar a mídia ou link na playlist atual quando possível\nCtrl+Shift+V — Colar e abrir em uma nova playlist\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter a mídia aberta (áudio ou vídeo); mais opções em Arquivo > Converter\nCtrl+T — Nova playlist\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+B — Baixar a mídia atual do YouTube (áudio ou vídeo); seleção e playlist inteira no menu de contexto da lista\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nNavegação\nTab — Alternar entre a lista de itens e o player\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do YouTube Music em uma aba, quando a integração estiver ativada\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar ou abrir o item selecionado no navegador\nDelete — Remover item da playlist\nBackspace — Voltar de pasta no navegador\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+Alt+O — Abrir medio, playlist o carpeta\nCtrl+O — Abrir archivos de medios o una playlist local\nCtrl+Shift+O — Abrir carpeta en el navegador\nCtrl+C — Copiar la selección; en carpetas, permite pegar los archivos en el Explorador\nCtrl+Shift+C — Copiar la ruta de la selección en carpetas o del medio actual en las demás pestañas\nCtrl+V — Pegar y agregar el medio o enlace a la playlist actual cuando sea posible\nCtrl+Shift+V — Pegar y abrir en una nueva playlist\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir el medio abierto (audio o vídeo); más opciones en Archivo > Convertir\nCtrl+T — Nueva playlist\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nHome / End — Ir al inicio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Aumentar o reducir la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono (pitch), en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Seleccionar el dispositivo de audio\nCtrl+PageUp / Ctrl+PageDown — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Home / End — Ir al primer o último elemento de la playlist\nCtrl+L — Dar me gusta al medio actual en YouTube Music\nCtrl+Alt+L — Alternar el panel de letras\nCtrl+Alt+V — Alternar el video de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como no me gusta en YouTube Music\nCtrl+Shift+A — Agregar el medio actual a una playlist de YouTube Music\nCtrl+Shift+F — Agregar el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+B — Descargar el medio actual de YouTube (audio o vídeo); selección y playlist completa en el menú contextual de la lista\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir el panel de YouTube Music en una pestaña, cuando la integración esté activada\nCtrl+F — Localizar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Siguiente o anterior resultado de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (listas, carpetas e historial)\nCtrl+D — Marcar o desmarcar la selección como favorita\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Continuar escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir o abrir el elemento seleccionado en el navegador\nDelete — Quitar el elemento de la playlist\nBackspace — Volver a la carpeta anterior en el navegador\nEscribe letras o números — Ir rápidamente a los elementos que empiecen así\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
-
 msgid "&Baixar"
 msgstr "&Descargar"
-
-msgid "&Baixar mídia atual...\tCtrl+Shift+B"
-msgstr "&Descargar medio actual...\tCtrl+Shift+B"
 
 msgid "A instalação automática do FFmpeg só está disponível no Windows."
 msgstr "La instalación automática de FFmpeg solo está disponible en Windows."
@@ -5067,9 +4293,6 @@ msgstr "Se canceló la instalación de FFmpeg."
 
 msgid "A qualidade {requested}p não estava disponível; o vídeo foi baixado em {actual}p."
 msgstr "La calidad {requested}p no estaba disponible; el vídeo se descargó en {actual}p."
-
-msgid "Altura máxima do vídeo. Se a qualidade escolhida não existir, o vídeo é baixado na melhor qualidade disponível."
-msgstr "Altura máxima del vídeo. Si la calidad elegida no existe, el vídeo se descarga en la mejor calidad disponible."
 
 msgid "Baixando..."
 msgstr "Descargando..."
@@ -5082,9 +4305,6 @@ msgstr "Descargar"
 
 msgid "Baixar mídia"
 msgstr "Descargar medio"
-
-msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg, que ainda não foi encontrado. O KeyTune oferece instalá-lo na primeira vez que precisar."
-msgstr "Convertir el audio y descargar vídeo en alta resolución requieren FFmpeg, que aún no se ha encontrado. KeyTune ofrece instalarlo la primera vez que haga falta."
 
 msgid "Deseja cancelar o download?"
 msgstr "¿Quieres cancelar la descarga?"
@@ -5110,12 +4330,6 @@ msgstr "Descarga en curso: {percent}%."
 msgid "Escolha a pasta de download"
 msgstr "Elige la carpeta de descarga"
 
-msgid "Escolha como baixar a mídia que está tocando (Ctrl+Shift+B). O download usa o yt-dlp e vale para mídias do YouTube e do YouTube Music."
-msgstr "Elige cómo descargar el medio que se está reproduciendo (Ctrl+Shift+B). La descarga usa yt-dlp y sirve para medios de YouTube y YouTube Music."
-
-msgid "Escolha se o download será apenas o áudio ou o vídeo completo."
-msgstr "Elige si se descargará solo el audio o el vídeo completo."
-
 msgid "Escolha uma pasta de destino para o download."
 msgstr "Elige una carpeta de destino para la descarga."
 
@@ -5139,9 +4353,6 @@ msgstr "Iniciando la descarga."
 
 msgid "Instalando o FFmpeg..."
 msgstr "Instalando FFmpeg..."
-
-msgid "Ligado, cada download abre um diálogo para confirmar formato e qualidade. Desligado, o download começa direto com as opções desta guia."
-msgstr "Activada, cada descarga abre un diálogo para confirmar el formato y la calidad. Desactivada, la descarga empieza directamente con las opciones de esta pestaña."
 
 msgid "MP3 {bitrate} kbps"
 msgstr "MP3 {bitrate} kbps"
@@ -5173,9 +4384,6 @@ msgstr "No se puede descargar una transmisión en directo."
 msgid "O FFmpeg baixado não passou na validação de integridade."
 msgstr "El FFmpeg descargado no superó la validación de integridad."
 
-msgid "O FFmpeg já está disponível para converter áudio e unir vídeo e áudio."
-msgstr "FFmpeg ya está disponible para convertir audio y unir vídeo y audio."
-
 msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
 msgstr "No se encontró FFmpeg. La descarga continuará en la calidad original, sin conversión."
 
@@ -5196,9 +4404,6 @@ msgstr "Original"
 
 msgid "Original (sem conversão)"
 msgstr "Original (sin conversión)"
-
-msgid "Original mantém o áudio exatamente como o YouTube o entrega, sem converter. MP3 e FLAC convertem o áudio e exigem o FFmpeg. Se a qualidade escolhida não existir, o áudio é baixado na qualidade original."
-msgstr "Original mantiene el audio exactamente como lo entrega YouTube, sin convertir. MP3 y FLAC convierten el audio y requieren FFmpeg. Si la calidad elegida no existe, el audio se descarga en la calidad original."
 
 msgid "Para {what} o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nSim: instalar o FFmpeg e baixar.\nNão: baixar agora na qualidade original, sem conversão.\nCancelar: não baixar."
 msgstr "Para {what}, KeyTune necesita FFmpeg, que no se encontró. Se descargará de las versiones oficiales (unos {size} MB) y se guardará en la carpeta de recursos de KeyTune.\n\nSí: instalar FFmpeg y descargar.\nNo: descargar ahora en la calidad original, sin conversión.\nCancelar: no descargar."
@@ -5230,12 +4435,6 @@ msgstr "Mostrar siempre el diálogo al des&cargar"
 msgid "Sempre mostrar este diálogo ao baixar"
 msgstr "Mostrar siempre este diálogo al descargar"
 
-msgid "Sempre mostrar o diálogo ao baixar"
-msgstr "Mostrar siempre el diálogo al descargar"
-
-msgid "Só vale quando o áudio é convertido para MP3 ou FLAC. Original mantém a taxa do arquivo baixado."
-msgstr "Solo se aplica cuando el audio se convierte a MP3 o FLAC. Original mantiene la frecuencia del archivo descargado."
-
 msgid "Taxa de amostragem do áudio"
 msgstr "Frecuencia de muestreo del audio"
 
@@ -5259,9 +4458,6 @@ msgstr "{rate} Hz"
 
 msgid "Áudio"
 msgstr "Audio"
-
-msgid "&Converter"
-msgstr "&Convertir"
 
 msgid "A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B)."
 msgstr "La conversión funciona con archivos del equipo. Para medios de YouTube, usa Descargar (Ctrl+Shift+B)."
@@ -5293,9 +4489,6 @@ msgstr "Convirtiendo..."
 msgid "Convertendo... {percent}%"
 msgstr "Convirtiendo... {percent}%"
 
-msgid "Converter &mídia atual...\tCtrl+Shift+K"
-msgstr "Convertir &medio actual...\tCtrl+Shift+K"
-
 msgid "Converter mídia"
 msgstr "Convertir medio"
 
@@ -5310,12 +4503,6 @@ msgstr "Elige una carpeta de destino para el archivo convertido."
 
 msgid "Escolher pasta de destino"
 msgstr "Elegir carpeta de destino"
-
-msgid "Esta opção converte vídeo, mas a mídia atual é um áudio. Use as opções de áudio."
-msgstr "Esta opción convierte vídeo, pero el medio actual es un audio. Usa las opciones de audio."
-
-msgid "Esta opção converte áudio, mas a mídia atual é um vídeo. Use as opções de vídeo."
-msgstr "Esta opción convierte audio, pero el medio actual es un vídeo. Usa las opciones de vídeo."
 
 msgid "Este arquivo não tem faixa de vídeo para converter."
 msgstr "Este archivo no tiene pista de vídeo para convertir."
@@ -5410,17 +4597,8 @@ msgstr "Tamaño del fotograma del vídeo generado. Resoluciones mayores generan 
 msgid "Taxa de bits dos formatos com perdas (MP3, M4A, OGG e Opus). FLAC e WAV não usam esta opção."
 msgstr "Tasa de bits de los formatos con pérdidas (MP3, M4A, OGG y Opus). FLAC y WAV no usan esta opción."
 
-msgid "Usar a &capa do álbum como imagem, se houver"
-msgstr "Usar la &carátula del álbum como imagen, si existe"
-
 msgid "Usar a capa do álbum como imagem"
 msgstr "Usar la carátula del álbum como imagen"
-
-msgid "Vídeo para &áudio..."
-msgstr "Vídeo a &audio..."
-
-msgid "Vídeo para outro f&ormato de vídeo..."
-msgstr "Vídeo a otro f&ormato de vídeo..."
 
 msgid "Vídeo para outro formato de vídeo"
 msgstr "Vídeo a otro formato de vídeo"
@@ -5436,12 +4614,6 @@ msgstr "WebM"
 
 msgid "{bitrate} kbps"
 msgstr "{bitrate} kbps"
-
-msgid "Áudio para &vídeo..."
-msgstr "Audio a &vídeo..."
-
-msgid "Áudio para outro &formato de áudio..."
-msgstr "Audio a otro &formato de audio..."
 
 msgid "Áudio para outro formato de áudio"
 msgstr "Audio a otro formato de audio"
@@ -5470,15 +4642,6 @@ msgstr "Descargando {index} de {total}..."
 msgid "Baixando {index} de {total}... {percent}%"
 msgstr "Descargando {index} de {total}... {percent}%"
 
-msgid "Baixar playlist inteira do YouTube..."
-msgstr "Descargar la playlist completa de YouTube..."
-
-msgid "Baixar seleção do YouTube..."
-msgstr "Descargar la selección de YouTube..."
-
-msgid "Baixar seleção..."
-msgstr "Descargar selección..."
-
 msgid "Baixar {count} itens do YouTube para a pasta:"
 msgstr "Descargar {count} elementos de YouTube en la carpeta:"
 
@@ -5499,9 +4662,6 @@ msgstr "Convirtiendo {index} de {total}..."
 
 msgid "Convertendo {index} de {total}... {percent}%"
 msgstr "Convirtiendo {index} de {total}... {percent}%"
-
-msgid "Converter seleção..."
-msgstr "Convertir selección..."
 
 msgid "Download cancelado. {done} de {total} itens já foram baixados."
 msgstr "Descarga cancelada. {done} de {total} elementos ya se habían descargado."
@@ -5557,23 +4717,11 @@ msgstr "Se omitirán {count} elementos que no son de YouTube."
 msgid "{mode} (arquivos: {count})"
 msgstr "{mode} (archivos: {count})"
 
-msgid "Baixar &seleção da lista..."
-msgstr "Descargar la &selección de la lista..."
-
-msgid "Baixar playlist &inteira..."
-msgstr "Descargar la playlist &completa..."
-
-msgid "Converter arquivos &selecionados na lista..."
-msgstr "Convertir los archivos &seleccionados de la lista..."
-
 msgid "Progresso da tarefa"
 msgstr "Progreso de la tarea"
 
 msgid "&Copiar lista"
 msgstr "&Copiar lista"
-
-msgid "Arquivo, pasta, link de mídia ou lista .m3u/.m3u8."
-msgstr "Archivo, carpeta, enlace de medios o lista .m3u/.m3u8."
 
 msgid "Baixar {count} itens"
 msgstr "Descargar {count} elementos"
@@ -5613,3 +4761,1445 @@ msgstr "{mode}: {count} archivos"
 
 msgid "{mode}: “{name}”"
 msgstr "{mode}: “{name}”"
+
+msgid "Os itens selecionados já estão na fila de reprodução."
+msgstr "Los elementos seleccionados ya están en la cola de reproducción."
+
+msgid "Copiar seleção\tCtrl+C"
+msgstr "Copiar selección\tCtrl+C"
+
+msgid "Nenhuma mídia compatível para adicionar."
+msgstr "No hay medios compatibles para añadir."
+
+msgid "Nenhuma mídia compatível foi encontrada no conteúdo colado."
+msgstr "No se encontraron medios compatibles en el contenido pegado."
+
+msgid "Explorador de pastas"
+msgstr "Explorador de carpetas"
+
+msgid "Pasta atual do explorador"
+msgstr "Carpeta actual del explorador"
+
+msgid "Lendo as pastas selecionadas..."
+msgstr "Leyendo las carpetas seleccionadas..."
+
+msgid "&Tocar agora"
+msgstr "&Reproducir ahora"
+
+msgid "Adicionar à &fila de reprodução\tCtrl+Shift+F"
+msgstr "Añadir a la &cola de reproducción\tCtrl+Shift+F"
+
+msgid "Abrir em &nova playlist"
+msgstr "Abrir en una playlist &nueva"
+
+msgid "Adicionar a &pasta atual inteira à playlist"
+msgstr "Añadir toda la car&peta actual a la playlist"
+
+msgid "&Indexar pasta na biblioteca"
+msgstr "&Indexar carpeta en la biblioteca"
+
+msgid "&Copiar\tCtrl+C"
+msgstr "&Copiar\tCtrl+C"
+
+msgid "Copiar ca&minho\tCtrl+Shift+C"
+msgstr "Copiar &ruta\tCtrl+Shift+C"
+
+msgid "At&ualizar\tF5"
+msgstr "Act&ualizar\tF5"
+
+msgid "Explorador"
+msgstr "Explorador"
+
+msgid "Explorador de pastas fechado."
+msgstr "Explorador de carpetas cerrado."
+
+msgid "A pasta não está mais disponível."
+msgstr "La carpeta ya no está disponible."
+
+msgid "Nenhum item selecionado no explorador."
+msgstr "Ningún elemento seleccionado en el explorador."
+
+msgid "A lista de unidades não pode ser classificada."
+msgstr "La lista de unidades no se puede ordenar."
+
+msgid "Mostrar no &Explorador de Arquivos do Windows"
+msgstr "Mostrar en el &Explorador de archivos de Windows"
+
+msgid "Nenhuma mídia compatível foi encontrada na seleção."
+msgstr "No se encontraron medios compatibles en la selección."
+
+msgid "Não foi possível abrir o Explorador de Arquivos do Windows."
+msgstr "No se pudo abrir el Explorador de archivos de Windows."
+
+msgid "Localiza itens da pasta aberta no explorador."
+msgstr "Busca elementos de la carpeta abierta en el explorador."
+
+msgid "Os itens já estavam em {title}."
+msgstr "Los elementos ya estaban en {title}."
+
+msgid "Este computador"
+msgstr "Este equipo"
+
+msgid "Músicas"
+msgstr "Música"
+
+msgid "Vídeos"
+msgstr "Vídeos"
+
+msgid "Downloads"
+msgstr "Descargas"
+
+msgid "Área de trabalho"
+msgstr "Escritorio"
+
+msgid "Documentos"
+msgstr "Documentos"
+
+msgid "Limpar a fila de reprodução"
+msgstr "Vaciar la cola de reproducción"
+
+msgid "Deseja remover todos os {count} itens da fila de reprodução?"
+msgstr "¿Deseas quitar los {count} elementos de la cola de reproducción?"
+
+msgid "{count} item adicionado a {title}, sem tocar."
+msgid_plural "{count} itens adicionados a {title}, sem tocar."
+msgstr[0] "{count} elemento añadido a {title}, sin reproducir."
+msgstr[1] "{count} elementos añadidos a {title}, sin reproducir."
+
+msgid "Lendo as pastas coladas..."
+msgstr "Leyendo las carpetas pegadas..."
+
+msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
+msgstr "No se puede añadir una unidad entera de una vez. Entra en ella y elige una carpeta."
+
+msgid "Repetindo faixa atual."
+msgstr "Repitiendo la pista actual."
+
+msgid "Conteúdo relacionado."
+msgstr "Contenido relacionado."
+
+msgid "Sessão restaurada com {count} abas. {title}."
+msgstr "Sesión restaurada con {count} pestañas. {title}."
+
+msgid "Colar\tCtrl+V"
+msgstr "Pegar\tCtrl+V"
+
+msgid "Colar sem tocar\tCtrl+Shift+V"
+msgstr "Pegar sin reproducir\tCtrl+Shift+V"
+
+msgid "Escolha os arquivos para abrir sem tocar"
+msgstr "Elige los archivos para abrir sin reproducir"
+
+msgid "Enter abre ou toca. Shift+Enter adiciona sem tocar. Shift+F10 abre as ações."
+msgstr "Enter abre o reproduce. Shift+Enter añade sin reproducir. Shift+F10 abre las acciones."
+
+msgid "&Adicionar à playlist sem tocar\tShift+Enter"
+msgstr "&Añadir a la playlist sin reproducir\tShift+Enter"
+
+msgid "&Fechar explorador\tCtrl+E"
+msgstr "&Cerrar explorador\tCtrl+E"
+
+msgid "&Abrir...\tCtrl+O"
+msgstr "&Abrir...\tCtrl+O"
+
+msgid "Abrir sem &tocar...\tCtrl+Shift+O"
+msgstr "Abrir &sin reproducir...\tCtrl+Shift+O"
+
+msgid "&Explorador de Pastas\tCtrl+E"
+msgstr "&Explorador de carpetas\tCtrl+E"
+
+msgid "Co&lar (Ctrl+V)"
+msgstr "&Pegar (Ctrl+V)"
+
+msgid "Colar se&m tocar (Ctrl+Shift+V)"
+msgstr "Pegar sin reprod&ucir (Ctrl+Shift+V)"
+
+msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
+msgstr "Atajos principales: Ctrl+O abrir · Ctrl+V pegar · Ctrl+E explorador de carpetas · Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Tab elementos/reproductor · Ctrl+F localizar elemento (F3 siguiente) · Ctrl+G buscar en la biblioteca · Ctrl+D favorito · Ctrl+Shift+H historial · Ctrl+Shift+D temporizador · Ctrl+Shift+Y panel de KeyTube (opcional) · F1 ayuda"
+
+msgid "Sem mídia carregada\n\nCtrl+O abre arquivos ou uma playlist\nCtrl+V cola links, arquivos ou pastas copiados\nCtrl+E abre o explorador de pastas\nEspaço reproduz ou pausa\nTab alterna entre itens e player\nCtrl+Shift+Y abre a central do KeyTube quando a integração opcional estiver ativada\nF1 mostra a ajuda rápida de atalhos"
+msgstr "Sin medio cargado\n\nCtrl+O abre archivos o una playlist\nCtrl+V pega enlaces, archivos o carpetas copiados\nCtrl+E abre el explorador de carpetas\nEspacio reproduce o pausa\nTab alterna entre elementos y reproductor\nCtrl+Shift+Y abre el panel de KeyTube cuando la integración opcional está activada\nF1 muestra la ayuda rápida de atajos"
+
+msgid "Enter entra na pasta ou toca o arquivo. Shift+Enter adiciona sem tocar. Ctrl+Shift+F põe na fila. Backspace volta. Shift+F10 abre ações. Tab vai para a playlist."
+msgstr "Enter entra en la carpeta o reproduce el archivo. Shift+Enter añade sin reproducir. Ctrl+Shift+F pone en la cola. Retroceso vuelve. Shift+F10 abre acciones. Tab va a la playlist."
+
+msgid "&Usar a capa do álbum como imagem, se houver"
+msgstr "&Usar la portada del álbum como imagen, si la hay"
+
+msgid "Baixar seleção...\tCtrl+Shift+B"
+msgstr "Descargar selección...\tCtrl+Shift+B"
+
+msgid "Baixar playlist inteira..."
+msgstr "Descargar playlist completa..."
+
+msgid "Converter seleção...\tCtrl+Shift+K"
+msgstr "Convertir selección...\tCtrl+Shift+K"
+
+msgid "Os arquivos selecionados não foram encontrados."
+msgstr "No se encontraron los archivos seleccionados."
+
+msgid "Con&verter seleção...\tCtrl+Shift+K"
+msgstr "Con&vertir selección...\tCtrl+Shift+K"
+
+msgid "Converter &mídia atual... (Ctrl+Shift+K no player)"
+msgstr "Convertir &medio actual... (Ctrl+Shift+K en el reproductor)"
+
+msgid "Converter &seleção... (Ctrl+Shift+K na lista)"
+msgstr "Convertir &selección... (Ctrl+Shift+K en la lista)"
+
+msgid "Baixar &mídia atual... (Ctrl+Shift+B no player)"
+msgstr "Descargar &medio actual... (Ctrl+Shift+B en el reproductor)"
+
+msgid "Baixar &seleção... (Ctrl+Shift+B na lista)"
+msgstr "Descargar &selección... (Ctrl+Shift+B en la lista)"
+
+msgid "Baixar &playlist inteira..."
+msgstr "Descargar &playlist completa..."
+
+msgid "&Baixar do YouTube"
+msgstr "&Descargar de YouTube"
+
+msgid "Desça até o fim da lista para carregar mais."
+msgstr "Baja hasta el final de la lista para cargar más."
+
+msgid "Não foi possível carregar esta lista agora."
+msgstr "No se pudo cargar esta lista ahora."
+
+msgid "Este resultado não tem conteúdo para abrir."
+msgstr "Este resultado no tiene contenido para abrir."
+
+msgid "Não foi possível abrir este resultado agora."
+msgstr "No se pudo abrir este resultado ahora."
+
+msgid "Não há lista anterior para voltar."
+msgstr "No hay una lista anterior a la que volver."
+
+msgid "Abrindo {title}."
+msgstr "Abriendo {title}."
+
+msgid "Canal {name}"
+msgstr "Canal {name}"
+
+msgid "Artista {name}"
+msgstr "Artista {name}"
+
+msgid "Álbum {name}"
+msgstr "Álbum {name}"
+
+msgid "Playlist {name}"
+msgstr "Playlist {name}"
+
+msgid "Não foi possível carregar mais resultados agora."
+msgstr "No se pudieron cargar más resultados ahora."
+
+msgid "Ver conteúdo (Seta para a direita)"
+msgstr "Ver contenido (Flecha derecha)"
+
+msgid "Voltar à lista anterior (Backspace)"
+msgstr "Volver a la lista anterior (Retroceso)"
+
+msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
+msgstr "yt-dlp no pudo listar el contenido de YouTube."
+
+msgid "Playlist do YouTube"
+msgstr "Playlist de YouTube"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Álbuns"
+msgstr "Álbumes"
+
+msgid "Singles e EPs"
+msgstr "Sencillos y EP"
+
+msgid "Artistas parecidos"
+msgstr "Artistas similares"
+
+msgid "YouTube Music — álbuns"
+msgstr "YouTube Music — álbumes"
+
+msgid "YouTube Music — artistas"
+msgstr "YouTube Music — artistas"
+
+msgid "YouTube — canais"
+msgstr "YouTube — canales"
+
+msgid "YouTube — playlists"
+msgstr "YouTube — playlists"
+
+msgid "álbum"
+msgstr "álbum"
+
+msgid "artista"
+msgstr "artista"
+
+msgid "canal"
+msgstr "canal"
+
+msgid " inscritos"
+msgstr " suscriptores"
+
+msgid "ao vivo"
+msgstr "en vivo"
+
+msgid "{count} inscritos"
+msgstr "{count} suscriptores"
+
+msgid "Carregando mais itens."
+msgstr "Cargando más elementos."
+
+msgid "{title}: nenhum item."
+msgstr "{title}: ningún elemento."
+
+msgid "Início"
+msgstr "Inicio"
+
+msgid "Início: escolha uma lista, faça uma busca ou cole um link."
+msgstr "Inicio: elige una lista, haz una búsqueda o pega un enlace."
+
+msgid "Fim da lista: não há mais itens."
+msgstr "Fin de la lista: no hay más elementos."
+
+msgid "Tocar (Enter)"
+msgstr "Reproducir (Enter)"
+
+msgid "Adicionar sem tocar (Shift+Enter)"
+msgstr "Añadir sin reproducir (Shift+Enter)"
+
+msgid "Salvar no YouTube Music"
+msgstr "Guardar en YouTube Music"
+
+msgid "Selecione ao menos um item da lista para abrir o menu de ações."
+msgstr "Selecciona al menos un elemento de la lista para abrir el menú de acciones."
+
+msgid "Excluir playlist do YouTube Music..."
+msgstr "Eliminar playlist de YouTube Music..."
+
+msgid "Buscar no YouTube Music e no YouTube, ou colar um link"
+msgstr "Buscar en YouTube Music y en YouTube, o pegar un enlace"
+
+msgid "Digite o que procura e pressione Enter. Um link de playlist, mix ou vídeo colado aqui é aberto direto."
+msgstr "Escribe lo que buscas y pulsa Enter. Un enlace de playlist, mix o video pegado aquí se abre directamente."
+
+msgid "Onde buscar"
+msgstr "Dónde buscar"
+
+msgid "Lista atual do YouTube Music"
+msgstr "Lista actual de YouTube Music"
+
+msgid "Ações do item selecionado"
+msgstr "Acciones del elemento seleccionado"
+
+msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, ver conteúdo, baixar, salvar e outras."
+msgstr "Abre el menú con las acciones del elemento seleccionado: reproducir, añadir, ver contenido, descargar, guardar y otras."
+
+msgid "Buscar ou colar link:"
+msgstr "Buscar o pegar un enlace:"
+
+msgid "Em:"
+msgstr "En:"
+
+msgid "&Ações..."
+msgstr "&Acciones..."
+
+msgid "Enter entra no item ou toca; Shift+Enter adiciona sem tocar. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
+msgstr "Enter entra en el elemento o lo reproduce; Shift+Enter añade sin reproducir. Flecha derecha muestra lo que hay dentro y Retroceso vuelve. Bajar más allá del último elemento carga más. Shift+F10 abre las acciones."
+
+msgid "Em alta — {group}"
+msgstr "Tendencias — {group}"
+
+msgid "Em alta em {country}"
+msgstr "Tendencias en {country}"
+
+msgid "Moods e gêneros — {category}"
+msgstr "Estados de ánimo y géneros — {category}"
+
+msgid "Central do KeyTube. Navegue pela lista, faça uma busca ou cole um link."
+msgstr "Central de KeyTube. Navega por la lista, haz una búsqueda o pega un enlace."
+
+msgid "Suas playlists e mixes"
+msgstr "Tus playlists y mixes"
+
+msgid "Curtidas"
+msgstr "Me gusta"
+
+msgid "Em alta"
+msgstr "Tendencias"
+
+msgid "Moods e gêneros"
+msgstr "Estados de ánimo y géneros"
+
+msgid "{title}: {count} item."
+msgid_plural "{title}: {count} itens."
+msgstr[0] "{title}: {count} elemento."
+msgstr[1] "{title}: {count} elementos."
+
+msgid "Mais {count} item. Total: {total}."
+msgid_plural "Mais {count} itens. Total: {total}."
+msgstr[0] "{count} elemento más. Total: {total}."
+msgstr[1] "{count} elementos más. Total: {total}."
+
+msgid "Carregando as faixas de {title} para baixar."
+msgstr "Cargando las pistas de {title} para descargar."
+
+msgid "Carregando as faixas das listas selecionadas para baixar."
+msgstr "Cargando las pistas de las listas seleccionadas para descargar."
+
+msgid "Não foi possível carregar as faixas para baixar."
+msgstr "No se pudieron cargar las pistas para descargar."
+
+msgid "Cada playlist ou álbum fica em uma subpasta com o nome dele."
+msgstr "Cada playlist o álbum queda en una subcarpeta con su nombre."
+
+msgid "A seleção atual não tem faixas que possam ser baixadas."
+msgstr "La selección actual no tiene pistas que se puedan descargar."
+
+msgid "Artistas"
+msgstr "Artistas"
+
+msgid "Canais"
+msgstr "Canales"
+
+msgid "Pesquisando {query}."
+msgstr "Buscando {query}."
+
+msgid "Busca por {query}"
+msgstr "Búsqueda de {query}"
+
+msgid "Tipo:"
+msgstr "Tipo:"
+
+msgid "O mesmo do KeyTune"
+msgstr "El mismo de KeyTune"
+
+msgid "Automática"
+msgstr "Automática"
+
+msgid "fixado"
+msgstr "fijado"
+
+msgid "{count} curtidas"
+msgstr "{count} me gusta"
+
+msgid "{count} respostas"
+msgstr "{count} respuestas"
+
+msgid "Autor desconhecido"
+msgstr "Autor desconocido"
+
+msgid "As respostas dos comentários precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Las respuestas de los comentarios necesitan YouTube.js, activado en Preferencias > Recursos adicionales."
+
+msgid "O yt-dlp não conseguiu trazer os comentários."
+msgstr "yt-dlp no pudo obtener los comentarios."
+
+msgid "Comentários de {title}"
+msgstr "Comentarios de {title}"
+
+msgid "Comentários"
+msgstr "Comentarios"
+
+msgid "Respostas a {author}"
+msgstr "Respuestas a {author}"
+
+msgid "Este item não tem comentários para mostrar."
+msgstr "Este elemento no tiene comentarios para mostrar."
+
+msgid "A mídia atual não é do YouTube: não há comentários para mostrar."
+msgstr "El contenido actual no es de YouTube: no hay comentarios para mostrar."
+
+msgid "Não foi possível carregar os comentários agora."
+msgstr "No se pudieron cargar los comentarios ahora."
+
+msgid "Comentário de {author}"
+msgstr "Comentario de {author}"
+
+msgid "Comentário"
+msgstr "Comentario"
+
+msgid "Ler o comentário inteiro (Enter)"
+msgstr "Leer el comentario completo (Enter)"
+
+msgid "Ver comentários"
+msgstr "Ver comentarios"
+
+msgid "Ver &comentários da mídia atual\tCtrl+Shift+M"
+msgstr "Ver &comentarios del contenido actual\tCtrl+Shift+M"
+
+msgid "O yt-dlp não conseguiu listar as faixas de áudio."
+msgstr "yt-dlp no pudo listar las pistas de audio."
+
+msgid "{name} (audiodescrição)"
+msgstr "{name} (audiodescripción)"
+
+msgid "A que o YouTube entregar"
+msgstr "La que YouTube entregue"
+
+msgid "Original do vídeo"
+msgstr "Original del video"
+
+msgid "&Idioma do áudio da mídia atual..."
+msgstr "&Idioma del audio del contenido actual..."
+
+msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
+msgstr "El contenido actual no es de YouTube: no hay pistas de audio para elegir."
+
+msgid "Procurando as faixas de áudio desta mídia."
+msgstr "Buscando las pistas de audio de este contenido."
+
+msgid "Não foi possível listar as faixas de áudio agora."
+msgstr "No se pudieron listar las pistas de audio ahora."
+
+msgid "Esta mídia tem só uma faixa de áudio."
+msgstr "Este contenido tiene una sola pista de audio."
+
+msgid "Faixa de áudio desta mídia:"
+msgstr "Pista de audio de este contenido:"
+
+msgid "Idioma do áudio"
+msgstr "Idioma del audio"
+
+msgid "Áudio em {name}."
+msgstr "Audio en {name}."
+
+msgid "Vídeos das inscrições"
+msgstr "Videos de las suscripciones"
+
+msgid "Canais inscritos"
+msgstr "Canales suscritos"
+
+msgid "As inscrições precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Las suscripciones necesitan YouTube.js, activado en Preferencias > Recursos adicionales."
+
+msgid "Conecte a conta do YouTube para ver as inscrições."
+msgstr "Conecta la cuenta de YouTube para ver las suscripciones."
+
+msgid "{count} visualizações"
+msgstr "{count} visualizaciones"
+
+msgid "Mídia atual curtida no YouTube."
+msgstr "Medio actual marcado con me gusta en YouTube."
+
+msgid "Mídia atual marcada como não gostei no YouTube."
+msgstr "Medio actual marcado como no me gusta en YouTube."
+
+msgid "Avaliação da mídia atual removida no YouTube."
+msgstr "Valoración del medio actual eliminada en YouTube."
+
+msgid "A mídia atual já está curtida no YouTube."
+msgstr "El medio actual ya está marcado con me gusta en YouTube."
+
+msgid "A mídia atual já está marcada como não gostei no YouTube."
+msgstr "El medio actual ya está marcado como no me gusta en YouTube."
+
+msgid "Ir para o canal {name}"
+msgstr "Ir al canal {name}"
+
+msgid "Ir para o artista {name}"
+msgstr "Ir al artista {name}"
+
+msgid "Os itens selecionados já estão marcados como não gostei no YouTube."
+msgstr "Los elementos seleccionados ya están marcados como no me gusta en YouTube."
+
+msgid "Os itens selecionados já estão curtidos no YouTube."
+msgstr "Los elementos seleccionados ya están marcados con me gusta en YouTube."
+
+msgid "Item marcado como não gostei no YouTube."
+msgid_plural "{count} itens marcados como não gostei no YouTube."
+msgstr[0] "Elemento marcado como no me gusta en YouTube."
+msgstr[1] "{count} elementos marcados como no me gusta en YouTube."
+
+msgid "Item curtido no YouTube."
+msgid_plural "{count} itens curtidos no YouTube."
+msgstr[0] "Elemento marcado con me gusta en YouTube."
+msgstr[1] "{count} elementos marcados con me gusta en YouTube."
+
+msgid "O yt-dlp não conseguiu trazer os detalhes."
+msgstr "yt-dlp no pudo obtener los detalles."
+
+msgid "Canal: {name}"
+msgstr "Canal: {name}"
+
+msgid "Transmissão ao vivo"
+msgstr "Transmisión en vivo"
+
+msgid "Duração: {duration}"
+msgstr "Duración: {duration}"
+
+msgid "Publicado: {date}"
+msgstr "Publicado: {date}"
+
+msgid "Descrição:"
+msgstr "Descripción:"
+
+msgid "Sem descrição."
+msgstr "Sin descripción."
+
+msgid "Este item não tem detalhes para mostrar."
+msgstr "Este elemento no tiene detalles para mostrar."
+
+msgid "A mídia atual não é do YouTube: não há detalhes para mostrar."
+msgstr "El medio actual no es de YouTube: no hay detalles para mostrar."
+
+msgid "Detalhes de {title}"
+msgstr "Detalles de {title}"
+
+msgid "Detalhes"
+msgstr "Detalles"
+
+msgid "Não foi possível carregar os detalhes agora."
+msgstr "No se pudieron cargar los detalles ahora."
+
+msgid "Carregando os detalhes."
+msgstr "Cargando los detalles."
+
+msgid "Ver detalhes"
+msgstr "Ver detalles"
+
+msgid "Ver &detalhes da mídia atual\tCtrl+Shift+I"
+msgstr "Ver &detalles del medio actual\tCtrl+Shift+I"
+
+msgid "Fechou {title}. Nova playlist vazia."
+msgstr "Cerró {title}. Nueva playlist vacía."
+
+msgid "Fechou {title}."
+msgstr "Cerró {title}."
+
+msgid "Ir para o &canal"
+msgstr "Ir al &canal"
+
+msgid "{count} reproduções"
+msgstr "{count} reproducciones"
+
+msgid ","
+msgstr ","
+
+msgid "{number} mil"
+msgstr "{number} mil"
+
+msgid "{number} mi de"
+msgstr "{number} M de"
+
+msgid "{number} bi de"
+msgstr "{number} mil M de"
+
+msgid "Ir para o &artista"
+msgstr "Ir al &artista"
+
+msgid "&Ativar"
+msgstr "&Activar"
+
+msgid "&Ativar ou desativar"
+msgstr "&Activar o desactivar"
+
+msgid "&Instalar e ativar"
+msgstr "&Instalar y activar"
+
+msgid "&Instalar pacote..."
+msgstr "&Instalar paquete..."
+
+msgid "&Rádios online por aba\tCtrl+Shift+N"
+msgstr "&Radios en línea en una pestaña\tCtrl+Shift+N"
+
+msgid "A alteração foi aplicada."
+msgstr "El cambio se aplicó."
+
+msgid "A análise avançada requer a biblioteca librosa. Detalhes: {detail}"
+msgstr "El análisis avanzado requiere la biblioteca librosa. Detalles: {detail}"
+
+msgid "A análise do AutoDJ foi cancelada porque o resultado não é mais necessário."
+msgstr "El análisis de AutoDJ se canceló porque ya no se necesita el resultado."
+
+msgid "A faixa online excede o limite de análise de 120 MB."
+msgstr "La pista en línea supera el límite de análisis de 120 MB."
+
+msgid "A rádio automática do YouTube Music. A tecla A alterna."
+msgstr "La radio automática de YouTube Music. La tecla A la activa o desactiva."
+
+msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, favoritar, ver detalhes e outras."
+msgstr "Abre el menú con las acciones del elemento seleccionado: reproducir, añadir, marcar como favorito, ver detalles y más."
+
+msgid "Abre os diálogos de arquivo na última pasta usada."
+msgstr "Abre los diálogos de archivo en la última carpeta usada."
+
+msgid "Abrindo o site de {name} no navegador."
+msgstr "Abriendo el sitio web de {name} en el navegador."
+
+msgid "Abrir &marketplace"
+msgstr "Abrir &marketplace"
+
+msgid "Abrir o &site"
+msgstr "Abrir el &sitio web"
+
+msgid "Abrir o site da rádio no navegador"
+msgstr "Abrir el sitio web de la radio en el navegador"
+
+msgid "Abrir pasta de l&ogs"
+msgstr "Abrir la carpeta de l&ogs"
+
+msgid "Acessar a internet e outros serviços de rede"
+msgstr "Acceder a internet y a otros servicios de red"
+
+msgid "Acima desse número, as mais antigas saem."
+msgstr "Al superar este número, se eliminan las más antiguas."
+
+msgid "Adicionar abas ao player"
+msgstr "Añadir pestañas al reproductor"
+
+msgid "Adicionar ações e submenus"
+msgstr "Añadir acciones y submenús"
+
+msgid "Adicionar telas ou painéis"
+msgstr "Añadir pantallas o paneles"
+
+msgid "Adicionar às favoritas (Ctrl+D)"
+msgstr "Añadir a favoritas (Ctrl+D)"
+
+msgid "Adicionar às favoritas a rádio que está tocando"
+msgstr "Añadir a favoritas la radio que se está reproduciendo"
+
+msgid "Ainda não revisado"
+msgstr "Aún sin revisar"
+
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+O — Abrir archivos en la playlist actual y reproducir (un archivo de playlist se abre como playlist)\nCtrl+Shift+O — Abrir archivos sin reproducir: van al final de la playlist actual\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (también desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar sin reproducir\nCtrl+E — Abrir el explorador de carpetas junto a la playlist; si pulsas otra vez con el foco en él, se cierra\nCtrl+T — Nueva playlist (ábrela o pega en ella para empezar otra lista)\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir: con el foco en una lista, la selección; en el reproductor, el medio actual\nCtrl+Shift+B — Descargar de YouTube: con el foco en una lista, la selección; en el reproductor, el medio actual (la playlist completa en Archivo > Descargar de YouTube)\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nInicio / Fin — Ir al principio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Subir o bajar la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono, en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Elegir el dispositivo de audio\nCtrl+RePág / Ctrl+AvPág — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Inicio / Fin — Ir al primer o al último elemento de la playlist\nCtrl+L — Marcar el medio actual como «me gusta» en YouTube Music\nCtrl+Alt+L — Mostrar u ocultar el panel de letras\nCtrl+Alt+V — Alternar el vídeo de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como «no me gusta» en YouTube Music\nCtrl+Shift+A — Añadir el medio actual a una playlist de YouTube Music\nCtrl+Shift+M — Ver los comentarios del medio actual\nCtrl+Shift+I — Ver los detalles del medio actual (descripción, canal, visualizaciones)\nCtrl+Shift+F — Añadir el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nShift+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Subir a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir la central de KeyTube en una pestaña, cuando la integración está activada\nCtrl+Shift+N — Abrir las radios en línea en una pestaña\nCtrl+F — Buscar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Resultado siguiente o anterior de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (playlists, carpetas e historial)\nCtrl+D — Marcar o desmarcar como favorito la selección\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Seguir escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nSuprimir — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápido a los elementos que empiezan por ellos\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+
+msgid "Alterar biblioteca, playlists, favoritos e avaliações"
+msgstr "Modificar la biblioteca, las playlists, los favoritos y las valoraciones"
+
+msgid "Alterar playlists e avaliações do YouTube Music"
+msgstr "Modificar las playlists y las valoraciones de YouTube Music"
+
+msgid "Altura máxima do vídeo; sem ela, vem a melhor disponível."
+msgstr "Altura máxima del vídeo; sin ella, se usa la mejor disponible."
+
+msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
+msgstr "Analizar el BPM, los tiempos, la energía y la tonalidad de las pistas"
+
+msgid "Anuncia mudanças como tempo, volume e troca de abas."
+msgstr "Anuncia cambios como el tiempo, el volumen y el cambio de pestaña."
+
+msgid "Ao atingir o limite, as mais antigas saem."
+msgstr "Al alcanzar el límite, se eliminan las más antiguas."
+
+msgid "Aplica o dispositivo de áudio selecionado."
+msgstr "Aplica el dispositivo de audio seleccionado."
+
+msgid "Aplicado na próxima vez que o KeyTune for aberto."
+msgstr "Se aplica la próxima vez que se abra KeyTune."
+
+msgid "Aplicar crossfade ao trocar de fai&xa manualmente"
+msgstr "Aplicar el crossfade al cambiar de pis&ta manualmente"
+
+msgid "Aplicar dispositivo de áudio"
+msgstr "Aplicar dispositivo de audio"
+
+msgid "Armazenar configurações próprias"
+msgstr "Guardar sus propios ajustes"
+
+msgid "As mídias da pasta entram no índice em segundo plano."
+msgstr "Los medios de la carpeta se añaden al índice en segundo plano."
+
+msgid "As rádios selecionadas já estavam em {title}."
+msgstr "Las radios seleccionadas ya estaban en {title}."
+
+msgid "Ativar a integração com &YouTube e YouTube Music"
+msgstr "Activar la integración con &YouTube y YouTube Music"
+
+msgid "Atualizar os componentes a&utomaticamente"
+msgstr "Actualizar los componentes a&utomáticamente"
+
+msgid "Atualização disponível (versão instalada: {version})"
+msgstr "Actualización disponible (versión instalada: {version})"
+
+msgid "Atualize os recursos adicionais do YouTube Music e tente novamente. Faixas que exigem uma conta podem não estar disponíveis nos perfis de reprodução compatíveis."
+msgstr "Actualiza los recursos adicionales de YouTube Music e inténtalo de nuevo. Es posible que las pistas que exigen una cuenta no estén disponibles en los perfiles de reproducción compatibles."
+
+msgid "AutoDJ"
+msgstr "AutoDJ"
+
+msgid "Autor: {author}"
+msgstr "Autor: {author}"
+
+msgid "Avanço e transição entre faixas"
+msgstr "Avance y transición entre pistas"
+
+msgid "Ações de p&lugins"
+msgstr "Acciones de p&lugins"
+
+msgid "Baixa as bibliotecas de análise de áudio: librosa, NumPy, SciPy, Numba e PyAV."
+msgstr "Descarga las bibliotecas de análisis de audio: librosa, NumPy, SciPy, Numba y PyAV."
+
+msgid "Baixa e mantém o yt-dlp, o ytmusicapi e o Node.js. Necessário para o KeyTube."
+msgstr "Descarga y mantiene yt-dlp, ytmusicapi y Node.js. Necesario para KeyTube."
+
+msgid "Batidas de sobreposição entre duas faixas."
+msgstr "Tiempos de solapamiento entre dos pistas."
+
+msgid "Busca global (Ctrl+G), favoritos, avaliações, histórico e retomada. Tudo fica no seu computador."
+msgstr "Búsqueda global (Ctrl+G), favoritos, valoraciones, historial y reanudación. Todo se queda en tu equipo."
+
+msgid "Buscar rádio ou colar endereço:"
+msgstr "Buscar una radio o pegar una dirección:"
+
+msgid "Buscar rádio pelo nome, ou colar o endereço de um stream"
+msgstr "Buscar una radio por su nombre, o pegar la dirección de un stream"
+
+msgid "Cancelar seleção de dispositivo de áudio"
+msgstr "Cancelar la selección del dispositivo de audio"
+
+msgid "Carregando…"
+msgstr "Cargando…"
+
+msgid "Componentes do YouTube"
+msgstr "Componentes de YouTube"
+
+msgid "Confirma formato e qualidade a cada download (Ctrl+Shift+B)."
+msgstr "Confirma el formato y la calidad en cada descarga (Ctrl+Shift+B)."
+
+msgid "Confirmar instalação do plugin"
+msgstr "Confirmar la instalación del plugin"
+
+msgid "Consultar a biblioteca carregada, playlists e metadados"
+msgstr "Consultar la biblioteca cargada, las playlists y los metadatos"
+
+msgid "Consultar a conta e a biblioteca do YouTube Music"
+msgstr "Consultar la cuenta y la biblioteca de YouTube Music"
+
+msgid "Controlar reprodução, volume, fila e troca de faixa"
+msgstr "Controlar la reproducción, el volumen, la cola y el cambio de pista"
+
+msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg; o KeyTune oferece instalá-lo quando precisar."
+msgstr "Convertir el audio y descargar vídeo en alta resolución exigen FFmpeg; KeyTune ofrece instalarlo cuando haga falta."
+
+msgid "Copiar o endereço do stream (Ctrl+C)"
+msgstr "Copiar la dirección del stream (Ctrl+C)"
+
+msgid "Definir {country} como o meu país"
+msgstr "Establecer {country} como mi país"
+
+msgid "Descrição: {description}"
+msgstr "Descripción: {description}"
+
+msgid "Detalhes do plugin"
+msgstr "Detalles del plugin"
+
+msgid "Detalhes do plugin selecionado"
+msgstr "Detalles del plugin seleccionado"
+
+msgid "Detalhes do plugin:"
+msgstr "Detalles del plugin:"
+
+msgid "Digite o nome da rádio e pressione Enter. O endereço de um stream colado aqui toca direto."
+msgstr "Escribe el nombre de la radio y pulsa Enter. La dirección de un stream pegada aquí se reproduce directamente."
+
+msgid "Digite o nome de uma rádio para pesquisar."
+msgstr "Escribe el nombre de una radio para buscarla."
+
+msgid "Disponível para instalar"
+msgstr "Disponible para instalar"
+
+msgid "Dispositivo de áudio:"
+msgstr "Dispositivo de audio:"
+
+msgid "Endereço do stream copiado."
+msgstr "Dirección del stream copiada."
+
+msgid "Enter entra no item ou toca a rádio; Shift+Enter adiciona sem tocar. Ctrl+D favorita. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
+msgstr "Enter abre el elemento o reproduce la radio; Shift+Enter la añade sin reproducir. Ctrl+D la marca como favorita. Flecha derecha muestra lo que hay dentro y Retroceso vuelve. Bajar más allá del último elemento carga más. Shift+F10 abre las acciones."
+
+msgid "Escolha a saída de áudio usada na reprodução."
+msgstr "Elige la salida de audio que se usa en la reproducción."
+
+msgid "Estado"
+msgstr "Estado"
+
+msgid "Estado ou região: {value}"
+msgstr "Estado o región: {value}"
+
+msgid "Estados e regiões de {country}"
+msgstr "Estados y regiones de {country}"
+
+msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Atualize os recursos adicionais e tente novamente mais tarde."
+msgstr "Este contenido exige un PO Token que yt-dlp no puede generar por sí solo. Actualiza los recursos adicionales e inténtalo de nuevo más tarde."
+
+msgid "Este item não tem conteúdo para abrir."
+msgstr "Este elemento no tiene contenido que abrir."
+
+msgid "Este plugin será executado dentro do processo do KeyTune e terá o mesmo acesso do aplicativo ao computador. Ative somente código de um autor em quem você confia plenamente."
+msgstr "Este plugin se ejecutará dentro del proceso de KeyTune y tendrá el mismo acceso al equipo que la aplicación. Activa solo código de un autor en quien confíes plenamente."
+
+msgid "Estilo da sequência e das transições."
+msgstr "Estilo de la secuencia y de las transiciones."
+
+msgid "Faixa tocada nos vídeos com mais de um áudio."
+msgstr "Pista que se reproduce en los vídeos con más de un audio."
+
+msgid "Falhou"
+msgstr "Falló"
+
+msgid "Fecha a janela sem alterar o dispositivo de áudio."
+msgstr "Cierra la ventana sin cambiar el dispositivo de audio."
+
+msgid "Feche as abas ou telas abertas por este plugin antes de desativá-lo, atualizá-lo ou removê-lo."
+msgstr "Cierra las pestañas o pantallas abiertas por este plugin antes de desactivarlo, actualizarlo o eliminarlo."
+
+msgid "Gerenciador de plugins"
+msgstr "Gestor de plugins"
+
+msgid "Gerenciar &plugins..."
+msgstr "Gestionar &plugins..."
+
+msgid "Grava um arquivo de log, útil para relatar problemas."
+msgstr "Escribe un archivo de registro, útil para informar de problemas."
+
+msgid "Gênero {name}"
+msgstr "Género {name}"
+
+msgid "Gêneros"
+msgstr "Géneros"
+
+msgid "Gêneros: {value}"
+msgstr "Géneros: {value}"
+
+msgid "Horas entre as verificações."
+msgstr "Horas entre comprobaciones."
+
+msgid "Idioma do conteúdo"
+msgstr "Idioma del contenido"
+
+msgid "Idioma e região"
+msgstr "Idioma y región"
+
+msgid "Idioma {name}"
+msgstr "Idioma {name}"
+
+msgid "Idioma: {value}"
+msgstr "Idioma: {value}"
+
+msgid "Idiomas"
+msgstr "Idiomas"
+
+msgid "Inicializando"
+msgstr "Iniciando"
+
+msgid "Instalar pacote de plugin"
+msgstr "Instalar paquete de plugin"
+
+msgid "Integração com o YouTube ativada. Opções dos componentes disponíveis."
+msgstr "Integración con YouTube activada. Opciones de los componentes disponibles."
+
+msgid "Integração com o YouTube desativada. Opções dos componentes indisponíveis."
+msgstr "Integración con YouTube desactivada. Opciones de los componentes no disponibles."
+
+msgid "Início das rádios online: escolha uma lista, busque uma rádio ou cole o endereço de um stream."
+msgstr "Inicio de las radios en línea: elige una lista, busca una radio o pega la dirección de un stream."
+
+msgid "Isolamento"
+msgstr "Aislamiento"
+
+msgid "Isolamento: {mode}"
+msgstr "Aislamiento: {mode}"
+
+msgid "Itens da página inicial varridos em busca de mixes."
+msgstr "Elementos de la página de inicio revisados en busca de mixes."
+
+msgid "Já instalado"
+msgstr "Ya instalado"
+
+msgid "KeyTube"
+msgstr "KeyTube"
+
+msgid "Ler a faixa, a posição e o estado de reprodução"
+msgstr "Leer la pista, la posición y el estado de reproducción"
+
+msgid "Ler ou alterar a área de transferência"
+msgstr "Leer o modificar el portapapeles"
+
+msgid "Licença: {license}"
+msgstr "Licencia: {license}"
+
+msgid "Lista atual das rádios online"
+msgstr "Lista actual de las radios en línea"
+
+msgid "Lista de plugins instalados"
+msgstr "Lista de plugins instalados"
+
+msgid "Mais ouvidas"
+msgstr "Más escuchadas"
+
+msgid "Mais ouvidas de {country}"
+msgstr "Más escuchadas en {country}"
+
+msgid "Mais ouvidas no mundo"
+msgstr "Más escuchadas en el mundo"
+
+msgid "Marca as faixas ouvidas no histórico da sua conta."
+msgstr "Marca las pistas escuchadas en el historial de tu cuenta."
+
+msgid "Marketplace de plugins"
+msgstr "Marketplace de plugins"
+
+msgid "Marketplace — revisão do catálogo: pendente"
+msgstr "Marketplace · revisión del catálogo: pendiente"
+
+msgid "Marketplace — revisão do catálogo: revisado"
+msgstr "Marketplace · revisión del catálogo: revisado"
+
+msgid "Melhora a resolução e a reprodução."
+msgstr "Mejora la resolución y la reproducción."
+
+msgid "Meu país"
+msgstr "Mi país"
+
+msgid "Modo de repetição das playlists novas."
+msgstr "Modo de repetición de las playlists nuevas."
+
+msgid "Mostrar avisos e fazer anúncios pelo leitor de telas"
+msgstr "Mostrar avisos y hacer anuncios a través del lector de pantalla"
+
+msgid "Mídias mais curtas sempre recomeçam do início."
+msgstr "Los medios más cortos siempre empiezan desde el principio."
+
+msgid "Nenhuma permissão especial."
+msgstr "Ningún permiso especial."
+
+msgid "Nenhuma rádio tocando agora."
+msgstr "Ninguna radio se está reproduciendo ahora."
+
+msgid "No processo do player"
+msgstr "En el proceso del reproductor"
+
+msgid "Nome: {name}"
+msgstr "Nombre: {name}"
+
+msgid "Nome: {value}"
+msgstr "Nombre: {value}"
+
+msgid "Não foi possível abrir esta lista de rádios agora."
+msgstr "No se pudo abrir esta lista de radios ahora."
+
+msgid "Não foi possível abrir o site desta rádio."
+msgstr "No se pudo abrir el sitio web de esta radio."
+
+msgid "Não foi possível carregar mais rádios agora."
+msgstr "No se pudieron cargar más radios ahora."
+
+msgid "Não foi possível carregar o marketplace: {error}"
+msgstr "No se pudo cargar el marketplace: {error}"
+
+msgid "Não foi possível concluir a busca de rádios agora."
+msgstr "No se pudo terminar la búsqueda de radios ahora."
+
+msgid "Não foi possível copiar para a área de transferência."
+msgstr "No se pudo copiar al portapapeles."
+
+msgid "Não foi possível instalar o plugin: {error}"
+msgstr "No se pudo instalar el plugin: {error}"
+
+msgid "Não foi possível remover o plugin: {error}"
+msgstr "No se pudo eliminar el plugin: {error}"
+
+msgid "Não foi possível validar o processo do YouTube.js."
+msgstr "No se pudo validar el proceso de YouTube.js."
+
+msgid "Não foi possível votar nesta rádio agora."
+msgstr "No se pudo votar por esta radio ahora."
+
+msgid "O Node.js ou o pacote YouTube.js não pôde ser preparado."
+msgstr "No se pudo preparar Node.js o el paquete YouTube.js."
+
+msgid "O YouTube não forneceu um stream de áudio direto para esta faixa. Atualize os recursos adicionais e tente novamente; o conteúdo pode exigir um PO Token que não está disponível no perfil atual."
+msgstr "YouTube no proporcionó un stream de audio directo para esta pista. Actualiza los recursos adicionales e inténtalo de nuevo; puede que el contenido exija un PO Token que no está disponible en el perfil actual."
+
+msgid "O YouTube.js demorou demais para responder."
+msgstr "YouTube.js tardó demasiado en responder."
+
+msgid "O diretório não aceitou o voto: {detail}"
+msgstr "El directorio no aceptó el voto: {detail}"
+
+msgid "O download pelo yt-dlp excedeu o tempo limite."
+msgstr "La descarga con yt-dlp superó el tiempo límite."
+
+msgid "O executável yt-dlp não está disponível."
+msgstr "El ejecutable de yt-dlp no está disponible."
+
+msgid "O modelo do nome do arquivo não pode conter pastas."
+msgstr "La plantilla del nombre de archivo no puede contener carpetas."
+
+msgid "O pacote não corresponde ao plugin selecionado no marketplace."
+msgstr "El paquete no corresponde al plugin seleccionado en el marketplace."
+
+msgid "O player não respondeu ao plugin em 30 segundos."
+msgstr "El reproductor no respondió al plugin en 30 segundos."
+
+msgid "O plugin foi ativado."
+msgstr "El plugin se activó."
+
+msgid "O plugin não concluiu a inicialização em 30 segundos."
+msgstr "El plugin no terminó de iniciarse en 30 segundos."
+
+msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
+msgstr "El plugin no se inició y volvió a quedar desactivado: {error}"
+
+msgid "O processo do YouTube.js não passou na validação: {detail}"
+msgstr "El proceso de YouTube.js no superó la validación: {detail}"
+
+msgid "O processo isolado do AutoDJ excedeu o tempo limite de análise."
+msgstr "El proceso aislado de AutoDJ superó el tiempo límite de análisis."
+
+msgid "O processo separado evita que falhas comuns derrubem o player e não recebe variáveis de ambiente sensíveis. As permissões acima controlam a API do KeyTune, mas o plugin ainda pode usar Python normalmente e acessar o computador; este modo não é uma sandbox de segurança."
+msgstr "El proceso separado evita que los fallos comunes tumben el reproductor y no recibe variables de entorno sensibles. Los permisos de arriba controlan la API de KeyTune, pero el plugin aún puede usar Python con normalidad y acceder al equipo; este modo no es un sandbox de seguridad."
+
+msgid "O processo terminou durante a inicialização."
+msgstr "El proceso terminó durante el inicio."
+
+msgid "O resolvedor remoto não retornou uma URL reproduzível."
+msgstr "El resolutor remoto no devolvió una URL reproducible."
+
+msgid "O resolvedor remoto retornou uma URL de mídia inválida."
+msgstr "El resolutor remoto devolvió una URL de medio no válida."
+
+msgid "O servidor remoto não retornou uma mídia de áudio válida."
+msgstr "El servidor remoto no devolvió un medio de audio válido."
+
+msgid "Origem: {source}"
+msgstr "Origen: {source}"
+
+msgid "Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
+msgstr "Original no convierte. MP3 y FLAC convierten el audio y exigen FFmpeg."
+
+msgid "Os recursos adicionais do YouTube Music não estão disponíveis. Ative ou atualize os recursos adicionais e tente novamente."
+msgstr "Los recursos adicionales de YouTube Music no están disponibles. Activa o actualiza los recursos adicionales e inténtalo de nuevo."
+
+msgid "Ouvidas recentemente"
+msgstr "Escuchadas recientemente"
+
+msgid "Ouvintes nas últimas 24 horas: {value}"
+msgstr "Oyentes en las últimas 24 horas: {value}"
+
+msgid "Pacote local selecionado"
+msgstr "Paquete local seleccionado"
+
+msgid "Parar dentro dessa margem não cria ponto de retomada."
+msgstr "Parar dentro de este margen no crea un punto de reanudación."
+
+msgid "País do início da aba e da busca. Outros países: menu de ações do país, na aba."
+msgstr "País del inicio de la pestaña y de la búsqueda. Otros países: el menú de acciones del país, en la pestaña."
+
+msgid "País usado nas buscas do YouTube e do YouTube Music."
+msgstr "País que se usa en las búsquedas de YouTube y de YouTube Music."
+
+msgid "País: {value}"
+msgstr "País: {value}"
+
+msgid "Países"
+msgstr "Países"
+
+msgid "Pede confirmação antes de fechar."
+msgstr "Pide confirmación antes de cerrar."
+
+msgid "Permissões do plugin"
+msgstr "Permisos del plugin"
+
+msgid "Permissões solicitadas e aviso de segurança"
+msgstr "Permisos solicitados y aviso de seguridad"
+
+msgid "Playlists novas"
+msgstr "Playlists nuevas"
+
+msgid "Playlists novas já começam em modo aleatório."
+msgstr "Las playlists nuevas empiezan en modo aleatorio."
+
+msgid "Plugin"
+msgstr "Plugin"
+
+msgid "Plugin do KeyTune (*.ktplugin)|*.ktplugin|Todos os arquivos|*.*"
+msgstr "Plugin de KeyTune (*.ktplugin)|*.ktplugin|Todos los archivos|*.*"
+
+msgid "Plugin em uso"
+msgstr "Plugin en uso"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Plugins disponíveis no marketplace"
+msgstr "Plugins disponibles en el marketplace"
+
+msgid "Plugins disponíveis:"
+msgstr "Plugins disponibles:"
+
+msgid "Plugins instalados:"
+msgstr "Plugins instalados:"
+
+msgid "Podcasts, audiolivros e vídeos longos voltam do ponto onde pararam."
+msgstr "Los podcasts, audiolibros y vídeos largos se reanudan donde se quedaron."
+
+msgid "Por estado ou região"
+msgstr "Por estado o región"
+
+msgid "Processo separado"
+msgstr "Proceso separado"
+
+msgid "Página: {homepage}"
+msgstr "Página: {homepage}"
+
+msgid "Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."
+msgstr "Añade KeyTune al menú Abrir con de Windows para audio, vídeo y playlists."
+
+msgid "Qualidade: {value}"
+msgstr "Calidad: {value}"
+
+msgid "Quanto a mídia avança ou volta a cada seta esquerda ou direita."
+msgstr "Cuánto avanza o retrocede el medio con cada flecha izquierda o derecha."
+
+msgid "Quanto mais detalhado, maior o arquivo."
+msgstr "Cuanto más detallado, mayor es el archivo."
+
+msgid "Quanto o volume muda a cada seta para cima ou para baixo."
+msgstr "Cuánto cambia el volumen con cada flecha arriba o abajo."
+
+msgid "Re&gistrar como player padrão"
+msgstr "Re&gistrar como reproductor predeterminado"
+
+msgid "Reabre as abas da última sessão."
+msgstr "Reabre las pestañas de la última sesión."
+
+msgid "Recebe correções do YouTube antes da versão estável."
+msgstr "Recibe las correcciones para YouTube antes que la versión estable."
+
+msgid "Registra as faixas ouvidas."
+msgstr "Registra las pistas que escuchaste."
+
+msgid "Região"
+msgstr "Región"
+
+msgid "Região do conteúdo"
+msgstr "Región del contenido"
+
+msgid "Remover das favoritas (Ctrl+D)"
+msgstr "Quitar de favoritas (Ctrl+D)"
+
+msgid "Remover das favoritas a rádio que está tocando"
+msgstr "Quitar de favoritas la radio que se está reproduciendo"
+
+msgid "Remover o plugin {name}? Os dados e ajustes privados serão preservados."
+msgstr "¿Eliminar el plugin {name}? Sus datos y ajustes privados se conservarán."
+
+msgid "Remover plugin"
+msgstr "Eliminar plugin"
+
+msgid "Restaura o tamanho da janela principal."
+msgstr "Restaura el tamaño de la ventana principal."
+
+msgid "Revisado"
+msgstr "Revisado"
+
+msgid "Revisão do catálogo: {review}"
+msgstr "Revisión del catálogo: {review}"
+
+msgid "Rádio: {name}"
+msgstr "Radio: {name}"
+
+msgid "Rádios ({count})"
+msgstr "Radios ({count})"
+
+msgid "Rádios de {country}"
+msgstr "Radios de {country}"
+
+msgid "Rádios de {place}"
+msgstr "Radios de {place}"
+
+msgid "Rádios do seu país"
+msgstr "Radios de tu país"
+
+msgid "Rádios favoritas"
+msgstr "Radios favoritas"
+
+msgid "Rádios online"
+msgstr "Radios en línea"
+
+msgid "Rádios online. Navegue pela lista, busque uma rádio ou cole o endereço de um stream."
+msgstr "Radios en línea. Navega por la lista, busca una radio o pega la dirección de un stream."
+
+msgid "Salvar o que ouvi no &histórico do YouTube Music"
+msgstr "Guardar lo que escuché en el &historial de YouTube Music"
+
+msgid "Saída de áudio e vídeo"
+msgstr "Salida de audio y vídeo"
+
+msgid "Saída de áudio usada na reprodução."
+msgstr "Salida de audio que se usa en la reproducción."
+
+msgid "Selecionar dispositivo de á&udio\tAlt+D"
+msgstr "Elegir dispositivo de a&udio\tAlt+D"
+
+msgid "Selecionar dispositivo de áudio"
+msgstr "Elegir dispositivo de audio"
+
+msgid "Selecione ao menos uma rádio."
+msgstr "Selecciona al menos una radio."
+
+msgid "Selecione o dispositivo de áudio"
+msgstr "Selecciona el dispositivo de audio"
+
+msgid "Selecione uma rádio para copiar o endereço do stream."
+msgstr "Selecciona una radio para copiar la dirección del stream."
+
+msgid "Selecione uma rádio para favoritar."
+msgstr "Selecciona una radio para marcarla como favorita."
+
+msgid "Site: {value}"
+msgstr "Sitio web: {value}"
+
+msgid "Sobreposição entre duas faixas de áudio."
+msgstr "Solapamiento entre dos pistas de audio."
+
+msgid "Status: {status}"
+msgstr "Estado: {status}"
+
+msgid "Stream: {value}"
+msgstr "Stream: {value}"
+
+msgid "Só o áudio ou o vídeo completo."
+msgstr "Solo el audio o el vídeo completo."
+
+msgid "Só vale quando o áudio é convertido para MP3 ou FLAC."
+msgstr "Solo se aplica cuando el audio se convierte a MP3 o FLAC."
+
+msgid "Tela do plugin {name} aberta."
+msgstr "Pantalla del plugin {name} abierta."
+
+msgid "Toca só o áudio, mesmo em arquivos de vídeo."
+msgstr "Reproduce solo el audio, incluso en archivos de vídeo."
+
+msgid "Tocando na rádio: {title}."
+msgstr "Sonando en la radio: {title}."
+
+msgid "Tocando {name}."
+msgstr "Reproduciendo {name}."
+
+msgid "Tocar faixas relacionadas ao fim da &playlist"
+msgstr "Reproducir pistas relacionadas al final de la &playlist"
+
+msgid "Todas as rádios de {country}"
+msgstr "Todas las radios de {country}"
+
+msgid "Todas, em ordem alfabética"
+msgstr "Todas, en orden alfabético"
+
+msgid "Todo o mundo"
+msgstr "Todo el mundo"
+
+msgid "Um efeito curto no início de cada transição."
+msgstr "Un efecto corto al comienzo de cada transición."
+
+msgid "Usa o crossfade também ao avançar ou voltar pelos controles."
+msgstr "Usa el crossfade también al avanzar o retroceder con los controles."
+
+msgid "Usado nas buscas, nos comentários e nos nomes das faixas de áudio."
+msgstr "Se usa en las búsquedas, en los comentarios y en los nombres de las pistas de audio."
+
+msgid "Usar YouTube.&js (recomendado)"
+msgstr "Usar YouTube.&js (recomendado)"
+
+msgid "Usar a API do KeyTune para criar ou alterar arquivos externos"
+msgstr "Usar la API de KeyTune para crear o modificar archivos externos"
+
+msgid "Usar a API do KeyTune para ler arquivos externos"
+msgstr "Usar la API de KeyTune para leer archivos externos"
+
+msgid "Usar o resolvedor de mídia yt-dlp"
+msgstr "Usar el resolutor de medios yt-dlp"
+
+msgid "Use as setas para escolher a saída de áudio."
+msgstr "Usa las flechas para elegir la salida de audio."
+
+msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
+msgstr "Se aplica incluso con la salida de vídeo desactivada. Ctrl+Alt+V la alterna."
+
+msgid "Valores menores abrem a biblioteca mais rápido."
+msgstr "Los valores menores abren la biblioteca más rápido."
+
+msgid "Ver &permissões"
+msgstr "Ver &permisos"
+
+msgid "Ver detalhes da rádio"
+msgstr "Ver detalles de la radio"
+
+msgid "Verifica atualizações ao abrir o KeyTube, no intervalo a seguir."
+msgstr "Busca actualizaciones al abrir KeyTube, con el intervalo indicado abajo."
+
+msgid "Versão"
+msgstr "Versión"
+
+msgid "Versão: {version}"
+msgstr "Versión: {version}"
+
+msgid "Volume"
+msgstr "Volumen"
+
+msgid "Volume inicial, de 0 a 100."
+msgstr "Volumen inicial, de 0 a 100."
+
+msgid "Votar nesta rádio no diretório"
+msgstr "Votar por esta radio en el directorio"
+
+msgid "Voto registrado para {name}."
+msgstr "Voto registrado para {name}."
+
+msgid "Votos: {value}"
+msgstr "Votos: {value}"
+
+msgid "a faixa é longa demais para uma análise rítmica completa"
+msgstr "la pista es demasiado larga para un análisis rítmico completo"
+
+msgid "erro desconhecido"
+msgstr "error desconocido"
+
+msgid "favorita"
+msgstr "favorita"
+
+msgid "{codec} {bitrate} kbps"
+msgstr "{codec} {bitrate} kbps"
+
+msgid "{country} definido como o seu país nas rádios online."
+msgstr "{country} establecido como tu país en las radios en línea."
+
+msgid "{count} rádio"
+msgid_plural "{count} rádios"
+msgstr[0] "{count} radio"
+msgstr[1] "{count} radios"
+
+msgid "{count} rádio adicionada a {title}, sem tocar."
+msgid_plural "{count} rádios adicionadas a {title}, sem tocar."
+msgstr[0] "{count} radio añadida a {title}, sin reproducir."
+msgstr[1] "{count} radios añadidas a {title}, sin reproducir."
+
+msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
+msgstr "{details}\n\nPermisos solicitados:\n{permissions}\n\n{security_notice}"
+
+msgid "{name} adicionada às rádios favoritas."
+msgstr "{name} añadida a las radios favoritas."
+
+msgid "{name} foi instalado e ativado."
+msgstr "{name} se instaló y se activó."
+
+msgid "{name} removida das rádios favoritas."
+msgstr "{name} quitada de las radios favoritas."
+
+msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
+msgstr "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
+
+msgid "{station}: {title}"
+msgstr "{station}: {title}"
+
+msgid "Áudio dos vídeos dublados"
+msgstr "Audio de los vídeos doblados"
+
+msgid "{name}. Item {current} de {total}."
+msgstr "{name}. Elemento {current} de {total}."
+
+msgid "Repetindo faixa atual. {position}"
+msgstr "Repitiendo la pista actual. {position}"
