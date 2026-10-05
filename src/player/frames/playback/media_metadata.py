@@ -196,7 +196,7 @@ class MediaMetadataMixin:
         self._apply_media_display_metadata(media_path, title, artist)
 
     def _refresh_active_runtime_stream_title(self, *, force=False):
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state else ""
         if not media_path or not is_remote_media_path(media_path):
             self._last_runtime_stream_title = ""

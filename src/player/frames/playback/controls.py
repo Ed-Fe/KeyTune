@@ -240,11 +240,18 @@ class PlaybackControlsMixin:
         self._announce(_("Fim do arquivo."))
 
     def _toggle_play_pause(self):
-        state = self._get_playlist_state()
+        # Espaço controla sempre o que está no player, seja qual for a aba à vista.
+        state = self._get_active_playlist_state()
         if not self.player.get_media():
             media_start_is_pending = getattr(self, "_media_start_is_pending", None)
             if callable(media_start_is_pending) and media_start_is_pending():
                 self._announce(_("A mídia ainda está carregando."))
+                return
+            # Player vazio: a playlist à vista retoma de onde tinha parado.
+            selected_index = self._get_selected_playlist_index()
+            selected_state = self._get_playlist_state(selected_index)
+            if selected_state and selected_state.current_media_path and not selected_state.is_loading:
+                self._resume_playlist_tab(selected_index, announce=False, force_play=True)
                 return
             self.on_open(None)
             return
@@ -358,7 +365,7 @@ class PlaybackControlsMixin:
         # está no padrão (velocidade 1x, tom original, aleatório e repetição
         # desligados) não é falado.
         current_tab = self._get_tab_state()
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         status_parts = []
 
         media_path = state.current_media_path if state else None

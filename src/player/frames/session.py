@@ -6,6 +6,11 @@ from ..session import load_session, save_session
 
 class FrameSessionMixin:
     def _capture_tab_state(self, index=None):
+        if index is None:
+            index = self._get_active_playlist_index()
+        # O player só diz a posição da playlist que é dona dele.
+        if index != self._get_active_playlist_index():
+            return
         state = self._get_playlist_state(index)
         if not state or not state.current_media_path or not self.player.get_media():
             return
@@ -119,14 +124,14 @@ class FrameSessionMixin:
 
         selected_tab -= sum(1 for position in folder_tab_positions if position < selected_tab)
         selected_tab = max(0, min(selected_tab, len(self.playlists) - 1))
-        if adopted is not None:
-            # A aba da mídia herdada é aberta e selecionada logo em seguida;
-            # ativar a da sessão carregaria a faixa dela por cima da que toca.
-            pass
-        elif selected_tab == self._get_current_tab_index():
+        if adopted is None:
+            # A aba que tocava volta a ser a dona do player, com a mídia dela.
+            # Com um player herdado, a aba dele é aberta logo em seguida, e
+            # carregar a da sessão seria tocar por cima do que já soa.
+            if selected_tab != self._get_current_tab_index():
+                self.notebook.ChangeSelection(selected_tab)
             self._activate_tab(selected_tab, announce=False)
-        else:
-            self._select_tab(selected_tab, announce=False)
+            self._resume_playlist_tab(selected_tab, announce=False)
 
         current_state = self._get_playlist_state(selected_tab)
         refresh_autodj_ui = getattr(self, "_refresh_autodj_session_ui", None)

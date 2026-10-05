@@ -40,6 +40,10 @@ applyTo:
   - `playback_handover.py` holds what changes hands (`AdoptedPlayback`: the MPV player still playing, its paths, volume and speed); `frames/playback/adoption.py` ties it to a new playlist without reloading the media. While an adoption is pending, session restore and tab activation must not touch the player
   - `quick_player/launch.py` for what the quick player accepts and its starting volume (pure, no wxPython); `quick_player/panel.py` for the wx controls only; `quick_player/frame.py` for the window, its single MPV player and the keys
   - It reads the settings and never writes settings, session, recents or library; keep its import path free of `frames/` so it stays fast to open
+- Two different playlists matter to the window, and they are often not the same tab:
+  - the one that **owns the player** (`_get_active_playlist_state()` / `_get_active_playlist_index()`): transport, end of track, crossfade, title, status and anything else about what is playing
+  - the one **on screen** (`_get_playlist_state()` with no index, `_get_selected_playlist_index()`): browsing and editing the list. Before such code stops, unloads or restarts the player, it checks `_is_active_playlist_state(state)`
+  - selecting a tab (`_activate_tab`) never touches the player. A playlist takes it through `_play_media(index=...)` or `_resume_playlist_tab(index)`, which save the position of the playlist that loses it; nothing else assigns `active_playlist_index` while something is playing
 - Preserve public method names unless the refactor requires a coordinated call-site update.
 - Prefer small helper functions and composition over adding another long conditional block to an already-large module.
 - After structural Python refactors, run `python -m compileall src`.

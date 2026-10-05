@@ -61,6 +61,7 @@ class PlaybackRaceTests(unittest.TestCase):
         state = PlaylistState(title="Playlist")
         state.set_items(["a.mp3", "b.mp3"])
         frame._get_playlist_state = lambda *_args: state
+        frame._get_active_playlist_state = lambda: state
         player = Mock()
         player.get_media.return_value = object()
         player.is_playing.return_value = True
@@ -97,6 +98,7 @@ class PlaybackRaceTests(unittest.TestCase):
         state.autodj_session = True
         state.custom_queue = ["b.mp3", "c.mp3"]
         frame._get_playlist_state = lambda *_args: state
+        frame._get_active_playlist_state = lambda: state
         frame._get_active_playlist_index = lambda: 0
         frame._active_player_key = "primary"
         frame._crossfade_state = None

@@ -157,7 +157,15 @@ O submenu também tem **Tempo restante** e **Cancelar temporizador**. O player a
 
 ## Playlist, pastas e abas
 
-Cada playlist fica numa aba, o que ajuda a separar contextos: uma lista para ouvir agora, uma coleção organizada, uma de testes. A aba ativa decide o que toca e o que aparece no navegador de itens.
+Cada playlist fica numa aba, o que ajuda a separar contextos: uma lista para ouvir agora, uma coleção organizada, uma de testes. A aba à vista decide o que aparece no navegador de itens.
+
+Trocar de aba não mexe no que está tocando: dá para passear pelas playlists, ou criar uma nova com `Ctrl+T`, sem interromper a música. Uma playlist só assume a reprodução quando você toca algo nela.
+
+- `Enter` num item toca esse item, e a playlist dele passa a ser a que toca.
+- Cada playlist guarda a faixa e a posição em que parou. `Enter` nessa faixa, numa playlist que não é a que toca, retoma daquele ponto em vez de recomeçar.
+- `Espaço`, as setas de avanço e de volume, **Próxima** e **Anterior** valem sempre para o que está tocando, seja qual for a aba à vista. Se nada está carregado, `Espaço` retoma a playlist à vista.
+- Aleatório e repetição valem para a playlist à vista.
+- O título da janela e o status (`S`) dizem o que está tocando. O `S` também diz a aba à vista quando ela é outra.
 
 ### Atalhos de abas e itens
 

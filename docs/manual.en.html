@@ -438,7 +438,15 @@ footer {
 <h3 id="lyrics">Lyrics</h3>
 <p><code>Ctrl+Alt+L</code>, or the <strong>Lyrics</strong> box in the time panel, shows or hides the lyrics panel. When the track changes, KeyTune looks for the lyrics on its own, first on LRCLIB and then on YouTube Music. The <strong>Copy full lyrics</strong> button copies the text to the clipboard.</p>
 <h2 id="playlists-folders-and-tabs">Playlists, folders and tabs</h2>
-<p>Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The active tab decides what plays and what shows in the item browser.</p>
+<p>Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The tab on screen decides what shows in the item browser.</p>
+<p>Switching tabs does not touch what is playing: you can walk through the playlists, or create a new one with <code>Ctrl+T</code>, without interrupting the music. A playlist only takes over playback when you play something in it.</p>
+<ul>
+<li><code>Enter</code> on an item plays that item, and its playlist becomes the one that plays.</li>
+<li>Each playlist keeps the track and the position where it stopped. <code>Enter</code> on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.</li>
+<li><code>Space</code>, the seek and volume arrows, <strong>Next</strong> and <strong>Previous</strong> always act on what is playing, whatever tab is on screen. If nothing is loaded, <code>Space</code> resumes the playlist on screen.</li>
+<li>Shuffle and repeat apply to the playlist on screen.</li>
+<li>The window title and the status (<code>S</code>) tell what is playing. <code>S</code> also names the tab on screen when it is another one.</li>
+</ul>
 <h3 id="tab-and-item-shortcuts">Tab and item shortcuts</h3>
 <ul>
 <li><code>Ctrl+T</code>: new playlist tab</li>

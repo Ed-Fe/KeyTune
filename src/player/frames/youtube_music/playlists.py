@@ -23,7 +23,7 @@ class PlaylistEditMixin:
     }
 
     def _rate_current_youtube_music_media(self, rating):
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
             self._announce(_("Nenhuma mídia está carregada para avaliar."))
@@ -59,7 +59,7 @@ class PlaylistEditMixin:
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
             if normalized_rating == "DISLIKE":
-                current_state = self._get_playlist_state()
+                current_state = self._get_active_playlist_state()
                 current_media_path = str(getattr(current_state, "current_media_path", "") or "").strip()
                 if current_media_path == media_path:
                     self._play_adjacent_item(1)
@@ -75,7 +75,7 @@ class PlaylistEditMixin:
             self._announce(normalized_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
-            current_state = self._get_playlist_state()
+            current_state = self._get_active_playlist_state()
             current_media_path = str(getattr(current_state, "current_media_path", "") or "").strip()
             if normalized_rating == "DISLIKE" and current_media_path == media_path:
                 self._play_adjacent_item(1)
@@ -167,7 +167,7 @@ class PlaylistEditMixin:
         return playlists[selected_index]
 
     def _add_current_media_to_youtube_playlist(self):
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
             self._announce(_("Nenhuma mídia está tocando para ser adicionada."))

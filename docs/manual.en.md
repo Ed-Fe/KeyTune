@@ -157,7 +157,15 @@ The submenu also has **Time remaining** and **Cancel timer**. The player warns y
 
 ## Playlists, folders and tabs
 
-Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The active tab decides what plays and what shows in the item browser.
+Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The tab on screen decides what shows in the item browser.
+
+Switching tabs does not touch what is playing: you can walk through the playlists, or create a new one with `Ctrl+T`, without interrupting the music. A playlist only takes over playback when you play something in it.
+
+- `Enter` on an item plays that item, and its playlist becomes the one that plays.
+- Each playlist keeps the track and the position where it stopped. `Enter` on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.
+- `Space`, the seek and volume arrows, **Next** and **Previous** always act on what is playing, whatever tab is on screen. If nothing is loaded, `Space` resumes the playlist on screen.
+- Shuffle and repeat apply to the playlist on screen.
+- The window title and the status (`S`) tell what is playing. `S` also names the tab on screen when it is another one.
 
 ### Tab and item shortcuts
 

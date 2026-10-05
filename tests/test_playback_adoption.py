@@ -165,7 +165,7 @@ class PendingAdoptionProtectsThePlayerTests(unittest.TestCase):
         ):
             untouched.assert_not_called()
 
-    def test_activating_a_tab_does_not_unload_the_inherited_player(self):
+    def test_resuming_a_tab_does_not_unload_the_inherited_player(self):
         frame = TabManagementMixin.__new__(TabManagementMixin)
         frame._pending_adopted_playback = _adopted()
         frame.playlists = [PlaylistState(title="Vazia")]
@@ -174,7 +174,7 @@ class PendingAdoptionProtectsThePlayerTests(unittest.TestCase):
         frame._queue_media_start = Mock()
         frame._apply_equalizer_state = Mock()
 
-        frame._activate_tab(0, announce=False)
+        self.assertFalse(frame._resume_playlist_tab(0, announce=False))
 
         frame._unload_player.assert_not_called()
         frame._queue_media_start.assert_not_called()

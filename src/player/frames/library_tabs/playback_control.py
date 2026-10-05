@@ -42,9 +42,13 @@ class PlaylistPlaybackMixin:
         autodj_transition=None,
     ):
         self._suppress_next_auto_advance = False
-        state = self._get_playlist_state(index)
+        # Sem índice, toca na playlist que o usuário está vendo.
+        target_index = self._get_selected_playlist_index() if index is None else index
+        state = self._get_playlist_state(target_index)
         if not state:
             return
+        # Tocar algo numa playlist é o que passa o player para ela.
+        self._set_active_playlist(target_index)
         state.autodj_waiting_for_next = False
 
         if media_path is not None and state.current_media_path != media_path:
@@ -85,7 +89,6 @@ class PlaylistPlaybackMixin:
         state.last_position_ms = 0
         if autodj_transition is None:
             state.playback_gain_db = 0.0
-        target_index = self._get_active_playlist_index() if index is None else index
         transition_duration_ms = (
             self._autodj_transition_duration_ms(autodj_transition)
             if autodj_transition is not None
@@ -152,7 +155,7 @@ class PlaylistPlaybackMixin:
         if getattr(self, "_crossfade_state", None) is not None:
             return False
 
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         if not state or state.is_folder_tab or not state.current_media_path or state.repeat_mode == REPEAT_ONE:
             return False
 
@@ -262,7 +265,8 @@ class PlaylistPlaybackMixin:
                 self.SetTitle(f"{APP_TITLE} — {current_tab.title}")
             return
 
-        state = self._get_playlist_state()
+        # O título diz o que toca, seja qual for a playlist à vista.
+        state = self._get_active_playlist_state()
         if not state:
             self.SetTitle(APP_TITLE)
             return
@@ -289,7 +293,7 @@ class PlaylistPlaybackMixin:
         if self._block_sensitive_action_during_youtube_music("track-navigation"):
             return
 
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         if not state or not state.items:
             self._announce(_("Nenhuma playlist carregada."))
             return
@@ -376,7 +380,7 @@ class PlaylistPlaybackMixin:
         if self._block_sensitive_action_during_youtube_music("track-selection"):
             return
 
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         if not state or not state.items:
             self._announce(_("Nenhuma playlist carregada."))
             return
@@ -482,7 +486,7 @@ class PlaylistPlaybackMixin:
         # avanço automático: a sessão termina aqui, com a posição preservada.
         if self._sleep_timer_should_stop_at_media_end():
             _logger.debug("Media end: sleep timer armed for end of track; stopping playback.")
-            end_state = self._get_playlist_state()
+            end_state = self._get_active_playlist_state()
             if end_state:
                 end_state.was_playing = False
                 end_state.last_position_ms = 0
@@ -491,7 +495,7 @@ class PlaylistPlaybackMixin:
             self._refresh_playlist_browser()
             return
 
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         if not state:
             _logger.debug("Media end: no active playlist state.")
             self._announce(_("Mídia finalizada."))

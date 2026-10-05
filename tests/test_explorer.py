@@ -331,6 +331,7 @@ class LegacyFolderTabSessionTests(unittest.TestCase):
         frame._apply_equalizer_state_to_current_playback = Mock()
         frame._get_current_tab_index = Mock(return_value=0)
         frame._activate_tab = Mock()
+        frame._resume_playlist_tab = Mock()
         frame._select_tab = Mock()
         frame._get_playlist_state = Mock(return_value=None)
         frame._announce = Mock()

@@ -94,7 +94,6 @@ class RadioActionsMixin:
             play_index = target_state.index_of_item(play_item)
             if play_index is not None:
                 target_state.select_index(play_index)
-                self.active_playlist_index = target_index
                 self._play_media(
                     index=target_index,
                     announce_message=_("Tocando {name}.").format(name=stations[0].name),

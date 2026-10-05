@@ -333,7 +333,6 @@ class SearchMixin:
             )
             self.notebook.SetPageText(target_index, target_state.title)
             self._add_recent_media_paths(prepared_items)
-            self.active_playlist_index = target_index
             self._select_tab(target_index, announce=False)
             self._refresh_playlist_browser()
             self._update_title()
@@ -392,7 +391,6 @@ class SearchMixin:
                 return
 
             self._add_recent_media_paths(prepared_items)
-            self.active_playlist_index = target_index
             self._select_tab(target_index, announce=False)
             self._refresh_playlist_browser()
             self._update_title()
@@ -543,7 +541,6 @@ class SearchMixin:
             return False
 
         target_state.select_index(play_index)
-        self.active_playlist_index = target_index
         self._play_media(index=target_index)
         return True
 

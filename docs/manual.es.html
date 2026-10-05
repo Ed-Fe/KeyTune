@@ -438,7 +438,15 @@ footer {
 <h3 id="letras">Letras</h3>
 <p><code>Ctrl+Alt+L</code>, o la casilla <strong>Letras</strong> del panel de tiempo, muestra u oculta el panel de letras. Al cambiar de pista, KeyTune busca la letra por sí solo, primero en LRCLIB y después en YouTube Music. El botón <strong>Copiar letra completa</strong> lleva el texto al portapapeles.</p>
 <h2 id="playlists-carpetas-y-pestanas">Playlists, carpetas y pestañas</h2>
-<p>Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña activa decide qué suena y qué aparece en el navegador de elementos.</p>
+<p>Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña a la vista decide qué aparece en el navegador de elementos.</p>
+<p>Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists, o crear una nueva con <code>Ctrl+T</code>, sin interrumpir la música. Una playlist solo asume la reproducción cuando reproduces algo en ella.</p>
+<ul>
+<li><code>Enter</code> sobre un elemento lo reproduce, y su playlist pasa a ser la que suena.</li>
+<li>Cada playlist guarda la pista y la posición en que se detuvo. <code>Enter</code> sobre esa pista, en una playlist que no es la que suena, retoma desde ese punto en vez de empezar de nuevo.</li>
+<li><code>Espacio</code>, las flechas de avance y de volumen, <strong>Siguiente</strong> y <strong>Anterior</strong> actúan siempre sobre lo que está sonando, sea cual sea la pestaña a la vista. Si no hay nada cargado, <code>Espacio</code> retoma la playlist a la vista.</li>
+<li>Aleatorio y repetición valen para la playlist a la vista.</li>
+<li>El título de la ventana y el estado (<code>S</code>) dicen qué está sonando. <code>S</code> también dice la pestaña a la vista cuando es otra.</li>
+</ul>
 <h3 id="atajos-de-pestanas-y-elementos">Atajos de pestañas y elementos</h3>
 <ul>
 <li><code>Ctrl+T</code>: nueva pestaña de playlist</li>

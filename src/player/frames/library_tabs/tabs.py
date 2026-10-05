@@ -230,13 +230,21 @@ class TabManagementMixin:
         index = self.notebook.GetSelection()
         return 0 if index == wx.NOT_FOUND else index
 
+    def _get_selected_playlist_index(self):
+        """A playlist que o usuário está vendo; numa tela (KeyTube, equalizador), a que toca."""
+        index = self.notebook.GetSelection()
+        if isinstance(self._get_tab_state(index), PlaylistState):
+            return index
+        return self._get_active_playlist_index()
+
+    def _is_active_playlist_state(self, state):
+        """Diz se *state* é a playlist dona do player."""
+        return state is not None and state is self._get_active_playlist_state()
+
     def _get_video_panel(self, index=None):
         if index is None:
-            selected_state = self._get_tab_state()
-            if isinstance(selected_state, PlaylistState):
-                index = self.notebook.GetSelection()
-            else:
-                index = self._get_active_playlist_index()
+            # O vídeo sai na playlist dona do player, não na que está à vista.
+            index = self._get_active_playlist_index()
 
         if index == wx.NOT_FOUND or index is None:
             return None
@@ -360,65 +368,97 @@ class TabManagementMixin:
         if not state:
             return
 
-        if getattr(self, "_pending_adopted_playback", None) is not None:
-            # Um player herdado do player rápido já está tocando e ainda não
-            # tem aba: nenhuma aba pode descarregá-lo ou carregar outra mídia.
-            return
-
-        # Switching tabs changes which video page is visible. Refresh its
-        # overlay right away instead of waiting for the gated progress-timer
-        # pass (see PlaybackControlsMixin._maybe_refresh_player_visual_hints).
+        # Mostrar uma playlist não mexe na reprodução: o que toca continua
+        # tocando. A aba só assume o player quando algo é tocado nela
+        # (`_play_media`) ou retomado (`_resume_playlist_tab`).
         refresh_visual_hints = getattr(self, "_refresh_player_visual_hints", None)
         if callable(refresh_visual_hints):
             refresh_visual_hints()
+        refresh_autodj_menu = getattr(self, "_refresh_autodj_menu_state", None)
+        if callable(refresh_autodj_menu):
+            refresh_autodj_menu()
 
-        previous_active_playlist_index = self._get_active_playlist_index()
+        self._update_title()
+        self._refresh_playlist_browser()
+        if not announce:
+            return
+        if state.is_loading:
+            self._announce(state.loading_message or _("Carregando {title}.").format(title=state.title))
+        elif not state.current_media_path:
+            self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
+        else:
+            self._announce(
+                f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} '
+                f"{self._describe_playlist_position(state)}".strip()
+            )
+
+    def _set_active_playlist(self, index):
+        """Passa o player para a playlist *index*; devolve se ela já era a dona dele."""
+        previous_index = self._get_active_playlist_index()
+        if previous_index == index:
+            return True
+
+        # A posição da playlist que perde o player fica guardada nela.
+        if previous_index != wx.NOT_FOUND:
+            self._capture_tab_state(previous_index)
         self.active_playlist_index = index
         refresh_autodj_menu = getattr(self, "_refresh_autodj_menu_state", None)
         if callable(refresh_autodj_menu):
             refresh_autodj_menu()
+        return False
+
+    def _resume_playlist_tab(self, index, announce=True, *, force_play=False):
+        """Carrega no player a mídia da playlist *index*, de onde ela tinha parado.
+
+        Usado ao restaurar a sessão e quando o usuário manda tocar uma playlist
+        que não é a dona do player. Volta pausada se era assim que estava, a
+        menos que *force_play* peça para tocar.
+        """
+        state = self._get_playlist_state(index)
+        if not state:
+            return False
+        if getattr(self, "_pending_adopted_playback", None) is not None:
+            # Um player herdado do player rápido já está tocando e ainda não
+            # tem aba: nada pode descarregá-lo ou carregar outra mídia.
+            return False
+
+        was_active = self._set_active_playlist(index)
         self._apply_equalizer_state(state)
 
-        if state.is_loading:
+        if state.is_loading or not state.current_media_path:
             self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
-            if announce:
-                self._announce(state.loading_message or _("Carregando {title}.").format(title=state.title))
-            return
+            return False
 
-        if not state.current_media_path:
-            self._unload_player()
-            self._update_title()
-            self._refresh_playlist_browser()
-            if announce:
-                self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
-            return
-
-        if previous_active_playlist_index == index and self._player_has_loaded_media(state.current_media_path):
+        if was_active and self._player_has_loaded_media(state.current_media_path):
             self._bind_player_to_window()
             self._update_title()
             self._update_time_bar()
             self._refresh_playlist_browser()
-            if announce:
-                self._announce(f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip())
-            return
+            if force_play and not self.player.is_playing():
+                self.player.play()
+                state.was_playing = True
+            return True
 
-        pause_after_restore = not state.was_playing
         self._update_title()
         self._refresh_playlist_browser()
         announce_message = (
-            f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} {self._describe_playlist_position(state)}'.strip()
+            f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} '
+            f"{self._describe_playlist_position(state)}".strip()
             if announce
             else None
         )
+        if force_play:
+            state.was_playing = True
         self._queue_media_start(
             state.current_media_path,
             tab_index=index,
             announce_message=announce_message,
             restore_position_ms=state.last_position_ms,
-            pause_after_start=pause_after_restore,
+            pause_after_start=not state.was_playing,
         )
+        return True
 
     def _close_current_tab(self):
         current_index = self._get_current_tab_index()

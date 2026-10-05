@@ -157,7 +157,15 @@ El submenú también tiene **Tiempo restante** y **Cancelar temporizador**. El r
 
 ## Playlists, carpetas y pestañas
 
-Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña activa decide qué suena y qué aparece en el navegador de elementos.
+Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña a la vista decide qué aparece en el navegador de elementos.
+
+Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists, o crear una nueva con `Ctrl+T`, sin interrumpir la música. Una playlist solo asume la reproducción cuando reproduces algo en ella.
+
+- `Enter` sobre un elemento lo reproduce, y su playlist pasa a ser la que suena.
+- Cada playlist guarda la pista y la posición en que se detuvo. `Enter` sobre esa pista, en una playlist que no es la que suena, retoma desde ese punto en vez de empezar de nuevo.
+- `Espacio`, las flechas de avance y de volumen, **Siguiente** y **Anterior** actúan siempre sobre lo que está sonando, sea cual sea la pestaña a la vista. Si no hay nada cargado, `Espacio` retoma la playlist a la vista.
+- Aleatorio y repetición valen para la playlist a la vista.
+- El título de la ventana y el estado (`S`) dicen qué está sonando. `S` también dice la pestaña a la vista cuando es otra.
 
 ### Atajos de pestañas y elementos
 
