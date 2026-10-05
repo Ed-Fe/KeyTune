@@ -186,6 +186,7 @@ class FrameUIMixin:
             "Ctrl+Shift+W — Fechar mídia atual\n\n"
             "Reprodução\n"
             "Espaço — Play/Pause\n"
+            "Enter — No player, tocar a playlist da aba à vista, de onde ela parou\n"
             "Seta esquerda / direita — Voltar ou avançar no arquivo\n"
             "Shift+Seta esquerda / direita — Voltar ou avançar 1 minuto\n"
             "Home / End — Ir para o início ou para o fim\n"

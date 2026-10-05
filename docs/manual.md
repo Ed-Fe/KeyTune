@@ -105,6 +105,7 @@ Abrem direto na janela principal, como antes: playlists `.m3u` e `.m3u8`, vídeo
 | Tecla | O que faz |
 | --- | --- |
 | `Espaço` | Reproduzir ou pausar |
+| `Enter` | Com o foco no player, tocar a playlist da aba à vista, de onde ela parou |
 | `Seta esquerda` / `Seta direita` | Voltar ou avançar na mídia (o passo está em **Preferências > Reprodução**) |
 | `Shift+Seta esquerda` / `Shift+Seta direita` | Voltar ou avançar 1 minuto |
 | `Home` / `End` | Ir ao início ou ao fim da mídia |
@@ -164,6 +165,7 @@ Trocar de aba não mexe no que está tocando: dá para passear pelas playlists, 
 - `Enter` num item toca esse item, e a playlist dele passa a ser a que toca.
 - Cada playlist guarda a faixa e a posição em que parou. `Enter` nessa faixa, numa playlist que não é a que toca, retoma daquele ponto em vez de recomeçar.
 - `Espaço`, as setas de avanço e de volume, **Próxima** e **Anterior** valem sempre para o que está tocando, seja qual for a aba à vista. Se nada está carregado, `Espaço` retoma a playlist à vista.
+- `Enter`, com o foco no player, passa a reprodução para a playlist à vista: ela volta a tocar de onde tinha parado, e a que tocava guarda a posição dela.
 - Aleatório e repetição também valem para a playlist que está tocando. Se nada está carregado, valem para a playlist à vista.
 - O título da janela e o status (`S`) dizem o que está tocando. O `S` também diz a aba à vista quando ela é outra.
 

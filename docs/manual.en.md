@@ -105,6 +105,7 @@ These open straight in the main window, as before: `.m3u` and `.m3u8` playlists,
 | Key | What it does |
 | --- | --- |
 | `Space` | Play or pause |
+| `Enter` | With focus on the player, play the playlist of the tab on screen, from where it stopped |
 | `Left arrow` / `Right arrow` | Rewind or fast-forward the media (the step is in **Preferences > Playback**) |
 | `Shift+Left arrow` / `Shift+Right arrow` | Rewind or fast-forward 1 minute |
 | `Home` / `End` | Go to the start or the end of the media |
@@ -164,6 +165,7 @@ Switching tabs does not touch what is playing: you can walk through the playlist
 - `Enter` on an item plays that item, and its playlist becomes the one that plays.
 - Each playlist keeps the track and the position where it stopped. `Enter` on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.
 - `Space`, the seek and volume arrows, **Next** and **Previous** always act on what is playing, whatever tab is on screen. If nothing is loaded, `Space` resumes the playlist on screen.
+- `Enter`, with focus on the player, hands playback to the playlist on screen: it plays again from where it had stopped, and the one that was playing keeps its position.
 - Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen.
 - The window title and the status (`S`) tell what is playing. `S` also names the tab on screen when it is another one.
 

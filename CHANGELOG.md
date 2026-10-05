@@ -21,6 +21,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Trocar de aba não muda mais o que está tocando**: antes, passar para outra playlist parava a música ou carregava a faixa daquela aba. Agora o que toca continua tocando enquanto você olha as outras abas ou cria uma nova com `Ctrl+T`.
   - Uma playlist assume a reprodução quando você toca algo nela. `Enter` na faixa em que ela tinha parado retoma daquele ponto.
   - `Espaço`, as setas, **Próxima**, **Anterior**, aleatório e repetição valem sempre para o que está tocando, seja qual for a aba à vista.
+  - `Enter`, com o foco no player, toca a playlist da aba à vista, de onde ela tinha parado.
   - O título da janela e o status (`S`) dizem o que está tocando.
 - **Abrir um arquivo pelo Windows com o KeyTune fechado**: antes, o arquivo abria a janela principal, restaurava a sessão e entrava na playlist atual. Agora ele toca no player rápido. Se o KeyTune já está aberto, nada muda: o arquivo vai para a playlist atual. Para voltar ao comportamento antigo, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
 

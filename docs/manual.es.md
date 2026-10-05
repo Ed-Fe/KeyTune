@@ -105,6 +105,7 @@ Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.
 | Tecla | Qué hace |
 | --- | --- |
 | `Espacio` | Reproducir o pausar |
+| `Enter` | Con el foco en el reproductor, reproducir la playlist de la pestaña a la vista, desde donde se detuvo |
 | `Flecha izquierda` / `Flecha derecha` | Retroceder o avanzar en el medio (el paso se configura en **Preferencias > Reproducción**) |
 | `Shift+Flecha izquierda` / `Shift+Flecha derecha` | Retroceder o avanzar 1 minuto |
 | `Inicio` / `Fin` | Ir al principio o al final del medio |
@@ -164,6 +165,7 @@ Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists,
 - `Enter` sobre un elemento lo reproduce, y su playlist pasa a ser la que suena.
 - Cada playlist guarda la pista y la posición en que se detuvo. `Enter` sobre esa pista, en una playlist que no es la que suena, retoma desde ese punto en vez de empezar de nuevo.
 - `Espacio`, las flechas de avance y de volumen, **Siguiente** y **Anterior** actúan siempre sobre lo que está sonando, sea cual sea la pestaña a la vista. Si no hay nada cargado, `Espacio` retoma la playlist a la vista.
+- `Enter`, con el foco en el reproductor, pasa la reproducción a la playlist a la vista: vuelve a sonar desde donde se había detenido, y la que sonaba guarda su posición.
 - Aleatorio y repetición también valen para la playlist que está sonando. Si no hay nada cargado, valen para la playlist a la vista.
 - El título de la ventana y el estado (`S`) dicen qué está sonando. `S` también dice la pestaña a la vista cuando es otra.
 

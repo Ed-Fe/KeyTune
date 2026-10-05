@@ -239,6 +239,25 @@ class PlaybackControlsMixin:
         self._update_time_bar()
         self._announce(_("Fim do arquivo."))
 
+    def _play_selected_playlist(self):
+        # Enter no player: a playlist à vista assume a reprodução, de onde
+        # tinha parado. O Espaço continua valendo para o que já está tocando.
+        if self._block_sensitive_action_during_youtube_music("track-selection"):
+            return
+
+        selected_index = self._get_selected_playlist_index()
+        state = self._get_playlist_state(selected_index)
+        if not state or state.is_loading or not state.current_media_path:
+            self._announce(_("A playlist atual está vazia."))
+            return
+
+        if self._is_active_playlist_state(state) and self.player.get_media():
+            if not self.player.is_playing():
+                self._toggle_play_pause()
+            return
+
+        self._resume_playlist_tab(selected_index, announce=False, force_play=True)
+
     def _toggle_play_pause(self):
         # Espaço controla sempre o que está no player, seja qual for a aba à vista.
         state = self._get_active_playlist_state()

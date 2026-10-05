@@ -177,6 +177,55 @@ class SpaceTests(unittest.TestCase):
         frame.on_open.assert_not_called()
 
 
+class EnterInThePlayerTests(unittest.TestCase):
+    def _frame(self, *, viewed_owns_player, playing=True, viewed=None):
+        frame = PlaybackControlsMixin.__new__(PlaybackControlsMixin)
+        frame.viewed = viewed if viewed is not None else _playlist("Livro", ["b.mp3"], position_ms=900)
+        frame.player = Mock()
+        frame.player.get_media.return_value = object()
+        frame.player.is_playing.return_value = playing
+        frame._get_selected_playlist_index = lambda: 1
+        frame._get_playlist_state = lambda index=None: frame.viewed
+        frame._is_active_playlist_state = lambda _state: viewed_owns_player
+        frame._block_sensitive_action_during_youtube_music = Mock(return_value=False)
+        frame._resume_playlist_tab = Mock()
+        frame._toggle_play_pause = Mock()
+        frame._announce = Mock()
+        return frame
+
+    def test_the_playlist_on_screen_takes_the_player_from_where_it_had_stopped(self):
+        frame = self._frame(viewed_owns_player=False)
+
+        frame._play_selected_playlist()
+
+        frame._resume_playlist_tab.assert_called_once_with(1, announce=False, force_play=True)
+        frame._toggle_play_pause.assert_not_called()
+
+    def test_it_only_resumes_when_the_playlist_on_screen_is_already_the_one_loaded(self):
+        frame = self._frame(viewed_owns_player=True, playing=False)
+
+        frame._play_selected_playlist()
+
+        frame._toggle_play_pause.assert_called_once_with()
+        frame._resume_playlist_tab.assert_not_called()
+
+    def test_it_leaves_alone_a_playlist_that_is_already_playing(self):
+        frame = self._frame(viewed_owns_player=True, playing=True)
+
+        frame._play_selected_playlist()
+
+        frame._toggle_play_pause.assert_not_called()
+        frame._resume_playlist_tab.assert_not_called()
+
+    def test_an_empty_playlist_does_not_stop_the_music(self):
+        frame = self._frame(viewed_owns_player=False, viewed=_playlist("Nova"))
+
+        frame._play_selected_playlist()
+
+        frame._resume_playlist_tab.assert_not_called()
+        frame._announce.assert_called_once()
+
+
 class ShuffleAndRepeatTests(unittest.TestCase):
     def _frame(self, *, player_has_media):
         frame = PlaylistPlaybackMixin.__new__(PlaylistPlaybackMixin)
