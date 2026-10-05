@@ -48,12 +48,22 @@ class MediaPlayerFrame(
     FrameUIMixin,
     wx.Frame,
 ):
-    def __init__(self, initial_paths=None):
+    def __init__(
+        self,
+        initial_paths=None,
+        *,
+        initial_paths_in_new_playlist=False,
+        adopted_playback=None,
+    ):
         super().__init__(None, title=APP_TITLE, size=DEFAULT_WINDOW_SIZE)
 
         self.settings = load_settings()
         setup_logging(self.settings.logging_enabled, self.settings.logging_level)
         self._initial_paths = list(initial_paths or [])
+        # Vindo do player rápido com a mídia já encerrada: ela abre numa playlist nova.
+        self._initial_paths_in_new_playlist = bool(initial_paths_in_new_playlist)
+        # O MPV do player rápido, ainda tocando, para a mídia seguir sem corte.
+        self._pending_adopted_playback = adopted_playback
         self._initialize_equalizer_support()
         self.current_volume = self.settings.default_volume
         self.current_playback_rate = 1.0
@@ -101,7 +111,7 @@ class MediaPlayerFrame(
             return
 
         self._startup_initialization_started = True
-        self._create_player_backend()
+        self._create_player_backend(adopted=self._pending_adopted_playback)
         self._create_library_loader()
         self._create_smart_library_service()
         self._initialize_smtc_service()
@@ -109,6 +119,7 @@ class MediaPlayerFrame(
         self._startup_ready = True
 
         self._initialize_player_state()
+        self._adopt_pending_playback()
         # Plugins start only after session restore, so on_start can inspect the
         # playlists and active media that are actually visible to the user.
         self._initialize_plugin_service()
@@ -134,6 +145,10 @@ class MediaPlayerFrame(
             return
         paths = self._initial_paths
         self._initial_paths = []
+        if self._initial_paths_in_new_playlist:
+            self._initial_paths_in_new_playlist = False
+            self._open_media_paths(paths)
+            return
         self._open_external_files(paths)
 
     def receive_external_files(self, paths):

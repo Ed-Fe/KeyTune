@@ -116,6 +116,7 @@ footer {
         <li class="toc-level-2"><a href="#getting-started">Getting started</a></li>
         <li class="toc-level-2"><a href="#interface">Interface</a></li>
         <li class="toc-level-2"><a href="#how-to-open-media">How to open media</a></li>
+        <li class="toc-level-3"><a href="#listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</a></li>
         <li class="toc-level-2"><a href="#playback">Playback</a></li>
         <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
         <li class="toc-level-3"><a href="#playback-queue">Playback queue</a></li>
@@ -161,6 +162,7 @@ footer {
         <li class="toc-level-2"><a href="#equalizer">Equalizer</a></li>
         <li class="toc-level-3"><a href="#how-to-use-it">How to use it</a></li>
         <li class="toc-level-4"><a href="#management-buttons">Management buttons</a></li>
+        <li class="toc-level-4"><a href="#equalizer-just-for-one-tab">Equalizer just for one tab</a></li>
         <li class="toc-level-4"><a href="#preset-editor">Preset editor</a></li>
         <li class="toc-level-3"><a href="#built-in-presets">Built-in presets</a></li>
         <li class="toc-level-3"><a href="#tips">Tips</a></li>
@@ -189,7 +191,7 @@ footer {
 <li>Search in the current playlist or folder, with navigation between results</li>
 <li>Smart library: global search, favorites, ratings, history and per-file resume</li>
 <li>Sleep timer with preset durations or a pause at the end of the track</li>
-<li>Per-tab equalizer, with presets and your own presets</li>
+<li>Equalizer for all tabs or just for one, with presets and your own presets</li>
 <li>Lyrics panel with automatic search</li>
 <li>KeyTube tab, with YouTube Music and YouTube (<code>Ctrl+Shift+Y</code>)</li>
 <li>YouTube live broadcasts, with audio and optional video</li>
@@ -257,6 +259,64 @@ footer {
 <li>Video: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
 </ul>
 <p><strong>File &gt; Recent</strong> keeps, in separate lists, the last files, folders and playlists you used.</p>
+<h3 id="listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</h3>
+<p>With KeyTune set as the default player, <code>Enter</code> on an audio file in File Explorer opens the <strong>quick player</strong>: a small window that plays the file right away, without loading tabs, playlists or the previous session.</p>
+<ol>
+<li>In File Explorer, select the file and press <code>Enter</code>.</li>
+<li>Listen. The screen reader announces the file name in the window title.</li>
+<li>Press <code>Esc</code> or <code>Alt+F4</code> to close.</li>
+</ol>
+<p><code>Enter</code> on another file, with the quick player open, replaces what is playing with the new file, in the same window. Focus stays in File Explorer, and KeyTune announces nothing: you hear the new file start.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Play or pause</td>
+<td><code>Space</code></td>
+</tr>
+<tr>
+<td>Seek back or forward</td>
+<td><code>Left arrow</code> / <code>Right arrow</code></td>
+</tr>
+<tr>
+<td>Seek back or forward 1 minute</td>
+<td><code>Shift+Left arrow</code> / <code>Shift+Right arrow</code></td>
+</tr>
+<tr>
+<td>Volume</td>
+<td><code>Up arrow</code> / <code>Down arrow</code></td>
+</tr>
+<tr>
+<td>Go to the start or the end</td>
+<td><code>Home</code> / <code>End</code></td>
+</tr>
+<tr>
+<td>Speed</td>
+<td><code>]</code> faster, <code>[</code> slower, <code>\</code> back to normal</td>
+</tr>
+<tr>
+<td>Hear the time, the volume or the status</td>
+<td><code>T</code> / <code>V</code> / <code>S</code></td>
+</tr>
+<tr>
+<td>Continue in the full KeyTune</td>
+<td><code>Ctrl+Enter</code> (or the <strong>Continue in the full KeyTune</strong> button)</td>
+</tr>
+<tr>
+<td>Close</td>
+<td><code>Esc</code> or <code>Alt+F4</code></td>
+</tr>
+</tbody>
+</table>
+<p>The keys and the announcements are the same as in the main window's player: changing the volume or seeking says nothing, and <code>V</code> and <code>T</code> tell you the volume and the time when you want them.</p>
+<p><code>Ctrl+Enter</code> opens the main window and takes the media to a new playlist. The sound is not interrupted: the media keeps playing from where it was, at the same volume and speed, while the tabs of the last session come back. Opening KeyTune from the Start menu while the quick player is open does the same.</p>
+<p>The quick player saves nothing: the file does not enter the recent files, the history or the session, and a volume changed in it lasts only until you close it or continue in the full KeyTune, which keeps it. It starts with the volume of the last session, or with the default volume if the session is not restored.</p>
+<p>These open straight in the main window, as before: <code>.m3u</code> and <code>.m3u8</code> playlists, videos when video output is on, and any file when the full KeyTune is already open (it goes to the current playlist). To always use the main window, uncheck <strong>Use the quick player when opening files from Windows</strong> in <code>Ctrl+,</code> &gt; <strong>General</strong>.</p>
 <h2 id="playback">Playback</h2>
 <h3 id="playback-shortcuts">Playback shortcuts</h3>
 <table>
@@ -270,6 +330,10 @@ footer {
 <tr>
 <td><code>Space</code></td>
 <td>Play or pause</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>With focus on the player, play the playlist of the tab on screen, from where it stopped</td>
 </tr>
 <tr>
 <td><code>Left arrow</code> / <code>Right arrow</code></td>
@@ -379,13 +443,22 @@ footer {
 <h3 id="lyrics">Lyrics</h3>
 <p><code>Ctrl+Alt+L</code>, or the <strong>Lyrics</strong> box in the time panel, shows or hides the lyrics panel. When the track changes, KeyTune looks for the lyrics on its own, first on LRCLIB and then on YouTube Music. The <strong>Copy full lyrics</strong> button copies the text to the clipboard.</p>
 <h2 id="playlists-folders-and-tabs">Playlists, folders and tabs</h2>
-<p>Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The active tab decides what plays and what shows in the item browser.</p>
+<p>Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The tab on screen decides what shows in the item browser.</p>
+<p>Switching tabs does not touch what is playing: you can walk through the playlists, or create a new one with <code>Ctrl+T</code>, without interrupting the music. A playlist only takes over playback when you play something in it.</p>
+<ul>
+<li><code>Enter</code> on an item plays that item, and its playlist becomes the one that plays.</li>
+<li>Each playlist keeps the track and the position where it stopped. <code>Enter</code> on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.</li>
+<li><code>Space</code>, the seek and volume arrows, <strong>Next</strong> and <strong>Previous</strong> always act on what is playing, whatever tab is on screen. If nothing is loaded, <code>Space</code> resumes the playlist on screen.</li>
+<li><code>Enter</code>, with focus on the player, hands playback to the playlist on screen: it plays again from where it had stopped, and the one that was playing keeps its position.</li>
+<li>Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen.</li>
+<li>The window title and the status (<code>S</code>) tell what is playing. <code>S</code> also names the tab on screen when it is another one.</li>
+</ul>
 <h3 id="tab-and-item-shortcuts">Tab and item shortcuts</h3>
 <ul>
 <li><code>Ctrl+T</code>: new playlist tab</li>
 <li><code>Ctrl+W</code>: close the current tab</li>
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: next tab or previous tab</li>
-<li><code>Ctrl+Shift+E</code>: equalizer of the active tab</li>
+<li><code>Ctrl+Shift+E</code>: equalizer</li>
 <li><code>Ctrl+C</code>: copy the selection as text and, for files on the computer, also as files. You can paste into another playlist, into a text field or into Windows Explorer</li>
 <li><code>Ctrl+Shift+C</code>: copy the link or the path of the current media (in the folder explorer, the path of the selection)</li>
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
@@ -712,9 +785,9 @@ footer {
 <p>The station goes into the current playlist under the station's name. It plays as an audio-only live broadcast: you can't rewind or fast-forward, and it stays out of AutoDJ and crossfade.</p>
 <p>The song the station announces appears in the status bar, in the format <em>Station: title</em>, and goes into the status announcement (<code>S</code>). Recent stations come from the playback history.</p>
 <h2 id="equalizer">Equalizer</h2>
-<p><code>Ctrl+Shift+E</code> (or <strong>View &gt; Per-tab equalizer</strong>) opens the active tab's equalizer, so each playlist can have its own setting. That lets you, for example, keep one playlist with boosted bass and another with a neutral setting, without redoing everything each time you switch.</p>
+<p><code>Ctrl+Shift+E</code> (or <strong>View &gt; Equalizer</strong>) opens the equalizer. The setting applies to everything KeyTune plays: all tabs, the ones you open later and the quick player.</p>
 <h3 id="how-to-use-it">How to use it</h3>
-<p>The <strong>Target tab</strong> field shows which playlist receives the adjustments. The <strong>Enable equalizer on this tab</strong> box turns the effect on or off for that tab only.</p>
+<p>The <strong>Enable equalizer</strong> box turns the effect on or off.</p>
 <p>The <strong>Preset</strong> field lists all the presets. The built-in ones carry the suffix <em>(built-in)</em>. When you choose one, <strong>Description</strong> shows a note about the sound profile and <strong>Preset summary</strong> brings the preamp and the value of each band, so you can check before applying.</p>
 <h4 id="management-buttons">Management buttons</h4>
 <ul>
@@ -723,7 +796,12 @@ footer {
 <li><strong>Save copy...</strong>: when the selected one is built-in, this is the button that appears. It creates an editable version based on it, the right way to start from a ready-made preset and adjust.</li>
 <li><strong>Duplicate...</strong>: copies a custom preset under another name, without touching the original. Doesn't apply to built-in ones.</li>
 <li><strong>Delete</strong>: permanently removes the selected custom preset. Doesn't apply to built-in ones.</li>
-<li><strong>Apply to all tabs</strong>: copies the current tab's preset and enabled state to all open media tabs.</li>
+</ul>
+<h4 id="equalizer-just-for-one-tab">Equalizer just for one tab</h4>
+<p>A playlist can sound different from the others: audiobooks with the voice brought forward, for example. With it playing, open the equalizer and check <strong>Use an equalizer just for this tab</strong>. The <strong>Target tab</strong> field shows which playlist that is.</p>
+<ul>
+<li>Checked, the tab starts from the setting that was already in effect, and what you change stays in it.</li>
+<li>Unchecked, the tab follows the equalizer of all tabs again.</li>
 </ul>
 <h4 id="preset-editor">Preset editor</h4>
 <p>The editor has the name field, the preamp and one control per frequency band. Each band goes from -12.0 dB to +12.0 dB: positive values boost the frequency and negative ones cut it. The preamp adjusts the overall gain before all the bands.</p>
@@ -825,7 +903,7 @@ footer {
 <h2 id="settings">Settings</h2>
 <p>Preferences open with <code>Ctrl+,</code> and are divided into eight tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, <strong>KeyTube</strong>, <strong>Online radio</strong> and <strong>Additional resources</strong>.</p>
 <h3 id="general">General</h3>
-<p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says.</p>
+<p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says. <strong>Use the quick player when opening files from Windows</strong> comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see <a href="#listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</a>).</p>
 <p>The <strong>File association</strong> section (Windows) has the <strong>Register as default player</strong> button, which adds KeyTune to the <em>Open with</em> menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. <strong>Unregister associations</strong> undoes the registration.</p>
 <p>The <strong>Log recording</strong> section helps investigate problems. <strong>Record diagnostic logs</strong> writes a log file, in English, to the data folder, useful to attach to a bug report. <strong>Detail level</strong> goes from <em>Errors only</em>, the quietest, to <em>Debug</em>, which produces large files. <strong>Open log folder</strong> takes you to them.</p>
 <h3 id="playback-2">Playback</h3>
@@ -925,7 +1003,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 04/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

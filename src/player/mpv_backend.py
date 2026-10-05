@@ -65,6 +65,11 @@ class MPVEventManager:
             self._callbacks[event_type] = []
         self._callbacks[event_type].append((callback, args))
 
+    def clear(self):
+        """Drop every listener, for a player that changes owner while it plays."""
+        for callbacks in self._callbacks.values():
+            callbacks.clear()
+
     def emit(self, event_type: PlayerEventType, event: Any = None):
         for callback, args in list(self._callbacks.get(event_type, [])):
             try:
@@ -93,6 +98,7 @@ class MPVPlayer:
         # ``eof-reached`` property; this tracks its last value so we only react
         # to the transition into the "reached end" state.
         self._eof_reached_state = False
+        self._audio_filters_applied = False
         player_kwargs = {
             "input_default_bindings": False,
             "input_vo_keyboard": False,
@@ -619,8 +625,20 @@ class MPVPlayer:
             pass
 
     def set_audio_filters(self, filter_chain: str):
+        filter_chain = filter_chain or ""
+        # Clearing a chain that was never set would still make MPV rebuild the
+        # audio chain, an audible glitch on a media that is already playing.
+        if not filter_chain and not getattr(self, "_audio_filters_applied", True):
+            return
+        # The same goes for writing the chain that is already there. Labelled
+        # filters are the exception: `af-command` changes them in place, so
+        # writing the chain again is how they go back to their initial values.
+        if filter_chain == getattr(self, "_audio_filter_chain", None) and "@" not in filter_chain:
+            return
         try:
-            self._player["af"] = filter_chain or ""
+            self._player["af"] = filter_chain
+            self._audio_filters_applied = bool(filter_chain)
+            self._audio_filter_chain = filter_chain
         except Exception:
             pass
 

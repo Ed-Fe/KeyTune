@@ -101,7 +101,7 @@ class YouTubeMusicSearchResultsTests(unittest.TestCase):
 
         self.assertEqual(state.items, ["https://example.com/a", "https://example.com/b", "https://example.com/c"])
         self.assertEqual(state.current_media_path, "https://example.com/b")
-        self.assertEqual(frame.active_playlist_index, 2)
+        # Playing in the playlist is what hands it the player.
         frame._play_media.assert_called_once_with(index=2)
         frame._select_tab.assert_not_called()
 

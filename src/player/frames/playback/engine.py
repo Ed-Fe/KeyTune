@@ -22,7 +22,8 @@ class PlaybackEngineMixin:
             return
 
         self._update_title()
-        self._announce(_("Nenhuma mídia tocando agora."))
+        if getattr(self, "_pending_adopted_playback", None) is None:
+            self._announce(_("Nenhuma mídia tocando agora."))
 
     def _next_playback_request_serial(self):
         self._playback_request_serial += 1

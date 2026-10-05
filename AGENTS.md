@@ -41,7 +41,7 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 ## Conventions
 
 - The updater contract spans `constants.py`, `installer/keytune.iss`, `.github/workflows/release-windows.yml`, and the release assets `KeyTune-Setup.exe` + `.sha256` — keep them in sync. Updates are installer-driven: the app downloads the setup and runs it `/VERYSILENT`; the Inno `[Run]` step relaunches; the installer also registers default-app `Capabilities`/`RegisteredApplications` (HKA).
-- The update dialog shows the GitHub release body as the changelog — keep `CHANGELOG.md` and the published release notes consistent (the app doesn't read the file).
+- The changelog is one file per version in `docs/changelog/` (`X.Y.Z.md` in Portuguese, plus `.en.md`/`.es.md`; `unreleased*.md` for the next one). The release publishes it as the release body and `release-notes.<lang>.md` assets, and the update dialog shows the active language; **Ajuda > Histórico de mudanças** reads the bundled files. Keep all three languages in step.
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Full feature list and shortcut inventory: `README.md`, `docs/manual.md`.
 - Run `python scripts/generate_credits.py --language pt_BR --language en` after editing dependencies in `pyproject.toml` (or before a release) to keep `docs/credits.md` and `docs/credits.en.md` — shown by the About dialog — accurate; they're also regenerated automatically during Windows release builds.
@@ -52,6 +52,6 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - `instructions/ui-screens.instructions.md` — **required before building a screen**: labels, groups, help text, layout, where options live, the audit.
 - `instructions/player-ui-a11y.instructions.md` — wxPython UI, dialogs, menus, shortcuts, focus, screen reader.
 - `instructions/i18n.instructions.md` — localization: wrapping strings in `_()`, catalogs under `locale/`, translating the manual/credits/installer.
-- `instructions/update-release.instructions.md` — updater, Windows packaging, release notes, CHANGELOG.
+- `instructions/update-release.instructions.md` — updater, Windows packaging, release notes, changelog.
 - `instructions/git-workflow.instructions.md` — finalizing features, commits, pushes. Commits in English; manual and changelog wording rules in `instructions/writing.instructions.md`.
 - `prompts/accessibility-smoke-test.prompt.md`, `prompts/release-readiness.prompt.md` — verification checklists.

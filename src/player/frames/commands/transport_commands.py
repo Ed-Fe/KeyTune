@@ -13,7 +13,7 @@ class TransportCommandsMixin:
         self._toggle_play_pause()
 
     def on_stop(self, _event):
-        state = self._get_playlist_state()
+        state = self._get_active_playlist_state()
         self._cancel_crossfade_transition(
             stop_incoming=True, stop_outgoing=True, invalidate_requests=True, restore_selection=True,
         )

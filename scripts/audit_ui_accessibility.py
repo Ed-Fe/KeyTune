@@ -221,6 +221,12 @@ def _manifest():
     )
 
 
+def _changelog_entries():
+    from player.changelog import list_changelog_entries
+
+    return list_changelog_entries()
+
+
 def _update_info():
     from player.update.service import UpdateInfo
 
@@ -239,6 +245,7 @@ def _update_info():
 def _build_screens():
     """Map each screen class name to a factory taking the parent window."""
     from player.about.dialog import AboutDialog
+    from player.changelog.dialog import ChangelogDialog
     from player.convert import dialog as convert_dialog
     from player.download.dialog import DownloadDialog
     from player.equalizer.dialog import EqualizerPresetDialog
@@ -257,6 +264,7 @@ def _build_screens():
     from player.preferences.audio_output_dialog import AudioOutputDialog
     from player.preferences.dialog import PreferencesDialog
     from player.preferences.models import AppSettings
+    from player.quick_player.panel import QuickPlayerPanel
     from player.radio.manual_dialog import AddRadioManuallyDialog
     from player.radio.panel import RadioTabPanel
     from player.sleep_timer.dialog import SleepTimerDialog
@@ -290,6 +298,7 @@ def _build_screens():
         "AutoDJSessionPanel": lambda parent: AutoDJSessionPanel(
             parent, on_replace_next=_noop, on_recalculate=_noop, on_toggle_preparation=_noop, on_stop=_noop
         ),
+        "ChangelogDialog": lambda parent: ChangelogDialog(parent, _changelog_entries()),
         "ConvertDialog": lambda parent: convert_dialog.ConvertDialog(
             parent, convert_dialog.MODE_VIDEO_TO_VIDEO, "video.mp4", settings=AppSettings()
         ),
@@ -299,9 +308,9 @@ def _build_screens():
         ),
         "EqualizerTabPanel": lambda parent: EqualizerTabPanel(
             parent,
+            on_toggle_own=_noop,
             on_toggle_enabled=_noop,
             on_select_preset=_noop,
-            on_apply_to_all_tabs=_noop,
             on_create_preset=_noop,
             on_edit_preset=_noop,
             on_duplicate_preset=_noop,
@@ -317,6 +326,7 @@ def _build_screens():
         "PlaylistBrowserPanel": lambda parent: PlaylistBrowserPanel(parent, _noop, _noop),
         "PluginManagerDialog": lambda parent: PluginManagerDialog(parent, plugin_service),
         "PreferencesDialog": lambda parent: PreferencesDialog(parent, AppSettings()),
+        "QuickPlayerPanel": lambda parent: QuickPlayerPanel(parent),
         "QueueManagerDialog": lambda parent: QueueManagerDialog(
             parent, get_entries=_empty, on_remove=_noop, on_move=_noop, on_clear=_noop
         ),

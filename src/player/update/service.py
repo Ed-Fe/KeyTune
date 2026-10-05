@@ -22,7 +22,7 @@ from ..constants import (
     WINDOWS_SETUP_CHECKSUM_NAME,
     WINDOWS_SETUP_EXECUTABLE_NAME,
 )
-from ..i18n import _
+from ..i18n import SOURCE_LANGUAGE, _, get_active_language
 from ..install_info import read_install_info
 from ..log import get_logger
 
@@ -98,13 +98,43 @@ def fetch_latest_release() -> UpdateInfo:
         latest_version=tag_name,
         release_name=str(payload.get("name") or payload.get("tag_name") or archive_name),
         release_page_url=str(payload.get("html_url") or "").strip(),
-        release_notes=str(payload.get("body") or "").strip(),
+        release_notes=_localized_release_notes(assets, str(payload.get("body") or "").strip()),
         archive_name=archive_name,
         archive_url=archive_url,
         archive_size_bytes=_safe_int(archive_asset.get("size")),
         checksum_name=str(checksum_asset.get("name") or "").strip() or None if checksum_asset else None,
         checksum_url=str(checksum_asset.get("browser_download_url") or "").strip() or None if checksum_asset else None,
     )
+
+
+def release_notes_asset_name(language: str) -> str:
+    return f"release-notes.{language}.md"
+
+
+def _localized_release_notes(assets: list[dict], default_notes: str) -> str:
+    """Notas da release no idioma ativo, publicadas como asset ``release-notes.<idioma>.md``.
+
+    O corpo da release está em português; sem o asset do idioma, ou se ele não
+    puder ser baixado, vale o corpo.
+    """
+    language = get_active_language()
+    if not language or language == SOURCE_LANGUAGE:
+        return default_notes
+
+    asset_name = release_notes_asset_name(language).casefold()
+    for asset in assets:
+        if str(asset.get("name") or "").casefold() != asset_name:
+            continue
+        url = str(asset.get("browser_download_url") or "").strip()
+        if not url:
+            break
+        try:
+            localized = _download_text(url).strip()
+        except (UpdateError, OSError, UnicodeDecodeError):
+            _logger.warning("Could not download localized release notes (%s)", asset_name)
+            break
+        return localized or default_notes
+    return default_notes
 
 
 def download_release_archive(

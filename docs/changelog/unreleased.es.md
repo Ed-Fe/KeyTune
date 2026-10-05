@@ -1,0 +1,31 @@
+## [Sin publicar]
+
+### Agregado
+
+- **Reproductor rápido**: `Enter` sobre un archivo de audio en el Explorador de archivos abre una ventana pequeña que reproduce al instante, sin cargar pestañas, playlists ni la sesión anterior.
+  - `Enter` sobre otro archivo cambia lo que está sonando, en la misma ventana. `Esc` cierra.
+  - Las teclas y los anuncios son los mismos de la ventana principal.
+  - `Ctrl+Enter` sigue yendo al KeyTune completo, con el contenido en una playlist nueva.
+  - No guarda recientes, historial ni sesión.
+- **`Enter` en el reproductor**: con el foco en el reproductor, reproduce la playlist de la pestaña a la vista, desde donde se había quedado.
+- **Historial de cambios**: **Ayuda > Historial de cambios** muestra qué cambió en cada versión, de la más nueva a la más antigua.
+  - El texto llega en el idioma de la interfaz, en portugués, inglés o español.
+
+### Cambiado
+
+- **Cambiar de pestaña ya no cambia lo que está sonando**: antes, pasar a otra playlist detenía la música o cargaba la pista de esa pestaña. Ahora sigue sonando mientras miras las otras pestañas o creas una con `Ctrl+T`.
+  - Una playlist asume la reproducción cuando reproduces algo en ella. `Enter` sobre la pista en la que se había quedado reanuda desde ese punto.
+  - `Espacio`, las flechas, **Siguiente**, **Anterior**, aleatorio y repetición valen para lo que está sonando, sea cual sea la pestaña a la vista.
+  - El título de la ventana y el estado (`S`) dicen qué está sonando.
+- **Abrir un archivo desde Windows con KeyTune cerrado**: antes abría la ventana principal y restauraba la sesión. Ahora se reproduce en el reproductor rápido.
+  - Con KeyTune ya abierto no cambia nada: el archivo va a la playlist actual.
+  - Para volver al comportamiento anterior, desmarca **Usar el reproductor rápido al abrir archivos desde Windows** en `Ctrl+,` > **General**.
+- **Un ecualizador para todas las pestañas**: antes cada pestaña tenía el suyo, y repetir el ajuste requería **Aplicar en todas las pestañas**. Ahora lo que defines en `Ctrl+Shift+E` vale para todas las pestañas, las nuevas y el reproductor rápido.
+  - Para un ajuste distinto en una playlist, marca **Usar un ecualizador solo para esta pestaña**.
+  - Los ecualizadores por pestaña de versiones anteriores no se conservan: define el ajuste de nuevo, una sola vez.
+  - El botón **Aplicar en todas las pestañas** desapareció.
+- **`T` y `V` más cortos**: dicen solo el valor, como "1:20 de 3:40. 36%." y "80%.", sin "Tiempo actual:" ni "Volumen actual:".
+- **Estado (`S`) más directo**: empieza por el contenido y el tiempo, por ejemplo "Música.mp3, reproduciendo. 1:20 de 3:40. 36%. Elemento 3 de 12. Volumen 80%.".
+  - La velocidad, el tono, el aleatorio y la repetición solo se dicen cuando están fuera del valor predeterminado.
+  - La pestaña solo se dice cuando no es la del contenido que está sonando.
+- **Notas de la actualización en tu idioma**: el diálogo de actualización muestra qué cambió en la nueva versión en portugués, inglés o español, según el idioma de la interfaz.

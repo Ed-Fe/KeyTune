@@ -449,6 +449,10 @@ class KeyNavigationMixin:
             self._toggle_play_pause()
             return
 
+        if key_code in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and not event.HasAnyModifiers():
+            self._play_selected_playlist()
+            return
+
         if key_code == wx.WXK_HOME:
             self._seek_to_start()
             return

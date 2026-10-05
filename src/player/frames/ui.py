@@ -186,6 +186,7 @@ class FrameUIMixin:
             "Ctrl+Shift+W — Fechar mídia atual\n\n"
             "Reprodução\n"
             "Espaço — Play/Pause\n"
+            "Enter — No player, tocar a playlist da aba à vista, de onde ela parou\n"
             "Seta esquerda / direita — Voltar ou avançar no arquivo\n"
             "Shift+Seta esquerda / direita — Voltar ou avançar 1 minuto\n"
             "Home / End — Ir para o início ou para o fim\n"
@@ -520,7 +521,7 @@ class FrameUIMixin:
         self.view_menu = view_menu
         self.menu_playlist_browser_id = wx.NewIdRef()
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
-        view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
+        view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
         view_menu.Append(self.menu_open_radio_id, _("&Rádios online por aba\tCtrl+Shift+N"))
         view_menu.AppendSeparator()
@@ -555,15 +556,17 @@ class FrameUIMixin:
 
         help_menu = wx.Menu()
         self.menu_open_manual_id = wx.NewIdRef()
+        self.menu_changelog_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
         self.menu_show_welcome_screen_id = wx.NewIdRef()
         self.menu_about_id = wx.NewIdRef()
         help_menu.Append(self.menu_show_welcome_screen_id, _("Mostrar tela de &boas-vindas"))
         help_menu.Append(self.menu_open_manual_id, _("Abrir &manual do usuário"))
+        help_menu.Append(self.menu_changelog_id, _("&Histórico de mudanças"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
-        help_menu.Append(self.menu_check_updates_id, _("Verificar &atualizações"))
+        help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
 
@@ -851,6 +854,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_manage_plugins, id=self.menu_manage_plugins_id)
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
+        self.Bind(wx.EVT_MENU, self.on_open_changelog, id=self.menu_changelog_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
         self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)

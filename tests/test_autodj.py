@@ -988,6 +988,7 @@ class AutoDJTests(unittest.TestCase):
 
             def _get_active_playlist_state(self): return self.state
             def _get_playlist_state(self, _index=None): return self.state
+            def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _set_status_message(self, *_args, **_kwargs): pass
             def _finish_autodj_session_fill(self, *args):
@@ -1039,6 +1040,7 @@ class AutoDJTests(unittest.TestCase):
 
             def _get_active_playlist_state(self): return self.state
             def _get_playlist_state(self, _index=None): return self.state
+            def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _set_status_message(self, *_args, **_kwargs): pass
             def _finish_autodj_session_fill(self, *args):
@@ -1177,6 +1179,8 @@ class AutoDJTests(unittest.TestCase):
                 self.announcements = []
 
             def _get_playlist_state(self, _index=None): return self.state
+
+            def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, session=None): self.fill_calls.append(session); return True
             def _announce(self, message): self.announcements.append(message)
@@ -1205,6 +1209,8 @@ class AutoDJTests(unittest.TestCase):
                 self._autodj_transition_requests = {}
 
             def _get_playlist_state(self, _index=None): return self.state
+
+            def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, _state=None): return True
             def _announce(self, _message): pass
@@ -1236,6 +1242,8 @@ class AutoDJTests(unittest.TestCase):
                 self.fill_count = 0
 
             def _get_playlist_state(self, _index=None): return self.state
+
+            def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, _state=None): self.fill_count += 1; return True
             def _announce(self, _message): pass
@@ -1333,6 +1341,8 @@ class AutoDJTests(unittest.TestCase):
 
             def _get_playlist_state(self, _index=None): return state
 
+            def _get_active_playlist_state(self): return state
+
         frame = Frame()
         frame._refresh_autodj_session_ui(state)
 
@@ -1401,6 +1411,8 @@ class AutoDJTests(unittest.TestCase):
                 self.play_request = None
 
             def _get_playlist_state(self, _index=None): return self.state
+
+            def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return transition
             def _autodj_transition_duration_ms(self, _transition): return 8000
             def _autodj_preload_lead_ms(self, _media_path): return 1000
@@ -1450,6 +1462,7 @@ class AutoDJTests(unittest.TestCase):
 
             def _block_sensitive_action_during_youtube_music(self, _action): return False
             def _get_playlist_state(self, _index=None): return self.state
+            def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return transition
             def _autodj_transition_duration_ms(self, _transition): return 8000
             def _get_active_playlist_index(self): return 0
@@ -1479,6 +1492,7 @@ class AutoDJTests(unittest.TestCase):
 
             def _block_sensitive_action_during_youtube_music(self, _action): return False
             def _get_playlist_state(self, _index=None): return self.state
+            def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return None
             def _get_active_playlist_index(self): return 0
             def _play_media(self, **kwargs): self.play_request = kwargs
@@ -1516,6 +1530,8 @@ class AutoDJTests(unittest.TestCase):
                 self.play_request = None
 
             def _get_playlist_state(self, _index=None): return self.state
+
+            def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return transition
             def _autodj_transition_duration_ms(self, _transition): return 4000
             def _autodj_preload_lead_ms(self, _media_path): return 1000

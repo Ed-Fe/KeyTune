@@ -68,7 +68,7 @@ class PlaybackLoadingTests(unittest.TestCase):
     def test_space_during_media_loading_does_not_open_media_dialog(self):
         frame = PlaybackControlsMixin.__new__(PlaybackControlsMixin)
         frame.player = SimpleNamespace(get_media=Mock(return_value=None))
-        frame._get_playlist_state = Mock(return_value=PlaylistState(title="Músicas"))
+        frame._get_active_playlist_state = Mock(return_value=PlaylistState(title="Músicas"))
         frame._media_start_is_pending = Mock(return_value=True)
         frame._announce = Mock()
         frame.on_open = Mock()
@@ -95,6 +95,7 @@ class SessionRestoreTests(unittest.TestCase):
         frame._apply_equalizer_state_to_current_playback = Mock()
         frame._get_current_tab_index = Mock(return_value=0)
         frame._activate_tab = Mock()
+        frame._resume_playlist_tab = Mock()
         frame._get_playlist_state = lambda index=None: frame.playlists[0]
         frame._refresh_autodj_session_ui = Mock()
         frame._describe_playlist_position = Mock(return_value="Item 1 de 1.")

@@ -144,6 +144,10 @@ msgstr ""
 msgid "&Conteúdo Relacionado do YouTube Music (A)"
 msgstr ""
 
+#: src/player/quick_player/panel.py
+msgid "&Continuar no KeyTune completo"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Continuar ouvindo\tCtrl+Shift+R"
 msgstr ""
@@ -218,6 +222,7 @@ msgid "&Favoritar ou desfavoritar seleção\tCtrl+D"
 msgstr ""
 
 #: src/player/about/dialog.py
+#: src/player/changelog/dialog.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/reading_dialog.py
@@ -245,6 +250,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/smart_playlists.py
 msgid "&Gerenciar playlists inteligentes..."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Histórico de mudanças"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -348,6 +357,10 @@ msgstr ""
 msgid "&Ordenar por"
 msgstr ""
 
+#: src/player/quick_player/panel.py
+msgid "&Pausar"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "&Pausar preparação"
 msgstr ""
@@ -390,6 +403,7 @@ msgstr ""
 msgid "&Remover entrada"
 msgstr ""
 
+#: src/player/quick_player/panel.py
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "&Reproduzir"
@@ -487,6 +501,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
 msgid "A aba atual não é uma playlist editável do YouTube Music."
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "A aba {tab} agora tem um equalizador só dela."
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "A aba {tab} voltou a seguir o equalizador de todas as abas."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -677,6 +699,7 @@ msgid "A pasta não está mais disponível."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
+#: src/player/frames/playback/controls.py
 msgid "A playlist atual está vazia."
 msgstr ""
 
@@ -830,7 +853,7 @@ msgid "Aba A&nterior\tCtrl+Shift+Tab"
 msgstr ""
 
 #: src/player/frames/equalizer.py
-msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
+msgid "Aba Equalizador."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -849,10 +872,6 @@ msgstr ""
 msgid "Aba de mídia alvo do equalizador"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Aba de mídia ativa: {title}."
-msgstr ""
-
 #: src/player/frames/library_tabs/tabs.py
 msgid "Aba fechada."
 msgstr ""
@@ -863,10 +882,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -883,6 +898,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador."
+msgstr ""
+
+#: src/player/quick_player/panel.py
+msgid "Abre a janela principal com esta mídia numa playlist nova."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1144,7 +1163,7 @@ msgid "Ajuda rápida de atalhos"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nEnter — No player, tocar a playlist da aba à vista, de onde ela parou\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1167,16 +1186,12 @@ msgstr ""
 msgid "Ajuste de tempo: {adjustment:+.1%}."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr ""
-
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Aleatória"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Aleatório {state}."
+msgid "Aleatório ligado."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -1304,14 +1319,6 @@ msgstr ""
 msgid "Aplicar dispositivo de áudio"
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Aplicar em &todas as abas"
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Aplicar equalizador em todas as abas de mídia"
-msgstr ""
-
 #: src/player/preferences/dialog.py
 msgid "Aplicativos padrão"
 msgstr ""
@@ -1434,7 +1441,7 @@ msgid "Ativado"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Ativar &equalizador nesta aba"
+msgid "Ativar &equalizador"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1458,7 +1465,7 @@ msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Ativar equalizador nesta aba"
+msgid "Ativar equalizador"
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -1792,6 +1799,7 @@ msgid "Bandas do equalizador"
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Barra de tempo"
 msgstr ""
 
@@ -2245,10 +2253,6 @@ msgstr ""
 msgid "Conta: {name}."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Contexto"
-msgstr ""
-
 #: src/player/welcome/dialog.py
 msgid "Conteúdo da página atual"
 msgstr ""
@@ -2429,7 +2433,7 @@ msgid "Criar playlist do YouTube Music"
 msgstr ""
 
 #: src/player/frames/equalizer.py
-msgid "Crie um preset personalizado. Os ajustes ficam salvos nas preferências e podem ser aplicados a qualquer aba de mídia."
+msgid "Crie um preset personalizado. Ele fica salvo nas preferências."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -2584,6 +2588,10 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Deseja remover todos os {count} itens da fila de reprodução?"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Desmarcada, a aba segue o equalizador de todas as abas."
 msgstr ""
 
 #: src/player/download/dialog.py
@@ -2974,7 +2982,7 @@ msgid "Entradas guardadas no cache"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Eq&ualizador por aba\tCtrl+Shift+E"
+msgid "Eq&ualizador\tCtrl+Shift+E"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2983,10 +2991,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Equalizador"
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Equalizador desativado em {count} abas de mídia."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -2999,10 +3003,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Equalizador na aba {tab}: {name}."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Equalizador {name} aplicado em {count} abas de mídia."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -3038,11 +3038,11 @@ msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Naveg
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Escolha o preset que será usado na aba de mídia ativa."
+msgid "Escolha o preset do equalizador."
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
+msgid "Escolha o preset do equalizador. Descrição do preset atual: {desc}"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3101,6 +3101,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Espanha"
+msgstr ""
+
+#: src/player/quick_player/panel.py
+msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
 msgstr ""
 
 #: src/player/frames/download.py
@@ -3383,6 +3387,7 @@ msgid "Fim da lista: não há mais itens."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Fim do arquivo."
 msgstr ""
 
@@ -3485,6 +3490,10 @@ msgstr ""
 #: src/player/youtube_music/folders.py
 #: src/player/youtube_music/library_manager.py
 msgid "Histórico"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Histórico de mudanças"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3715,6 +3724,7 @@ msgid "Início das rádios online: escolha uma lista, busque uma rádio ou cole 
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Início do arquivo."
 msgstr ""
 
@@ -3820,6 +3830,7 @@ msgid "Item removido"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Item {current} de {total}."
 msgstr ""
 
@@ -3949,7 +3960,7 @@ msgid "Licença: {license}"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
+msgid "Liga ou desliga o equalizador."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -4249,6 +4260,10 @@ msgstr ""
 msgid "Mudanças da atualização"
 msgstr ""
 
+#: src/player/changelog/dialog.py
+msgid "Mudanças da versão"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "México"
 msgstr ""
@@ -4283,10 +4298,6 @@ msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Mídia suportada"
-msgstr ""
-
-#: src/player/frames/playback/controls.py
-msgid "Mídia: {name}. Estado: {state}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4352,6 +4363,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/search.py
 msgid "Nenhum favorito ainda. Use Ctrl+D para marcar o item atual."
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -4441,10 +4456,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -5041,10 +5052,12 @@ msgid "Não foi possível remover o plugin: {error}"
 msgstr ""
 
 #: src/player/frames/playback/backend.py
+#: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia."
 msgstr ""
 
 #: src/player/frames/playback/backend.py
+#: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia: {detail}."
 msgstr ""
 
@@ -5124,6 +5137,10 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Não há outra faixa disponível para substituir a próxima."
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Não lançado"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -5293,6 +5310,10 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "O equalizador não está disponível nesta instalação."
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "O equalizador vale para todas as abas. Uma aba só tem um ajuste diferente se você marcar a caixa para usar um equalizador só nela."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -5554,6 +5575,10 @@ msgstr ""
 msgid "Onde encontrar ajuda"
 msgstr ""
 
+#: src/player/equalizer/panel.py
+msgid "Onde vale"
+msgstr ""
+
 #: src/player/youtube_music/auth.py
 msgid "Opera"
 msgstr ""
@@ -5803,9 +5828,11 @@ msgid "Pastas recentes limpas."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Pausado."
 msgstr ""
 
+#: src/player/frames/playback/adoption.py
 #: src/player/frames/playback/controls.py
 msgid "Pausado: {name}"
 msgstr ""
@@ -6524,6 +6551,7 @@ msgid "Reprodução"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Reprodução retomada."
 msgstr ""
 
@@ -7070,15 +7098,8 @@ msgstr ""
 msgid "Tela do plugin {name} aberta."
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Tempo atual: {current} de {total}. {percent}%."
-msgstr ""
-
-#: src/player/frames/playback/controls.py
-msgid "Tempo atual: {time}."
-msgstr ""
-
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Tempo da mídia"
 msgstr ""
 
@@ -7087,11 +7108,8 @@ msgid "Tempo personalizado (minutos)"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Tempo {current} de {total}. {percent}%."
-msgstr ""
-
-#: src/player/frames/playback/controls.py
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Tempo: nenhuma mídia carregada."
 msgstr ""
 
@@ -7100,7 +7118,12 @@ msgid "Tempo: transmissão ao vivo"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Tempo: {current} / duração desconhecida"
+msgstr ""
+
+#: src/player/quick_player/frame.py
+msgid "Tempo: {current} / {total} ({percent}%)"
 msgstr ""
 
 #: src/player/sleep_timer/dialog.py
@@ -7170,6 +7193,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Tipo:"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Toca numa janela pequena, sem carregar as playlists."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7349,8 +7376,20 @@ msgstr ""
 msgid "Usar a capa do álbum como imagem"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Usar o player rápido ao abrir arqui&vos pelo Windows"
+msgstr ""
+
 #: src/player/plugins/manifest.py
 msgid "Usar o resolvedor de mídia yt-dlp"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Usar um equalizador só para esta a&ba"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Usar um equalizador só para esta aba"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7394,11 +7433,13 @@ msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Fa�
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Velocidade atual: {rate}."
+#: src/player/quick_player/frame.py
+msgid "Velocidade de reprodução: {rate}."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Velocidade de reprodução: {rate}."
+#: src/player/quick_player/frame.py
+msgid "Velocidade {rate}."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -7465,7 +7506,7 @@ msgid "Verificando atualizações..."
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Verificar &atualizações"
+msgid "Verificar at&ualizações"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -7474,6 +7515,14 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Versão: {version}"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Versões"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Versões:"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -7521,10 +7570,6 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Volume atual: {volume}%."
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
 msgstr ""
@@ -7535,6 +7580,11 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Volume padrão"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "Volume {volume}%."
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7715,10 +7765,6 @@ msgstr ""
 msgid "desconhecida"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "desligado"
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "diferença de BPM acima do limite seguro"
 msgstr ""
@@ -7767,10 +7813,6 @@ msgstr ""
 msgid "incluindo mídias remotas"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "ligado"
-msgstr ""
-
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "mídia remota"
@@ -7805,6 +7847,7 @@ msgid "pasta"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "pausado"
 msgstr ""
 
@@ -7893,6 +7936,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "tocando"
 msgstr ""
 
@@ -8162,6 +8206,11 @@ msgstr ""
 msgid "{criteria}; {sort}; até {limit} itens"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "{current} de {total}. {percent}%."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
 msgstr ""
@@ -8289,6 +8338,11 @@ msgstr ""
 msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "{name}, {state}."
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "{name}. Item {current} de {total}."
 msgstr ""
@@ -8396,6 +8450,10 @@ msgid "{title}: {count} item."
 msgid_plural "{title}: {count} itens."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/changelog/dialog.py
+msgid "{version} ({date})"
+msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "África"

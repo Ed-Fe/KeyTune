@@ -1,6 +1,7 @@
 import wx
 
 from ...about import AboutDialog
+from ...changelog import ChangelogDialog
 from ...i18n import _
 from ...log import setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
@@ -10,6 +11,13 @@ from ...preferences import AudioOutputDialog, PreferencesDialog
 class AppCommandsMixin:
     def on_open_about(self, _event):
         dialog = AboutDialog(self, on_open_credits=self._open_credits_document)
+        try:
+            dialog.ShowModal()
+        finally:
+            dialog.Destroy()
+
+    def on_open_changelog(self, _event):
+        dialog = ChangelogDialog(self)
         try:
             dialog.ShowModal()
         finally:

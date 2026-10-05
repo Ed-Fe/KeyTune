@@ -11,12 +11,12 @@ Use the workspace guidance in [AGENTS](../../AGENTS.md) and the release-specific
 When needed, reference:
 - [update-testing guide](../../docs/update-testing.md)
 - [release workflow](../../.github/workflows/release-windows.yml)
-- [changelog](../../CHANGELOG.md)
+- [changelog](../../docs/changelog/)
 
 Scope the review to the user-provided target (for example: a tag like `v0.2.0`, a branch, or a set of changed files).
 
 Check these risks when relevant:
-- Version coherence across `src/player/constants.py` (`APP_VERSION`), `CHANGELOG.md`, and the intended GitHub release tag/body.
+- Version coherence across `src/player/constants.py` (`APP_VERSION`), `docs/changelog/<version>.md` (with `.en.md` and `.es.md`), and the intended GitHub release tag/body.
 - Release asset contract expected by `src/player/update/service.py`: `KeyTune-Setup.exe` and `KeyTune-Setup.exe.sha256` (installer-driven updates, run silently via `/VERYSILENT`).
 - Release-body and changelog consistency (the app shows the GitHub release body in the update dialog).
 - Preservation of `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER` and `MEDIA_PLAYER_UPDATE_REPOSITORY_NAME` for updater testing overrides.

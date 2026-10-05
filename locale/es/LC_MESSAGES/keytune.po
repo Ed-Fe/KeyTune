@@ -223,7 +223,7 @@ msgid "&Sem avaliação\tCtrl+0"
 msgstr "&Sin valoración\tCtrl+0"
 
 msgid "&Sobre o KeyTune"
-msgstr "&Acerca de KeyTune"
+msgstr "A&cerca de KeyTune"
 
 msgid "&Subir"
 msgstr "&Subir"
@@ -431,12 +431,6 @@ msgstr "Pestaña actual: {title}."
 msgid "Aba de mídia alvo do equalizador"
 msgstr "Pestaña de medios destino del ecualizador"
 
-msgid "Aba de mídia ativa: {title}."
-msgstr "Pestaña de medios activa: {title}."
-
-msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
-msgstr "Pestaña Ecualizador. Ajustes de sonido disponibles para la pestaña de medios activa."
-
 msgid "Aba fechada."
 msgstr "Pestaña cerrada."
 
@@ -445,9 +439,6 @@ msgstr "Pestaña {num}: {title}."
 
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
 msgstr "Abre manualmente: Configuración > Aplicaciones > Aplicaciones predeterminadas."
-
-msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
-msgstr "Abre al menos dos pestañas de medios para aplicar el ecualizador en lote."
 
 msgid "Abra uma playlist do YouTube Music para remover faixas dela."
 msgstr "Abre una playlist de YouTube Music para quitar pistas de ella."
@@ -575,14 +566,8 @@ msgstr "Ajusta la ganancia de la banda de {freq}. Acepta valores de -20,0 dB a 2
 msgid "Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."
 msgstr "Ajusta la ganancia general antes de las bandas. Si el sonido se distorsiona, reduce este valor."
 
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr "Ajusta el ecualizador de la pestaña de medios activa. Usa los botones para crear presets, editar o duplicar presets personalizados y guardar una copia editable de los presets integrados. Cuando quieras repetir la misma configuración en las pestañas abiertas, usa Aplicar en todas las pestañas."
-
 msgid "Aleatória"
 msgstr "Aleatoria"
-
-msgid "Aleatório {state}."
-msgstr "Aleatorio {state}."
 
 msgid "Aleatório: {status}."
 msgstr "Aleatorio: {status}."
@@ -631,12 +616,6 @@ msgstr "Borrar las &posiciones de reanudación"
 
 msgid "Apenas erros (ERROR)"
 msgstr "Solo errores (ERROR)"
-
-msgid "Aplicar em &todas as abas"
-msgstr "Aplicar en &todas las pestañas"
-
-msgid "Aplicar equalizador em todas as abas de mídia"
-msgstr "Aplicar el ecualizador en todas las pestañas de medios"
 
 msgid "Aplicativos padrão"
 msgstr "Aplicaciones predeterminadas"
@@ -701,9 +680,6 @@ msgstr "Activado"
 msgid "ativado"
 msgstr "activado"
 
-msgid "Ativar &equalizador nesta aba"
-msgstr "Activar &ecualizador en esta pestaña"
-
 msgid "Ativar a &biblioteca inteligente"
 msgstr "Activar la &biblioteca inteligente"
 
@@ -712,9 +688,6 @@ msgstr "Activar a&nuncios de accesibilidad"
 
 msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr "Activar &modo aleatorio en playlists nuevas"
-
-msgid "Ativar equalizador nesta aba"
-msgstr "Activar ecualizador en esta pestaña"
 
 msgid "Ativar integração nas &Preferências..."
 msgstr "Activar integración en &Preferencias..."
@@ -1057,9 +1030,6 @@ msgstr "Cuenta: no conectada."
 msgid "Conta: {name}."
 msgstr "Cuenta: {name}."
 
-msgid "Contexto"
-msgstr "Contexto"
-
 msgid "Conteúdo da página atual"
 msgstr "Contenido de la página actual"
 
@@ -1116,9 +1086,6 @@ msgstr "Crear una nueva playlist en YouTube Music"
 
 msgid "Criar playlist do YouTube Music"
 msgstr "Crear playlist de YouTube Music"
-
-msgid "Crie um preset personalizado. Os ajustes ficam salvos nas preferências e podem ser aplicados a qualquer aba de mídia."
-msgstr "Crea un preset personalizado. Los ajustes quedan guardados en las preferencias y pueden aplicarse a cualquier pestaña de medios."
 
 msgid "Crie uma cópia editável do preset selecionado."
 msgstr "Crea una copia editable del preset seleccionado."
@@ -1209,9 +1176,6 @@ msgstr "¿Quieres eliminar la autenticación guardada de YouTube en esta computa
 
 msgid "Deseja remover a playlist inteligente {name}?"
 msgstr "¿Quieres quitar la lista inteligente {name}?"
-
-msgid "desligado"
-msgstr "desactivado"
 
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
 msgstr "Resalta detalles, platillos, voces y brillo general."
@@ -1354,17 +1318,11 @@ msgstr "Enter activa. Delete quita. Shift+F10 abre acciones. Escribe letras para
 msgid "Entradas guardadas no cache"
 msgstr "Entradas guardadas en la caché"
 
-msgid "Eq&ualizador por aba\tCtrl+Shift+E"
-msgstr "Ec&ualizador por pestaña\tCtrl+Shift+E"
-
 msgid "Equador"
 msgstr "Ecuador"
 
 msgid "Equalizador"
 msgstr "Ecualizador"
-
-msgid "Equalizador desativado em {count} abas de mídia."
-msgstr "Ecualizador desactivado en {count} pestañas de medios."
 
 msgid "Equalizador desativado na aba {tab}."
 msgstr "Ecualizador desactivado en la pestaña {tab}."
@@ -1374,9 +1332,6 @@ msgstr "Ecualizador desactivado."
 
 msgid "Equalizador na aba {tab}: {name}."
 msgstr "Ecualizador en la pestaña {tab}: {name}."
-
-msgid "Equalizador {name} aplicado em {count} abas de mídia."
-msgstr "Ecualizador {name} aplicado en {count} pestañas de medios."
 
 msgid "Equalizador: {name}."
 msgstr "Ecualizador: {name}."
@@ -1392,12 +1347,6 @@ msgstr "Elige la carpeta de la lista inteligente"
 
 msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr "Elige cómo conectar tu cuenta de YouTube.\n\nOpción 1 — Navegador instalado: selecciona el navegador en la lista y haz clic en \"Conectar\". El reproductor importará las cookies automáticamente.\n\nOpción 2 — Manual: pega los datos del navegador o elige un archivo browser.json, JSON de cookies o cookies.txt exportado anteriormente."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa."
-msgstr "Elige el preset que se usará en la pestaña de medios activa."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
-msgstr "Elige el preset que se usará en la pestaña de medios activa. Descripción del preset actual: {desc}"
 
 msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
 msgstr "Elige cuándo KeyTune debe pausar la reproducción automáticamente."
@@ -1777,12 +1726,6 @@ msgstr "Licenciado bajo la licencia {license}."
 msgid "Licença do aplicativo"
 msgstr "Licencia de la aplicación"
 
-msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
-msgstr "Activa o desactiva el ecualizador solo para la pestaña de medios activa."
-
-msgid "ligado"
-msgstr "activado"
-
 msgid "Limitar à &pasta (vazio ignora)"
 msgstr "Limitar a la &carpeta (vacío la ignora)"
 
@@ -1930,9 +1873,6 @@ msgstr "medio remoto"
 msgid "Mídia suportada"
 msgstr "Medios admitidos"
 
-msgid "Mídia: {name}. Estado: {state}."
-msgstr "Medio: {name}. Estado: {state}."
-
 msgid "na pasta {folder}"
 msgstr "en la carpeta {folder}"
 
@@ -2025,9 +1965,6 @@ msgstr "ninguna pestaña de medios"
 
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
 msgstr "Ninguna pestaña de medios activa para configurar el ecualizador."
-
-msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
-msgstr "Ninguna pestaña de medios activa para copiar el ecualizador."
 
 msgid "Nenhuma conta do YouTube está conectada."
 msgstr "Ninguna cuenta de YouTube está conectada."
@@ -3209,12 +3146,6 @@ msgstr "Te&mporizador"
 msgid "Techno"
 msgstr "Techno"
 
-msgid "Tempo atual: {current} de {total}. {percent}%."
-msgstr "Tiempo actual: {current} de {total}. {percent}%."
-
-msgid "Tempo atual: {time}."
-msgstr "Tiempo actual: {time}."
-
 msgid "Tempo da mídia"
 msgstr "Tiempo del medio"
 
@@ -3223,9 +3154,6 @@ msgstr "tiempo desconocido"
 
 msgid "Tempo personalizado (minutos)"
 msgstr "Tiempo personalizado (minutos)"
-
-msgid "Tempo {current} de {total}. {percent}%."
-msgstr "Tiempo {current} de {total}. {percent}%."
 
 msgid "Tempo: nenhuma mídia carregada."
 msgstr "Tiempo: ningún medio cargado."
@@ -3347,9 +3275,6 @@ msgstr "Validando la integridad del paquete..."
 msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
 msgstr "Los valores positivos refuerzan la frecuencia. Los valores negativos la atenúan. Haz ajustes sutiles para evitar la distorsión."
 
-msgid "Velocidade atual: {rate}."
-msgstr "Velocidad actual: {rate}."
-
 msgid "Velocidade de reprodução: {rate}."
 msgstr "Velocidad de reproducción: {rate}."
 
@@ -3374,8 +3299,8 @@ msgstr "Ver código fuente en GitHub"
 msgid "Verificando atualizações..."
 msgstr "Comprobando actualizaciones..."
 
-msgid "Verificar &atualizações"
-msgstr "Comprobar &actualizaciones"
+msgid "Verificar at&ualizações"
+msgstr "Comprobar ac&tualizaciones"
 
 msgid "versão desconhecida"
 msgstr "versión desconocida"
@@ -3406,9 +3331,6 @@ msgstr "Solo puedes quitar pistas de playlists que creaste o en las que eres col
 
 msgid "Voltar"
 msgstr "Atrás"
-
-msgid "Volume atual: {volume}%."
-msgstr "Volumen actual: {volume}%."
 
 msgid "Volume padrão"
 msgstr "Volumen predeterminado"
@@ -4872,9 +4794,6 @@ msgstr "Leyendo las carpetas pegadas..."
 msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
 msgstr "No se puede añadir una unidad entera de una vez. Entra en ella y elige una carpeta."
 
-msgid "Repetindo faixa atual."
-msgstr "Repitiendo la pista actual."
-
 msgid "Conteúdo relacionado."
 msgstr "Contenido relacionado."
 
@@ -5462,8 +5381,8 @@ msgstr "Añadir a favoritas la radio que se está reproduciendo"
 msgid "Ainda não revisado"
 msgstr "Aún sin revisar"
 
-msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
-msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+O — Abrir archivos en la playlist actual y reproducir (un archivo de playlist se abre como playlist)\nCtrl+Shift+O — Abrir archivos sin reproducir: van al final de la playlist actual\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (también desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar sin reproducir\nCtrl+E — Abrir el explorador de carpetas junto a la playlist; si pulsas otra vez con el foco en él, se cierra\nCtrl+T — Nueva playlist (ábrela o pega en ella para empezar otra lista)\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir: con el foco en una lista, la selección; en el reproductor, el medio actual\nCtrl+Shift+B — Descargar de YouTube: con el foco en una lista, la selección; en el reproductor, el medio actual (la playlist completa en Archivo > Descargar de YouTube)\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nInicio / Fin — Ir al principio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Subir o bajar la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono, en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Elegir el dispositivo de audio\nCtrl+RePág / Ctrl+AvPág — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Inicio / Fin — Ir al primer o al último elemento de la playlist\nCtrl+L — Marcar el medio actual como «me gusta» en YouTube Music\nCtrl+Alt+L — Mostrar u ocultar el panel de letras\nCtrl+Alt+V — Alternar el vídeo de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como «no me gusta» en YouTube Music\nCtrl+Shift+A — Añadir el medio actual a una playlist de YouTube Music\nCtrl+Shift+M — Ver los comentarios del medio actual\nCtrl+Shift+I — Ver los detalles del medio actual (descripción, canal, visualizaciones)\nCtrl+Shift+F — Añadir el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nShift+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Subir a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir la central de KeyTube en una pestaña, cuando la integración está activada\nCtrl+Shift+N — Abrir las radios en línea en una pestaña\nCtrl+F — Buscar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Resultado siguiente o anterior de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (playlists, carpetas e historial)\nCtrl+D — Marcar o desmarcar como favorito la selección\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Seguir escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nSuprimir — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápido a los elementos que empiezan por ellos\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
+msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\nCtrl+Shift+O — Abrir arquivos sem tocar: vão para o fim da playlist atual\nCtrl+V — Colar links, arquivos ou pastas copiados (inclusive no Explorador do Windows) na playlist atual e tocar\nCtrl+Shift+V — Colar sem tocar\nCtrl+E — Abrir o explorador de pastas ao lado da playlist; de novo, com o foco nele, fecha\nCtrl+T — Nova playlist (abra ou cole nela para começar outra lista)\nCtrl+C — Copiar a seleção; arquivos copiados também podem ser colados no Explorador do Windows\nCtrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\nCtrl+Shift+S — Salvar playlist atual\nCtrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\nCtrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\nCtrl+W — Fechar aba ou playlist atual\nCtrl+Shift+W — Fechar mídia atual\n\nReprodução\nEspaço — Play/Pause\nEnter — No player, tocar a playlist da aba à vista, de onde ela parou\nSeta esquerda / direita — Voltar ou avançar no arquivo\nShift+Seta esquerda / direita — Voltar ou avançar 1 minuto\nHome / End — Ir para o início ou para o fim\nSeta cima / baixo — Aumentar ou diminuir o volume\n] / [ — Aumentar ou diminuir a velocidade de reprodução\n\\ — Restaurar velocidade normal (1x)\nShift+] / Shift+[ — Aumentar ou diminuir o tom (pitch), em semitons, sem alterar a velocidade\nShift+\\ — Restaurar o tom original\nAlt+D — Selecionar dispositivo de áudio\nCtrl+PageUp / Ctrl+PageDown — Faixa anterior ou próxima\nAlt+Seta esquerda / direita — Faixa anterior ou próxima na playlist\nAlt+Seta cima / baixo — Mover o item atual na playlist\nAlt+Home / End — Ir para o primeiro ou último item da playlist\nCtrl+L — Curtir mídia atual no YouTube Music\nCtrl+Alt+L — Alternar painel de letras\nCtrl+Alt+V — Alternar o vídeo das transmissões ao vivo\nCtrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\nCtrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\nCtrl+Shift+M — Ver os comentários da mídia atual\nCtrl+Shift+I — Ver os detalhes da mídia atual (descrição, canal, visualizações)\nCtrl+Shift+F — Adicionar o item selecionado à fila de reprodução\nCtrl+Shift+Q — Gerenciar a fila de reprodução (ver, remover, reordenar)\nCtrl+Shift+D — Temporizador (durações prontas ou fim da faixa)\nE — Alternar modo aleatório\nR — Alternar modo de repetição\nA — Alternar conteúdo relacionado do YouTube Music (rádio automática ao fim da playlist)\nT — Anunciar tempo\nV — Anunciar volume\nS — Anunciar status\n\nExplorador de pastas\nEnter — Entrar na pasta ou tocar o arquivo, adicionando-o à playlist atual\nShift+Enter — Adicionar a seleção (arquivos ou pastas inteiras) à playlist sem tocar\nCtrl+Shift+F — Adicionar a seleção à fila de reprodução\nCtrl+Shift+K — Converter a seleção\nBackspace — Voltar para a pasta acima\nCtrl+Espaço — Classificar a pasta\nF5 — Atualizar a pasta\nShift+F10 — Todas as ações da seleção\nTab / Shift+Tab — Ir para a playlist ou para o player; Esc volta para onde o foco estava\n\nNavegação\nTab — Alternar entre a lista de itens e o player (e o explorador, quando aberto)\nCtrl+B — Alternar foco entre a lista de itens e o player\nCtrl+Shift+Y — Abrir a central do KeyTube em uma aba, quando a integração estiver ativada\nCtrl+Shift+N — Abrir as rádios online em uma aba\nCtrl+F — Localizar item na playlist ou pasta atual\nF3 / Shift+F3 — Próximo ou anterior resultado da busca\nCtrl+G — Buscar na biblioteca inteira (playlists, pastas e histórico)\nCtrl+D — Favoritar ou desfavoritar a seleção\nCtrl+0 a Ctrl+5 — Avaliar a seleção de zero a cinco estrelas\nCtrl+Shift+H — Histórico de reprodução\nCtrl+Shift+R — Continuar ouvindo o que ficou pela metade\nMenu Biblioteca > Playlists inteligentes — Abrir uma regra salva\nEnter — Tocar o item selecionado\nDelete — Remover item da playlist\nDigite letras ou números — Ir rapidamente para itens com esse início\nCtrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\nF1 — Mostrar esta ajuda"
+msgstr "Ayuda rápida de atajos\n\nArchivos y playlists\nCtrl+O — Abrir archivos en la playlist actual y reproducir (un archivo de playlist se abre como playlist)\nCtrl+Shift+O — Abrir archivos sin reproducir: van al final de la playlist actual\nCtrl+V — Pegar enlaces, archivos o carpetas copiados (también desde el Explorador de Windows) en la playlist actual y reproducir\nCtrl+Shift+V — Pegar sin reproducir\nCtrl+E — Abrir el explorador de carpetas junto a la playlist; si pulsas otra vez con el foco en él, se cierra\nCtrl+T — Nueva playlist (ábrela o pega en ella para empezar otra lista)\nCtrl+C — Copiar la selección; los archivos copiados también se pueden pegar en el Explorador de Windows\nCtrl+Shift+C — Copiar la ruta del medio actual (en el explorador, la ruta de la selección)\nCtrl+Shift+S — Guardar la playlist actual\nCtrl+Shift+K — Convertir: con el foco en una lista, la selección; en el reproductor, el medio actual\nCtrl+Shift+B — Descargar de YouTube: con el foco en una lista, la selección; en el reproductor, el medio actual (la playlist completa en Archivo > Descargar de YouTube)\nCtrl+W — Cerrar la pestaña o playlist actual\nCtrl+Shift+W — Cerrar el medio actual\n\nReproducción\nEspacio — Reproducir/Pausar\nEnter — En el reproductor, reproducir la playlist de la pestaña a la vista, desde donde se detuvo\nFlecha izquierda / derecha — Retroceder o avanzar en el archivo\nShift+Flecha izquierda / derecha — Retroceder o avanzar 1 minuto\nInicio / Fin — Ir al principio o al final\nFlecha arriba / abajo — Subir o bajar el volumen\n] / [ — Subir o bajar la velocidad de reproducción\n\\ — Restaurar la velocidad normal (1x)\nShift+] / Shift+[ — Subir o bajar el tono, en semitonos, sin cambiar la velocidad\nShift+\\ — Restaurar el tono original\nAlt+D — Elegir el dispositivo de audio\nCtrl+RePág / Ctrl+AvPág — Pista anterior o siguiente\nAlt+Flecha izquierda / derecha — Pista anterior o siguiente en la playlist\nAlt+Flecha arriba / abajo — Mover el elemento actual en la playlist\nAlt+Inicio / Fin — Ir al primer o al último elemento de la playlist\nCtrl+L — Marcar el medio actual como «me gusta» en YouTube Music\nCtrl+Alt+L — Mostrar u ocultar el panel de letras\nCtrl+Alt+V — Alternar el vídeo de las transmisiones en vivo\nCtrl+Shift+L — Marcar el medio actual como «no me gusta» en YouTube Music\nCtrl+Shift+A — Añadir el medio actual a una playlist de YouTube Music\nCtrl+Shift+M — Ver los comentarios del medio actual\nCtrl+Shift+I — Ver los detalles del medio actual (descripción, canal, visualizaciones)\nCtrl+Shift+F — Añadir el elemento seleccionado a la cola de reproducción\nCtrl+Shift+Q — Gestionar la cola de reproducción (ver, quitar, reordenar)\nCtrl+Shift+D — Temporizador (duraciones predefinidas o fin de la pista)\nE — Alternar el modo aleatorio\nR — Alternar el modo de repetición\nA — Alternar el contenido relacionado de YouTube Music (radio automática al final de la playlist)\nT — Anunciar el tiempo\nV — Anunciar el volumen\nS — Anunciar el estado\n\nExplorador de carpetas\nEnter — Entrar en la carpeta o reproducir el archivo, añadiéndolo a la playlist actual\nShift+Enter — Añadir la selección (archivos o carpetas enteras) a la playlist sin reproducir\nCtrl+Shift+F — Añadir la selección a la cola de reproducción\nCtrl+Shift+K — Convertir la selección\nRetroceso — Subir a la carpeta superior\nCtrl+Espacio — Ordenar la carpeta\nF5 — Actualizar la carpeta\nShift+F10 — Todas las acciones de la selección\nTab / Shift+Tab — Ir a la playlist o al reproductor; Esc vuelve a donde estaba el foco\n\nNavegación\nTab — Alternar entre la lista de elementos y el reproductor (y el explorador, cuando está abierto)\nCtrl+B — Alternar el foco entre la lista de elementos y el reproductor\nCtrl+Shift+Y — Abrir la central de KeyTube en una pestaña, cuando la integración está activada\nCtrl+Shift+N — Abrir las radios en línea en una pestaña\nCtrl+F — Buscar un elemento en la playlist o carpeta actual\nF3 / Shift+F3 — Resultado siguiente o anterior de la búsqueda\nCtrl+G — Buscar en toda la biblioteca (playlists, carpetas e historial)\nCtrl+D — Marcar o desmarcar como favorito la selección\nCtrl+0 a Ctrl+5 — Valorar la selección de cero a cinco estrellas\nCtrl+Shift+H — Historial de reproducción\nCtrl+Shift+R — Seguir escuchando lo que quedó a medias\nMenú Biblioteca > Listas inteligentes — Abrir una regla guardada\nEnter — Reproducir el elemento seleccionado\nSuprimir — Quitar el elemento de la playlist\nEscribe letras o números — Ir rápido a los elementos que empiezan por ellos\nCtrl+Tab / Ctrl+Shift+Tab — Pestaña siguiente o anterior\nF1 — Mostrar esta ayuda"
 
 msgid "Alterar biblioteca, playlists, favoritos e avaliações"
 msgstr "Modificar la biblioteca, las playlists, los favoritos y las valoraciones"
@@ -6203,3 +6122,156 @@ msgstr "{name}. Elemento {current} de {total}."
 
 msgid "Repetindo faixa atual. {position}"
 msgstr "Repitiendo la pista actual. {position}"
+
+msgid "&Continuar no KeyTune completo"
+msgstr "&Continuar en KeyTune completo"
+
+msgid "&Pausar"
+msgstr "&Pausar"
+
+msgid "Abre a janela principal com esta mídia numa playlist nova."
+msgstr "Abre la ventana principal con este medio en una playlist nueva."
+
+msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
+msgstr "Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Ctrl+Enter KeyTune completo · Esc cerrar"
+
+msgid "Tempo: {current} / {total} ({percent}%)"
+msgstr "Tiempo: {current} / {total} ({percent}%)"
+
+msgid "Toca numa janela pequena, sem carregar as playlists."
+msgstr "Reproduce en una ventana pequeña, sin cargar las playlists."
+
+msgid "Usar o player rápido ao abrir arqui&vos pelo Windows"
+msgstr "Usar el reproductor rápido al abrir archi&vos desde Windows"
+
+msgid "{current} de {total}. {percent}%."
+msgstr "{current} de {total}. {percent}%."
+
+msgid "Volume {volume}%."
+msgstr "Volumen {volume}%."
+
+msgid "{name}, {state}."
+msgstr "{name}, {state}."
+
+msgid "Velocidade {rate}."
+msgstr "Velocidad {rate}."
+
+msgid "Aleatório ligado."
+msgstr "Aleatorio activado."
+
+msgid "Eq&ualizador\tCtrl+Shift+E"
+msgstr "Ec&ualizador\tCtrl+Shift+E"
+
+msgid "A aba {tab} agora tem um equalizador só dela."
+msgstr "La pestaña {tab} ahora tiene un ecualizador solo para ella."
+
+msgid "A aba {tab} voltou a seguir o equalizador de todas as abas."
+msgstr "La pestaña {tab} vuelve a seguir el ecualizador de todas las pestañas."
+
+msgid "Aba Equalizador."
+msgstr "Pestaña Ecualizador."
+
+msgid "Ativar &equalizador"
+msgstr "Activar &ecualizador"
+
+msgid "Ativar equalizador"
+msgstr "Activar ecualizador"
+
+msgid "Crie um preset personalizado. Ele fica salvo nas preferências."
+msgstr "Crea un preset personalizado. Queda guardado en las preferencias."
+
+msgid "Desmarcada, a aba segue o equalizador de todas as abas."
+msgstr "Sin marcar, la pestaña sigue el ecualizador de todas las pestañas."
+
+msgid "Escolha o preset do equalizador."
+msgstr "Elige el preset del ecualizador."
+
+msgid "Escolha o preset do equalizador. Descrição do preset atual: {desc}"
+msgstr "Elige el preset del ecualizador. Descripción del preset actual: {desc}"
+
+msgid "Liga ou desliga o equalizador."
+msgstr "Activa o desactiva el ecualizador."
+
+msgid "O equalizador vale para todas as abas. Uma aba só tem um ajuste diferente se você marcar a caixa para usar um equalizador só nela."
+msgstr "El ecualizador vale para todas las pestañas. Una pestaña solo tiene un ajuste distinto si marcas la casilla para usar un ecualizador solo en ella."
+
+msgid "Onde vale"
+msgstr "Dónde se aplica"
+
+msgid "Usar um equalizador só para esta a&ba"
+msgstr "Usar un ecualizador solo para esta pesta&ña"
+
+msgid "Usar um equalizador só para esta aba"
+msgstr "Usar un ecualizador solo para esta pestaña"
+
+msgid "&Histórico de mudanças"
+msgstr "&Historial de cambios"
+
+msgid "Histórico de mudanças"
+msgstr "Historial de cambios"
+
+msgid "Mudanças da versão"
+msgstr "Cambios de la versión"
+
+msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
+msgstr "No se encontró ningún historial de cambios en esta instalación."
+
+msgid "Não lançado"
+msgstr "Sin publicar"
+
+msgid "Versões"
+msgstr "Versiones"
+
+msgid "Versões:"
+msgstr "Versiones:"
+
+msgid "{version} ({date})"
+msgstr "{version} ({date})"
+
+msgid "&Endereço do stream ou M3U"
+msgstr "&Dirección del stream o M3U"
+
+msgid "&Nome da rádio"
+msgstr "&Nombre de la radio"
+
+msgid "&OK"
+msgstr "&OK"
+
+msgid "Adicionar rádio &manualmente..."
+msgstr "Añadir radio &manualmente..."
+
+msgid "Adicionar rádio manualmente"
+msgstr "Añadir radio manualmente"
+
+msgid "Adicionar rádio manualmente..."
+msgstr "Añadir radio manualmente..."
+
+msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
+msgstr "Registra por su nombre y por la dirección del stream una radio que no está en el directorio, y la lleva a las favoritas."
+
+msgid "Digite o endereço do stream ou do arquivo M3U."
+msgstr "Escribe la dirección del stream o del archivo M3U."
+
+msgid "Digite um nome para a rádio."
+msgstr "Escribe un nombre para la radio."
+
+msgid "Endereço do stream ou M3U da rádio"
+msgstr "Dirección del stream o M3U de la radio"
+
+msgid "Endereço em branco"
+msgstr "Dirección en blanco"
+
+msgid "Endereço inválido"
+msgstr "Dirección no válida"
+
+msgid "Nome da rádio"
+msgstr "Nombre de la radio"
+
+msgid "Nome em branco"
+msgstr "Nombre en blanco"
+
+msgid "Não foi possível reconhecer este endereço como um stream de rádio válido."
+msgstr "No se pudo reconocer esta dirección como un stream de radio válido."
+
+msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
+msgstr "Úsalo cuando no encuentres la radio en la búsqueda: escribe un nombre para ella y la dirección directa del stream o de un archivo M3U. Al confirmar, pasa a tus radios favoritas."

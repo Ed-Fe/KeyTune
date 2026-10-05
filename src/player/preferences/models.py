@@ -18,6 +18,7 @@ from ..constants import (
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
+    DEFAULT_QUICK_PLAYER_ENABLED,
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
     DEFAULT_RESTORE_SESSION_ON_STARTUP,
@@ -80,7 +81,7 @@ from ..download.options import (
     normalize_sample_rate,
     normalize_video_quality,
 )
-from ..equalizer.models import EqualizerPreset
+from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID, EqualizerPreset
 
 
 @dataclass
@@ -91,6 +92,7 @@ class AppSettings:
     remember_window_size: bool = DEFAULT_REMEMBER_WINDOW_SIZE
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
+    quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
     live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
@@ -158,6 +160,9 @@ class AppSettings:
     recent_folders: list[str] = field(default_factory=list)
     recent_playlists: list[str] = field(default_factory=list)
     equalizer_custom_presets: list[EqualizerPreset] = field(default_factory=list)
+    # O equalizador de todas as abas; uma playlist pode ter o dela (equalizer_custom).
+    equalizer_enabled: bool = False
+    equalizer_preset_id: str = DEFAULT_EQUALIZER_PRESET_ID
     logging_enabled: bool = DEFAULT_LOGGING_ENABLED
     logging_level: str = DEFAULT_LOGGING_LEVEL
     welcome_screen_completed: bool = False
@@ -181,6 +186,7 @@ class AppSettings:
             "remember_window_size": self.remember_window_size,
             "remember_last_folder": self.remember_last_folder,
             "confirm_on_exit": self.confirm_on_exit,
+            "quick_player_enabled": self.quick_player_enabled,
             "announcements_enabled": self.announcements_enabled,
             "disable_video_output": self.disable_video_output,
             "live_video_enabled": self.live_video_enabled,
@@ -244,6 +250,8 @@ class AppSettings:
             "recent_folders": list(self.recent_folders),
             "recent_playlists": list(self.recent_playlists),
             "equalizer_custom_presets": [preset.to_dict() for preset in self.equalizer_custom_presets],
+            "equalizer_enabled": self.equalizer_enabled,
+            "equalizer_preset_id": self.equalizer_preset_id,
             "logging_enabled": self.logging_enabled,
             "logging_level": self.logging_level,
             "welcome_screen_completed": self.welcome_screen_completed,
@@ -257,6 +265,7 @@ class AppSettings:
         settings.remember_window_size = bool(data.get("remember_window_size", settings.remember_window_size))
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
+        settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
         settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))
@@ -428,6 +437,8 @@ class AppSettings:
         settings.recent_folders = _string_list(data.get("recent_folders"))
         settings.recent_playlists = _string_list(data.get("recent_playlists"))
         settings.equalizer_custom_presets = _equalizer_preset_list(data.get("equalizer_custom_presets"))
+        settings.equalizer_enabled = bool(data.get("equalizer_enabled", False))
+        settings.equalizer_preset_id = str(data.get("equalizer_preset_id") or DEFAULT_EQUALIZER_PRESET_ID)
         settings.logging_enabled = bool(data.get("logging_enabled", settings.logging_enabled))
         raw_logging_level = str(data.get("logging_level") or "").upper()
         settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL

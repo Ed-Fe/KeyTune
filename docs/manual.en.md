@@ -14,7 +14,7 @@ Here you will find the app's features and step-by-step instructions for the most
 - Search in the current playlist or folder, with navigation between results
 - Smart library: global search, favorites, ratings, history and per-file resume
 - Sleep timer with preset durations or a pause at the end of the track
-- Per-tab equalizer, with presets and your own presets
+- Equalizer for all tabs or just for one, with presets and your own presets
 - Lyrics panel with automatic search
 - KeyTube tab, with YouTube Music and YouTube (`Ctrl+Shift+Y`)
 - YouTube live broadcasts, with audio and optional video
@@ -68,6 +68,36 @@ Formats supported directly:
 
 **File > Recent** keeps, in separate lists, the last files, folders and playlists you used.
 
+### Listening to a file straight from Windows File Explorer
+
+With KeyTune set as the default player, `Enter` on an audio file in File Explorer opens the **quick player**: a small window that plays the file right away, without loading tabs, playlists or the previous session.
+
+1. In File Explorer, select the file and press `Enter`.
+2. Listen. The screen reader announces the file name in the window title.
+3. Press `Esc` or `Alt+F4` to close.
+
+`Enter` on another file, with the quick player open, replaces what is playing with the new file, in the same window. Focus stays in File Explorer, and KeyTune announces nothing: you hear the new file start.
+
+| Action | Shortcut |
+| --- | --- |
+| Play or pause | `Space` |
+| Seek back or forward | `Left arrow` / `Right arrow` |
+| Seek back or forward 1 minute | `Shift+Left arrow` / `Shift+Right arrow` |
+| Volume | `Up arrow` / `Down arrow` |
+| Go to the start or the end | `Home` / `End` |
+| Speed | `]` faster, `[` slower, `\` back to normal |
+| Hear the time, the volume or the status | `T` / `V` / `S` |
+| Continue in the full KeyTune | `Ctrl+Enter` (or the **Continue in the full KeyTune** button) |
+| Close | `Esc` or `Alt+F4` |
+
+The keys and the announcements are the same as in the main window's player: changing the volume or seeking says nothing, and `V` and `T` tell you the volume and the time when you want them.
+
+`Ctrl+Enter` opens the main window and takes the media to a new playlist. The sound is not interrupted: the media keeps playing from where it was, at the same volume and speed, while the tabs of the last session come back. Opening KeyTune from the Start menu while the quick player is open does the same.
+
+The quick player saves nothing: the file does not enter the recent files, the history or the session, and a volume changed in it lasts only until you close it or continue in the full KeyTune, which keeps it. It starts with the volume of the last session, or with the default volume if the session is not restored.
+
+These open straight in the main window, as before: `.m3u` and `.m3u8` playlists, videos when video output is on, and any file when the full KeyTune is already open (it goes to the current playlist). To always use the main window, uncheck **Use the quick player when opening files from Windows** in `Ctrl+,` > **General**.
+
 ## Playback
 
 ### Playback shortcuts
@@ -75,6 +105,7 @@ Formats supported directly:
 | Key | What it does |
 | --- | --- |
 | `Space` | Play or pause |
+| `Enter` | With focus on the player, play the playlist of the tab on screen, from where it stopped |
 | `Left arrow` / `Right arrow` | Rewind or fast-forward the media (the step is in **Preferences > Playback**) |
 | `Shift+Left arrow` / `Shift+Right arrow` | Rewind or fast-forward 1 minute |
 | `Home` / `End` | Go to the start or the end of the media |
@@ -127,14 +158,23 @@ The submenu also has **Time remaining** and **Cancel timer**. The player warns y
 
 ## Playlists, folders and tabs
 
-Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The active tab decides what plays and what shows in the item browser.
+Each playlist lives in a tab, which helps separate contexts: a list to listen to now, an organized collection, one for tests. The tab on screen decides what shows in the item browser.
+
+Switching tabs does not touch what is playing: you can walk through the playlists, or create a new one with `Ctrl+T`, without interrupting the music. A playlist only takes over playback when you play something in it.
+
+- `Enter` on an item plays that item, and its playlist becomes the one that plays.
+- Each playlist keeps the track and the position where it stopped. `Enter` on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.
+- `Space`, the seek and volume arrows, **Next** and **Previous** always act on what is playing, whatever tab is on screen. If nothing is loaded, `Space` resumes the playlist on screen.
+- `Enter`, with focus on the player, hands playback to the playlist on screen: it plays again from where it had stopped, and the one that was playing keeps its position.
+- Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen.
+- The window title and the status (`S`) tell what is playing. `S` also names the tab on screen when it is another one.
 
 ### Tab and item shortcuts
 
 - `Ctrl+T`: new playlist tab
 - `Ctrl+W`: close the current tab
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: next tab or previous tab
-- `Ctrl+Shift+E`: equalizer of the active tab
+- `Ctrl+Shift+E`: equalizer
 - `Ctrl+C`: copy the selection as text and, for files on the computer, also as files. You can paste into another playlist, into a text field or into Windows Explorer
 - `Ctrl+Shift+C`: copy the link or the path of the current media (in the folder explorer, the path of the selection)
 - `Ctrl+Shift+S`: save the current playlist
@@ -540,11 +580,11 @@ The song the station announces appears in the status bar, in the format *Station
 
 ## Equalizer
 
-`Ctrl+Shift+E` (or **View > Per-tab equalizer**) opens the active tab's equalizer, so each playlist can have its own setting. That lets you, for example, keep one playlist with boosted bass and another with a neutral setting, without redoing everything each time you switch.
+`Ctrl+Shift+E` (or **View > Equalizer**) opens the equalizer. The setting applies to everything KeyTune plays: all tabs, the ones you open later and the quick player.
 
 ### How to use it
 
-The **Target tab** field shows which playlist receives the adjustments. The **Enable equalizer on this tab** box turns the effect on or off for that tab only.
+The **Enable equalizer** box turns the effect on or off.
 
 The **Preset** field lists all the presets. The built-in ones carry the suffix *(built-in)*. When you choose one, **Description** shows a note about the sound profile and **Preset summary** brings the preamp and the value of each band, so you can check before applying.
 
@@ -555,7 +595,13 @@ The **Preset** field lists all the presets. The built-in ones carry the suffix *
 - **Save copy...**: when the selected one is built-in, this is the button that appears. It creates an editable version based on it, the right way to start from a ready-made preset and adjust.
 - **Duplicate...**: copies a custom preset under another name, without touching the original. Doesn't apply to built-in ones.
 - **Delete**: permanently removes the selected custom preset. Doesn't apply to built-in ones.
-- **Apply to all tabs**: copies the current tab's preset and enabled state to all open media tabs.
+
+#### Equalizer just for one tab
+
+A playlist can sound different from the others: audiobooks with the voice brought forward, for example. With it playing, open the equalizer and check **Use an equalizer just for this tab**. The **Target tab** field shows which playlist that is.
+
+- Checked, the tab starts from the setting that was already in effect, and what you change stays in it.
+- Unchecked, the tab follows the equalizer of all tabs again.
 
 #### Preset editor
 
@@ -609,7 +655,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 ### General
 
-**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says.
+**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
 The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the *Open with* menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration.
 
@@ -708,7 +754,9 @@ Favorites and ratings are spoken together with the item, and details, comments a
 
 On startup, KeyTune can check for updates on its own. To check at any time, use **Help > Check for updates**.
 
-When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready.
+When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready. The notes come in the interface language.
+
+To read what changed in each version, including earlier ones, use **Help > Change history**: choose the version in the list and read the text just below it.
 
 ## Troubleshooting
 

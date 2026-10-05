@@ -108,6 +108,9 @@ class StationRadioMixin:
         target_state.was_playing = bool(getattr(source_state, "was_playing", False))
 
         self.notebook.SetPageText(target_index, target_state.title)
+        # A posição da playlist de origem já foi guardada acima; a rádio nova
+        # passa a ser a dona do player, que segue com a mesma mídia.
+        self.active_playlist_index = target_index
         self._select_tab(target_index, announce=False)
         self._refresh_playlist_browser()
         message = _("Nova rádio iniciada com {name} como primeira faixa.").format(name=source_label)

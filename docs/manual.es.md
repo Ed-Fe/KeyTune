@@ -14,7 +14,7 @@ Aquí encontrarás las funciones de la aplicación y el paso a paso de las tarea
 - Búsqueda en la playlist o en la carpeta actual, con navegación entre los resultados
 - Biblioteca inteligente: búsqueda global, favoritos, valoraciones, historial y reanudación por archivo
 - Temporizador con duraciones predefinidas o pausa al final de la pista
-- Ecualizador por pestaña, con preajustes y presets propios
+- Ecualizador para todas las pestañas o solo para una, con preajustes y presets propios
 - Panel de letras con búsqueda automática
 - Pestaña KeyTube, con YouTube Music y YouTube (`Ctrl+Shift+Y`)
 - Transmisiones en vivo de YouTube, con audio y vídeo opcional
@@ -68,6 +68,36 @@ Formatos de medios compatibles directamente:
 
 **Archivo > Recientes** guarda, en listas separadas, los últimos archivos, carpetas y playlists que usaste.
 
+### Escuchar un archivo directamente desde el Explorador de archivos de Windows
+
+Con KeyTune definido como reproductor predeterminado, `Enter` sobre un archivo de audio en el Explorador de archivos abre el **reproductor rápido**: una ventana pequeña que reproduce el archivo al momento, sin cargar pestañas, playlists ni la sesión anterior.
+
+1. En el Explorador de archivos, selecciona el archivo y pulsa `Enter`.
+2. Escucha. El lector de pantalla anuncia el nombre del archivo en el título de la ventana.
+3. Pulsa `Esc` o `Alt+F4` para cerrar.
+
+`Enter` sobre otro archivo, con el reproductor rápido abierto, cambia lo que suena por el archivo nuevo, en la misma ventana. El foco sigue en el Explorador de archivos, y KeyTune no anuncia nada: oyes empezar el archivo nuevo.
+
+| Acción | Atajo |
+| --- | --- |
+| Reproducir o pausar | `Espacio` |
+| Retroceder o avanzar | `Flecha izquierda` / `Flecha derecha` |
+| Retroceder o avanzar 1 minuto | `Shift+Flecha izquierda` / `Shift+Flecha derecha` |
+| Volumen | `Flecha arriba` / `Flecha abajo` |
+| Ir al inicio o al final | `Home` / `End` |
+| Velocidad | `]` aumenta, `[` disminuye, `\` vuelve a la normal |
+| Oír el tiempo, el volumen o el estado | `T` / `V` / `S` |
+| Continuar en KeyTune completo | `Ctrl+Enter` (o el botón **Continuar en KeyTune completo**) |
+| Cerrar | `Esc` o `Alt+F4` |
+
+Las teclas y los anuncios son los mismos del reproductor de la ventana principal: cambiar el volumen o avanzar no dice nada, y `V` y `T` dicen el volumen y el tiempo cuando quieras.
+
+`Ctrl+Enter` abre la ventana principal y lleva el medio a una playlist nueva. El sonido no se interrumpe: el medio sigue sonando desde donde estaba, con el mismo volumen y la misma velocidad, mientras vuelven las pestañas de la última sesión. Abrir KeyTune desde el menú Inicio con el reproductor rápido abierto hace lo mismo.
+
+El reproductor rápido no guarda nada: el archivo no entra en los recientes, en el historial ni en la sesión, y el volumen cambiado en él vale solo hasta cerrarlo o hasta continuar en KeyTune completo, que lo mantiene. Empieza con el volumen de la última sesión, o con el volumen predeterminado si la sesión no se restaura.
+
+Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.m3u8`, vídeos cuando la salida de vídeo está activada, y cualquier archivo cuando KeyTune completo ya está abierto (va a la playlist actual). Para usar siempre la ventana principal, desmarca **Usar el reproductor rápido al abrir archivos desde Windows** en `Ctrl+,` > **General**.
+
 ## Reproducción
 
 ### Atajos de reproducción
@@ -75,6 +105,7 @@ Formatos de medios compatibles directamente:
 | Tecla | Qué hace |
 | --- | --- |
 | `Espacio` | Reproducir o pausar |
+| `Enter` | Con el foco en el reproductor, reproducir la playlist de la pestaña a la vista, desde donde se detuvo |
 | `Flecha izquierda` / `Flecha derecha` | Retroceder o avanzar en el medio (el paso se configura en **Preferencias > Reproducción**) |
 | `Shift+Flecha izquierda` / `Shift+Flecha derecha` | Retroceder o avanzar 1 minuto |
 | `Inicio` / `Fin` | Ir al principio o al final del medio |
@@ -127,14 +158,23 @@ El submenú también tiene **Tiempo restante** y **Cancelar temporizador**. El r
 
 ## Playlists, carpetas y pestañas
 
-Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña activa decide qué suena y qué aparece en el navegador de elementos.
+Cada playlist vive en una pestaña, lo que ayuda a separar contextos: una lista para escuchar ahora, una colección organizada, una de pruebas. La pestaña a la vista decide qué aparece en el navegador de elementos.
+
+Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists, o crear una nueva con `Ctrl+T`, sin interrumpir la música. Una playlist solo asume la reproducción cuando reproduces algo en ella.
+
+- `Enter` sobre un elemento lo reproduce, y su playlist pasa a ser la que suena.
+- Cada playlist guarda la pista y la posición en que se detuvo. `Enter` sobre esa pista, en una playlist que no es la que suena, retoma desde ese punto en vez de empezar de nuevo.
+- `Espacio`, las flechas de avance y de volumen, **Siguiente** y **Anterior** actúan siempre sobre lo que está sonando, sea cual sea la pestaña a la vista. Si no hay nada cargado, `Espacio` retoma la playlist a la vista.
+- `Enter`, con el foco en el reproductor, pasa la reproducción a la playlist a la vista: vuelve a sonar desde donde se había detenido, y la que sonaba guarda su posición.
+- Aleatorio y repetición también valen para la playlist que está sonando. Si no hay nada cargado, valen para la playlist a la vista.
+- El título de la ventana y el estado (`S`) dicen qué está sonando. `S` también dice la pestaña a la vista cuando es otra.
 
 ### Atajos de pestañas y elementos
 
 - `Ctrl+T`: nueva pestaña de playlist
 - `Ctrl+W`: cerrar la pestaña actual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: pestaña siguiente o anterior
-- `Ctrl+Shift+E`: ecualizador de la pestaña activa
+- `Ctrl+Shift+E`: ecualizador
 - `Ctrl+C`: copiar la selección como texto y, en el caso de archivos del equipo, también como archivos. Se puede pegar en otra playlist, en un campo de texto o en el Explorador de Windows
 - `Ctrl+Shift+C`: copiar el enlace o la ruta del medio actual (en el explorador de carpetas, la ruta de la selección)
 - `Ctrl+Shift+S`: guardar la playlist actual
@@ -540,11 +580,11 @@ La canción que anuncia la emisora aparece en la barra de estado, con el formato
 
 ## Ecualizador
 
-`Ctrl+Shift+E` (o **Ver > Ecualizador por pestaña**) abre el ecualizador de la pestaña activa, así que cada playlist puede tener su propio ajuste. Eso permite, por ejemplo, dejar una playlist con los graves reforzados y otra con un ajuste neutro, sin rehacerlo todo en cada cambio.
+`Ctrl+Shift+E` (o **Ver > Ecualizador**) abre el ecualizador. El ajuste vale para todo lo que KeyTune reproduce: todas las pestañas, las que abras después y el reproductor rápido.
 
 ### Cómo usarlo
 
-El campo **Pestaña destino** muestra qué playlist recibe los ajustes. La casilla **Activar ecualizador en esta pestaña** activa o desactiva el efecto solo en ella.
+La casilla **Activar ecualizador** activa o desactiva el efecto.
 
 El campo **Preset** lista todos los presets. Los integrados llevan el sufijo *(integrado)*. Al elegir uno, **Descripción** muestra una nota sobre el perfil sonoro y **Resumen del preset** trae la preamplificación y el valor de cada banda, para que lo compruebes antes de aplicar.
 
@@ -555,7 +595,13 @@ El campo **Preset** lista todos los presets. Los integrados llevan el sufijo *(i
 - **Guardar copia...**: cuando el seleccionado es integrado, este es el botón que aparece. Crea una versión editable basada en él, el camino correcto para partir de un preset listo y ajustar.
 - **Duplicar...**: copia un preset personalizado con otro nombre, sin tocar el original. No vale para los integrados.
 - **Eliminar**: elimina de forma definitiva el preset personalizado seleccionado. No vale para los integrados.
-- **Aplicar en todas las pestañas**: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.
+
+#### Ecualizador solo para una pestaña
+
+Una playlist puede sonar distinta de las demás: audiolibros con la voz realzada, por ejemplo. Con ella sonando, abre el ecualizador y marca **Usar un ecualizador solo para esta pestaña**. El campo **Pestaña destino** muestra de qué playlist se trata.
+
+- Marcada, la pestaña parte del ajuste que ya estaba en uso, y lo que cambies se queda solo en ella.
+- Sin marcar, la pestaña vuelve a seguir el ecualizador de todas las pestañas.
 
 #### Editor de presets
 
@@ -609,7 +655,7 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 
 ### General
 
-**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre.
+**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre. **Usar el reproductor rápido al abrir archivos desde Windows** viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
 
 La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú *Abrir con* para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro.
 
@@ -708,7 +754,9 @@ Los favoritos y las valoraciones se dicen junto con el elemento, y los detalles,
 
 Al iniciar, KeyTune puede comprobar las actualizaciones por sí solo. Para comprobarlas en cualquier momento, usa **Ayuda > Comprobar actualizaciones**.
 
-Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo.
+Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo. Las notas llegan en el idioma de la interfaz.
+
+Para leer qué cambió en cada versión, incluidas las anteriores, usa **Ayuda > Historial de cambios**: elige la versión en la lista y lee el texto justo debajo.
 
 ## Solución de problemas
 

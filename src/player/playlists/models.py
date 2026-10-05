@@ -81,6 +81,9 @@ class PlaylistState:
     # Radio queue that produced the last related-autoplay batch, so the next
     # fetch can continue it instead of opening a new radio around the seed.
     radio_queue_playlist_id: str | None = None
+    # False: a aba segue o equalizador padrão das preferências, e os dois
+    # campos abaixo não valem. True: ela usa os dela.
+    equalizer_custom: bool = False
     equalizer_enabled: bool = False
     equalizer_preset_id: str = DEFAULT_EQUALIZER_PRESET_ID
     playback_gain_db: float = 0.0
@@ -578,6 +581,7 @@ class PlaylistState:
             "folder_selected_path": self.folder_selected_path,
             "folder_sort_by": self.folder_sort_by,
             "folder_sort_descending": self.folder_sort_descending,
+            "equalizer_custom": self.equalizer_custom,
             "equalizer_enabled": self.equalizer_enabled,
             "equalizer_preset_id": self.equalizer_preset_id,
             "playback_gain_db": self.playback_gain_db,
@@ -615,6 +619,7 @@ class PlaylistState:
         folder_sort_by = str(data.get("folder_sort_by") or FOLDER_SORT_NAME)
         state.folder_sort_by = folder_sort_by if folder_sort_by in FOLDER_SORT_OPTIONS else FOLDER_SORT_NAME
         state.folder_sort_descending = bool(data.get("folder_sort_descending", False))
+        state.equalizer_custom = bool(data.get("equalizer_custom", False))
         state.equalizer_enabled = bool(data.get("equalizer_enabled", False))
         state.equalizer_preset_id = str(data.get("equalizer_preset_id") or DEFAULT_EQUALIZER_PRESET_ID)
         try:

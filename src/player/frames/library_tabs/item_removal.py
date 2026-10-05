@@ -21,8 +21,10 @@ class PlaylistItemRemovalMixin:
         removed_path = state.items[item_index]
         removed_name = self._media_label(removed_path)
         removed_current_item = item_index == state.current_index
+        # Só a playlist dona do player mexe nele; nas outras, é só edição da lista.
+        owns_player = self._is_active_playlist_state(state)
 
-        if removed_current_item:
+        if removed_current_item and owns_player:
             self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
             self._stop_all_players(unload=False)
 
@@ -31,13 +33,14 @@ class PlaylistItemRemovalMixin:
 
         if not state.items:
             state.clear()
-            self._unload_player()
+            if owns_player:
+                self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
             self._announce(_("{prefix}: {name}. Playlist vazia.").format(prefix=announce_prefix, name=removed_name))
             return
 
-        if removed_current_item:
+        if removed_current_item and owns_player:
             next_index = min(item_index, len(state.items) - 1)
             state.select_index(next_index)
             self._play_media(
@@ -46,7 +49,10 @@ class PlaylistItemRemovalMixin:
             )
             return
 
-        if item_index < state.current_index:
+        if removed_current_item:
+            state.select_index(min(item_index, len(state.items) - 1))
+            state.last_position_ms = 0
+        elif item_index < state.current_index:
             state.current_index -= 1
 
         state.current_media_path = state.items[state.current_index]
@@ -88,7 +94,8 @@ class PlaylistItemRemovalMixin:
 
         removed_current_item = state.current_index in valid_indexes
         removed_count = len(valid_indexes)
-        if removed_current_item:
+        owns_player = self._is_active_playlist_state(state)
+        if removed_current_item and owns_player:
             self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=True, invalidate_requests=True)
             self._stop_all_players(unload=False)
 
@@ -99,13 +106,14 @@ class PlaylistItemRemovalMixin:
 
         if not state.items:
             state.clear()
-            self._unload_player()
+            if owns_player:
+                self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
             self._announce(_("{prefix}: {count} itens. Playlist vazia.").format(prefix=announce_prefix, count=removed_count))
             return
 
-        if removed_current_item:
+        if removed_current_item and owns_player:
             next_index = min(valid_indexes[-1], len(state.items) - 1)
             state.select_index(next_index)
             self._play_media(
@@ -115,7 +123,10 @@ class PlaylistItemRemovalMixin:
             return
 
         shift_count = sum(1 for index in valid_indexes if index < state.current_index)
-        if shift_count:
+        if removed_current_item:
+            state.select_index(min(valid_indexes[-1], len(state.items) - 1))
+            state.last_position_ms = 0
+        elif shift_count:
             state.current_index = max(0, state.current_index - shift_count)
         state.current_media_path = state.items[state.current_index]
         state.reset_playback_order(preferred_index=state.current_index)
@@ -139,7 +150,8 @@ class PlaylistItemRemovalMixin:
             state.current_media_path = None
             state.last_position_ms = 0
             state.was_playing = False
-            self._unload_player()
+            if self._is_active_playlist_state(state):
+                self._unload_player()
             self._update_title()
             self._refresh_playlist_browser()
             self._announce(_("Prévia fechada."))

@@ -12,6 +12,7 @@ from .models import (
     clamp_gain_db,
     normalize_band_gains,
     normalize_builtin_preset_key,
+    normalize_equalizer_preset_id,
 )
 
 
@@ -39,6 +40,24 @@ def load_equalizer_catalog():
         )
 
     return EqualizerCatalog(band_frequencies_hz=frequencies, builtin_presets=builtin_presets)
+
+
+def default_equalizer_filter(settings):
+    """Cadeia de filtros do equalizador padrão das preferências; vazia se ele está desligado.
+
+    Para quem toca sem abas (o player rápido): o mesmo som que a janela
+    principal dá a uma aba sem equalizador próprio.
+    """
+    if not getattr(settings, "equalizer_enabled", False):
+        return ""
+
+    catalog = load_equalizer_catalog()
+    presets = list(catalog.builtin_presets) + list(getattr(settings, "equalizer_custom_presets", []) or [])
+    preset_id = normalize_equalizer_preset_id(getattr(settings, "equalizer_preset_id", ""))
+    preset = next((candidate for candidate in presets if candidate.preset_id == preset_id), None)
+    if preset is None:
+        return ""
+    return build_mpv_equalizer_filter(preset, band_frequencies_hz=catalog.band_frequencies_hz)
 
 
 def _band_width_octaves(band_frequencies_hz, index):

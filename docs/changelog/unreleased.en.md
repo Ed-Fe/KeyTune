@@ -1,0 +1,31 @@
+## [Unreleased]
+
+### Added
+
+- **Quick player**: `Enter` on an audio file in File Explorer opens a small window that plays right away, without loading tabs, playlists or the previous session.
+  - `Enter` on another file switches what is playing, in the same window. `Esc` closes.
+  - The keys and announcements are the same as in the main window.
+  - `Ctrl+Enter` still goes to the full KeyTune, with the media in a new playlist.
+  - It does not record recents, history or session.
+- **`Enter` on the player**: with focus on the player, it plays the playlist of the tab in view, from where it had stopped.
+- **Change history**: **Help > Change history** shows what changed in each version, from the newest to the oldest.
+  - The text comes in the language of the interface, in Portuguese, English or Spanish.
+
+### Changed
+
+- **Switching tabs no longer changes what is playing**: before, moving to another playlist stopped the music or loaded that tab's track. Now it keeps playing while you look at the other tabs or create one with `Ctrl+T`.
+  - A playlist takes over playback when you play something in it. `Enter` on the track where it had stopped resumes from that point.
+  - `Space`, the arrows, **Next**, **Previous**, shuffle and repeat apply to what is playing, whichever tab is in view.
+  - The window title and the status (`S`) say what is playing.
+- **Opening a file from Windows with KeyTune closed**: before, it opened the main window and restored the session. Now it plays in the quick player.
+  - With KeyTune already open nothing changes: the file goes to the current playlist.
+  - To go back to the old behavior, uncheck **Use the quick player when opening files from Windows** in `Ctrl+,` > **General**.
+- **One equalizer for all tabs**: before, each tab had its own, and repeating the adjustment required **Apply to all tabs**. Now what you set in `Ctrl+Shift+E` applies to all tabs, the new ones and the quick player.
+  - For a different adjustment on one playlist, check **Use an equalizer just for this tab**.
+  - The per-tab equalizers from earlier versions are not kept: set the adjustment again, once.
+  - The **Apply to all tabs** button is gone.
+- **Shorter `T` and `V`**: they say only the value, like "1:20 of 3:40. 36%." and "80%.", without "Current time:" and "Current volume:".
+- **More direct status (`S`)**: it starts with the media and the time, for example "Music.mp3, playing. 1:20 of 3:40. 36%. Item 3 of 12. Volume 80%.".
+  - Speed, pitch, shuffle and repeat are only spoken when they are off the default.
+  - The tab is only spoken when it is not the tab of the media that is playing.
+- **Update notes in your language**: the update dialog shows what changed in the new version in Portuguese, English or Spanish, according to the interface language.

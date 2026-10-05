@@ -39,7 +39,8 @@ class PlayerBackendMixin:
             self._live_video_player_keys = set()
         self._live_video_player_keys.add(player_key)
 
-    def _create_player_backend(self):
+    def _create_player_backend(self, adopted=None):
+        """Create the two player slots; *adopted* fills the first with a player that is already playing."""
         self._playback_request_serial = 0
         self._pending_playback_request_serial = None
         self._playback_backend_lock = threading.Lock()
@@ -55,9 +56,15 @@ class PlayerBackendMixin:
         self._autodj_sound_player = None
         self._current_track_gain_db = 0.0
         for player_key in self._player_keys:
-            instance = self._build_player_instance()
+            adopted_player = None
+            if adopted is not None and player_key == self._player_keys[0]:
+                instance, adopted_player = adopted.instance, adopted.player
+                # Its previous owner's listeners must not hear this window's playback.
+                adopted_player.event_manager().clear()
+            else:
+                instance = self._build_player_instance()
             self._player_instances[player_key] = instance
-            player, event_manager = self._create_managed_player(player_key, instance)
+            player, event_manager = self._create_managed_player(player_key, instance, player=adopted_player)
             self._players[player_key] = player
             self._player_event_managers[player_key] = event_manager
             self._player_loaded_media_paths[player_key] = None
@@ -156,12 +163,13 @@ class PlayerBackendMixin:
 
         return getattr(self, "instance", None)
 
-    def _create_managed_player(self, player_key, instance=None):
+    def _create_managed_player(self, player_key, instance=None, *, player=None):
         target_instance = instance or self._instance_for_player(player_key)
         if target_instance is None:
             raise RuntimeError(_("Instância do backend de reprodução indisponível para o player."))
 
-        player = target_instance.media_player_new()
+        if player is None:
+            player = target_instance.media_player_new()
         try:
             player.video_set_key_input(False)
         except Exception:
@@ -297,6 +305,12 @@ class PlayerBackendMixin:
         wx.CallAfter(self._handle_player_error, player_key, error_detail)
 
     def _handle_player_end_reached(self, player_key):
+        pending_adoption = getattr(self, "_pending_adopted_playback", None)
+        if pending_adoption is not None:
+            # The inherited media ended before it was tied to a playlist.
+            pending_adoption.ended = True
+            return
+
         crossfade_state = getattr(self, "_crossfade_state", None)
         if crossfade_state and player_key == crossfade_state.get("outgoing_key"):
             _logger.debug("End reached on outgoing crossfade slot %r; marking ended.", player_key)

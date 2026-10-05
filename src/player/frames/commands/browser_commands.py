@@ -27,8 +27,18 @@ class BrowserCommandsMixin:
         if self._block_sensitive_action_during_youtube_music("track-selection"):
             return
 
+        selected_index = self._get_selected_playlist_index()
+        if (
+            item_index == state.current_index
+            and state.last_position_ms > 0
+            and not self._is_active_playlist_state(state)
+        ):
+            # A mídia em que esta playlist tinha parado volta do ponto dela.
+            self._resume_playlist_tab(selected_index, announce=False, force_play=True)
+            return
+
         state.select_index(item_index)
-        self._play_media(index=self._get_active_playlist_index(), allow_crossfade=False)
+        self._play_media(index=selected_index, allow_crossfade=False)
 
     def on_playlist_browser_remove_item(self, item_indexes):
         self._remove_items_from_current_playlist(item_indexes)

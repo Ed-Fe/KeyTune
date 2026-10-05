@@ -75,6 +75,9 @@ class _DummyFrame(FrameYouTubeMusicMixin):
     def _get_active_playlist_index(self):
         return self.active_playlist_index
 
+    def _get_active_playlist_state(self):
+        return self._get_playlist_state(self.active_playlist_index)
+
     def _get_playlist_state(self, index=None):
         if index is None or index == -1:
             index = self._current_tab_index

@@ -6,6 +6,11 @@ from ..session import load_session, save_session
 
 class FrameSessionMixin:
     def _capture_tab_state(self, index=None):
+        if index is None:
+            index = self._get_active_playlist_index()
+        # O player só diz a posição da playlist que é dona dele.
+        if index != self._get_active_playlist_index():
+            return
         state = self._get_playlist_state(index)
         if not state or not state.current_media_path or not self.player.get_media():
             return
@@ -73,16 +78,27 @@ class FrameSessionMixin:
         except (TypeError, ValueError):
             saved_volume = DEFAULT_VOLUME
 
+        # Um player herdado do player rápido já está tocando: vale o volume e a
+        # velocidade dele, e nada aqui pode mexer no player.
+        adopted = getattr(self, "_pending_adopted_playback", None)
+        if adopted is not None:
+            saved_volume = adopted.volume
+
         self.current_volume = max(0, min(100, saved_volume))
-        self._apply_current_volume()
+        if adopted is None:
+            self._apply_current_volume()
 
         try:
             saved_playback_rate = float(session_payload.get("playback_rate", 1.0))
         except (TypeError, ValueError):
             saved_playback_rate = 1.0
 
+        if adopted is not None:
+            saved_playback_rate = adopted.playback_rate
+
         self.current_playback_rate = max(0.25, min(3.0, saved_playback_rate))
-        self._apply_current_playback_rate()
+        if adopted is None:
+            self._apply_current_playback_rate()
 
         try:
             saved_pitch_semitones = int(session_payload.get("pitch_semitones", 0))
@@ -90,7 +106,8 @@ class FrameSessionMixin:
             saved_pitch_semitones = 0
 
         self.current_pitch_semitones = max(-12, min(12, saved_pitch_semitones))
-        self._apply_equalizer_state_to_current_playback()
+        if adopted is None:
+            self._apply_equalizer_state_to_current_playback()
 
         if self.settings.remember_window_size:
             saved_window_size = session_payload.get("window_size")
@@ -107,10 +124,14 @@ class FrameSessionMixin:
 
         selected_tab -= sum(1 for position in folder_tab_positions if position < selected_tab)
         selected_tab = max(0, min(selected_tab, len(self.playlists) - 1))
-        if selected_tab == self._get_current_tab_index():
+        if adopted is None:
+            # A aba que tocava volta a ser a dona do player, com a mídia dela.
+            # Com um player herdado, a aba dele é aberta logo em seguida, e
+            # carregar a da sessão seria tocar por cima do que já soa.
+            if selected_tab != self._get_current_tab_index():
+                self.notebook.ChangeSelection(selected_tab)
             self._activate_tab(selected_tab, announce=False)
-        else:
-            self._select_tab(selected_tab, announce=False)
+            self._resume_playlist_tab(selected_tab, announce=False)
 
         current_state = self._get_playlist_state(selected_tab)
         refresh_autodj_ui = getattr(self, "_refresh_autodj_session_ui", None)

@@ -4,7 +4,7 @@ Este documento descreve um fluxo prático para validar a atualização automáti
 
 ## Objetivo do teste
 
-Na preparação de uma release, confirme a versão e a data de publicação no changelog. O workflow usa essa seção como corpo da release.
+Na preparação de uma release, confirme a versão e a data de publicação em `docs/changelog/<versão>.md` e em suas traduções `.en.md` e `.es.md`. O workflow usa o arquivo em português como corpo da release e publica as traduções como `release-notes.en.md` e `release-notes.es.md`.
 
 Antes de distribuir o instalador, confirme em `dist/KeyTune/docs` a presença de `plugins.html`, `plugins.en.html` e `plugins.es.html`, além dos manuais. Abra cada manual e siga o link para a API sem conexão; confira também os links entre idiomas e o destino do rodapé. O instalador deve preservar esses arquivos na pasta `docs` da instalação.
 
@@ -82,6 +82,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -Ap
 4. Anexe os arquivos:
   - `KeyTune-Setup.exe`
   - `KeyTune-Setup.exe.sha256`
+  - `release-notes.en.md` e `release-notes.es.md` (opcionais; sem eles o diálogo mostra o corpo da release, em português)
 5. Escreva no corpo da release as notas/changelog que devem aparecer no diálogo antes do download.
 
 ### Etapa C — apontar a build antiga para o repositório de teste

@@ -14,7 +14,7 @@ Aqui você encontra os recursos do aplicativo e o passo a passo das tarefas mais
 - Busca na playlist ou na pasta atual, com navegação entre os resultados
 - Biblioteca inteligente: busca global, favoritos, avaliações, histórico e retomada por arquivo
 - Temporizador com durações prontas ou pausa ao fim da faixa
-- Equalizador por aba, com predefinições e presets próprios
+- Equalizador para todas as abas ou só para uma, com predefinições e presets próprios
 - Painel de letras com busca automática
 - Aba KeyTube, com o YouTube Music e o YouTube (`Ctrl+Shift+Y`)
 - Transmissões ao vivo do YouTube, com áudio e vídeo opcional
@@ -68,6 +68,36 @@ Formatos de mídia suportados diretamente:
 
 **Arquivo > Recentes** guarda, em listas separadas, os últimos arquivos, pastas e playlists que você usou.
 
+### Ouvir um arquivo direto do Explorador de Arquivos do Windows
+
+Com o KeyTune definido como player padrão, `Enter` num arquivo de áudio no Explorador de Arquivos abre o **player rápido**: uma janela pequena que toca o arquivo na hora, sem carregar abas, playlists nem a sessão anterior.
+
+1. No Explorador de Arquivos, selecione o arquivo e pressione `Enter`.
+2. Ouça. O leitor de tela anuncia o nome do arquivo no título da janela.
+3. Pressione `Esc` ou `Alt+F4` para fechar.
+
+`Enter` em outro arquivo, com o player rápido aberto, troca o que está tocando pelo arquivo novo, na mesma janela. O foco continua no Explorador de Arquivos, e o KeyTune não anuncia nada: você ouve o arquivo novo começar.
+
+| Ação | Atalho |
+| --- | --- |
+| Reproduzir ou pausar | `Espaço` |
+| Voltar ou avançar | `Seta para a esquerda` / `Seta para a direita` |
+| Voltar ou avançar 1 minuto | `Shift+Seta para a esquerda` / `Shift+Seta para a direita` |
+| Volume | `Seta para cima` / `Seta para baixo` |
+| Ir ao início ou ao fim | `Home` / `End` |
+| Velocidade | `]` aumenta, `[` diminui, `\` volta ao normal |
+| Ouvir o tempo, o volume ou o status | `T` / `V` / `S` |
+| Continuar no KeyTune completo | `Ctrl+Enter` (ou o botão **Continuar no KeyTune completo**) |
+| Fechar | `Esc` ou `Alt+F4` |
+
+As teclas e os anúncios são os mesmos do player da janela principal: mudar o volume ou avançar não fala nada, e `V` e `T` dizem o volume e o tempo quando você quiser.
+
+`Ctrl+Enter` abre a janela principal e leva a mídia para uma playlist nova. O som não é interrompido: a mídia segue tocando do ponto em que estava, com o mesmo volume e a mesma velocidade, enquanto as abas da última sessão voltam. Abrir o KeyTune pelo menu Iniciar com o player rápido aberto faz o mesmo.
+
+O player rápido não grava nada: o arquivo não entra nos recentes, no histórico nem na sessão, e o volume mudado nele vale só até fechar ou até você continuar no KeyTune completo, que o mantém. Ele começa com o volume da última sessão, ou com o volume padrão se a sessão não é restaurada.
+
+Abrem direto na janela principal, como antes: playlists `.m3u` e `.m3u8`, vídeos quando a saída de vídeo está ligada, e qualquer arquivo quando o KeyTune completo já está aberto (ele vai para a playlist atual). Para usar sempre a janela principal, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
+
 ## Reproduzir
 
 ### Atalhos de reprodução
@@ -75,6 +105,7 @@ Formatos de mídia suportados diretamente:
 | Tecla | O que faz |
 | --- | --- |
 | `Espaço` | Reproduzir ou pausar |
+| `Enter` | Com o foco no player, tocar a playlist da aba à vista, de onde ela parou |
 | `Seta esquerda` / `Seta direita` | Voltar ou avançar na mídia (o passo está em **Preferências > Reprodução**) |
 | `Shift+Seta esquerda` / `Shift+Seta direita` | Voltar ou avançar 1 minuto |
 | `Home` / `End` | Ir ao início ou ao fim da mídia |
@@ -127,14 +158,23 @@ O submenu também tem **Tempo restante** e **Cancelar temporizador**. O player a
 
 ## Playlist, pastas e abas
 
-Cada playlist fica numa aba, o que ajuda a separar contextos: uma lista para ouvir agora, uma coleção organizada, uma de testes. A aba ativa decide o que toca e o que aparece no navegador de itens.
+Cada playlist fica numa aba, o que ajuda a separar contextos: uma lista para ouvir agora, uma coleção organizada, uma de testes. A aba à vista decide o que aparece no navegador de itens.
+
+Trocar de aba não mexe no que está tocando: dá para passear pelas playlists, ou criar uma nova com `Ctrl+T`, sem interromper a música. Uma playlist só assume a reprodução quando você toca algo nela.
+
+- `Enter` num item toca esse item, e a playlist dele passa a ser a que toca.
+- Cada playlist guarda a faixa e a posição em que parou. `Enter` nessa faixa, numa playlist que não é a que toca, retoma daquele ponto em vez de recomeçar.
+- `Espaço`, as setas de avanço e de volume, **Próxima** e **Anterior** valem sempre para o que está tocando, seja qual for a aba à vista. Se nada está carregado, `Espaço` retoma a playlist à vista.
+- `Enter`, com o foco no player, passa a reprodução para a playlist à vista: ela volta a tocar de onde tinha parado, e a que tocava guarda a posição dela.
+- Aleatório e repetição também valem para a playlist que está tocando. Se nada está carregado, valem para a playlist à vista.
+- O título da janela e o status (`S`) dizem o que está tocando. O `S` também diz a aba à vista quando ela é outra.
 
 ### Atalhos de abas e itens
 
 - `Ctrl+T`: nova aba de playlist
 - `Ctrl+W`: fechar a aba atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: próxima aba ou aba anterior
-- `Ctrl+Shift+E`: equalizador da aba ativa
+- `Ctrl+Shift+E`: equalizador
 - `Ctrl+C`: copiar a seleção como texto e, no caso de arquivos do computador, também como arquivos. Dá para colar em outra playlist, num campo de texto ou no Explorador do Windows
 - `Ctrl+Shift+C`: copiar o link ou o caminho da mídia atual (no explorador de pastas, o caminho da seleção)
 - `Ctrl+Shift+S`: salvar a playlist atual
@@ -544,11 +584,11 @@ A música que a estação anuncia aparece na barra de status, no formato *Estaç
 
 ## Equalizador
 
-`Ctrl+Shift+E` (ou **Exibir > Equalizador por aba**) abre o equalizador da aba ativa, então cada playlist pode ter o seu ajuste. Isso permite, por exemplo, deixar uma playlist com graves reforçados e outra com um ajuste neutro, sem refazer tudo a cada troca.
+`Ctrl+Shift+E` (ou **Exibir > Equalizador**) abre o equalizador. O ajuste vale para tudo o que o KeyTune toca: todas as abas, as que você abrir depois e o player rápido.
 
 ### Como usar
 
-O campo **Aba alvo** mostra qual playlist recebe os ajustes. A caixa **Ativar equalizador nesta aba** liga ou desliga o efeito só nela.
+A caixa **Ativar equalizador** liga ou desliga o efeito.
 
 O campo **Preset** lista todos os presets. Os embutidos levam o sufixo *(embutido)*. Ao escolher um, **Descrição** mostra uma nota sobre o perfil sonoro e **Resumo do preset** traz a pré-amplificação e o valor de cada banda, para você conferir antes de aplicar.
 
@@ -559,7 +599,13 @@ O campo **Preset** lista todos os presets. Os embutidos levam o sufixo *(embutid
 - **Salvar cópia...**: quando o selecionado é embutido, é este o botão que aparece. Cria uma versão editável baseada nele, o caminho certo para partir de um preset pronto e ajustar.
 - **Duplicar...**: copia um preset personalizado com outro nome, sem mexer no original. Não vale para os embutidos.
 - **Excluir**: remove de vez o preset personalizado selecionado. Não vale para os embutidos.
-- **Aplicar em todas as abas**: copia o preset e o estado de ativação da aba atual para todas as abas de mídia abertas.
+
+#### Equalizador só para uma aba
+
+Uma playlist pode soar diferente das outras: audiolivros com a voz realçada, por exemplo. Com ela tocando, abra o equalizador e marque **Usar um equalizador só para esta aba**. O campo **Aba alvo** mostra de qual playlist se trata.
+
+- Marcada, a aba começa com o ajuste que já estava valendo, e o que você mudar fica só nela.
+- Desmarcada, a aba volta a seguir o equalizador de todas as abas.
 
 #### Editor de preset
 
@@ -613,7 +659,7 @@ As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Repr
 
 ### Geral
 
-**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz.
+**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
 
 A seção **Associação de arquivos** (Windows) tem o botão **Registrar como player padrão**, que põe o KeyTune no menu *Abrir com* para formatos de áudio, vídeo e playlists. Depois de registrar, defina o app como padrão nas configurações do Windows, se quiser que esses arquivos abram direto nele. **Desregistrar associações** desfaz o registro.
 
@@ -712,7 +758,9 @@ Favoritos e avaliações são falados junto com o item, e detalhes, comentários
 
 Ao iniciar, o KeyTune pode verificar atualizações sozinho. Para verificar a qualquer hora, use **Ajuda > Verificar atualizações**.
 
-Quando há versão nova, o aplicativo mostra as notas da release, o nome do arquivo e o tamanho do download antes de pedir confirmação. Se você aceitar, ele baixa o pacote, mostra o andamento e pede permissão para instalar quando o arquivo estiver pronto.
+Quando há versão nova, o aplicativo mostra as notas da release, o nome do arquivo e o tamanho do download antes de pedir confirmação. Se você aceitar, ele baixa o pacote, mostra o andamento e pede permissão para instalar quando o arquivo estiver pronto. As notas vêm no idioma da interface.
+
+Para ler o que mudou em cada versão, inclusive nas anteriores, use **Ajuda > Histórico de mudanças**: escolha a versão na lista e leia o texto logo abaixo.
 
 ## Solução de problemas
 
