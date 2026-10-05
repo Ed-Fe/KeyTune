@@ -144,6 +144,10 @@ msgstr ""
 msgid "&Conteúdo Relacionado do YouTube Music (A)"
 msgstr ""
 
+#: src/player/quick_player/panel.py
+msgid "&Continuar no KeyTune completo"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Continuar ouvindo\tCtrl+Shift+R"
 msgstr ""
@@ -348,6 +352,10 @@ msgstr ""
 msgid "&Ordenar por"
 msgstr ""
 
+#: src/player/quick_player/panel.py
+msgid "&Pausar"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "&Pausar preparação"
 msgstr ""
@@ -390,6 +398,7 @@ msgstr ""
 msgid "&Remover entrada"
 msgstr ""
 
+#: src/player/quick_player/panel.py
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "&Reproduzir"
@@ -849,10 +858,6 @@ msgstr ""
 msgid "Aba de mídia alvo do equalizador"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Aba de mídia ativa: {title}."
-msgstr ""
-
 #: src/player/frames/library_tabs/tabs.py
 msgid "Aba fechada."
 msgstr ""
@@ -883,6 +888,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Abre a janela para escolher um arquivo de conexão exportado do navegador."
+msgstr ""
+
+#: src/player/quick_player/panel.py
+msgid "Abre a janela principal com esta mídia numa playlist nova."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -1176,7 +1185,7 @@ msgid "Aleatória"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Aleatório {state}."
+msgid "Aleatório ligado."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -1792,6 +1801,7 @@ msgid "Bandas do equalizador"
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Barra de tempo"
 msgstr ""
 
@@ -3103,6 +3113,10 @@ msgstr ""
 msgid "Espanha"
 msgstr ""
 
+#: src/player/quick_player/panel.py
+msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Esta aba não tem uma playlist para baixar."
 msgstr ""
@@ -3383,6 +3397,7 @@ msgid "Fim da lista: não há mais itens."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Fim do arquivo."
 msgstr ""
 
@@ -3715,6 +3730,7 @@ msgid "Início das rádios online: escolha uma lista, busque uma rádio ou cole 
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Início do arquivo."
 msgstr ""
 
@@ -3820,6 +3836,7 @@ msgid "Item removido"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Item {current} de {total}."
 msgstr ""
 
@@ -4283,10 +4300,6 @@ msgstr ""
 
 #: src/player/library/open_dialog.py
 msgid "Mídia suportada"
-msgstr ""
-
-#: src/player/frames/playback/controls.py
-msgid "Mídia: {name}. Estado: {state}."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5041,10 +5054,12 @@ msgid "Não foi possível remover o plugin: {error}"
 msgstr ""
 
 #: src/player/frames/playback/backend.py
+#: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia."
 msgstr ""
 
 #: src/player/frames/playback/backend.py
+#: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia: {detail}."
 msgstr ""
 
@@ -5803,9 +5818,11 @@ msgid "Pastas recentes limpas."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Pausado."
 msgstr ""
 
+#: src/player/frames/playback/adoption.py
 #: src/player/frames/playback/controls.py
 msgid "Pausado: {name}"
 msgstr ""
@@ -6524,6 +6541,7 @@ msgid "Reprodução"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Reprodução retomada."
 msgstr ""
 
@@ -7070,15 +7088,8 @@ msgstr ""
 msgid "Tela do plugin {name} aberta."
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Tempo atual: {current} de {total}. {percent}%."
-msgstr ""
-
-#: src/player/frames/playback/controls.py
-msgid "Tempo atual: {time}."
-msgstr ""
-
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Tempo da mídia"
 msgstr ""
 
@@ -7087,11 +7098,8 @@ msgid "Tempo personalizado (minutos)"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Tempo {current} de {total}. {percent}%."
-msgstr ""
-
-#: src/player/frames/playback/controls.py
 #: src/player/frames/ui.py
+#: src/player/quick_player/panel.py
 msgid "Tempo: nenhuma mídia carregada."
 msgstr ""
 
@@ -7100,7 +7108,12 @@ msgid "Tempo: transmissão ao vivo"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "Tempo: {current} / duração desconhecida"
+msgstr ""
+
+#: src/player/quick_player/frame.py
+msgid "Tempo: {current} / {total} ({percent}%)"
 msgstr ""
 
 #: src/player/sleep_timer/dialog.py
@@ -7170,6 +7183,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Tipo:"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Toca numa janela pequena, sem carregar as playlists."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7349,6 +7366,10 @@ msgstr ""
 msgid "Usar a capa do álbum como imagem"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Usar o player rápido ao abrir arqui&vos pelo Windows"
+msgstr ""
+
 #: src/player/plugins/manifest.py
 msgid "Usar o resolvedor de mídia yt-dlp"
 msgstr ""
@@ -7394,11 +7415,13 @@ msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Fa�
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Velocidade atual: {rate}."
+#: src/player/quick_player/frame.py
+msgid "Velocidade de reprodução: {rate}."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
-msgid "Velocidade de reprodução: {rate}."
+#: src/player/quick_player/frame.py
+msgid "Velocidade {rate}."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -7521,10 +7544,6 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "Volume atual: {volume}%."
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
 msgstr ""
@@ -7535,6 +7554,11 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Volume padrão"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "Volume {volume}%."
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7715,10 +7739,6 @@ msgstr ""
 msgid "desconhecida"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "desligado"
-msgstr ""
-
 #: src/player/frames/autodj.py
 msgid "diferença de BPM acima do limite seguro"
 msgstr ""
@@ -7767,10 +7787,6 @@ msgstr ""
 msgid "incluindo mídias remotas"
 msgstr ""
 
-#: src/player/frames/playback/controls.py
-msgid "ligado"
-msgstr ""
-
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "mídia remota"
@@ -7805,6 +7821,7 @@ msgid "pasta"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "pausado"
 msgstr ""
 
@@ -7893,6 +7910,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
 msgid "tocando"
 msgstr ""
 
@@ -8162,6 +8180,11 @@ msgstr ""
 msgid "{criteria}; {sort}; até {limit} itens"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "{current} de {total}. {percent}%."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
 msgstr ""
@@ -8287,6 +8310,11 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
+msgstr ""
+
+#: src/player/frames/playback/controls.py
+#: src/player/quick_player/frame.py
+msgid "{name}, {state}."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py

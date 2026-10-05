@@ -68,6 +68,36 @@ Formatos de mídia suportados diretamente:
 
 **Arquivo > Recentes** guarda, em listas separadas, os últimos arquivos, pastas e playlists que você usou.
 
+### Ouvir um arquivo direto do Explorador de Arquivos do Windows
+
+Com o KeyTune definido como player padrão, `Enter` num arquivo de áudio no Explorador de Arquivos abre o **player rápido**: uma janela pequena que toca o arquivo na hora, sem carregar abas, playlists nem a sessão anterior.
+
+1. No Explorador de Arquivos, selecione o arquivo e pressione `Enter`.
+2. Ouça. O leitor de tela anuncia o nome do arquivo no título da janela.
+3. Pressione `Esc` ou `Alt+F4` para fechar.
+
+`Enter` em outro arquivo, com o player rápido aberto, troca o que está tocando pelo arquivo novo, na mesma janela. O foco continua no Explorador de Arquivos, e o KeyTune não anuncia nada: você ouve o arquivo novo começar.
+
+| Ação | Atalho |
+| --- | --- |
+| Reproduzir ou pausar | `Espaço` |
+| Voltar ou avançar | `Seta para a esquerda` / `Seta para a direita` |
+| Voltar ou avançar 1 minuto | `Shift+Seta para a esquerda` / `Shift+Seta para a direita` |
+| Volume | `Seta para cima` / `Seta para baixo` |
+| Ir ao início ou ao fim | `Home` / `End` |
+| Velocidade | `]` aumenta, `[` diminui, `\` volta ao normal |
+| Ouvir o tempo, o volume ou o status | `T` / `V` / `S` |
+| Continuar no KeyTune completo | `Ctrl+Enter` (ou o botão **Continuar no KeyTune completo**) |
+| Fechar | `Esc` ou `Alt+F4` |
+
+As teclas e os anúncios são os mesmos do player da janela principal: mudar o volume ou avançar não fala nada, e `V` e `T` dizem o volume e o tempo quando você quiser.
+
+`Ctrl+Enter` abre a janela principal e leva a mídia para uma playlist nova. O som não é interrompido: a mídia segue tocando do ponto em que estava, com o mesmo volume e a mesma velocidade, enquanto as abas da última sessão voltam. Abrir o KeyTune pelo menu Iniciar com o player rápido aberto faz o mesmo.
+
+O player rápido não grava nada: o arquivo não entra nos recentes, no histórico nem na sessão, e o volume mudado nele vale só até fechar ou até você continuar no KeyTune completo, que o mantém. Ele começa com o volume da última sessão, ou com o volume padrão se a sessão não é restaurada.
+
+Abrem direto na janela principal, como antes: playlists `.m3u` e `.m3u8`, vídeos quando a saída de vídeo está ligada, e qualquer arquivo quando o KeyTune completo já está aberto (ele vai para a playlist atual). Para usar sempre a janela principal, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
+
 ## Reproduzir
 
 ### Atalhos de reprodução
@@ -613,7 +643,7 @@ As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Repr
 
 ### Geral
 
-**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz.
+**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
 
 A seção **Associação de arquivos** (Windows) tem o botão **Registrar como player padrão**, que põe o KeyTune no menu *Abrir com* para formatos de áudio, vídeo e playlists. Depois de registrar, defina o app como padrão nas configurações do Windows, se quiser que esses arquivos abram direto nele. **Desregistrar associações** desfaz o registro.
 

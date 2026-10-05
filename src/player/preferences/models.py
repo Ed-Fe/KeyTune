@@ -18,6 +18,7 @@ from ..constants import (
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
+    DEFAULT_QUICK_PLAYER_ENABLED,
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
     DEFAULT_RESTORE_SESSION_ON_STARTUP,
@@ -91,6 +92,7 @@ class AppSettings:
     remember_window_size: bool = DEFAULT_REMEMBER_WINDOW_SIZE
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
+    quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
     live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
@@ -181,6 +183,7 @@ class AppSettings:
             "remember_window_size": self.remember_window_size,
             "remember_last_folder": self.remember_last_folder,
             "confirm_on_exit": self.confirm_on_exit,
+            "quick_player_enabled": self.quick_player_enabled,
             "announcements_enabled": self.announcements_enabled,
             "disable_video_output": self.disable_video_output,
             "live_video_enabled": self.live_video_enabled,
@@ -257,6 +260,7 @@ class AppSettings:
         settings.remember_window_size = bool(data.get("remember_window_size", settings.remember_window_size))
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
+        settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
         settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))

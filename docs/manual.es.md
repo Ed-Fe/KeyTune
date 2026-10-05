@@ -68,6 +68,36 @@ Formatos de medios compatibles directamente:
 
 **Archivo > Recientes** guarda, en listas separadas, los últimos archivos, carpetas y playlists que usaste.
 
+### Escuchar un archivo directamente desde el Explorador de archivos de Windows
+
+Con KeyTune definido como reproductor predeterminado, `Enter` sobre un archivo de audio en el Explorador de archivos abre el **reproductor rápido**: una ventana pequeña que reproduce el archivo al momento, sin cargar pestañas, playlists ni la sesión anterior.
+
+1. En el Explorador de archivos, selecciona el archivo y pulsa `Enter`.
+2. Escucha. El lector de pantalla anuncia el nombre del archivo en el título de la ventana.
+3. Pulsa `Esc` o `Alt+F4` para cerrar.
+
+`Enter` sobre otro archivo, con el reproductor rápido abierto, cambia lo que suena por el archivo nuevo, en la misma ventana. El foco sigue en el Explorador de archivos, y KeyTune no anuncia nada: oyes empezar el archivo nuevo.
+
+| Acción | Atajo |
+| --- | --- |
+| Reproducir o pausar | `Espacio` |
+| Retroceder o avanzar | `Flecha izquierda` / `Flecha derecha` |
+| Retroceder o avanzar 1 minuto | `Shift+Flecha izquierda` / `Shift+Flecha derecha` |
+| Volumen | `Flecha arriba` / `Flecha abajo` |
+| Ir al inicio o al final | `Home` / `End` |
+| Velocidad | `]` aumenta, `[` disminuye, `\` vuelve a la normal |
+| Oír el tiempo, el volumen o el estado | `T` / `V` / `S` |
+| Continuar en KeyTune completo | `Ctrl+Enter` (o el botón **Continuar en KeyTune completo**) |
+| Cerrar | `Esc` o `Alt+F4` |
+
+Las teclas y los anuncios son los mismos del reproductor de la ventana principal: cambiar el volumen o avanzar no dice nada, y `V` y `T` dicen el volumen y el tiempo cuando quieras.
+
+`Ctrl+Enter` abre la ventana principal y lleva el medio a una playlist nueva. El sonido no se interrumpe: el medio sigue sonando desde donde estaba, con el mismo volumen y la misma velocidad, mientras vuelven las pestañas de la última sesión. Abrir KeyTune desde el menú Inicio con el reproductor rápido abierto hace lo mismo.
+
+El reproductor rápido no guarda nada: el archivo no entra en los recientes, en el historial ni en la sesión, y el volumen cambiado en él vale solo hasta cerrarlo o hasta continuar en KeyTune completo, que lo mantiene. Empieza con el volumen de la última sesión, o con el volumen predeterminado si la sesión no se restaura.
+
+Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.m3u8`, vídeos cuando la salida de vídeo está activada, y cualquier archivo cuando KeyTune completo ya está abierto (va a la playlist actual). Para usar siempre la ventana principal, desmarca **Usar el reproductor rápido al abrir archivos desde Windows** en `Ctrl+,` > **General**.
+
 ## Reproducción
 
 ### Atajos de reproducción
@@ -609,7 +639,7 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 
 ### General
 
-**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre.
+**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre. **Usar el reproductor rápido al abrir archivos desde Windows** viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
 
 La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú *Abrir con* para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro.
 

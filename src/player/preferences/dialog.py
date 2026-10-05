@@ -139,6 +139,12 @@ class PreferencesDialog(wx.Dialog):
         self.confirm_on_exit_checkbox = self._add_checkbox(
             box, sizer, _("Con&firmar ao sair"), _("Pede confirmação antes de fechar.")
         )
+        self.quick_player_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Usar o player rápido ao abrir arqui&vos pelo Windows"),
+            _("Toca numa janela pequena, sem carregar as playlists."),
+        )
 
         if sys.platform == "win32":
             box, sizer = self._create_group(page, page_sizer, _("Associação de arquivos"))
@@ -680,6 +686,7 @@ class PreferencesDialog(wx.Dialog):
         self.remember_window_size_checkbox.SetValue(settings.remember_window_size)
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
+        self.quick_player_checkbox.SetValue(settings.quick_player_enabled)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
         self.live_video_checkbox.SetValue(settings.live_video_enabled)
@@ -767,6 +774,7 @@ class PreferencesDialog(wx.Dialog):
         settings.remember_window_size = self.remember_window_size_checkbox.GetValue()
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()
+        settings.quick_player_enabled = self.quick_player_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
         settings.live_video_enabled = self.live_video_checkbox.GetValue()

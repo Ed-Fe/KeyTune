@@ -116,6 +116,7 @@ footer {
         <li class="toc-level-2"><a href="#primeros-pasos">Primeros pasos</a></li>
         <li class="toc-level-2"><a href="#interfaz">Interfaz</a></li>
         <li class="toc-level-2"><a href="#como-abrir-medios">Cómo abrir medios</a></li>
+        <li class="toc-level-3"><a href="#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows">Escuchar un archivo directamente desde el Explorador de archivos de Windows</a></li>
         <li class="toc-level-2"><a href="#reproduccion">Reproducción</a></li>
         <li class="toc-level-3"><a href="#atajos-de-reproduccion">Atajos de reproducción</a></li>
         <li class="toc-level-3"><a href="#cola-de-reproduccion">Cola de reproducción</a></li>
@@ -257,6 +258,64 @@ footer {
 <li>Vídeo: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
 </ul>
 <p><strong>Archivo &gt; Recientes</strong> guarda, en listas separadas, los últimos archivos, carpetas y playlists que usaste.</p>
+<h3 id="escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows">Escuchar un archivo directamente desde el Explorador de archivos de Windows</h3>
+<p>Con KeyTune definido como reproductor predeterminado, <code>Enter</code> sobre un archivo de audio en el Explorador de archivos abre el <strong>reproductor rápido</strong>: una ventana pequeña que reproduce el archivo al momento, sin cargar pestañas, playlists ni la sesión anterior.</p>
+<ol>
+<li>En el Explorador de archivos, selecciona el archivo y pulsa <code>Enter</code>.</li>
+<li>Escucha. El lector de pantalla anuncia el nombre del archivo en el título de la ventana.</li>
+<li>Pulsa <code>Esc</code> o <code>Alt+F4</code> para cerrar.</li>
+</ol>
+<p><code>Enter</code> sobre otro archivo, con el reproductor rápido abierto, cambia lo que suena por el archivo nuevo, en la misma ventana. El foco sigue en el Explorador de archivos, y KeyTune no anuncia nada: oyes empezar el archivo nuevo.</p>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Atajo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reproducir o pausar</td>
+<td><code>Espacio</code></td>
+</tr>
+<tr>
+<td>Retroceder o avanzar</td>
+<td><code>Flecha izquierda</code> / <code>Flecha derecha</code></td>
+</tr>
+<tr>
+<td>Retroceder o avanzar 1 minuto</td>
+<td><code>Shift+Flecha izquierda</code> / <code>Shift+Flecha derecha</code></td>
+</tr>
+<tr>
+<td>Volumen</td>
+<td><code>Flecha arriba</code> / <code>Flecha abajo</code></td>
+</tr>
+<tr>
+<td>Ir al inicio o al final</td>
+<td><code>Home</code> / <code>End</code></td>
+</tr>
+<tr>
+<td>Velocidad</td>
+<td><code>]</code> aumenta, <code>[</code> disminuye, <code>\</code> vuelve a la normal</td>
+</tr>
+<tr>
+<td>Oír el tiempo, el volumen o el estado</td>
+<td><code>T</code> / <code>V</code> / <code>S</code></td>
+</tr>
+<tr>
+<td>Continuar en KeyTune completo</td>
+<td><code>Ctrl+Enter</code> (o el botón <strong>Continuar en KeyTune completo</strong>)</td>
+</tr>
+<tr>
+<td>Cerrar</td>
+<td><code>Esc</code> o <code>Alt+F4</code></td>
+</tr>
+</tbody>
+</table>
+<p>Las teclas y los anuncios son los mismos del reproductor de la ventana principal: cambiar el volumen o avanzar no dice nada, y <code>V</code> y <code>T</code> dicen el volumen y el tiempo cuando quieras.</p>
+<p><code>Ctrl+Enter</code> abre la ventana principal y lleva el medio a una playlist nueva. El sonido no se interrumpe: el medio sigue sonando desde donde estaba, con el mismo volumen y la misma velocidad, mientras vuelven las pestañas de la última sesión. Abrir KeyTune desde el menú Inicio con el reproductor rápido abierto hace lo mismo.</p>
+<p>El reproductor rápido no guarda nada: el archivo no entra en los recientes, en el historial ni en la sesión, y el volumen cambiado en él vale solo hasta cerrarlo o hasta continuar en KeyTune completo, que lo mantiene. Empieza con el volumen de la última sesión, o con el volumen predeterminado si la sesión no se restaura.</p>
+<p>Se abren directamente en la ventana principal, como antes: playlists <code>.m3u</code> y <code>.m3u8</code>, vídeos cuando la salida de vídeo está activada, y cualquier archivo cuando KeyTune completo ya está abierto (va a la playlist actual). Para usar siempre la ventana principal, desmarca <strong>Usar el reproductor rápido al abrir archivos desde Windows</strong> en <code>Ctrl+,</code> &gt; <strong>General</strong>.</p>
 <h2 id="reproduccion">Reproducción</h2>
 <h3 id="atajos-de-reproduccion">Atajos de reproducción</h3>
 <table>
@@ -825,7 +884,7 @@ footer {
 <h2 id="configuracion">Configuración</h2>
 <p>Las preferencias se abren con <code>Ctrl+,</code> y se dividen en ocho pestañas: <strong>General</strong>, <strong>Reproducción</strong>, <strong>Accesibilidad</strong>, <strong>Biblioteca</strong>, <strong>Descarga</strong>, <strong>KeyTube</strong>, <strong>Radios en línea</strong> y <strong>Recursos adicionales</strong>.</p>
 <h3 id="general">General</h3>
-<p><strong>Restaurar sesión al iniciar</strong>, <strong>Recordar tamaño de la ventana</strong>, <strong>Recordar última carpeta usada</strong> y <strong>Confirmar al salir</strong> hacen lo que dice su nombre.</p>
+<p><strong>Restaurar sesión al iniciar</strong>, <strong>Recordar tamaño de la ventana</strong>, <strong>Recordar última carpeta usada</strong> y <strong>Confirmar al salir</strong> hacen lo que dice su nombre. <strong>Usar el reproductor rápido al abrir archivos desde Windows</strong> viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta <a href="#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows">Escuchar un archivo directamente desde el Explorador de archivos de Windows</a>).</p>
 <p>La sección <strong>Asociación de archivos</strong> (Windows) tiene el botón <strong>Registrar como reproductor predeterminado</strong>, que añade KeyTune al menú <em>Abrir con</em> para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. <strong>Anular registro de asociaciones</strong> deshace el registro.</p>
 <p>La sección <strong>Registro de logs</strong> ayuda a investigar problemas. <strong>Registrar logs de diagnóstico</strong> escribe un archivo de registro, en inglés, en la carpeta de datos, útil para adjuntar a un informe de errores. <strong>Nivel de detalle</strong> va de <em>Solo errores</em>, el más silencioso, a <em>Depuración</em>, que genera archivos grandes. <strong>Abrir la carpeta de logs</strong> te lleva hasta ellos.</p>
 <h3 id="reproduccion-2">Reproducción</h3>
@@ -925,7 +984,7 @@ footer {
 <p>KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El código fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">docs/manual.es.md</a>.</p>
 <p>Para ejecutar el proyecto desde el código, instala las dependencias con <code>uv sync</code> y abre el reproductor con <code>uv run keytune</code>. Las reglas de redacción del manual, el changelog y los commits están en <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generado el 04/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

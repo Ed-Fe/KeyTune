@@ -73,16 +73,27 @@ class FrameSessionMixin:
         except (TypeError, ValueError):
             saved_volume = DEFAULT_VOLUME
 
+        # Um player herdado do player rápido já está tocando: vale o volume e a
+        # velocidade dele, e nada aqui pode mexer no player.
+        adopted = getattr(self, "_pending_adopted_playback", None)
+        if adopted is not None:
+            saved_volume = adopted.volume
+
         self.current_volume = max(0, min(100, saved_volume))
-        self._apply_current_volume()
+        if adopted is None:
+            self._apply_current_volume()
 
         try:
             saved_playback_rate = float(session_payload.get("playback_rate", 1.0))
         except (TypeError, ValueError):
             saved_playback_rate = 1.0
 
+        if adopted is not None:
+            saved_playback_rate = adopted.playback_rate
+
         self.current_playback_rate = max(0.25, min(3.0, saved_playback_rate))
-        self._apply_current_playback_rate()
+        if adopted is None:
+            self._apply_current_playback_rate()
 
         try:
             saved_pitch_semitones = int(session_payload.get("pitch_semitones", 0))
@@ -90,7 +101,8 @@ class FrameSessionMixin:
             saved_pitch_semitones = 0
 
         self.current_pitch_semitones = max(-12, min(12, saved_pitch_semitones))
-        self._apply_equalizer_state_to_current_playback()
+        if adopted is None:
+            self._apply_equalizer_state_to_current_playback()
 
         if self.settings.remember_window_size:
             saved_window_size = session_payload.get("window_size")
@@ -107,7 +119,11 @@ class FrameSessionMixin:
 
         selected_tab -= sum(1 for position in folder_tab_positions if position < selected_tab)
         selected_tab = max(0, min(selected_tab, len(self.playlists) - 1))
-        if selected_tab == self._get_current_tab_index():
+        if adopted is not None:
+            # A aba da mídia herdada é aberta e selecionada logo em seguida;
+            # ativar a da sessão carregaria a faixa dela por cima da que toca.
+            pass
+        elif selected_tab == self._get_current_tab_index():
             self._activate_tab(selected_tab, announce=False)
         else:
             self._select_tab(selected_tab, announce=False)

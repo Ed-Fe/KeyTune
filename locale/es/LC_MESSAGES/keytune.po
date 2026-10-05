@@ -3209,12 +3209,6 @@ msgstr "Te&mporizador"
 msgid "Techno"
 msgstr "Techno"
 
-msgid "Tempo atual: {current} de {total}. {percent}%."
-msgstr "Tiempo actual: {current} de {total}. {percent}%."
-
-msgid "Tempo atual: {time}."
-msgstr "Tiempo actual: {time}."
-
 msgid "Tempo da mídia"
 msgstr "Tiempo del medio"
 
@@ -3406,9 +3400,6 @@ msgstr "Solo puedes quitar pistas de playlists que creaste o en las que eres col
 
 msgid "Voltar"
 msgstr "Atrás"
-
-msgid "Volume atual: {volume}%."
-msgstr "Volumen actual: {volume}%."
 
 msgid "Volume padrão"
 msgstr "Volumen predeterminado"
@@ -6203,3 +6194,39 @@ msgstr "{name}. Elemento {current} de {total}."
 
 msgid "Repetindo faixa atual. {position}"
 msgstr "Repitiendo la pista actual. {position}"
+
+msgid "&Continuar no KeyTune completo"
+msgstr "&Continuar en KeyTune completo"
+
+msgid "&Pausar"
+msgstr "&Pausar"
+
+msgid "Abre a janela principal com esta mídia numa playlist nova."
+msgstr "Abre la ventana principal con este medio en una playlist nueva."
+
+msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
+msgstr "Espacio reproducir/pausar · ←/→ buscar · ↑/↓ volumen · Ctrl+Enter KeyTune completo · Esc cerrar"
+
+msgid "Tempo: {current} / {total} ({percent}%)"
+msgstr "Tiempo: {current} / {total} ({percent}%)"
+
+msgid "Toca numa janela pequena, sem carregar as playlists."
+msgstr "Reproduce en una ventana pequeña, sin cargar las playlists."
+
+msgid "Usar o player rápido ao abrir arqui&vos pelo Windows"
+msgstr "Usar el reproductor rápido al abrir archi&vos desde Windows"
+
+msgid "{current} de {total}. {percent}%."
+msgstr "{current} de {total}. {percent}%."
+
+msgid "Volume {volume}%."
+msgstr "Volumen {volume}%."
+
+msgid "{name}, {state}."
+msgstr "{name}, {state}."
+
+msgid "Velocidade {rate}."
+msgstr "Velocidad {rate}."
+
+msgid "Aleatório ligado."
+msgstr "Aleatorio activado."

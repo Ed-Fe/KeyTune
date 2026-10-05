@@ -68,6 +68,36 @@ Formats supported directly:
 
 **File > Recent** keeps, in separate lists, the last files, folders and playlists you used.
 
+### Listening to a file straight from Windows File Explorer
+
+With KeyTune set as the default player, `Enter` on an audio file in File Explorer opens the **quick player**: a small window that plays the file right away, without loading tabs, playlists or the previous session.
+
+1. In File Explorer, select the file and press `Enter`.
+2. Listen. The screen reader announces the file name in the window title.
+3. Press `Esc` or `Alt+F4` to close.
+
+`Enter` on another file, with the quick player open, replaces what is playing with the new file, in the same window. Focus stays in File Explorer, and KeyTune announces nothing: you hear the new file start.
+
+| Action | Shortcut |
+| --- | --- |
+| Play or pause | `Space` |
+| Seek back or forward | `Left arrow` / `Right arrow` |
+| Seek back or forward 1 minute | `Shift+Left arrow` / `Shift+Right arrow` |
+| Volume | `Up arrow` / `Down arrow` |
+| Go to the start or the end | `Home` / `End` |
+| Speed | `]` faster, `[` slower, `\` back to normal |
+| Hear the time, the volume or the status | `T` / `V` / `S` |
+| Continue in the full KeyTune | `Ctrl+Enter` (or the **Continue in the full KeyTune** button) |
+| Close | `Esc` or `Alt+F4` |
+
+The keys and the announcements are the same as in the main window's player: changing the volume or seeking says nothing, and `V` and `T` tell you the volume and the time when you want them.
+
+`Ctrl+Enter` opens the main window and takes the media to a new playlist. The sound is not interrupted: the media keeps playing from where it was, at the same volume and speed, while the tabs of the last session come back. Opening KeyTune from the Start menu while the quick player is open does the same.
+
+The quick player saves nothing: the file does not enter the recent files, the history or the session, and a volume changed in it lasts only until you close it or continue in the full KeyTune, which keeps it. It starts with the volume of the last session, or with the default volume if the session is not restored.
+
+These open straight in the main window, as before: `.m3u` and `.m3u8` playlists, videos when video output is on, and any file when the full KeyTune is already open (it goes to the current playlist). To always use the main window, uncheck **Use the quick player when opening files from Windows** in `Ctrl+,` > **General**.
+
 ## Playback
 
 ### Playback shortcuts
@@ -609,7 +639,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 ### General
 
-**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says.
+**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
 The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the *Open with* menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration.
 

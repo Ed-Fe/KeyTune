@@ -3209,12 +3209,6 @@ msgstr "Sleep ti&mer"
 msgid "Techno"
 msgstr "Techno"
 
-msgid "Tempo atual: {current} de {total}. {percent}%."
-msgstr "Current time: {current} of {total}. {percent}%."
-
-msgid "Tempo atual: {time}."
-msgstr "Current time: {time}."
-
 msgid "Tempo da mídia"
 msgstr "Media time"
 
@@ -3406,9 +3400,6 @@ msgstr "You can only remove tracks from playlists you created or where you are a
 
 msgid "Voltar"
 msgstr "Back"
-
-msgid "Volume atual: {volume}%."
-msgstr "Current volume: {volume}%."
 
 msgid "Volume padrão"
 msgstr "Default volume"
@@ -6203,3 +6194,39 @@ msgstr "{name}. Item {current} of {total}."
 
 msgid "Repetindo faixa atual. {position}"
 msgstr "Repeating the current track. {position}"
+
+msgid "&Continuar no KeyTune completo"
+msgstr "&Continue in the full KeyTune"
+
+msgid "&Pausar"
+msgstr "&Pause"
+
+msgid "Abre a janela principal com esta mídia numa playlist nova."
+msgstr "Opens the main window with this media in a new playlist."
+
+msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
+msgstr "Space play/pause · ←/→ seek · ↑/↓ volume · Ctrl+Enter full KeyTune · Esc close"
+
+msgid "Tempo: {current} / {total} ({percent}%)"
+msgstr "Time: {current} / {total} ({percent}%)"
+
+msgid "Toca numa janela pequena, sem carregar as playlists."
+msgstr "Plays in a small window, without loading the playlists."
+
+msgid "Usar o player rápido ao abrir arqui&vos pelo Windows"
+msgstr "Use the &quick player when opening files from Windows"
+
+msgid "{current} de {total}. {percent}%."
+msgstr "{current} of {total}. {percent}%."
+
+msgid "Volume {volume}%."
+msgstr "Volume {volume}%."
+
+msgid "{name}, {state}."
+msgstr "{name}, {state}."
+
+msgid "Velocidade {rate}."
+msgstr "Speed {rate}."
+
+msgid "Aleatório ligado."
+msgstr "Shuffle on."

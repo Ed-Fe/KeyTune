@@ -360,6 +360,11 @@ class TabManagementMixin:
         if not state:
             return
 
+        if getattr(self, "_pending_adopted_playback", None) is not None:
+            # Um player herdado do player rápido já está tocando e ainda não
+            # tem aba: nenhuma aba pode descarregá-lo ou carregar outra mídia.
+            return
+
         # Switching tabs changes which video page is visible. Refresh its
         # overlay right away instead of waiting for the gated progress-timer
         # pass (see PlaybackControlsMixin._maybe_refresh_player_visual_hints).

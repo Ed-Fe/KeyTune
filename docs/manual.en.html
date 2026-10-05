@@ -116,6 +116,7 @@ footer {
         <li class="toc-level-2"><a href="#getting-started">Getting started</a></li>
         <li class="toc-level-2"><a href="#interface">Interface</a></li>
         <li class="toc-level-2"><a href="#how-to-open-media">How to open media</a></li>
+        <li class="toc-level-3"><a href="#listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</a></li>
         <li class="toc-level-2"><a href="#playback">Playback</a></li>
         <li class="toc-level-3"><a href="#playback-shortcuts">Playback shortcuts</a></li>
         <li class="toc-level-3"><a href="#playback-queue">Playback queue</a></li>
@@ -257,6 +258,64 @@ footer {
 <li>Video: <code>.mp4</code>, <code>.m4v</code>, <code>.mkv</code>, <code>.avi</code>, <code>.mov</code>, <code>.webm</code>, <code>.flv</code>, <code>.wmv</code>, <code>.mpg</code>, <code>.mpeg</code>, <code>.3gp</code>, <code>.ts</code>, <code>.m2ts</code>, <code>.mts</code>, <code>.ogv</code>.</li>
 </ul>
 <p><strong>File &gt; Recent</strong> keeps, in separate lists, the last files, folders and playlists you used.</p>
+<h3 id="listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</h3>
+<p>With KeyTune set as the default player, <code>Enter</code> on an audio file in File Explorer opens the <strong>quick player</strong>: a small window that plays the file right away, without loading tabs, playlists or the previous session.</p>
+<ol>
+<li>In File Explorer, select the file and press <code>Enter</code>.</li>
+<li>Listen. The screen reader announces the file name in the window title.</li>
+<li>Press <code>Esc</code> or <code>Alt+F4</code> to close.</li>
+</ol>
+<p><code>Enter</code> on another file, with the quick player open, replaces what is playing with the new file, in the same window. Focus stays in File Explorer, and KeyTune announces nothing: you hear the new file start.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Play or pause</td>
+<td><code>Space</code></td>
+</tr>
+<tr>
+<td>Seek back or forward</td>
+<td><code>Left arrow</code> / <code>Right arrow</code></td>
+</tr>
+<tr>
+<td>Seek back or forward 1 minute</td>
+<td><code>Shift+Left arrow</code> / <code>Shift+Right arrow</code></td>
+</tr>
+<tr>
+<td>Volume</td>
+<td><code>Up arrow</code> / <code>Down arrow</code></td>
+</tr>
+<tr>
+<td>Go to the start or the end</td>
+<td><code>Home</code> / <code>End</code></td>
+</tr>
+<tr>
+<td>Speed</td>
+<td><code>]</code> faster, <code>[</code> slower, <code>\</code> back to normal</td>
+</tr>
+<tr>
+<td>Hear the time, the volume or the status</td>
+<td><code>T</code> / <code>V</code> / <code>S</code></td>
+</tr>
+<tr>
+<td>Continue in the full KeyTune</td>
+<td><code>Ctrl+Enter</code> (or the <strong>Continue in the full KeyTune</strong> button)</td>
+</tr>
+<tr>
+<td>Close</td>
+<td><code>Esc</code> or <code>Alt+F4</code></td>
+</tr>
+</tbody>
+</table>
+<p>The keys and the announcements are the same as in the main window's player: changing the volume or seeking says nothing, and <code>V</code> and <code>T</code> tell you the volume and the time when you want them.</p>
+<p><code>Ctrl+Enter</code> opens the main window and takes the media to a new playlist. The sound is not interrupted: the media keeps playing from where it was, at the same volume and speed, while the tabs of the last session come back. Opening KeyTune from the Start menu while the quick player is open does the same.</p>
+<p>The quick player saves nothing: the file does not enter the recent files, the history or the session, and a volume changed in it lasts only until you close it or continue in the full KeyTune, which keeps it. It starts with the volume of the last session, or with the default volume if the session is not restored.</p>
+<p>These open straight in the main window, as before: <code>.m3u</code> and <code>.m3u8</code> playlists, videos when video output is on, and any file when the full KeyTune is already open (it goes to the current playlist). To always use the main window, uncheck <strong>Use the quick player when opening files from Windows</strong> in <code>Ctrl+,</code> &gt; <strong>General</strong>.</p>
 <h2 id="playback">Playback</h2>
 <h3 id="playback-shortcuts">Playback shortcuts</h3>
 <table>
@@ -825,7 +884,7 @@ footer {
 <h2 id="settings">Settings</h2>
 <p>Preferences open with <code>Ctrl+,</code> and are divided into eight tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, <strong>KeyTube</strong>, <strong>Online radio</strong> and <strong>Additional resources</strong>.</p>
 <h3 id="general">General</h3>
-<p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says.</p>
+<p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says. <strong>Use the quick player when opening files from Windows</strong> comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see <a href="#listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</a>).</p>
 <p>The <strong>File association</strong> section (Windows) has the <strong>Register as default player</strong> button, which adds KeyTune to the <em>Open with</em> menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. <strong>Unregister associations</strong> undoes the registration.</p>
 <p>The <strong>Log recording</strong> section helps investigate problems. <strong>Record diagnostic logs</strong> writes a log file, in English, to the data folder, useful to attach to a bug report. <strong>Detail level</strong> goes from <em>Errors only</em>, the quietest, to <em>Debug</em>, which produces large files. <strong>Open log folder</strong> takes you to them.</p>
 <h3 id="playback-2">Playback</h3>
@@ -925,7 +984,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 04/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

@@ -35,6 +35,11 @@ applyTo:
   - `convert/options.py` for modes, formats, and labels; `convert/plan.py` for the FFmpeg commands (pure, no I/O); `convert/probe.py` for ffprobe; `convert/runner.py` for running FFmpeg with progress and cancellation
   - `convert/dialog.py` for the wx dialog; everything else in the package must stay free of wxPython
   - `process_control.py` (cancel token, process-tree kill) and `widgets.py` (accessible choice and folder rows) are shared with the download feature
+- For the quick player (an audio file opened from Windows while KeyTune is closed), keep responsibilities separated:
+  - `app.py` decides which window opens and routes launches forwarded by other instances to it; the quick player hands over to `MediaPlayerFrame` through the `on_continue` callback
+  - `playback_handover.py` holds what changes hands (`AdoptedPlayback`: the MPV player still playing, its paths, volume and speed); `frames/playback/adoption.py` ties it to a new playlist without reloading the media. While an adoption is pending, session restore and tab activation must not touch the player
+  - `quick_player/launch.py` for what the quick player accepts and its starting volume (pure, no wxPython); `quick_player/panel.py` for the wx controls only; `quick_player/frame.py` for the window, its single MPV player and the keys
+  - It reads the settings and never writes settings, session, recents or library; keep its import path free of `frames/` so it stays fast to open
 - Preserve public method names unless the refactor requires a coordinated call-site update.
 - Prefer small helper functions and composition over adding another long conditional block to an already-large module.
 - After structural Python refactors, run `python -m compileall src`.

@@ -7,6 +7,7 @@ import surface (``from player.frames.playback import FramePlaybackMixin``) and
 ``base.py`` composition stay unchanged.
 """
 
+from .adoption import AdoptedPlayback, PlaybackAdoptionMixin
 from .audio_output import AudioOutputMixin
 from .backend import PlayerBackendMixin
 from .controls import PlaybackControlsMixin
@@ -31,6 +32,7 @@ class FramePlaybackMixin(
     AudioOutputMixin,
     CrossfadeMixin,
     PlaybackEngineMixin,
+    PlaybackAdoptionMixin,
     LivePlaybackMixin,
     YouTubeHistoryMixin,
     MediaMetadataMixin,
@@ -40,6 +42,7 @@ class FramePlaybackMixin(
 
 
 __all__ = [
+    "AdoptedPlayback",
     "FramePlaybackMixin",
     "is_music_youtube_url",
     "is_youtube_music_media",

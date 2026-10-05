@@ -7,6 +7,17 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Não lançado]
 
+### Adicionado
+
+- **Player rápido para arquivos abertos pelo Windows**: `Enter` num arquivo de áudio no Explorador de Arquivos agora abre uma janela pequena que toca na hora, sem carregar abas, playlists nem a sessão anterior. `Enter` em outro arquivo troca o que está tocando, e `Esc` ou `Alt+F4` fecham.
+  - As teclas e os anúncios são os mesmos do player da janela principal: `Espaço` pausa, as setas avançam e mudam o volume, `T`, `V` e `S` falam o tempo, o volume e o status.
+  - `Ctrl+Enter` continua no KeyTune completo, com a mídia numa playlist nova. O som não para na passagem.
+  - O player rápido não grava recentes, histórico nem sessão.
+
+### Alterado
+
+- **Abrir um arquivo pelo Windows com o KeyTune fechado**: antes, o arquivo abria a janela principal, restaurava a sessão e entrava na playlist atual. Agora ele toca no player rápido. Se o KeyTune já está aberto, nada muda: o arquivo vai para a playlist atual. Para voltar ao comportamento antigo, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
+
 ## [2.1.0] - 2026-10-04
 
 ### Adicionado

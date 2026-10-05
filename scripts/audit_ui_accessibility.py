@@ -257,6 +257,7 @@ def _build_screens():
     from player.preferences.audio_output_dialog import AudioOutputDialog
     from player.preferences.dialog import PreferencesDialog
     from player.preferences.models import AppSettings
+    from player.quick_player.panel import QuickPlayerPanel
     from player.radio.manual_dialog import AddRadioManuallyDialog
     from player.radio.panel import RadioTabPanel
     from player.sleep_timer.dialog import SleepTimerDialog
@@ -317,6 +318,7 @@ def _build_screens():
         "PlaylistBrowserPanel": lambda parent: PlaylistBrowserPanel(parent, _noop, _noop),
         "PluginManagerDialog": lambda parent: PluginManagerDialog(parent, plugin_service),
         "PreferencesDialog": lambda parent: PreferencesDialog(parent, AppSettings()),
+        "QuickPlayerPanel": lambda parent: QuickPlayerPanel(parent),
         "QueueManagerDialog": lambda parent: QueueManagerDialog(
             parent, get_entries=_empty, on_remove=_noop, on_move=_noop, on_clear=_noop
         ),
