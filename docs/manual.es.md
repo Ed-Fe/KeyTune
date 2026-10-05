@@ -14,7 +14,7 @@ Aquí encontrarás las funciones de la aplicación y el paso a paso de las tarea
 - Búsqueda en la playlist o en la carpeta actual, con navegación entre los resultados
 - Biblioteca inteligente: búsqueda global, favoritos, valoraciones, historial y reanudación por archivo
 - Temporizador con duraciones predefinidas o pausa al final de la pista
-- Ecualizador por pestaña, con preajustes y presets propios
+- Ecualizador para todas las pestañas o solo para una, con preajustes y presets propios
 - Panel de letras con búsqueda automática
 - Pestaña KeyTube, con YouTube Music y YouTube (`Ctrl+Shift+Y`)
 - Transmisiones en vivo de YouTube, con audio y vídeo opcional
@@ -174,7 +174,7 @@ Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists,
 - `Ctrl+T`: nueva pestaña de playlist
 - `Ctrl+W`: cerrar la pestaña actual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: pestaña siguiente o anterior
-- `Ctrl+Shift+E`: ecualizador de la pestaña activa
+- `Ctrl+Shift+E`: ecualizador
 - `Ctrl+C`: copiar la selección como texto y, en el caso de archivos del equipo, también como archivos. Se puede pegar en otra playlist, en un campo de texto o en el Explorador de Windows
 - `Ctrl+Shift+C`: copiar el enlace o la ruta del medio actual (en el explorador de carpetas, la ruta de la selección)
 - `Ctrl+Shift+S`: guardar la playlist actual
@@ -580,11 +580,11 @@ La canción que anuncia la emisora aparece en la barra de estado, con el formato
 
 ## Ecualizador
 
-`Ctrl+Shift+E` (o **Ver > Ecualizador por pestaña**) abre el ecualizador de la pestaña activa, así que cada playlist puede tener su propio ajuste. Eso permite, por ejemplo, dejar una playlist con los graves reforzados y otra con un ajuste neutro, sin rehacerlo todo en cada cambio.
+`Ctrl+Shift+E` (o **Ver > Ecualizador**) abre el ecualizador. El ajuste vale para todo lo que KeyTune reproduce: todas las pestañas, las que abras después y el reproductor rápido.
 
 ### Cómo usarlo
 
-El campo **Pestaña destino** muestra qué playlist recibe los ajustes. La casilla **Activar ecualizador en esta pestaña** activa o desactiva el efecto solo en ella.
+La casilla **Activar ecualizador** activa o desactiva el efecto.
 
 El campo **Preset** lista todos los presets. Los integrados llevan el sufijo *(integrado)*. Al elegir uno, **Descripción** muestra una nota sobre el perfil sonoro y **Resumen del preset** trae la preamplificación y el valor de cada banda, para que lo compruebes antes de aplicar.
 
@@ -595,7 +595,13 @@ El campo **Preset** lista todos los presets. Los integrados llevan el sufijo *(i
 - **Guardar copia...**: cuando el seleccionado es integrado, este es el botón que aparece. Crea una versión editable basada en él, el camino correcto para partir de un preset listo y ajustar.
 - **Duplicar...**: copia un preset personalizado con otro nombre, sin tocar el original. No vale para los integrados.
 - **Eliminar**: elimina de forma definitiva el preset personalizado seleccionado. No vale para los integrados.
-- **Aplicar en todas las pestañas**: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.
+
+#### Ecualizador solo para una pestaña
+
+Una playlist puede sonar distinta de las demás: audiolibros con la voz realzada, por ejemplo. Con ella sonando, abre el ecualizador y marca **Usar un ecualizador solo para esta pestaña**. El campo **Pestaña destino** muestra de qué playlist se trata.
+
+- Marcada, la pestaña parte del ajuste que ya estaba en uso, y lo que cambies se queda solo en ella.
+- Sin marcar, la pestaña vuelve a seguir el ecualizador de todas las pestañas.
 
 #### Editor de presets
 

@@ -521,7 +521,7 @@ class FrameUIMixin:
         self.view_menu = view_menu
         self.menu_playlist_browser_id = wx.NewIdRef()
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
-        view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador por aba\tCtrl+Shift+E"))
+        view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
         view_menu.Append(self.menu_open_radio_id, _("&Rádios online por aba\tCtrl+Shift+N"))
         view_menu.AppendSeparator()

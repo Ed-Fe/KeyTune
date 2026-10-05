@@ -630,9 +630,15 @@ class MPVPlayer:
         # audio chain, an audible glitch on a media that is already playing.
         if not filter_chain and not getattr(self, "_audio_filters_applied", True):
             return
+        # The same goes for writing the chain that is already there. Labelled
+        # filters are the exception: `af-command` changes them in place, so
+        # writing the chain again is how they go back to their initial values.
+        if filter_chain == getattr(self, "_audio_filter_chain", None) and "@" not in filter_chain:
+            return
         try:
             self._player["af"] = filter_chain
             self._audio_filters_applied = bool(filter_chain)
+            self._audio_filter_chain = filter_chain
         except Exception:
             pass
 

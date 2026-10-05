@@ -498,6 +498,14 @@ msgstr ""
 msgid "A aba atual não é uma playlist editável do YouTube Music."
 msgstr ""
 
+#: src/player/frames/equalizer.py
+msgid "A aba {tab} agora tem um equalizador só dela."
+msgstr ""
+
+#: src/player/frames/equalizer.py
+msgid "A aba {tab} voltou a seguir o equalizador de todas as abas."
+msgstr ""
+
 #: src/player/frames/commands/open_commands.py
 msgid "A abertura externa aceita apenas uma playlist por vez."
 msgstr ""
@@ -840,7 +848,7 @@ msgid "Aba A&nterior\tCtrl+Shift+Tab"
 msgstr ""
 
 #: src/player/frames/equalizer.py
-msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
+msgid "Aba Equalizador."
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -869,10 +877,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -1177,10 +1181,6 @@ msgstr ""
 msgid "Ajuste de tempo: {adjustment:+.1%}."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr ""
-
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Aleatória"
 msgstr ""
@@ -1314,14 +1314,6 @@ msgstr ""
 msgid "Aplicar dispositivo de áudio"
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Aplicar em &todas as abas"
-msgstr ""
-
-#: src/player/equalizer/panel.py
-msgid "Aplicar equalizador em todas as abas de mídia"
-msgstr ""
-
 #: src/player/preferences/dialog.py
 msgid "Aplicativos padrão"
 msgstr ""
@@ -1444,7 +1436,7 @@ msgid "Ativado"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Ativar &equalizador nesta aba"
+msgid "Ativar &equalizador"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1468,7 +1460,7 @@ msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Ativar equalizador nesta aba"
+msgid "Ativar equalizador"
 msgstr ""
 
 #: src/player/frames/youtube_music/state.py
@@ -2256,10 +2248,6 @@ msgstr ""
 msgid "Conta: {name}."
 msgstr ""
 
-#: src/player/equalizer/panel.py
-msgid "Contexto"
-msgstr ""
-
 #: src/player/welcome/dialog.py
 msgid "Conteúdo da página atual"
 msgstr ""
@@ -2440,7 +2428,7 @@ msgid "Criar playlist do YouTube Music"
 msgstr ""
 
 #: src/player/frames/equalizer.py
-msgid "Crie um preset personalizado. Os ajustes ficam salvos nas preferências e podem ser aplicados a qualquer aba de mídia."
+msgid "Crie um preset personalizado. Ele fica salvo nas preferências."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -2595,6 +2583,10 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Deseja remover todos os {count} itens da fila de reprodução?"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Desmarcada, a aba segue o equalizador de todas as abas."
 msgstr ""
 
 #: src/player/download/dialog.py
@@ -2985,7 +2977,7 @@ msgid "Entradas guardadas no cache"
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Eq&ualizador por aba\tCtrl+Shift+E"
+msgid "Eq&ualizador\tCtrl+Shift+E"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2994,10 +2986,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Equalizador"
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Equalizador desativado em {count} abas de mídia."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -3010,10 +2998,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Equalizador na aba {tab}: {name}."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Equalizador {name} aplicado em {count} abas de mídia."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -3049,11 +3033,11 @@ msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Naveg
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Escolha o preset que será usado na aba de mídia ativa."
+msgid "Escolha o preset do equalizador."
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
+msgid "Escolha o preset do equalizador. Descrição do preset atual: {desc}"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -3967,7 +3951,7 @@ msgid "Licença: {license}"
 msgstr ""
 
 #: src/player/equalizer/panel.py
-msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
+msgid "Liga ou desliga o equalizador."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -4455,10 +4439,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
-msgstr ""
-
-#: src/player/frames/equalizer.py
-msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -5311,6 +5291,10 @@ msgstr ""
 msgid "O equalizador não está disponível nesta instalação."
 msgstr ""
 
+#: src/player/equalizer/panel.py
+msgid "O equalizador vale para todas as abas. Uma aba só tem um ajuste diferente se você marcar a caixa para usar um equalizador só nela."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O executável yt-dlp baixado não passou na validação de integridade."
 msgstr ""
@@ -5568,6 +5552,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Onde encontrar ajuda"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Onde vale"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -7373,6 +7361,14 @@ msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Usar o resolvedor de mídia yt-dlp"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Usar um equalizador só para esta a&ba"
+msgstr ""
+
+#: src/player/equalizer/panel.py
+msgid "Usar um equalizador só para esta aba"
 msgstr ""
 
 #: src/player/preferences/dialog.py

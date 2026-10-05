@@ -25,6 +25,10 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Abrir um arquivo pelo Windows com o KeyTune fechado**: antes abria a janela principal e restaurava a sessão. Agora toca no player rápido.
   - Com o KeyTune já aberto nada muda: o arquivo vai para a playlist atual.
   - Para voltar ao comportamento antigo, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
+- **Equalizador para todas as abas**: antes cada aba tinha o seu, e repetir o ajuste pedia **Aplicar em todas as abas**. Agora o que você define em `Ctrl+Shift+E` vale para todas as abas, as novas e o player rápido.
+  - Para um ajuste diferente numa playlist, marque **Usar um equalizador só para esta aba**.
+  - Os equalizadores por aba de versões anteriores não são mantidos: defina o ajuste de novo, uma vez.
+  - O botão **Aplicar em todas as abas** saiu.
 - **`T` e `V` mais curtos**: falam só o valor, como "1:20 de 3:40. 36%." e "80%.", sem "Tempo atual:" e "Volume atual:".
 - **Status (`S`) mais direto**: começa pela mídia e pelo tempo, por exemplo "Música.mp3, tocando. 1:20 de 3:40. 36%. Item 3 de 12. Volume 80%.".
   - Velocidade, tom, aleatório e repetição só são falados quando estão fora do padrão.

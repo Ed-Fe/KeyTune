@@ -6230,3 +6230,48 @@ msgstr "Speed {rate}."
 
 msgid "Aleatório ligado."
 msgstr "Shuffle on."
+
+msgid "Eq&ualizador\tCtrl+Shift+E"
+msgstr "Eq&ualizer\tCtrl+Shift+E"
+
+msgid "A aba {tab} agora tem um equalizador só dela."
+msgstr "Tab {tab} now has an equalizer of its own."
+
+msgid "A aba {tab} voltou a seguir o equalizador de todas as abas."
+msgstr "Tab {tab} follows the equalizer of all tabs again."
+
+msgid "Aba Equalizador."
+msgstr "Equalizer tab."
+
+msgid "Ativar &equalizador"
+msgstr "Enable &equalizer"
+
+msgid "Ativar equalizador"
+msgstr "Enable equalizer"
+
+msgid "Crie um preset personalizado. Ele fica salvo nas preferências."
+msgstr "Create a custom preset. It is saved in preferences."
+
+msgid "Desmarcada, a aba segue o equalizador de todas as abas."
+msgstr "Unchecked, the tab follows the equalizer of all tabs."
+
+msgid "Escolha o preset do equalizador."
+msgstr "Choose the equalizer preset."
+
+msgid "Escolha o preset do equalizador. Descrição do preset atual: {desc}"
+msgstr "Choose the equalizer preset. Current preset description: {desc}"
+
+msgid "Liga ou desliga o equalizador."
+msgstr "Turns the equalizer on or off."
+
+msgid "O equalizador vale para todas as abas. Uma aba só tem um ajuste diferente se você marcar a caixa para usar um equalizador só nela."
+msgstr "The equalizer applies to all tabs. A tab only has a different setting if you check the box to use an equalizer just for it."
+
+msgid "Onde vale"
+msgstr "Where it applies"
+
+msgid "Usar um equalizador só para esta a&ba"
+msgstr "Use an equalizer just for this ta&b"
+
+msgid "Usar um equalizador só para esta aba"
+msgstr "Use an equalizer just for this tab"

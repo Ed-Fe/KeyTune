@@ -116,8 +116,19 @@ class QuickPlayerFrame(wx.Frame):
         event_manager.event_attach(PlayerEventType.MEDIA_PLAYER_END_REACHED, self._post, self._on_media_end)
         event_manager.event_attach(PlayerEventType.MEDIA_PLAYER_ERROR, self._post, self._on_media_error)
         player.audio_set_volume(self._volume)
+        self._apply_default_equalizer()
         self.progress_timer.Start(PROGRESS_TIMER_INTERVAL_MS)
         self._play_current()
+
+    def _apply_default_equalizer(self):
+        if not getattr(self.settings, "equalizer_enabled", False):
+            return
+        try:
+            from ..equalizer.backend import default_equalizer_filter
+
+            self._player.set_audio_filters(default_equalizer_filter(self.settings))
+        except Exception as exc:
+            _logger.warning("Quick player could not apply the equalizer: %s", exc)
 
     def _configured_audio_output_device_id(self):
         device_id = normalize_audio_output_device_id(getattr(self.settings, "audio_output_device_id", ""))

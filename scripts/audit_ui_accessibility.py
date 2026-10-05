@@ -300,9 +300,9 @@ def _build_screens():
         ),
         "EqualizerTabPanel": lambda parent: EqualizerTabPanel(
             parent,
+            on_toggle_own=_noop,
             on_toggle_enabled=_noop,
             on_select_preset=_noop,
-            on_apply_to_all_tabs=_noop,
             on_create_preset=_noop,
             on_edit_preset=_noop,
             on_duplicate_preset=_noop,

@@ -14,7 +14,7 @@ Aqui você encontra os recursos do aplicativo e o passo a passo das tarefas mais
 - Busca na playlist ou na pasta atual, com navegação entre os resultados
 - Biblioteca inteligente: busca global, favoritos, avaliações, histórico e retomada por arquivo
 - Temporizador com durações prontas ou pausa ao fim da faixa
-- Equalizador por aba, com predefinições e presets próprios
+- Equalizador para todas as abas ou só para uma, com predefinições e presets próprios
 - Painel de letras com busca automática
 - Aba KeyTube, com o YouTube Music e o YouTube (`Ctrl+Shift+Y`)
 - Transmissões ao vivo do YouTube, com áudio e vídeo opcional
@@ -174,7 +174,7 @@ Trocar de aba não mexe no que está tocando: dá para passear pelas playlists, 
 - `Ctrl+T`: nova aba de playlist
 - `Ctrl+W`: fechar a aba atual
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: próxima aba ou aba anterior
-- `Ctrl+Shift+E`: equalizador da aba ativa
+- `Ctrl+Shift+E`: equalizador
 - `Ctrl+C`: copiar a seleção como texto e, no caso de arquivos do computador, também como arquivos. Dá para colar em outra playlist, num campo de texto ou no Explorador do Windows
 - `Ctrl+Shift+C`: copiar o link ou o caminho da mídia atual (no explorador de pastas, o caminho da seleção)
 - `Ctrl+Shift+S`: salvar a playlist atual
@@ -584,11 +584,11 @@ A música que a estação anuncia aparece na barra de status, no formato *Estaç
 
 ## Equalizador
 
-`Ctrl+Shift+E` (ou **Exibir > Equalizador por aba**) abre o equalizador da aba ativa, então cada playlist pode ter o seu ajuste. Isso permite, por exemplo, deixar uma playlist com graves reforçados e outra com um ajuste neutro, sem refazer tudo a cada troca.
+`Ctrl+Shift+E` (ou **Exibir > Equalizador**) abre o equalizador. O ajuste vale para tudo o que o KeyTune toca: todas as abas, as que você abrir depois e o player rápido.
 
 ### Como usar
 
-O campo **Aba alvo** mostra qual playlist recebe os ajustes. A caixa **Ativar equalizador nesta aba** liga ou desliga o efeito só nela.
+A caixa **Ativar equalizador** liga ou desliga o efeito.
 
 O campo **Preset** lista todos os presets. Os embutidos levam o sufixo *(embutido)*. Ao escolher um, **Descrição** mostra uma nota sobre o perfil sonoro e **Resumo do preset** traz a pré-amplificação e o valor de cada banda, para você conferir antes de aplicar.
 
@@ -599,7 +599,13 @@ O campo **Preset** lista todos os presets. Os embutidos levam o sufixo *(embutid
 - **Salvar cópia...**: quando o selecionado é embutido, é este o botão que aparece. Cria uma versão editável baseada nele, o caminho certo para partir de um preset pronto e ajustar.
 - **Duplicar...**: copia um preset personalizado com outro nome, sem mexer no original. Não vale para os embutidos.
 - **Excluir**: remove de vez o preset personalizado selecionado. Não vale para os embutidos.
-- **Aplicar em todas as abas**: copia o preset e o estado de ativação da aba atual para todas as abas de mídia abertas.
+
+#### Equalizador só para uma aba
+
+Uma playlist pode soar diferente das outras: audiolivros com a voz realçada, por exemplo. Com ela tocando, abra o equalizador e marque **Usar um equalizador só para esta aba**. O campo **Aba alvo** mostra de qual playlist se trata.
+
+- Marcada, a aba começa com o ajuste que já estava valendo, e o que você mudar fica só nela.
+- Desmarcada, a aba volta a seguir o equalizador de todas as abas.
 
 #### Editor de preset
 

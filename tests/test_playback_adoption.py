@@ -269,6 +269,19 @@ class AudioFilterTests(unittest.TestCase):
 
         self.assertEqual(self.core.option_sets, [("af", "equalizer=f=60:g=3"), ("af", "")])
 
+    def test_writing_the_chain_that_is_already_there_does_not_touch_the_audio_chain(self):
+        self.player.set_audio_filters("equalizer=f=60:g=3")
+        self.player.set_audio_filters("equalizer=f=60:g=3")
+
+        self.assertEqual(self.core.option_sets, [("af", "equalizer=f=60:g=3")])
+
+    def test_a_chain_with_labelled_filters_is_always_written_again(self):
+        chain = "@autodj_mix:lavfi=[equalizer=f=80:g=0]"
+        self.player.set_audio_filters(chain)
+        self.player.set_audio_filters(chain)
+
+        self.assertEqual(self.core.option_sets, [("af", chain), ("af", chain)])
+
 
 if __name__ == "__main__":
     unittest.main()

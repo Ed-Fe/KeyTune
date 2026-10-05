@@ -162,6 +162,7 @@ footer {
         <li class="toc-level-2"><a href="#ecualizador">Ecualizador</a></li>
         <li class="toc-level-3"><a href="#como-usarlo">Cómo usarlo</a></li>
         <li class="toc-level-4"><a href="#botones-de-gestion">Botones de gestión</a></li>
+        <li class="toc-level-4"><a href="#ecualizador-solo-para-una-pestana">Ecualizador solo para una pestaña</a></li>
         <li class="toc-level-4"><a href="#editor-de-presets">Editor de presets</a></li>
         <li class="toc-level-3"><a href="#presets-integrados">Presets integrados</a></li>
         <li class="toc-level-3"><a href="#consejos">Consejos</a></li>
@@ -190,7 +191,7 @@ footer {
 <li>Búsqueda en la playlist o en la carpeta actual, con navegación entre los resultados</li>
 <li>Biblioteca inteligente: búsqueda global, favoritos, valoraciones, historial y reanudación por archivo</li>
 <li>Temporizador con duraciones predefinidas o pausa al final de la pista</li>
-<li>Ecualizador por pestaña, con preajustes y presets propios</li>
+<li>Ecualizador para todas las pestañas o solo para una, con preajustes y presets propios</li>
 <li>Panel de letras con búsqueda automática</li>
 <li>Pestaña KeyTube, con YouTube Music y YouTube (<code>Ctrl+Shift+Y</code>)</li>
 <li>Transmisiones en vivo de YouTube, con audio y vídeo opcional</li>
@@ -457,7 +458,7 @@ footer {
 <li><code>Ctrl+T</code>: nueva pestaña de playlist</li>
 <li><code>Ctrl+W</code>: cerrar la pestaña actual</li>
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: pestaña siguiente o anterior</li>
-<li><code>Ctrl+Shift+E</code>: ecualizador de la pestaña activa</li>
+<li><code>Ctrl+Shift+E</code>: ecualizador</li>
 <li><code>Ctrl+C</code>: copiar la selección como texto y, en el caso de archivos del equipo, también como archivos. Se puede pegar en otra playlist, en un campo de texto o en el Explorador de Windows</li>
 <li><code>Ctrl+Shift+C</code>: copiar el enlace o la ruta del medio actual (en el explorador de carpetas, la ruta de la selección)</li>
 <li><code>Ctrl+Shift+S</code>: guardar la playlist actual</li>
@@ -784,9 +785,9 @@ footer {
 <p>La radio entra en la playlist actual con el nombre de la emisora. Suena como una transmisión en vivo solo de audio: no se puede avanzar ni retroceder, y queda fuera de AutoDJ y del crossfade.</p>
 <p>La canción que anuncia la emisora aparece en la barra de estado, con el formato <em>Emisora: título</em>, y entra en el anuncio de estado (<code>S</code>). Las recientes salen del historial de reproducción.</p>
 <h2 id="ecualizador">Ecualizador</h2>
-<p><code>Ctrl+Shift+E</code> (o <strong>Ver &gt; Ecualizador por pestaña</strong>) abre el ecualizador de la pestaña activa, así que cada playlist puede tener su propio ajuste. Eso permite, por ejemplo, dejar una playlist con los graves reforzados y otra con un ajuste neutro, sin rehacerlo todo en cada cambio.</p>
+<p><code>Ctrl+Shift+E</code> (o <strong>Ver &gt; Ecualizador</strong>) abre el ecualizador. El ajuste vale para todo lo que KeyTune reproduce: todas las pestañas, las que abras después y el reproductor rápido.</p>
 <h3 id="como-usarlo">Cómo usarlo</h3>
-<p>El campo <strong>Pestaña destino</strong> muestra qué playlist recibe los ajustes. La casilla <strong>Activar ecualizador en esta pestaña</strong> activa o desactiva el efecto solo en ella.</p>
+<p>La casilla <strong>Activar ecualizador</strong> activa o desactiva el efecto.</p>
 <p>El campo <strong>Preset</strong> lista todos los presets. Los integrados llevan el sufijo <em>(integrado)</em>. Al elegir uno, <strong>Descripción</strong> muestra una nota sobre el perfil sonoro y <strong>Resumen del preset</strong> trae la preamplificación y el valor de cada banda, para que lo compruebes antes de aplicar.</p>
 <h4 id="botones-de-gestion">Botones de gestión</h4>
 <ul>
@@ -795,7 +796,12 @@ footer {
 <li><strong>Guardar copia...</strong>: cuando el seleccionado es integrado, este es el botón que aparece. Crea una versión editable basada en él, el camino correcto para partir de un preset listo y ajustar.</li>
 <li><strong>Duplicar...</strong>: copia un preset personalizado con otro nombre, sin tocar el original. No vale para los integrados.</li>
 <li><strong>Eliminar</strong>: elimina de forma definitiva el preset personalizado seleccionado. No vale para los integrados.</li>
-<li><strong>Aplicar en todas las pestañas</strong>: copia el preset y el estado de activación de la pestaña actual a todas las pestañas de medios abiertas.</li>
+</ul>
+<h4 id="ecualizador-solo-para-una-pestana">Ecualizador solo para una pestaña</h4>
+<p>Una playlist puede sonar distinta de las demás: audiolibros con la voz realzada, por ejemplo. Con ella sonando, abre el ecualizador y marca <strong>Usar un ecualizador solo para esta pestaña</strong>. El campo <strong>Pestaña destino</strong> muestra de qué playlist se trata.</p>
+<ul>
+<li>Marcada, la pestaña parte del ajuste que ya estaba en uso, y lo que cambies se queda solo en ella.</li>
+<li>Sin marcar, la pestaña vuelve a seguir el ecualizador de todas las pestañas.</li>
 </ul>
 <h4 id="editor-de-presets">Editor de presets</h4>
 <p>El editor tiene el campo del nombre, la preamplificación y un control por banda de frecuencia. Cada banda va de -12,0 dB a +12,0 dB: los valores positivos refuerzan la frecuencia y los negativos la atenúan. La preamplificación ajusta la ganancia general antes de todas las bandas.</p>

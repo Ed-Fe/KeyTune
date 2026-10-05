@@ -162,6 +162,7 @@ footer {
         <li class="toc-level-2"><a href="#equalizer">Equalizer</a></li>
         <li class="toc-level-3"><a href="#how-to-use-it">How to use it</a></li>
         <li class="toc-level-4"><a href="#management-buttons">Management buttons</a></li>
+        <li class="toc-level-4"><a href="#equalizer-just-for-one-tab">Equalizer just for one tab</a></li>
         <li class="toc-level-4"><a href="#preset-editor">Preset editor</a></li>
         <li class="toc-level-3"><a href="#built-in-presets">Built-in presets</a></li>
         <li class="toc-level-3"><a href="#tips">Tips</a></li>
@@ -190,7 +191,7 @@ footer {
 <li>Search in the current playlist or folder, with navigation between results</li>
 <li>Smart library: global search, favorites, ratings, history and per-file resume</li>
 <li>Sleep timer with preset durations or a pause at the end of the track</li>
-<li>Per-tab equalizer, with presets and your own presets</li>
+<li>Equalizer for all tabs or just for one, with presets and your own presets</li>
 <li>Lyrics panel with automatic search</li>
 <li>KeyTube tab, with YouTube Music and YouTube (<code>Ctrl+Shift+Y</code>)</li>
 <li>YouTube live broadcasts, with audio and optional video</li>
@@ -457,7 +458,7 @@ footer {
 <li><code>Ctrl+T</code>: new playlist tab</li>
 <li><code>Ctrl+W</code>: close the current tab</li>
 <li><code>Ctrl+Tab</code> / <code>Ctrl+Shift+Tab</code>: next tab or previous tab</li>
-<li><code>Ctrl+Shift+E</code>: equalizer of the active tab</li>
+<li><code>Ctrl+Shift+E</code>: equalizer</li>
 <li><code>Ctrl+C</code>: copy the selection as text and, for files on the computer, also as files. You can paste into another playlist, into a text field or into Windows Explorer</li>
 <li><code>Ctrl+Shift+C</code>: copy the link or the path of the current media (in the folder explorer, the path of the selection)</li>
 <li><code>Ctrl+Shift+S</code>: save the current playlist</li>
@@ -784,9 +785,9 @@ footer {
 <p>The station goes into the current playlist under the station's name. It plays as an audio-only live broadcast: you can't rewind or fast-forward, and it stays out of AutoDJ and crossfade.</p>
 <p>The song the station announces appears in the status bar, in the format <em>Station: title</em>, and goes into the status announcement (<code>S</code>). Recent stations come from the playback history.</p>
 <h2 id="equalizer">Equalizer</h2>
-<p><code>Ctrl+Shift+E</code> (or <strong>View &gt; Per-tab equalizer</strong>) opens the active tab's equalizer, so each playlist can have its own setting. That lets you, for example, keep one playlist with boosted bass and another with a neutral setting, without redoing everything each time you switch.</p>
+<p><code>Ctrl+Shift+E</code> (or <strong>View &gt; Equalizer</strong>) opens the equalizer. The setting applies to everything KeyTune plays: all tabs, the ones you open later and the quick player.</p>
 <h3 id="how-to-use-it">How to use it</h3>
-<p>The <strong>Target tab</strong> field shows which playlist receives the adjustments. The <strong>Enable equalizer on this tab</strong> box turns the effect on or off for that tab only.</p>
+<p>The <strong>Enable equalizer</strong> box turns the effect on or off.</p>
 <p>The <strong>Preset</strong> field lists all the presets. The built-in ones carry the suffix <em>(built-in)</em>. When you choose one, <strong>Description</strong> shows a note about the sound profile and <strong>Preset summary</strong> brings the preamp and the value of each band, so you can check before applying.</p>
 <h4 id="management-buttons">Management buttons</h4>
 <ul>
@@ -795,7 +796,12 @@ footer {
 <li><strong>Save copy...</strong>: when the selected one is built-in, this is the button that appears. It creates an editable version based on it, the right way to start from a ready-made preset and adjust.</li>
 <li><strong>Duplicate...</strong>: copies a custom preset under another name, without touching the original. Doesn't apply to built-in ones.</li>
 <li><strong>Delete</strong>: permanently removes the selected custom preset. Doesn't apply to built-in ones.</li>
-<li><strong>Apply to all tabs</strong>: copies the current tab's preset and enabled state to all open media tabs.</li>
+</ul>
+<h4 id="equalizer-just-for-one-tab">Equalizer just for one tab</h4>
+<p>A playlist can sound different from the others: audiobooks with the voice brought forward, for example. With it playing, open the equalizer and check <strong>Use an equalizer just for this tab</strong>. The <strong>Target tab</strong> field shows which playlist that is.</p>
+<ul>
+<li>Checked, the tab starts from the setting that was already in effect, and what you change stays in it.</li>
+<li>Unchecked, the tab follows the equalizer of all tabs again.</li>
 </ul>
 <h4 id="preset-editor">Preset editor</h4>
 <p>The editor has the name field, the preamp and one control per frequency band. Each band goes from -12.0 dB to +12.0 dB: positive values boost the frequency and negative ones cut it. The preamp adjusts the overall gain before all the bands.</p>

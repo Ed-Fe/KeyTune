@@ -6230,3 +6230,48 @@ msgstr "Velocidad {rate}."
 
 msgid "Aleatório ligado."
 msgstr "Aleatorio activado."
+
+msgid "Eq&ualizador\tCtrl+Shift+E"
+msgstr "Ec&ualizador\tCtrl+Shift+E"
+
+msgid "A aba {tab} agora tem um equalizador só dela."
+msgstr "La pestaña {tab} ahora tiene un ecualizador solo para ella."
+
+msgid "A aba {tab} voltou a seguir o equalizador de todas as abas."
+msgstr "La pestaña {tab} vuelve a seguir el ecualizador de todas las pestañas."
+
+msgid "Aba Equalizador."
+msgstr "Pestaña Ecualizador."
+
+msgid "Ativar &equalizador"
+msgstr "Activar &ecualizador"
+
+msgid "Ativar equalizador"
+msgstr "Activar ecualizador"
+
+msgid "Crie um preset personalizado. Ele fica salvo nas preferências."
+msgstr "Crea un preset personalizado. Queda guardado en las preferencias."
+
+msgid "Desmarcada, a aba segue o equalizador de todas as abas."
+msgstr "Sin marcar, la pestaña sigue el ecualizador de todas las pestañas."
+
+msgid "Escolha o preset do equalizador."
+msgstr "Elige el preset del ecualizador."
+
+msgid "Escolha o preset do equalizador. Descrição do preset atual: {desc}"
+msgstr "Elige el preset del ecualizador. Descripción del preset actual: {desc}"
+
+msgid "Liga ou desliga o equalizador."
+msgstr "Activa o desactiva el ecualizador."
+
+msgid "O equalizador vale para todas as abas. Uma aba só tem um ajuste diferente se você marcar a caixa para usar um equalizador só nela."
+msgstr "El ecualizador vale para todas las pestañas. Una pestaña solo tiene un ajuste distinto si marcas la casilla para usar un ecualizador solo en ella."
+
+msgid "Onde vale"
+msgstr "Dónde se aplica"
+
+msgid "Usar um equalizador só para esta a&ba"
+msgstr "Usar un ecualizador solo para esta pesta&ña"
+
+msgid "Usar um equalizador só para esta aba"
+msgstr "Usar un ecualizador solo para esta pestaña"

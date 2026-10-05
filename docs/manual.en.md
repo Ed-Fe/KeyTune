@@ -14,7 +14,7 @@ Here you will find the app's features and step-by-step instructions for the most
 - Search in the current playlist or folder, with navigation between results
 - Smart library: global search, favorites, ratings, history and per-file resume
 - Sleep timer with preset durations or a pause at the end of the track
-- Per-tab equalizer, with presets and your own presets
+- Equalizer for all tabs or just for one, with presets and your own presets
 - Lyrics panel with automatic search
 - KeyTube tab, with YouTube Music and YouTube (`Ctrl+Shift+Y`)
 - YouTube live broadcasts, with audio and optional video
@@ -174,7 +174,7 @@ Switching tabs does not touch what is playing: you can walk through the playlist
 - `Ctrl+T`: new playlist tab
 - `Ctrl+W`: close the current tab
 - `Ctrl+Tab` / `Ctrl+Shift+Tab`: next tab or previous tab
-- `Ctrl+Shift+E`: equalizer of the active tab
+- `Ctrl+Shift+E`: equalizer
 - `Ctrl+C`: copy the selection as text and, for files on the computer, also as files. You can paste into another playlist, into a text field or into Windows Explorer
 - `Ctrl+Shift+C`: copy the link or the path of the current media (in the folder explorer, the path of the selection)
 - `Ctrl+Shift+S`: save the current playlist
@@ -580,11 +580,11 @@ The song the station announces appears in the status bar, in the format *Station
 
 ## Equalizer
 
-`Ctrl+Shift+E` (or **View > Per-tab equalizer**) opens the active tab's equalizer, so each playlist can have its own setting. That lets you, for example, keep one playlist with boosted bass and another with a neutral setting, without redoing everything each time you switch.
+`Ctrl+Shift+E` (or **View > Equalizer**) opens the equalizer. The setting applies to everything KeyTune plays: all tabs, the ones you open later and the quick player.
 
 ### How to use it
 
-The **Target tab** field shows which playlist receives the adjustments. The **Enable equalizer on this tab** box turns the effect on or off for that tab only.
+The **Enable equalizer** box turns the effect on or off.
 
 The **Preset** field lists all the presets. The built-in ones carry the suffix *(built-in)*. When you choose one, **Description** shows a note about the sound profile and **Preset summary** brings the preamp and the value of each band, so you can check before applying.
 
@@ -595,7 +595,13 @@ The **Preset** field lists all the presets. The built-in ones carry the suffix *
 - **Save copy...**: when the selected one is built-in, this is the button that appears. It creates an editable version based on it, the right way to start from a ready-made preset and adjust.
 - **Duplicate...**: copies a custom preset under another name, without touching the original. Doesn't apply to built-in ones.
 - **Delete**: permanently removes the selected custom preset. Doesn't apply to built-in ones.
-- **Apply to all tabs**: copies the current tab's preset and enabled state to all open media tabs.
+
+#### Equalizer just for one tab
+
+A playlist can sound different from the others: audiobooks with the voice brought forward, for example. With it playing, open the equalizer and check **Use an equalizer just for this tab**. The **Target tab** field shows which playlist that is.
+
+- Checked, the tab starts from the setting that was already in effect, and what you change stays in it.
+- Unchecked, the tab follows the equalizer of all tabs again.
 
 #### Preset editor
 
