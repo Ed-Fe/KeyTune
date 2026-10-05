@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.frames.commands.browser_commands import BrowserCommandsMixin
 from player.frames.library_tabs.item_removal import PlaylistItemRemovalMixin
+from player.frames.library_tabs.playback_control import PlaylistPlaybackMixin
 from player.frames.library_tabs.tabs import TabManagementMixin
 from player.frames.playback.controls import PlaybackControlsMixin
 from player.frames.session import FrameSessionMixin
@@ -174,6 +175,43 @@ class SpaceTests(unittest.TestCase):
 
         frame._resume_playlist_tab.assert_called_once_with(1, announce=False, force_play=True)
         frame.on_open.assert_not_called()
+
+
+class ShuffleAndRepeatTests(unittest.TestCase):
+    def _frame(self, *, player_has_media):
+        frame = PlaylistPlaybackMixin.__new__(PlaylistPlaybackMixin)
+        frame.playing = _playlist("Rock", ["a.mp3", "b.mp3"])
+        frame.viewed = _playlist("Livro", ["c.mp3"])
+        frame.player = Mock()
+        frame.player.get_media.return_value = object() if player_has_media else None
+        frame._get_active_playlist_state = lambda: frame.playing
+        frame._get_selected_playlist_index = lambda: 1
+        frame._get_playlist_state = lambda index=None: frame.viewed
+        frame._block_sensitive_action_during_youtube_music = Mock(return_value=False)
+        frame._refresh_playlist_browser = Mock()
+        frame._announce = Mock()
+        return frame
+
+    def test_they_change_the_playlist_that_is_playing_whatever_playlist_is_on_screen(self):
+        frame = self._frame(player_has_media=True)
+
+        frame._toggle_shuffle()
+        frame._cycle_repeat_mode()
+
+        self.assertTrue(frame.playing.shuffle_enabled)
+        self.assertNotEqual(frame.playing.repeat_mode, "off")
+        self.assertFalse(frame.viewed.shuffle_enabled)
+        self.assertEqual(frame.viewed.repeat_mode, "off")
+
+    def test_with_an_empty_player_they_change_the_playlist_on_screen(self):
+        frame = self._frame(player_has_media=False)
+
+        frame._toggle_shuffle()
+        frame._cycle_repeat_mode()
+
+        self.assertTrue(frame.viewed.shuffle_enabled)
+        self.assertNotEqual(frame.viewed.repeat_mode, "off")
+        self.assertFalse(frame.playing.shuffle_enabled)
 
 
 class EnterOnAnItemTests(unittest.TestCase):

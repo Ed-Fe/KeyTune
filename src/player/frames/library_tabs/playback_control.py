@@ -438,11 +438,18 @@ class PlaylistPlaybackMixin:
             _("Item movido para a posição {pos} de {total}: {name}.").format(pos=target_index + 1, total=state.item_count, name=self._media_label(moved_item))
         )
 
+    def _playback_order_playlist_state(self):
+        # Como o Espaço: vale para o que está no player; com o player vazio,
+        # para a playlist à vista, que é a que o Espaço retomaria.
+        if self.player.get_media():
+            return self._get_active_playlist_state()
+        return self._get_playlist_state(self._get_selected_playlist_index())
+
     def _toggle_shuffle(self):
         if self._block_sensitive_action_during_youtube_music("playback-order"):
             return
 
-        state = self._get_playlist_state()
+        state = self._playback_order_playlist_state()
         if not state:
             self._announce(_("Nenhuma playlist ativa."))
             return
@@ -460,7 +467,7 @@ class PlaylistPlaybackMixin:
         if self._block_sensitive_action_during_youtube_music("playback-order"):
             return
 
-        state = self._get_playlist_state()
+        state = self._playback_order_playlist_state()
         if not state:
             self._announce(_("Nenhuma playlist ativa."))
             return

@@ -164,7 +164,7 @@ Switching tabs does not touch what is playing: you can walk through the playlist
 - `Enter` on an item plays that item, and its playlist becomes the one that plays.
 - Each playlist keeps the track and the position where it stopped. `Enter` on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.
 - `Space`, the seek and volume arrows, **Next** and **Previous** always act on what is playing, whatever tab is on screen. If nothing is loaded, `Space` resumes the playlist on screen.
-- Shuffle and repeat apply to the playlist on screen.
+- Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen.
 - The window title and the status (`S`) tell what is playing. `S` also names the tab on screen when it is another one.
 
 ### Tab and item shortcuts
