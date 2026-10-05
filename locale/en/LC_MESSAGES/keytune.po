@@ -431,12 +431,6 @@ msgstr "Current tab: {title}."
 msgid "Aba de mídia alvo do equalizador"
 msgstr "Equalizer target media tab"
 
-msgid "Aba de mídia ativa: {title}."
-msgstr "Active media tab: {title}."
-
-msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
-msgstr "Equalizer tab. Sound adjustments available for the active media tab."
-
 msgid "Aba fechada."
 msgstr "Tab closed."
 
@@ -445,9 +439,6 @@ msgstr "Tab {num}: {title}."
 
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
 msgstr "Open manually: Settings > Apps > Default apps."
-
-msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
-msgstr "Open at least two media tabs to apply the equalizer in bulk."
 
 msgid "Abra uma playlist do YouTube Music para remover faixas dela."
 msgstr "Open a YouTube Music playlist to remove tracks from it."
@@ -575,14 +566,8 @@ msgstr "Adjusts the gain of the {freq} band. Accepts values from -20.0 dB to 20.
 msgid "Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."
 msgstr "Adjusts the overall gain before the bands. If the sound distorts, lower this value."
 
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr "Adjust the equalizer of the active media tab. Use the buttons to create presets, edit or duplicate custom presets and save an editable copy of built-in presets. When you want to repeat the same configuration across open tabs, use Apply to all tabs."
-
 msgid "Aleatória"
 msgstr "Random"
-
-msgid "Aleatório {state}."
-msgstr "Shuffle {state}."
 
 msgid "Aleatório: {status}."
 msgstr "Shuffle: {status}."
@@ -631,12 +616,6 @@ msgstr "Clear resume &positions"
 
 msgid "Apenas erros (ERROR)"
 msgstr "Errors only (ERROR)"
-
-msgid "Aplicar em &todas as abas"
-msgstr "Apply to &all tabs"
-
-msgid "Aplicar equalizador em todas as abas de mídia"
-msgstr "Apply equalizer to all media tabs"
 
 msgid "Aplicativos padrão"
 msgstr "Default apps"
@@ -701,9 +680,6 @@ msgstr "Enabled"
 msgid "ativado"
 msgstr "enabled"
 
-msgid "Ativar &equalizador nesta aba"
-msgstr "Enable &equalizer on this tab"
-
 msgid "Ativar a &biblioteca inteligente"
 msgstr "Enable the smart &library"
 
@@ -712,9 +688,6 @@ msgstr "Enable accessibility a&nnouncements"
 
 msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr "Enable &shuffle on new playlists"
-
-msgid "Ativar equalizador nesta aba"
-msgstr "Enable equalizer on this tab"
 
 msgid "Ativar integração nas &Preferências..."
 msgstr "Enable integration in &Preferences..."
@@ -1057,9 +1030,6 @@ msgstr "Account: not connected."
 msgid "Conta: {name}."
 msgstr "Account: {name}."
 
-msgid "Contexto"
-msgstr "Context"
-
 msgid "Conteúdo da página atual"
 msgstr "Current page content"
 
@@ -1116,9 +1086,6 @@ msgstr "Create a new playlist on YouTube Music"
 
 msgid "Criar playlist do YouTube Music"
 msgstr "Create YouTube Music playlist"
-
-msgid "Crie um preset personalizado. Os ajustes ficam salvos nas preferências e podem ser aplicados a qualquer aba de mídia."
-msgstr "Create a custom preset. The settings are saved in preferences and can be applied to any media tab."
 
 msgid "Crie uma cópia editável do preset selecionado."
 msgstr "Create an editable copy of the selected preset."
@@ -1209,9 +1176,6 @@ msgstr "Do you want to remove the saved YouTube authentication on this computer?
 
 msgid "Deseja remover a playlist inteligente {name}?"
 msgstr "Do you want to remove the smart playlist {name}?"
-
-msgid "desligado"
-msgstr "off"
 
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
 msgstr "Highlights details, cymbals, vocals and overall brightness."
@@ -1354,17 +1318,11 @@ msgstr "Enter activates. Delete removes. Shift+F10 opens actions. Type letters t
 msgid "Entradas guardadas no cache"
 msgstr "Entries kept in the cache"
 
-msgid "Eq&ualizador por aba\tCtrl+Shift+E"
-msgstr "Per-tab eq&ualizer\tCtrl+Shift+E"
-
 msgid "Equador"
 msgstr "Ecuador"
 
 msgid "Equalizador"
 msgstr "Equalizer"
-
-msgid "Equalizador desativado em {count} abas de mídia."
-msgstr "Equalizer disabled on {count} media tabs."
 
 msgid "Equalizador desativado na aba {tab}."
 msgstr "Equalizer disabled on tab {tab}."
@@ -1374,9 +1332,6 @@ msgstr "Equalizer disabled."
 
 msgid "Equalizador na aba {tab}: {name}."
 msgstr "Equalizer on tab {tab}: {name}."
-
-msgid "Equalizador {name} aplicado em {count} abas de mídia."
-msgstr "Equalizer {name} applied to {count} media tabs."
 
 msgid "Equalizador: {name}."
 msgstr "Equalizer: {name}."
@@ -1392,12 +1347,6 @@ msgstr "Choose the smart playlist folder"
 
 msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr "Choose how to connect your YouTube account.\n\nOption 1 — Installed browser: select the browser from the list and click \"Connect\". The player will import the cookies automatically.\n\nOption 2 — Manual: paste the browser data or choose a previously exported browser.json, cookie JSON, or cookies.txt file."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa."
-msgstr "Choose the preset that will be used on the active media tab."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
-msgstr "Choose the preset that will be used on the active media tab. Current preset description: {desc}"
 
 msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
 msgstr "Choose when KeyTune should pause playback automatically."
@@ -1777,12 +1726,6 @@ msgstr "Licensed under the {license} license."
 msgid "Licença do aplicativo"
 msgstr "Application license"
 
-msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
-msgstr "Turns the equalizer on or off only for the active media tab."
-
-msgid "ligado"
-msgstr "on"
-
 msgid "Limitar à &pasta (vazio ignora)"
 msgstr "Limit to &folder (empty ignores it)"
 
@@ -1930,9 +1873,6 @@ msgstr "remote media"
 msgid "Mídia suportada"
 msgstr "Supported media"
 
-msgid "Mídia: {name}. Estado: {state}."
-msgstr "Media: {name}. State: {state}."
-
 msgid "na pasta {folder}"
 msgstr "in the folder {folder}"
 
@@ -2025,9 +1965,6 @@ msgstr "no media tab"
 
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
 msgstr "No active media tab to configure the equalizer."
-
-msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
-msgstr "No active media tab to copy the equalizer."
 
 msgid "Nenhuma conta do YouTube está conectada."
 msgstr "No YouTube account is connected."
@@ -3218,9 +3155,6 @@ msgstr "unknown time"
 msgid "Tempo personalizado (minutos)"
 msgstr "Custom time (minutes)"
 
-msgid "Tempo {current} de {total}. {percent}%."
-msgstr "Time {current} of {total}. {percent}%."
-
 msgid "Tempo: nenhuma mídia carregada."
 msgstr "Time: no media loaded."
 
@@ -3341,9 +3275,6 @@ msgstr "Validating package integrity..."
 msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
 msgstr "Positive values boost the frequency. Negative values attenuate it. Make subtle adjustments to avoid distortion."
 
-msgid "Velocidade atual: {rate}."
-msgstr "Current speed: {rate}."
-
 msgid "Velocidade de reprodução: {rate}."
 msgstr "Playback speed: {rate}."
 
@@ -3368,7 +3299,7 @@ msgstr "View source code on GitHub"
 msgid "Verificando atualizações..."
 msgstr "Checking for updates..."
 
-msgid "Verificar &atualizações"
+msgid "Verificar at&ualizações"
 msgstr "Check for &updates"
 
 msgid "versão desconhecida"
@@ -4863,9 +4794,6 @@ msgstr "Reading the pasted folders..."
 msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
 msgstr "A whole drive cannot be added at once. Open it and choose a folder."
 
-msgid "Repetindo faixa atual."
-msgstr "Repeating the current track."
-
 msgid "Conteúdo relacionado."
 msgstr "Related content."
 
@@ -6275,3 +6203,75 @@ msgstr "Use an equalizer just for this ta&b"
 
 msgid "Usar um equalizador só para esta aba"
 msgstr "Use an equalizer just for this tab"
+
+msgid "&Histórico de mudanças"
+msgstr "&Change history"
+
+msgid "Histórico de mudanças"
+msgstr "Change history"
+
+msgid "Mudanças da versão"
+msgstr "Changes in the version"
+
+msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
+msgstr "No change history was found in this installation."
+
+msgid "Não lançado"
+msgstr "Unreleased"
+
+msgid "Versões"
+msgstr "Versions"
+
+msgid "Versões:"
+msgstr "Versions:"
+
+msgid "{version} ({date})"
+msgstr "{version} ({date})"
+
+msgid "&Endereço do stream ou M3U"
+msgstr "Stream or M3U &address"
+
+msgid "&Nome da rádio"
+msgstr "Radio &name"
+
+msgid "&OK"
+msgstr "&OK"
+
+msgid "Adicionar rádio &manualmente..."
+msgstr "Add radio &manually..."
+
+msgid "Adicionar rádio manualmente"
+msgstr "Add radio manually"
+
+msgid "Adicionar rádio manualmente..."
+msgstr "Add radio manually..."
+
+msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
+msgstr "Registers a radio that is not in the directory by its name and stream address, and adds it to the favorites."
+
+msgid "Digite o endereço do stream ou do arquivo M3U."
+msgstr "Type the address of the stream or of the M3U file."
+
+msgid "Digite um nome para a rádio."
+msgstr "Type a name for the radio."
+
+msgid "Endereço do stream ou M3U da rádio"
+msgstr "Radio stream or M3U address"
+
+msgid "Endereço em branco"
+msgstr "Blank address"
+
+msgid "Endereço inválido"
+msgstr "Invalid address"
+
+msgid "Nome da rádio"
+msgstr "Radio name"
+
+msgid "Nome em branco"
+msgstr "Blank name"
+
+msgid "Não foi possível reconhecer este endereço como um stream de rádio válido."
+msgstr "This address could not be recognized as a valid radio stream."
+
+msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
+msgstr "Use this when you cannot find the radio in the search: type a name for it and the direct address of the stream or of an M3U file. When you confirm, it goes to your favorite radios."

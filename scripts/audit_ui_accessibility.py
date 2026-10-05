@@ -221,6 +221,12 @@ def _manifest():
     )
 
 
+def _changelog_entries():
+    from player.changelog import list_changelog_entries
+
+    return list_changelog_entries()
+
+
 def _update_info():
     from player.update.service import UpdateInfo
 
@@ -239,6 +245,7 @@ def _update_info():
 def _build_screens():
     """Map each screen class name to a factory taking the parent window."""
     from player.about.dialog import AboutDialog
+    from player.changelog.dialog import ChangelogDialog
     from player.convert import dialog as convert_dialog
     from player.download.dialog import DownloadDialog
     from player.equalizer.dialog import EqualizerPresetDialog
@@ -291,6 +298,7 @@ def _build_screens():
         "AutoDJSessionPanel": lambda parent: AutoDJSessionPanel(
             parent, on_replace_next=_noop, on_recalculate=_noop, on_toggle_preparation=_noop, on_stop=_noop
         ),
+        "ChangelogDialog": lambda parent: ChangelogDialog(parent, _changelog_entries()),
         "ConvertDialog": lambda parent: convert_dialog.ConvertDialog(
             parent, convert_dialog.MODE_VIDEO_TO_VIDEO, "video.mp4", settings=AppSettings()
         ),

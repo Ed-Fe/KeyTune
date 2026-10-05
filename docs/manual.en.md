@@ -754,7 +754,9 @@ Favorites and ratings are spoken together with the item, and details, comments a
 
 On startup, KeyTune can check for updates on its own. To check at any time, use **Help > Check for updates**.
 
-When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready.
+When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready. The notes come in the interface language.
+
+To read what changed in each version, including earlier ones, use **Help > Change history**: choose the version in the list and read the text just below it.
 
 ## Troubleshooting
 

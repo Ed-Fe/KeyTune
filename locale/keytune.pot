@@ -222,6 +222,7 @@ msgid "&Favoritar ou desfavoritar seleção\tCtrl+D"
 msgstr ""
 
 #: src/player/about/dialog.py
+#: src/player/changelog/dialog.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/reading_dialog.py
@@ -249,6 +250,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/smart_playlists.py
 msgid "&Gerenciar playlists inteligentes..."
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Histórico de mudanças"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3487,6 +3492,10 @@ msgstr ""
 msgid "Histórico"
 msgstr ""
 
+#: src/player/changelog/dialog.py
+msgid "Histórico de mudanças"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 #: src/player/smart_library/history_dialog.py
 msgid "Histórico de reprodução"
@@ -4251,6 +4260,10 @@ msgstr ""
 msgid "Mudanças da atualização"
 msgstr ""
 
+#: src/player/changelog/dialog.py
+msgid "Mudanças da versão"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "México"
 msgstr ""
@@ -4350,6 +4363,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/search.py
 msgid "Nenhum favorito ainda. Use Ctrl+D para marcar o item atual."
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -5120,6 +5137,10 @@ msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Não há outra faixa disponível para substituir a próxima."
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Não lançado"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -7485,7 +7506,7 @@ msgid "Verificando atualizações..."
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Verificar &atualizações"
+msgid "Verificar at&ualizações"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -7494,6 +7515,14 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Versão: {version}"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Versões"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "Versões:"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -8421,6 +8450,10 @@ msgid "{title}: {count} item."
 msgid_plural "{title}: {count} itens."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/changelog/dialog.py
+msgid "{version} ({date})"
+msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "África"

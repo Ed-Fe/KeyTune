@@ -77,6 +77,7 @@ locale/
   `docs/manual.en.md`). The build renders it to `manual.<language>.html`, and
   the app opens that version when the corresponding language is active, falling
   back to the Portuguese manual if the translation does not exist.
+- **Changelog**: `docs/changelog/<version>.md` is the Portuguese text of a release. Add `docs/changelog/<version>.<language>.md` for your language, with the same headings and bullets in the same order, and use the menu names of your translated interface. The update dialog and *Help > Change history* show the file of the active language and fall back to Portuguese. Releases publish `release-notes.<language>.md` for the update dialog (see `.github/workflows/release-windows.yml`).
 - **Credits**: the library and contributor lists are language-neutral; only the
   titles are translated. Add the language in `CREDITS_STRINGS` in
   `scripts/generate_credits.py`, and generate it with

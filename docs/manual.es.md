@@ -754,7 +754,9 @@ Los favoritos y las valoraciones se dicen junto con el elemento, y los detalles,
 
 Al iniciar, KeyTune puede comprobar las actualizaciones por sí solo. Para comprobarlas en cualquier momento, usa **Ayuda > Comprobar actualizaciones**.
 
-Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo.
+Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo. Las notas llegan en el idioma de la interfaz.
+
+Para leer qué cambió en cada versión, incluidas las anteriores, usa **Ayuda > Historial de cambios**: elige la versión en la lista y lee el texto justo debajo.
 
 ## Solución de problemas
 

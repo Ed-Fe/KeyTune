@@ -758,7 +758,9 @@ Favoritos e avaliações são falados junto com o item, e detalhes, comentários
 
 Ao iniciar, o KeyTune pode verificar atualizações sozinho. Para verificar a qualquer hora, use **Ajuda > Verificar atualizações**.
 
-Quando há versão nova, o aplicativo mostra as notas da release, o nome do arquivo e o tamanho do download antes de pedir confirmação. Se você aceitar, ele baixa o pacote, mostra o andamento e pede permissão para instalar quando o arquivo estiver pronto.
+Quando há versão nova, o aplicativo mostra as notas da release, o nome do arquivo e o tamanho do download antes de pedir confirmação. Se você aceitar, ele baixa o pacote, mostra o andamento e pede permissão para instalar quando o arquivo estiver pronto. As notas vêm no idioma da interface.
+
+Para ler o que mudou em cada versão, inclusive nas anteriores, use **Ajuda > Histórico de mudanças**: escolha a versão na lista e leia o texto logo abaixo.
 
 ## Solução de problemas
 

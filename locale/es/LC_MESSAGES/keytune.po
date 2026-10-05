@@ -223,7 +223,7 @@ msgid "&Sem avaliação\tCtrl+0"
 msgstr "&Sin valoración\tCtrl+0"
 
 msgid "&Sobre o KeyTune"
-msgstr "&Acerca de KeyTune"
+msgstr "A&cerca de KeyTune"
 
 msgid "&Subir"
 msgstr "&Subir"
@@ -431,12 +431,6 @@ msgstr "Pestaña actual: {title}."
 msgid "Aba de mídia alvo do equalizador"
 msgstr "Pestaña de medios destino del ecualizador"
 
-msgid "Aba de mídia ativa: {title}."
-msgstr "Pestaña de medios activa: {title}."
-
-msgid "Aba Equalizador. Ajustes do som disponíveis para a aba de mídia ativa."
-msgstr "Pestaña Ecualizador. Ajustes de sonido disponibles para la pestaña de medios activa."
-
 msgid "Aba fechada."
 msgstr "Pestaña cerrada."
 
@@ -445,9 +439,6 @@ msgstr "Pestaña {num}: {title}."
 
 msgid "Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."
 msgstr "Abre manualmente: Configuración > Aplicaciones > Aplicaciones predeterminadas."
-
-msgid "Abra pelo menos duas abas de mídia para aplicar o equalizador em lote."
-msgstr "Abre al menos dos pestañas de medios para aplicar el ecualizador en lote."
 
 msgid "Abra uma playlist do YouTube Music para remover faixas dela."
 msgstr "Abre una playlist de YouTube Music para quitar pistas de ella."
@@ -575,14 +566,8 @@ msgstr "Ajusta la ganancia de la banda de {freq}. Acepta valores de -20,0 dB a 2
 msgid "Ajusta o ganho geral antes das bandas. Se o som distorcer, reduza este valor."
 msgstr "Ajusta la ganancia general antes de las bandas. Si el sonido se distorsiona, reduce este valor."
 
-msgid "Ajuste o equalizador da aba de mídia ativa. Use os botões para criar presets, editar ou duplicar presets personalizados e salvar uma cópia editável de presets embutidos. Quando quiser repetir a mesma configuração nas abas abertas, use Aplicar em todas as abas."
-msgstr "Ajusta el ecualizador de la pestaña de medios activa. Usa los botones para crear presets, editar o duplicar presets personalizados y guardar una copia editable de los presets integrados. Cuando quieras repetir la misma configuración en las pestañas abiertas, usa Aplicar en todas las pestañas."
-
 msgid "Aleatória"
 msgstr "Aleatoria"
-
-msgid "Aleatório {state}."
-msgstr "Aleatorio {state}."
 
 msgid "Aleatório: {status}."
 msgstr "Aleatorio: {status}."
@@ -631,12 +616,6 @@ msgstr "Borrar las &posiciones de reanudación"
 
 msgid "Apenas erros (ERROR)"
 msgstr "Solo errores (ERROR)"
-
-msgid "Aplicar em &todas as abas"
-msgstr "Aplicar en &todas las pestañas"
-
-msgid "Aplicar equalizador em todas as abas de mídia"
-msgstr "Aplicar el ecualizador en todas las pestañas de medios"
 
 msgid "Aplicativos padrão"
 msgstr "Aplicaciones predeterminadas"
@@ -701,9 +680,6 @@ msgstr "Activado"
 msgid "ativado"
 msgstr "activado"
 
-msgid "Ativar &equalizador nesta aba"
-msgstr "Activar &ecualizador en esta pestaña"
-
 msgid "Ativar a &biblioteca inteligente"
 msgstr "Activar la &biblioteca inteligente"
 
@@ -712,9 +688,6 @@ msgstr "Activar a&nuncios de accesibilidad"
 
 msgid "Ativar e&mbaralhamento em novas playlists"
 msgstr "Activar &modo aleatorio en playlists nuevas"
-
-msgid "Ativar equalizador nesta aba"
-msgstr "Activar ecualizador en esta pestaña"
 
 msgid "Ativar integração nas &Preferências..."
 msgstr "Activar integración en &Preferencias..."
@@ -1057,9 +1030,6 @@ msgstr "Cuenta: no conectada."
 msgid "Conta: {name}."
 msgstr "Cuenta: {name}."
 
-msgid "Contexto"
-msgstr "Contexto"
-
 msgid "Conteúdo da página atual"
 msgstr "Contenido de la página actual"
 
@@ -1116,9 +1086,6 @@ msgstr "Crear una nueva playlist en YouTube Music"
 
 msgid "Criar playlist do YouTube Music"
 msgstr "Crear playlist de YouTube Music"
-
-msgid "Crie um preset personalizado. Os ajustes ficam salvos nas preferências e podem ser aplicados a qualquer aba de mídia."
-msgstr "Crea un preset personalizado. Los ajustes quedan guardados en las preferencias y pueden aplicarse a cualquier pestaña de medios."
 
 msgid "Crie uma cópia editável do preset selecionado."
 msgstr "Crea una copia editable del preset seleccionado."
@@ -1209,9 +1176,6 @@ msgstr "¿Quieres eliminar la autenticación guardada de YouTube en esta computa
 
 msgid "Deseja remover a playlist inteligente {name}?"
 msgstr "¿Quieres quitar la lista inteligente {name}?"
-
-msgid "desligado"
-msgstr "desactivado"
 
 msgid "Destaca detalhes, pratos, vozes e brilho geral."
 msgstr "Resalta detalles, platillos, voces y brillo general."
@@ -1354,17 +1318,11 @@ msgstr "Enter activa. Delete quita. Shift+F10 abre acciones. Escribe letras para
 msgid "Entradas guardadas no cache"
 msgstr "Entradas guardadas en la caché"
 
-msgid "Eq&ualizador por aba\tCtrl+Shift+E"
-msgstr "Ec&ualizador por pestaña\tCtrl+Shift+E"
-
 msgid "Equador"
 msgstr "Ecuador"
 
 msgid "Equalizador"
 msgstr "Ecualizador"
-
-msgid "Equalizador desativado em {count} abas de mídia."
-msgstr "Ecualizador desactivado en {count} pestañas de medios."
 
 msgid "Equalizador desativado na aba {tab}."
 msgstr "Ecualizador desactivado en la pestaña {tab}."
@@ -1374,9 +1332,6 @@ msgstr "Ecualizador desactivado."
 
 msgid "Equalizador na aba {tab}: {name}."
 msgstr "Ecualizador en la pestaña {tab}: {name}."
-
-msgid "Equalizador {name} aplicado em {count} abas de mídia."
-msgstr "Ecualizador {name} aplicado en {count} pestañas de medios."
 
 msgid "Equalizador: {name}."
 msgstr "Ecualizador: {name}."
@@ -1392,12 +1347,6 @@ msgstr "Elige la carpeta de la lista inteligente"
 
 msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
 msgstr "Elige cómo conectar tu cuenta de YouTube.\n\nOpción 1 — Navegador instalado: selecciona el navegador en la lista y haz clic en \"Conectar\". El reproductor importará las cookies automáticamente.\n\nOpción 2 — Manual: pega los datos del navegador o elige un archivo browser.json, JSON de cookies o cookies.txt exportado anteriormente."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa."
-msgstr "Elige el preset que se usará en la pestaña de medios activa."
-
-msgid "Escolha o preset que será usado na aba de mídia ativa. Descrição do preset atual: {desc}"
-msgstr "Elige el preset que se usará en la pestaña de medios activa. Descripción del preset actual: {desc}"
 
 msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
 msgstr "Elige cuándo KeyTune debe pausar la reproducción automáticamente."
@@ -1777,12 +1726,6 @@ msgstr "Licenciado bajo la licencia {license}."
 msgid "Licença do aplicativo"
 msgstr "Licencia de la aplicación"
 
-msgid "Liga ou desliga o equalizador apenas para a aba de mídia ativa."
-msgstr "Activa o desactiva el ecualizador solo para la pestaña de medios activa."
-
-msgid "ligado"
-msgstr "activado"
-
 msgid "Limitar à &pasta (vazio ignora)"
 msgstr "Limitar a la &carpeta (vacío la ignora)"
 
@@ -1930,9 +1873,6 @@ msgstr "medio remoto"
 msgid "Mídia suportada"
 msgstr "Medios admitidos"
 
-msgid "Mídia: {name}. Estado: {state}."
-msgstr "Medio: {name}. Estado: {state}."
-
 msgid "na pasta {folder}"
 msgstr "en la carpeta {folder}"
 
@@ -2025,9 +1965,6 @@ msgstr "ninguna pestaña de medios"
 
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
 msgstr "Ninguna pestaña de medios activa para configurar el ecualizador."
-
-msgid "Nenhuma aba de mídia ativa para copiar o equalizador."
-msgstr "Ninguna pestaña de medios activa para copiar el ecualizador."
 
 msgid "Nenhuma conta do YouTube está conectada."
 msgstr "Ninguna cuenta de YouTube está conectada."
@@ -3218,9 +3155,6 @@ msgstr "tiempo desconocido"
 msgid "Tempo personalizado (minutos)"
 msgstr "Tiempo personalizado (minutos)"
 
-msgid "Tempo {current} de {total}. {percent}%."
-msgstr "Tiempo {current} de {total}. {percent}%."
-
 msgid "Tempo: nenhuma mídia carregada."
 msgstr "Tiempo: ningún medio cargado."
 
@@ -3341,9 +3275,6 @@ msgstr "Validando la integridad del paquete..."
 msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
 msgstr "Los valores positivos refuerzan la frecuencia. Los valores negativos la atenúan. Haz ajustes sutiles para evitar la distorsión."
 
-msgid "Velocidade atual: {rate}."
-msgstr "Velocidad actual: {rate}."
-
 msgid "Velocidade de reprodução: {rate}."
 msgstr "Velocidad de reproducción: {rate}."
 
@@ -3368,8 +3299,8 @@ msgstr "Ver código fuente en GitHub"
 msgid "Verificando atualizações..."
 msgstr "Comprobando actualizaciones..."
 
-msgid "Verificar &atualizações"
-msgstr "Comprobar &actualizaciones"
+msgid "Verificar at&ualizações"
+msgstr "Comprobar ac&tualizaciones"
 
 msgid "versão desconhecida"
 msgstr "versión desconocida"
@@ -4863,9 +4794,6 @@ msgstr "Leyendo las carpetas pegadas..."
 msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
 msgstr "No se puede añadir una unidad entera de una vez. Entra en ella y elige una carpeta."
 
-msgid "Repetindo faixa atual."
-msgstr "Repitiendo la pista actual."
-
 msgid "Conteúdo relacionado."
 msgstr "Contenido relacionado."
 
@@ -6275,3 +6203,75 @@ msgstr "Usar un ecualizador solo para esta pesta&ña"
 
 msgid "Usar um equalizador só para esta aba"
 msgstr "Usar un ecualizador solo para esta pestaña"
+
+msgid "&Histórico de mudanças"
+msgstr "&Historial de cambios"
+
+msgid "Histórico de mudanças"
+msgstr "Historial de cambios"
+
+msgid "Mudanças da versão"
+msgstr "Cambios de la versión"
+
+msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
+msgstr "No se encontró ningún historial de cambios en esta instalación."
+
+msgid "Não lançado"
+msgstr "Sin publicar"
+
+msgid "Versões"
+msgstr "Versiones"
+
+msgid "Versões:"
+msgstr "Versiones:"
+
+msgid "{version} ({date})"
+msgstr "{version} ({date})"
+
+msgid "&Endereço do stream ou M3U"
+msgstr "&Dirección del stream o M3U"
+
+msgid "&Nome da rádio"
+msgstr "&Nombre de la radio"
+
+msgid "&OK"
+msgstr "&OK"
+
+msgid "Adicionar rádio &manualmente..."
+msgstr "Añadir radio &manualmente..."
+
+msgid "Adicionar rádio manualmente"
+msgstr "Añadir radio manualmente"
+
+msgid "Adicionar rádio manualmente..."
+msgstr "Añadir radio manualmente..."
+
+msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
+msgstr "Registra por su nombre y por la dirección del stream una radio que no está en el directorio, y la lleva a las favoritas."
+
+msgid "Digite o endereço do stream ou do arquivo M3U."
+msgstr "Escribe la dirección del stream o del archivo M3U."
+
+msgid "Digite um nome para a rádio."
+msgstr "Escribe un nombre para la radio."
+
+msgid "Endereço do stream ou M3U da rádio"
+msgstr "Dirección del stream o M3U de la radio"
+
+msgid "Endereço em branco"
+msgstr "Dirección en blanco"
+
+msgid "Endereço inválido"
+msgstr "Dirección no válida"
+
+msgid "Nome da rádio"
+msgstr "Nombre de la radio"
+
+msgid "Nome em branco"
+msgstr "Nombre en blanco"
+
+msgid "Não foi possível reconhecer este endereço como um stream de rádio válido."
+msgstr "No se pudo reconocer esta dirección como un stream de radio válido."
+
+msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
+msgstr "Úsalo cuando no encuentres la radio en la búsqueda: escribe un nombre para ella y la dirección directa del stream o de un archivo M3U. Al confirmar, pasa a tus radios favoritas."

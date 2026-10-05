@@ -185,6 +185,10 @@ foreach ($manual in Get-ChildItem -Path "docs" -Filter "manual.*.md" -ErrorActio
     }
 }
 
+Write-Step "Empacotando o histórico de mudanças (por idioma)"
+New-Item -ItemType Directory -Force "dist\KeyTune\docs\changelog" | Out-Null
+Copy-Item -Path "docs\changelog\*.md" -Exclude "unreleased*" -Destination "dist\KeyTune\docs\changelog" -Force
+
 Write-Step "Gerando créditos de bibliotecas e contribuidores (por idioma)"
 & $PythonExe scripts\generate_credits.py --language pt_BR --language en --language es
 if ($LASTEXITCODE -ne 0) {

@@ -8,7 +8,7 @@ How to write the manual, changelog, release notes and commits. One rule undernea
 
 | Type | Language | Reader |
 | --- | --- | --- |
-| Manual (`docs/manual.md`), changelog (`CHANGELOG.md`), release notes, UI text | Portuguese (source language; translations come from the catalog, see `i18n.instructions.md`) | People using KeyTune, often with a screen reader |
+| Manual (`docs/manual.md`), changelog (`docs/changelog/`), release notes, UI text | Portuguese (source language; translations come from the catalog, see `i18n.instructions.md`) | People using KeyTune, often with a screen reader |
 | Commits, PRs, issues, code comments | English | People maintaining the project |
 
 Examples of manual and changelog text below stay in Portuguese because that is what ships.
@@ -79,8 +79,9 @@ Se o KeyTune avisar que não encontrou o FFmpeg, vale aceitar o download dele: �
 
 Format: [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning](https://semver.org/). The changelog is for humans: it answers "what changes for me if I update?"
 
-**Structure** (already used in `CHANGELOG.md`)
-- A `## [Não lançado]` section on top, newest versions first, dates as `YYYY-MM-DD`.
+**Structure** (already used in `docs/changelog/`)
+- One file per version: `X.Y.Z.md` in Portuguese, `X.Y.Z.en.md` and `X.Y.Z.es.md` translations with the same headings and bullets, in the same order (a test checks the shape). What is not released yet lives in `unreleased.md` (and `.en`/`.es`), under `## [Não lançado]`. The heading of a released file is `## [X.Y.Z] - YYYY-MM-DD`.
+- Translate menu and option names the way the app does (`locale/<lang>/LC_MESSAGES/keytune.po`, `docs/manual.<lang>.md`); key names too (`Espaço` → `Space` / `Espacio`). Keep shortcuts in backticks.
 - Groups: **Adicionado**, **Alterado**, **Obsoleto**, **Removido**, **Corrigido**, **Segurança**. Only the ones that have entries.
 - One entry per change the user notices. Internal refactors, tests and CI stay out unless they change something visible.
 
@@ -108,7 +109,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning
 - **Colar arquivos copiados**: `Ctrl+V` não reconhecia arquivos copiados com `Ctrl+C` e respondia que a área de transferência estava vazia. Agora funciona.
 ```
 
-**GitHub release notes** are that version's `CHANGELOG.md` section, copied. The update dialog shows this text, so it has to make sense on its own. See `update-release.instructions.md` for the flow.
+**GitHub release notes** are that version's `docs/changelog/X.Y.Z.md`, copied (the translations go with the release as assets). The update dialog shows this text, so it has to make sense on its own. See `update-release.instructions.md` for the flow.
 
 ## 4. Commits, PRs and issues (English)
 

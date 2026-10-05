@@ -159,6 +159,12 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar créditos traduzidos: $($credit.Name)." }
           }
 
+      - name: Bundle change history
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force "dist\KeyTune\docs\changelog" | Out-Null
+          Copy-Item -Path "docs\changelog\*.md" -Exclude "unreleased*" -Destination "dist\KeyTune\docs\changelog" -Force
+
       - name: Bundle MPV runtime into dist
         shell: powershell
         run: |
@@ -236,13 +242,22 @@ jobs:
         run: |
           $version = "${{ github.ref_name }}".TrimStart("v")
           $utf8 = [System.Text.UTF8Encoding]::new($false)
-          $changelog = [System.IO.File]::ReadAllText((Resolve-Path "CHANGELOG.md"), $utf8)
-          $pattern = "(?ms)^## \[$([regex]::Escape($version))\].*?(?=^## \[|\z)"
-          $match = [regex]::Match($changelog, $pattern)
-          if (-not $match.Success) {
-            throw "Não foi possível localizar a seção da versão $version no CHANGELOG.md."
+          $artifacts = Resolve-Path "artifacts"
+          $source = "docs/changelog/$version.md"
+          if (-not (Test-Path $source)) {
+            throw "Não foi possível localizar $source."
           }
-          [System.IO.File]::WriteAllText((Join-Path (Resolve-Path "artifacts") "release-body.md"), $match.Value.Trim(), $utf8)
+          $body = [System.IO.File]::ReadAllText((Resolve-Path $source), $utf8)
+          [System.IO.File]::WriteAllText((Join-Path $artifacts "release-body.md"), $body.Trim(), $utf8)
+          # The release body is in Portuguese; the app picks release-notes.<language>.md for the other languages.
+          foreach ($language in @("en", "es")) {
+            $translated = "docs/changelog/$version.$language.md"
+            if (-not (Test-Path $translated)) {
+              throw "Não foi possível localizar $translated."
+            }
+            $text = [System.IO.File]::ReadAllText((Resolve-Path $translated), $utf8)
+            [System.IO.File]::WriteAllText((Join-Path $artifacts "release-notes.$language.md"), $text.Trim(), $utf8)
+          }
 
       - name: Publish installer to GitHub Release
         uses: softprops/action-gh-release@v3
@@ -252,4 +267,5 @@ jobs:
             artifacts/KeyTune-Setup.exe.sha256
             artifacts/optional-resources/*.zip
             artifacts/optional-resources/*.sha256
+            artifacts/release-notes.*.md
           body_path: artifacts/release-body.md
