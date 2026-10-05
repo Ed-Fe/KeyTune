@@ -6197,3 +6197,9 @@ msgstr "{station}: {title}"
 
 msgid "Áudio dos vídeos dublados"
 msgstr "Audio of dubbed videos"
+
+msgid "{name}. Item {current} de {total}."
+msgstr "{name}. Item {current} of {total}."
+
+msgid "Repetindo faixa atual. {position}"
+msgstr "Repeating the current track. {position}"

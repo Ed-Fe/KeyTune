@@ -382,6 +382,9 @@ class PlaybackEngineMixin:
         if announce_message is not None:
             if announce_message:
                 self._announce(announce_message)
+            return
+
+        self._announce(self._describe_playlist_position(state))
 
     def _refresh_lyrics_for_active_media(self, resolved_display_title, resolved_display_artist):
         """Kick off the lyrics lookup for the media that just became active.

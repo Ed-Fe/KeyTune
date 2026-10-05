@@ -380,8 +380,11 @@ class CrossfadeMixin:
         self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
 
         announce_message = crossfade_state.get("announce_message")
-        if announce_message:
-            self._announce(announce_message)
+        if announce_message is not None:
+            if announce_message:
+                self._announce(announce_message)
+        else:
+            self._announce(self._describe_playlist_position(state))
 
         self._apply_volume_to_player(player_key, 0)
         tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)

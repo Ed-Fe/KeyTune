@@ -6483,7 +6483,7 @@ msgid "Removido da playlist do YouTube Music"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
-msgid "Repetindo faixa atual."
+msgid "Repetindo faixa atual. {position}"
 msgstr ""
 
 #: src/player/constants.py
@@ -8287,6 +8287,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "{name}, de {author}, solicita:\n\n{permissions}\n\n{security_notice}"
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "{name}. Item {current} de {total}."
 msgstr ""
 
 #: src/player/welcome/dialog.py
