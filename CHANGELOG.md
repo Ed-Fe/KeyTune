@@ -7,6 +7,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Não lançado]
 
+## [2.1.0] - 2026-10-04
+
 ### Adicionado
 
 - **Explorador de pastas**: `Ctrl+E` abre, ao lado das abas, uma lista com as pastas e os arquivos de mídia do computador, a partir de **Este computador**.
