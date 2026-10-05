@@ -1,4 +1,4 @@
-from ...constants import PROGRESS_GAUGE_RANGE
+from ...constants import PROGRESS_GAUGE_RANGE, REPEAT_OFF
 from ...i18n import _
 from .live import is_live_media
 
@@ -322,15 +322,15 @@ class PlaybackControlsMixin:
         current_label = self._format_time_ms(current_time)
 
         if total_time is None or total_time <= 0:
-            self._announce(_("Tempo atual: {time}.").format(time=current_label))
+            self._announce(f"{current_label}.")
             return
 
         total_label = self._format_time_ms(total_time)
         percentage = int(max(0, min(100, round((max(0, current_time) / total_time) * 100)))) if total_time > 0 else 0
-        self._announce(_("Tempo atual: {current} de {total}. {percent}%.").format(current=current_label, total=total_label, percent=percentage))
+        self._announce(_("{current} de {total}. {percent}%.").format(current=current_label, total=total_label, percent=percentage))
 
     def _announce_current_volume(self):
-        self._announce(_("Volume atual: {volume}%.").format(volume=self.current_volume))
+        self._announce(f"{self.current_volume}%.")
 
     def _append_sleep_timer_status(self, status_parts):
         sleep_timer_sentence = getattr(self, "_sleep_timer_status_sentence", None)
@@ -340,65 +340,66 @@ class PlaybackControlsMixin:
         if sentence:
             status_parts.append(sentence)
 
+    def _status_setting_parts(self, state):
+        """O que só vale falar quando não está no padrão: velocidade, tom, aleatório e repetição."""
+        parts = []
+        if self.current_playback_rate != 1.0:
+            parts.append(_("Velocidade {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate)))
+        if self.current_pitch_semitones != 0:
+            parts.append(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
+        if state and state.shuffle_enabled:
+            parts.append(_("Aleatório ligado."))
+        if state and state.repeat_mode != REPEAT_OFF:
+            parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
+        return parts
+
     def _announce_player_status(self):
+        # Do mais procurado para o menos: o que toca, onde está, volume. O que
+        # está no padrão (velocidade 1x, tom original, aleatório e repetição
+        # desligados) não é falado.
         current_tab = self._get_tab_state()
         state = self._get_playlist_state()
         status_parts = []
 
-        if current_tab:
-            status_parts.append(_("Aba atual: {title}.").format(title=current_tab.title))
-
-        if state and current_tab is not state:
-            status_parts.append(_("Aba de mídia ativa: {title}.").format(title=state.title))
-
         media_path = state.current_media_path if state else None
         if not media_path:
             status_parts.append(_("Nenhuma mídia tocando agora."))
-            status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
-            status_parts.append(
-                _("Velocidade atual: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
-            )
-            status_parts.append(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
-            if state:
-                shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
-                status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
-                status_parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
-            self._append_sleep_timer_status(status_parts)
-            self._announce(" ".join(status_parts))
-            return
-
-        media_name = self._media_label(media_path)
-        playback_state = _("tocando") if self.player.is_playing() else _("pausado")
-        status_parts.append(_("Mídia: {name}. Estado: {state}.").format(name=media_name, state=playback_state))
-        radio_now_playing_sentence = getattr(self, "_radio_now_playing_sentence", None)
-        if callable(radio_now_playing_sentence) and radio_now_playing_sentence():
-            status_parts.append(radio_now_playing_sentence())
-        status_parts.append(
-            _("Velocidade atual: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
-        )
-        status_parts.append(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
-
-        if state and state.item_count > 0:
-            status_parts.append(_("Item {current} de {total}.").format(current=state.current_index + 1, total=state.item_count))
-            shuffle_label = _("ligado") if state.shuffle_enabled else _("desligado")
-            status_parts.append(_("Aleatório {state}.").format(state=shuffle_label))
-            status_parts.append(self._repeat_mode_message(state.repeat_mode) + ".")
-
-        current_time = self.player.get_time()
-        if current_time is None or current_time < 0:
-            current_time = 0
-
-        total_time = self.player.get_length()
-        if is_live_media(self.player.get_media()):
-            status_parts.append(_("Transmissão ao vivo."))
-        elif total_time is not None and total_time > 0:
-            percentage = int(max(0, min(100, round((current_time / total_time) * 100))))
-            status_parts.append(
-                _("Tempo {current} de {total}. {percent}%.").format(current=self._format_time_ms(current_time), total=self._format_time_ms(total_time), percent=percentage)
-            )
         else:
-            status_parts.append(_("Tempo atual: {time}.").format(time=self._format_time_ms(current_time)))
+            playback_state = _("tocando") if self.player.is_playing() else _("pausado")
+            status_parts.append(
+                _("{name}, {state}.").format(name=self._media_label(media_path), state=playback_state)
+            )
+            radio_now_playing_sentence = getattr(self, "_radio_now_playing_sentence", None)
+            if callable(radio_now_playing_sentence) and radio_now_playing_sentence():
+                status_parts.append(radio_now_playing_sentence())
 
-        status_parts.append(_("Volume atual: {volume}%.").format(volume=self.current_volume))
+            current_time = self.player.get_time()
+            if current_time is None or current_time < 0:
+                current_time = 0
+
+            total_time = self.player.get_length()
+            if is_live_media(self.player.get_media()):
+                status_parts.append(_("Transmissão ao vivo."))
+            elif total_time is not None and total_time > 0:
+                percentage = int(max(0, min(100, round((current_time / total_time) * 100))))
+                status_parts.append(
+                    _("{current} de {total}. {percent}%.").format(
+                        current=self._format_time_ms(current_time),
+                        total=self._format_time_ms(total_time),
+                        percent=percentage,
+                    )
+                )
+            else:
+                status_parts.append(f"{self._format_time_ms(current_time)}.")
+
+            if state.item_count > 1:
+                status_parts.append(
+                    _("Item {current} de {total}.").format(current=state.current_index + 1, total=state.item_count)
+                )
+
+        status_parts.append(_("Volume {volume}%.").format(volume=self.current_volume))
+        status_parts.extend(self._status_setting_parts(state))
+        if current_tab and current_tab is not state:
+            status_parts.append(_("Aba atual: {title}.").format(title=current_tab.title))
         self._append_sleep_timer_status(status_parts)
         self._announce(" ".join(status_parts))

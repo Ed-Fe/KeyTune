@@ -16,6 +16,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Alterado
 
+- **Anúncios de tempo e volume mais curtos**: `T` e `V` agora falam só o valor, como "1:20 de 3:40. 36%." e "80%.". Antes começavam com "Tempo atual:" e "Volume atual:".
+- **Status (`S`) mais direto**: começa pelo que está tocando e pelo tempo, por exemplo "Música.mp3, tocando. 1:20 de 3:40. 36%. Item 3 de 12. Volume 80%.". Velocidade, tom, aleatório e repetição só são falados quando estão fora do padrão, e a aba só quando não é a da mídia que toca.
 - **Abrir um arquivo pelo Windows com o KeyTune fechado**: antes, o arquivo abria a janela principal, restaurava a sessão e entrava na playlist atual. Agora ele toca no player rápido. Se o KeyTune já está aberto, nada muda: o arquivo vai para a playlist atual. Para voltar ao comportamento antigo, desmarque **Usar o player rápido ao abrir arquivos pelo Windows** em `Ctrl+,` > **Geral**.
 
 ## [2.1.0] - 2026-10-04
