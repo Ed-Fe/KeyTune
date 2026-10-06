@@ -55,6 +55,10 @@ msgstr ""
 msgid "&Adicionar à playlist sem tocar\tShift+Enter"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "&Alterar atalho..."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Anunciar"
 msgstr ""
@@ -112,6 +116,7 @@ msgstr ""
 #: src/player/convert/dialog.py
 #: src/player/download/dialog.py
 #: src/player/equalizer/dialog.py
+#: src/player/keyboard/dialog.py
 #: src/player/library/search_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/preferences/audio_output_dialog.py
@@ -138,6 +143,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Configurar temporizador...\tCtrl+Shift+D"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "&Confirmar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -240,6 +249,10 @@ msgstr ""
 msgid "&Filtrar"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "&Filtrar ações:"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "&Filtrar por texto"
 msgstr ""
@@ -321,6 +334,10 @@ msgstr ""
 msgid "&Minutos personalizados"
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "&Mostrar KeyTune"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Nome da playlist"
 msgstr ""
@@ -353,6 +370,14 @@ msgstr ""
 msgid "&OK"
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "&Ocultar KeyTune"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Ocultar na bandeja do sistema"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Ordenar por"
 msgstr ""
@@ -381,6 +406,10 @@ msgstr ""
 msgid "&Procurar..."
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "&Próxima faixa"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "&Recalcular sequência"
 msgstr ""
@@ -395,6 +424,10 @@ msgstr ""
 msgid "&Remover"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "&Remover atalho"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
 msgid "&Remover do histórico"
 msgstr ""
@@ -407,6 +440,10 @@ msgstr ""
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
 msgid "&Reproduzir"
+msgstr ""
+
+#: src/player/frames/tray.py
+msgid "&Reproduzir ou pausar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -433,7 +470,12 @@ msgstr ""
 msgid "&Sair\tAlt+F4"
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "&Sair do KeyTune"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
+#: src/player/keyboard/dialog.py
 #: src/player/preferences/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Salvar"
@@ -803,6 +845,10 @@ msgstr ""
 msgid "A seleção não contém faixas do YouTube Music para remover."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "A tecla Windows só pode ser usada em atalhos globais."
+msgstr ""
+
 #: src/player/frames/playback/live.py
 #: src/player/youtube_music/live_streams.py
 msgid "A transmissão ao vivo terminou."
@@ -938,6 +984,10 @@ msgstr ""
 msgid "Abrindo {title}."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Abrir"
+msgstr ""
+
 #: src/player/frames/youtube_music/state.py
 msgid "Abrir &central do KeyTube...\tCtrl+Shift+Y"
 msgstr ""
@@ -1001,6 +1051,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Abrir sem &tocar...\tCtrl+Shift+O"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Abrir sem tocar"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1090,6 +1144,14 @@ msgstr ""
 msgid "Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Adicionar à fila de reprodução"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Adicionar à playlist do YouTube Music"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Adicionar à playlist do YouTube Music..."
 msgstr ""
@@ -1159,6 +1221,7 @@ msgid "Ajuda rápida de &atalhos\tF1"
 msgstr ""
 
 #: src/player/frames/ui.py
+#: src/player/keyboard/shortcuts.py
 msgid "Ajuda rápida de atalhos"
 msgstr ""
 
@@ -1202,6 +1265,10 @@ msgstr ""
 msgid "Alemanha"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Alterar atalho"
+msgstr ""
+
 #: src/player/plugins/manifest.py
 msgid "Alterar biblioteca, playlists, favoritos e avaliações"
 msgstr ""
@@ -1216,6 +1283,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Alternar foco entre &itens e player (Tab)"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Alternar foco entre itens e player"
 msgstr ""
 
 #: src/player/download/panel.py
@@ -1266,12 +1337,32 @@ msgstr ""
 msgid "Anunciar &marcadores da seleção"
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "Anunciar &status"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Anunciar status"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Anunciar tempo"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Anunciar volume"
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Análise pendente"
 msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "Análise rítmica: faixa atual {outgoing_bpm:.1f} BPM, confiança {outgoing_confidence:.0%}; próxima faixa {incoming_bpm:.1f} BPM, confiança {incoming_confidence:.0%}."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Anúncios"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1282,8 +1373,16 @@ msgstr ""
 msgid "Ao atingir o limite, as mais antigas saem."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Ao fechar, manter tocando na band&eja"
+msgstr ""
+
 #: src/player/sleep_timer/dialog.py
 msgid "Ao fim da faixa atual"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Ao minimizar, a janela sai da barra de tarefas e fica um ícone perto do relógio."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -1353,6 +1452,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos de texto (*.txt)"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Arquivos e playlists"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -1427,12 +1530,52 @@ msgstr ""
 msgid "At&ualizar acesso..."
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Atalho"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Atalho em uso"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Atalhos do player"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Atalhos do player:"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Atalhos e ajuda"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Atalhos globais"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Atalhos globais:"
+msgstr ""
+
+#: src/player/frames/keyboard.py
+msgid "Atalhos personalizados (substituem os acima):"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Atalhos principais: Ctrl+O abrir · Ctrl+V colar · Ctrl+E explorador de pastas · Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Tab itens/player · Ctrl+F localizar item (F3 próximo) · Ctrl+G buscar na biblioteca · Ctrl+D favoritar · Ctrl+Shift+H histórico · Ctrl+Shift+D temporizador · Ctrl+Shift+Y central do KeyTube (opcional) · F1 ajuda"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Atalhos restaurados ao padrão."
+msgstr ""
+
+#: src/player/frames/keyboard.py
+msgid "Atalhos salvos."
+msgstr ""
+
+#: src/player/frames/keyboard.py
+msgid "Atalhos salvos. Não foi possível registrar {shortcuts}: já estão em uso por outro programa."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1458,6 +1601,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Ativar a&núncios de acessibilidade"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Ativar atalhos &globais"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1578,6 +1725,18 @@ msgstr ""
 msgid "Aumentar &Velocidade (])"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Aumentar tom"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Aumentar velocidade"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Aumentar volume"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Austrália"
 msgstr ""
@@ -1646,6 +1805,10 @@ msgstr ""
 msgid "Autor: {author}"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Avaliar com {stars} estrela(s)"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 #: src/player/smart_library/search_dialog.py
 msgid "Avaliação"
@@ -1671,8 +1834,13 @@ msgstr ""
 msgid "Avaliação: {rating}."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/welcome/dialog.py
 msgid "Avançar"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Avançar mais"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1689,6 +1857,10 @@ msgstr ""
 
 #: src/player/constants.py
 msgid "Avisos (WARNING)"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Ação"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1773,6 +1945,10 @@ msgstr ""
 msgid "Baixar recursos e ativar &AutoDJ"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Baixar seleção ou mídia atual"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 #: src/player/frames/youtube_music/search.py
 msgid "Baixar seleção...\tCtrl+Shift+B"
@@ -1798,6 +1974,10 @@ msgstr ""
 msgid "Bandas do equalizador"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Bandeja do sistema"
+msgstr ""
+
 #: src/player/frames/ui.py
 #: src/player/quick_player/panel.py
 msgid "Barra de tempo"
@@ -1811,6 +1991,7 @@ msgstr ""
 msgid "Bem-vindo ao KeyTune"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/preferences/dialog.py
 msgid "Biblioteca"
 msgstr ""
@@ -1934,6 +2115,7 @@ msgstr ""
 msgid "Buscando músicas inéditas para a nova rádio."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/smart_library/search_dialog.py
 msgid "Buscar na biblioteca"
 msgstr ""
@@ -1956,6 +2138,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Bélgica"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Ca&ncelar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -2068,6 +2254,10 @@ msgstr ""
 
 #: src/player/frames/radio/lifecycle.py
 msgid "Carregando…"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Categoria"
 msgstr ""
 
 #: src/player/youtube_music/folders.py
@@ -2196,6 +2386,10 @@ msgstr ""
 msgid "Conexão com o YouTube Music cancelada."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Configurar temporizador"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Confirma formato e qualidade a cada download (Ctrl+Shift+B)."
 msgstr ""
@@ -2270,6 +2464,10 @@ msgstr ""
 msgid "Conteúdo relacionado adicionado à playlist."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Conteúdo relacionado do YouTube Music"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Conteúdo relacionado do YouTube Music {status}."
 msgstr ""
@@ -2283,6 +2481,7 @@ msgid "Conteúdo relacionado: {status}."
 msgstr ""
 
 #: src/player/frames/smart_library/resume.py
+#: src/player/keyboard/shortcuts.py
 msgid "Continuar ouvindo"
 msgstr ""
 
@@ -2368,6 +2567,10 @@ msgstr ""
 msgid "Converter o áudio e baixar vídeo em alta resolução exigem o FFmpeg; o KeyTune oferece instalá-lo quando precisar."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Converter seleção ou mídia atual"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Converter seleção...\tCtrl+Shift+K"
 msgstr ""
@@ -2386,6 +2589,10 @@ msgstr ""
 
 #: src/player/frames/lyrics_panel.py
 msgid "Copiar letra completa"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Copiar o caminho da mídia em execução"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -2498,6 +2705,10 @@ msgstr ""
 
 #: src/player/frames/radio/actions.py
 msgid "Definir {country} como o meu país"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Delete na lista faz o mesmo."
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -2722,8 +2933,24 @@ msgstr ""
 msgid "Diminuir Ve&locidade ([)"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Diminuir tom"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Diminuir velocidade"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Diminuir volume"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Dinamarca"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Disponível apenas no Windows."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -2904,6 +3131,10 @@ msgstr ""
 msgid "Em:"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Embaralhar"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Emirados Árabes Unidos"
 msgstr ""
@@ -2977,6 +3208,10 @@ msgstr ""
 msgid "Enter entra no item ou toca; Shift+Enter adiciona sem tocar. Seta para a direita mostra o que há dentro e Backspace volta. Descer além do último item carrega mais. Shift+F10 abre as ações."
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Enter na lista faz o mesmo."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Entradas guardadas no cache"
 msgstr ""
@@ -2990,6 +3225,7 @@ msgid "Equador"
 msgstr ""
 
 #: src/player/frames/equalizer.py
+#: src/player/keyboard/shortcuts.py
 msgid "Equalizador"
 msgstr ""
 
@@ -3103,12 +3339,20 @@ msgstr ""
 msgid "Espanha"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Espaço"
+msgstr ""
+
 #: src/player/quick_player/panel.py
 msgid "Espaço reproduzir/pausar · ←/→ buscar · ↑/↓ volume · Ctrl+Enter KeyTune completo · Esc fechar"
 msgstr ""
 
 #: src/player/frames/download.py
 msgid "Esta aba não tem uma playlist para baixar."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Esta combinação de teclas não é reconhecida."
 msgstr ""
 
 #: src/player/frames/download.py
@@ -3224,6 +3468,10 @@ msgstr ""
 msgid "Executa a ação: {label}."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Exibir e ferramentas"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Explica como abrir a ajuda rápida de atalhos e o manual completo do KeyTune."
 msgstr ""
@@ -3233,6 +3481,7 @@ msgid "Explorador"
 msgstr ""
 
 #: src/player/frames/explorer.py
+#: src/player/keyboard/shortcuts.py
 msgid "Explorador de pastas"
 msgstr ""
 
@@ -3262,6 +3511,18 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Faixa &Anterior\tCtrl+PageUp"
+msgstr ""
+
+#: src/player/frames/tray.py
+msgid "Faixa &anterior"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Faixa anterior"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Faixa anterior (alternativo)"
 msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
@@ -3312,6 +3573,10 @@ msgstr ""
 msgid "Favoritar ou desfavoritar (Ctrl+D)"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Favoritar ou desfavoritar seleção"
+msgstr ""
+
 #: src/player/frames/smart_library/search.py
 msgid "Favoritos"
 msgstr ""
@@ -3344,6 +3609,18 @@ msgstr ""
 msgid "Fechar Mí&dia\tCtrl+Shift+W"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Fechar a janela só a esconde; para sair, use Arquivo > Sair ou o menu do ícone."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Fechar aba ou playlist"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Fechar mídia"
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Feche as abas ou telas abertas por este plugin antes de desativá-lo, atualizá-lo ou removê-lo."
 msgstr ""
@@ -3371,6 +3648,10 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Fila de reprodução esvaziada."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Filtrar ações glo&bais:"
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
@@ -3431,6 +3712,10 @@ msgstr ""
 msgid "Frequência"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Funcionam mesmo com o KeyTune minimizado, na bandeja ou com outro programa em foco."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Geral"
 msgstr ""
@@ -3443,6 +3728,7 @@ msgstr ""
 msgid "Gerenciar &plugins..."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/playlists/queue_dialog.py
 msgid "Gerenciar fila de reprodução"
 msgstr ""
@@ -3453,6 +3739,10 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "Google Chrome"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Gostei da mídia atual (YouTube Music)"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3496,6 +3786,7 @@ msgstr ""
 msgid "Histórico de mudanças"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/preferences/dialog.py
 #: src/player/smart_library/history_dialog.py
 msgid "Histórico de reprodução"
@@ -3657,6 +3948,10 @@ msgstr ""
 msgid "Iniciar &rádio desta faixa\tCtrl+R"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Iniciar rádio desta faixa"
+msgstr ""
+
 #: src/player/frames/convert.py
 #: src/player/frames/download.py
 msgid "Instalando o FFmpeg..."
@@ -3750,6 +4045,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/search.py
 msgid "Ir para o canal {name}"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ir para o fim da mídia"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ir para o início da mídia"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3866,6 +4169,10 @@ msgstr ""
 msgid "Itália"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Janela"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Japão"
 msgstr ""
@@ -3880,6 +4187,14 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "KeyTube"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "KeyTube por aba"
+msgstr ""
+
+#: src/player/frames/tray.py
+msgid "KeyTune na bandeja do sistema."
 msgstr ""
 
 #: src/player/lyrics/service.py
@@ -4037,12 +4352,17 @@ msgstr ""
 msgid "Localiza itens da playlist {title}."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/library/search_dialog.py
 msgid "Localizar item"
 msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Luxemburgo"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "M&inimizar para a bandeja do sistema"
 msgstr ""
 
 #: src/player/convert/options.py
@@ -4161,6 +4481,10 @@ msgstr ""
 msgid "Microsoft Edge"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Minimizar ou restaurar a janela"
+msgstr ""
+
 #: src/player/sleep_timer/dialog.py
 msgid "Minutos personalizados"
 msgstr ""
@@ -4196,6 +4520,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Modo de conexão com o YouTube Music"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Modo de repetição"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4238,6 +4566,18 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Mostrar o vídeo das &transmissões ao vivo"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Mostrar ou ocultar a imagem da transmissão ao vivo"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Mostrar ou ocultar a letra"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Mostrar ou ocultar o KeyTune na bandeja do sistema"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -4335,6 +4675,14 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Navegador:"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Navegação na mídia"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Nenhum"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -4456,6 +4804,10 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Nenhuma ação selecionada."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -4645,6 +4997,10 @@ msgstr ""
 msgid "Nova Zelândia"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Nova playlist"
+msgstr ""
+
 #: src/player/frames/library_tabs/station_radio.py
 msgid "Nova rádio iniciada com {name} como primeira faixa."
 msgstr ""
@@ -4659,6 +5015,10 @@ msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Nova volta da playlist. "
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Novo atalho"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -5104,6 +5464,10 @@ msgstr ""
 
 #: src/player/frames/radio/actions.py
 msgid "Não foi possível votar nesta rádio agora."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Não gostei da mídia atual (YouTube Music)"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
@@ -5566,6 +5930,10 @@ msgstr ""
 msgid "Oceania"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Ocultar na bandeja do sistema"
+msgstr ""
+
 #: src/player/radio/panel.py
 #: src/player/youtube_music/panel.py
 msgid "Onde buscar"
@@ -5699,6 +6067,10 @@ msgstr ""
 msgid "Ouvintes nas últimas 24 horas: {value}"
 msgstr ""
 
+#: src/player/frames/tray.py
+msgid "P&arar"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "P&arar\tCtrl+."
 msgstr ""
@@ -5763,6 +6135,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Paraguai"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Parar"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -5879,6 +6255,19 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Permissões solicitadas e aviso de segurança"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Personalizar &teclado..."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+#: src/player/keyboard/shortcuts.py
+msgid "Personalizar teclado"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Personalização\nConfigurações > Personalizar teclado — Trocar, remover ou restaurar atalhos e definir atalhos globais, que funcionam com o KeyTune minimizado ou na bandeja do sistema"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -6079,6 +6468,7 @@ msgstr ""
 msgid "Posições de retomada apagadas."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/preferences/dialog.py
 msgid "Preferências"
 msgstr ""
@@ -6173,6 +6563,14 @@ msgstr ""
 msgid "Presets embutidos são somente leitura. Ajuste os valores abaixo e salve uma cópia personalizada."
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Pressione o novo atalho para «{action}»:"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Pressione uma combinação de teclas."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Prioriza subgraves e graves para dar mais peso à batida."
 msgstr ""
@@ -6203,6 +6601,10 @@ msgstr ""
 
 #: src/player/smart_library/search_dialog.py
 msgid "Procura em tudo que já foi indexado na biblioteca."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Procura pelo nome da ação, pela categoria ou pelo atalho."
 msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
@@ -6245,6 +6647,14 @@ msgstr ""
 msgid "Próxima Fai&xa\tCtrl+PageDown"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Próxima faixa"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Próxima faixa (alternativo)"
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Próxima transição: aguardando uma faixa na fila."
 msgstr ""
@@ -6279,6 +6689,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Próximo &resultado\tF3"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Próximo resultado"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -6509,6 +6923,10 @@ msgstr[1] ""
 msgid "Removido da playlist do YouTube Music"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Removido de: {others}"
+msgstr ""
+
 #: src/player/frames/library_tabs/playback_control.py
 msgid "Repetindo faixa atual. {position}"
 msgstr ""
@@ -6541,11 +6959,16 @@ msgstr ""
 msgid "Reproduzir / Pa&usar (Espaço)"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Reproduzir ou pausar"
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 #: src/player/frames/ui.py
 msgid "Reproduzir playlist com AutoDJ"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/preferences/dialog.py
 msgid "Reprodução"
 msgstr ""
@@ -6603,8 +7026,28 @@ msgstr ""
 msgid "Restaurar &Tom Original (Shift+\\)"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Restaurar &padrão"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Restaurar Velocidade &Normal (\\)"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Restaurar t&odos"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Restaurar todos"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Restaurar tom original"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Restaurar velocidade normal"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -6613,6 +7056,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Resultado &anterior\tShift+F3"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Resultado anterior"
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
@@ -6722,6 +7169,10 @@ msgstr ""
 msgid "Rádios online"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Rádios online por aba"
+msgstr ""
+
 #: src/player/frames/radio/lifecycle.py
 msgid "Rádios online. Navegue pela lista, busque uma rádio ou cole o endereço de um stream."
 msgstr ""
@@ -6767,6 +7218,7 @@ msgid "Salvar o que ouvi no &histórico do YouTube Music"
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
+#: src/player/keyboard/shortcuts.py
 msgid "Salvar playlist"
 msgstr ""
 
@@ -6798,6 +7250,7 @@ msgstr ""
 msgid "Selecionar dispositivo de á&udio\tAlt+D"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
 #: src/player/preferences/audio_output_dialog.py
 msgid "Selecionar dispositivo de áudio"
 msgstr ""
@@ -6882,6 +7335,7 @@ msgid "Seleção do YouTube Music"
 msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
+#: src/player/keyboard/shortcuts.py
 msgid "Sem avaliação"
 msgstr ""
 
@@ -6958,6 +7412,22 @@ msgstr ""
 msgid "Sessão restaurada com {count} abas. {title}."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Seta abaixo"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Seta acima"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Seta direita"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Seta esquerda"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Shorts"
 msgstr ""
@@ -6984,6 +7454,10 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Situação do histórico"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Situação:"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -7067,6 +7541,10 @@ msgstr ""
 
 #: src/player/download/panel.py
 msgid "Só vale quando o áudio é convertido para MP3 ou FLAC."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Tab sai do campo, Enter confirma e Esc cancela."
 msgstr ""
 
 #: src/player/frames/explorer.py
@@ -7195,6 +7673,10 @@ msgstr ""
 msgid "Tipo:"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Tipos de atalho"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Toca numa janela pequena, sem carregar as playlists."
 msgstr ""
@@ -7292,6 +7774,10 @@ msgstr ""
 msgid "Transmissões ao vivo não podem ser analisadas pelo AutoDJ."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Trazer o KeyTune para a frente"
+msgstr ""
+
 #: src/player/frames/lyrics_panel.py
 msgid "Trecho da letra copiado."
 msgstr ""
@@ -7326,6 +7812,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Ucrânia"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Um atalho global precisa de Ctrl, Alt ou Windows, senão a tecla deixaria de funcionar nos outros programas."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7471,6 +7961,10 @@ msgstr ""
 msgid "Ver comentários"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Ver comentários da mídia atual"
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 #: src/player/frames/youtube_music/search.py
 msgid "Ver conteúdo (Seta para a direita)"
@@ -7491,6 +7985,10 @@ msgstr ""
 #: src/player/frames/commands/browser_commands.py
 #: src/player/frames/youtube_music/search.py
 msgid "Ver detalhes"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ver detalhes da mídia atual"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7557,8 +8055,21 @@ msgstr ""
 msgid "Você só pode remover faixas de playlists que criou ou onde é colaborador."
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Volta todos os atalhos da aba atual ao padrão."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
 #: src/player/welcome/dialog.py
 msgid "Voltar"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Voltar mais"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "Voltar todos os atalhos desta aba ao padrão?"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7899,6 +8410,10 @@ msgstr ""
 msgid "sem as nunca tocadas"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "sem atalho"
+msgstr ""
+
 #: src/player/smart_library/search_dialog.py
 msgid "sem avaliação"
 msgstr ""
@@ -7962,6 +8477,18 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "vídeo"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{action}: sem atalho"
+msgstr ""
+
+#: src/player/frames/keyboard.py
+msgid "{action}: sem atalho (padrão era {default})"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{action}: {shortcut}"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -8415,6 +8942,22 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "{semitones:+d} semitons"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{shortcut} já é usado por «{other}». Passar o atalho para «{action}» e deixar «{other}» sem atalho?"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "{shortcut} é reservado para navegar e editar texto."
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{shortcut}. Enter confirma."
+msgstr ""
+
+#: src/player/frames/keyboard.py
+msgid "{shortcut}: {action}"
 msgstr ""
 
 #: src/player/frames/radio/now_playing.py

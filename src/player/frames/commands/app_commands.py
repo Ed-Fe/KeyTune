@@ -64,6 +64,8 @@ class AppCommandsMixin:
         else:
             self._save_settings()
 
+        self._refresh_tray_icon()
+
         handle_youtube_music_preferences_change = getattr(self, "_handle_youtube_music_preferences_change", None)
         if callable(handle_youtube_music_preferences_change):
             handle_youtube_music_preferences_change(previous_settings)
@@ -189,9 +191,15 @@ class AppCommandsMixin:
         return False
 
     def on_exit(self, _event):
+        # Arquivo > Sair encerra de fato, mesmo com "fechar para a bandeja" ligado.
+        self._exit_requested = True
         self.Close()
 
     def on_close(self, event):
+        close_to_tray_requested = getattr(self, "_close_to_tray_requested", None)
+        if callable(close_to_tray_requested) and close_to_tray_requested(event):
+            return
+
         if not getattr(self, "_update_restart_pending", False) and self.settings.confirm_on_exit and event.CanVeto():
             with wx.MessageDialog(
                 self,
@@ -200,6 +208,7 @@ class AppCommandsMixin:
                 wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
             ) as dialog:
                 if dialog.ShowModal() != wx.ID_YES:
+                    self._exit_requested = False
                     event.Veto()
                     return
 
@@ -234,6 +243,8 @@ class AppCommandsMixin:
         self._finish_player_backend_shutdown()
         self._finish_smart_library_shutdown()
         self._shutdown_smtc_service()
+        self._unregister_global_hotkeys()
+        self._shutdown_tray()
         self.announcer.close()
         self.Destroy()
 

@@ -6275,3 +6275,396 @@ msgstr "This address could not be recognized as a valid radio stream."
 
 msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr "Use this when you cannot find the radio in the search: type a name for it and the direct address of the stream or of an M3U file. When you confirm, it goes to your favorite radios."
+
+msgid "&Alterar atalho..."
+msgstr "C&hange shortcut..."
+
+msgid "&Confirmar"
+msgstr "&Confirm"
+
+msgid "&Filtrar ações:"
+msgstr "&Filter actions:"
+
+msgid "&Mostrar KeyTune"
+msgstr "&Show KeyTune"
+
+msgid "&Ocultar KeyTune"
+msgstr "&Hide KeyTune"
+
+msgid "&Ocultar na bandeja do sistema"
+msgstr "Hide to system tra&y"
+
+msgid "&Próxima faixa"
+msgstr "&Next track"
+
+msgid "&Remover atalho"
+msgstr "&Remove shortcut"
+
+msgid "&Reproduzir ou pausar"
+msgstr "&Play or pause"
+
+msgid "&Sair do KeyTune"
+msgstr "E&xit KeyTune"
+
+msgid "A tecla Windows só pode ser usada em atalhos globais."
+msgstr "The Windows key can only be used in global shortcuts."
+
+msgid "Abrir"
+msgstr "Open"
+
+msgid "Abrir sem tocar"
+msgstr "Open without playing"
+
+msgid "Adicionar à fila de reprodução"
+msgstr "Add to the play queue"
+
+msgid "Adicionar à playlist do YouTube Music"
+msgstr "Add to a YouTube Music playlist"
+
+msgid "Alterar atalho"
+msgstr "Change shortcut"
+
+msgid "Alternar foco entre itens e player"
+msgstr "Switch focus between items and player"
+
+msgid "Anunciar &status"
+msgstr "Announce st&atus"
+
+msgid "Anunciar status"
+msgstr "Announce status"
+
+msgid "Anunciar tempo"
+msgstr "Announce time"
+
+msgid "Anunciar volume"
+msgstr "Announce volume"
+
+msgid "Anúncios"
+msgstr "Announcements"
+
+msgid "Ao fechar, manter tocando na band&eja"
+msgstr "Wh&en closing, keep playing in the tray"
+
+msgid "Ao minimizar, a janela sai da barra de tarefas e fica um ícone perto do relógio."
+msgstr "When minimized, the window leaves the taskbar and an icon stays near the clock."
+
+msgid "Arquivos e playlists"
+msgstr "Files and playlists"
+
+msgid "Atalho"
+msgstr "Shortcut"
+
+msgid "Atalho em uso"
+msgstr "Shortcut in use"
+
+msgid "Atalhos do player"
+msgstr "Player shortcuts"
+
+msgid "Atalhos do player:"
+msgstr "Player shortcuts:"
+
+msgid "Atalhos globais"
+msgstr "Global shortcuts"
+
+msgid "Atalhos globais:"
+msgstr "Global shortcuts:"
+
+msgid "Atalhos personalizados (substituem os acima):"
+msgstr "Custom shortcuts (they replace the ones above):"
+
+msgid "Atalhos restaurados ao padrão."
+msgstr "Shortcuts restored to default."
+
+msgid "Atalhos salvos."
+msgstr "Shortcuts saved."
+
+msgid "Atalhos salvos. Não foi possível registrar {shortcuts}: já estão em uso por outro programa."
+msgstr "Shortcuts saved. Could not register {shortcuts}: already in use by another program."
+
+msgid "Ativar atalhos &globais"
+msgstr "Enable &global shortcuts"
+
+msgid "Aumentar tom"
+msgstr "Raise pitch"
+
+msgid "Aumentar velocidade"
+msgstr "Increase speed"
+
+msgid "Aumentar volume"
+msgstr "Volume up"
+
+msgid "Avaliar com {stars} estrela(s)"
+msgstr "Rate {stars} star(s)"
+
+msgid "Avançar mais"
+msgstr "Skip further forward"
+
+msgid "Ação"
+msgstr "Action"
+
+msgid "Baixar seleção ou mídia atual"
+msgstr "Download selection or current media"
+
+msgid "Bandeja do sistema"
+msgstr "System tray"
+
+msgid "Ca&ncelar"
+msgstr "Ca&ncel"
+
+msgid "Categoria"
+msgstr "Category"
+
+msgid "Configurar temporizador"
+msgstr "Set sleep timer"
+
+msgid "Conteúdo relacionado do YouTube Music"
+msgstr "YouTube Music related content"
+
+msgid "Converter seleção ou mídia atual"
+msgstr "Convert selection or current media"
+
+msgid "Copiar o caminho da mídia em execução"
+msgstr "Copy the path of the playing media"
+
+msgid "Delete na lista faz o mesmo."
+msgstr "Delete in the list does the same."
+
+msgid "Diminuir tom"
+msgstr "Lower pitch"
+
+msgid "Diminuir velocidade"
+msgstr "Decrease speed"
+
+msgid "Diminuir volume"
+msgstr "Volume down"
+
+msgid "Disponível apenas no Windows."
+msgstr "Available on Windows only."
+
+msgid "Embaralhar"
+msgstr "Shuffle"
+
+msgid "Enter na lista faz o mesmo."
+msgstr "Enter in the list does the same."
+
+msgid "Espaço"
+msgstr "Space"
+
+msgid "Esta combinação de teclas não é reconhecida."
+msgstr "This key combination is not recognized."
+
+msgid "Exibir e ferramentas"
+msgstr "View and tools"
+
+msgid "Faixa &anterior"
+msgstr "Pre&vious track"
+
+msgid "Faixa anterior"
+msgstr "Previous track"
+
+msgid "Faixa anterior (alternativo)"
+msgstr "Previous track (alternative)"
+
+msgid "Favoritar ou desfavoritar seleção"
+msgstr "Favorite or unfavorite selection"
+
+msgid "Fechar a janela só a esconde; para sair, use Arquivo > Sair ou o menu do ícone."
+msgstr "Closing the window only hides it; to exit, use File > Exit or the icon menu."
+
+msgid "Fechar aba ou playlist"
+msgstr "Close tab or playlist"
+
+msgid "Fechar mídia"
+msgstr "Close media"
+
+msgid "Filtrar ações glo&bais:"
+msgstr "Filter glo&bal actions:"
+
+msgid "Funcionam mesmo com o KeyTune minimizado, na bandeja ou com outro programa em foco."
+msgstr "They work even with KeyTune minimized, in the tray or with another program focused."
+
+msgid "Gostei da mídia atual (YouTube Music)"
+msgstr "Like current media (YouTube Music)"
+
+msgid "Iniciar rádio desta faixa"
+msgstr "Start radio from this track"
+
+msgid "Ir para o fim da mídia"
+msgstr "Go to the end of the media"
+
+msgid "Ir para o início da mídia"
+msgstr "Go to the start of the media"
+
+msgid "Janela"
+msgstr "Window"
+
+msgid "KeyTube por aba"
+msgstr "KeyTube in a tab"
+
+msgid "KeyTune na bandeja do sistema."
+msgstr "KeyTune in the system tray."
+
+msgid "M&inimizar para a bandeja do sistema"
+msgstr "M&inimize to the system tray"
+
+msgid "Minimizar ou restaurar a janela"
+msgstr "Minimize or restore the window"
+
+msgid "Modo de repetição"
+msgstr "Repeat mode"
+
+msgid "Mostrar ou ocultar a imagem da transmissão ao vivo"
+msgstr "Show or hide the live stream picture"
+
+msgid "Mostrar ou ocultar a letra"
+msgstr "Show or hide lyrics"
+
+msgid "Mostrar ou ocultar o KeyTune na bandeja do sistema"
+msgstr "Show or hide KeyTune in the system tray"
+
+msgid "Navegação na mídia"
+msgstr "Media navigation"
+
+msgid "Nenhum"
+msgstr "None"
+
+msgid "Nenhuma ação selecionada."
+msgstr "No action selected."
+
+msgid "Nova playlist"
+msgstr "New playlist"
+
+msgid "Novo atalho"
+msgstr "New shortcut"
+
+msgid "Não gostei da mídia atual (YouTube Music)"
+msgstr "Dislike current media (YouTube Music)"
+
+msgid "Ocultar na bandeja do sistema"
+msgstr "Hide to system tray"
+
+msgid "P&arar"
+msgstr "S&top"
+
+msgid "Parar"
+msgstr "Stop"
+
+msgid "Personalizar &teclado..."
+msgstr "Customize &keyboard..."
+
+msgid "Personalizar teclado"
+msgstr "Customize keyboard"
+
+msgid "Personalização\nConfigurações > Personalizar teclado — Trocar, remover ou restaurar atalhos e definir atalhos globais, que funcionam com o KeyTune minimizado ou na bandeja do sistema"
+msgstr "Customization\nSettings > Customize keyboard — Change, remove or restore shortcuts and set global shortcuts, which work with KeyTune minimized or in the system tray"
+
+msgid "Pressione o novo atalho para «{action}»:"
+msgstr "Press the new shortcut for “{action}”:"
+
+msgid "Pressione uma combinação de teclas."
+msgstr "Press a key combination."
+
+msgid "Procura pelo nome da ação, pela categoria ou pelo atalho."
+msgstr "Searches the action name, category or shortcut."
+
+msgid "Próxima faixa"
+msgstr "Next track"
+
+msgid "Próxima faixa (alternativo)"
+msgstr "Next track (alternative)"
+
+msgid "Próximo resultado"
+msgstr "Next result"
+
+msgid "Removido de: {others}"
+msgstr "Removed from: {others}"
+
+msgid "Reproduzir ou pausar"
+msgstr "Play or pause"
+
+msgid "Restaurar &padrão"
+msgstr "Restore &default"
+
+msgid "Restaurar t&odos"
+msgstr "Restore a&ll"
+
+msgid "Restaurar todos"
+msgstr "Restore all"
+
+msgid "Restaurar tom original"
+msgstr "Restore original pitch"
+
+msgid "Restaurar velocidade normal"
+msgstr "Restore normal speed"
+
+msgid "Resultado anterior"
+msgstr "Previous result"
+
+msgid "Rádios online por aba"
+msgstr "Online radios in a tab"
+
+msgid "Seta abaixo"
+msgstr "Down arrow"
+
+msgid "Seta acima"
+msgstr "Up arrow"
+
+msgid "Seta direita"
+msgstr "Right arrow"
+
+msgid "Seta esquerda"
+msgstr "Left arrow"
+
+msgid "Situação:"
+msgstr "Status:"
+
+msgid "Tab sai do campo, Enter confirma e Esc cancela."
+msgstr "Tab leaves the field, Enter confirms and Esc cancels."
+
+msgid "Tipos de atalho"
+msgstr "Shortcut types"
+
+msgid "Trazer o KeyTune para a frente"
+msgstr "Bring KeyTune to the front"
+
+msgid "Um atalho global precisa de Ctrl, Alt ou Windows, senão a tecla deixaria de funcionar nos outros programas."
+msgstr "A global shortcut needs Ctrl, Alt or Windows, otherwise the key would stop working in other programs."
+
+msgid "Ver comentários da mídia atual"
+msgstr "View comments of current media"
+
+msgid "Ver detalhes da mídia atual"
+msgstr "View details of current media"
+
+msgid "Volta todos os atalhos da aba atual ao padrão."
+msgstr "Restores every shortcut on the current tab to its default."
+
+msgid "Voltar mais"
+msgstr "Skip further back"
+
+msgid "Voltar todos os atalhos desta aba ao padrão?"
+msgstr "Restore every shortcut on this tab to its default?"
+
+msgid "sem atalho"
+msgstr "no shortcut"
+
+msgid "{action}: sem atalho"
+msgstr "{action}: no shortcut"
+
+msgid "{action}: sem atalho (padrão era {default})"
+msgstr "{action}: no shortcut (default was {default})"
+
+msgid "{action}: {shortcut}"
+msgstr "{action}: {shortcut}"
+
+msgid "{shortcut} já é usado por «{other}». Passar o atalho para «{action}» e deixar «{other}» sem atalho?"
+msgstr "{shortcut} is already used by “{other}”. Give the shortcut to “{action}” and leave “{other}” without one?"
+
+msgid "{shortcut} é reservado para navegar e editar texto."
+msgstr "{shortcut} is reserved for navigating and editing text."
+
+msgid "{shortcut}. Enter confirma."
+msgstr "{shortcut}. Enter confirms."
+
+msgid "{shortcut}: {action}"
+msgstr "{shortcut}: {action}"

@@ -168,7 +168,7 @@ class FrameUIMixin:
         return ""
 
     def _keyboard_help_text(self):
-        return _(
+        text = _(
             "Ajuda rápida de atalhos\n\n"
             "Arquivos e playlists\n"
             "Ctrl+O — Abrir arquivos na playlist atual e tocar (um arquivo de playlist abre como playlist)\n"
@@ -245,6 +245,15 @@ class FrameUIMixin:
             "Ctrl+Tab / Ctrl+Shift+Tab — Próxima ou aba anterior\n"
             "F1 — Mostrar esta ajuda"
         )
+        text += "\n\n" + _(
+            "Personalização\n"
+            "Configurações > Personalizar teclado — Trocar, remover ou restaurar atalhos e definir atalhos globais, "
+            "que funcionam com o KeyTune minimizado ou na bandeja do sistema"
+        )
+        custom_help = self._custom_shortcuts_help_text()
+        if custom_help:
+            text += "\n\n" + custom_help
+        return text
 
     def _refresh_shortcuts_hint_layout(self):
         if not hasattr(self, "shortcuts_hint_label") or not hasattr(self, "progress_panel"):
@@ -447,6 +456,8 @@ class FrameUIMixin:
         file_menu.Append(self.menu_save_playlist_id, _("Salvar Playli&st\tCtrl+Shift+S"))
         file_menu.Append(self.menu_close_media_id, _("Fechar Mí&dia\tCtrl+Shift+W"))
         file_menu.AppendSeparator()
+        self.menu_hide_to_tray_id = wx.NewIdRef()
+        file_menu.Append(self.menu_hide_to_tray_id, _("&Ocultar na bandeja do sistema"))
         file_menu.Append(wx.ID_EXIT, _("&Sair\tAlt+F4"))
 
         playback_menu = wx.Menu()
@@ -548,7 +559,9 @@ class FrameUIMixin:
         self.menu_check_updates_id = wx.NewIdRef()
         self.menu_preferences_id = wx.NewIdRef()
         self.menu_manage_plugins_id = wx.NewIdRef()
+        self.menu_customize_keyboard_id = wx.NewIdRef()
         settings_menu.Append(self.menu_preferences_id, _("&Preferências\tCtrl+,"))
+        settings_menu.Append(self.menu_customize_keyboard_id, _("Personalizar &teclado..."))
         settings_menu.AppendSeparator()
         settings_menu.Append(self.menu_manage_plugins_id, _("Gerenciar &plugins..."))
         self.plugins_extensions_menu = wx.Menu()
@@ -762,19 +775,9 @@ class FrameUIMixin:
                 timer.StartOnce(auto_clear_ms)
 
     def _bind_events(self):
-        accelerators = wx.AcceleratorTable(
-            [
-                (wx.ACCEL_CTRL, ord("O"), self.menu_open_file_id),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("O"), int(self.menu_add_files_without_playing_id)),
-                (wx.ACCEL_CTRL, ord("E"), int(self.menu_open_folder_id)),
-                (wx.ACCEL_ALT, ord("D"), int(self.menu_cycle_audio_output_device_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("F"), int(self.menu_enqueue_item_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("Q"), int(self.menu_manage_queue_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("B"), int(self.menu_download_shortcut_id)),
-                (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, ord("K"), int(self.menu_convert_shortcut_id)),
-            ]
-        )
-        self.SetAcceleratorTable(accelerators)
+        # A tabela de aceleradores (Ctrl+O, Alt+D, Ctrl+Shift+F...) e os rótulos
+        # dos menus seguem os atalhos personalizados; ver frames/keyboard.py.
+        self._apply_keyboard_customization()
 
         self.Bind(wx.EVT_MENU, self.on_new_playlist, id=self.menu_new_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_open, id=self.menu_open_file_id)
@@ -851,6 +854,8 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_previous_tab, id=self.menu_previous_tab_id)
         self.Bind(wx.EVT_MENU, self.on_check_for_updates, id=self.menu_check_updates_id)
         self.Bind(wx.EVT_MENU, self.on_open_preferences, id=self.menu_preferences_id)
+        self.Bind(wx.EVT_MENU, self.on_customize_keyboard, id=self.menu_customize_keyboard_id)
+        self.Bind(wx.EVT_MENU, self.on_hide_to_tray, id=self.menu_hide_to_tray_id)
         self.Bind(wx.EVT_MENU, self.on_manage_plugins, id=self.menu_manage_plugins_id)
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
@@ -866,6 +871,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_TIMER, self.on_sleep_timer_tick, self.sleep_timer)
         self.Bind(wx.EVT_CHAR_HOOK, self.on_key_down)
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(wx.EVT_ICONIZE, self._on_iconize_to_tray)
         self.progress_timer.Start(PROGRESS_TIMER_INTERVAL_MS)
         # The crossfade timer is started on demand (only while a crossfade is
         # active) by CrossfadeMixin._ensure_crossfade_timer_running(); leaving

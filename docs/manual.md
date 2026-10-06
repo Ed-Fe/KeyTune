@@ -653,6 +653,49 @@ Os controles da sessão trocam a próxima faixa, recalculam a sequência, adicio
 
 As opções do AutoDJ estão em **Preferências > Reprodução** e **Recursos adicionais**; veja [Configurações](#configuracoes).
 
+## Personalizar o teclado
+
+**Configurações > Personalizar teclado** lista cada ação do player com o atalho em vigor. A tela tem duas abas: **Atalhos do player**, que valem com a janela do KeyTune em foco, e **Atalhos globais**, que valem de qualquer lugar do Windows.
+
+Em cada aba:
+
+- **Filtrar ações** procura pelo nome da ação, pela categoria ou pelo próprio atalho. Digitar "volume" ou "Ctrl+Shift" já reduz a lista.
+- `Enter` na lista (ou **Alterar atalho**) abre um campo que captura a combinação que você pressionar. `Tab` sai do campo, `Enter` confirma e `Esc` cancela.
+- `Delete` na lista (ou **Remover atalho**) deixa a ação sem atalho.
+- **Restaurar padrão** devolve o atalho original da ação; **Restaurar todos** faz isso com a aba inteira.
+- Nada muda até você escolher **Salvar**.
+
+Se o atalho escolhido já pertence a outra ação, o KeyTune diz qual e pergunta se pode passá-lo para a nova; a antiga fica sem atalho. Assim nunca há duas ações no mesmo atalho.
+
+Algumas teclas não podem ser usadas, porque servem para navegar e editar: `Tab`, `Shift+Tab`, `Ctrl+Tab`, `Esc`, `Enter`, `Alt+F4`, `Shift+F10`, `Ctrl+A`, `Ctrl+C`, `Ctrl+V`, `Ctrl+X` e `Ctrl+Z`.
+
+Um atalho sem `Ctrl` nem `Alt` (como `Espaço`, `P` ou `Shift+Seta direita`) se comporta como os padrão: só age com o foco no player. Na lista de itens e nos campos de texto a tecla continua sendo do controle. Atalhos com `Ctrl` ou `Alt` agem em qualquer ponto da janela, menos dentro de um campo de texto.
+
+Os menus passam a mostrar o atalho novo, e `F1` lista no fim da ajuda o que você mudou.
+
+### Atalhos globais
+
+Funcionam com o KeyTune minimizado, na bandeja do sistema ou com outro programa em primeiro plano. Ficam desligados até você marcar **Ativar atalhos globais**, na aba **Atalhos globais**. Disponível só no Windows.
+
+| Atalho padrão | Ação |
+| --- | --- |
+| `Ctrl+Alt+Shift+P` | Reproduzir ou pausar |
+| `Ctrl+Alt+Shift+Seta direita` / `Seta esquerda` | Próxima faixa / faixa anterior |
+| `Ctrl+Alt+Shift+X` | Parar |
+| `Ctrl+Alt+Shift+Seta acima` / `Seta abaixo` | Aumentar / diminuir o volume (o volume novo é falado) |
+| `Ctrl+Alt+Shift+I` | Anunciar status |
+| `Ctrl+Alt+Shift+T` | Anunciar tempo |
+| `Ctrl+Alt+Shift+K` | Mostrar ou ocultar o KeyTune na bandeja do sistema |
+| `Ctrl+Alt+Shift+M` | Minimizar ou restaurar a janela |
+
+Avançar, voltar, embaralhar, modo de repetição, anunciar volume e trazer o KeyTune para a frente vêm sem atalho; dá para definir um na mesma tela. Atalhos globais precisam de `Ctrl`, `Alt` ou da tecla `Windows`, senão a tecla deixaria de funcionar nos outros programas. Se outro programa já usa a combinação, o KeyTune avisa ao salvar e aquele atalho fica sem efeito até você escolher outro.
+
+### Bandeja do sistema
+
+**Arquivo > Ocultar na bandeja do sistema** (ou `Ctrl+Alt+Shift+K`, com os atalhos globais ligados) esconde a janela e deixa um ícone perto do relógio, e a música continua. Para chegar ao ícone pelo teclado, use `Windows+B` e as setas. `Enter` no ícone mostra a janela de novo; o menu de contexto (`Shift+F10` ou a tecla de aplicativos) tem **Mostrar KeyTune**, **Reproduzir ou pausar**, **Faixa anterior**, **Próxima faixa**, **Parar**, **Anunciar status** e **Sair do KeyTune**. Ao voltar, o foco fica onde estava.
+
+Em **Preferências > Geral > Bandeja do sistema**, **Minimizar para a bandeja do sistema** faz o mesmo ao minimizar, e **Ao fechar, manter tocando na bandeja** faz fechar a janela só escondê-la. Com essa opção ligada, para sair use **Arquivo > Sair** ou **Sair do KeyTune** no menu do ícone.
+
 ## Configurações
 
 As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Reprodução**, **Acessibilidade**, **Biblioteca**, **Download**, **KeyTube**, **Rádios online** e **Recursos adicionais**.
@@ -660,6 +703,8 @@ As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Repr
 ### Geral
 
 **Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
+
+A seção **Bandeja do sistema** tem **Minimizar para a bandeja do sistema** e **Ao fechar, manter tocando na bandeja**; veja [Bandeja do sistema](#bandeja-do-sistema).
 
 A seção **Associação de arquivos** (Windows) tem o botão **Registrar como player padrão**, que põe o KeyTune no menu *Abrir com* para formatos de áudio, vídeo e playlists. Depois de registrar, defina o app como padrão nas configurações do Windows, se quiser que esses arquivos abram direto nele. **Desregistrar associações** desfaz o registro.
 

@@ -41,6 +41,11 @@ applyTo:
   - `playback_handover.py` holds what changes hands (`AdoptedPlayback`: the MPV player still playing, its paths, volume and speed); `frames/playback/adoption.py` ties it to a new playlist without reloading the media. While an adoption is pending, session restore and tab activation must not touch the player
   - `quick_player/launch.py` for what the quick player accepts and its starting volume (pure, no wxPython); `quick_player/panel.py` for the wx controls only; `quick_player/frame.py` for the window, its single MPV player and the keys
   - It reads the settings and never writes settings, session, recents or library; keep its import path free of `frames/` so it stays fast to open
+- For keyboard customization, keep responsibilities separated:
+  - `keyboard/shortcuts.py` is the catalog of remappable actions (id, default shortcut, frame handler, menu id) plus the canonical shortcut text and override rules; no wxPython. A new remappable shortcut is added here, not as another hard-coded branch
+  - `keyboard/wx_keys.py` translates between that text and wx key events, accelerator entries and hotkey arguments; `keyboard/dialog.py` is the customization screen
+  - `frames/keyboard.py` applies the overrides (dispatch before the fixed branches of `on_key_down`, menu labels, accelerator table); defaults stay handled where they always were, so with no overrides nothing changes
+  - `frames/global_hotkeys.py` registers the global hotkeys (Windows only, degrades to nothing); `frames/tray.py` owns the tray icon, hide/restore and minimize/close to tray
 - Two different playlists matter to the window, and they are often not the same tab:
   - the one that **owns the player** (`_get_active_playlist_state()` / `_get_active_playlist_index()`): transport, end of track, crossfade, title, status and anything else about what is playing
   - the one **on screen** (`_get_playlist_state()` with no index, `_get_selected_playlist_index()`): browsing and editing the list. Before such code stops, unloads or restarts the player, it checks `_is_active_playlist_state(state)`

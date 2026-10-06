@@ -34,6 +34,8 @@ It focuses on playlist management, folder browsing, session restore, and persist
 - Batch download and conversion: the selected list items or a whole YouTube playlist (into a folder named after it), and several local files at once, from the list's context menu
 - Download of the current YouTube or YouTube Music media as audio (original, MP3, FLAC) or video with `Ctrl+Shift+B`, using yt-dlp, with configurable quality, sample rate, and folder in a new **Download** preferences tab
 - Fresh per-track YouTube Music radio (`Ctrl+R`) with recent-playback repeat suppression
+- Keyboard customization (**Settings > Customize keyboard**): change, remove, or restore any shortcut, with conflict checks
+- Global shortcuts (Windows) for playback, volume, status, and showing or hiding the window, plus a system tray icon with minimize/close-to-tray options
 
 ## Requirements
 
@@ -134,6 +136,8 @@ For a repeatable end-to-end updater test flow, see `docs/update-testing.md`.
 - `src/player/frames/smart_library/` — window behavior for the smart library
 - `src/player/frames/sleep_timer.py` — sleep timer scheduling and countdown handling
 - `src/player/sleep_timer/dialog.py` — sleep timer configuration dialog
+- `src/player/keyboard/` — shortcut catalog, customization rules, and the keyboard customization dialog
+- `src/player/frames/keyboard.py`, `global_hotkeys.py`, `tray.py` — custom shortcuts, global hotkeys, and the system tray icon
 - `src/player/preferences/dialog.py` — preferences UI
 - `src/player/preferences/models.py` — persistent user settings model
 - `src/player/preferences/storage.py` — persistent user settings storage

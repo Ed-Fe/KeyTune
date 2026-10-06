@@ -81,6 +81,7 @@ from ..download.options import (
     normalize_sample_rate,
     normalize_video_quality,
 )
+from ..keyboard.shortcuts import SCOPE_GLOBAL, SCOPE_LOCAL, normalize_overrides
 from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID, EqualizerPreset
 
 
@@ -166,6 +167,13 @@ class AppSettings:
     logging_enabled: bool = DEFAULT_LOGGING_ENABLED
     logging_level: str = DEFAULT_LOGGING_LEVEL
     welcome_screen_completed: bool = False
+    # Atalhos personalizados: {id da ação: atalho}, só o que difere do padrão;
+    # "" deixa a ação sem atalho. Ver keyboard/shortcuts.py.
+    custom_shortcuts: dict = field(default_factory=dict)
+    global_hotkeys_enabled: bool = False
+    global_hotkeys: dict = field(default_factory=dict)
+    minimize_to_tray: bool = False
+    close_to_tray: bool = False
 
     @property
     def seek_step_ms(self):
@@ -255,6 +263,11 @@ class AppSettings:
             "logging_enabled": self.logging_enabled,
             "logging_level": self.logging_level,
             "welcome_screen_completed": self.welcome_screen_completed,
+            "custom_shortcuts": dict(self.custom_shortcuts),
+            "global_hotkeys_enabled": self.global_hotkeys_enabled,
+            "global_hotkeys": dict(self.global_hotkeys),
+            "minimize_to_tray": self.minimize_to_tray,
+            "close_to_tray": self.close_to_tray,
         }
 
     @classmethod
@@ -443,6 +456,11 @@ class AppSettings:
         raw_logging_level = str(data.get("logging_level") or "").upper()
         settings.logging_level = raw_logging_level if raw_logging_level in LOGGING_LEVELS else DEFAULT_LOGGING_LEVEL
         settings.welcome_screen_completed = bool(data.get("welcome_screen_completed", settings.welcome_screen_completed))
+        settings.custom_shortcuts = normalize_overrides(data.get("custom_shortcuts"), SCOPE_LOCAL)
+        settings.global_hotkeys_enabled = bool(data.get("global_hotkeys_enabled", settings.global_hotkeys_enabled))
+        settings.global_hotkeys = normalize_overrides(data.get("global_hotkeys"), SCOPE_GLOBAL)
+        settings.minimize_to_tray = bool(data.get("minimize_to_tray", settings.minimize_to_tray))
+        settings.close_to_tray = bool(data.get("close_to_tray", settings.close_to_tray))
         return settings
 
 

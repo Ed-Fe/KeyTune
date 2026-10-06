@@ -167,6 +167,9 @@ footer {
         <li class="toc-level-3"><a href="#built-in-presets">Built-in presets</a></li>
         <li class="toc-level-3"><a href="#tips">Tips</a></li>
         <li class="toc-level-2"><a href="#autodj">AutoDJ</a></li>
+        <li class="toc-level-2"><a href="#customizing-the-keyboard">Customizing the keyboard</a></li>
+        <li class="toc-level-3"><a href="#global-shortcuts">Global shortcuts</a></li>
+        <li class="toc-level-3"><a href="#system-tray">System tray</a></li>
         <li class="toc-level-2"><a href="#settings">Settings</a></li>
         <li class="toc-level-3"><a href="#general">General</a></li>
         <li class="toc-level-3"><a href="#playback-2">Playback</a></li>
@@ -900,10 +903,73 @@ footer {
 <p><strong>Play playlist with AutoDJ</strong> creates a separate tab, without touching the original playlist. The current track starts right away, and KeyTune keeps up to five songs prepared ahead. The tab has a reading field with the source, how many tracks are prepared, the analysis activity and the next transition: BPM, tempo adjustment and, when a regular transition is needed, the reason. Each item appears as played, playing, next or prepared.</p>
 <p>The session controls swap the next track, recalculate the sequence, add files, pause or resume the preparation and end the session keeping the part already prepared. The same actions are in <code>Shift+F10</code>, on the list. The session is restored along with the player.</p>
 <p>AutoDJ options are in <strong>Preferences &gt; Playback</strong> and <strong>Additional resources</strong>; see <a href="#settings">Settings</a>.</p>
+<h2 id="customizing-the-keyboard">Customizing the keyboard</h2>
+<p><strong>Settings &gt; Customize keyboard</strong> lists every player action with the shortcut in effect. The screen has two tabs: <strong>Player shortcuts</strong>, which work while the KeyTune window has focus, and <strong>Global shortcuts</strong>, which work from anywhere in Windows.</p>
+<p>On each tab:</p>
+<ul>
+<li><strong>Filter actions</strong> searches the action name, its category or the shortcut itself. Typing "volume" or "Ctrl+Shift" narrows the list.</li>
+<li><code>Enter</code> on the list (or <strong>Change shortcut</strong>) opens a field that captures the combination you press. <code>Tab</code> leaves the field, <code>Enter</code> confirms and <code>Esc</code> cancels.</li>
+<li><code>Delete</code> on the list (or <strong>Remove shortcut</strong>) leaves the action without a shortcut.</li>
+<li><strong>Restore default</strong> gives the action its original shortcut back; <strong>Restore all</strong> does that for the whole tab.</li>
+<li>Nothing changes until you choose <strong>Save</strong>.</li>
+</ul>
+<p>If the shortcut you pick already belongs to another action, KeyTune says which one and asks whether to hand it over; the old action is left without a shortcut. So two actions never share a shortcut.</p>
+<p>A few keys cannot be used because they navigate and edit: <code>Tab</code>, <code>Shift+Tab</code>, <code>Ctrl+Tab</code>, <code>Esc</code>, <code>Enter</code>, <code>Alt+F4</code>, <code>Shift+F10</code>, <code>Ctrl+A</code>, <code>Ctrl+C</code>, <code>Ctrl+V</code>, <code>Ctrl+X</code> and <code>Ctrl+Z</code>.</p>
+<p>A shortcut without <code>Ctrl</code> or <code>Alt</code> (such as <code>Space</code>, <code>P</code> or <code>Shift+Right arrow</code>) behaves like the default ones: it only acts with focus on the player. In the item list and in text fields the key still belongs to the control. Shortcuts with <code>Ctrl</code> or <code>Alt</code> act anywhere in the window except inside a text field.</p>
+<p>The menus show the new shortcut, and <code>F1</code> lists what you changed at the end of the help.</p>
+<h3 id="global-shortcuts">Global shortcuts</h3>
+<p>They work with KeyTune minimized, in the system tray or with another program in front. They stay off until you check <strong>Enable global shortcuts</strong> on the <strong>Global shortcuts</strong> tab. Windows only.</p>
+<table>
+<thead>
+<tr>
+<th>Default shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+Alt+Shift+P</code></td>
+<td>Play or pause</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+Right arrow</code> / <code>Left arrow</code></td>
+<td>Next track / previous track</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+X</code></td>
+<td>Stop</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+Up arrow</code> / <code>Down arrow</code></td>
+<td>Volume up / down (the new volume is spoken)</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+I</code></td>
+<td>Announce status</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+T</code></td>
+<td>Announce time</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+K</code></td>
+<td>Show or hide KeyTune in the system tray</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+Shift+M</code></td>
+<td>Minimize or restore the window</td>
+</tr>
+</tbody>
+</table>
+<p>Skip forward, skip back, shuffle, repeat mode, announce volume and bring KeyTune to the front come without a shortcut; you can set one on the same screen. Global shortcuts need <code>Ctrl</code>, <code>Alt</code> or the <code>Windows</code> key, otherwise the key would stop working in other programs. If another program already uses the combination, KeyTune tells you when you save, and that shortcut does nothing until you pick another one.</p>
+<h3 id="system-tray">System tray</h3>
+<p><strong>File &gt; Hide to system tray</strong> (or <code>Ctrl+Alt+Shift+K</code>, with global shortcuts on) hides the window and leaves an icon near the clock, and the music keeps playing. To reach the icon from the keyboard, use <code>Windows+B</code> and the arrows. <code>Enter</code> on the icon shows the window again; its context menu (<code>Shift+F10</code> or the applications key) has <strong>Show KeyTune</strong>, <strong>Play or pause</strong>, <strong>Previous track</strong>, <strong>Next track</strong>, <strong>Stop</strong>, <strong>Announce status</strong> and <strong>Exit KeyTune</strong>. When the window comes back, focus is where it was.</p>
+<p>In <strong>Preferences &gt; General &gt; System tray</strong>, <strong>Minimize to the system tray</strong> does the same when you minimize, and <strong>When closing, keep playing in the tray</strong> makes closing the window only hide it. With that option on, exit with <strong>File &gt; Exit</strong> or <strong>Exit KeyTune</strong> in the icon menu.</p>
 <h2 id="settings">Settings</h2>
 <p>Preferences open with <code>Ctrl+,</code> and are divided into eight tabs: <strong>General</strong>, <strong>Playback</strong>, <strong>Accessibility</strong>, <strong>Library</strong>, <strong>Download</strong>, <strong>KeyTube</strong>, <strong>Online radio</strong> and <strong>Additional resources</strong>.</p>
 <h3 id="general">General</h3>
 <p><strong>Restore session on startup</strong>, <strong>Remember window size</strong>, <strong>Remember last used folder</strong> and <strong>Confirm on exit</strong> do what the name says. <strong>Use the quick player when opening files from Windows</strong> comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see <a href="#listening-to-a-file-straight-from-windows-file-explorer">Listening to a file straight from Windows File Explorer</a>).</p>
+<p>The <strong>System tray</strong> section has <strong>Minimize to the system tray</strong> and <strong>When closing, keep playing in the tray</strong>; see <a href="#system-tray">System tray</a>.</p>
 <p>The <strong>File association</strong> section (Windows) has the <strong>Register as default player</strong> button, which adds KeyTune to the <em>Open with</em> menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. <strong>Unregister associations</strong> undoes the registration.</p>
 <p>The <strong>Log recording</strong> section helps investigate problems. <strong>Record diagnostic logs</strong> writes a log file, in English, to the data folder, useful to attach to a bug report. <strong>Detail level</strong> goes from <em>Errors only</em>, the quietest, to <em>Debug</em>, which produces large files. <strong>Open log folder</strong> takes you to them.</p>
 <h3 id="playback-2">Playback</h3>
@@ -984,7 +1050,8 @@ footer {
 <p>Favorites and ratings are spoken together with the item, and details, comments and plugin permissions appear in reading fields with a label. The screen reader also announces the name of the group when focus enters it.</p>
 <h2 id="updates">Updates</h2>
 <p>On startup, KeyTune can check for updates on its own. To check at any time, use <strong>Help &gt; Check for updates</strong>.</p>
-<p>When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready.</p>
+<p>When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready. The notes come in the interface language.</p>
+<p>To read what changed in each version, including earlier ones, use <strong>Help &gt; Change history</strong>: choose the version in the list and read the text just below it.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p><strong>The app doesn't open properly.</strong> Check that the installation finished without errors (reinstalling with the latest installer fixes most cases) and that the system has permission to access the files or folders you tried to open.</p>
 <p><strong>The player can't find the MPV runtime.</strong> Check that it is in one of these places: an <code>mpv/</code> folder next to the executable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, the cache saved from the previous run or a compatible Chocolatey installation.</p>
@@ -1003,7 +1070,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 06/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>
