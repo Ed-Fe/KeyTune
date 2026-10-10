@@ -5,6 +5,7 @@ import threading
 import wx
 
 from ..i18n import _
+from ..reading_dialog import create_reading_field
 from .service import (
     UpdateCancelledError,
     UpdateError,
@@ -51,13 +52,12 @@ class UpdateAvailableDialog(wx.Dialog):
         notes_label = wx.StaticText(panel, label=_("O que mudou nesta versão:"))
         notes_label.SetName(_("Título das mudanças"))
 
-        self.notes_ctrl = wx.TextCtrl(
+        self.notes_ctrl = create_reading_field(
             panel,
-            value=self._format_release_notes(update_info.release_notes),
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP,
+            _("Mudanças da atualização"),
+            self._format_release_notes(update_info.release_notes),
         )
         self.notes_ctrl.SetMinSize((560, 240))
-        self.notes_ctrl.SetName(_("Mudanças da atualização"))
 
         root_sizer.Add(details_label, 0, wx.ALL | wx.EXPAND, 10)
         root_sizer.Add(notes_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)

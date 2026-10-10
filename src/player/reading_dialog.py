@@ -1,20 +1,36 @@
-"""Caixa de leitura: um texto somente leitura para reler linha a linha e copiar."""
+"""Campo e caixa de leitura: texto somente leitura para reler linha a linha e copiar.
+
+Todo campo somente leitura do KeyTune nasce em ``create_reading_field``, para
+que todos se leiam do mesmo jeito.
+"""
 
 import wx
 
 from .i18n import _
 
+# Sem quebra automática: cada seta lê uma linha inteira do texto (um parágrafo,
+# em texto corrido), e não o pedaço que coube na largura da janela. Linhas
+# longas rolam para o lado.
+READING_FIELD_STYLE = wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_DONTWRAP | wx.HSCROLL | wx.VSCROLL
 
-def add_reading_field(parent, sizer, label_text, text, *, style=0, border=10):
-    """Rótulo visível seguido do campo somente leitura; devolve o campo.
 
-    O rótulo é criado logo antes do campo: no Windows é desse texto vizinho
-    que o leitor de tela tira o nome de um campo de edição.
+def create_reading_field(parent, name, text=""):
+    """O campo somente leitura padrão, com o cursor no começo; devolve o campo.
+
+    Crie o rótulo visível logo antes de chamar: no Windows é desse texto
+    vizinho que o leitor de tela tira o nome de um campo de edição. Um campo
+    sem rótulo visível recebe o nome por ``attach_named_accessible``.
     """
-    label = wx.StaticText(parent, label=f"{label_text}:")
-    text_ctrl = wx.TextCtrl(parent, value=text, style=wx.TE_MULTILINE | wx.TE_READONLY | style)
-    text_ctrl.SetName(label_text)
+    text_ctrl = wx.TextCtrl(parent, value=text, style=READING_FIELD_STYLE)
+    text_ctrl.SetName(name)
     text_ctrl.SetInsertionPoint(0)
+    return text_ctrl
+
+
+def add_reading_field(parent, sizer, label_text, text, *, border=10):
+    """Rótulo visível seguido do campo somente leitura; devolve o campo."""
+    label = wx.StaticText(parent, label=f"{label_text}:")
+    text_ctrl = create_reading_field(parent, label_text, text)
     sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, border)
     sizer.Add(text_ctrl, 1, wx.ALL | wx.EXPAND, border)
     return text_ctrl

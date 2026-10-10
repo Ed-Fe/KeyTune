@@ -4,6 +4,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _
+from ..reading_dialog import create_reading_field
 from ..widgets import create_group
 
 
@@ -21,12 +22,7 @@ class AutoDJSessionPanel(wx.Panel):
 
         box, sizer = create_group(self, _("Sessão AutoDJ"))
 
-        self.info_ctrl = wx.TextCtrl(
-            box,
-            value="",
-            style=wx.TE_READONLY | wx.TE_MULTILINE,
-        )
-        self.info_ctrl.SetName(_("Informações da sessão AutoDJ"))
+        self.info_ctrl = create_reading_field(box, _("Informações da sessão AutoDJ"))
         self.info_ctrl.SetToolTip(_("Resume o estado da sessão e informa como será a próxima transição."))
         attach_named_accessible(
             self.info_ctrl,

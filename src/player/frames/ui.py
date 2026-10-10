@@ -8,7 +8,7 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..radio.media import is_radio_media
-from ..reading_dialog import show_reading_dialog
+from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
@@ -332,13 +332,7 @@ class FrameUIMixin:
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
         instructions_label = wx.StaticText(dialog, label=_("Ajuda rápida de atalhos:"))
-        instructions = wx.TextCtrl(
-            dialog,
-            value=self._keyboard_help_text(),
-            style=wx.TE_MULTILINE | wx.TE_READONLY,
-        )
-        instructions.SetName(_("Ajuda rápida de atalhos"))
-        instructions.SetInsertionPoint(0)
+        instructions = create_reading_field(dialog, _("Ajuda rápida de atalhos"), self._keyboard_help_text())
 
         button_sizer = dialog.CreateStdDialogButtonSizer(wx.OK)
         if button_sizer is not None:

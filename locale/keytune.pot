@@ -8719,10 +8719,6 @@ msgstr ""
 msgid "{name}. Item {current} de {total}."
 msgstr ""
 
-#: src/player/welcome/dialog.py
-msgid "{name}:"
-msgstr ""
-
 #: src/player/frames/smart_library/smart_playlists.py
 msgid "{name}: {count} item."
 msgid_plural "{name}: {count} itens."

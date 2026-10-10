@@ -15,6 +15,8 @@ It fails (exit code 1) when:
   and its name is never announced;
 * a focusable control has no accessible name, or only the generic one wx gives
   it ("text", "filepicker", ...);
+* a read-only multi-line text field was not built by
+  ``reading_dialog.create_reading_field``, so it wraps and is read in fragments;
 * a ``wx.Dialog``/``wx.Panel`` subclass under ``src/player`` is missing from
   ``SCREENS`` below — a new screen must be registered here to be audited.
 
@@ -180,6 +182,13 @@ def audit_window(screen, root, verbose=False):
         if verbose:
             description = accessible_description(control) or ""
             print(f"    [{group or '-'}] {kind}: {name!r}" + (f" — {description!r}" if description else ""))
+        if isinstance(control, wx.TextCtrl):
+            style = control.GetWindowStyleFlag()
+            if style & wx.TE_MULTILINE and style & wx.TE_READONLY and not style & wx.TE_DONTWRAP:
+                problems.append(
+                    f"read-only {kind} ({control.GetName()!r}) wraps its lines: build it with "
+                    "reading_dialog.create_reading_field"
+                )
         if name and name.strip() and name.strip().lower() not in GENERIC_NAMES:
             return
         if (screen, kind) in ALLOWED or ("*", kind) in ALLOWED:

@@ -8,7 +8,7 @@ import threading
 import wx
 
 from ..i18n import _
-from ..reading_dialog import add_reading_field
+from ..reading_dialog import add_reading_field, create_reading_field
 from .installer import InstallationError, download_package, inspect_archive, install_archive, uninstall_plugin
 from .manifest import PERMISSION_DESCRIPTIONS
 from .marketplace import fetch_catalog
@@ -71,7 +71,7 @@ class PermissionDialog(wx.Dialog):
             security_notice=security_notice(manifest),
         )
         add_reading_field(
-            panel, root, _("Permissões solicitadas e aviso de segurança"), warning, style=wx.TE_BESTWRAP, border=12
+            panel, root, _("Permissões solicitadas e aviso de segurança"), warning, border=12
         )
         buttons = wx.StdDialogButtonSizer()
         ok_button = wx.Button(panel, wx.ID_OK, _("&Ativar"))
@@ -93,7 +93,7 @@ class InstallationConfirmationDialog(wx.Dialog):
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
         add_reading_field(
-            panel, root, _("Detalhes do plugin"), installation_summary(manifest, source), style=wx.TE_BESTWRAP, border=12
+            panel, root, _("Detalhes do plugin"), installation_summary(manifest, source), border=12
         )
         buttons = wx.StdDialogButtonSizer()
         install_button = wx.Button(panel, wx.ID_OK, _("&Instalar e ativar"))
@@ -141,8 +141,7 @@ class MarketplaceDialog(wx.Dialog):
         self.items.SetName(_("Plugins disponíveis no marketplace"))
         root.Add(self.items, 1, wx.ALL | wx.EXPAND, 12)
         root.Add(wx.StaticText(panel, label=_("Detalhes do plugin:")), 0, wx.LEFT | wx.RIGHT, 12)
-        self.details = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP)
-        self.details.SetName(_("Detalhes do plugin selecionado"))
+        self.details = create_reading_field(panel, _("Detalhes do plugin selecionado"))
         self.details.SetMinSize((600, 130))
         root.Add(self.details, 0, wx.ALL | wx.EXPAND, 12)
 

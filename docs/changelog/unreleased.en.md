@@ -18,6 +18,8 @@
   - In the browser list, Chrome, Edge and Brave warn that they may fail on Windows.
   - When YouTube stops accepting the cookies, the message says so, instead of "could not validate the authentication".
 
+- **Read-only fields**: they all now behave like the song lyrics field, with no automatic line wrapping. With a screen reader, each arrow press reads a whole line of the text (a paragraph, in running text) instead of the fragment that fit the window width. This covers the welcome screen, the shortcut help (`F1`), the update notes, the change history, the diagnostics, video details and comments, plugin and radio details, the equalizer preset description and the AutoDJ session information. Long lines scroll sideways.
+
 ### Fixed
 
 - **KeyTune could not start MPV on computers with an old video driver**: the window showed "ctypes.CDLL could not load it" and nothing played. The Vulkan loader that ships with drivers from 2016 or older lacks functions the current MPV needs, and Windows refused to load the library.
