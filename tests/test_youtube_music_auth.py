@@ -15,6 +15,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.youtube_music.auth import (
     auth_headers_have_login_info,
+    summarize_auth_input,
     build_browser_auth_cookie_file_content,
     create_temporary_browser_auth_cookie_file,
     export_cookies_from_browser,
@@ -275,6 +276,36 @@ class YouTubeMusicAuthTests(unittest.TestCase):
         self.assertTrue(auth_headers_have_login_info(prepare_browser_auth_input(cookies_txt)))
         self.assertTrue(auth_headers_have_login_info({"Cookie": "SAPISID=segredo; LOGIN_INFO=a:b"}))
         self.assertFalse(auth_headers_have_login_info(prepare_browser_auth_input("SID=x; SAPISID=segredo")))
+
+    def test_input_summary_for_the_log_has_names_and_counts_but_no_values(self):
+        cookies_txt = (
+            "# Netscape HTTP Cookie File\n"
+            ".youtube.com\tTRUE\t/\tTRUE\t0\tSAPISID\tvalor-secreto\n"
+            ".youtube.com\tTRUE\t/\tTRUE\t1\tSID\tvalor-vencido\n"
+            ".google.com\tTRUE\t/\tTRUE\t0\tSID\tvalor-de-outro-site\n"
+        )
+
+        summary = summarize_auth_input(cookies_txt)
+
+        self.assertIn("format=netscape other_sites=1 expired=1 youtube_cookies=1", summary)
+        self.assertIn("present=SAPISID ", summary)
+        self.assertIn("LOGIN_INFO", summary.split("missing=")[1])
+        self.assertNotIn("valor", summary)
+
+    def test_input_summary_names_each_accepted_format(self):
+        inputs = {
+            "format=headers": "Cookie: SID=x; SAPISID=segredo\nUser-Agent: Teste",
+            "format=cookie-value": "SID=x; SAPISID=segredo",
+            "format=json-cookies": '[{"name": "SAPISID", "value": "segredo", "domain": ".youtube.com"}]',
+            "format=json-headers": '{"cookie": "SID=x; SAPISID=segredo"}',
+            "format=unknown": "texto qualquer",
+            "format=empty": "  ",
+        }
+        for expected, raw_input in inputs.items():
+            with self.subTest(expected=expected):
+                summary = summarize_auth_input(raw_input)
+                self.assertTrue(summary.startswith(expected), summary)
+                self.assertNotIn("segredo", summary)
 
     def test_text_without_cookies_is_left_for_ytmusicapi_to_reject(self):
         self.assertEqual(prepare_browser_auth_input("texto qualquer"), "texto qualquer")

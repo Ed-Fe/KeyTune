@@ -94,6 +94,24 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "janela anônima"):
                 self._save_with_candidate_client(temp_dir, client, "Cookie: LOGIN_INFO=a:b; SAPISID=segredo")
 
+    def test_refused_connection_is_logged_with_the_reason_and_no_cookie_values(self):
+        client = Mock()
+        client.get_account_info.side_effect = RuntimeError("Server returned HTTP 401: Cookie: SID=vazou")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertLogs("keytune.youtube_music.service", level="WARNING") as logs:
+                with self.assertRaises(RuntimeError):
+                    self._save_with_candidate_client(
+                        temp_dir, client, "Cookie: LOGIN_INFO=a:b; SAPISID=segredo"
+                    )
+
+        logged = "\n".join(logs.output)
+        self.assertIn("connection refused: RuntimeError: Server returned HTTP 401", logged)
+        self.assertIn("format=headers", logged)
+        self.assertIn("present=SAPISID,LOGIN_INFO", logged)
+        self.assertNotIn("segredo", logged)
+        self.assertNotIn("vazou", logged)
+
     def test_other_failures_without_login_info_keep_their_own_message(self):
         client = Mock()
         client.get_account_info.side_effect = RuntimeError("sem rede")

@@ -20,6 +20,19 @@ _NETSCAPE_HTTP_ONLY_PREFIX = "#HttpOnly_"
 # Ordem de preferência: o ytmusicapi só lê o primeiro, mas os três carregam o mesmo valor.
 _SAPISID_COOKIE_NAMES = ("__Secure-3PAPISID", "SAPISID", "__Secure-1PAPISID")
 _LOGIN_INFO_COOKIE_NAME = "LOGIN_INFO"
+# Cookies de sessão cuja presença ou falta vai para o log ao conectar (só os nomes).
+_DIAGNOSTIC_COOKIE_NAMES = (
+    *_SAPISID_COOKIE_NAMES,
+    _LOGIN_INFO_COOKIE_NAME,
+    "SID",
+    "HSID",
+    "SSID",
+    "APISID",
+    "__Secure-1PSID",
+    "__Secure-3PSID",
+    "__Secure-1PSIDTS",
+    "__Secure-3PSIDTS",
+)
 
 # Pares (nome_yt_dlp, rótulo exibido) para navegadores suportados nativamente
 # pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
@@ -455,6 +468,60 @@ def auth_headers_have_login_info(headers) -> bool:
         headers = _headers_from_raw_text(headers)
     cookie_pairs = _cookie_pairs_from_header(_get_header_value(headers, "cookie"))
     return any(name == _LOGIN_INFO_COOKIE_NAME for name, _value in cookie_pairs)
+
+
+def summarize_auth_input(raw_input) -> str:
+    """O que veio na entrada de conexão, para o log: formato, contagens e nomes conhecidos.
+
+    Nunca inclui valores de cookies, só o que ajuda a entender uma recusa.
+    """
+    normalized_input = str(raw_input or "").strip()
+    if not normalized_input:
+        return "format=empty"
+
+    details = []
+    cookie_names = []
+    json_payload = _try_parse_json(normalized_input)
+    if json_payload is not None:
+        all_entries = []
+        _collect_cookie_entries(json_payload, all_entries)
+        if all_entries:
+            input_format = "json-cookies"
+            kept_entries = _cookie_entries_from_json_payload(json_payload)
+            cookie_names = [str(cookie.get("name") or "").strip() for cookie in kept_entries]
+            details.append(f"entries={len(all_entries)}")
+        else:
+            input_format = "json-headers"
+            headers = _extract_browser_auth_headers(json_payload) or {}
+            cookie_names = [name for name, _value in _cookie_pairs_from_header(_get_header_value(headers, "cookie"))]
+    elif _looks_like_netscape_cookie_text(normalized_input):
+        input_format = "netscape"
+        other_sites = expired = 0
+        for raw_line in normalized_input.splitlines():
+            parsed_line = _parse_netscape_cookie_line(raw_line)
+            if parsed_line is None:
+                continue
+            domain, _subdomains, _path, _secure, expiry, name, value = parsed_line[0]
+            if str(domain).strip() and not _cookie_entry_matches_music_youtube({"domain": domain}):
+                other_sites += 1
+            elif _cookie_entry_is_expired({"expirationDate": expiry}):
+                expired += 1
+            elif str(name).strip() and str(value).strip():
+                cookie_names.append(str(name).strip())
+        details.append(f"other_sites={other_sites} expired={expired}")
+    else:
+        cookie_header = _get_header_value(_headers_from_raw_text(normalized_input), "cookie")
+        input_format = "headers" if cookie_header else "cookie-value"
+        cookie_names = [name for name, _value in _cookie_pairs_from_header(cookie_header or normalized_input)]
+        if not cookie_names:
+            input_format = "unknown"
+
+    present = [name for name in _DIAGNOSTIC_COOKIE_NAMES if name in cookie_names]
+    missing = [name for name in _DIAGNOSTIC_COOKIE_NAMES if name not in cookie_names]
+    details.append(f"youtube_cookies={len(cookie_names)}")
+    details.append("present=" + (",".join(present) or "-"))
+    details.append("missing=" + (",".join(missing) or "-"))
+    return f"format={input_format} " + " ".join(details)
 
 
 def _is_valid_browser_auth_cookie_file(file_path):

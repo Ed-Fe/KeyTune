@@ -12,6 +12,8 @@ from .auth import (
     harden_sensitive_file_permissions,
     prepare_browser_auth_input,
     read_auth_file_text,
+    sanitize_sensitive_text,
+    summarize_auth_input,
     write_browser_auth_cookie_file,
 )
 from .audio_tracks import yt_dlp_selector_for_playback
@@ -93,7 +95,7 @@ _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS = (
 )
 
 
-def _is_probably_invalid_saved_auth_error(error):
+def _error_chain_messages(error):
     messages = []
     current_error = error
     visited_error_ids = set()
@@ -101,8 +103,16 @@ def _is_probably_invalid_saved_auth_error(error):
         visited_error_ids.add(id(current_error))
         messages.append(f"{type(current_error).__name__}: {current_error}")
         current_error = getattr(current_error, "__cause__", None) or getattr(current_error, "__context__", None)
+    return messages
 
-    normalized_message = " ".join(messages).casefold()
+
+def _describe_error_for_log(error):
+    """O erro e o que o causou, com os valores sensíveis mascarados."""
+    return sanitize_sensitive_text(" <- ".join(_error_chain_messages(error)), max_length=1000)
+
+
+def _is_probably_invalid_saved_auth_error(error):
+    normalized_message = " ".join(_error_chain_messages(error)).casefold()
     return any(marker in normalized_message for marker in _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS)
 
 
@@ -356,6 +366,28 @@ class YouTubeMusicService:
         return removed
 
     def save_browser_auth(self, headers_raw=None, source_file_path=None):
+        try:
+            return self._save_browser_auth(headers_raw=headers_raw, source_file_path=source_file_path)
+        except Exception as error:
+            # É o registro que se pede a quem não consegue conectar: o motivo
+            # da recusa e o que veio na entrada, sem os valores dos cookies.
+            _logger.warning(
+                "YouTube Music connection refused: %s | input: %s",
+                _describe_error_for_log(error),
+                self._summarize_connection_input(headers_raw, source_file_path),
+            )
+            raise
+
+    @staticmethod
+    def _summarize_connection_input(headers_raw, source_file_path):
+        try:
+            if source_file_path:
+                return summarize_auth_input(read_auth_file_text(source_file_path))
+            return summarize_auth_input(headers_raw)
+        except Exception as error:
+            return f"unreadable ({type(error).__name__})"
+
+    def _save_browser_auth(self, headers_raw=None, source_file_path=None):
         target_path = self.browser_auth_file_path
         target_cookie_file_path = self.browser_auth_cookie_file_path
 
@@ -430,7 +462,11 @@ class YouTubeMusicService:
         self._account_info = account_info
         self._feedback.set_active_account(account_info)
         self._reset_stream_playback_mode()
-        _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
+        _logger.info(
+            "YouTube Music browser auth saved (source=%s) | input: %s",
+            source_name,
+            summarize_auth_input(raw_auth_input),
+        )
         return target_path
 
     # -- Contas da sessão -----------------------------------------------------
@@ -477,7 +513,12 @@ class YouTubeMusicService:
                 account_info = _fetch_account_info(
                     ytmusicapi.YTMusic(self._headers_for_account(headers, account_index))
                 )
-            except Exception:
+            except Exception as error:
+                _logger.debug(
+                    "YouTube Music session accounts end at index %s: %s",
+                    account_index,
+                    _describe_error_for_log(error),
+                )
                 break
             name = str(account_info.get("accountName") or account_info.get("channelHandle") or "").strip()
             accounts.append((account_index, name or _("Conta {number}").format(number=account_index + 1)))
@@ -520,7 +561,15 @@ class YouTubeMusicService:
         _logger.info("YouTube Music browser auth export requested (browser=%s)", browser_name)
         with tempfile.TemporaryDirectory(prefix="keytune_browser_auth_") as temp_dir:
             exported_cookie_path = os.path.join(temp_dir, "cookies.txt")
-            export_cookies_from_browser(browser_name, exported_cookie_path)
+            try:
+                export_cookies_from_browser(browser_name, exported_cookie_path)
+            except Exception as error:
+                _logger.warning(
+                    "YouTube Music cookie export failed (browser=%s): %s",
+                    browser_name,
+                    _describe_error_for_log(error),
+                )
+                raise
             raw_cookie_content = read_auth_file_text(exported_cookie_path)
             saved_path = self.save_browser_auth(headers_raw=raw_cookie_content)
         _logger.info(
@@ -540,7 +589,7 @@ class YouTubeMusicService:
             client = self.get_client()
             account_info = _fetch_account_info(client)
         except Exception as exc:
-            _logger.warning("Failed to retrieve YouTube Music account info: %s", exc)
+            _logger.warning("Failed to retrieve YouTube Music account info: %s", _describe_error_for_log(exc))
             self.clear_client_cache()
             if _is_missing_youtube_music_library_error(exc):
                 raise YouTubeMusicDependencyUnavailableError() from exc
