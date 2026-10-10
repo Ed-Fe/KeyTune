@@ -13,7 +13,7 @@
 ;   /DSourceDir=...      overrides the PyInstaller payload folder (default ..\dist\KeyTune).
 
 #ifndef AppVersion
-  #define AppVersion "2.3.0"
+  #define AppVersion "2.3.1"
 #endif
 
 #ifndef SourceDir
