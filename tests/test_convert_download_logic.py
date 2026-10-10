@@ -188,6 +188,19 @@ class DownloadFileSafetyTests(unittest.TestCase):
         command = runner.build_command("yt-dlp", YOUTUBE_URL, choice, plan, output_directory="D:\\Musicas")
 
         self.assertEqual(command[command.index("--match-filter") + 1], "!is_live")
+        self.assertNotIn("--playlist-items", command)
+
+    def test_other_sites_only_download_one_item_that_has_a_duration(self):
+        choice = DownloadChoice("audio", "original", "best", 0, "D:\\Musicas")
+        plan = build_download_plan(choice, ffmpeg_available=False)
+
+        command = runner.build_command(
+            "yt-dlp", "https://example.com/pagina", choice, plan, output_directory="D:\\Musicas"
+        )
+
+        self.assertEqual(command[command.index("--playlist-items") + 1], "1")
+        filters = [command[index + 1] for index, value in enumerate(command) if value == "--match-filter"]
+        self.assertEqual(filters, ["!is_live & duration", "!is_live & !direct"])
 
 
 class ConvertMemoryTests(unittest.TestCase):

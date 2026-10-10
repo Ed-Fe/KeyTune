@@ -129,7 +129,7 @@ Abrem direto na janela principal, como antes: playlists `.m3u` e `.m3u8`, vídeo
 | `Ctrl+Shift+D` | Configurar o temporizador |
 | `T`, `V`, `S` | Anunciar o tempo, o volume e o status |
 
-Os atalhos do YouTube Music, de baixar e de converter estão em [KeyTube](#keytube-youtube-e-youtube-music), [Baixar do YouTube](#baixar-do-youtube) e [Converter mídia](#converter-midia).
+Os atalhos do YouTube Music, de baixar e de converter estão em [KeyTube](#keytube-youtube-e-youtube-music), [Baixar da internet](#baixar-da-internet) e [Converter mídia](#converter-midia).
 
 `Ctrl+W` fecha a aba ativa. `Ctrl+Shift+W` fecha, ou descarrega, só a mídia atual.
 
@@ -239,9 +239,9 @@ Além das teclas de [Como as listas funcionam](#como-as-listas-funcionam):
 
 ## Baixar e converter
 
-### Baixar do YouTube
+### Baixar da internet
 
-`Ctrl+Shift+B` baixa músicas e vídeos do YouTube e do YouTube Music. Ele segue a mesma regra do `Ctrl+Shift+K` (converter): com o foco numa lista (a playlist ou os resultados do KeyTube), baixa a **seleção**; com o foco no player, baixa a **mídia atual**. Os mesmos comandos estão em **Arquivo > Baixar do YouTube**: **Baixar mídia atual**, **Baixar seleção** e **Baixar playlist inteira**. O download usa o `yt-dlp`, o mesmo que já toca essas mídias, e acontece em segundo plano: a reprodução continua normalmente.
+`Ctrl+Shift+B` baixa músicas e vídeos do YouTube, do YouTube Music e de outros sites que o KeyTune toca. Ele segue a mesma regra do `Ctrl+Shift+K` (converter): com o foco numa lista (a playlist ou os resultados do KeyTube), baixa a **seleção**; com o foco no player, baixa a **mídia atual**. Os mesmos comandos estão em **Arquivo > Baixar da internet**: **Baixar mídia atual**, **Baixar seleção** e **Baixar playlist inteira**. O download usa o `yt-dlp`, o mesmo que já toca essas mídias, e acontece em segundo plano: a reprodução continua normalmente.
 
 1. Selecione o que quer baixar, ou deixe o foco no player para baixar a mídia atual.
 2. Pressione `Ctrl+Shift+B`.
@@ -256,11 +256,11 @@ Detalhes que vale saber:
 - **Andamento.** Pressione `Ctrl+Shift+B` de novo durante um download para ouvir o andamento ou cancelar.
 - **FFmpeg.** Converter o áudio (MP3, FLAC ou outra taxa de amostragem) e baixar vídeo em alta resolução exigem o FFmpeg. Se ele não for encontrado, o KeyTune pergunta se pode baixá-lo (cerca de 90 MB). Se você recusar, o download segue na qualidade original, sem conversão. Um FFmpeg já instalado no sistema também é usado.
 
-**Vários itens de uma vez.** **Baixar seleção** baixa os itens selecionados, e **Baixar playlist inteira** baixa todos os da aba numa subpasta com o nome da playlist. Os dois estão em **Arquivo > Baixar do YouTube** e no menu de contexto da lista. O KeyTune pede confirmação antes de começar.
+**Vários itens de uma vez.** **Baixar seleção** baixa os itens selecionados, e **Baixar playlist inteira** baixa todos os da aba numa subpasta com o nome da playlist. Os dois estão em **Arquivo > Baixar da internet** e no menu de contexto da lista. O KeyTune pede confirmação antes de começar.
 
-Os itens são baixados um por vez, com as mesmas opções. No fim, o player resume quantos deram certo e quantos falharam, e `Ctrl+Shift+B` informa a posição e permite cancelar. Um item que falha não interrompe os outros, e o KeyTune oferece uma lista com cada falha e o motivo, com o botão **Copiar lista**. Uma fila leva no máximo 200 itens.
+Os itens são baixados três de cada vez, com as mesmas opções, e a barra de status mostra a posição na fila. No fim, o player resume quantos deram certo e quantos falharam, e `Ctrl+Shift+B` informa a posição e permite cancelar. Um item que falha não interrompe os outros, e o KeyTune oferece uma lista com cada falha e o motivo, com o botão **Copiar lista**.
 
-Só mídias do YouTube e do YouTube Music podem ser baixadas, uma de cada vez.
+**Outros sites.** Um endereço de outro site que o KeyTune toca também pode ser baixado, assim como o link direto de um arquivo de áudio ou vídeo. Rádios e transmissões ao vivo ficam de fora, porque não terminam. Se o endereço for de uma lista, só o primeiro item é baixado. A conta do YouTube não é usada em outros sites.
 
 ### Converter mídia
 
@@ -285,7 +285,7 @@ O diálogo lembra as últimas escolhas. O arquivo original nunca é alterado nem
 
 A conversão roda em segundo plano, e a reprodução continua. Pressione `Ctrl+Shift+K` durante uma conversão para ouvir o andamento ou cancelar; um arquivo incompleto nunca fica para trás.
 
-A conversão usa o FFmpeg, o mesmo do download. Se ele não for encontrado, o KeyTune pergunta se pode baixá-lo, como descrito em [Baixar do YouTube](#baixar-do-youtube). Só arquivos do computador são convertidos; para mídias do YouTube, use `Ctrl+Shift+B`.
+A conversão usa o FFmpeg, o mesmo do download. Se ele não for encontrado, o KeyTune pergunta se pode baixá-lo, como descrito em [Baixar da internet](#baixar-da-internet). Só arquivos do computador são convertidos; para mídias da internet, use `Ctrl+Shift+B`.
 
 ## Biblioteca inteligente
 

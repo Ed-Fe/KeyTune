@@ -81,8 +81,8 @@ class DownloadCommandTests(unittest.TestCase):
         self.assertFalse(frame.started)
         self.assertEqual(len(frame.announcements), 1)
 
-    def test_local_files_and_other_sites_are_not_downloaded(self):
-        for media_path in ("C:\\Musicas\\faixa.mp3", "https://radio.example.com/stream"):
+    def test_local_files_and_radios_are_not_downloaded(self):
+        for media_path in ("C:\\Musicas\\faixa.mp3", "https://radio.example.com/stream#keytune-radio=abc"):
             with self.subTest(media_path=media_path):
                 frame = _Frame(media_path=media_path)
 

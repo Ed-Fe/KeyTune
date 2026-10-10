@@ -129,7 +129,7 @@ footer {
         <li class="toc-level-3"><a href="#folder-explorer">Folder explorer</a></li>
         <li class="toc-level-3"><a href="#finding-items">Finding items</a></li>
         <li class="toc-level-2"><a href="#download-and-convert">Download and convert</a></li>
-        <li class="toc-level-3"><a href="#download-from-youtube">Download from YouTube</a></li>
+        <li class="toc-level-3"><a href="#download-from-the-internet">Download from the internet</a></li>
         <li class="toc-level-3"><a href="#convert-media">Convert media</a></li>
         <li class="toc-level-2"><a href="#smart-library">Smart library</a></li>
         <li class="toc-level-3"><a href="#what-goes-into-the-index">What goes into the index</a></li>
@@ -430,7 +430,7 @@ footer {
 </tr>
 </tbody>
 </table>
-<p>The shortcuts for YouTube Music, download and convert are in <a href="#keytube-youtube-and-youtube-music">KeyTube</a>, <a href="#download-from-youtube">Download from YouTube</a> and <a href="#convert-media">Convert media</a>.</p>
+<p>The shortcuts for YouTube Music, download and convert are in <a href="#keytube-youtube-and-youtube-music">KeyTube</a>, <a href="#download-from-the-internet">Download from the internet</a> and <a href="#convert-media">Convert media</a>.</p>
 <p><code>Ctrl+W</code> closes the active tab. <code>Ctrl+Shift+W</code> closes, or unloads, only the current media.</p>
 <h3 id="playback-queue">Playback queue</h3>
 <p>The queue defines what plays after the current track, regardless of the order of the playlist you are looking at. It always belongs to the playlist that is playing.</p>
@@ -520,8 +520,8 @@ footer {
 <li><code>F3</code> repeats the last search without opening the box. If there has been no search yet, it opens the box.</li>
 </ul>
 <h2 id="download-and-convert">Download and convert</h2>
-<h3 id="download-from-youtube">Download from YouTube</h3>
-<p><code>Ctrl+Shift+B</code> downloads YouTube and YouTube Music songs and videos. It follows the same rule as <code>Ctrl+Shift+K</code> (convert): with focus on a list (the playlist or the KeyTube results), it downloads the <strong>selection</strong>; with focus on the player, it downloads the <strong>current media</strong>. The same commands are in <strong>File &gt; Download from YouTube</strong>: <strong>Download current media</strong>, <strong>Download selection</strong> and <strong>Download whole playlist</strong>. The download uses <code>yt-dlp</code>, the same tool that already plays this media, and it happens in the background: playback continues normally.</p>
+<h3 id="download-from-the-internet">Download from the internet</h3>
+<p><code>Ctrl+Shift+B</code> downloads songs and videos from YouTube, YouTube Music and other sites that KeyTune plays. It follows the same rule as <code>Ctrl+Shift+K</code> (convert): with focus on a list (the playlist or the KeyTube results), it downloads the <strong>selection</strong>; with focus on the player, it downloads the <strong>current media</strong>. The same commands are in <strong>File &gt; Download from the internet</strong>: <strong>Download current media</strong>, <strong>Download selection</strong> and <strong>Download whole playlist</strong>. The download uses <code>yt-dlp</code>, the same tool that already plays this media, and it happens in the background: playback continues normally.</p>
 <ol>
 <li>Select what you want to download, or leave focus on the player to download the current media.</li>
 <li>Press <code>Ctrl+Shift+B</code>.</li>
@@ -536,9 +536,9 @@ footer {
 <li><strong>Progress.</strong> Press <code>Ctrl+Shift+B</code> again during a download to hear the progress or cancel.</li>
 <li><strong>FFmpeg.</strong> Converting the audio (MP3, FLAC or another sample rate) and downloading high-resolution video require FFmpeg. If it isn't found, KeyTune asks whether it can download it (about 90 MB). If you refuse, the download continues in the original quality, without conversion. An FFmpeg already installed on the system is also used.</li>
 </ul>
-<p><strong>Several items at once.</strong> <strong>Download selection</strong> downloads the selected items, and <strong>Download whole playlist</strong> downloads all the items in the tab into a subfolder named after the playlist. Both are in <strong>File &gt; Download from YouTube</strong> and in the list's context menu. KeyTune asks for confirmation before starting.</p>
-<p>Items are downloaded one at a time, with the same options. At the end, the player summarizes how many succeeded and how many failed, and <code>Ctrl+Shift+B</code> tells you the position and lets you cancel. An item that fails does not interrupt the others, and KeyTune offers a list with each failure and its reason, with the <strong>Copy list</strong> button. A queue holds at most 200 items.</p>
-<p>Only YouTube and YouTube Music media can be downloaded, one at a time.</p>
+<p><strong>Several items at once.</strong> <strong>Download selection</strong> downloads the selected items, and <strong>Download whole playlist</strong> downloads all the items in the tab into a subfolder named after the playlist. Both are in <strong>File &gt; Download from the internet</strong> and in the list's context menu. KeyTune asks for confirmation before starting.</p>
+<p>Items are downloaded three at a time, with the same options, and the status bar shows the position in the queue. At the end, the player summarizes how many succeeded and how many failed, and <code>Ctrl+Shift+B</code> tells you the position and lets you cancel. An item that fails does not interrupt the others, and KeyTune offers a list with each failure and its reason, with the <strong>Copy list</strong> button.</p>
+<p><strong>Other sites.</strong> An address from another site that KeyTune plays can also be downloaded, and so can a direct link to an audio or video file. Radios and live broadcasts are left out, because they never end. If the address is a list, only the first item is downloaded. The YouTube account is not used on other sites.</p>
 <h3 id="convert-media">Convert media</h3>
 <p>KeyTune converts audio and video files from your computer without leaving the player. <code>Ctrl+Shift+K</code> follows the same rule as <code>Ctrl+Shift+B</code>: with focus on a list (the playlist or the folder explorer), it converts the <strong>selection</strong>; with focus on the player, it converts the <strong>current media</strong>. The same commands are in <strong>File &gt; Convert</strong> (<strong>Convert current media</strong> and <strong>Convert selection</strong>) and in the lists' context menu.</p>
 <p>KeyTune asks what to do and shows only the options that suit the file type:</p>
@@ -557,7 +557,7 @@ footer {
 <p>The dialog remembers your last choices. The original file is never changed or overwritten: if a file with the same name already exists, the new one gets " (1)", " (2)" and so on.</p>
 <p><strong>Several files.</strong> Select them in the playlist or in the explorer and press <code>Ctrl+Shift+K</code>. KeyTune asks for the mode and shows how many files each one applies to. Only files of the right type are converted. The options apply to all of them. With <strong>Same folder as the original file</strong>, each file goes to its own original's folder; with <strong>Another folder</strong>, all go to the chosen folder. Files are converted one at a time, with a summary at the end. An error in one file does not interrupt the others, and the list of failures can be opened and copied, as with downloads.</p>
 <p>Conversion runs in the background, and playback continues. Press <code>Ctrl+Shift+K</code> during a conversion to hear the progress or cancel; an incomplete file is never left behind.</p>
-<p>Conversion uses FFmpeg, the same one as the download. If it isn't found, KeyTune asks whether it can download it, as described in <a href="#download-from-youtube">Download from YouTube</a>. Only files on the computer are converted; for YouTube media, use <code>Ctrl+Shift+B</code>.</p>
+<p>Conversion uses FFmpeg, the same one as the download. If it isn't found, KeyTune asks whether it can download it, as described in <a href="#download-from-the-internet">Download from the internet</a>. Only files on the computer are converted; for media from the internet, use <code>Ctrl+Shift+B</code>.</p>
 <h2 id="smart-library">Smart library</h2>
 <p>While <code>Ctrl+F</code> searches the list that is open, the <strong>smart library</strong> remembers what you have opened and listened to and makes it all searchable at once. It also keeps favorites, ratings, the playback history and the point where each long media stopped.</p>
 <p>Everything lives in a local database (<code>smart_library.db</code>), in the same data folder as the preferences. Nothing leaves your computer, and the whole feature can be turned off in <code>Ctrl+,</code> &gt; <strong>Library</strong>. The <strong>Library</strong> menu gathers the commands.</p>
@@ -1081,7 +1081,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 09/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 10/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

@@ -129,7 +129,7 @@ Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.
 | `Ctrl+Shift+D` | Configurar el temporizador |
 | `T`, `V`, `S` | Anunciar el tiempo, el volumen y el estado |
 
-Los atajos de YouTube Music, de descargar y de convertir están en [KeyTube](#keytube-youtube-y-youtube-music), [Descargar de YouTube](#descargar-de-youtube) y [Convertir medios](#convertir-medios).
+Los atajos de YouTube Music, de descargar y de convertir están en [KeyTube](#keytube-youtube-y-youtube-music), [Descargar de internet](#descargar-de-internet) y [Convertir medios](#convertir-medios).
 
 `Ctrl+W` cierra la pestaña activa. `Ctrl+Shift+W` cierra, o descarga de memoria, solo el medio actual.
 
@@ -239,9 +239,9 @@ Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas
 
 ## Descargar y convertir
 
-### Descargar de YouTube
+### Descargar de internet
 
-`Ctrl+Shift+B` descarga canciones y vídeos de YouTube y de YouTube Music. Sigue la misma regla que `Ctrl+Shift+K` (convertir): con el foco en una lista (la playlist o los resultados de KeyTube), descarga la **selección**; con el foco en el reproductor, descarga el **medio actual**. Los mismos comandos están en **Archivo > Descargar de YouTube**: **Descargar medio actual**, **Descargar selección** y **Descargar playlist completa**. La descarga usa `yt-dlp`, el mismo que ya reproduce esos medios, y ocurre en segundo plano: la reproducción continúa con normalidad.
+`Ctrl+Shift+B` descarga canciones y vídeos de YouTube, de YouTube Music y de otros sitios que KeyTune reproduce. Sigue la misma regla que `Ctrl+Shift+K` (convertir): con el foco en una lista (la playlist o los resultados de KeyTube), descarga la **selección**; con el foco en el reproductor, descarga el **medio actual**. Los mismos comandos están en **Archivo > Descargar de internet**: **Descargar medio actual**, **Descargar selección** y **Descargar playlist completa**. La descarga usa `yt-dlp`, el mismo que ya reproduce esos medios, y ocurre en segundo plano: la reproducción continúa con normalidad.
 
 1. Selecciona lo que quieres descargar, o deja el foco en el reproductor para descargar el medio actual.
 2. Pulsa `Ctrl+Shift+B`.
@@ -256,11 +256,11 @@ Cosas que conviene saber:
 - **Progreso.** Pulsa `Ctrl+Shift+B` otra vez durante una descarga para oír el progreso o cancelar.
 - **FFmpeg.** Convertir el audio (MP3, FLAC u otra frecuencia de muestreo) y descargar vídeo en alta resolución exigen FFmpeg. Si no se encuentra, KeyTune pregunta si puede descargarlo (unos 90 MB). Si lo rechazas, la descarga continúa en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.
 
-**Varios elementos a la vez.** **Descargar selección** descarga los elementos seleccionados, y **Descargar playlist completa** descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en **Archivo > Descargar de YouTube** y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.
+**Varios elementos a la vez.** **Descargar selección** descarga los elementos seleccionados, y **Descargar playlist completa** descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en **Archivo > Descargar de internet** y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.
 
-Los elementos se descargan de uno en uno, con las mismas opciones. Al final, el reproductor resume cuántos salieron bien y cuántos fallaron, y `Ctrl+Shift+B` informa de la posición y permite cancelar. Un elemento que falla no interrumpe a los demás, y KeyTune ofrece una lista con cada fallo y su motivo, con el botón **Copiar lista**. Una cola admite como máximo 200 elementos.
+Los elementos se descargan de tres en tres, con las mismas opciones, y la barra de estado muestra la posición en la cola. Al final, el reproductor resume cuántos salieron bien y cuántos fallaron, y `Ctrl+Shift+B` informa de la posición y permite cancelar. Un elemento que falla no interrumpe a los demás, y KeyTune ofrece una lista con cada fallo y su motivo, con el botón **Copiar lista**.
 
-Solo se pueden descargar medios de YouTube y de YouTube Music, de uno en uno.
+**Otros sitios.** Una dirección de otro sitio que KeyTune reproduce también se puede descargar, igual que el enlace directo a un archivo de audio o video. Las radios y las transmisiones en vivo quedan fuera, porque no terminan. Si la dirección es de una lista, solo se descarga el primer elemento. La cuenta de YouTube no se usa en otros sitios.
 
 ### Convertir medios
 
@@ -285,7 +285,7 @@ El diálogo recuerda tus últimas elecciones. El archivo original nunca se modif
 
 La conversión se ejecuta en segundo plano, y la reproducción continúa. Pulsa `Ctrl+Shift+K` durante una conversión para oír el progreso o cancelar; nunca se deja un archivo incompleto.
 
-La conversión usa FFmpeg, el mismo de la descarga. Si no se encuentra, KeyTune pregunta si puede descargarlo, como se describe en [Descargar de YouTube](#descargar-de-youtube). Solo se convierten archivos del equipo; para medios de YouTube, usa `Ctrl+Shift+B`.
+La conversión usa FFmpeg, el mismo de la descarga. Si no se encuentra, KeyTune pregunta si puede descargarlo, como se describe en [Descargar de internet](#descargar-de-internet). Solo se convierten archivos del equipo; para medios de internet, usa `Ctrl+Shift+B`.
 
 ## Biblioteca inteligente
 

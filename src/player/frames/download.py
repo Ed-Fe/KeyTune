@@ -1,4 +1,4 @@
-"""Download de mídia do YouTube pelo yt-dlp (Ctrl+Shift+B).
+"""Download de mídia pelo yt-dlp (Ctrl+Shift+B).
 
 Este módulo cuida só do lado da janela: validar o que será baixado, perguntar o
 formato, oferecer o FFmpeg quando preciso e acompanhar o download em segundo
@@ -6,6 +6,7 @@ plano, seja uma faixa, uma seleção da lista ou a playlist inteira. Montar o
 comando, executar o yt-dlp e instalar o FFmpeg ficam em ``player/download``.
 """
 
+from concurrent.futures import ThreadPoolExecutor
 import dataclasses
 import os
 import threading
@@ -23,12 +24,12 @@ from ..download.ffmpeg import (
 )
 from ..download.options import DOWNLOAD_KIND_VIDEO, resolve_download_directory
 from ..download.plan import (
-    MAX_BATCH_ITEMS,
     DownloadChoice,
     build_download_plan,
     describe_quality_difference,
     download_file_stem,
     download_source_url,
+    is_youtube_url,
     requires_ffmpeg,
     safe_folder_name,
     select_download_items,
@@ -49,6 +50,10 @@ _logger = get_logger(__name__)
 # Intervalo mínimo entre atualizações da barra de status, para o progresso não
 # disparar um redesenho a cada bloco baixado.
 _STATUS_UPDATE_INTERVAL_SECONDS = 0.5
+# Itens de uma fila baixados ao mesmo tempo. Cada item gasta alguns segundos
+# fixos (abrir o yt-dlp, resolver o endereço) que a conexão não acelera; mais
+# do que isso e o YouTube passa a recusar os pedidos.
+PARALLEL_DOWNLOADS = 3
 
 
 def _existing_file_stems(directory):
@@ -133,7 +138,7 @@ class FrameDownloadMixin(TaskProgressMixin):
 
         if not download_source_url(media_path):
             if is_remote_media_path(media_path):
-                self._announce(_("O download só está disponível para mídias do YouTube e do YouTube Music."))
+                self._announce(_("Não é possível baixar esta mídia: rádios, transmissões e endereços de playlists ficam de fora."))
             else:
                 self._announce(_("Esta mídia já está no seu computador."))
             return
@@ -175,7 +180,7 @@ class FrameDownloadMixin(TaskProgressMixin):
 
         selection = select_download_items(entries)
         if not selection.items:
-            self._announce(_("Nada para baixar: só mídias do YouTube e do YouTube Music podem ser baixadas."))
+            self._announce(_("Nada para baixar: a seleção só tem arquivos do computador, rádios ou endereços de playlists."))
             return
 
         count = len(selection.items)
@@ -253,7 +258,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         """Pede confirmação antes de uma fila: ela pode ser longa e ocupar disco."""
         destination = os.path.join(choice.directory, folder_name) if folder_name else choice.directory
         lines = [
-            _("Baixar {count} itens do YouTube para a pasta:").format(count=len(selection.items)),
+            _("Baixar {count} itens para a pasta:").format(count=len(selection.items)),
             destination,
         ]
         if any(item.folder for item in selection.items):
@@ -262,14 +267,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         if selection.skipped:
             lines.append("")
             lines.append(
-                _("{count} itens que não são do YouTube serão ignorados.").format(count=selection.skipped)
-            )
-        if selection.truncated:
-            lines.append("")
-            lines.append(
-                _("Só os primeiros {limit} itens serão baixados; {count} ficarão de fora.").format(
-                    limit=MAX_BATCH_ITEMS, count=selection.truncated
-                )
+                _("{count} itens que não podem ser baixados serão ignorados.").format(count=selection.skipped)
             )
         response = wx.MessageBox(
             "\n".join(lines),
@@ -369,44 +367,72 @@ class FrameDownloadMixin(TaskProgressMixin):
             base_directory = os.path.join(choice.directory, folder_name) if folder_name else choice.directory
             js_runtimes = find_all_available_javascript_runtimes()
 
-            results = []
-            failures = []
-            cancelled = False
-            # Nomes já usados em cada pasta de destino desta fila.
+            # Nomes já usados em cada pasta de destino desta fila. Cada item recebe
+            # a pasta e o nome antes de a fila começar, para dois downloads
+            # simultâneos nunca disputarem o mesmo arquivo.
             used_stems_by_directory = {}
-            for position, item in enumerate(items, start=1):
-                if token.cancelled:
-                    cancelled = True
-                    break
-                wx.CallAfter(self._on_download_item_started, token, position)
+            jobs = []
+            for item in items:
                 # Um item de playlist ou álbum vai para a subpasta dela; os avulsos, para a pasta escolhida.
                 directory = os.path.join(base_directory, item.folder) if item.folder else base_directory
                 used_stems = used_stems_by_directory.get(directory)
                 if used_stems is None:
                     used_stems = used_stems_by_directory[directory] = _existing_file_stems(directory)
+                # O arquivo leva o mesmo nome que o KeyTune mostra para o item.
+                jobs.append((item, directory, unique_file_stem(download_file_stem(item.title), used_stems)))
+
+            single = len(jobs) == 1
+            stopped = threading.Event()
+            finished_lock = threading.Lock()
+            finished = [0]
+            outcomes = [None] * len(jobs)
+
+            def run_job(index):
+                item, directory, file_stem = jobs[index]
+                # A conta do YouTube só acompanha os pedidos ao próprio YouTube.
+                from_youtube = is_youtube_url(item.url)
                 try:
-                    result = run_download(
+                    if stopped.is_set() or token.cancelled:
+                        raise DownloadCancelled()
+                    outcomes[index] = run_download(
                         item.url,
                         dataclasses.replace(choice, directory=directory),
                         plan,
                         ffmpeg_directory=str(ffmpeg_directory or ""),
-                        cookie_file_path=cookie_file_path,
-                        http_headers=playback_auth.yt_dlp_http_headers,
+                        cookie_file_path=cookie_file_path if from_youtube else "",
+                        http_headers=playback_auth.yt_dlp_http_headers if from_youtube else None,
                         js_runtimes=js_runtimes,
-                        # O arquivo leva o mesmo nome que o KeyTune mostra para o item.
-                        file_stem=unique_file_stem(download_file_stem(item.title), used_stems),
-                        progress_callback=self._on_download_progress,
-                        processing_callback=lambda: wx.CallAfter(self._on_download_processing),
+                        file_stem=file_stem,
+                        # Com vários itens ao mesmo tempo, o andamento é o de itens concluídos.
+                        progress_callback=self._on_download_progress if single else None,
+                        processing_callback=(lambda: wx.CallAfter(self._on_download_processing)) if single else None,
                         cancel_token=token,
                     )
-                except DownloadCancelled:
-                    cancelled = True
-                    break
+                except DownloadCancelled as exc:
+                    stopped.set()
+                    outcomes[index] = exc
                 except Exception as exc:
                     _logger.warning("Download failed: %s", exc)
-                    failures.append((item.title, str(exc)))
-                else:
-                    results.append(result)
+                    outcomes[index] = exc
+                with finished_lock:
+                    finished[0] += 1
+                    done = finished[0]
+                if done < len(jobs) and not stopped.is_set():
+                    wx.CallAfter(self._on_download_item_started, token, done + 1)
+
+            wx.CallAfter(self._on_download_item_started, token, 1)
+            with ThreadPoolExecutor(
+                max_workers=min(PARALLEL_DOWNLOADS, len(jobs)), thread_name_prefix="keytune-download"
+            ) as pool:
+                list(pool.map(run_job, range(len(jobs))))
+
+            cancelled = stopped.is_set() or token.cancelled
+            results = [outcome for outcome in outcomes if outcome is not None and not isinstance(outcome, Exception)]
+            failures = [
+                (jobs[index][0].title, str(outcome))
+                for index, outcome in enumerate(outcomes)
+                if isinstance(outcome, Exception) and not isinstance(outcome, DownloadCancelled)
+            ]
         except FFmpegInstallCancelled:
             wx.CallAfter(self._on_download_cancelled, token)
         except Exception as exc:

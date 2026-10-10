@@ -36,7 +36,8 @@ class CancelToken:
     def __init__(self):
         self._event = threading.Event()
         self._lock = threading.Lock()
-        self._process: subprocess.Popen | None = None
+        # Mais de um quando a tarefa roda processos em paralelo.
+        self._processes: list[subprocess.Popen] = []
 
     @property
     def cancelled(self):
@@ -48,13 +49,14 @@ class CancelToken:
 
     def attach(self, process):
         with self._lock:
-            self._process = process
+            self._processes = [running for running in self._processes if running.poll() is None]
+            self._processes.append(process)
         if self._event.is_set():
             terminate_process_tree(process)
 
     def cancel(self):
         self._event.set()
         with self._lock:
-            process = self._process
-        if process is not None:
+            processes = list(self._processes)
+        for process in processes:
             terminate_process_tree(process)

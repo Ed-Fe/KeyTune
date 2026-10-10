@@ -51,7 +51,7 @@ The manual is for lookup, not for reading cover to cover. Whoever opens it wants
 - **One section, one task.** Title it with what the person wants to do ("Baixar uma playlist do YouTube"), not with the internal feature name.
 - **What it is first, steps second.** One or two sentences of context at most.
 - **Numbered steps, one verb each.** One action per step. The condition comes before the action: "Se a pasta não existir, escolha outra."
-- **Shortcut first, menu second**, always both: "Pressione `Ctrl+Shift+B` (ou **Arquivo > Baixar do YouTube**)." KeyTune is keyboard-first; readers should find the shortcut without hunting.
+- **Shortcut first, menu second**, always both: "Pressione `Ctrl+Shift+B` (ou **Arquivo > Baixar da internet**)." KeyTune is keyboard-first; readers should find the shortcut without hunting.
 - **Say what the reader will hear or see** at the end when it helps confirm the result: "O KeyTune anuncia o resumo com o que deu certo e o que falhou."
 - **Interface names exactly as on screen**, in bold, same spelling. When the UI text changes, the manual changes in the same commit.
 - **Tables for shortcuts**, lists for options, paragraphs for explanation. No long block of text in the middle of a procedure.
@@ -67,7 +67,7 @@ Section template:
 Você pode salvar no computador uma música ou um vídeo que encontrou na aba KeyTube, em áudio ou em vídeo.
 
 1. Selecione o item na lista.
-2. Pressione `Ctrl+Shift+B` (ou use **Arquivo > Baixar do YouTube**).
+2. Pressione `Ctrl+Shift+B` (ou use **Arquivo > Baixar da internet**).
 3. Escolha áudio ou vídeo, a qualidade e a pasta, e confirme.
 
 O download acontece em segundo plano e o KeyTune avisa quando termina, então você pode continuar ouvindo ou usando o player. Se a qualidade que você escolheu não existir, ele baixa na original e informa. Para saber o andamento ou cancelar, pressione `Ctrl+Shift+B` de novo durante o download.

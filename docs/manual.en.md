@@ -129,7 +129,7 @@ These open straight in the main window, as before: `.m3u` and `.m3u8` playlists,
 | `Ctrl+Shift+D` | Configure the sleep timer |
 | `T`, `V`, `S` | Announce the time, the volume and the status |
 
-The shortcuts for YouTube Music, download and convert are in [KeyTube](#keytube-youtube-and-youtube-music), [Download from YouTube](#download-from-youtube) and [Convert media](#convert-media).
+The shortcuts for YouTube Music, download and convert are in [KeyTube](#keytube-youtube-and-youtube-music), [Download from the internet](#download-from-the-internet) and [Convert media](#convert-media).
 
 `Ctrl+W` closes the active tab. `Ctrl+Shift+W` closes, or unloads, only the current media.
 
@@ -239,9 +239,9 @@ In addition to the keys in [How lists work](#how-lists-work):
 
 ## Download and convert
 
-### Download from YouTube
+### Download from the internet
 
-`Ctrl+Shift+B` downloads YouTube and YouTube Music songs and videos. It follows the same rule as `Ctrl+Shift+K` (convert): with focus on a list (the playlist or the KeyTube results), it downloads the **selection**; with focus on the player, it downloads the **current media**. The same commands are in **File > Download from YouTube**: **Download current media**, **Download selection** and **Download whole playlist**. The download uses `yt-dlp`, the same tool that already plays this media, and it happens in the background: playback continues normally.
+`Ctrl+Shift+B` downloads songs and videos from YouTube, YouTube Music and other sites that KeyTune plays. It follows the same rule as `Ctrl+Shift+K` (convert): with focus on a list (the playlist or the KeyTube results), it downloads the **selection**; with focus on the player, it downloads the **current media**. The same commands are in **File > Download from the internet**: **Download current media**, **Download selection** and **Download whole playlist**. The download uses `yt-dlp`, the same tool that already plays this media, and it happens in the background: playback continues normally.
 
 1. Select what you want to download, or leave focus on the player to download the current media.
 2. Press `Ctrl+Shift+B`.
@@ -256,11 +256,11 @@ Things worth knowing:
 - **Progress.** Press `Ctrl+Shift+B` again during a download to hear the progress or cancel.
 - **FFmpeg.** Converting the audio (MP3, FLAC or another sample rate) and downloading high-resolution video require FFmpeg. If it isn't found, KeyTune asks whether it can download it (about 90 MB). If you refuse, the download continues in the original quality, without conversion. An FFmpeg already installed on the system is also used.
 
-**Several items at once.** **Download selection** downloads the selected items, and **Download whole playlist** downloads all the items in the tab into a subfolder named after the playlist. Both are in **File > Download from YouTube** and in the list's context menu. KeyTune asks for confirmation before starting.
+**Several items at once.** **Download selection** downloads the selected items, and **Download whole playlist** downloads all the items in the tab into a subfolder named after the playlist. Both are in **File > Download from the internet** and in the list's context menu. KeyTune asks for confirmation before starting.
 
-Items are downloaded one at a time, with the same options. At the end, the player summarizes how many succeeded and how many failed, and `Ctrl+Shift+B` tells you the position and lets you cancel. An item that fails does not interrupt the others, and KeyTune offers a list with each failure and its reason, with the **Copy list** button. A queue holds at most 200 items.
+Items are downloaded three at a time, with the same options, and the status bar shows the position in the queue. At the end, the player summarizes how many succeeded and how many failed, and `Ctrl+Shift+B` tells you the position and lets you cancel. An item that fails does not interrupt the others, and KeyTune offers a list with each failure and its reason, with the **Copy list** button.
 
-Only YouTube and YouTube Music media can be downloaded, one at a time.
+**Other sites.** An address from another site that KeyTune plays can also be downloaded, and so can a direct link to an audio or video file. Radios and live broadcasts are left out, because they never end. If the address is a list, only the first item is downloaded. The YouTube account is not used on other sites.
 
 ### Convert media
 
@@ -285,7 +285,7 @@ The dialog remembers your last choices. The original file is never changed or ov
 
 Conversion runs in the background, and playback continues. Press `Ctrl+Shift+K` during a conversion to hear the progress or cancel; an incomplete file is never left behind.
 
-Conversion uses FFmpeg, the same one as the download. If it isn't found, KeyTune asks whether it can download it, as described in [Download from YouTube](#download-from-youtube). Only files on the computer are converted; for YouTube media, use `Ctrl+Shift+B`.
+Conversion uses FFmpeg, the same one as the download. If it isn't found, KeyTune asks whether it can download it, as described in [Download from the internet](#download-from-the-internet). Only files on the computer are converted; for media from the internet, use `Ctrl+Shift+B`.
 
 ## Smart library
 

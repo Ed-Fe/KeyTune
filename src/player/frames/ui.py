@@ -181,7 +181,7 @@ class FrameUIMixin:
             "Ctrl+Shift+C — Copiar o caminho da mídia atual (no explorador, o caminho da seleção)\n"
             "Ctrl+Shift+S — Salvar playlist atual\n"
             "Ctrl+Shift+K — Converter: com o foco numa lista, a seleção; no player, a mídia atual\n"
-            "Ctrl+Shift+B — Baixar do YouTube: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar do YouTube)\n"
+            "Ctrl+Shift+B — Baixar da internet: com o foco numa lista, a seleção; no player, a mídia atual (playlist inteira em Arquivo > Baixar da internet)\n"
             "Ctrl+W — Fechar aba ou playlist atual\n"
             "Ctrl+Shift+W — Fechar mídia atual\n\n"
             "Reprodução\n"
@@ -445,7 +445,7 @@ class FrameUIMixin:
         download_menu.Append(self.menu_download_media_id, _("Baixar &mídia atual... (Ctrl+Shift+B no player)"))
         download_menu.Append(self.menu_download_selection_id, _("Baixar &seleção... (Ctrl+Shift+B na lista)"))
         download_menu.Append(self.menu_download_playlist_id, _("Baixar &playlist inteira..."))
-        file_menu.AppendSubMenu(download_menu, _("&Baixar do YouTube"))
+        file_menu.AppendSubMenu(download_menu, _("&Baixar da internet"))
         file_menu.AppendSeparator()
         file_menu.Append(self.menu_save_playlist_id, _("Salvar Playli&st\tCtrl+Shift+S"))
         file_menu.Append(self.menu_close_media_id, _("Fechar Mí&dia\tCtrl+Shift+W"))

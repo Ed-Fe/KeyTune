@@ -129,7 +129,7 @@ footer {
         <li class="toc-level-3"><a href="#explorador-de-carpetas">Explorador de carpetas</a></li>
         <li class="toc-level-3"><a href="#buscar-elementos">Buscar elementos</a></li>
         <li class="toc-level-2"><a href="#descargar-y-convertir">Descargar y convertir</a></li>
-        <li class="toc-level-3"><a href="#descargar-de-youtube">Descargar de YouTube</a></li>
+        <li class="toc-level-3"><a href="#descargar-de-internet">Descargar de internet</a></li>
         <li class="toc-level-3"><a href="#convertir-medios">Convertir medios</a></li>
         <li class="toc-level-2"><a href="#biblioteca-inteligente">Biblioteca inteligente</a></li>
         <li class="toc-level-3"><a href="#que-entra-en-el-indice">Qué entra en el índice</a></li>
@@ -430,7 +430,7 @@ footer {
 </tr>
 </tbody>
 </table>
-<p>Los atajos de YouTube Music, de descargar y de convertir están en <a href="#keytube-youtube-y-youtube-music">KeyTube</a>, <a href="#descargar-de-youtube">Descargar de YouTube</a> y <a href="#convertir-medios">Convertir medios</a>.</p>
+<p>Los atajos de YouTube Music, de descargar y de convertir están en <a href="#keytube-youtube-y-youtube-music">KeyTube</a>, <a href="#descargar-de-internet">Descargar de internet</a> y <a href="#convertir-medios">Convertir medios</a>.</p>
 <p><code>Ctrl+W</code> cierra la pestaña activa. <code>Ctrl+Shift+W</code> cierra, o descarga de memoria, solo el medio actual.</p>
 <h3 id="cola-de-reproduccion">Cola de reproducción</h3>
 <p>La cola define qué suena después de la pista actual, sin depender del orden de la playlist que estás viendo. Siempre pertenece a la playlist que está sonando.</p>
@@ -520,8 +520,8 @@ footer {
 <li><code>F3</code> repite la última búsqueda sin abrir el cuadro. Si todavía no hubo ninguna búsqueda, abre el cuadro.</li>
 </ul>
 <h2 id="descargar-y-convertir">Descargar y convertir</h2>
-<h3 id="descargar-de-youtube">Descargar de YouTube</h3>
-<p><code>Ctrl+Shift+B</code> descarga canciones y vídeos de YouTube y de YouTube Music. Sigue la misma regla que <code>Ctrl+Shift+K</code> (convertir): con el foco en una lista (la playlist o los resultados de KeyTube), descarga la <strong>selección</strong>; con el foco en el reproductor, descarga el <strong>medio actual</strong>. Los mismos comandos están en <strong>Archivo &gt; Descargar de YouTube</strong>: <strong>Descargar medio actual</strong>, <strong>Descargar selección</strong> y <strong>Descargar playlist completa</strong>. La descarga usa <code>yt-dlp</code>, el mismo que ya reproduce esos medios, y ocurre en segundo plano: la reproducción continúa con normalidad.</p>
+<h3 id="descargar-de-internet">Descargar de internet</h3>
+<p><code>Ctrl+Shift+B</code> descarga canciones y vídeos de YouTube, de YouTube Music y de otros sitios que KeyTune reproduce. Sigue la misma regla que <code>Ctrl+Shift+K</code> (convertir): con el foco en una lista (la playlist o los resultados de KeyTube), descarga la <strong>selección</strong>; con el foco en el reproductor, descarga el <strong>medio actual</strong>. Los mismos comandos están en <strong>Archivo &gt; Descargar de internet</strong>: <strong>Descargar medio actual</strong>, <strong>Descargar selección</strong> y <strong>Descargar playlist completa</strong>. La descarga usa <code>yt-dlp</code>, el mismo que ya reproduce esos medios, y ocurre en segundo plano: la reproducción continúa con normalidad.</p>
 <ol>
 <li>Selecciona lo que quieres descargar, o deja el foco en el reproductor para descargar el medio actual.</li>
 <li>Pulsa <code>Ctrl+Shift+B</code>.</li>
@@ -536,9 +536,9 @@ footer {
 <li><strong>Progreso.</strong> Pulsa <code>Ctrl+Shift+B</code> otra vez durante una descarga para oír el progreso o cancelar.</li>
 <li><strong>FFmpeg.</strong> Convertir el audio (MP3, FLAC u otra frecuencia de muestreo) y descargar vídeo en alta resolución exigen FFmpeg. Si no se encuentra, KeyTune pregunta si puede descargarlo (unos 90 MB). Si lo rechazas, la descarga continúa en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.</li>
 </ul>
-<p><strong>Varios elementos a la vez.</strong> <strong>Descargar selección</strong> descarga los elementos seleccionados, y <strong>Descargar playlist completa</strong> descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en <strong>Archivo &gt; Descargar de YouTube</strong> y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.</p>
-<p>Los elementos se descargan de uno en uno, con las mismas opciones. Al final, el reproductor resume cuántos salieron bien y cuántos fallaron, y <code>Ctrl+Shift+B</code> informa de la posición y permite cancelar. Un elemento que falla no interrumpe a los demás, y KeyTune ofrece una lista con cada fallo y su motivo, con el botón <strong>Copiar lista</strong>. Una cola admite como máximo 200 elementos.</p>
-<p>Solo se pueden descargar medios de YouTube y de YouTube Music, de uno en uno.</p>
+<p><strong>Varios elementos a la vez.</strong> <strong>Descargar selección</strong> descarga los elementos seleccionados, y <strong>Descargar playlist completa</strong> descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en <strong>Archivo &gt; Descargar de internet</strong> y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.</p>
+<p>Los elementos se descargan de tres en tres, con las mismas opciones, y la barra de estado muestra la posición en la cola. Al final, el reproductor resume cuántos salieron bien y cuántos fallaron, y <code>Ctrl+Shift+B</code> informa de la posición y permite cancelar. Un elemento que falla no interrumpe a los demás, y KeyTune ofrece una lista con cada fallo y su motivo, con el botón <strong>Copiar lista</strong>.</p>
+<p><strong>Otros sitios.</strong> Una dirección de otro sitio que KeyTune reproduce también se puede descargar, igual que el enlace directo a un archivo de audio o video. Las radios y las transmisiones en vivo quedan fuera, porque no terminan. Si la dirección es de una lista, solo se descarga el primer elemento. La cuenta de YouTube no se usa en otros sitios.</p>
 <h3 id="convertir-medios">Convertir medios</h3>
 <p>KeyTune convierte archivos de audio y de vídeo del equipo sin salir del reproductor. <code>Ctrl+Shift+K</code> sigue la misma regla que <code>Ctrl+Shift+B</code>: con el foco en una lista (la playlist o el explorador de carpetas), convierte la <strong>selección</strong>; con el foco en el reproductor, convierte el <strong>medio actual</strong>. Los mismos comandos están en <strong>Archivo &gt; Convertir</strong> (<strong>Convertir medio actual</strong> y <strong>Convertir selección</strong>) y en el menú contextual de las listas.</p>
 <p>KeyTune pregunta qué hacer y muestra solo las opciones que sirven para el tipo de archivo:</p>
@@ -557,7 +557,7 @@ footer {
 <p>El diálogo recuerda tus últimas elecciones. El archivo original nunca se modifica ni se sobrescribe: si ya existe un archivo con el mismo nombre, el nuevo recibe « (1)», « (2)» y así sucesivamente.</p>
 <p><strong>Varios archivos.</strong> Selecciónalos en la playlist o en el explorador y pulsa <code>Ctrl+Shift+K</code>. KeyTune pregunta el modo y muestra a cuántos archivos se aplica cada uno. Solo se convierten los del tipo correcto. Las opciones valen para todos. Con <strong>Misma carpeta del archivo original</strong>, cada archivo va a la carpeta de su propio original; con <strong>Otra carpeta</strong>, todos van a la carpeta elegida. Los archivos se convierten de uno en uno, con un resumen al final. Un error en un archivo no interrumpe a los demás, y la lista de fallos se puede abrir y copiar, como en las descargas.</p>
 <p>La conversión se ejecuta en segundo plano, y la reproducción continúa. Pulsa <code>Ctrl+Shift+K</code> durante una conversión para oír el progreso o cancelar; nunca se deja un archivo incompleto.</p>
-<p>La conversión usa FFmpeg, el mismo de la descarga. Si no se encuentra, KeyTune pregunta si puede descargarlo, como se describe en <a href="#descargar-de-youtube">Descargar de YouTube</a>. Solo se convierten archivos del equipo; para medios de YouTube, usa <code>Ctrl+Shift+B</code>.</p>
+<p>La conversión usa FFmpeg, el mismo de la descarga. Si no se encuentra, KeyTune pregunta si puede descargarlo, como se describe en <a href="#descargar-de-internet">Descargar de internet</a>. Solo se convierten archivos del equipo; para medios de internet, usa <code>Ctrl+Shift+B</code>.</p>
 <h2 id="biblioteca-inteligente">Biblioteca inteligente</h2>
 <p>Mientras <code>Ctrl+F</code> busca en la lista que está abierta, la <strong>biblioteca inteligente</strong> recuerda lo que ya abriste y escuchaste y lo deja todo disponible para buscar de una vez. También guarda favoritos, valoraciones, el historial de reproducción y el punto en el que se quedó cada medio largo.</p>
 <p>Todo queda en una base de datos local (<code>smart_library.db</code>), en la misma carpeta de datos de las preferencias. Nada sale de tu equipo, y la función entera se puede desactivar en <code>Ctrl+,</code> &gt; <strong>Biblioteca</strong>. El menú <strong>Biblioteca</strong> reúne los comandos.</p>
@@ -1081,7 +1081,7 @@ footer {
 <p>KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El código fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">docs/manual.es.md</a>.</p>
 <p>Para ejecutar el proyecto desde el código, instala las dependencias con <code>uv sync</code> y abre el reproductor con <code>uv run keytune</code>. Las reglas de redacción del manual, el changelog y los commits están en <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generado el 09/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 10/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

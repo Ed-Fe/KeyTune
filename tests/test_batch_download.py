@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import threading
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
@@ -7,7 +8,6 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from player.download.plan import (
-    MAX_BATCH_ITEMS,
     DownloadChoice,
     DownloadItem,
     DownloadPlan,
@@ -28,14 +28,18 @@ def _entries(*ids):
 
 
 class SelectDownloadItemsTests(unittest.TestCase):
-    def test_keeps_youtube_items_and_counts_the_rest_as_skipped(self):
-        entries = _entries("a1", "b2") + [("C:\\musicas\\local.mp3", "Local"), ("https://example.com/x.mp3", "Site")]
+    def test_keeps_remote_items_and_counts_the_rest_as_skipped(self):
+        entries = _entries("a1", "b2") + [
+            ("C:\\musicas\\local.mp3", "Local"),
+            ("https://example.com/x.mp3", "Site"),
+            ("https://radio.example.com/stream#keytune-radio=abc", "Rádio"),
+            ("https://example.com/lista.m3u", "Playlist"),
+        ]
 
         selection = select_download_items(entries)
 
-        self.assertEqual([item.title for item in selection.items], ["Faixa a1", "Faixa b2"])
-        self.assertEqual(selection.skipped, 2)
-        self.assertEqual(selection.truncated, 0)
+        self.assertEqual([item.title for item in selection.items], ["Faixa a1", "Faixa b2", "Site"])
+        self.assertEqual(selection.skipped, 3)
 
     def test_a_repeated_track_is_downloaded_once(self):
         selection = select_download_items(_entries("a1", "a1", "b2"))
@@ -43,11 +47,10 @@ class SelectDownloadItemsTests(unittest.TestCase):
         self.assertEqual(len(selection.items), 2)
         self.assertEqual(selection.skipped, 0)
 
-    def test_items_beyond_the_limit_are_left_out_and_counted(self):
-        selection = select_download_items(_entries(*[f"v{i:04d}" for i in range(MAX_BATCH_ITEMS + 5)]))
+    def test_a_long_queue_is_kept_whole(self):
+        selection = select_download_items(_entries(*[f"v{i:04d}" for i in range(500)]))
 
-        self.assertEqual(len(selection.items), MAX_BATCH_ITEMS)
-        self.assertEqual(selection.truncated, 5)
+        self.assertEqual(len(selection.items), 500)
 
     def test_an_entry_may_say_which_subfolder_it_goes_to(self):
         entries = [
@@ -195,7 +198,9 @@ class BatchEntryPointTests(unittest.TestCase):
 class _WorkerFrame(_Frame):
     """Roda o worker de verdade, com as chamadas de interface executadas na hora."""
 
-    def run_worker(self, items, run_download_side_effect, *, install_ffmpeg=False, folder_name="Lista"):
+    def run_worker(
+        self, items, run_download_side_effect, *, install_ffmpeg=False, folder_name="Lista", parallel=1
+    ):
         token = DownloadCancelToken()
         self._download_token = token
         self._download_batch_total = len(items)
@@ -206,8 +211,8 @@ class _WorkerFrame(_Frame):
         ), patch("player.youtube_music.auth.load_saved_playback_auth", return_value=fake_auth), patch(
             "player.youtube_music.yt_dlp_runtime.find_all_available_javascript_runtimes", return_value={}
         ), patch.object(download_frame, "find_ffmpeg_directory", return_value=Path("C:\\ffmpeg")), patch.object(
-            download_frame, "run_download", side_effect=run_download_side_effect
-        ) as run_download:
+            download_frame, "PARALLEL_DOWNLOADS", parallel
+        ), patch.object(download_frame, "run_download", side_effect=run_download_side_effect) as run_download:
             self._download_worker(tuple(items), choice, token, install_ffmpeg, folder_name)
         return token, run_download
 
@@ -284,6 +289,29 @@ class BatchWorkerTests(unittest.TestCase):
         self.assertEqual(run_download.call_count, 2)
         self.assertIn("1 de 3", frame.announcements[-1])
         self.assertFalse(frame._download_in_progress())
+
+    def test_items_of_a_queue_are_downloaded_at_the_same_time(self):
+        frame = _WorkerFrame()
+        together = threading.Barrier(3, timeout=5)
+
+        def side_effect(url, *args, **kwargs):
+            # Só passa se os três downloads estiverem rodando juntos.
+            together.wait()
+            return _result(url[-2:])
+
+        _token, run_download = frame.run_worker(self.items, side_effect, parallel=3)
+
+        self.assertEqual(run_download.call_count, 3)
+        self.assertIn("3", frame.announcements[-1])
+        self.assertNotIn("falharam", frame.announcements[-1])
+
+    def test_items_of_a_queue_report_the_position_instead_of_their_own_progress(self):
+        frame = _WorkerFrame()
+
+        _token, run_download = frame.run_worker(self.items, [_result("a"), _result("b"), _result("c")])
+
+        self.assertIsNone(run_download.call_args.kwargs["progress_callback"])
+        self.assertTrue(any("3 de 3" in status for status in frame.statuses), frame.statuses)
 
     def test_a_single_item_keeps_the_single_download_messages(self):
         frame = _WorkerFrame()

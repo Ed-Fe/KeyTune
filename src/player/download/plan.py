@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from urllib.parse import parse_qs, urlparse
 
 from ..i18n import _
+from ..library.playlist_io import is_playlist_source
+from ..radio.media import is_radio_media
 from .options import (
     AUDIO_QUALITY_SPECS,
     DOWNLOAD_KIND_VIDEO,
@@ -44,21 +46,30 @@ class DownloadPlan:
     reduced_without_ffmpeg: bool
 
 
-def download_source_url(media_path) -> str:
-    """Devolve a URL baixável de uma mídia do YouTube ou vazio se não houver.
+def is_youtube_url(url) -> bool:
+    return (urlparse(str(url or "").strip()).netloc or "").lower() in YOUTUBE_HOSTS
 
-    Só aceita um vídeo individual: listas, buscas e referências internas
-    (``ytmusic://``) não são baixadas, para nunca puxar uma playlist inteira sem
-    o usuário pedir.
+
+def download_source_url(media_path) -> str:
+    """Devolve a URL baixável de uma mídia remota ou vazio se não houver.
+
+    Do YouTube só aceita um vídeo individual: listas, buscas e referências
+    internas (``ytmusic://``) não são baixadas, para nunca puxar uma playlist
+    inteira sem o usuário pedir. De outros sites vale o endereço como está,
+    menos as rádios (um stream que não termina) e os arquivos de playlist.
     """
     normalized = str(media_path or "").strip()
+    if is_radio_media(normalized):
+        return ""
     parsed = urlparse(normalized)
     if parsed.scheme.lower() not in {"http", "https"}:
         return ""
 
     host = (parsed.netloc or "").lower()
-    if host not in YOUTUBE_HOSTS:
+    if not host:
         return ""
+    if host not in YOUTUBE_HOSTS:
+        return "" if is_playlist_source(normalized) else normalized
 
     if host == "youtu.be":
         return normalized if parsed.path.strip("/") else ""
@@ -133,10 +144,6 @@ def describe_quality_difference(choice: DownloadChoice, downloaded_height) -> st
     )
 
 
-# Teto de itens numa só fila de download: acima disso o excedente fica de fora
-# (com aviso), para um clique não virar horas de download.
-MAX_BATCH_ITEMS = 200
-
 _INVALID_FOLDER_CHARACTERS = '<>:"/\\|?*'
 
 
@@ -151,14 +158,12 @@ class DownloadItem:
 @dataclass(frozen=True, slots=True)
 class DownloadSelection:
     items: tuple[DownloadItem, ...]
-    # Itens que não são baixáveis (arquivos locais, outros sites) e ficaram de fora.
+    # Itens que não são baixáveis (arquivos locais, rádios, playlists) e ficaram de fora.
     skipped: int = 0
-    # Itens baixáveis além de MAX_BATCH_ITEMS, também deixados de fora.
-    truncated: int = 0
 
 
 def select_download_items(entries) -> DownloadSelection:
-    """Filtra ``(caminho, título)`` deixando só o que o yt-dlp baixa do YouTube.
+    """Filtra ``(caminho, título)`` deixando só o que o yt-dlp baixa.
 
     Uma entrada pode trazer um terceiro valor: a subpasta para onde o item vai.
     Repetições contam uma vez só por pasta: a mesma faixa duas vezes na lista
@@ -167,7 +172,6 @@ def select_download_items(entries) -> DownloadSelection:
     items: list[DownloadItem] = []
     seen: set[str] = set()
     skipped = 0
-    truncated = 0
     for media_path, title, *rest in entries:
         folder = str(rest[0] or "") if rest else ""
         url = download_source_url(media_path)
@@ -177,11 +181,8 @@ def select_download_items(entries) -> DownloadSelection:
         if (url, folder) in seen:
             continue
         seen.add((url, folder))
-        if len(items) >= MAX_BATCH_ITEMS:
-            truncated += 1
-            continue
         items.append(DownloadItem(url=url, title=str(title or "").strip(), folder=folder))
-    return DownloadSelection(items=tuple(items), skipped=skipped, truncated=truncated)
+    return DownloadSelection(items=tuple(items), skipped=skipped)
 
 
 def safe_folder_name(name, fallback="Playlist") -> str:

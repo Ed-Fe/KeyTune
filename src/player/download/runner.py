@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import subprocess
+import urllib.request
 
 from .. import process_control
 from ..i18n import _
@@ -18,12 +19,13 @@ from ..log import get_logger
 from ..process_control import CancelToken
 from ..youtube_music.auth import sanitize_sensitive_text
 from ..youtube_music.yt_dlp_runtime import find_yt_dlp_executable_path
-from .plan import DownloadChoice, DownloadPlan
+from .plan import DownloadChoice, DownloadPlan, is_youtube_url
 
 
 _logger = get_logger(__name__)
 
 FILENAME_TEMPLATE = "%(title).200B [%(id)s].%(ext)s"
+_PROBE_USER_AGENT = "Mozilla/5.0 KeyTune"
 
 
 def output_template(file_stem: str = "") -> str:
@@ -49,6 +51,10 @@ _FILTERED_OUT_MARKER = "does not pass filter"
 
 class DownloadCancelled(RuntimeError):
     pass
+
+
+class _EndlessStreamRefused(RuntimeError):
+    """O item foi barrado pelo --match-filter."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,6 +94,7 @@ def build_command(
     http_headers=None,
     js_runtimes=None,
     file_stem="",
+    allow_direct_link=False,
 ):
     command = [
         str(executable_path),
@@ -101,8 +108,7 @@ def build_command(
         "--paths", str(output_directory),
         "--output", output_template(file_stem),
         "--force-overwrites",
-        # Uma transmissão ao vivo não termina: numa fila, prenderia os demais itens.
-        "--match-filter", "!is_live",
+        *_stream_guard_arguments(url, allow_direct_link),
         "--format", plan.format_selector,
     ]
     if ffmpeg_directory:
@@ -124,6 +130,38 @@ def build_command(
 
     command.extend(("--", url))
     return command
+
+
+def _stream_guard_arguments(url, allow_direct_link):
+    """O que impede o yt-dlp de baixar algo que não termina, o que prenderia a fila."""
+    if is_youtube_url(url):
+        return ("--match-filter", "!is_live")
+    # Fora do YouTube o endereço pode ser uma lista inteira: só o primeiro item, como no player.
+    guard = ["--playlist-items", "1"]
+    if allow_direct_link:
+        guard.extend(("--match-filter", "!is_live"))
+    else:
+        # Num link direto o yt-dlp não distingue um arquivo de uma rádio: só passa o que tem duração.
+        guard.extend(("--match-filter", "!is_live & duration", "--match-filter", "!is_live & !direct"))
+    return tuple(guard)
+
+
+def is_finite_direct_link(url, *, timeout_seconds=10) -> bool:
+    """Se o servidor entrega *url* como um arquivo de tamanho conhecido, e não um stream contínuo."""
+    for method in ("HEAD", "GET"):
+        request = urllib.request.Request(str(url), method=method, headers={"User-Agent": _PROBE_USER_AGENT})
+        try:
+            with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+                headers = response.headers
+                if any(str(name).lower().startswith("icy-") for name in headers.keys()):
+                    return False
+                if str(headers.get("Content-Type") or "").lower().startswith("text/"):
+                    return False
+                return (_to_int(headers.get("Content-Length")) or 0) > 0
+        except (OSError, ValueError):
+            # Há servidores que recusam HEAD; o GET lê só os cabeçalhos.
+            continue
+    return False
 
 
 def parse_progress_line(line: str) -> DownloadProgress | None:
@@ -162,7 +200,17 @@ def _to_int(value):
         return None
 
 
-def run_download(
+def run_download(url: str, choice: DownloadChoice, plan: DownloadPlan, **options) -> DownloadResult:
+    try:
+        return _run_download(url, choice, plan, **options)
+    except _EndlessStreamRefused:
+        # Barrado por não ter duração: um arquivo num link direto também não tem.
+        if is_youtube_url(url) or not is_finite_direct_link(url):
+            raise
+    return _run_download(url, choice, plan, allow_direct_link=True, **options)
+
+
+def _run_download(
     url: str,
     choice: DownloadChoice,
     plan: DownloadPlan,
@@ -175,6 +223,7 @@ def run_download(
     progress_callback=None,
     processing_callback=None,
     cancel_token: DownloadCancelToken | None = None,
+    allow_direct_link=False,
 ) -> DownloadResult:
     executable_path = find_yt_dlp_executable_path()
     if executable_path is None:
@@ -204,6 +253,7 @@ def run_download(
         http_headers=http_headers,
         js_runtimes=js_runtimes,
         file_stem=file_stem,
+        allow_direct_link=allow_direct_link,
     )
     _logger.info("Starting download (%s) with format %s", choice.kind, plan.format_selector)
 
@@ -227,6 +277,7 @@ def run_download(
 
     downloaded_paths: list[str] = []
     downloaded_height = None
+    saw_result = False
     output_tail: list[str] = []
     try:
         for raw_line in process.stdout:
@@ -244,6 +295,7 @@ def run_download(
 
             result = parse_result_line(line)
             if result is not None:
+                saw_result = True
                 path, height = result
                 resolved = _path_inside(output_directory, path)
                 if resolved is not None:
@@ -263,11 +315,22 @@ def run_download(
 
     if cancel_token is not None and cancel_token.cancelled:
         raise DownloadCancelled(_("Download cancelado."))
-    if not downloaded_paths and any(_FILTERED_OUT_MARKER in line for line in output_tail):
-        raise RuntimeError(_("Não é possível baixar uma transmissão ao vivo."))
+    if not saw_result and _was_filtered_out(return_code, output_tail):
+        if is_youtube_url(url):
+            raise _EndlessStreamRefused(_("Não é possível baixar uma transmissão ao vivo."))
+        raise _EndlessStreamRefused(
+            _("Não é possível baixar uma transmissão ao vivo ou contínua, como uma rádio.")
+        )
     if return_code != 0 or not downloaded_paths:
         raise RuntimeError(_error_message_from_output(output_tail))
     return DownloadResult(paths=tuple(downloaded_paths), height=downloaded_height)
+
+
+def _was_filtered_out(return_code, output_tail) -> bool:
+    if any(_FILTERED_OUT_MARKER in line for line in output_tail):
+        return True
+    # Com --print o yt-dlp não diz que barrou o item: termina bem, sem arquivo e sem erro.
+    return return_code == 0 and not any(line.startswith("ERROR:") for line in output_tail)
 
 
 def _path_inside(directory: Path, candidate_text: str):

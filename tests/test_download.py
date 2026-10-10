@@ -75,13 +75,20 @@ class DownloadSourceUrlTests(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertEqual(download_source_url(url), url)
 
-    def test_rejects_playlists_local_files_and_other_sites(self):
+    def test_accepts_addresses_from_other_sites(self):
+        for url in ("https://example.com/audio.mp3", "https://soundcloud.com/artista/faixa"):
+            with self.subTest(url=url):
+                self.assertEqual(download_source_url(url), url)
+
+    def test_rejects_playlists_local_files_and_radios(self):
         for value in (
             "https://www.youtube.com/playlist?list=PL123",
             "https://www.youtube.com/watch?list=PL123",
             "https://www.youtube.com/@canal",
             "ytmusic://playlist/PL123",
-            "https://example.com/audio.mp3",
+            "https://radio.example.com/stream#keytune-radio=abc",
+            "https://example.com/lista.m3u",
+            "rtsp://example.com/camera",
             "C:\\Musicas\\faixa.mp3",
             "",
             None,
@@ -290,6 +297,53 @@ class RunDownloadTests(unittest.TestCase):
         with patch.object(runner.process_control, "terminate_process_tree"):
             with self.assertRaises(runner.DownloadCancelled):
                 self._run(["KTP|downloading|1|2|NA\n"], return_code=1, cancel_token=token)
+
+    def _run_from_another_site(self, attempts, *, finite):
+        """Roda um download de outro site; *attempts* traz a saída do yt-dlp de cada tentativa."""
+        processes = [_FakeProcess(lines, return_code) for lines, return_code in attempts]
+        with patch.object(runner, "find_yt_dlp_executable_path", return_value=Path("yt-dlp.exe")), patch.object(
+            runner.subprocess, "Popen", side_effect=processes
+        ) as popen, patch.object(runner, "is_finite_direct_link", return_value=finite) as probe:
+            try:
+                result = runner.run_download("https://example.com/audio.mp3", self.choice, self.plan)
+            except RuntimeError as error:
+                result = error
+        return result, [call.args[0] for call in popen.call_args_list], probe
+
+    def test_a_direct_file_link_is_downloaded_after_the_server_confirms_its_size(self):
+        final_file = self.output_dir / "audio.mp3"
+        final_file.write_bytes(b"data")
+        filtered = (["[download] audio does not pass filter (!is_live & duration), skipping ..\n"], 0)
+
+        result, commands, _probe = self._run_from_another_site(
+            [filtered, ([f"KTF|{final_file}|NA|128\n"], 0)], finite=True
+        )
+
+        self.assertEqual(result.paths, (str(final_file),))
+        self.assertIn("!is_live & duration", commands[0])
+        self.assertNotIn("!is_live & duration", commands[1])
+        self.assertIn("!is_live", commands[1])
+
+    def test_an_endless_stream_from_another_site_is_refused(self):
+        filtered = (["[download] stream does not pass filter (!is_live & duration), skipping ..\n"], 0)
+
+        result, commands, probe = self._run_from_another_site([filtered], finite=False)
+
+        self.assertIsInstance(result, RuntimeError)
+        self.assertIn("rádio", str(result))
+        self.assertEqual(len(commands), 1)
+        probe.assert_called_once()
+
+    def test_a_filtered_youtube_live_is_refused_without_probing_the_server(self):
+        with patch.object(runner, "is_finite_direct_link") as probe:
+            with self.assertRaises(RuntimeError):
+                self._run(["[download] live does not pass filter (!is_live), skipping ..\n"])
+
+        probe.assert_not_called()
+
+    def test_an_item_that_yt_dlp_skips_in_silence_counts_as_filtered_out(self):
+        with self.assertRaisesRegex(RuntimeError, "ao vivo"):
+            self._run([])
 
     def test_requires_a_destination_folder(self):
         choice = _choice(directory="  ")
