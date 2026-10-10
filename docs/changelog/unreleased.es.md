@@ -1,0 +1,21 @@
+## [Sin publicar]
+
+### Agregado
+
+- **Diagnóstico** (**Ayuda > Diagnóstico**): prueba lo que KeyTune necesita para reproducir y muestra, en un cuadro de lectura, qué está mal y qué hacer en cada caso.
+  - Comprueba la biblioteca de MPV y sus dependencias en Windows, el inicio del reproductor, los dispositivos de audio, `yt-dlp`, Node.js, YouTube.js, FFmpeg, la cuenta de YouTube y, resolviendo un video público de verdad, si YouTube responde a YouTube.js y a `yt-dlp`.
+  - Si el reproductor no se inicia al abrir KeyTune, el diagnóstico se ejecuta solo y muestra el motivo antes de que la aplicación se cierre. Antes la ventana quedaba abierta sin funcionar.
+  - Solo lee y prueba; no instala ni cambia nada en el equipo.
+  - La prueba del video usa internet y no envía las cookies de la cuenta.
+
+### Corregido
+
+- **KeyTune no podía iniciar MPV en equipos con un driver de video antiguo**: la ventana mostraba "ctypes.CDLL could not load it" y no sonaba nada. El loader de Vulkan que viene con drivers de 2016 o anteriores no tiene funciones que el MPV actual necesita, y Windows se negaba a cargar la biblioteca.
+  - KeyTune ahora lleva su propio `vulkan-1.dll` en la carpeta `mpv` y usa los drivers de video instalados como antes.
+  - Si MPV no carga por otro motivo, el diagnóstico indica qué DLL o función falta, o si Windows o el antivirus bloqueó el archivo.
+- **Las cookies válidas de YouTube Music se rechazaban al conectar**: en algunas cuentas la conexión fallaba con "no contiene una cookie de autenticación compatible" o con un error en inglés sobre `__Secure-3PAPISID`, incluso con la exportación correcta.
+  - Una cookie con un espacio, una tilde u otro carácter fuera del estándar ocultaba todas las que venían después, incluida la de autenticación. Ahora se deja de lado y se lee el resto.
+  - Puedes pegar solo el valor de la cabecera `Cookie`, un `cookies.txt` cuyas tabulaciones se convirtieron en espacios al copiar, o las cabeceras sin `X-Goog-AuthUser`.
+  - Si YouTube confirma que la sesión está iniciada pero el menú de la cuenta llega en un formato que KeyTune no reconoce, la cuenta se acepta igualmente, sin el nombre.
+  - Cuando el navegador ya cambió las cookies, el mensaje lo dice y explica cómo exportarlas de nuevo.
+- **Con la cuenta de YouTube conectada, MPV no podía crear un reproductor nuevo**: después de que KeyTune hablaba con la cuenta, cualquier reproductor creado a continuación fallaba con "access violation". Esto afectaba al cambio a un video después de otro medio y a la recreación del reproductor. La biblioteca de la cuenta cambiaba una configuración regional del proceso que MPV exige; ahora KeyTune la restaura antes de crear cada reproductor.
