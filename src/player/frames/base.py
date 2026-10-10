@@ -6,6 +6,7 @@ from ..log import setup_logging
 from ..preferences import load_settings, save_settings
 from .commands import FrameCommandMixin
 from .convert import FrameConvertMixin
+from .diagnostics import FrameDiagnosticsMixin
 from .download import FrameDownloadMixin
 from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
@@ -31,6 +32,7 @@ class MediaPlayerFrame(
     FrameRadioMixin,
     FrameCommandMixin,
     FrameConvertMixin,
+    FrameDiagnosticsMixin,
     FrameDownloadMixin,
     FrameSessionMixin,
     FrameRecentsMixin,
@@ -111,7 +113,11 @@ class MediaPlayerFrame(
             return
 
         self._startup_initialization_started = True
-        self._create_player_backend(adopted=self._pending_adopted_playback)
+        try:
+            self._create_player_backend(adopted=self._pending_adopted_playback)
+        except Exception as exc:
+            self._handle_player_startup_failure(exc)
+            return
         self._create_library_loader()
         self._create_smart_library_service()
         self._initialize_smtc_service()

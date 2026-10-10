@@ -6275,3 +6275,228 @@ msgstr "No se pudo reconocer esta dirección como un stream de radio válido."
 
 msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr "Úsalo cuando no encuentres la radio en la búsqueda: escribe un nombre para ella y la dirección directa del stream o de un archivo M3U. Al confirmar, pasa a tus radios favoritas."
+
+msgid "Erro {code} ao carregar {name}."
+msgstr "Error {code} al cargar {name}."
+
+msgid "Estas funções não existem na DLL do sistema: {names}."
+msgstr "Estas funciones no existen en la DLL del sistema: {names}."
+
+msgid "Faltam estas bibliotecas do Windows: {names}."
+msgstr "Faltan estas bibliotecas de Windows: {names}."
+
+msgid "O Windows ou o antivírus bloqueou o carregamento de {name}. Restaure o arquivo da quarentena e adicione a pasta do KeyTune às exclusões."
+msgstr "Windows o el antivirus bloqueó la carga de {name}. Restaura el archivo desde la cuarentena y agrega la carpeta de KeyTune a las exclusiones."
+
+msgid "{name} não é compatível com esta versão do aplicativo. Reinstale o KeyTune."
+msgstr "{name} no es compatible con esta versión de la aplicación. Reinstala KeyTune."
+
+msgid "O YouTube recebeu os cookies, mas respondeu como se ninguém estivesse conectado. Eles já venceram ou foram trocados pelo navegador depois da exportação. Exporte de novo por uma janela anônima e feche essa janela logo em seguida."
+msgstr "YouTube recibió las cookies, pero respondió como si nadie hubiera iniciado sesión. Ya caducaron o el navegador las cambió después de la exportación. Expórtalas de nuevo desde una ventana privada y cierra esa ventana enseguida."
+
+msgid "&Copiar relatório"
+msgstr "Copiar &informe"
+
+msgid "&Diagnóstico"
+msgstr "&Diagnóstico"
+
+msgid "A biblioteca do MPV não foi encontrada na instalação."
+msgstr "No se encontró la biblioteca de MPV en la instalación."
+
+msgid "A verificação falhou: {error}"
+msgstr "La comprobación falló: {error}"
+
+msgid "Abrir pasta de &logs"
+msgstr "Abrir carpeta de &logs"
+
+msgid "Arquivos de log: {path}"
+msgstr "Archivos de log: {path}"
+
+msgid "Aviso"
+msgstr "Aviso"
+
+msgid "Biblioteca do MPV"
+msgstr "Biblioteca de MPV"
+
+msgid "Carregada de {path}."
+msgstr "Cargada desde {path}."
+
+msgid "Conectada como {name}."
+msgstr "Conectada como {name}."
+
+msgid "Conecte ou ative um dispositivo de som nas configurações do Windows."
+msgstr "Conecta o activa un dispositivo de sonido en la configuración de Windows."
+
+msgid "Conta do YouTube"
+msgstr "Cuenta de YouTube"
+
+msgid "Diagnóstico do KeyTune"
+msgstr "Diagnóstico de KeyTune"
+
+msgid "Dispositivos de saída encontrados: {count}."
+msgstr "Dispositivos de salida encontrados: {count}."
+
+msgid "Em ordem"
+msgstr "En orden"
+
+msgid "Encontrado em {path}."
+msgstr "Encontrado en {path}."
+
+msgid "Executando o diagnóstico..."
+msgstr "Ejecutando el diagnóstico..."
+
+msgid "Falta o Universal C Runtime, que faz parte do Windows. Instale as atualizações pendentes do Windows."
+msgstr "Falta el Universal C Runtime, que forma parte de Windows. Instala las actualizaciones pendientes de Windows."
+
+msgid "Instale as atualizações pendentes do Windows."
+msgstr "Instala las actualizaciones pendientes de Windows."
+
+msgid "Instale o Microsoft Visual C++ Redistributable 2015-2022 (x64), disponível em {url}."
+msgstr "Instala Microsoft Visual C++ Redistributable 2015-2022 (x64), disponible en {url}."
+
+msgid "Instale ou atualize em Preferências > Recursos adicionais."
+msgstr "Instálalo o actualízalo en Preferencias > Recursos adicionales."
+
+msgid "KeyTune {version}, {system} {release} ({build}), {bits}."
+msgstr "KeyTune {version}, {system} {release} ({build}), {bits}."
+
+msgid "Nenhum problema encontrado."
+msgstr "No se encontró ningún problema."
+
+msgid "Nenhuma conta conectada."
+msgstr "Ninguna cuenta conectada."
+
+msgid "O FFmpeg não foi encontrado. Ele é usado para converter mídias e em alguns downloads."
+msgstr "No se encontró FFmpeg. Se usa para convertir medios y en algunas descargas."
+
+msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico encontrou o motivo abaixo."
+msgstr "KeyTune no pudo iniciar el reproductor y se cerrará. El diagnóstico encontró el motivo a continuación."
+
+msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico não encontrou a causa. Erro: {error}"
+msgstr "KeyTune no pudo iniciar el reproductor y se cerrará. El diagnóstico no encontró la causa. Error: {error}"
+
+msgid "O KeyTune oferece a instalação na primeira conversão ou download que precisar dele."
+msgstr "KeyTune ofrece instalarlo en la primera conversión o descarga que lo necesite."
+
+msgid "O MPV iniciou."
+msgstr "MPV se inició."
+
+msgid "O MPV não encontrou nenhum dispositivo de saída de áudio."
+msgstr "MPV no encontró ningún dispositivo de salida de audio."
+
+msgid "O MPV usa o vulkan-1.dll do Windows, instalado pelo driver de vídeo."
+msgstr "MPV usa el vulkan-1.dll de Windows, instalado por el driver de video."
+
+msgid "O MPV usa o vulkan-1.dll que vem com o KeyTune."
+msgstr "MPV usa el vulkan-1.dll que viene con KeyTune."
+
+msgid "O Windows recusou estes arquivos da pasta do MPV: {names}. Eles estão danificados ou bloqueados."
+msgstr "Windows rechazó estos archivos de la carpeta de MPV: {names}. Están dañados o bloqueados."
+
+msgid "O diagnóstico já está em andamento."
+msgstr "El diagnóstico ya está en curso."
+
+msgid "O player não iniciou"
+msgstr "El reproductor no se inició"
+
+msgid "O player não iniciou."
+msgstr "El reproductor no se inició."
+
+msgid "O que fazer: {advice}"
+msgstr "Qué hacer: {advice}"
+
+msgid "O vulkan-1.dll em uso é antigo. Reinstale o KeyTune, que leva o próprio vulkan-1.dll na pasta mpv, ou atualize o driver de vídeo."
+msgstr "El vulkan-1.dll en uso es antiguo. Reinstala KeyTune, que lleva su propio vulkan-1.dll en la carpeta mpv, o actualiza el driver de video."
+
+msgid "O yt-dlp está em {path}, mas não respondeu."
+msgstr "yt-dlp está en {path}, pero no respondió."
+
+msgid "O yt-dlp não está instalado. Sem ele o YouTube não toca e os downloads não funcionam."
+msgstr "yt-dlp no está instalado. Sin él YouTube no se reproduce y las descargas no funcionan."
+
+msgid "Player"
+msgstr "Reproductor"
+
+msgid "Problema"
+msgstr "Problema"
+
+msgid "Problemas: {problems}. Avisos: {warnings}."
+msgstr "Problemas: {problems}. Avisos: {warnings}."
+
+msgid "Reinstale o KeyTune, que leva o próprio vulkan-1.dll na pasta mpv, ou atualize o driver de vídeo."
+msgstr "Reinstala KeyTune, que lleva su propio vulkan-1.dll en la carpeta mpv, o actualiza el driver de video."
+
+msgid "Reinstale o KeyTune."
+msgstr "Reinstala KeyTune."
+
+msgid "Reinstale o KeyTune. Se o antivírus removeu os arquivos, adicione a pasta do KeyTune às exclusões."
+msgstr "Reinstala KeyTune. Si el antivirus eliminó los archivos, añade la carpeta de KeyTune a las exclusiones."
+
+msgid "Use Copiar relatório e envie o texto, junto com o arquivo de log, ao relatar o problema."
+msgstr "Usa Copiar informe y envía el texto, junto con el archivo de log, al informar del problema."
+
+msgid "Reinstale o KeyTune. Se o erro continuar, instale as atualizações pendentes do Windows."
+msgstr "Reinstala KeyTune. Si el error continúa, instala las actualizaciones pendientes de Windows."
+
+msgid "Relatório do diagnóstico"
+msgstr "Informe del diagnóstico"
+
+msgid "Saída de áudio"
+msgstr "Salida de audio"
+
+msgid "Sistema"
+msgstr "Sistema"
+
+msgid "Use o botão Atualizar acesso, na aba KeyTube, para conectar a conta de novo."
+msgstr "Usa el botón Actualizar acceso, en la pestaña KeyTube, para conectar la cuenta de nuevo."
+
+msgid "Veja se o antivírus bloqueou o arquivo."
+msgstr "Comprueba si el antivirus bloqueó el archivo."
+
+msgid "Verifique a conexão com a internet e tente de novo."
+msgstr "Comprueba la conexión a internet e inténtalo de nuevo."
+
+msgid "Versão {version}."
+msgstr "Versión {version}."
+
+msgid "Vulkan"
+msgstr "Vulkan"
+
+msgid "O Node.js não foi encontrado. O yt-dlp e o YouTube.js precisam dele para resolver vídeos do YouTube."
+msgstr "No se encontró Node.js. yt-dlp y YouTube.js lo necesitan para resolver videos de YouTube."
+
+msgid "O Node.js em {path} é da versão {version}, que o KeyTune não aceita."
+msgstr "Node.js en {path} es de la versión {version}, que KeyTune no acepta."
+
+msgid "Desativado nas preferências; o KeyTune usa o yt-dlp."
+msgstr "Desactivado en las preferencias; KeyTune usa yt-dlp."
+
+msgid "O YouTube.js está ativado, mas o pacote ou o Node.js não está instalado. O KeyTune usa o yt-dlp no lugar."
+msgstr "YouTube.js está activado, pero el paquete o Node.js no está instalado. KeyTune usa yt-dlp en su lugar."
+
+msgid "Instalado e respondendo."
+msgstr "Instalado y respondiendo."
+
+msgid "Está desativado nas preferências."
+msgstr "Está desactivado en las preferencias."
+
+msgid "Vídeo do YouTube"
+msgstr "Video de YouTube"
+
+msgid "Vídeo pelo YouTube.js"
+msgstr "Video por YouTube.js"
+
+msgid "Vídeo pelo yt-dlp"
+msgstr "Video por yt-dlp"
+
+msgid "Resolveu um vídeo público em {seconds} s."
+msgstr "Resolvió un video público en {seconds} s."
+
+msgid "O outro resolvedor funcionou, então o YouTube toca. Atualize em Preferências > Recursos adicionais."
+msgstr "El otro resolvedor funcionó, así que YouTube se reproduce. Actualízalo en Preferencias > Recursos adicionales."
+
+msgid "Verifique a conexão com a internet. Se ela estiver normal, atualize os componentes em Preferências > Recursos adicionais; a versão nightly do yt-dlp costuma receber as correções antes."
+msgstr "Comprueba la conexión a internet. Si funciona, actualiza los componentes en Preferencias > Recursos adicionales; la versión nightly de yt-dlp suele recibir las correcciones antes."
+
+msgid "O yt-dlp abriu o vídeo, mas o YouTube não entregou nenhum formato reproduzível."
+msgstr "yt-dlp abrió el video, pero YouTube no entregó ningún formato reproducible."

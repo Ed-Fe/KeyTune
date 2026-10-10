@@ -25,7 +25,20 @@ _mpv_module = None
 def _load_mpv_module():
     global _mpv_module
     if _mpv_module is None:
-        _mpv_module = importlib.import_module("mpv")
+        try:
+            _mpv_module = importlib.import_module("mpv")
+        except OSError as exc:
+            from .diagnostics.mpv_library import describe_mpv_load_failure
+
+            try:
+                hint = describe_mpv_load_failure()
+            except Exception:
+                _logger.exception("MPV load diagnosis failed")
+                hint = ""
+            if not hint:
+                raise
+            _logger.error("Failed to load the MPV library: %s", exc)
+            raise RuntimeError(f"{hint}\n\n{exc}") from exc
     return _mpv_module
 
 

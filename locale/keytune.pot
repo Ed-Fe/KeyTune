@@ -164,6 +164,10 @@ msgstr ""
 msgid "&Copiar lista"
 msgstr ""
 
+#: src/player/diagnostics/dialog.py
+msgid "&Copiar relatório"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Copiar seleção (Ctrl+C)"
 msgstr ""
@@ -182,6 +186,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "&Desregistrar associações"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "&Diagnóstico"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -548,6 +556,10 @@ msgstr ""
 msgid "A avaliação solicitada para a mídia atual é inválida."
 msgstr ""
 
+#: src/player/diagnostics/mpv_library.py
+msgid "A biblioteca do MPV não foi encontrada na instalação."
+msgstr ""
+
 #: src/player/frames/smart_library/lifecycle.py
 msgid "A biblioteca inteligente está desligada. Ative em Preferências, aba Biblioteca."
 msgstr ""
@@ -808,6 +820,10 @@ msgstr ""
 msgid "A transmissão ao vivo terminou."
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "A verificação falhou: {error}"
+msgstr ""
+
 #: src/player/frames/update.py
 msgid "A verificação já está em andamento."
 msgstr ""
@@ -985,6 +1001,10 @@ msgstr ""
 
 #: src/player/frames/library_loader.py
 msgid "Abrir pasta como playlist"
+msgstr ""
+
+#: src/player/diagnostics/dialog.py
+msgid "Abrir pasta de &logs"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1351,6 +1371,10 @@ msgstr ""
 msgid "Arquivos de autenticação (*.json;*.txt)"
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "Arquivos de log: {path}"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos de texto (*.txt)"
 msgstr ""
@@ -1679,6 +1703,10 @@ msgstr ""
 msgid "Avanço e transição entre faixas"
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "Aviso"
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "Aviso sobre instalação"
 msgstr ""
@@ -1813,6 +1841,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Biblioteca"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Biblioteca do MPV"
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -2025,6 +2057,10 @@ msgstr ""
 msgid "Cancelar seleção de dispositivo de áudio"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Carregada de {path}."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Carregando as faixas das listas selecionadas para baixar."
 msgstr ""
@@ -2168,6 +2204,10 @@ msgstr ""
 msgid "Concluir"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Conectada como {name}."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "Conectando a conta do YouTube..."
 msgstr ""
@@ -2186,6 +2226,10 @@ msgstr ""
 
 #: src/player/youtube_music/subscriptions.py
 msgid "Conecte a conta do YouTube para ver as inscrições."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Conecte ou ative um dispositivo de som nas configurações do Windows."
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -2219,6 +2263,10 @@ msgstr ""
 #: src/player/frames/youtube_music/auth.py
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Conta conectada: {name}."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Conta do YouTube"
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -2517,6 +2565,10 @@ msgstr ""
 msgid "Desativado"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Desativado nas preferências; o KeyTune usa o yt-dlp."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Desativar saída de &vídeo (tocar só o áudio)"
 msgstr ""
@@ -2658,6 +2710,10 @@ msgstr ""
 msgid "Detalhes: {error}"
 msgstr ""
 
+#: src/player/diagnostics/dialog.py
+msgid "Diagnóstico do KeyTune"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Dias sem tocar"
 msgstr ""
@@ -2756,6 +2812,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Dispositivo salvo indisponível — {device}"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Dispositivos de saída encontrados: {count}."
 msgstr ""
 
 #: src/player/library/explorer.py
@@ -2895,6 +2955,10 @@ msgstr ""
 msgid "Em alta — {group}"
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "Em ordem"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Em&baralhar (E)"
 msgstr ""
@@ -2927,6 +2991,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Encerrar sessão AutoDJ"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Encontrado em {path}."
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -3015,6 +3083,10 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "Erro inesperado ao exportar cookies do {browser}: {detail}"
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Erro {code} ao carregar {name}."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -3139,6 +3211,10 @@ msgstr ""
 msgid "Estados e regiões de {country}"
 msgstr ""
 
+#: src/player/diagnostics/mpv_library.py
+msgid "Estas funções não existem na DLL do sistema: {names}."
+msgstr ""
+
 #: src/player/convert/plan.py
 msgid "Este arquivo não tem faixa de vídeo para converter."
 msgstr ""
@@ -3187,6 +3263,10 @@ msgstr ""
 msgid "Estilo da sequência e das transições."
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Está desativado nas preferências."
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Estônia"
 msgstr ""
@@ -3222,6 +3302,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Executa a ação: {label}."
+msgstr ""
+
+#: src/player/frames/diagnostics.py
+msgid "Executando o diagnóstico..."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3302,6 +3386,14 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Falhou"
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Falta o Universal C Runtime, que faz parte do Windows. Instale as atualizações pendentes do Windows."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Faltam estas bibliotecas do Windows: {names}."
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -3657,6 +3749,10 @@ msgstr ""
 msgid "Iniciar &rádio desta faixa\tCtrl+R"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Instalado e respondendo."
+msgstr ""
+
 #: src/player/frames/convert.py
 #: src/player/frames/download.py
 msgid "Instalando o FFmpeg..."
@@ -3680,6 +3776,18 @@ msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
 msgid "Instalação de {runtime} aberta no Windows Package Manager."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Instale as atualizações pendentes do Windows."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Instale o Microsoft Visual C++ Redistributable 2015-2022 (x64), disponível em {url}."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Instale ou atualize em Preferências > Recursos adicionais."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -3880,6 +3988,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "KeyTube"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "KeyTune {version}, {system} {release} ({build}), {bits}."
 msgstr ""
 
 #: src/player/lyrics/service.py
@@ -4450,12 +4562,20 @@ msgstr ""
 msgid "Nenhum preset selecionado."
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "Nenhum problema encontrado."
+msgstr ""
+
 #: src/player/frames/sleep_timer.py
 msgid "Nenhum temporizador ativo."
 msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Nenhuma aba de mídia ativa para configurar o equalizador."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Nenhuma conta conectada."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -5196,12 +5316,52 @@ msgstr ""
 msgid "O FFmpeg não foi encontrado."
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "O FFmpeg não foi encontrado. Ele é usado para converter mídias e em alguns downloads."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico encontrou o motivo abaixo."
+msgstr ""
+
+#: src/player/diagnostics/report.py
+msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico não encontrou a causa. Erro: {error}"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O KeyTune oferece a instalação na primeira conversão ou download que precisar dele."
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O MPV iniciou."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O MPV não encontrou nenhum dispositivo de saída de áudio."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O MPV usa o vulkan-1.dll do Windows, instalado pelo driver de vídeo."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O MPV usa o vulkan-1.dll que vem com o KeyTune."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O Node.js em {path} é da versão {version}, que o KeyTune não aceita."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O Node.js não foi encontrado. O yt-dlp e o YouTube.js precisam dele para resolver vídeos do YouTube."
 msgstr ""
 
 #: src/player/youtube_music/youtubejs_runtime.py
@@ -5214,6 +5374,14 @@ msgstr ""
 
 #: src/player/youtube_music/auth.py
 msgid "O Windows não permitiu descriptografar os cookies do {browser}. Tente usar o Firefox ou a importação manual."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "O Windows ou o antivírus bloqueou o carregamento de {name}. Restaure o arquivo da quarentena e adicione a pasta do KeyTune às exclusões."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "O Windows recusou estes arquivos da pasta do MPV: {names}. Eles estão danificados ou bloqueados."
 msgstr ""
 
 #: src/player/frames/youtube_music/tasks.py
@@ -5252,12 +5420,20 @@ msgstr ""
 msgid "O YouTube pode estar exigindo um token adicional no cliente atual. Atualize os recursos adicionais e tente novamente em alguns instantes."
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "O YouTube recebeu os cookies, mas respondeu como se ninguém estivesse conectado. Eles já venceram ou foram trocados pelo navegador depois da exportação. Exporte de novo por uma janela anônima e feche essa janela logo em seguida."
+msgstr ""
+
 #: src/player/frames/playback/backend.py
 msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
 msgstr ""
 
 #: src/player/youtube_music/youtubejs_runtime.py
 msgid "O YouTube.js demorou demais para responder."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O YouTube.js está ativado, mas o pacote ou o Node.js não está instalado. O KeyTune usa o yt-dlp no lugar."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py
@@ -5286,6 +5462,10 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O checksum do recurso adicional é inválido."
+msgstr ""
+
+#: src/player/frames/diagnostics.py
+msgid "O diagnóstico já está em andamento."
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -5381,6 +5561,10 @@ msgstr ""
 msgid "O modelo do nome do arquivo não pode conter pastas."
 msgstr ""
 
+#: src/player/diagnostics/youtube_resolution.py
+msgid "O outro resolvedor funcionou, então o YouTube toca. Atualize em Preferências > Recursos adicionais."
+msgstr ""
+
 #: src/player/optional_resources.py
 msgid "O pacote baixado não corresponde ao recurso solicitado."
 msgstr ""
@@ -5415,6 +5599,14 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O pacote {name} não passou na validação de integridade."
+msgstr ""
+
+#: src/player/diagnostics/dialog.py
+msgid "O player não iniciou"
+msgstr ""
+
+#: src/player/frames/diagnostics.py
+msgid "O player não iniciou."
 msgstr ""
 
 #: src/player/frames/plugins.py
@@ -5453,6 +5645,10 @@ msgstr ""
 msgid "O processo terminou durante a inicialização."
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "O que fazer: {advice}"
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "O que mudou nesta versão:"
 msgstr ""
@@ -5485,8 +5681,16 @@ msgstr ""
 msgid "O serviço do YouTube Music não está disponível para iniciar a rádio."
 msgstr ""
 
+#: src/player/diagnostics/mpv_library.py
+msgid "O vulkan-1.dll em uso é antigo. Reinstale o KeyTune, que leva o próprio vulkan-1.dll na pasta mpv, ou atualize o driver de vídeo."
+msgstr ""
+
 #: src/player/youtube_music/playlists.py
 msgid "O vídeo do YouTube não tem videoId válido."
+msgstr ""
+
+#: src/player/diagnostics/youtube_resolution.py
+msgid "O yt-dlp abriu o vídeo, mas o YouTube não entregou nenhum formato reproduzível."
 msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
@@ -5495,6 +5699,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O yt-dlp encontrou runtime JavaScript instalado, mas nenhuma versão é compatível: {runtimes}. Ative ou atualize os recursos adicionais para instalar o Node.js 24+."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O yt-dlp está em {path}, mas não respondeu."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -5528,6 +5736,10 @@ msgstr ""
 
 #: src/player/youtube_music/details.py
 msgid "O yt-dlp não conseguiu trazer os detalhes."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "O yt-dlp não está instalado. Sem ele o YouTube não toca e os downloads não funcionam."
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -5890,6 +6102,10 @@ msgstr ""
 msgid "Pesquisando {query}."
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Player"
+msgstr ""
+
 #: src/player/frames/playback/engine.py
 msgid "Player de reprodução indisponível."
 msgstr ""
@@ -6193,6 +6409,14 @@ msgstr ""
 msgid "Privada: só você vê. Não listada: visível para quem tiver o link. Pública: aparece no seu perfil e pode surgir em buscas."
 msgstr ""
 
+#: src/player/diagnostics/report.py
+msgid "Problema"
+msgstr ""
+
+#: src/player/diagnostics/report.py
+msgid "Problemas: {problems}. Avisos: {warnings}."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Processando o arquivo..."
 msgstr ""
@@ -6458,6 +6682,26 @@ msgstr ""
 msgid "Reinstalando yt-dlp na versão {channel}..."
 msgstr ""
 
+#: src/player/diagnostics/mpv_library.py
+msgid "Reinstale o KeyTune, que leva o próprio vulkan-1.dll na pasta mpv, ou atualize o driver de vídeo."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Reinstale o KeyTune."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Reinstale o KeyTune. Se o antivírus removeu os arquivos, adicione a pasta do KeyTune às exclusões."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "Reinstale o KeyTune. Se o erro continuar, instale as atualizações pendentes do Windows."
+msgstr ""
+
+#: src/player/diagnostics/dialog.py
+msgid "Relatório do diagnóstico"
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Remove a autenticação salva da conta do YouTube nesta instalação."
 msgstr ""
@@ -6589,6 +6833,10 @@ msgstr ""
 
 #: src/player/frames/playback/engine.py
 msgid "Resolvendo {label}..."
+msgstr ""
+
+#: src/player/diagnostics/youtube_resolution.py
+msgid "Resolveu um vídeo público em {seconds} s."
 msgstr ""
 
 #: src/player/youtube_music/comments.py
@@ -6782,6 +7030,10 @@ msgstr ""
 msgid "Saída de vídeo desativada\n\nEsta mídia está tocando só o áudio.\nAbra Preferências > Reprodução para reativar o vídeo quando quiser."
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Saída de áudio"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Saída de áudio e vídeo"
 msgstr ""
@@ -6968,6 +7220,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Singles e EPs"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Sistema"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7396,12 +7652,20 @@ msgstr ""
 msgid "Usar versão &nightly do yt-dlp (recomendado)"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Use Copiar relatório e envie o texto, junto com o arquivo de log, ao relatar o problema."
+msgstr ""
+
 #: src/player/frames/library_tabs/item_removal.py
 msgid "Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."
 msgstr ""
 
 #: src/player/preferences/audio_output_dialog.py
 msgid "Use as setas para escolher a saída de áudio."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Use o botão Atualizar acesso, na aba KeyTube, para conectar a conta de novo."
 msgstr ""
 
 #: src/player/radio/manual_dialog.py
@@ -7430,6 +7694,10 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Veja se o antivírus bloqueou o arquivo."
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -7509,8 +7777,20 @@ msgstr ""
 msgid "Verificar at&ualizações"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Verifique a conexão com a internet e tente de novo."
+msgstr ""
+
+#: src/player/diagnostics/youtube_resolution.py
+msgid "Verifique a conexão com a internet. Se ela estiver normal, atualize os componentes em Preferências > Recursos adicionais; a versão nightly do yt-dlp costuma receber as correções antes."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Versão"
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Versão {version}."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -7599,6 +7879,10 @@ msgstr ""
 msgid "Votos: {value}"
 msgstr ""
 
+#: src/player/diagnostics/checks.py
+msgid "Vulkan"
+msgstr ""
+
 #: src/player/download/options.py
 msgid "Vídeo"
 msgstr ""
@@ -7609,6 +7893,10 @@ msgstr ""
 
 #: src/player/frames/playback/live.py
 msgid "Vídeo das transmissões ao vivo desativado."
+msgstr ""
+
+#: src/player/diagnostics/checks.py
+msgid "Vídeo do YouTube"
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -7625,6 +7913,14 @@ msgstr ""
 
 #: src/player/convert/options.py
 msgid "Vídeo para áudio"
+msgstr ""
+
+#: src/player/diagnostics/youtube_resolution.py
+msgid "Vídeo pelo YouTube.js"
+msgstr ""
+
+#: src/player/diagnostics/youtube_resolution.py
+msgid "Vídeo pelo yt-dlp"
 msgstr ""
 
 #: src/player/library/explorer.py
@@ -8324,6 +8620,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "{name} foi instalado e ativado."
+msgstr ""
+
+#: src/player/diagnostics/mpv_library.py
+msgid "{name} não é compatível com esta versão do aplicativo. Reinstale o KeyTune."
 msgstr ""
 
 #: src/player/frames/equalizer.py

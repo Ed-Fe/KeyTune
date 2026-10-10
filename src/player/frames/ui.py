@@ -558,6 +558,7 @@ class FrameUIMixin:
         self.menu_open_manual_id = wx.NewIdRef()
         self.menu_changelog_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
+        self.menu_diagnostics_id = wx.NewIdRef()
         self.menu_show_welcome_screen_id = wx.NewIdRef()
         self.menu_about_id = wx.NewIdRef()
         help_menu.Append(self.menu_show_welcome_screen_id, _("Mostrar tela de &boas-vindas"))
@@ -567,6 +568,7 @@ class FrameUIMixin:
         help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
+        help_menu.Append(self.menu_diagnostics_id, _("&Diagnóstico"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
 
@@ -855,6 +857,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
         self.Bind(wx.EVT_MENU, self.on_open_changelog, id=self.menu_changelog_id)
+        self.Bind(wx.EVT_MENU, self.on_run_diagnostics, id=self.menu_diagnostics_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
         self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)

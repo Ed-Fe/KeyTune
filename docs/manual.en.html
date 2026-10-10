@@ -984,8 +984,11 @@ footer {
 <p>Favorites and ratings are spoken together with the item, and details, comments and plugin permissions appear in reading fields with a label. The screen reader also announces the name of the group when focus enters it.</p>
 <h2 id="updates">Updates</h2>
 <p>On startup, KeyTune can check for updates on its own. To check at any time, use <strong>Help &gt; Check for updates</strong>.</p>
-<p>When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready.</p>
+<p>When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready. The notes come in the interface language.</p>
+<p>To read what changed in each version, including earlier ones, use <strong>Help &gt; Change history</strong>: choose the version in the list and read the text just below it.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>Start with the diagnostics.</strong> <strong>Help &gt; Diagnostics</strong> tests what KeyTune needs to play: the MPV library and its Windows dependencies, starting the player, the audio devices, <code>yt-dlp</code>, Node.js, YouTube.js, FFmpeg, the YouTube account and, by resolving a real public video, whether YouTube answers YouTube.js and <code>yt-dlp</code>. The report opens in a reading box, with the problems first and, for each one, what to do. <strong>Copy report</strong> puts the text on the clipboard, to attach to a bug report. The diagnostics only read and test; they do not install or change anything.</p>
+<p>If the player cannot start when KeyTune opens, the same diagnostics run by themselves, show the reason, and the app then closes.</p>
 <p><strong>The app doesn't open properly.</strong> Check that the installation finished without errors (reinstalling with the latest installer fixes most cases) and that the system has permission to access the files or folders you tried to open.</p>
 <p><strong>The player can't find the MPV runtime.</strong> Check that it is in one of these places: an <code>mpv/</code> folder next to the executable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, the cache saved from the previous run or a compatible Chocolatey installation.</p>
 <p><strong>File association doesn't work as expected.</strong> There are two separate steps. First, KeyTune must be registered as an option (during installation, or later in <strong>Settings &gt; Preferences &gt; General &gt; Register as default player</strong>). Second, it must be chosen as the default app for those formats in the Windows default apps settings. Registering alone doesn't make KeyTune the default.</p>
@@ -1003,7 +1006,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 09/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

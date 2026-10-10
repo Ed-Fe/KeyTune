@@ -764,6 +764,10 @@ Para ler o que mudou em cada versão, inclusive nas anteriores, use **Ajuda > Hi
 
 ## Solução de problemas
 
+**Comece pelo diagnóstico.** **Ajuda > Diagnóstico** testa o que o KeyTune precisa para tocar: a biblioteca do MPV e as dependências dela no Windows, o início do player, os dispositivos de áudio, o `yt-dlp`, o Node.js, o YouTube.js, o FFmpeg, a conta do YouTube e, resolvendo um vídeo público de verdade, se o YouTube responde ao YouTube.js e ao `yt-dlp`. O relatório abre numa caixa de leitura, com os problemas primeiro e, em cada um, o que fazer. **Copiar relatório** leva o texto para a área de transferência, para anexar a um relato de bug. O diagnóstico só lê e testa; ele não instala nem altera nada.
+
+Se o player não conseguir iniciar ao abrir o KeyTune, o mesmo diagnóstico roda sozinho, mostra o motivo e o aplicativo fecha em seguida.
+
 **O aplicativo não abre direito.** Veja se a instalação terminou sem erros (reinstalar com o instalador mais recente resolve a maioria dos casos) e se o sistema tem permissão para acessar os arquivos ou pastas que você tentou abrir.
 
 **O player não acha o runtime do MPV.** Confira se ele está num destes lugares: uma pasta `mpv/` ao lado do executável, `MPV_HOME`, `MPV_DLL_DIR`, o cache salvo da execução anterior ou uma instalação compatível do Chocolatey.

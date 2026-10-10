@@ -984,8 +984,11 @@ footer {
 <p>Los favoritos y las valoraciones se dicen junto con el elemento, y los detalles, los comentarios y los permisos de los plugins aparecen en campos de lectura con etiqueta. El lector de pantalla también anuncia el nombre del grupo cuando el foco entra en él.</p>
 <h2 id="actualizaciones">Actualizaciones</h2>
 <p>Al iniciar, KeyTune puede comprobar las actualizaciones por sí solo. Para comprobarlas en cualquier momento, usa <strong>Ayuda &gt; Comprobar actualizaciones</strong>.</p>
-<p>Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo.</p>
+<p>Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo. Las notas llegan en el idioma de la interfaz.</p>
+<p>Para leer qué cambió en cada versión, incluidas las anteriores, usa <strong>Ayuda &gt; Historial de cambios</strong>: elige la versión en la lista y lee el texto justo debajo.</p>
 <h2 id="solucion-de-problemas">Solución de problemas</h2>
+<p><strong>Empieza por el diagnóstico.</strong> <strong>Ayuda &gt; Diagnóstico</strong> prueba lo que KeyTune necesita para reproducir: la biblioteca de MPV y sus dependencias en Windows, el inicio del reproductor, los dispositivos de audio, <code>yt-dlp</code>, Node.js, YouTube.js, FFmpeg, la cuenta de YouTube y, resolviendo un video público de verdad, si YouTube responde a YouTube.js y a <code>yt-dlp</code>. El informe se abre en un cuadro de lectura, con los problemas primero y, en cada uno, qué hacer. <strong>Copiar informe</strong> lleva el texto al portapapeles, para adjuntarlo a un informe de error. El diagnóstico solo lee y prueba; no instala ni cambia nada.</p>
+<p>Si el reproductor no consigue iniciarse al abrir KeyTune, el mismo diagnóstico se ejecuta solo, muestra el motivo y la aplicación se cierra a continuación.</p>
 <p><strong>La aplicación no se abre bien.</strong> Comprueba que la instalación terminó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y que el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.</p>
 <p><strong>El reproductor no encuentra el runtime de MPV.</strong> Comprueba que está en uno de estos lugares: una carpeta <code>mpv/</code> junto al ejecutable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, la caché guardada de la ejecución anterior o una instalación compatible de Chocolatey.</p>
 <p><strong>La asociación de archivos no funciona como esperabas.</strong> Son dos pasos separados. Primero, KeyTune debe estar registrado como opción (durante la instalación, o después en <strong>Configuración &gt; Preferencias &gt; General &gt; Registrar como reproductor predeterminado</strong>). Segundo, debe estar elegido como aplicación predeterminada para esos formatos en la configuración de aplicaciones predeterminadas de Windows. Registrar no basta para que KeyTune sea el predeterminado.</p>
@@ -1003,7 +1006,7 @@ footer {
 <p>KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El código fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">docs/manual.es.md</a>.</p>
 <p>Para ejecutar el proyecto desde el código, instala las dependencias con <code>uv sync</code> y abre el reproductor con <code>uv run keytune</code>. Las reglas de redacción del manual, el changelog y los commits están en <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generado el 05/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 09/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

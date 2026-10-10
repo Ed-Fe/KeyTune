@@ -144,6 +144,16 @@ def bootstrap_mpv_runtime() -> bool:
     return False
 
 
+def find_runtime_library() -> Path | None:
+    """The MPV DLL the bootstrap would use, or ``None`` when no candidate folder has one."""
+    for runtime_dir in _candidate_runtime_dirs():
+        for dll_name in _RUNTIME_DLL_NAMES:
+            dll_path = runtime_dir / dll_name
+            if dll_path.is_file():
+                return dll_path
+    return None
+
+
 def _get_logger():
     from .log import get_logger
     return get_logger(__name__)

@@ -95,6 +95,12 @@ class QuickPlayerFrame(wx.Frame):
 
     # --- reprodução ---------------------------------------------------------
 
+    def _report_player_startup_failure(self, error):
+        # Importado só na falha, para o player rápido continuar abrindo depressa.
+        from ..diagnostics.dialog import show_player_startup_failure
+
+        show_player_startup_failure(self, error)
+
     def _start_playback(self):
         if not self or self._player is not None:
             return
@@ -106,7 +112,7 @@ class QuickPlayerFrame(wx.Frame):
             player = self._instance.media_player_new()
         except Exception as exc:
             _logger.error("Quick player could not start MPV: %s", exc)
-            wx.MessageBox(str(exc), APP_TITLE, wx.OK | wx.ICON_ERROR, self)
+            self._report_player_startup_failure(exc)
             self.Close()
             return
 
