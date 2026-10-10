@@ -1606,6 +1606,10 @@ msgstr ""
 msgid "Atalhos salvos. Não foi possível registrar {shortcuts}: já estão em uso por outro programa."
 msgstr ""
 
+#: src/player/frames/youtube_music/auth.py
+msgid "Atenção: os cookies não trazem o LOGIN_INFO. A biblioteca funciona, mas faixas que exigem a conta podem não tocar. Se isso acontecer, exporte todos os cookies de youtube.com em um arquivo cookies.txt e conecte de novo."
+msgstr ""
+
 #: src/player/frames/ui.py
 #: src/player/plugins/dialog.py
 msgid "Ativado"
@@ -6289,6 +6293,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
+msgstr ""
+
+#: src/player/youtube_music/service.py
+msgid "Os cookies informados não trazem o LOGIN_INFO, e sem ele o YouTube não reconhece a conta. Isso acontece ao copiar os cookies pelo console do navegador ou com um exportador que deixa de fora os cookies protegidos. Exporte todos os cookies de youtube.com em um arquivo cookies.txt."
 msgstr ""
 
 #: src/player/frames/library_navigation.py

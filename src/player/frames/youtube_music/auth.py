@@ -177,8 +177,17 @@ class AuthMixin:
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("YouTube conectado como {name}.").format(name=account_name))
         self.on_refresh_youtube_music_library(None, announce=False)
+        connected_message = _("Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}").format(
+            path=saved_path, name=account_name
+        )
+        if self._get_youtube_music_service().saved_auth_has_login_info() is False:
+            connected_message += "\n\n" + _(
+                "Atenção: os cookies não trazem o LOGIN_INFO. A biblioteca funciona, mas faixas que exigem "
+                "a conta podem não tocar. Se isso acontecer, exporte todos os cookies de youtube.com "
+                "em um arquivo cookies.txt e conecte de novo."
+            )
         wx.MessageBox(
-            _("Autenticação do navegador salva em:\n{path}\n\nConta conectada: {name}").format(path=saved_path, name=account_name),
+            connected_message,
             "KeyTube",
             wx.OK | wx.ICON_INFORMATION,
             self,

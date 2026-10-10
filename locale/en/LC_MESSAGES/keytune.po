@@ -6995,3 +6995,9 @@ msgstr "{action} (global shortcut)"
 
 msgid "{action} (atalho do player)"
 msgstr "{action} (player shortcut)"
+
+msgid "Atenção: os cookies não trazem o LOGIN_INFO. A biblioteca funciona, mas faixas que exigem a conta podem não tocar. Se isso acontecer, exporte todos os cookies de youtube.com em um arquivo cookies.txt e conecte de novo."
+msgstr "Warning: the cookies do not include LOGIN_INFO. The library works, but tracks that require the account may not play. If that happens, export all youtube.com cookies to a cookies.txt file and connect again."
+
+msgid "Os cookies informados não trazem o LOGIN_INFO, e sem ele o YouTube não reconhece a conta. Isso acontece ao copiar os cookies pelo console do navegador ou com um exportador que deixa de fora os cookies protegidos. Exporte todos os cookies de youtube.com em um arquivo cookies.txt."
+msgstr "The cookies provided do not include LOGIN_INFO, and without it YouTube does not recognize the account. This happens when the cookies are copied from the browser console or with an exporter that leaves out protected cookies. Export all youtube.com cookies to a cookies.txt file."

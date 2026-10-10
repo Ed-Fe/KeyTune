@@ -66,6 +66,42 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             self.assertEqual(auth_path.read_text(encoding="utf-8"), "autenticação anterior")
             self.assertEqual(cookie_path.read_text(encoding="utf-8"), "cookies anteriores")
 
+    def _save_with_candidate_client(self, temp_dir, candidate_client, headers_raw):
+        def fake_setup(*, filepath, headers_raw):
+            pathlib.Path(filepath).write_text(headers_raw, encoding="utf-8")
+
+        fake_module = SimpleNamespace(setup=fake_setup, YTMusic=Mock(return_value=candidate_client))
+        with patch(
+            "player.youtube_music.service.get_browser_auth_file_path",
+            return_value=str(pathlib.Path(temp_dir) / "ytmusic_browser.json"),
+        ), patch(
+            "player.youtube_music.service.get_browser_auth_cookie_file_path",
+            return_value=str(pathlib.Path(temp_dir) / "ytmusic_cookies.txt"),
+        ), patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module):
+            return YouTubeMusicService().save_browser_auth(headers_raw=headers_raw)
+
+    def test_signed_out_answer_without_login_info_names_the_missing_cookie(self):
+        client = self._client_with_unreadable_account_menu(self._account_menu_response("0"))
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaisesRegex(RuntimeError, "LOGIN_INFO"):
+                self._save_with_candidate_client(temp_dir, client, "Cookie: SID=x; SAPISID=segredo")
+
+    def test_signed_out_answer_with_login_info_keeps_the_rotation_message(self):
+        client = self._client_with_unreadable_account_menu(self._account_menu_response("0"))
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaisesRegex(RuntimeError, "janela anônima"):
+                self._save_with_candidate_client(temp_dir, client, "Cookie: LOGIN_INFO=a:b; SAPISID=segredo")
+
+    def test_other_failures_without_login_info_keep_their_own_message(self):
+        client = Mock()
+        client.get_account_info.side_effect = RuntimeError("sem rede")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaisesRegex(RuntimeError, "sem rede"):
+                self._save_with_candidate_client(temp_dir, client, "Cookie: SID=x; SAPISID=segredo")
+
     def _account_menu_response(self, logged_in):
         return {
             "responseContext": {

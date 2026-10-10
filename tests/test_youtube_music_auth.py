@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.youtube_music.auth import (
+    auth_headers_have_login_info,
     build_browser_auth_cookie_file_content,
     create_temporary_browser_auth_cookie_file,
     export_cookies_from_browser,
@@ -263,6 +264,17 @@ class YouTubeMusicAuthTests(unittest.TestCase):
             headers_raw = prepare_browser_auth_input(cookies_txt)
 
         self.assertRegex(headers_raw, r"Authorization: SAPISIDHASH \d+_[0-9a-f]{40}\n")
+
+    def test_login_info_is_found_in_every_accepted_input(self):
+        cookies_txt = (
+            "# Netscape HTTP Cookie File\n"
+            ".youtube.com\tTRUE\t/\tTRUE\t0\tSAPISID\tsegredo\n"
+            "#HttpOnly_.youtube.com\tTRUE\t/\tTRUE\t0\tLOGIN_INFO\tAFmmF2sw:QUQ3Mj==\n"
+        )
+
+        self.assertTrue(auth_headers_have_login_info(prepare_browser_auth_input(cookies_txt)))
+        self.assertTrue(auth_headers_have_login_info({"Cookie": "SAPISID=segredo; LOGIN_INFO=a:b"}))
+        self.assertFalse(auth_headers_have_login_info(prepare_browser_auth_input("SID=x; SAPISID=segredo")))
 
     def test_text_without_cookies_is_left_for_ytmusicapi_to_reject(self):
         self.assertEqual(prepare_browser_auth_input("texto qualquer"), "texto qualquer")

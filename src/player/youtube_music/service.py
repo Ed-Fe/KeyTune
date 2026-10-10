@@ -5,6 +5,7 @@ import tempfile
 from .auth import (
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
     account_index_from_headers,
+    auth_headers_have_login_info,
     export_cookies_from_browser,
     get_browser_auth_file_path,
     get_browser_auth_cookie_file_path,
@@ -57,6 +58,10 @@ class TemporaryYouTubeMusicAuthError(YouTubeMusicAuthValidationError):
         super().__init__(message, should_disconnect=False)
 
 
+class _SignedOutSessionError(RuntimeError):
+    """O YouTube recebeu os cookies e respondeu como a um visitante."""
+
+
 class YouTubeMusicDependencyUnavailableError(YouTubeMusicAuthValidationError):
     is_dependency_unavailable = True
 
@@ -101,6 +106,10 @@ def _is_probably_invalid_saved_auth_error(error):
     return any(marker in normalized_message for marker in _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS)
 
 
+def _is_signed_out_error(error):
+    return isinstance(error, _SignedOutSessionError) or _is_probably_invalid_saved_auth_error(error)
+
+
 def _logged_in_state(response):
     """``True``/``False`` conforme o YouTube declara na resposta; ``None`` quando não declara."""
     try:
@@ -131,7 +140,7 @@ def _fetch_account_info(client):
         if logged_in is None:
             raise
         if not logged_in:
-            raise RuntimeError(
+            raise _SignedOutSessionError(
                 _(
                     "O YouTube recebeu os cookies, mas respondeu como se ninguém estivesse conectado. "
                     "Eles já venceram ou foram trocados pelo navegador depois da exportação. "
@@ -393,9 +402,24 @@ class YouTubeMusicService:
                 raise RuntimeError(_("A autenticação informada não contém cookies válidos do YouTube."))
 
             candidate_client = ytmusicapi.YTMusic(staged_auth_path)
-            account_info = _fetch_account_info(candidate_client)
+            has_login_info = auth_headers_have_login_info(normalized_headers_raw)
+            try:
+                account_info = _fetch_account_info(candidate_client)
+            except Exception as error:
+                if has_login_info or not _is_signed_out_error(error):
+                    raise
+                raise RuntimeError(
+                    _(
+                        "Os cookies informados não trazem o LOGIN_INFO, e sem ele o YouTube não reconhece a conta. "
+                        "Isso acontece ao copiar os cookies pelo console do navegador ou com um exportador "
+                        "que deixa de fora os cookies protegidos. "
+                        "Exporte todos os cookies de youtube.com em um arquivo cookies.txt."
+                    )
+                ) from error
             if not isinstance(account_info, dict):
                 raise RuntimeError(_("A resposta da conta do YouTube veio em formato inválido."))
+            if not has_login_info:
+                _logger.warning("YouTube Music cookies saved without LOGIN_INFO (source=%s)", source_name)
 
             harden_sensitive_file_permissions(staged_auth_path)
             harden_sensitive_file_permissions(staged_cookie_path)
@@ -430,6 +454,13 @@ class YouTubeMusicService:
             return account_index_from_headers(self._read_saved_browser_auth_headers())
         except (OSError, ValueError, RuntimeError):
             return 0
+
+    def saved_auth_has_login_info(self):
+        """``False`` quando a sessão salva não traz o ``LOGIN_INFO``; na dúvida, ``True``."""
+        try:
+            return auth_headers_have_login_info(self._read_saved_browser_auth_headers())
+        except (OSError, ValueError, RuntimeError):
+            return True
 
     def list_session_accounts(self):
         """``[(índice, nome)]`` das contas Google conectadas na sessão salva.

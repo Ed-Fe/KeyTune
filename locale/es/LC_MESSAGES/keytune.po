@@ -6995,3 +6995,9 @@ msgstr "{action} (atajo global)"
 
 msgid "{action} (atalho do player)"
 msgstr "{action} (atajo del reproductor)"
+
+msgid "Atenção: os cookies não trazem o LOGIN_INFO. A biblioteca funciona, mas faixas que exigem a conta podem não tocar. Se isso acontecer, exporte todos os cookies de youtube.com em um arquivo cookies.txt e conecte de novo."
+msgstr "Atención: las cookies no incluyen LOGIN_INFO. La biblioteca funciona, pero las pistas que requieren la cuenta pueden no reproducirse. Si eso ocurre, exporta todas las cookies de youtube.com a un archivo cookies.txt y conecta de nuevo."
+
+msgid "Os cookies informados não trazem o LOGIN_INFO, e sem ele o YouTube não reconhece a conta. Isso acontece ao copiar os cookies pelo console do navegador ou com um exportador que deixa de fora os cookies protegidos. Exporte todos os cookies de youtube.com em um arquivo cookies.txt."
+msgstr "Las cookies indicadas no incluyen LOGIN_INFO, y sin ella YouTube no reconoce la cuenta. Esto ocurre al copiar las cookies desde la consola del navegador o con un exportador que deja fuera las cookies protegidas. Exporta todas las cookies de youtube.com a un archivo cookies.txt."

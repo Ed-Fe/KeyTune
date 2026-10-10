@@ -19,6 +19,7 @@ _REDACTED_VALUE = "[oculto]"
 _NETSCAPE_HTTP_ONLY_PREFIX = "#HttpOnly_"
 # Ordem de preferência: o ytmusicapi só lê o primeiro, mas os três carregam o mesmo valor.
 _SAPISID_COOKIE_NAMES = ("__Secure-3PAPISID", "SAPISID", "__Secure-1PAPISID")
+_LOGIN_INFO_COOKIE_NAME = "LOGIN_INFO"
 
 # Pares (nome_yt_dlp, rótulo exibido) para navegadores suportados nativamente
 # pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
@@ -441,6 +442,19 @@ def account_index_from_headers(headers) -> int:
         return max(0, int(_get_header_value(headers, "x-goog-authuser") or 0))
     except ValueError:
         return 0
+
+
+def auth_headers_have_login_info(headers) -> bool:
+    """Se os cookies trazem o ``LOGIN_INFO``, que acompanha toda sessão conectada.
+
+    Sem ele o YouTube responde como a um visitante e o yt-dlp não usa a conta.
+    Ele é ``HttpOnly``: some de quem copia ``document.cookie`` ou usa um
+    exportador que deixa esses cookies de fora.
+    """
+    if not isinstance(headers, dict):
+        headers = _headers_from_raw_text(headers)
+    cookie_pairs = _cookie_pairs_from_header(_get_header_value(headers, "cookie"))
+    return any(name == _LOGIN_INFO_COOKIE_NAME for name, _value in cookie_pairs)
 
 
 def _is_valid_browser_auth_cookie_file(file_path):
