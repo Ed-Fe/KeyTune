@@ -213,6 +213,10 @@ $targetRoot = "dist\KeyTune\mpv"
 New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null
 Copy-Item -Path "$MpvRuntimeDir\*" -Destination $targetRoot -Recurse -Force
 
+# A libmpv importa funções do Vulkan 1.1+; um vulkan-1.dll antigo em System32 impede o carregamento (erro 127).
+Require-Path -Path "third_party\vulkan-loader\vulkan-1.dll" -Description "Loader Vulkan empacotado"
+Copy-Item -Path "third_party\vulkan-loader\vulkan-1.dll" -Destination $targetRoot -Force
+
 $licenseDir = "dist\KeyTune\THIRD_PARTY_LICENSES"
 New-Item -Path $licenseDir -ItemType Directory -Force | Out-Null
 $possibleLicenseFiles = @(
@@ -220,6 +224,8 @@ $possibleLicenseFiles = @(
     "$MpvRuntimeDir\COPYING.txt",
     "$MpvRuntimeDir\COPYING"
 )
+
+Copy-Item -Path "third_party\vulkan-loader\LICENSE.txt" -Destination (Join-Path $licenseDir "VULKAN-LOADER-LICENSE.txt") -Force
 
 foreach ($file in $possibleLicenseFiles) {
     if (Test-Path $file) {

@@ -172,8 +172,12 @@ jobs:
           New-Item -Path $targetRoot -ItemType Directory -Force | Out-Null
           Copy-Item -Path "build\mpv-runtime\*" -Destination $targetRoot -Recurse -Force
 
+          # libmpv imports Vulkan 1.1+ functions; an old vulkan-1.dll in System32 blocks loading it (error 127).
+          Copy-Item -Path "third_party\vulkan-loader\vulkan-1.dll" -Destination $targetRoot -Force -ErrorAction Stop
+
           $licenseDir = "dist\KeyTune\THIRD_PARTY_LICENSES"
           New-Item -Path $licenseDir -ItemType Directory -Force | Out-Null
+          Copy-Item -Path "third_party\vulkan-loader\LICENSE.txt" -Destination (Join-Path $licenseDir "VULKAN-LOADER-LICENSE.txt") -Force -ErrorAction Stop
 
           $possibleLicenseFiles = @(
             "build\mpv-runtime\LICENSE.txt",
