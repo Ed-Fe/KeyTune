@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import re
@@ -890,9 +891,8 @@ def _authorization_from_cookie(cookie_header, origin):
     if not sapisid:
         return ""
 
-    try:
-        from ytmusicapi.helpers import get_authorization
-    except ImportError:
-        return ""
-
-    return get_authorization(f"{sapisid} {origin}")
+    # Calculado aqui, e não pelo ytmusicapi: ele é baixado sob demanda e pode
+    # ainda não estar carregado quando os cookies são lidos.
+    timestamp = str(int(time.time()))
+    digest = hashlib.sha1(f"{timestamp} {sapisid} {origin}".encode("utf-8")).hexdigest()
+    return f"SAPISIDHASH {timestamp}_{digest}"

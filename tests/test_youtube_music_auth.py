@@ -255,6 +255,15 @@ class YouTubeMusicAuthTests(unittest.TestCase):
         self._assert_ytmusicapi_reads(prepare_browser_auth_input(pasted), "segredo")
         self.assertIn("#HttpOnly_.youtube.com\tTRUE\t/\tTRUE\t0\tSID\tx", build_browser_auth_cookie_file_content(pasted))
 
+    def test_cookies_are_read_before_ytmusicapi_is_available(self):
+        cookies_txt = "# Netscape HTTP Cookie File\n.youtube.com\tTRUE\t/\tTRUE\t0\tSAPISID\tsegredo\n"
+
+        # No build de release o ytmusicapi é baixado sob demanda.
+        with patch.dict(sys.modules, {"ytmusicapi": None, "ytmusicapi.helpers": None}):
+            headers_raw = prepare_browser_auth_input(cookies_txt)
+
+        self.assertRegex(headers_raw, r"Authorization: SAPISIDHASH \d+_[0-9a-f]{40}\n")
+
     def test_text_without_cookies_is_left_for_ytmusicapi_to_reject(self):
         self.assertEqual(prepare_browser_auth_input("texto qualquer"), "texto qualquer")
 
