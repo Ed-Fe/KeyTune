@@ -470,35 +470,35 @@ Besides opening and saving playlists, KeyTune edits your playlists directly in t
 
 ### Connect your account
 
-To use your library (saved playlists, history, likes and ratings), connect an account. The **Connect account** dialog offers two modes:
+To use your library (saved playlists, history, likes and ratings), connect an account. KeyTune does not ask for your password: it uses the cookies of the browser where you signed in to YouTube.
 
-1. **Extract from the installed browser**: choose Firefox, Google Chrome, Microsoft Edge, Brave or Opera from the list and click **Connect**. KeyTune extracts the session from the browser profile through `yt-dlp`. Firefox is the most recommended, because it works best on Windows.
-2. **Import a file or manual text**: for browsers that are not on the list, or custom setups, import a `cookies.txt` file or paste the session's HTTP headers.
+Open KeyTube (`Ctrl+Shift+Y`) and, in the **Account and library** section, activate **Connect account...**. The **Connect to YouTube** dialog has two modes:
 
-On Windows, Chrome, Edge and Brave may require the browser to be fully closed and, in some versions, the browser's own protection prevents extraction. If that happens, use Firefox or the manual import.
+1. **Enter manually (file or text)**: the default mode and the one that lasts. You export a `cookies.txt` from a private window and choose the file.
+2. **Export from installed browser**: quicker, but the connection drops when you use YouTube in that browser again.
+
+The **How to export the cookies...** button opens a summary of these instructions in a reading box.
 
 #### What cookies are
 
-Cookies are small text files that browsers keep to remember preferences and logins. When you sign in to YouTube Music, the browser saves cookies with your authentication. When you connect the account in KeyTune, the app uses that session to access your library without asking for your password.
+Cookies are small text files that browsers keep to remember preferences and logins. When you sign in to YouTube Music, the browser saves cookies with your authentication. When you connect the account in KeyTune, the app uses that session to reach your library.
 
-#### Connect through the browser
+#### Why the connection drops: cookie rotation
 
-1. Sign in to your account on [YouTube Music](https://music.youtube.com/) in the browser (Chrome, Edge, Firefox, Brave or Opera).
-2. In KeyTune, open KeyTube (`Ctrl+Shift+Y`).
-3. In the **Account and library** section, click **Connect account...**.
-4. Choose **Extract from the installed browser**.
-5. Choose the browser from the list and click **Connect**.
+For security, YouTube replaces the account cookies often while you use the site. When the browser gets the new cookies, the ones KeyTune kept stop working, and the account shows as disconnected even if it worked yesterday. It is not a KeyTune bug or a problem with your account.
 
-#### Alternative: export the cookies.txt
+The rotation only happens in a session that keeps being used. That is why the path that lasts is to export the cookies from a session the browser will never open again: a private window, closed right after the export.
 
-Use this path if you choose manual mode or have a browser that is not supported directly.
+When the cookies stop working, KeyTune tells you YouTube no longer accepts them. Connect again with a new file; the old one will not work again.
+
+#### Connect with a cookies.txt (recommended)
 
 **Before you start**, install the [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) extension in the browser.
 
-**1. Enable the extension in incognito tabs.** In an incognito tab, Google doesn't refresh the cookies all the time during normal browser use.
+**1. Enable the extension in private windows.**
 
 1. Press `Ctrl+L` to focus the address bar.
-2. Press `Escape` to leave the address bar's edit box.
+2. Press `Escape` to leave the address bar edit box.
 3. Press `Alt+F` to open the browser menu.
 4. With the arrow keys, go to **Extensions**, open the submenu with `Enter` and choose **Manage extensions**.
 5. Find **Get cookies.txt LOCALLY** and click **Details** (or "Learn more").
@@ -507,16 +507,33 @@ Use this path if you choose manual mode or have a browser that is not supported 
 
 **2. Sign in and export the cookies.**
 
-1. Open an incognito tab (`Ctrl+Shift+N` or `Ctrl+Shift+P`).
-2. Go to [music.youtube.com](https://music.youtube.com/).
-3. Sign in with your Google account.
-4. Open the **Get cookies.txt LOCALLY** extension and click **Export** (or **Download**) to save the `cookies.txt`.
-5. Close the incognito tab without visiting other sites.
+1. Open a private window (`Ctrl+Shift+N` or `Ctrl+Shift+P`). It must be the only private window open.
+2. Go to [music.youtube.com](https://music.youtube.com/) and sign in with your Google account.
+3. Open the **Get cookies.txt LOCALLY** extension and click **Export** (or **Download**) to save the `cookies.txt`.
+4. Close the private window without opening anything else in it.
+
+This is usually enough. If the account still drops, repeat the export with one more step, recommended by `yt-dlp`: after signing in and before exporting, press `Ctrl+L`, type `youtube.com/robots.txt` and press `Enter`. A text-only page opens; you do not need to do anything on it. Export the cookies with that page open and close the window.
 
 **3. Import into KeyTune.**
 
-1. In the **Connect account...** dialog, choose **Import a file or manual text**.
-2. Select the downloaded `cookies.txt` (or paste the headers text) and click **Connect**.
+1. In the **Connect to YouTube** dialog, leave **Enter manually (file or text)** chosen.
+2. In **Connection file**, choose the downloaded `cookies.txt` and activate **Connect**.
+
+Instead of the file, you can also paste into **Data copied from the browser** the contents of the `cookies.txt`, the HTTP headers of a YouTube Music request, or only the value of the `Cookie` header.
+
+#### Connect through the installed browser
+
+Use this mode if you do not want to install the extension. It copies the browser's normal session through `yt-dlp`, so what is in [Why the connection drops](#why-the-connection-drops-cookie-rotation) applies: the connection lasts while you do not use YouTube in that browser. It works best with a browser where you do not watch YouTube.
+
+1. Sign in to your account on [YouTube Music](https://music.youtube.com/) in that browser and close it completely.
+2. In the **Connect to YouTube** dialog, choose **Export from installed browser**.
+3. Choose the browser in the list and activate **Connect**.
+
+Firefox works best. On Windows, Chrome, Edge and Brave protect the cookies in a way `yt-dlp` cannot open, and the export usually fails; in that case use Firefox or the manual mode.
+
+#### More than one Google account
+
+If the session has more than one Google account, KeyTune asks which one to use right after connecting. The library and the subscriptions then belong to that account. To change it later, activate **Refresh access...** and connect again.
 
 #### Security
 
@@ -778,7 +795,7 @@ If the player cannot start when KeyTune opens, the same diagnostics run by thems
 
 **An online radio station doesn't play or the list doesn't open.** The Radio Browser directory and the stations themselves are sometimes offline. Try another station from the list, or go back to the list and open it again.
 
-**The YouTube session expired, or the player asks for authentication again.** Export the browser's cookies as described in [Connect your account](#connect-your-account) and reconnect.
+**The YouTube account shows as disconnected, or the player asks you to connect again.** The browser replaced the cookies KeyTune had kept; see [Why the connection drops](#why-the-connection-drops-cookie-rotation). Export a new `cookies.txt` from a private window, as in [Connect with a cookies.txt](#connect-with-a-cookies-txt-recommended), and connect again. If the library comes up empty or belongs to someone else, the session has more than one Google account: connect again and choose the right one.
 
 **Other problems.** Turn on log recording in `Ctrl+,` > **General** > **Log recording**. With **Record diagnostic logs** on and the level set to *Debug*, the player writes detailed information to `keytune.log`, in the data folder. **Open log folder** takes you to the file. If you report the problem, attach the log to the issue.
 

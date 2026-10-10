@@ -8,6 +8,16 @@
   - It only reads and tests; it does not install or change anything on the computer.
   - The video test uses the internet and does not send the account cookies.
 
+- **Choosing the YouTube account**: if the browser session has more than one Google account, KeyTune asks which one to use right after connecting. Before, it always used the first one, and the library could come up empty or from another account. Subscriptions follow the same account.
+
+### Changed
+
+- **Connecting the YouTube account**: the dialog now opens in **Enter manually (file or text)**, the mode that lasts.
+  - YouTube replaces the account cookies while you use the site, and the ones KeyTune kept stop working. The **Export from installed browser** mode copies exactly the session in use, which is why the account dropped after a while. It is still available, with that warning.
+  - **How to export the cookies...** opens the instructions in a reading box: export from a private window and close it right after. The manual explains cookie rotation in **Connect your account**.
+  - In the browser list, Chrome, Edge and Brave warn that they may fail on Windows.
+  - When YouTube stops accepting the cookies, the message says so, instead of "could not validate the authentication".
+
 ### Fixed
 
 - **KeyTune could not start MPV on computers with an old video driver**: the window showed "ctypes.CDLL could not load it" and nothing played. The Vulkan loader that ships with drivers from 2016 or older lacks functions the current MPV needs, and Windows refused to load the library.
