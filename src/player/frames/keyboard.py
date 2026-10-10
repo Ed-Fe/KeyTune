@@ -118,6 +118,13 @@ class FrameKeyboardMixin:
             self._run_key_action(action)
         return True
 
+    def _is_displaced_shortcut_variant(self, event):
+        """Se a tecla é só uma variação de um atalho padrão que o usuário mudou."""
+        keymap = getattr(self, "_keymap", None)
+        if keymap is None or not keymap.has_overrides:
+            return False
+        return keymap.is_displaced_variant(shortcut_from_key_event(event))
+
     def _run_key_action(self, action):
         handler = getattr(self, action.handler, None)
         if not callable(handler):

@@ -6989,3 +6989,9 @@ msgstr "Esta tecla no se puede usar en atajos."
 
 msgid "{shortcut} abre um menu do KeyTune."
 msgstr "{shortcut} abre un menú de KeyTune."
+
+msgid "{action} (atalho global)"
+msgstr "{action} (atajo global)"
+
+msgid "{action} (atalho do player)"
+msgstr "{action} (atajo del reproductor)"

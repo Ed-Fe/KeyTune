@@ -6989,3 +6989,9 @@ msgstr "This key cannot be used in shortcuts."
 
 msgid "{shortcut} abre um menu do KeyTune."
 msgstr "{shortcut} opens a KeyTune menu."
+
+msgid "{action} (atalho global)"
+msgstr "{action} (global shortcut)"
+
+msgid "{action} (atalho do player)"
+msgstr "{action} (player shortcut)"

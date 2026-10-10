@@ -169,6 +169,32 @@ class KeymapTests(unittest.TestCase):
         self.assertEqual(keymap.shortcut_for("new_playlist"), "")
         self.assertEqual(keymap.shortcut_for("open_file"), "Ctrl+O")
 
+    def test_variants_of_a_displaced_default_stop_working(self):
+        keymap = Keymap({"seek_backward": "J"})
+        # A Seta esquerda saiu de "Voltar": Ctrl+Seta esquerda não volta mais.
+        self.assertTrue(keymap.is_displaced_variant("Ctrl+Left"))
+        self.assertTrue(keymap.is_displaced_variant("Ctrl+Alt+Left"))
+        # Atalhos que outra ação usa de fato continuam valendo.
+        self.assertFalse(keymap.is_displaced_variant("Shift+Left"))
+        self.assertFalse(keymap.is_displaced_variant("Alt+Left"))
+        self.assertFalse(keymap.is_displaced_variant("Left"))
+        self.assertFalse(keymap.is_displaced_variant("Ctrl+Right"))
+        self.assertFalse(keymap.is_displaced_variant(""))
+
+    def test_variants_also_stop_when_another_action_takes_the_default(self):
+        keymap = Keymap({"previous_track": "", "stop": "Ctrl+PageUp"})
+        self.assertEqual(keymap.resolve("Ctrl+PageUp")[0].action_id, "stop")
+        self.assertTrue(keymap.is_displaced_variant("Ctrl+Shift+PageUp"))
+
+    def test_reserved_keys_are_never_variants(self):
+        # V saiu de "Anunciar volume", mas Ctrl+V continua colando.
+        keymap = Keymap({"announce_volume": "Ctrl+J"})
+        self.assertFalse(keymap.is_displaced_variant("Ctrl+V"))
+        self.assertTrue(keymap.is_displaced_variant("Shift+V"))
+
+    def test_without_overrides_no_variant_is_blocked(self):
+        self.assertFalse(Keymap({}).is_displaced_variant("Ctrl+Left"))
+
     def test_action_lookup(self):
         self.assertEqual(action_by_id("toggle_tray", SCOPE_GLOBAL).default, "Ctrl+Alt+Shift+K")
         self.assertIsNone(action_by_id("toggle_tray", SCOPE_LOCAL))

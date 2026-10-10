@@ -351,6 +351,14 @@ class KeyNavigationMixin:
             event.Skip()
             return
 
+        # As checagens abaixo aceitam modificadores a mais (Ctrl+Seta esquerda
+        # volta como a Seta esquerda). Se o usuário tirou o atalho padrão da
+        # ação, essas variações também deixam de dispará-la.
+        is_displaced_variant = getattr(self, "_is_displaced_shortcut_variant", None)
+        if callable(is_displaced_variant) and is_displaced_variant(event):
+            event.Skip()
+            return
+
         if not event.ControlDown() and not event.AltDown() and key_code in (ord("E"), ord("e")):
             self._toggle_shuffle()
             return

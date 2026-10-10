@@ -505,10 +505,17 @@ class Keymap:
             if shortcut:
                 self.custom[shortcut] = action_by_id(action_id)
         self.freed = set()
+        # Padrões que saíram da ação original, mesmo os que outra ação pegou.
+        self._displaced = []
         for action_id in self.overrides:
             default = normalize_shortcut(action_by_id(action_id).default)
-            if default and default not in self.custom:
+            if not default:
+                continue
+            modifiers, key = shortcut_parts(default)
+            self._displaced.append((frozenset(modifiers), key))
+            if default not in self.custom:
                 self.freed.add(default)
+        self._bound = {shortcut for shortcut in self.bindings.values() if shortcut}
 
     @property
     def has_overrides(self):
@@ -520,6 +527,25 @@ class Keymap:
         if action is not None:
             return action, True
         return None, shortcut in self.freed
+
+    def is_displaced_variant(self, shortcut):
+        """Se *shortcut* é um padrão que mudou de dono com modificadores a mais.
+
+        O tratamento fixo do player aceita variações que ninguém documentou
+        (``Ctrl+Seta esquerda`` volta como a ``Seta esquerda``). Depois que a
+        ação original perde o atalho, a variação não pode continuar a
+        dispará-la. Um atalho que alguma ação usa de fato nunca é variação.
+        """
+        if not shortcut or shortcut in self._bound:
+            return False
+        if shortcut in RESERVED_SHORTCUTS or shortcut in SYSTEM_SHORTCUTS:
+            return False
+        modifiers, key = shortcut_parts(shortcut)
+        modifiers = frozenset(modifiers)
+        return any(
+            displaced_key == key and displaced_modifiers < modifiers
+            for displaced_modifiers, displaced_key in self._displaced
+        )
 
     def shortcut_for(self, action_id):
         return self.bindings.get(action_id, "")

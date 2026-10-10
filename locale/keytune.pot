@@ -8864,6 +8864,14 @@ msgid "vídeo"
 msgstr ""
 
 #: src/player/keyboard/dialog.py
+msgid "{action} (atalho do player)"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{action} (atalho global)"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
 msgid "{action}: sem atalho"
 msgstr ""
 

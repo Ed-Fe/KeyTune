@@ -367,6 +367,36 @@ class KeyboardCustomizationDialog(wx.Dialog):
             return page, None
         return page, action_by_id(action_id, page.scope)
 
+    def _owners(self, page, shortcut, exclude):
+        """``(aba, id da ação)`` de quem já usa *shortcut*, nas duas abas.
+
+        Um atalho global é do KeyTune em qualquer programa, então a mesma
+        combinação numa ação do player nunca chegaria a ela.
+        """
+        other_page = self.local_page if page is self.global_page else self.global_page
+        owners = [(page, action_id) for action_id in find_conflicts(page.bindings, shortcut, exclude=exclude)]
+        owners.extend((other_page, action_id) for action_id in find_conflicts(other_page.bindings, shortcut))
+        return owners
+
+    def _owner_labels(self, page, owners):
+        labels = []
+        for owner_page, action_id in owners:
+            label = action_by_id(action_id, owner_page.scope).label
+            if owner_page is not page:
+                label = (
+                    _("{action} (atalho global)") if owner_page.scope == SCOPE_GLOBAL else _("{action} (atalho do player)")
+                ).format(action=label)
+            labels.append(label)
+        return ", ".join(labels)
+
+    def _release(self, page, owners):
+        """Deixa sem atalho as ações de *owners* e atualiza a outra aba, se mudou."""
+        for owner_page, action_id in owners:
+            owner_page.bindings[action_id] = ""
+        for owner_page in {owner_page for owner_page, _action_id in owners}:
+            if owner_page is not page:
+                owner_page.refresh()
+
     def _set_binding(self, page, action, shortcut):
         page.bindings[action.action_id] = shortcut
         page.refresh(select_id=action.action_id)
@@ -392,17 +422,16 @@ class KeyboardCustomizationDialog(wx.Dialog):
 
         if shortcut == page.bindings.get(action.action_id):
             return
-        conflicts = find_conflicts(page.bindings, shortcut, exclude=action.action_id)
+        conflicts = self._owners(page, shortcut, action.action_id)
         if conflicts:
-            other_labels = ", ".join(action_by_id(other, page.scope).label for other in conflicts)
+            other_labels = self._owner_labels(page, conflicts)
             message = _("{shortcut} já é usado por «{other}». Passar o atalho para «{action}» e deixar «{other}» sem atalho?").format(
                 shortcut=format_shortcut(shortcut), other=other_labels, action=action.label
             )
             with wx.MessageDialog(self, message, _("Atalho em uso"), wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION) as confirm:
                 if confirm.ShowModal() != wx.ID_YES:
                     return
-            for other in conflicts:
-                page.bindings[other] = ""
+            self._release(page, conflicts)
         self._set_binding(page, action, shortcut)
         _announce(self, _("{action}: {shortcut}").format(action=action.label, shortcut=format_shortcut(shortcut)))
 
@@ -418,15 +447,12 @@ class KeyboardCustomizationDialog(wx.Dialog):
         if action is None:
             return
         default = normalize_shortcut(action.default)
-        conflicts = find_conflicts(page.bindings, default, exclude=action.action_id)
-        for other in conflicts:
-            page.bindings[other] = ""
+        conflicts = self._owners(page, default, action.action_id)
+        self._release(page, conflicts)
         self._set_binding(page, action, default)
         message = _("{action}: {shortcut}").format(action=action.label, shortcut=format_shortcut(default) or _("sem atalho"))
         if conflicts:
-            message += ". " + _("Removido de: {others}").format(
-                others=", ".join(action_by_id(other, page.scope).label for other in conflicts)
-            )
+            message += ". " + _("Removido de: {others}").format(others=self._owner_labels(page, conflicts))
         _announce(self, message)
 
     def _on_restore_all(self, _event):
@@ -440,5 +466,16 @@ class KeyboardCustomizationDialog(wx.Dialog):
             if confirm.ShowModal() != wx.ID_YES:
                 return
         page.bindings = effective_bindings({}, page.scope)
+        # Um padrão desta aba que a outra pegou volta a ser só desta.
+        conflicts = [
+            owner
+            for shortcut in page.bindings.values()
+            for owner in self._owners(page, shortcut, None)
+            if owner[0] is not page
+        ]
+        self._release(page, conflicts)
         page.refresh()
-        _announce(self, _("Atalhos restaurados ao padrão."))
+        message = _("Atalhos restaurados ao padrão.")
+        if conflicts:
+            message += " " + _("Removido de: {others}").format(others=self._owner_labels(page, conflicts))
+        _announce(self, message)
