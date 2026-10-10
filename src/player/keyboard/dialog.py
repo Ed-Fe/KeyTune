@@ -6,7 +6,6 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _
-from ..reading_dialog import create_reading_field
 from ..widgets import ROW_BORDER, describe_control
 from .shortcuts import (
     SCOPE_GLOBAL,
@@ -49,22 +48,28 @@ class ShortcutCaptureDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         label = wx.StaticText(panel, label=_("Pressione o novo atalho para «{action}»:").format(action=action_label))
-        self.capture_ctrl = wx.TextCtrl(panel, style=wx.TE_READONLY)
-        describe_control(
+        # Sem TE_READONLY: no Windows um campo de uma linha somente leitura sai
+        # da ordem do Tab. A digitação é barrada em ``_on_capture_char``.
+        self.capture_ctrl = wx.TextCtrl(panel)
+        capture_name = _("Novo atalho")
+        capture_help = _("Tab sai do campo, Enter confirma e Esc cancela.")
+        self.capture_ctrl.SetName(capture_name)
+        self.capture_ctrl.SetToolTip(capture_help)
+        self.capture_ctrl.SetHelpText(capture_help)
+        attach_named_accessible(
             self.capture_ctrl,
-            _("Novo atalho"),
-            _("Tab sai do campo, Enter confirma e Esc cancela."),
+            name=capture_name,
+            description=capture_help,
+            role=wx.ROLE_SYSTEM_HOTKEYFIELD,
+            value_provider=self.capture_ctrl.GetValue,
         )
-        self.capture_ctrl.SetValue(format_shortcut(self._shortcut) or _("Nenhum"))
+        self.capture_ctrl.ChangeValue(format_shortcut(self._shortcut) or _("Nenhum"))
         self.capture_ctrl.SetMinSize(self.FromDIP(wx.Size(320, -1)))
         sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
         sizer.Add(self.capture_ctrl, 0, wx.ALL | wx.EXPAND, 10)
 
-        status_label = wx.StaticText(panel, label=_("Situação:"))
-        self.status_ctrl = create_reading_field(panel, _("Situação"))
-        self.status_ctrl.SetMinSize(self.FromDIP(wx.Size(320, 48)))
-        sizer.Add(status_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
-        sizer.Add(self.status_ctrl, 0, wx.ALL | wx.EXPAND, 10)
+        self.status_label = wx.StaticText(panel, label="")
+        sizer.Add(self.status_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         buttons = wx.StdDialogButtonSizer()
         self.ok_button = wx.Button(panel, wx.ID_OK, _("&Confirmar"))
@@ -80,15 +85,23 @@ class ShortcutCaptureDialog(wx.Dialog):
         frame_sizer.Add(panel, 1, wx.EXPAND)
         self.SetSizerAndFit(frame_sizer)
         self.SetEscapeId(wx.ID_CANCEL)
-        self.CentreOnParent()
 
         self.capture_ctrl.Bind(wx.EVT_CHAR_HOOK, self._on_capture_key)
+        self.capture_ctrl.Bind(wx.EVT_CHAR, self._on_capture_char)
+        for blocked in (wx.EVT_TEXT_PASTE, wx.EVT_TEXT_CUT):
+            self.capture_ctrl.Bind(blocked, lambda _event: None)
         self.ok_button.Bind(wx.EVT_BUTTON, self._on_ok)
         self._refresh_status(announce=False)
+        self.CentreOnParent()
 
     @property
     def shortcut(self):
         return self._shortcut
+
+    def _on_capture_char(self, event):
+        # O campo mostra o atalho capturado; nada é digitado nele.
+        if event.GetKeyCode() == wx.WXK_TAB:
+            event.Skip()
 
     def _on_capture_key(self, event):
         key_code = event.GetKeyCode()
@@ -106,7 +119,8 @@ class ShortcutCaptureDialog(wx.Dialog):
             # Um modificador sozinho: espera a tecla que completa o atalho.
             return
         self._shortcut = shortcut
-        self.capture_ctrl.SetValue(format_shortcut(shortcut))
+        self.capture_ctrl.ChangeValue(format_shortcut(shortcut))
+        self.capture_ctrl.SelectAll()
         self._refresh_status(announce=True)
 
     def _problem(self):
@@ -117,7 +131,11 @@ class ShortcutCaptureDialog(wx.Dialog):
     def _refresh_status(self, *, announce):
         problem = self._problem()
         text = problem or _("{shortcut}. Enter confirma.").format(shortcut=format_shortcut(self._shortcut))
-        self.status_ctrl.SetValue(text)
+        self.status_label.SetLabel(text)
+        self.status_label.Wrap(self.FromDIP(320))
+        self.ok_button.Enable(not problem)
+        self.Layout()
+        self.Fit()
         if announce:
             _announce(self, text)
 
@@ -125,7 +143,6 @@ class ShortcutCaptureDialog(wx.Dialog):
         problem = self._problem()
         if problem:
             _announce(self, problem)
-            self.status_ctrl.SetValue(problem)
             return
         self.EndModal(wx.ID_OK)
 

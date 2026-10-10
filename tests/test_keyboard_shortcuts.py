@@ -65,6 +65,12 @@ class ShortcutRulesTests(unittest.TestCase):
         self.assertEqual(shortcut_problem("F9", SCOPE_GLOBAL), "")
         self.assertEqual(shortcut_problem("P", SCOPE_LOCAL), "")
 
+    def test_shortcuts_windows_keeps_for_itself_are_refused(self):
+        for shortcut in ("Alt+Tab", "Alt+Shift+Tab", "Ctrl+Escape", "Ctrl+Shift+Escape", "Ctrl+Alt+Delete", "Alt+F4"):
+            for scope in (SCOPE_LOCAL, SCOPE_GLOBAL):
+                self.assertTrue(shortcut_problem(shortcut, scope), f"{shortcut} ({scope})")
+        self.assertEqual(shortcut_problem("Ctrl+Alt+P", SCOPE_GLOBAL), "")
+
     def test_format_uses_readable_key_names(self):
         self.assertEqual(format_shortcut("Space"), "Espaço")
         self.assertEqual(format_shortcut("ctrl+pageup"), "Ctrl+Page Up")

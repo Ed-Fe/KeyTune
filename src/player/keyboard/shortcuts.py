@@ -62,7 +62,7 @@ _PUNCTUATION_KEYS = set(",.;/\\[]'`-=")
 
 FUNCTION_KEYS = frozenset(f"F{number}" for number in range(1, 25))
 
-# Atalhos que nenhuma ação pode receber: navegação, edição de texto e os do sistema.
+# Atalhos que nenhuma ação pode receber: navegação e edição de texto.
 RESERVED_SHORTCUTS = frozenset(
     {
         "Tab",
@@ -71,7 +71,6 @@ RESERVED_SHORTCUTS = frozenset(
         "Ctrl+Shift+Tab",
         "Escape",
         "Enter",
-        "Alt+F4",
         "Shift+F10",
         "Ctrl+A",
         "Ctrl+C",
@@ -79,6 +78,19 @@ RESERVED_SHORTCUTS = frozenset(
         "Ctrl+X",
         "Ctrl+Z",
         "Ctrl+Shift+V",
+    }
+)
+
+# Combinações do Windows: trocar ou fechar a janela, menu Iniciar, Gerenciador de Tarefas.
+SYSTEM_SHORTCUTS = frozenset(
+    {
+        "Alt+F4",
+        "Alt+Tab",
+        "Alt+Shift+Tab",
+        "Alt+Escape",
+        "Ctrl+Escape",
+        "Ctrl+Shift+Escape",
+        "Ctrl+Alt+Delete",
     }
 )
 
@@ -171,6 +183,8 @@ def shortcut_problem(shortcut, scope):
         return _("{shortcut} é reservado para navegar e editar texto.").format(
             shortcut=format_shortcut(normalized)
         )
+    if normalized in SYSTEM_SHORTCUTS:
+        return _("{shortcut} é usado pelo Windows.").format(shortcut=format_shortcut(normalized))
     modifiers, key = shortcut_parts(normalized)
     if scope == SCOPE_GLOBAL:
         if not any(modifier in ("Ctrl", "Alt", "Win") for modifier in modifiers) and key not in FUNCTION_KEYS:

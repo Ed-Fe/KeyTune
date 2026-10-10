@@ -6615,9 +6615,6 @@ msgstr "Flecha derecha"
 msgid "Seta esquerda"
 msgstr "Flecha izquierda"
 
-msgid "Situação:"
-msgstr "Estado:"
-
 msgid "Tab sai do campo, Enter confirma e Esc cancela."
 msgstr "Tab sale del campo, Intro confirma y Esc cancela."
 
@@ -6972,5 +6969,5 @@ msgstr "Qué necesita KeyTune"
 msgid "O KeyTune não pede a sua senha do Google. Para abrir a sua biblioteca, ele usa os cookies do YouTube: pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao KeyTune uma cópia desses cookies, em um arquivo cookies.txt. Este texto explica como gerar esse arquivo e por que o jeito de gerar importa."
 msgstr "KeyTune no pide tu contraseña de Google. Para abrir tu biblioteca, usa las cookies de YouTube: pequeños archivos en los que el navegador guarda tu inicio de sesión. Conectar la cuenta es entregar a KeyTune una copia de esas cookies, en un archivo cookies.txt. Este texto explica cómo generar ese archivo y por qué importa la forma de generarlo."
 
-msgid "Situação"
-msgstr "Estado"
+msgid "{shortcut} é usado pelo Windows."
+msgstr "{shortcut} lo usa Windows."

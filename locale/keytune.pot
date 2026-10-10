@@ -7768,10 +7768,6 @@ msgstr ""
 msgid "Site: {value}"
 msgstr ""
 
-#: src/player/keyboard/dialog.py
-msgid "Situação"
-msgstr ""
-
 #: src/player/smart_library/search_dialog.py
 msgid "Situação da busca"
 msgstr ""
@@ -7782,10 +7778,6 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Situação do histórico"
-msgstr ""
-
-#: src/player/keyboard/dialog.py
-msgid "Situação:"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -9322,6 +9314,10 @@ msgstr ""
 
 #: src/player/keyboard/shortcuts.py
 msgid "{shortcut} é reservado para navegar e editar texto."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "{shortcut} é usado pelo Windows."
 msgstr ""
 
 #: src/player/keyboard/dialog.py
