@@ -2624,9 +2624,6 @@ msgstr "Playlists"
 msgid "Playlists &inteligentes"
 msgstr "Listas &inteligentes"
 
-msgid "Playlists carregadas por vez"
-msgstr "Playlists cargadas por vez"
-
 msgid "Playlists e mídias suportadas"
 msgstr "Playlists y medios admitidos"
 
@@ -6038,9 +6035,6 @@ msgstr "Usa las flechas para elegir la salida de audio."
 msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
 msgstr "Se aplica incluso con la salida de vídeo desactivada. Ctrl+Alt+V la alterna."
 
-msgid "Valores menores abrem a biblioteca mais rápido."
-msgstr "Los valores menores abren la biblioteca más rápido."
-
 msgid "Ver &permissões"
 msgstr "Ver &permisos"
 
@@ -7016,3 +7010,21 @@ msgstr "Se omitirán {count} elementos que no se pueden descargar."
 
 msgid "Não é possível baixar uma transmissão ao vivo ou contínua, como uma rádio."
 msgstr "No se puede descargar una transmisión en vivo o continua, como una radio."
+
+msgid "Itens carregados por vez"
+msgstr "Elementos cargados por vez"
+
+msgid "Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."
+msgstr "Se aplica a las listas de la pestaña: playlists, resultados y pistas. Los valores menores abren más rápido."
+
+msgid "Carregar a lista inteira"
+msgstr "Cargar la lista completa"
+
+msgid "Esta lista já está inteira."
+msgstr "Esta lista ya está completa."
+
+msgid "Carregando a lista inteira."
+msgstr "Cargando la lista completa."
+
+msgid "Carregando todas as playlists do YouTube Music."
+msgstr "Cargando todas las playlists de YouTube Music."

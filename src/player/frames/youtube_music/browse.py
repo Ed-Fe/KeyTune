@@ -27,8 +27,6 @@ from .navigation import YouTubeResultsView
 
 
 class BrowseMixin:
-    _YOUTUBE_MUSIC_LIKED_SONGS_LIMIT = 200
-
     def _build_youtube_music_folder_view(self, folder):
         """A lista de dentro de uma pasta do início: biblioteca, curtidas, em alta, moods..."""
         service = self._get_youtube_music_service()
@@ -42,10 +40,10 @@ class BrowseMixin:
         if kind == FOLDER_LIBRARY:
             return self._build_youtube_music_library_view()
         if kind == FOLDER_LIKED:
-            liked_limit = self._YOUTUBE_MUSIC_LIKED_SONGS_LIMIT
             return YouTubeResultsView(
                 title=folder.title,
-                fetch_page=whole_list(lambda: service.get_liked_songs(limit=liked_limit)),
+                fetch_page=service.fetch_liked_songs_page,
+                fetch_rest=lambda start: service.fetch_liked_songs_page(start, None),
             )
         if kind == FOLDER_HISTORY:
             return YouTubeResultsView(title=folder.title, fetch_page=whole_list(service.get_history))
@@ -245,7 +243,7 @@ class BrowseMixin:
 
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
-    def _load_more_youtube_music_playlists(self):
+    def _load_more_youtube_music_playlists(self, *, load_all=False):
         if not self._youtube_music_library_has_more_playlists():
             self._announce(_("Não há mais playlists para carregar."))
             return False
@@ -254,8 +252,12 @@ class BrowseMixin:
             return False
 
         service = self._get_youtube_music_service()
-        next_limit = self._youtube_music_current_library_limit() + int(self._youtube_music_library_page_size())
-        self._announce(_("Carregando mais playlists do YouTube Music."))
+        if load_all:
+            next_limit = None
+            self._announce(_("Carregando todas as playlists do YouTube Music."))
+        else:
+            next_limit = self._youtube_music_current_library_limit() + int(self._youtube_music_library_page_size())
+            self._announce(_("Carregando mais playlists do YouTube Music."))
 
         def worker():
             return service.get_user_library_playlists(limit=next_limit)
@@ -292,7 +294,10 @@ class BrowseMixin:
             if playlist_count <= previous_user_playlist_count:
                 has_more = False
 
-            self._youtube_music_library_limit = next_limit
+            if next_limit is None:
+                has_more = False
+            else:
+                self._youtube_music_library_limit = next_limit
             if has_more:
                 summary_message = " ".join(
                     (

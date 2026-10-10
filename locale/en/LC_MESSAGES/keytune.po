@@ -2624,9 +2624,6 @@ msgstr "Playlists"
 msgid "Playlists &inteligentes"
 msgstr "&Smart playlists"
 
-msgid "Playlists carregadas por vez"
-msgstr "Playlists loaded at a time"
-
 msgid "Playlists e mídias suportadas"
 msgstr "Supported playlists and media"
 
@@ -6038,9 +6035,6 @@ msgstr "Use the arrow keys to choose the audio output."
 msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
 msgstr "Applies even with video output disabled. Ctrl+Alt+V toggles it."
 
-msgid "Valores menores abrem a biblioteca mais rápido."
-msgstr "Smaller values open the library faster."
-
 msgid "Ver &permissões"
 msgstr "View &permissions"
 
@@ -7016,3 +7010,21 @@ msgstr "{count} items that cannot be downloaded will be skipped."
 
 msgid "Não é possível baixar uma transmissão ao vivo ou contínua, como uma rádio."
 msgstr "A live or continuous broadcast, such as a radio, cannot be downloaded."
+
+msgid "Itens carregados por vez"
+msgstr "Items loaded at a time"
+
+msgid "Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."
+msgstr "Applies to the lists of the tab: playlists, results and tracks. Smaller values open faster."
+
+msgid "Carregar a lista inteira"
+msgstr "Load the whole list"
+
+msgid "Esta lista já está inteira."
+msgstr "This list is already complete."
+
+msgid "Carregando a lista inteira."
+msgstr "Loading the whole list."
+
+msgid "Carregando todas as playlists do YouTube Music."
+msgstr "Loading all YouTube Music playlists."

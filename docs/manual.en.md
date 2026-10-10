@@ -403,8 +403,8 @@ The list works like the folder explorer (see [How lists work](#how-lists-work)) 
 In KeyTube, also:
 
 - `Backspace` goes back one level at a time, down to **Home**. You can chain: from an artist to an album, from a channel to one of its playlists.
-- Each list brings 20 items at a time.
-- The **Actions...** button opens the item's menu: **Play**, **Add without playing**, **View contents**, **Back to the previous list**, **View comments**, **View details**, **Go to the channel** (or **Go to the artist**, followed by the name), **Add selection...** (to a new playlist or to an open one), **Download selection...** and **Save to YouTube Music** (compatible playlists or tracks). On one of your playlists, the menu also has **Delete YouTube Music playlist...**, which deletes it from the account, with confirmation, and only works for playlists you created. On a comment, it has **Read the whole comment**.
+- Each list brings part of the items at a time (25, or whatever is set in **Items loaded at a time**, in the preferences). At the end, going further down brings the next part. **Load the whole list**, in the **Actions...** menu, brings what is missing all at once; in a search or a channel, which have no known end, it stops at 1000 items at a time.
+- The **Actions...** button opens the item's menu: **Play**, **Add without playing**, **View contents**, **Back to the previous list**, **Load the whole list**, **View comments**, **View details**, **Go to the channel** (or **Go to the artist**, followed by the name), **Add selection...** (to a new playlist or to an open one), **Download selection...** and **Save to YouTube Music** (compatible playlists or tracks). On one of your playlists, the menu also has **Delete YouTube Music playlist...**, which deletes it from the account, with confirmation, and only works for playlists you created. On a comment, it has **Read the whole comment**.
 - `Shift+Enter` on one of your playlists adds the tracks to the current playlist without playing.
 - `Ctrl+Shift+B` (or **Download selection...**) downloads what is selected. With a **playlist or an album**, KeyTune fetches all the tracks inside and downloads everything. You choose the destination folder; each playlist or album becomes a **subfolder with its name**, and standalone tracks and videos stay in the folder itself, even in a mixed selection. Two lists with the same name get separate folders (*Mix* and *Mix (2)*), and a track that is in two playlists is downloaded in both, so each folder is complete.
 
@@ -765,7 +765,7 @@ Gathers the YouTube and YouTube Music options. They only take effect with the in
 
 **Library**
 
-- **Playlists loaded at a time**: how many playlists from the library come with each load (5 to 200). Smaller values open faster; at the end of the list, the player offers to load more.
+- **Items loaded at a time**: how many items each list of the tab brings with each load (5 to 200). It applies to the library playlists, search results, the tracks of a playlist and comments. Smaller values open faster; at the end of the list, the player loads more.
 - **Custom mixes to discover**: the maximum number of items scanned on the YouTube Music home to find personalized mixes (5 to 200). Smaller values make syncing faster.
 
 **Playback**

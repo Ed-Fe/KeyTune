@@ -186,19 +186,24 @@ class BrowseServiceTests(unittest.TestCase):
         client.get_mood_playlists.assert_called_once_with("ggMPpop")
         self.assertEqual(results[0].source_badge, "Pop")
 
-    def test_get_liked_songs_extracts_tracks(self):
+    def test_liked_songs_are_paged_like_the_liked_playlist(self):
         client = Mock()
-        client.get_liked_songs.return_value = {
-            "tracks": [{"videoId": "abc123", "title": "Faixa", "artists": [{"name": "A"}]}]
+        client.get_playlist.return_value = {
+            "tracks": [
+                {"videoId": f"video{index:03d}", "title": f"Faixa {index}", "artists": [{"name": "A"}]}
+                for index in range(60)
+            ]
         }
         service, fake_module = self._service_with_client(client)
         service.has_saved_browser_auth = lambda: True
 
         with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=fake_module):
-            results = service.get_liked_songs(limit=50)
+            page = service.fetch_liked_songs_page(start=20, count=20)
 
-        client.get_liked_songs.assert_called_once_with(limit=50)
-        self.assertEqual(results[0].source_badge, "Curtida")
+        client.get_playlist.assert_called_once_with("LM", limit=40)
+        self.assertEqual([result.video_id for result in page.results], [f"video{index:03d}" for index in range(20, 40)])
+        self.assertTrue(page.has_more)
+        self.assertEqual(page.results[0].source_badge, "Curtida")
 
     def test_get_history_normalizes_items(self):
         client = Mock()

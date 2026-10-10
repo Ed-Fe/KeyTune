@@ -20,7 +20,6 @@ from player.youtube_music.folders import (
 from player.youtube_music.models import (
     YOUTUBE_ARTIST_SECTIONS,
     YOUTUBE_CHANNEL_SECTIONS,
-    YOUTUBE_RESULTS_PAGE_SIZE,
 )
 
 from ...i18n import _, ngettext
@@ -29,12 +28,18 @@ from ...i18n import _, ngettext
 VIEW_KIND_HOME = "home"
 VIEW_KIND_LIBRARY = "library"
 
+# "Carregar a lista inteira" numa lista sem fim conhecido: o bloco pedido por vez e onde parar.
+_LOAD_ALL_PAGE_SIZE = 200
+_LOAD_ALL_MAX_ITEMS = 1000
+
 
 @dataclass
 class YouTubeResultsView:
     title: str
     # ``fetch_page(start, count)`` devolve um YouTubeResultPage; roda fora da thread da interface.
     fetch_page: object = None
+    # ``fetch_rest(start)`` devolve de uma vez tudo de *start* em diante, onde a fonte permite.
+    fetch_rest: object = None
     results: list = field(default_factory=list)
     has_more: bool = False
     next_start: int = 0
@@ -142,7 +147,16 @@ class ResultsNavigationMixin:
         def fetch_page(start, count):
             return service.fetch_browse_page(result, section_id=section_id, start=start, count=count)
 
-        return YouTubeResultsView(title=container_title(result, section_id), fetch_page=fetch_page)
+        fetch_rest = None
+        if getattr(result, "result_type", "") == "playlist":
+            def fetch_rest(start):
+                return service.fetch_browse_page(result, section_id=section_id, start=start, count=None)
+
+        return YouTubeResultsView(
+            title=container_title(result, section_id),
+            fetch_page=fetch_page,
+            fetch_rest=fetch_rest,
+        )
 
     def _load_youtube_music_results_view(self, view, *, mode, error_message=None, focus_results=False):
         """Carrega a primeira página de *view* e a mostra.
@@ -159,13 +173,15 @@ class ResultsNavigationMixin:
             self._install_youtube_music_results_view(view, mode, focus_results=focus_results)
             return True
 
+        page_size = self._youtube_music_library_page_size()
+
         def worker():
-            return view.fetch_page(0, YOUTUBE_RESULTS_PAGE_SIZE)
+            return view.fetch_page(0, page_size)
 
         def on_success(page):
             view.results = list(page.results)
             view.has_more = bool(page.has_more and page.results)
-            view.next_start = YOUTUBE_RESULTS_PAGE_SIZE
+            view.next_start = page_size
             self._install_youtube_music_results_view(view, mode, focus_results=focus_results)
 
         def on_error(exc):
@@ -267,24 +283,60 @@ class ResultsNavigationMixin:
             return False
 
         start = view.next_start
+        page_size = self._youtube_music_library_page_size()
         self._announce(_("Carregando mais itens."))
 
         def worker():
-            return view.fetch_page(start, YOUTUBE_RESULTS_PAGE_SIZE)
+            page = view.fetch_page(start, page_size)
+            return page.results, page.has_more, start + page_size
 
-        def on_success(page):
+        return self._run_youtube_music_results_load(view, worker)
+
+    def on_load_all_youtube_music_results(self):
+        """Traz de uma vez o que falta da lista, em vez de uma página por descida."""
+        view = self._youtube_music_current_results_view()
+        if view.kind == VIEW_KIND_LIBRARY and self._youtube_music_library_has_more_playlists():
+            return self._load_more_youtube_music_playlists(load_all=True)
+        if not view.has_more or view.fetch_page is None:
+            self._announce(_("Esta lista já está inteira."))
+            return False
+
+        start = view.next_start
+        self._announce(_("Carregando a lista inteira."))
+
+        def worker():
+            if view.fetch_rest is not None:
+                return view.fetch_rest(start).results, False, start
+            # Busca e canal não têm fim conhecido: vêm aos blocos, até um teto.
+            results = []
+            position = start
+            has_more = True
+            while has_more and len(results) < _LOAD_ALL_MAX_ITEMS:
+                page = view.fetch_page(position, _LOAD_ALL_PAGE_SIZE)
+                results.extend(page.results)
+                position += _LOAD_ALL_PAGE_SIZE
+                has_more = bool(page.has_more and page.results)
+            return results, has_more, position
+
+        return self._run_youtube_music_results_load(view, worker)
+
+    def _run_youtube_music_results_load(self, view, worker):
+        """Roda *worker*, que devolve ``(itens, se há mais, próximo início)``, e junta o que veio a *view*."""
+
+        def on_success(loaded):
+            loaded_results, has_more, next_start = loaded
             if view is not self._youtube_music_current_results_view():
                 return
             known_ids = {result.stable_id for result in view.results}
             new_results = []
-            for result in page.results:
+            for result in loaded_results:
                 if result.stable_id not in known_ids:
                     known_ids.add(result.stable_id)
                     new_results.append(result)
             view.results.extend(new_results)
-            view.next_start = start + YOUTUBE_RESULTS_PAGE_SIZE
+            view.next_start = next_start
             # Uma página sem nada de novo encerra a lista, para não repetir o pedido sem fim.
-            view.has_more = bool(page.has_more and new_results)
+            view.has_more = bool(has_more and new_results)
             self._show_youtube_music_results_view(announce=False)
             if new_results:
                 self._announce(

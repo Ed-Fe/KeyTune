@@ -39,12 +39,14 @@ class YouTubeMusicLibraryManager:
     """
 
     _HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT = 30
+    _LIKED_SONGS_PLAYLIST_ID = "LM"
 
     def __init__(self, get_client_fn, build_watch_url_fn, feedback_items_fn=None):
         self._get_client = get_client_fn
         self._build_watch_url = build_watch_url_fn
         self._feedback_items = feedback_items_fn or (lambda _items: None)
         self._artist_cache = ("", None)
+        self._playlist_tracks_cache = catalog.PlaylistTracksCache()
 
     def search(self, query, *, search_scope):
         """Search YouTube Music or YouTube and return normalized results."""
@@ -84,7 +86,10 @@ class YouTubeMusicLibraryManager:
         return catalog.music_search_page(client, query, scope_option.music_filter, start, page_size)
 
     def fetch_browse_page(self, result, *, section_id="", start=0, count=20):
-        """Uma página do que há dentro de um canal, artista, álbum ou playlist."""
+        """Uma página do que há dentro de um canal, artista, álbum ou playlist.
+
+        Numa playlist, ``count=None`` traz tudo de *start* em diante.
+        """
         result_type = str(getattr(result, "result_type", "") or "")
         browse_id = str(getattr(result, "browse_id", "") or "").strip()
         playlist_id = str(getattr(result, "playlist_id", "") or "").strip()
@@ -103,7 +108,7 @@ class YouTubeMusicLibraryManager:
         if result_type == "album":
             return catalog.music_album_page(client, browse_id, playlist_id, start, count)
         if result_type == "playlist":
-            return catalog.music_playlist_page(client, playlist_id, start, count)
+            return catalog.music_playlist_page(client, playlist_id, start, count, cache=self._playlist_tracks_cache)
         return YouTubeResultPage()
 
     def _get_artist(self, client, channel_id):
@@ -115,7 +120,7 @@ class YouTubeMusicLibraryManager:
         self._artist_cache = (channel_id, artist)
         return artist
 
-    def get_youtube_playlist_content(self, playlist_id, fallback_title="", *, limit=200):
+    def get_youtube_playlist_content(self, playlist_id, fallback_title="", *, limit=None):
         """Vídeos de uma playlist do YouTube comum, prontos para entrar numa playlist do player."""
         page = catalog.youtube_playlist_page(playlist_id, 0, limit)
         return YouTubeMusicPlaylistContent(
@@ -184,16 +189,21 @@ class YouTubeMusicLibraryManager:
             return []
         return extract_browse_playlists_from_response(response)
 
-    def get_liked_songs(self, *, limit=100):
-        """Return the account's "Curtidas" (Liked Music) tracks as results."""
+    def fetch_liked_songs_page(self, start=0, count=20):
+        """Uma página das "Curtidas" da conta.
+
+        As curtidas são a playlist ``LM``: seguem a mesma paginação das demais
+        playlists, sem teto de faixas. ``count=None`` traz tudo de *start* em diante.
+        """
         client = self._get_client(require_auth=True)
-        try:
-            normalized_limit = max(1, int(limit))
-        except (TypeError, ValueError):
-            normalized_limit = 100
-        raw_liked = client.get_liked_songs(limit=normalized_limit)
-        raw_tracks = raw_liked.get("tracks") if isinstance(raw_liked, dict) else raw_liked
-        return normalize_track_items(raw_tracks, badge="Curtida")
+        return catalog.music_playlist_page(
+            client,
+            self._LIKED_SONGS_PLAYLIST_ID,
+            start,
+            count,
+            badge="Curtida",
+            cache=self._playlist_tracks_cache,
+        )
 
     def get_history(self):
         """Return the account's play history as song results (most recent first)."""

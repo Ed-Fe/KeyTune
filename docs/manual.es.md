@@ -403,8 +403,8 @@ La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las 
 En KeyTube, además:
 
 - `Retroceso` vuelve un nivel cada vez, hasta **Inicio**. Se puede encadenar: de un artista a un álbum, de un canal a una playlist suya.
-- Cada lista trae 20 elementos cada vez.
-- El botón **Acciones...** abre el menú del elemento: **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Ver comentarios**, **Ver detalles**, **Ir al canal** (o **Ir al artista**, seguido del nombre), **Agregar selección...** (en una playlist nueva o en una abierta), **Descargar selección...** y **Guardar en YouTube Music** (playlists o pistas compatibles). En una de tus playlists, el menú también trae **Eliminar playlist de YouTube Music...**, que la elimina de la cuenta, con confirmación, y solo vale para playlists que creaste. En un comentario, trae **Leer el comentario completo**.
+- Cada lista trae una parte de los elementos cada vez (25, o lo que esté en **Elementos cargados por vez**, en las preferencias). Al llegar al final, bajar más trae la parte siguiente. **Cargar la lista completa**, en el menú **Acciones...**, trae de una vez lo que falta; en una búsqueda o en un canal, que no tienen un final conocido, se detiene en 1000 elementos cada vez.
+- El botón **Acciones...** abre el menú del elemento: **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Cargar la lista completa**, **Ver comentarios**, **Ver detalles**, **Ir al canal** (o **Ir al artista**, seguido del nombre), **Agregar selección...** (en una playlist nueva o en una abierta), **Descargar selección...** y **Guardar en YouTube Music** (playlists o pistas compatibles). En una de tus playlists, el menú también trae **Eliminar playlist de YouTube Music...**, que la elimina de la cuenta, con confirmación, y solo vale para playlists que creaste. En un comentario, trae **Leer el comentario completo**.
 - `Shift+Enter` en una de tus playlists añade las pistas a la playlist actual sin reproducir.
 - `Ctrl+Shift+B` (o **Descargar selección...**) descarga lo que está seleccionado. Con una **playlist o un álbum**, KeyTune busca todas las pistas de dentro y lo descarga todo. Tú eliges la carpeta de destino; cada playlist o álbum se convierte en una **subcarpeta con su nombre**, y las pistas y vídeos sueltos quedan en la propia carpeta, incluso en una selección mixta. Dos listas con el mismo nombre reciben carpetas separadas (*Mix* y *Mix (2)*), y una pista que está en dos playlists se descarga en las dos, para que cada carpeta quede completa.
 
@@ -765,7 +765,7 @@ Reúne las opciones de YouTube y de YouTube Music. Solo tienen efecto con la int
 
 **Biblioteca**
 
-- **Playlists cargadas por vez**: cuántas playlists de la biblioteca llegan en cada carga (5 a 200). Los valores menores abren más rápido; al llegar al final de la lista, el reproductor ofrece cargar más.
+- **Elementos cargados por vez**: cuántos elementos trae cada lista de la pestaña en cada carga (5 a 200). Se aplica a las playlists de la biblioteca, los resultados de búsqueda, las pistas de una playlist y los comentarios. Los valores menores abren más rápido; al llegar al final de la lista, el reproductor carga más.
 - **Mixes personalizados para descubrir**: el máximo de elementos revisados en el inicio de YouTube Music para encontrar mixes personalizados (5 a 200). Los valores menores hacen la sincronización más rápida.
 
 **Reproducción**

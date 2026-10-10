@@ -2259,6 +2259,10 @@ msgstr ""
 msgid "Carregada de {path}."
 msgstr ""
 
+#: src/player/frames/youtube_music/navigation.py
+msgid "Carregando a lista inteira."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Carregando as faixas das listas selecionadas para baixar."
 msgstr ""
@@ -2296,12 +2300,20 @@ msgstr ""
 msgid "Carregando playlist..."
 msgstr ""
 
+#: src/player/frames/youtube_music/browse.py
+msgid "Carregando todas as playlists do YouTube Music."
+msgstr ""
+
 #: src/player/frames/library_tabs/tabs.py
 msgid "Carregando {title}."
 msgstr ""
 
 #: src/player/frames/radio/lifecycle.py
 msgid "Carregando…"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "Carregar a lista inteira"
 msgstr ""
 
 #: src/player/keyboard/dialog.py
@@ -3455,6 +3467,10 @@ msgstr ""
 msgid "Esta combinação de teclas não é reconhecida."
 msgstr ""
 
+#: src/player/frames/youtube_music/navigation.py
+msgid "Esta lista já está inteira."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Esta mídia já está no seu computador."
 msgstr ""
@@ -4303,6 +4319,10 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Itens carregados por vez"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -6688,10 +6708,6 @@ msgstr ""
 msgid "Playlists &inteligentes"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Playlists carregadas por vez"
-msgstr ""
-
 #: src/player/library/open_dialog.py
 msgid "Playlists e mídias suportadas"
 msgstr ""
@@ -8270,12 +8286,12 @@ msgstr ""
 msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
 msgstr ""
 
-#: src/player/update/service.py
-msgid "Validando integridade do pacote..."
+#: src/player/preferences/dialog.py
+msgid "Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Valores menores abrem a biblioteca mais rápido."
+#: src/player/update/service.py
+msgid "Validando integridade do pacote..."
 msgstr ""
 
 #: src/player/equalizer/dialog.py

@@ -22,6 +22,7 @@ class LibraryStateMixin:
     _YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT_MAX = 200
 
     def _youtube_music_library_page_size(self):
+        """Quantos itens cada lista da aba traz por vez: playlists da biblioteca, resultados, faixas."""
         try:
             value = int(getattr(self.settings, "youtube_music_library_page_size", self._YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE))
         except (TypeError, ValueError):

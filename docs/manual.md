@@ -403,8 +403,8 @@ A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#c
 No KeyTube, vale ainda:
 
 - `Backspace` volta um nível por vez, até o **Início**. Dá para encadear: de um artista para um álbum, de um canal para uma playlist dele.
-- Cada lista traz 20 itens por vez.
-- O botão **Ações...** abre o menu do item: **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Ver comentários**, **Ver detalhes**, **Ir para o canal** (ou **Ir para o artista**, seguido do nome), **Adicionar seleção...** (numa nova playlist ou numa aberta), **Baixar seleção...** e **Salvar no YouTube Music** (playlists ou faixas compatíveis). Numa das suas playlists, o menu também traz **Excluir playlist do YouTube Music...**, que a exclui da conta, com confirmação, e só vale para playlists que você criou. Num comentário, traz **Ler o comentário inteiro**.
+- Cada lista traz uma parte dos itens por vez (25, ou o que estiver em **Itens carregados por vez**, nas preferências). Ao chegar ao fim, descer mais traz a parte seguinte. **Carregar a lista inteira**, no menu **Ações...**, traz de uma vez o que falta; numa busca ou num canal, que não têm fim conhecido, para em 1000 itens por vez.
+- O botão **Ações...** abre o menu do item: **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Carregar a lista inteira**, **Ver comentários**, **Ver detalhes**, **Ir para o canal** (ou **Ir para o artista**, seguido do nome), **Adicionar seleção...** (numa nova playlist ou numa aberta), **Baixar seleção...** e **Salvar no YouTube Music** (playlists ou faixas compatíveis). Numa das suas playlists, o menu também traz **Excluir playlist do YouTube Music...**, que a exclui da conta, com confirmação, e só vale para playlists que você criou. Num comentário, traz **Ler o comentário inteiro**.
 - `Shift+Enter` numa das suas playlists adiciona as faixas à playlist atual sem tocar.
 - `Ctrl+Shift+B` (ou **Baixar seleção...**) baixa o que está selecionado. Com uma **playlist ou um álbum**, o KeyTune busca todas as faixas de dentro e baixa tudo. Você escolhe a pasta de destino; cada playlist ou álbum vira uma **subpasta com o nome dele**, e as faixas e vídeos avulsos ficam na própria pasta, inclusive numa seleção mista. Duas listas com o mesmo nome ganham pastas separadas (*Mix* e *Mix (2)*), e uma faixa que está em duas playlists é baixada nas duas, para cada pasta ficar completa.
 
@@ -769,7 +769,7 @@ Reúne as opções do YouTube e do YouTube Music. Elas só têm efeito com a int
 
 **Biblioteca**
 
-- **Playlists carregadas por vez**: quantas playlists da biblioteca vêm a cada carregamento (5 a 200). Valores menores abrem mais rápido; ao chegar ao fim da lista, o player oferece carregar mais.
+- **Itens carregados por vez**: quantos itens cada lista da aba traz a cada carregamento (5 a 200). Vale para as playlists da biblioteca, os resultados de busca, as faixas de uma playlist e os comentários. Valores menores abrem mais rápido; ao chegar ao fim da lista, o player carrega mais.
 - **Mixes personalizadas para descobrir**: o máximo de itens varridos no início do YouTube Music para achar mixes personalizadas (5 a 200). Valores menores deixam a sincronização mais rápida.
 
 **Reprodução**

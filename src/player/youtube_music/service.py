@@ -650,8 +650,8 @@ class YouTubeMusicService:
             badge = _("Mood ou gênero")
         return self._library.get_mood_playlists(params, badge=badge)
 
-    def get_liked_songs(self, *, limit=100):
-        return self._library.get_liked_songs(limit=limit)
+    def fetch_liked_songs_page(self, start=0, count=20):
+        return self._library.fetch_liked_songs_page(start=start, count=count)
 
     def get_history(self):
         return self._library.get_history()

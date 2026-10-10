@@ -187,6 +187,16 @@ class YouTubePageTests(unittest.TestCase):
         self.addCleanup(patcher.stop)
         return patcher.start()
 
+    def test_a_whole_youtube_playlist_is_asked_without_an_end(self):
+        self._patch("player.youtube_music.catalog.ensure_yt_dlp_executable_available", None)
+        with patch("player.youtube_music.catalog.extract_yt_dlp_info") as extract:
+            extract.return_value = SimpleNamespace(data={"entries": self._entries(300)})
+            page = catalog.youtube_playlist_page("PL1234567890", 0, None)
+
+        self.assertEqual(extract.call_args.kwargs["playlist_items"], "1:")
+        self.assertEqual(len(page.results), 300)
+        self.assertFalse(page.has_more)
+
     def test_with_youtubejs_on_the_search_does_not_go_through_yt_dlp(self):
         self._youtubejs_enabled.return_value = True
         entries = [{"id": "video000001", "title": "Vídeo", "channel": "Canal", "view_count_text": "2 mi de visualizações"}]
@@ -291,6 +301,59 @@ class MusicPageTests(unittest.TestCase):
         self.assertEqual(len(page.results), 7)
         self.assertFalse(page.has_more)
 
+    def _playlist_client(self, total):
+        client = Mock()
+        tracks = [{"videoId": f"song{index:07d}", "title": f"Faixa {index}"} for index in range(total)]
+        # Como o YouTube Music: as faixas vêm em blocos de 100, até passar do limite pedido.
+        client.get_playlist.side_effect = lambda playlist_id, limit=None: {
+            "tracks": tracks if limit is None else tracks[: -(-limit // 100) * 100]
+        }
+        return client
+
+    def test_the_next_pages_of_a_playlist_reuse_what_was_already_fetched(self):
+        client = self._playlist_client(250)
+        cache = catalog.PlaylistTracksCache()
+
+        pages = [catalog.music_playlist_page(client, "PL1", start, 25, cache=cache) for start in (0, 25, 50, 75)]
+
+        client.get_playlist.assert_called_once_with("PL1", limit=25)
+        self.assertEqual(pages[3].results[0].title, "Faixa 75")
+        self.assertTrue(all(page.has_more for page in pages))
+
+    def test_a_playlist_is_asked_again_only_when_the_fetched_tracks_run_out(self):
+        client = self._playlist_client(250)
+        cache = catalog.PlaylistTracksCache()
+        for start in (0, 25, 50, 75):
+            catalog.music_playlist_page(client, "PL1", start, 25, cache=cache)
+
+        page = catalog.music_playlist_page(client, "PL1", 100, 25, cache=cache)
+        last_page = catalog.music_playlist_page(client, "PL1", 225, 25, cache=cache)
+
+        self.assertEqual([call.kwargs["limit"] for call in client.get_playlist.call_args_list], [25, 200, 400])
+        self.assertEqual(page.results[0].title, "Faixa 100")
+        self.assertEqual(len(last_page.results), 25)
+        self.assertFalse(last_page.has_more)
+
+    def test_opening_a_playlist_again_asks_for_it_again(self):
+        client = self._playlist_client(250)
+        cache = catalog.PlaylistTracksCache()
+
+        catalog.music_playlist_page(client, "PL1", 0, 25, cache=cache)
+        catalog.music_playlist_page(client, "PL1", 0, 25, cache=cache)
+
+        self.assertEqual(client.get_playlist.call_count, 2)
+
+    def test_the_rest_of_a_playlist_comes_in_one_request(self):
+        client = self._playlist_client(250)
+        cache = catalog.PlaylistTracksCache()
+        catalog.music_playlist_page(client, "PL1", 0, 25, cache=cache)
+
+        page = catalog.music_playlist_page(client, "PL1", 25, None, cache=cache)
+
+        self.assertEqual(client.get_playlist.call_args.kwargs["limit"], None)
+        self.assertEqual(len(page.results), 225)
+        self.assertFalse(page.has_more)
+
     def test_the_albums_of_an_artist_come_from_the_full_listing_when_there_is_one(self):
         client = Mock()
         client.get_artist_albums.return_value = [
@@ -354,6 +417,7 @@ class _Frame(ResultsNavigationMixin, SearchMixin, BrowseMixin, LibraryStateMixin
         self._service = service
         self.panel = Mock()
         self.panel.get_selected_search_result_ids.return_value = []
+        self.settings = SimpleNamespace(youtube_music_library_page_size=YOUTUBE_RESULTS_PAGE_SIZE)
         self._refresh_youtube_music_screen_later = Mock()
         self._ensure_youtube_music_authenticated = Mock(return_value=True)
         self._auto_load_youtube_music_library_if_needed = Mock()
@@ -519,6 +583,77 @@ class ResultsNavigationTests(unittest.TestCase):
         self.assertEqual(service.fetch_browse_page.call_args.kwargs["start"], YOUTUBE_RESULTS_PAGE_SIZE)
         self.assertEqual(frame.announcements[-1], "Mais 20 itens. Total: 40.")
 
+    def test_the_page_size_follows_the_preference(self):
+        frame, service = self._frame()
+        frame.settings.youtube_music_library_page_size = 50
+        frame.on_search_youtube_music()
+        _open_channel(frame)
+
+        frame.on_load_more_youtube_music_results()
+
+        view = frame._youtube_music_current_results_view()
+        self.assertEqual(len(view.results), 100)
+        self.assertEqual(service.fetch_browse_page.call_args.kwargs, {"section_id": "videos", "start": 50, "count": 50})
+
+    def test_loading_the_whole_list_asks_in_blocks_until_it_ends(self):
+        frame, service = self._frame()
+        frame.on_search_youtube_music()
+        _open_channel(frame)
+        service.fetch_browse_page.side_effect = lambda result, section_id, start, count: _page(
+            start, min(count, 450 - start), has_more=start + count < 450
+        )
+
+        self.assertTrue(frame.on_load_all_youtube_music_results())
+
+        view = frame._youtube_music_current_results_view()
+        self.assertEqual(len(view.results), 450)
+        self.assertFalse(view.has_more)
+        self.assertEqual(frame.announcements[-1], "Mais 430 itens. Total: 450.")
+        self.assertFalse(frame.on_load_all_youtube_music_results())
+        self.assertEqual(frame.announcements[-1], "Esta lista já está inteira.")
+
+    def test_loading_the_whole_list_stops_at_a_ceiling_when_the_list_has_no_end(self):
+        frame, _service = self._frame()
+        frame.on_search_youtube_music()
+        _open_channel(frame)
+
+        frame.on_load_all_youtube_music_results()
+
+        view = frame._youtube_music_current_results_view()
+        self.assertEqual(len(view.results), YOUTUBE_RESULTS_PAGE_SIZE + 1000)
+        self.assertTrue(view.has_more)
+        self.assertEqual(view.next_start, YOUTUBE_RESULTS_PAGE_SIZE + 1000)
+
+    def test_a_playlist_loads_whole_in_one_request(self):
+        frame, service = self._frame()
+        playlist = YouTubeMediaSearchResult(
+            source=YOUTUBE_SEARCH_SOURCE_MUSIC, result_type="playlist", title="Rock", playlist_id="PL1"
+        )
+        service.fetch_browse_page.side_effect = lambda result, section_id, start, count: (
+            _page(start, 300 - start, has_more=False) if count is None else _page(start, count)
+        )
+        frame.on_browse_youtube_music_search_result(playlist)
+
+        frame.on_load_all_youtube_music_results()
+
+        view = frame._youtube_music_current_results_view()
+        self.assertEqual(service.fetch_browse_page.call_args.kwargs, {"section_id": "", "start": 20, "count": None})
+        self.assertEqual(len(view.results), 300)
+        self.assertFalse(view.has_more)
+
+    def test_loading_the_whole_library_asks_for_every_playlist(self):
+        frame, _service = self._frame()
+        frame._youtube_music_library_playlists = []
+        frame._youtube_music_library_more_playlists_available = True
+        frame._youtube_music_results_view_stack = [
+            frame._youtube_music_home_view(),
+            frame._build_youtube_music_library_view(),
+        ]
+
+        self.assertTrue(frame.on_load_all_youtube_music_results())
+
+        frame._load_more_youtube_music_playlists.assert_called_once_with(load_all=True)
+
     def test_repeated_items_are_not_added_twice_and_end_the_list(self):
         frame, service = self._frame()
         frame.on_search_youtube_music()
@@ -594,7 +729,7 @@ class HomeListTests(unittest.TestCase):
     def _frame(self):
         service = Mock()
         service.get_charts.return_value = [_video(1), _video(2)]
-        service.get_liked_songs.return_value = [_video(3)]
+        service.fetch_liked_songs_page.return_value = YouTubeResultPage(results=(_video(3),), has_more=False)
         service.get_mood_categories.return_value = [
             ("Momentos", [YouTubeMoodCategory("Foco", "p1"), YouTubeMoodCategory("Treino", "p2")]),
             ("Gêneros", [YouTubeMoodCategory("Rock", "p3")]),
@@ -675,7 +810,7 @@ class HomeListTests(unittest.TestCase):
         frame._ensure_youtube_music_authenticated.return_value = False
 
         self.assertFalse(frame.on_browse_youtube_music_search_result(_folder(frame, "Curtidas")))
-        service.get_liked_songs.assert_not_called()
+        service.fetch_liked_songs_page.assert_not_called()
         self.assertFalse(frame._youtube_music_can_go_back_in_results())
 
         frame._ensure_youtube_music_authenticated.return_value = True

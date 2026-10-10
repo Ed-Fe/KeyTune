@@ -44,6 +44,11 @@ class SearchMixin:
             single_result is not None and getattr(single_result, "can_browse", False),
         )
         append(_("Voltar à lista anterior (Backspace)"), self.on_youtube_music_results_back, can_go_back)
+        append(
+            _("Carregar a lista inteira"),
+            self.on_load_all_youtube_music_results,
+            self._youtube_music_current_results_view().has_more,
+        )
         if single_result is not None and getattr(single_result, "result_type", "") == "comment":
             append(_("Ler o comentário inteiro (Enter)"), lambda: self._read_youtube_music_comment(single_result))
         else:

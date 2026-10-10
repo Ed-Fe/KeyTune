@@ -128,6 +128,9 @@ class _Frame(CommentsMixin, ResultsNavigationMixin):
     def _announce(self, message):
         self.announcements.append(message)
 
+    def _youtube_music_library_page_size(self):
+        return 20
+
     def _selected_youtube_music_search_result(self):
         return self.selected
 

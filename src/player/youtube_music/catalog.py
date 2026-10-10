@@ -60,6 +60,31 @@ def _page_bounds(start, count):
     return normalized_start, normalized_count
 
 
+class PlaylistTracksCache:
+    """As faixas da última playlist paginada, para a página seguinte não pedir tudo de novo.
+
+    O ytmusicapi não retoma uma playlist do meio: cada pedido vem desde o começo.
+    """
+
+    def __init__(self):
+        self._playlist_id = ""
+        self._tracks = []
+        self._complete = False
+
+    def tracks(self, client, playlist_id, wanted, *, refresh=False):
+        """``(faixas desde o começo, se são todas)``: ao menos *wanted*, ou todas com ``None``."""
+        cached = self._tracks if playlist_id == self._playlist_id and not refresh else []
+        enough = wanted is not None and len(cached) >= wanted
+        if not cached or not (self._complete or enough):
+            # Pede o dobro do que já havia, para a lista longa não custar um pedido por página.
+            limit = None if wanted is None else max(wanted, 2 * len(cached))
+            playlist = client.get_playlist(playlist_id, limit=limit)
+            self._playlist_id = playlist_id
+            self._tracks = list(playlist.get("tracks") or [])
+            self._complete = limit is None or len(self._tracks) < limit
+        return self._tracks, self._complete
+
+
 def _slice_page(items, start, count):
     """Recorta a página de uma lista que foi pedida desde o começo."""
     items = list(items or [])
@@ -96,7 +121,7 @@ def _youtube_listing_page(target, start, count, *, show_owner=True):
         response = extract_yt_dlp_info(
             target,
             extract_flat="in_playlist",
-            playlist_items=f"{start + 1}-{start + count}",
+            playlist_items=f"{start + 1}:" if count is None else f"{start + 1}-{start + count}",
             socket_timeout_seconds=YOUTUBE_LISTING_SOCKET_TIMEOUT_SECONDS,
             quiet=True,
             no_warnings=True,
@@ -107,7 +132,8 @@ def _youtube_listing_page(target, start, count, *, show_owner=True):
         ) from exc
 
     entries = (response.data or {}).get("entries") or []
-    return _normalized_entries_page(entries, len(entries) >= count, show_owner=show_owner)
+    has_more = count is not None and len(entries) >= count
+    return _normalized_entries_page(entries, has_more, show_owner=show_owner)
 
 
 def youtube_search_page(query, kind, start, count):
@@ -164,11 +190,13 @@ def youtube_channel_page(channel_id, section_id, start, count):
 
 
 def youtube_playlist_page(playlist_id, start, count):
+    """Uma página de uma playlist do YouTube comum; ``count=None`` traz tudo de *start* em diante."""
     normalized_playlist_id = str(playlist_id or "").strip()
     if not normalized_playlist_id:
         return YouTubeResultPage()
 
-    start, count = _page_bounds(start, count)
+    if count is not None:
+        start, count = _page_bounds(start, count)
     target = "https://www.youtube.com/playlist?" + urlencode({"list": normalized_playlist_id})
     page = _youtube_listing_page(target, start, count)
     return YouTubeResultPage(
@@ -192,23 +220,36 @@ def music_search_page(client, query, music_filter, start, count):
     return YouTubeResultPage(results=tuple(normalize_music_search_results(page_items)), has_more=has_more)
 
 
-def music_playlist_page(client, playlist_id, start, count, *, as_videos=False):
+def music_playlist_page(client, playlist_id, start, count, *, as_videos=False, badge="", cache=None):
+    """Uma página de uma playlist do YouTube Music; ``count=None`` traz tudo de *start* em diante."""
     normalized_playlist_id = str(playlist_id or "").strip()
     if not normalized_playlist_id:
         return YouTubeResultPage()
 
+    whole = count is None
     start, count = _page_bounds(start, count)
     if is_watch_playlist_id(normalized_playlist_id):
         with tolerant_watch_playlist_parsing():
             playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=WATCH_PLAYLIST_LIMIT)
-        page_items, _has_more = _slice_page(playlist.get("tracks"), start, count)
-        has_more = len(playlist.get("tracks") or []) > start + count
+        tracks, complete = list(playlist.get("tracks") or []), True
     else:
-        playlist = client.get_playlist(normalized_playlist_id, limit=start + count)
-        page_items, has_more = _slice_page(playlist.get("tracks"), start, count)
+        cache = cache or PlaylistTracksCache()
+        # A primeira página é sempre pedida de novo: reabrir a lista mostra o que mudou.
+        tracks, complete = cache.tracks(
+            client, normalized_playlist_id, None if whole else start + count, refresh=start == 0
+        )
 
-    normalize = normalize_music_video_items if as_videos else _normalize_tracks
-    return YouTubeResultPage(results=tuple(normalize(page_items)), has_more=has_more)
+    if whole:
+        page_items, has_more = tracks[start:], False
+    else:
+        page_items = tracks[start:start + count]
+        has_more = len(tracks) > start + count or (not complete and len(tracks) == start + count)
+
+    if as_videos:
+        results = normalize_music_video_items(page_items)
+    else:
+        results = normalize_track_items(page_items, badge=badge)
+    return YouTubeResultPage(results=tuple(results), has_more=has_more)
 
 
 def music_album_page(client, browse_id, playlist_id, start, count):

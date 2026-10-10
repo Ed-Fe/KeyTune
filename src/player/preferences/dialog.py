@@ -408,8 +408,8 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_library_page_size_ctrl = self._add_spin(
             box,
             sizer,
-            _("Playlists carregadas por vez"),
-            _("Valores menores abrem a biblioteca mais rápido."),
+            _("Itens carregados por vez"),
+            _("Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."),
             MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
             MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
         )
