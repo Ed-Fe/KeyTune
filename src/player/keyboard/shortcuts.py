@@ -81,7 +81,8 @@ RESERVED_SHORTCUTS = frozenset(
     }
 )
 
-# Combinações do Windows: trocar ou fechar a janela, menu Iniciar, Gerenciador de Tarefas.
+# Combinações do Windows: trocar ou fechar a janela, menu Iniciar, Gerenciador de
+# Tarefas e a barra de menus.
 SYSTEM_SHORTCUTS = frozenset(
     {
         "Alt+F4",
@@ -91,6 +92,7 @@ SYSTEM_SHORTCUTS = frozenset(
         "Ctrl+Escape",
         "Ctrl+Shift+Escape",
         "Ctrl+Alt+Delete",
+        "F10",
     }
 )
 
@@ -345,6 +347,10 @@ def _local_actions():
         A("save_playlist", "files", _("Salvar playlist"), "Ctrl+Shift+S", "on_save_playlist", "menu_save_playlist_id"),
         A("close_media", "files", _("Fechar mídia"), "Ctrl+Shift+W", "_close_current_media", "menu_close_media_id"),
         A("close_tab", "files", _("Fechar aba ou playlist"), "Ctrl+W", "on_close_current_tab", "menu_close_tab_id"),
+        A("move_item_up", "files", _("Mover o item atual para cima na playlist"), "Alt+Up", "_shortcut_move_item_up"),
+        A("move_item_down", "files", _("Mover o item atual para baixo na playlist"), "Alt+Down", "_shortcut_move_item_down"),
+        A("first_item", "files", _("Ir ao primeiro item da playlist"), "Alt+Home", "_shortcut_first_item"),
+        A("last_item", "files", _("Ir ao último item da playlist"), "Alt+End", "_shortcut_last_item"),
         A("copy_playing_path", "files", _("Copiar o caminho da mídia em execução"), "Ctrl+Shift+C", "on_copy_playing_media_path"),
         A("convert", "files", _("Converter seleção ou mídia atual"), "Ctrl+Shift+K", "on_convert_shortcut", "menu_convert_shortcut_id", accelerator=True),
         A("download", "files", _("Baixar seleção ou mídia atual"), "Ctrl+Shift+B", "on_download_shortcut", "menu_download_shortcut_id", accelerator=True),

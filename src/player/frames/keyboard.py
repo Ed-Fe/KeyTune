@@ -155,6 +155,18 @@ class FrameKeyboardMixin:
     def _shortcut_seek_backward_large(self):
         self._seek_relative(-LARGE_SEEK_STEP_MS)
 
+    def _shortcut_move_item_up(self):
+        self._move_current_item(-1)
+
+    def _shortcut_move_item_down(self):
+        self._move_current_item(1)
+
+    def _shortcut_first_item(self):
+        self._jump_to_playlist_boundary(to_last=False)
+
+    def _shortcut_last_item(self):
+        self._jump_to_playlist_boundary(to_last=True)
+
     def _shortcut_find_next(self):
         self._repeat_item_search(1)
 
@@ -203,6 +215,7 @@ class FrameKeyboardMixin:
             global_overrides=self.settings.global_hotkeys,
             global_enabled=self.settings.global_hotkeys_enabled,
             global_available=self._global_hotkeys_supported(),
+            menu_shortcuts=self._menu_bar_shortcuts(),
         )
         try:
             if dialog.ShowModal() != wx.ID_OK:
@@ -224,6 +237,19 @@ class FrameKeyboardMixin:
             )
         else:
             self._announce(_("Atalhos salvos."))
+
+    def _menu_bar_shortcuts(self):
+        """Alt+letra de cada menu da barra, no idioma em uso: não podem virar atalho."""
+        menu_bar = self.GetMenuBar()
+        shortcuts = set()
+        for index in range(menu_bar.GetMenuCount() if menu_bar else 0):
+            label = menu_bar.GetMenuLabel(index).replace("&&", "")
+            position = label.find("&")
+            if 0 <= position < len(label) - 1:
+                shortcut = normalize_shortcut("Alt+" + label[position + 1])
+                if shortcut:
+                    shortcuts.add(shortcut)
+        return frozenset(shortcuts)
 
     def _custom_shortcuts_help_text(self):
         """Linhas da ajuda rápida com os atalhos que o usuário mudou."""

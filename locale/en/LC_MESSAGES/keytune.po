@@ -6971,3 +6971,21 @@ msgstr "KeyTune does not ask for your Google password. To open your library, it 
 
 msgid "{shortcut} é usado pelo Windows."
 msgstr "{shortcut} is used by Windows."
+
+msgid "Mover o item atual para cima na playlist"
+msgstr "Move the current item up in the playlist"
+
+msgid "Mover o item atual para baixo na playlist"
+msgstr "Move the current item down in the playlist"
+
+msgid "Ir ao primeiro item da playlist"
+msgstr "Go to the first item of the playlist"
+
+msgid "Ir ao último item da playlist"
+msgstr "Go to the last item of the playlist"
+
+msgid "Esta tecla não pode ser usada em atalhos."
+msgstr "This key cannot be used in shortcuts."
+
+msgid "{shortcut} abre um menu do KeyTune."
+msgstr "{shortcut} opens a KeyTune menu."

@@ -66,7 +66,7 @@ class ShortcutRulesTests(unittest.TestCase):
         self.assertEqual(shortcut_problem("P", SCOPE_LOCAL), "")
 
     def test_shortcuts_windows_keeps_for_itself_are_refused(self):
-        for shortcut in ("Alt+Tab", "Alt+Shift+Tab", "Ctrl+Escape", "Ctrl+Shift+Escape", "Ctrl+Alt+Delete", "Alt+F4"):
+        for shortcut in ("Alt+Tab", "Alt+Shift+Tab", "Ctrl+Escape", "Ctrl+Shift+Escape", "Ctrl+Alt+Delete", "Alt+F4", "F10"):
             for scope in (SCOPE_LOCAL, SCOPE_GLOBAL):
                 self.assertTrue(shortcut_problem(shortcut, scope), f"{shortcut} ({scope})")
         self.assertEqual(shortcut_problem("Ctrl+Alt+P", SCOPE_GLOBAL), "")
@@ -93,6 +93,13 @@ class CatalogTests(unittest.TestCase):
                 self.assertNotIn(normalized, RESERVED_SHORTCUTS)
                 self.assertNotIn(normalized, seen_shortcuts, f"{action.action_id} x {seen_shortcuts.get(normalized)}")
                 seen_shortcuts[normalized] = action.action_id
+
+    def test_playlist_item_shortcuts_are_in_the_catalog(self):
+        # Fora do catálogo, outro atalho os tomaria sem a tela perguntar.
+        bindings = effective_bindings({}, SCOPE_LOCAL)
+        expected = {"Alt+Up": "move_item_up", "Alt+Down": "move_item_down", "Alt+Home": "first_item", "Alt+End": "last_item"}
+        for shortcut, action_id in expected.items():
+            self.assertEqual(find_conflicts(bindings, shortcut), [action_id])
 
     def test_frame_handlers_exist(self):
         try:

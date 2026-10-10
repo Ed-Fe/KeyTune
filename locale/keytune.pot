@@ -3463,6 +3463,10 @@ msgstr ""
 msgid "Esta sessão do navegador tem mais de uma conta Google. Qual delas o KeyTune deve usar?"
 msgstr ""
 
+#: src/player/keyboard/dialog.py
+msgid "Esta tecla não pode ser usada em atalhos."
+msgstr ""
+
 #: src/player/youtube_music/live_streams.py
 msgid "Esta transmissão ao vivo ainda não começou."
 msgstr ""
@@ -4171,6 +4175,14 @@ msgstr ""
 msgid "Início: escolha uma lista, faça uma busca ou cole um link."
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Ir ao primeiro item da playlist"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ir ao último item da playlist"
+msgstr ""
+
 #: src/player/frames/youtube_music/details.py
 msgid "Ir para o &artista"
 msgstr ""
@@ -4742,6 +4754,14 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "Move o item selecionado uma posição para cima (Alt+Seta para cima)."
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Mover o item atual para baixo na playlist"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Mover o item atual para cima na playlist"
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -9306,6 +9326,10 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "{semitones:+d} semitons"
+msgstr ""
+
+#: src/player/keyboard/dialog.py
+msgid "{shortcut} abre um menu do KeyTune."
 msgstr ""
 
 #: src/player/keyboard/dialog.py

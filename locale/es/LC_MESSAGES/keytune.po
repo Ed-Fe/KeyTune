@@ -6971,3 +6971,21 @@ msgstr "KeyTune no pide tu contraseña de Google. Para abrir tu biblioteca, usa 
 
 msgid "{shortcut} é usado pelo Windows."
 msgstr "{shortcut} lo usa Windows."
+
+msgid "Mover o item atual para cima na playlist"
+msgstr "Mover el elemento actual hacia arriba en la playlist"
+
+msgid "Mover o item atual para baixo na playlist"
+msgstr "Mover el elemento actual hacia abajo en la playlist"
+
+msgid "Ir ao primeiro item da playlist"
+msgstr "Ir al primer elemento de la playlist"
+
+msgid "Ir ao último item da playlist"
+msgstr "Ir al último elemento de la playlist"
+
+msgid "Esta tecla não pode ser usada em atalhos."
+msgstr "Esta tecla no se puede usar en atajos."
+
+msgid "{shortcut} abre um menu do KeyTune."
+msgstr "{shortcut} abre un menú de KeyTune."

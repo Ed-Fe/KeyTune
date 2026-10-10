@@ -20,7 +20,7 @@ from .shortcuts import (
     overrides_from_bindings,
     shortcut_problem,
 )
-from .wx_keys import shortcut_from_key_event
+from .wx_keys import MODIFIER_KEY_CODES, shortcut_from_key_event
 
 
 def _announce(window, message):
@@ -39,9 +39,10 @@ class ShortcutCaptureDialog(wx.Dialog):
     continuam navegando, e Enter sem modificador confirma.
     """
 
-    def __init__(self, parent, action_label, current_shortcut, scope=SCOPE_LOCAL):
+    def __init__(self, parent, action_label, current_shortcut, scope=SCOPE_LOCAL, menu_shortcuts=()):
         super().__init__(parent, title=_("Alterar atalho"))
         self._scope = scope
+        self._menu_shortcuts = frozenset(menu_shortcuts)
         self._shortcut = normalize_shortcut(current_shortcut)
 
         panel = wx.Panel(self)
@@ -116,7 +117,12 @@ class ShortcutCaptureDialog(wx.Dialog):
             return
         shortcut = shortcut_from_key_event(event, allow_win=self._scope == SCOPE_GLOBAL)
         if not shortcut:
-            # Um modificador sozinho: espera a tecla que completa o atalho.
+            # Um modificador sozinho espera a tecla que completa o atalho; uma
+            # tecla que não serve (teclado numérico, mídia, acentos) é avisada.
+            if key_code not in MODIFIER_KEY_CODES and key_code not in (0, wx.WXK_NONE):
+                text = _("Esta tecla não pode ser usada em atalhos.")
+                self._show_status(text)
+                _announce(self, text)
             return
         self._shortcut = shortcut
         self.capture_ctrl.ChangeValue(format_shortcut(shortcut))
@@ -126,16 +132,21 @@ class ShortcutCaptureDialog(wx.Dialog):
     def _problem(self):
         if not self._shortcut:
             return _("Pressione uma combinação de teclas.")
+        if self._shortcut in self._menu_shortcuts:
+            return _("{shortcut} abre um menu do KeyTune.").format(shortcut=format_shortcut(self._shortcut))
         return shortcut_problem(self._shortcut, self._scope)
+
+    def _show_status(self, text):
+        self.status_label.SetLabel(text)
+        self.status_label.Wrap(self.FromDIP(320))
+        self.Layout()
+        self.Fit()
 
     def _refresh_status(self, *, announce):
         problem = self._problem()
         text = problem or _("{shortcut}. Enter confirma.").format(shortcut=format_shortcut(self._shortcut))
-        self.status_label.SetLabel(text)
-        self.status_label.Wrap(self.FromDIP(320))
         self.ok_button.Enable(not problem)
-        self.Layout()
-        self.Fit()
+        self._show_status(text)
         if announce:
             _announce(self, text)
 
@@ -232,12 +243,14 @@ class KeyboardCustomizationDialog(wx.Dialog):
         global_overrides=None,
         global_enabled=False,
         global_available=True,
+        menu_shortcuts=(),
     ):
         super().__init__(
             parent,
             title=_("Personalizar teclado"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
+        self._menu_shortcuts = frozenset(menu_shortcuts)
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
 
@@ -358,7 +371,13 @@ class KeyboardCustomizationDialog(wx.Dialog):
         page, action = self._selected()
         if action is None:
             return
-        dialog = ShortcutCaptureDialog(self, action.label, page.bindings.get(action.action_id, ""), page.scope)
+        dialog = ShortcutCaptureDialog(
+            self,
+            action.label,
+            page.bindings.get(action.action_id, ""),
+            page.scope,
+            menu_shortcuts=self._menu_shortcuts,
+        )
         try:
             if dialog.ShowModal() != wx.ID_OK:
                 return
