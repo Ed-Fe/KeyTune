@@ -146,6 +146,20 @@ class PreferencesDialog(wx.Dialog):
             _("Toca numa janela pequena, sem carregar as playlists."),
         )
 
+        box, sizer = self._create_group(page, page_sizer, _("Bandeja do sistema"))
+        self.minimize_to_tray_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ao m&inimizar, ocultar na bandeja do sistema"),
+            _("A janela sai da barra de tarefas e fica um ícone perto do relógio."),
+        )
+        self.close_to_tray_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ao fechar, ocultar na band&eja do sistema"),
+            _("Fechar a janela só a esconde; para sair, use Arquivo > Sair ou o menu do ícone."),
+        )
+
         if sys.platform == "win32":
             box, sizer = self._create_group(page, page_sizer, _("Associação de arquivos"))
             self._register_assoc_button = wx.Button(box, label=_("Re&gistrar como player padrão"))
@@ -687,6 +701,8 @@ class PreferencesDialog(wx.Dialog):
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
         self.quick_player_checkbox.SetValue(settings.quick_player_enabled)
+        self.minimize_to_tray_checkbox.SetValue(settings.minimize_to_tray)
+        self.close_to_tray_checkbox.SetValue(settings.close_to_tray)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
         self.live_video_checkbox.SetValue(settings.live_video_enabled)
@@ -775,6 +791,8 @@ class PreferencesDialog(wx.Dialog):
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()
         settings.quick_player_enabled = self.quick_player_checkbox.GetValue()
+        settings.minimize_to_tray = self.minimize_to_tray_checkbox.GetValue()
+        settings.close_to_tray = self.close_to_tray_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
         settings.live_video_enabled = self.live_video_checkbox.GetValue()

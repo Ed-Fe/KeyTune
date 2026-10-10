@@ -261,6 +261,7 @@ def _build_screens():
     from player.equalizer.panel import EqualizerTabPanel
     from player.frames.autodj_panel import AutoDJSessionPanel
     from player.frames.lyrics_panel import LyricsPanel
+    from player.keyboard.dialog import KeyboardCustomizationDialog, ShortcutCaptureDialog
     from player.library.browser import PlaylistBrowserPanel
     from player.library.search_dialog import ItemSearchDialog
     from player.playlists.queue_dialog import QueueManagerDialog
@@ -328,6 +329,7 @@ def _build_screens():
         "GlobalSearchDialog": lambda parent: GlobalSearchDialog(parent, _empty),
         "InstallationConfirmationDialog": lambda parent: InstallationConfirmationDialog(parent, _manifest(), "arquivo"),
         "ItemSearchDialog": lambda parent: ItemSearchDialog(parent),
+        "KeyboardCustomizationDialog": lambda parent: KeyboardCustomizationDialog(parent),
         "LyricsPanel": lambda parent: LyricsPanel(parent),
         "MarketplaceDialog": lambda parent: MarketplaceDialog(parent, [], {}),
         "PermissionDialog": lambda parent: PermissionDialog(parent, _manifest()),
@@ -353,6 +355,7 @@ def _build_screens():
             on_add_manually=_noop,
         ),
         "ReadingDialog": reading_dialog,
+        "ShortcutCaptureDialog": lambda parent: ShortcutCaptureDialog(parent, "Reproduzir ou pausar", "Space"),
         "SleepTimerDialog": lambda parent: SleepTimerDialog(parent),
         "SmartPlaylistEditorDialog": lambda parent: SmartPlaylistEditorDialog(parent),
         "SmartPlaylistManagerDialog": lambda parent: SmartPlaylistManagerDialog(parent, []),

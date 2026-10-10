@@ -11,7 +11,9 @@ from .download import FrameDownloadMixin
 from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
 from .explorer import FrameExplorerMixin
+from .global_hotkeys import FrameGlobalHotkeysMixin
 from .item_search import FrameItemSearchMixin
+from .keyboard import FrameKeyboardMixin
 from .library import FrameLibraryMixin
 from .lyrics_panel import LyricsPanel
 from .playback import FramePlaybackMixin
@@ -22,6 +24,7 @@ from .session import FrameSessionMixin
 from .sleep_timer import FrameSleepTimerMixin
 from .smart_library import FrameSmartLibraryMixin
 from .smtc import FrameSmtcMixin
+from .tray import FrameTrayMixin
 from .ui import FrameUIMixin
 from .update import FrameUpdateMixin
 from .youtube_music import FrameYouTubeMusicMixin
@@ -46,6 +49,9 @@ class MediaPlayerFrame(
     FrameAutoDJMixin,
     FramePluginMixin,
     FrameSmtcMixin,
+    FrameKeyboardMixin,
+    FrameGlobalHotkeysMixin,
+    FrameTrayMixin,
     FrameUpdateMixin,
     FrameUIMixin,
     wx.Frame,
@@ -83,6 +89,8 @@ class MediaPlayerFrame(
         self._startup_initialization_started = False
         self._startup_ready = False
         self._suppress_next_auto_advance = False
+        self._exit_requested = False
+        self._hidden_in_tray = False
         self._item_search_query = ""
         self._initialize_sleep_timer_state()
         self._initialize_download_state()
@@ -123,6 +131,8 @@ class MediaPlayerFrame(
         self._initialize_smtc_service()
         self._initialize_autodj_service()
         self._startup_ready = True
+        self._apply_global_hotkeys()
+        self._refresh_tray_icon()
 
         self._initialize_player_state()
         self._adopt_pending_playback()
@@ -180,6 +190,9 @@ class MediaPlayerFrame(
         Used when KeyTune is started without a file (Start Menu, shortcut),
         where the user intent is to return to the running instance.
         """
+        if self._hidden_in_tray:
+            self._restore_from_tray()
+            return
         if self.IsIconized():
             self.Iconize(False)
         self.Raise()

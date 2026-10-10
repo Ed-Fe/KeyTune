@@ -6276,6 +6276,396 @@ msgstr "No se pudo reconocer esta dirección como un stream de radio válido."
 msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr "Úsalo cuando no encuentres la radio en la búsqueda: escribe un nombre para ella y la dirección directa del stream o de un archivo M3U. Al confirmar, pasa a tus radios favoritas."
 
+msgid "&Alterar atalho..."
+msgstr "Ca&mbiar atajo..."
+
+msgid "&Confirmar"
+msgstr "&Confirmar"
+
+msgid "&Filtrar ações:"
+msgstr "&Filtrar acciones:"
+
+msgid "&Mostrar KeyTune"
+msgstr "&Mostrar KeyTune"
+
+msgid "&Ocultar KeyTune"
+msgstr "&Ocultar KeyTune"
+
+msgid "&Ocultar na bandeja do sistema"
+msgstr "&Ocultar en la bandeja del sistema"
+
+msgid "&Próxima faixa"
+msgstr "&Siguiente pista"
+
+msgid "&Remover atalho"
+msgstr "&Quitar atajo"
+
+msgid "&Reproduzir ou pausar"
+msgstr "&Reproducir o pausar"
+
+msgid "&Sair do KeyTune"
+msgstr "Salir de &KeyTune"
+
+msgid "A tecla Windows só pode ser usada em atalhos globais."
+msgstr "La tecla Windows solo se puede usar en atajos globales."
+
+msgid "Abrir"
+msgstr "Abrir"
+
+msgid "Abrir sem tocar"
+msgstr "Abrir sin reproducir"
+
+msgid "Adicionar à fila de reprodução"
+msgstr "Añadir a la cola de reproducción"
+
+msgid "Adicionar à playlist do YouTube Music"
+msgstr "Añadir a una lista de YouTube Music"
+
+msgid "Alterar atalho"
+msgstr "Cambiar atajo"
+
+msgid "Alternar foco entre itens e player"
+msgstr "Alternar el foco entre elementos y reproductor"
+
+msgid "Anunciar &status"
+msgstr "Anunciar es&tado"
+
+msgid "Anunciar status"
+msgstr "Anunciar estado"
+
+msgid "Anunciar tempo"
+msgstr "Anunciar tiempo"
+
+msgid "Anunciar volume"
+msgstr "Anunciar volumen"
+
+msgid "Anúncios"
+msgstr "Anuncios"
+
+msgid "Ao fechar, ocultar na band&eja do sistema"
+msgstr "Al c&errar, ocultar en la bandeja del sistema"
+
+msgid "A janela sai da barra de tarefas e fica um ícone perto do relógio."
+msgstr "La ventana sale de la barra de tareas y queda un icono junto al reloj."
+
+msgid "Arquivos e playlists"
+msgstr "Archivos y listas"
+
+msgid "Atalho"
+msgstr "Atajo"
+
+msgid "Atalho em uso"
+msgstr "Atajo en uso"
+
+msgid "Atalhos do player"
+msgstr "Atajos del reproductor"
+
+msgid "Atalhos do player:"
+msgstr "Atajos del reproductor:"
+
+msgid "Atalhos globais"
+msgstr "Atajos globales"
+
+msgid "Atalhos globais:"
+msgstr "Atajos globales:"
+
+msgid "Atalhos personalizados (substituem os acima):"
+msgstr "Atajos personalizados (sustituyen a los de arriba):"
+
+msgid "Atalhos restaurados ao padrão."
+msgstr "Atajos restaurados a los predeterminados."
+
+msgid "Atalhos salvos."
+msgstr "Atajos guardados."
+
+msgid "Atalhos salvos. Não foi possível registrar {shortcuts}: já estão em uso por outro programa."
+msgstr "Atajos guardados. No se pudo registrar {shortcuts}: ya los usa otro programa."
+
+msgid "Ativar atalhos &globais"
+msgstr "&Activar atajos globales"
+
+msgid "Aumentar tom"
+msgstr "Subir tono"
+
+msgid "Aumentar velocidade"
+msgstr "Aumentar velocidad"
+
+msgid "Aumentar volume"
+msgstr "Subir volumen"
+
+msgid "Avaliar com {stars} estrela(s)"
+msgstr "Valorar con {stars} estrella(s)"
+
+msgid "Avançar mais"
+msgstr "Avanzar más"
+
+msgid "Ação"
+msgstr "Acción"
+
+msgid "Baixar seleção ou mídia atual"
+msgstr "Descargar selección o medio actual"
+
+msgid "Bandeja do sistema"
+msgstr "Bandeja del sistema"
+
+msgid "Ca&ncelar"
+msgstr "Ca&ncelar"
+
+msgid "Categoria"
+msgstr "Categoría"
+
+msgid "Configurar temporizador"
+msgstr "Configurar temporizador"
+
+msgid "Conteúdo relacionado do YouTube Music"
+msgstr "Contenido relacionado de YouTube Music"
+
+msgid "Converter seleção ou mídia atual"
+msgstr "Convertir selección o medio actual"
+
+msgid "Copiar o caminho da mídia em execução"
+msgstr "Copiar la ruta del medio en reproducción"
+
+msgid "Delete na lista faz o mesmo."
+msgstr "Supr en la lista hace lo mismo."
+
+msgid "Diminuir tom"
+msgstr "Bajar tono"
+
+msgid "Diminuir velocidade"
+msgstr "Disminuir velocidad"
+
+msgid "Diminuir volume"
+msgstr "Bajar volumen"
+
+msgid "Disponível apenas no Windows."
+msgstr "Disponible solo en Windows."
+
+msgid "Embaralhar"
+msgstr "Aleatorio"
+
+msgid "Enter na lista faz o mesmo."
+msgstr "Intro en la lista hace lo mismo."
+
+msgid "Espaço"
+msgstr "Espacio"
+
+msgid "Esta combinação de teclas não é reconhecida."
+msgstr "Esta combinación de teclas no se reconoce."
+
+msgid "Exibir e ferramentas"
+msgstr "Ver y herramientas"
+
+msgid "Faixa &anterior"
+msgstr "Pista &anterior"
+
+msgid "Faixa anterior"
+msgstr "Pista anterior"
+
+msgid "Faixa anterior (alternativo)"
+msgstr "Pista anterior (alternativo)"
+
+msgid "Favoritar ou desfavoritar seleção"
+msgstr "Marcar o desmarcar selección como favorita"
+
+msgid "Fechar a janela só a esconde; para sair, use Arquivo > Sair ou o menu do ícone."
+msgstr "Cerrar la ventana solo la oculta; para salir, use Archivo > Salir o el menú del icono."
+
+msgid "Fechar aba ou playlist"
+msgstr "Cerrar pestaña o lista"
+
+msgid "Fechar mídia"
+msgstr "Cerrar medio"
+
+msgid "Filtrar ações glo&bais:"
+msgstr "Filtrar acciones glo&bales:"
+
+msgid "Funcionam mesmo com o KeyTune minimizado, na bandeja ou com outro programa em foco."
+msgstr "Funcionan aunque KeyTune esté minimizado, en la bandeja o con otro programa en primer plano."
+
+msgid "Gostei da mídia atual (YouTube Music)"
+msgstr "Me gusta el medio actual (YouTube Music)"
+
+msgid "Iniciar rádio desta faixa"
+msgstr "Iniciar radio de esta pista"
+
+msgid "Ir para o fim da mídia"
+msgstr "Ir al final del medio"
+
+msgid "Ir para o início da mídia"
+msgstr "Ir al inicio del medio"
+
+msgid "Janela"
+msgstr "Ventana"
+
+msgid "KeyTube por aba"
+msgstr "KeyTube en pestaña"
+
+msgid "KeyTune na bandeja do sistema."
+msgstr "KeyTune en la bandeja del sistema."
+
+msgid "Ao m&inimizar, ocultar na bandeja do sistema"
+msgstr "Al m&inimizar, ocultar en la bandeja del sistema"
+
+msgid "Minimizar ou restaurar a janela"
+msgstr "Minimizar o restaurar la ventana"
+
+msgid "Modo de repetição"
+msgstr "Modo de repetición"
+
+msgid "Mostrar ou ocultar a imagem da transmissão ao vivo"
+msgstr "Mostrar u ocultar la imagen de la transmisión en directo"
+
+msgid "Mostrar ou ocultar a letra"
+msgstr "Mostrar u ocultar la letra"
+
+msgid "Mostrar ou ocultar o KeyTune na bandeja do sistema"
+msgstr "Mostrar u ocultar KeyTune en la bandeja del sistema"
+
+msgid "Navegação na mídia"
+msgstr "Navegación en el medio"
+
+msgid "Nenhum"
+msgstr "Ninguno"
+
+msgid "Nenhuma ação selecionada."
+msgstr "Ninguna acción seleccionada."
+
+msgid "Nova playlist"
+msgstr "Nueva lista"
+
+msgid "Novo atalho"
+msgstr "Nuevo atajo"
+
+msgid "Não gostei da mídia atual (YouTube Music)"
+msgstr "No me gusta el medio actual (YouTube Music)"
+
+msgid "Ocultar na bandeja do sistema"
+msgstr "Ocultar en la bandeja del sistema"
+
+msgid "P&arar"
+msgstr "&Detener"
+
+msgid "Parar"
+msgstr "Detener"
+
+msgid "Personalizar &teclado..."
+msgstr "Personalizar &teclado..."
+
+msgid "Personalizar teclado"
+msgstr "Personalizar teclado"
+
+msgid "Personalização\nConfigurações > Personalizar teclado — Trocar, remover ou restaurar atalhos e definir atalhos globais, que funcionam com o KeyTune minimizado ou na bandeja do sistema"
+msgstr "Personalización\nConfiguración > Personalizar teclado — Cambiar, quitar o restaurar atajos y definir atajos globales, que funcionan con KeyTune minimizado o en la bandeja del sistema"
+
+msgid "Pressione o novo atalho para «{action}»:"
+msgstr "Pulse el nuevo atajo para «{action}»:"
+
+msgid "Pressione uma combinação de teclas."
+msgstr "Pulse una combinación de teclas."
+
+msgid "Procura pelo nome da ação, pela categoria ou pelo atalho."
+msgstr "Busca por nombre de acción, categoría o atajo."
+
+msgid "Próxima faixa"
+msgstr "Siguiente pista"
+
+msgid "Próxima faixa (alternativo)"
+msgstr "Siguiente pista (alternativo)"
+
+msgid "Próximo resultado"
+msgstr "Siguiente resultado"
+
+msgid "Removido de: {others}"
+msgstr "Quitado de: {others}"
+
+msgid "Reproduzir ou pausar"
+msgstr "Reproducir o pausar"
+
+msgid "Restaurar &padrão"
+msgstr "Restaurar &predeterminado"
+
+msgid "Restaurar t&odos"
+msgstr "Restaurar t&odos"
+
+msgid "Restaurar todos"
+msgstr "Restaurar todos"
+
+msgid "Restaurar tom original"
+msgstr "Restaurar tono original"
+
+msgid "Restaurar velocidade normal"
+msgstr "Restaurar velocidad normal"
+
+msgid "Resultado anterior"
+msgstr "Resultado anterior"
+
+msgid "Rádios online por aba"
+msgstr "Radios en línea en pestaña"
+
+msgid "Seta abaixo"
+msgstr "Flecha abajo"
+
+msgid "Seta acima"
+msgstr "Flecha arriba"
+
+msgid "Seta direita"
+msgstr "Flecha derecha"
+
+msgid "Seta esquerda"
+msgstr "Flecha izquierda"
+
+msgid "Tab sai do campo, Enter confirma e Esc cancela."
+msgstr "Tab sale del campo, Intro confirma y Esc cancela."
+
+msgid "Tipos de atalho"
+msgstr "Tipos de atajo"
+
+msgid "Trazer o KeyTune para a frente"
+msgstr "Traer KeyTune al frente"
+
+msgid "Um atalho global precisa de Ctrl, Alt ou Windows, senão a tecla deixaria de funcionar nos outros programas."
+msgstr "Un atajo global necesita Ctrl, Alt o Windows; si no, la tecla dejaría de funcionar en otros programas."
+
+msgid "Ver comentários da mídia atual"
+msgstr "Ver comentarios del medio actual"
+
+msgid "Ver detalhes da mídia atual"
+msgstr "Ver detalles del medio actual"
+
+msgid "Volta todos os atalhos da aba atual ao padrão."
+msgstr "Devuelve todos los atajos de la pestaña actual a su valor predeterminado."
+
+msgid "Voltar mais"
+msgstr "Retroceder más"
+
+msgid "Voltar todos os atalhos desta aba ao padrão?"
+msgstr "¿Devolver todos los atajos de esta pestaña a su valor predeterminado?"
+
+msgid "sem atalho"
+msgstr "sin atajo"
+
+msgid "{action}: sem atalho"
+msgstr "{action}: sin atajo"
+
+msgid "{action}: sem atalho (padrão era {default})"
+msgstr "{action}: sin atajo (el predeterminado era {default})"
+
+msgid "{action}: {shortcut}"
+msgstr "{action}: {shortcut}"
+
+msgid "{shortcut} já é usado por «{other}». Passar o atalho para «{action}» e deixar «{other}» sem atalho?"
+msgstr "{shortcut} ya lo usa «{other}». ¿Pasar el atajo a «{action}» y dejar «{other}» sin atajo?"
+
+msgid "{shortcut} é reservado para navegar e editar texto."
+msgstr "{shortcut} está reservado para navegar y editar texto."
+
+msgid "{shortcut}. Enter confirma."
+msgstr "{shortcut}. Intro confirma."
+
+msgid "{shortcut}: {action}"
+msgstr "{shortcut}: {action}"
+
 msgid "Erro {code} ao carregar {name}."
 msgstr "Error {code} al cargar {name}."
 
@@ -6578,3 +6968,24 @@ msgstr "Qué necesita KeyTune"
 
 msgid "O KeyTune não pede a sua senha do Google. Para abrir a sua biblioteca, ele usa os cookies do YouTube: pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao KeyTune uma cópia desses cookies, em um arquivo cookies.txt. Este texto explica como gerar esse arquivo e por que o jeito de gerar importa."
 msgstr "KeyTune no pide tu contraseña de Google. Para abrir tu biblioteca, usa las cookies de YouTube: pequeños archivos en los que el navegador guarda tu inicio de sesión. Conectar la cuenta es entregar a KeyTune una copia de esas cookies, en un archivo cookies.txt. Este texto explica cómo generar ese archivo y por qué importa la forma de generarlo."
+
+msgid "{shortcut} é usado pelo Windows."
+msgstr "{shortcut} lo usa Windows."
+
+msgid "Mover o item atual para cima na playlist"
+msgstr "Mover el elemento actual hacia arriba en la playlist"
+
+msgid "Mover o item atual para baixo na playlist"
+msgstr "Mover el elemento actual hacia abajo en la playlist"
+
+msgid "Ir ao primeiro item da playlist"
+msgstr "Ir al primer elemento de la playlist"
+
+msgid "Ir ao último item da playlist"
+msgstr "Ir al último elemento de la playlist"
+
+msgid "Esta tecla não pode ser usada em atalhos."
+msgstr "Esta tecla no se puede usar en atajos."
+
+msgid "{shortcut} abre um menu do KeyTune."
+msgstr "{shortcut} abre un menú de KeyTune."

@@ -221,6 +221,12 @@ class KeyNavigationMixin:
         if callable(explorer_has_focus) and explorer_has_focus() and self._handle_explorer_key_down(event):
             return
 
+        # Atalhos personalizados (Configurações > Personalizar teclado) passam à
+        # frente dos fixos abaixo; sem personalização, nada muda.
+        handle_custom_shortcut = getattr(self, "_handle_custom_shortcut", None)
+        if callable(handle_custom_shortcut) and handle_custom_shortcut(event):
+            return
+
         # Bare keys (no Ctrl/Alt) drive playback only while focus is on the
         # player surface — the frame or the playlist list. On any other control
         # (buttons, checkboxes, screen-tab widgets, the lyrics copy button) let

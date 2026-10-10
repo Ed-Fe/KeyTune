@@ -666,6 +666,49 @@ The session controls swap the next track, recalculate the sequence, add files, p
 
 AutoDJ options are in **Preferences > Playback** and **Additional resources**; see [Settings](#settings).
 
+## Customizing the keyboard
+
+**Settings > Customize keyboard** lists every player action with the shortcut in effect. The screen has two tabs: **Player shortcuts**, which work while the KeyTune window has focus, and **Global shortcuts**, which work from anywhere in Windows.
+
+On each tab:
+
+- **Filter actions** searches the action name, its category or the shortcut itself. Typing "volume" or "Ctrl+Shift" narrows the list.
+- `Enter` on the list (or **Change shortcut**) opens a field that captures the combination you press. `Tab` leaves the field, `Enter` confirms and `Esc` cancels.
+- `Delete` on the list (or **Remove shortcut**) leaves the action without a shortcut.
+- **Restore default** gives the action its original shortcut back; **Restore all** does that for the whole tab.
+- Nothing changes until you choose **Save**.
+
+If the shortcut you pick already belongs to another action, KeyTune says which one and asks whether to hand it over; the old action is left without a shortcut. So two actions never share a shortcut.
+
+A few keys cannot be used because they navigate and edit: `Tab`, `Shift+Tab`, `Ctrl+Tab`, `Esc`, `Enter`, `Alt+F4`, `Shift+F10`, `Ctrl+A`, `Ctrl+C`, `Ctrl+V`, `Ctrl+X` and `Ctrl+Z`.
+
+A shortcut without `Ctrl` or `Alt` (such as `Space`, `P` or `Shift+Right arrow`) behaves like the default ones: it only acts with focus on the player. In the item list and in text fields the key still belongs to the control. Shortcuts with `Ctrl` or `Alt` act anywhere in the window except inside a text field.
+
+The menus show the new shortcut, and `F1` lists what you changed at the end of the help.
+
+### Global shortcuts
+
+They work with KeyTune minimized, in the system tray or with another program in front. They stay off until you check **Enable global shortcuts** on the **Global shortcuts** tab. Windows only.
+
+| Default shortcut | Action |
+| --- | --- |
+| `Ctrl+Alt+Shift+P` | Play or pause |
+| `Ctrl+Alt+Shift+Right arrow` / `Left arrow` | Next track / previous track |
+| `Ctrl+Alt+Shift+X` | Stop |
+| `Ctrl+Alt+Shift+Up arrow` / `Down arrow` | Volume up / down (the new volume is spoken) |
+| `Ctrl+Alt+Shift+I` | Announce status |
+| `Ctrl+Alt+Shift+T` | Announce time |
+| `Ctrl+Alt+Shift+K` | Show or hide KeyTune in the system tray |
+| `Ctrl+Alt+Shift+M` | Minimize or restore the window |
+
+Skip forward, skip back, shuffle, repeat mode, announce volume and bring KeyTune to the front come without a shortcut; you can set one on the same screen. Global shortcuts need `Ctrl`, `Alt` or the `Windows` key, otherwise the key would stop working in other programs. If another program already uses the combination, KeyTune tells you when you save, and that shortcut does nothing until you pick another one.
+
+### System tray
+
+**File > Hide to system tray** (or `Ctrl+Alt+Shift+K`, with global shortcuts on) hides the window and leaves an icon near the clock, and the music keeps playing. To reach the icon from the keyboard, use `Windows+B` and the arrows. `Enter` on the icon shows the window again; its context menu (`Shift+F10` or the applications key) has **Show KeyTune**, **Play or pause**, **Previous track**, **Next track**, **Stop**, **Announce status** and **Exit KeyTune**. When the window comes back, focus is where it was.
+
+In **Preferences > General > System tray**, **When minimizing, hide to the system tray** does the same when you minimize, and **When closing, hide to the system tray** makes closing the window only hide it. With that option on, exit with **File > Exit** or **Exit KeyTune** in the icon menu.
+
 ## Settings
 
 Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **Playback**, **Accessibility**, **Library**, **Download**, **KeyTube**, **Online radio** and **Additional resources**.
@@ -673,6 +716,8 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 ### General
 
 **Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
+
+The **System tray** section has **When minimizing, hide to the system tray** and **When closing, hide to the system tray**; see [System tray](#system-tray).
 
 The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the *Open with* menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration.
 

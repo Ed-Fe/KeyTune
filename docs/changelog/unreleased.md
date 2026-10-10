@@ -2,6 +2,15 @@
 
 ### Adicionado
 
+- **Personalizar o teclado**: **Configurações > Personalizar teclado** mostra cada ação com o atalho em vigor e deixa trocar, remover ou restaurar qualquer um.
+  - `Enter` na ação captura a combinação que você pressionar. `Delete` deixa a ação sem atalho.
+  - Um filtro procura pelo nome, pela categoria ou pelo atalho.
+  - Se o atalho já é de outra ação, o KeyTune pergunta antes de passá-lo, então duas ações nunca dividem a mesma tecla.
+  - Os menus e a ajuda do `F1` mostram os atalhos que você mudou.
+- **Atalhos globais**: tocar, pausar, trocar de faixa, mudar o volume, ouvir o status e esconder ou mostrar o KeyTune com a janela minimizada ou com outro programa em foco. Ficam desligados até você marcar **Ativar atalhos globais** na aba **Atalhos globais**. Só no Windows.
+- **Bandeja do sistema**: **Arquivo > Ocultar na bandeja do sistema** esconde a janela e a música continua. O menu do ícone tem os controles básicos do player.
+  - Em `Ctrl+,` > **Geral**, dá para minimizar ou fechar a janela direto para a bandeja.
+
 - **Diagnóstico** (**Ajuda > Diagnóstico**): testa o que o KeyTune precisa para tocar e mostra, em uma caixa de leitura, o que está errado e o que fazer em cada caso.
   - Verifica a biblioteca do MPV e as dependências dela no Windows, o início do player, os dispositivos de áudio, o `yt-dlp`, o Node.js, o YouTube.js, o FFmpeg, a conta do YouTube e, resolvendo um vídeo público de verdade, se o YouTube responde ao YouTube.js e ao `yt-dlp`.
   - Se o player não iniciar ao abrir o KeyTune, o diagnóstico roda sozinho e mostra o motivo antes de o aplicativo fechar. Antes a janela ficava aberta sem funcionar.
