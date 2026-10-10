@@ -66,6 +66,52 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             self.assertEqual(auth_path.read_text(encoding="utf-8"), "autenticação anterior")
             self.assertEqual(cookie_path.read_text(encoding="utf-8"), "cookies anteriores")
 
+    def _account_menu_response(self, logged_in):
+        return {
+            "responseContext": {
+                "serviceTrackingParams": [{"service": "GFEEDBACK", "params": [{"key": "logged_in", "value": logged_in}]}]
+            }
+        }
+
+    def _client_with_unreadable_account_menu(self, response):
+        client = Mock()
+        client.get_account_info.side_effect = KeyError("Unable to find 'actions'")
+        client._send_request.return_value = response
+        return client
+
+    def test_unreadable_account_menu_is_accepted_when_youtube_reports_logged_in(self):
+        from player.youtube_music.service import _fetch_account_info
+
+        client = self._client_with_unreadable_account_menu(self._account_menu_response("1"))
+
+        self.assertEqual(_fetch_account_info(client)["accountName"], "")
+
+    def test_unreadable_account_menu_is_refused_when_youtube_reports_logged_out(self):
+        from player.youtube_music.service import _fetch_account_info
+
+        client = self._client_with_unreadable_account_menu(self._account_menu_response("0"))
+
+        with self.assertRaisesRegex(RuntimeError, "janela anônima"):
+            _fetch_account_info(client)
+
+    def test_unreadable_account_menu_keeps_the_original_error_when_state_is_unknown(self):
+        from player.youtube_music.service import _fetch_account_info
+
+        client = self._client_with_unreadable_account_menu({})
+
+        with self.assertRaises(KeyError):
+            _fetch_account_info(client)
+
+    def test_server_errors_are_not_retried_as_account_menu_problems(self):
+        from player.youtube_music.service import _fetch_account_info
+
+        client = Mock()
+        client.get_account_info.side_effect = RuntimeError("Server returned HTTP 401: Unauthorized")
+
+        with self.assertRaisesRegex(RuntimeError, "401"):
+            _fetch_account_info(client)
+        client._send_request.assert_not_called()
+
     def test_save_browser_auth_replaces_both_files_after_validation(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"

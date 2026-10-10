@@ -96,6 +96,47 @@ def _is_probably_invalid_saved_auth_error(error):
     return any(marker in normalized_message for marker in _INVALID_YOUTUBE_MUSIC_AUTH_ERROR_MARKERS)
 
 
+def _logged_in_state(response):
+    """``True``/``False`` conforme o YouTube declara na resposta; ``None`` quando não declara."""
+    try:
+        for service in response["responseContext"]["serviceTrackingParams"]:
+            for param in service.get("params") or []:
+                if param.get("key") == "logged_in":
+                    return str(param.get("value")) == "1"
+    except (KeyError, TypeError, AttributeError):
+        pass
+    return None
+
+
+def _fetch_account_info(client):
+    """Dados da conta conectada, sem recusar cookies bons por causa do menu da conta.
+
+    ``get_account_info`` do ytmusicapi falha quando o menu vem em outro formato
+    (conta sem canal, layout novo). Nesse caso vale o que o próprio YouTube diz
+    na resposta: conectado, a conta é aceita sem nome; desconectado, os cookies
+    já não servem.
+    """
+    try:
+        return client.get_account_info()
+    except (KeyError, IndexError, TypeError) as error:
+        try:
+            logged_in = _logged_in_state(client._send_request("account/account_menu", {}))
+        except Exception:
+            raise error from None
+        if logged_in is None:
+            raise
+        if not logged_in:
+            raise RuntimeError(
+                _(
+                    "O YouTube recebeu os cookies, mas respondeu como se ninguém estivesse conectado. "
+                    "Eles já venceram ou foram trocados pelo navegador depois da exportação. "
+                    "Exporte de novo por uma janela anônima e feche essa janela logo em seguida."
+                )
+            ) from error
+        _logger.warning("YouTube Music account menu not recognised; accepting the logged-in session: %s", error)
+        return {"accountName": "", "channelHandle": None, "accountPhotoUrl": ""}
+
+
 def _is_missing_youtube_music_library_error(error):
     current_error = error
     visited_error_ids = set()
@@ -347,7 +388,7 @@ class YouTubeMusicService:
                 raise RuntimeError(_("A autenticação informada não contém cookies válidos do YouTube."))
 
             candidate_client = ytmusicapi.YTMusic(staged_auth_path)
-            account_info = candidate_client.get_account_info()
+            account_info = _fetch_account_info(candidate_client)
             if not isinstance(account_info, dict):
                 raise RuntimeError(_("A resposta da conta do YouTube veio em formato inválido."))
 
@@ -400,7 +441,7 @@ class YouTubeMusicService:
 
         try:
             client = self.get_client()
-            account_info = client.get_account_info()
+            account_info = _fetch_account_info(client)
         except Exception as exc:
             _logger.warning("Failed to retrieve YouTube Music account info: %s", exc)
             self.clear_client_cache()
