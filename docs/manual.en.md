@@ -707,7 +707,7 @@ Skip forward, skip back, shuffle, repeat mode, announce volume and bring KeyTune
 
 **File > Hide to system tray** (or `Ctrl+Alt+Shift+K`, with global shortcuts on) hides the window and leaves an icon near the clock, and the music keeps playing. To reach the icon from the keyboard, use `Windows+B` and the arrows. `Enter` on the icon shows the window again; its context menu (`Shift+F10` or the applications key) has **Show KeyTune**, **Play or pause**, **Previous track**, **Next track**, **Stop**, **Announce status** and **Exit KeyTune**. When the window comes back, focus is where it was.
 
-In **Preferences > General > System tray**, **Minimize to the system tray** does the same when you minimize, and **When closing, keep playing in the tray** makes closing the window only hide it. With that option on, exit with **File > Exit** or **Exit KeyTune** in the icon menu.
+In **Preferences > General > System tray**, **When minimizing, hide to the system tray** does the same when you minimize, and **When closing, hide to the system tray** makes closing the window only hide it. With that option on, exit with **File > Exit** or **Exit KeyTune** in the icon menu.
 
 ## Settings
 
@@ -717,7 +717,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 **Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
-The **System tray** section has **Minimize to the system tray** and **When closing, keep playing in the tray**; see [System tray](#system-tray).
+The **System tray** section has **When minimizing, hide to the system tray** and **When closing, hide to the system tray**; see [System tray](#system-tray).
 
 The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the *Open with* menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration.
 

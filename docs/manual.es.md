@@ -707,7 +707,7 @@ Avanzar, retroceder, aleatorio, modo de repetición, anunciar volumen y traer Ke
 
 **Archivo > Ocultar en la bandeja del sistema** (o `Ctrl+Alt+Shift+K`, con los atajos globales activados) oculta la ventana y deja un icono junto al reloj, y la música sigue sonando. Para llegar al icono con el teclado, usa `Windows+B` y las flechas. `Intro` en el icono vuelve a mostrar la ventana; su menú contextual (`Shift+F10` o la tecla de aplicaciones) tiene **Mostrar KeyTune**, **Reproducir o pausar**, **Pista anterior**, **Siguiente pista**, **Detener**, **Anunciar estado** y **Salir de KeyTune**. Al volver, el foco queda donde estaba.
 
-En **Preferencias > General > Bandeja del sistema**, **Minimizar a la bandeja del sistema** hace lo mismo al minimizar, y **Al cerrar, seguir reproduciendo en la bandeja** hace que cerrar la ventana solo la oculte. Con esa opción activada, sal con **Archivo > Salir** o **Salir de KeyTune** en el menú del icono.
+En **Preferencias > General > Bandeja del sistema**, **Al minimizar, ocultar en la bandeja del sistema** hace lo mismo al minimizar, y **Al cerrar, ocultar en la bandeja del sistema** hace que cerrar la ventana solo la oculte. Con esa opción activada, sal con **Archivo > Salir** o **Salir de KeyTune** en el menú del icono.
 
 ## Configuración
 
@@ -717,7 +717,7 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 
 **Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre. **Usar el reproductor rápido al abrir archivos desde Windows** viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
 
-La sección **Bandeja del sistema** tiene **Minimizar a la bandeja del sistema** y **Al cerrar, seguir reproduciendo en la bandeja**; consulta [Bandeja del sistema](#bandeja-del-sistema).
+La sección **Bandeja del sistema** tiene **Al minimizar, ocultar en la bandeja del sistema** y **Al cerrar, ocultar en la bandeja del sistema**; consulta [Bandeja del sistema](#bandeja-del-sistema).
 
 La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú *Abrir con* para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro.
 

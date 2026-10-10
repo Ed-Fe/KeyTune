@@ -6342,11 +6342,11 @@ msgstr "Anunciar volumen"
 msgid "Anúncios"
 msgstr "Anuncios"
 
-msgid "Ao fechar, manter tocando na band&eja"
-msgstr "Al c&errar, seguir reproduciendo en la bandeja"
+msgid "Ao fechar, ocultar na band&eja do sistema"
+msgstr "Al c&errar, ocultar en la bandeja del sistema"
 
-msgid "Ao minimizar, a janela sai da barra de tarefas e fica um ícone perto do relógio."
-msgstr "Al minimizar, la ventana sale de la barra de tareas y queda un icono junto al reloj."
+msgid "A janela sai da barra de tarefas e fica um ícone perto do relógio."
+msgstr "La ventana sale de la barra de tareas y queda un icono junto al reloj."
 
 msgid "Arquivos e playlists"
 msgstr "Archivos y listas"
@@ -6504,8 +6504,8 @@ msgstr "KeyTube en pestaña"
 msgid "KeyTune na bandeja do sistema."
 msgstr "KeyTune en la bandeja del sistema."
 
-msgid "M&inimizar para a bandeja do sistema"
-msgstr "M&inimizar a la bandeja del sistema"
+msgid "Ao m&inimizar, ocultar na bandeja do sistema"
+msgstr "Al m&inimizar, ocultar en la bandeja del sistema"
 
 msgid "Minimizar ou restaurar a janela"
 msgstr "Minimizar o restaurar la ventana"

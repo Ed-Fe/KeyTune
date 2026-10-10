@@ -686,6 +686,10 @@ msgstr ""
 msgid "A janela principal é dividida em algumas áreas:\n\nAbas, na parte de cima: cada aba é uma playlist aberta. Use Ctrl+Tab e Ctrl+Shift+Tab para alternar entre elas, e Ctrl+T para criar uma nova.\n\nLista de itens, à esquerda em cada aba: mostra os arquivos da playlist atual ou os itens de uma pasta. Use as setas para navegar, Enter para tocar ou abrir, e Tab para mover o foco entre a lista e o player.\n\nÁrea do player, à direita: mostra o vídeo quando houver, ou apenas indica que o áudio está tocando. O controle de reprodução é feito por teclado: Espaço para tocar ou pausar, setas esquerda/direita para avançar ou voltar, e setas para cima/baixo para o volume.\n\nBarra de tempo e barra de status, na parte de baixo: mostram o andamento da mídia atual e mensagens rápidas sobre as ações realizadas."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "A janela sai da barra de tarefas e fica um ícone perto do relógio."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "A lista de unidades não pode ser classificada."
 msgstr ""
@@ -1394,7 +1398,7 @@ msgid "Ao atingir o limite, as mais antigas saem."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ao fechar, manter tocando na band&eja"
+msgid "Ao fechar, ocultar na band&eja do sistema"
 msgstr ""
 
 #: src/player/sleep_timer/dialog.py
@@ -1402,7 +1406,7 @@ msgid "Ao fim da faixa atual"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ao minimizar, a janela sai da barra de tarefas e fica um ícone perto do relógio."
+msgid "Ao m&inimizar, ocultar na bandeja do sistema"
 msgstr ""
 
 #: src/player/equalizer/models.py
@@ -4503,10 +4507,6 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Luxemburgo"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "M&inimizar para a bandeja do sistema"
 msgstr ""
 
 #: src/player/convert/options.py

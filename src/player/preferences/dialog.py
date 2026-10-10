@@ -150,13 +150,13 @@ class PreferencesDialog(wx.Dialog):
         self.minimize_to_tray_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("M&inimizar para a bandeja do sistema"),
-            _("Ao minimizar, a janela sai da barra de tarefas e fica um ícone perto do relógio."),
+            _("Ao m&inimizar, ocultar na bandeja do sistema"),
+            _("A janela sai da barra de tarefas e fica um ícone perto do relógio."),
         )
         self.close_to_tray_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("Ao fechar, manter tocando na band&eja"),
+            _("Ao fechar, ocultar na band&eja do sistema"),
             _("Fechar a janela só a esconde; para sair, use Arquivo > Sair ou o menu do ícone."),
         )
 
