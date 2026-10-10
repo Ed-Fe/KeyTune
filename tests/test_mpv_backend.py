@@ -90,6 +90,32 @@ class _FakeMPVModule:
 
 
 class MPVPlayerTests(unittest.TestCase):
+    def test_player_is_created_with_the_c_numeric_locale_even_after_a_library_changed_it(self):
+        import locale
+
+        previous = locale.setlocale(locale.LC_NUMERIC)
+        seen = []
+        original_mpv = self.fake_module.MPV
+
+        def recording_mpv(**kwargs):
+            seen.append(locale.setlocale(locale.LC_NUMERIC))
+            return original_mpv(**kwargs)
+
+        self.fake_module.MPV = recording_mpv
+        try:
+            # What ytmusicapi does to the whole process when it builds a client.
+            for changed in ("en_US.UTF-8", ""):
+                try:
+                    locale.setlocale(locale.LC_NUMERIC, changed)
+                    break
+                except locale.Error:
+                    continue
+            mpv_backend.MPVPlayer(video_output_enabled=False)
+        finally:
+            locale.setlocale(locale.LC_NUMERIC, previous)
+
+        self.assertEqual(seen, ["C"])
+
     def test_normal_load_overrides_previous_file_local_pause(self):
         player = mpv_backend.MPVPlayer(video_output_enabled=False)
         core = self.fake_module.created_players[0]

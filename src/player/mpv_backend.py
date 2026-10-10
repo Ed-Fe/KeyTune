@@ -15,6 +15,7 @@ from .audio_output import (
     normalize_audio_output_device_id,
 )
 from .log import get_logger
+from .mpv_runtime import ensure_c_numeric_locale
 
 _logger = get_logger(__name__)
 
@@ -130,6 +131,7 @@ class MPVPlayer:
             video_output_enabled,
             audio_output_device_id or "(system default)",
         )
+        ensure_c_numeric_locale()
         try:
             self._player = self._mpv.MPV(**player_kwargs)
         except Exception as exc:
