@@ -14,15 +14,16 @@ from .models import YouTubeResultPage
 from .search import normalize_youtube_entry
 
 
-def _account_cookie():
+def _account():
+    """``(cookies, índice da conta)`` da sessão salva."""
     if not youtubejs_resolver_enabled():
         raise RuntimeError(
             _("As inscrições precisam do YouTube.js, ativado em Preferências > Recursos adicionais.")
         )
-    cookie_header = load_saved_playback_auth().cookie_header
-    if not cookie_header:
+    playback_auth = load_saved_playback_auth()
+    if not playback_auth.cookie_header:
         raise RuntimeError(_("Conecte a conta do YouTube para ver as inscrições."))
-    return cookie_header
+    return playback_auth.cookie_header, playback_auth.account_index
 
 
 def _page(entries, has_more):
@@ -32,9 +33,19 @@ def _page(entries, has_more):
 
 def subscription_videos_page(start, count):
     """Os vídeos novos dos canais em que a conta está inscrita, do mais recente para o mais antigo."""
-    return _page(*youtubejs_runtime.subscription_videos_page(_account_cookie(), start=start, count=count))
+    cookie_header, account_index = _account()
+    return _page(
+        *youtubejs_runtime.subscription_videos_page(
+            cookie_header, start=start, count=count, account_index=account_index
+        )
+    )
 
 
 def subscribed_channels_page(start, count):
     """Os canais em que a conta está inscrita."""
-    return _page(*youtubejs_runtime.subscribed_channels_page(_account_cookie(), start=start, count=count))
+    cookie_header, account_index = _account()
+    return _page(
+        *youtubejs_runtime.subscribed_channels_page(
+            cookie_header, start=start, count=count, account_index=account_index
+        )
+    )

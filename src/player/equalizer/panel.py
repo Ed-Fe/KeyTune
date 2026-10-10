@@ -2,6 +2,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _
+from ..reading_dialog import create_reading_field
 from ..widgets import create_group, describe_control
 from .models import format_frequency_label
 
@@ -75,12 +76,8 @@ class EqualizerTabPanel(wx.Panel):
         self.preset_choice.SetToolTip(_("Escolha o preset do equalizador."))
 
         preset_description_label = wx.StaticText(box, label=_("Descrição do preset:"))
-        self.preset_description_ctrl = wx.TextCtrl(
-            box,
-            style=wx.TE_MULTILINE | wx.TE_READONLY,
-        )
+        self.preset_description_ctrl = create_reading_field(box, _("Descrição do preset atual"))
         self.preset_description_ctrl.SetMinSize((-1, 72))
-        self.preset_description_ctrl.SetName(_("Descrição do preset atual"))
         self.preset_description_ctrl.SetToolTip(
             _("Mostra a descrição do preset atualmente selecionado. Campo somente leitura.")
         )

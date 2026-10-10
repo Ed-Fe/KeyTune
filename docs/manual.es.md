@@ -470,53 +470,70 @@ Además de abrir y guardar playlists, KeyTune edita tus playlists directamente e
 
 ### Conectar tu cuenta
 
-Para usar tu biblioteca (playlists guardadas, historial, «me gusta» y valoraciones), conecta una cuenta. El diálogo **Conectar cuenta** ofrece dos modos:
+Para usar tu biblioteca (listas guardadas, historial, me gusta y valoraciones), conecta una cuenta. KeyTune no pide tu contraseña: usa las cookies del navegador en el que iniciaste sesión en YouTube.
 
-1. **Extraer del navegador instalado**: elige Firefox, Google Chrome, Microsoft Edge, Brave u Opera en la lista y haz clic en **Conectar**. KeyTune extrae la sesión del perfil del navegador con `yt-dlp`. Firefox es el más recomendado, por funcionar mejor en Windows.
-2. **Importar archivo o texto manual**: para navegadores que no están en la lista, o configuraciones personalizadas, importa un archivo `cookies.txt` o pega las cabeceras HTTP de la sesión.
+Abre KeyTube (`Ctrl+Shift+Y`) y, en la sección **Cuenta y biblioteca**, activa **Conectar cuenta...**. El diálogo **Conectar a YouTube** tiene dos modos:
 
-En Windows, Chrome, Edge y Brave pueden exigir que el navegador esté completamente cerrado y, en algunas versiones, la propia protección del navegador impide la extracción. Si ocurre, usa Firefox o la importación manual.
+1. **Introducir manualmente (archivo o texto)**: el modo predeterminado y el que dura. Exportas un `cookies.txt` desde una ventana privada y eliges el archivo.
+2. **Extraer del navegador instalado**: más rápido, pero la conexión se cae cuando vuelves a usar YouTube en ese navegador.
+
+El botón **Cómo exportar las cookies...** abre un resumen de estas instrucciones en un cuadro de lectura.
 
 #### Qué son las cookies
 
-Las cookies son pequeños archivos de texto que los navegadores guardan para recordar preferencias e inicios de sesión. Cuando entras en YouTube Music, el navegador guarda cookies con tu autenticación. Al conectar la cuenta en KeyTune, la aplicación usa esa sesión para acceder a tu biblioteca sin pedirte la contraseña.
+Las cookies son pequeños archivos de texto que los navegadores guardan para recordar preferencias e inicios de sesión. Cuando entras en YouTube Music, el navegador guarda cookies con tu autenticación. Al conectar la cuenta en KeyTune, la aplicación usa esa sesión para acceder a tu biblioteca.
 
-#### Conectar desde el navegador
+#### Por qué se cae la conexión: el cambio de cookies
 
-1. Entra en tu cuenta de [YouTube Music](https://music.youtube.com/) en el navegador (Chrome, Edge, Firefox, Brave u Opera).
-2. En KeyTune, abre KeyTube (`Ctrl+Shift+Y`).
-3. En la sección **Cuenta y biblioteca**, haz clic en **Conectar cuenta...**.
-4. Elige **Extraer del navegador instalado**.
-5. Elige el navegador en la lista y haz clic en **Conectar**.
+Por seguridad, YouTube cambia las cookies de la cuenta con frecuencia mientras usas el sitio. Cuando el navegador recibe las cookies nuevas, las que guardó KeyTune dejan de valer, y la cuenta aparece como desconectada aunque ayer funcionara. No es un fallo de KeyTune ni de tu cuenta.
 
-#### Alternativa: exportar el cookies.txt
+El cambio solo ocurre en una sesión que se sigue usando. Por eso el camino que dura es exportar las cookies de una sesión que el navegador no volverá a abrir: una ventana privada, cerrada justo después de la exportación.
 
-Usa este camino si eliges el modo manual o tienes un navegador que no es compatible directamente.
+Cuando las cookies dejan de valer, KeyTune avisa de que YouTube ya no las acepta. Conecta de nuevo con un archivo nuevo; el anterior no vuelve a funcionar.
+
+#### Conectar con un cookies.txt (recomendado)
 
 **Antes de empezar**, instala en el navegador la extensión [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc).
 
-**1. Activar la extensión en pestañas de incógnito.** En una pestaña de incógnito, Google no renueva las cookies a cada rato durante el uso normal del navegador.
+**1. Activar la extensión en ventanas privadas.**
 
 1. Pulsa `Ctrl+L` para enfocar la barra de direcciones.
 2. Pulsa `Escape` para salir del cuadro de edición de la barra de direcciones.
 3. Pulsa `Alt+F` para abrir el menú del navegador.
-4. Con las flechas, ve hasta **Extensiones**, abre el submenú con `Enter` y elige **Administrar extensiones**.
-5. Busca **Get cookies.txt LOCALLY** y haz clic en **Detalles** (o «Más información»).
-6. En la página de detalles, activa **Permitir en pestañas privadas** (o **Permitir en incógnito**).
+4. Con las flechas, ve a **Extensiones**, abre el submenú con `Enter` y elige **Gestionar extensiones**.
+5. Busca **Get cookies.txt LOCALLY** y haz clic en **Detalles** (o "Más información").
+6. En la página de detalles, activa **Permitir en pestañas privadas** (o **Permitir en modo incógnito**).
 7. Cierra la página y vuelve al navegador.
 
 **2. Iniciar sesión y exportar las cookies.**
 
-1. Abre una pestaña de incógnito (`Ctrl+Shift+N` o `Ctrl+Shift+P`).
-2. Ve a [music.youtube.com](https://music.youtube.com/).
-3. Inicia sesión con tu cuenta de Google.
-4. Abre la extensión **Get cookies.txt LOCALLY** y haz clic en **Exportar** (o **Download**) para guardar el `cookies.txt`.
-5. Cierra la pestaña de incógnito sin visitar otros sitios.
+1. Abre una ventana privada (`Ctrl+Shift+N` o `Ctrl+Shift+P`). Debe ser la única ventana privada abierta.
+2. Ve a [music.youtube.com](https://music.youtube.com/) e inicia sesión con tu cuenta de Google.
+3. Abre la extensión **Get cookies.txt LOCALLY** y haz clic en **Exportar** (o **Download**) para guardar el `cookies.txt`.
+4. Cierra la ventana privada sin abrir nada más en ella.
+
+Esto suele bastar. Si la cuenta se cae igualmente, repite la exportación con un paso más, recomendado por `yt-dlp`: después de iniciar sesión y antes de exportar, pulsa `Ctrl+L`, escribe `youtube.com/robots.txt` y pulsa `Enter`. Se abre una página solo de texto; no hace falta hacer nada en ella. Exporta las cookies con esa página abierta y cierra la ventana.
 
 **3. Importar en KeyTune.**
 
-1. En el diálogo **Conectar cuenta...**, elige **Importar archivo o texto manual**.
-2. Selecciona el `cookies.txt` descargado (o pega el texto de las cabeceras) y haz clic en **Conectar**.
+1. En el diálogo **Conectar a YouTube**, deja elegido **Introducir manualmente (archivo o texto)**.
+2. En **Archivo de conexión**, elige el `cookies.txt` descargado y activa **Conectar**.
+
+En lugar del archivo, también puedes pegar en **Datos copiados del navegador** el contenido del `cookies.txt`, las cabeceras HTTP de una petición de YouTube Music o solo el valor de la cabecera `Cookie`.
+
+#### Conectar desde el navegador instalado
+
+Usa este modo si no quieres instalar la extensión. Copia la sesión normal del navegador con `yt-dlp`, así que vale lo dicho en [Por qué se cae la conexión](#por-que-se-cae-la-conexion-el-cambio-de-cookies): la conexión dura mientras no uses YouTube en ese navegador. Funciona mejor con un navegador en el que no ves YouTube.
+
+1. Inicia sesión en tu cuenta en [YouTube Music](https://music.youtube.com/) en ese navegador y ciérralo por completo.
+2. En el diálogo **Conectar a YouTube**, elige **Extraer del navegador instalado**.
+3. Elige el navegador en la lista y activa **Conectar**.
+
+Firefox es el que mejor funciona. En Windows, Chrome, Edge y Brave protegen las cookies de una forma que `yt-dlp` no puede abrir, y la exportación suele fallar; en ese caso usa Firefox o el modo manual.
+
+#### Más de una cuenta de Google
+
+Si la sesión tiene más de una cuenta de Google, KeyTune pregunta cuál usar justo después de conectar. La biblioteca y las suscripciones pasan a ser de esa cuenta. Para cambiarla después, activa **Actualizar acceso...** y conecta de nuevo.
 
 #### Seguridad
 
@@ -805,6 +822,10 @@ Para leer qué cambió en cada versión, incluidas las anteriores, usa **Ayuda >
 
 ## Solución de problemas
 
+**Empieza por el diagnóstico.** **Ayuda > Diagnóstico** prueba lo que KeyTune necesita para reproducir: la biblioteca de MPV y sus dependencias en Windows, el inicio del reproductor, los dispositivos de audio, `yt-dlp`, Node.js, YouTube.js, FFmpeg, la cuenta de YouTube y, resolviendo un video público de verdad, si YouTube responde a YouTube.js y a `yt-dlp`. El informe se abre en un cuadro de lectura, con los problemas primero y, en cada uno, qué hacer. **Copiar informe** lleva el texto al portapapeles, para adjuntarlo a un informe de error. El diagnóstico solo lee y prueba; no instala ni cambia nada.
+
+Si el reproductor no consigue iniciarse al abrir KeyTune, el mismo diagnóstico se ejecuta solo, muestra el motivo y la aplicación se cierra a continuación.
+
 **La aplicación no se abre bien.** Comprueba que la instalación terminó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y que el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.
 
 **El reproductor no encuentra el runtime de MPV.** Comprueba que está en uno de estos lugares: una carpeta `mpv/` junto al ejecutable, `MPV_HOME`, `MPV_DLL_DIR`, la caché guardada de la ejecución anterior o una instalación compatible de Chocolatey.
@@ -819,7 +840,7 @@ Para leer qué cambió en cada versión, incluidas las anteriores, usa **Ayuda >
 
 **Una radio en línea no suena o la lista no se abre.** El directorio de Radio Browser y las propias emisoras a veces están fuera de servicio. Prueba otra radio de la lista, o vuelve a la lista y ábrela de nuevo.
 
-**La sesión de YouTube caducó, o el reproductor pide autenticación otra vez.** Exporta las cookies del navegador como se describe en [Conectar tu cuenta](#conectar-tu-cuenta) y vuelve a conectar.
+**La cuenta de YouTube aparece desconectada, o el reproductor pide conectar de nuevo.** El navegador cambió las cookies que KeyTune había guardado; consulta [Por qué se cae la conexión](#por-que-se-cae-la-conexion-el-cambio-de-cookies). Exporta un `cookies.txt` nuevo desde una ventana privada, como en [Conectar con un cookies.txt](#conectar-con-un-cookies-txt-recomendado), y conecta de nuevo. Si la biblioteca aparece vacía o es de otra persona, la sesión tiene más de una cuenta de Google: conecta de nuevo y elige la cuenta correcta.
 
 **Otros problemas.** Activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel en *Depuración*, el reproductor escribe información detallada en `keytune.log`, en la carpeta de datos. **Abrir la carpeta de logs** te lleva hasta el archivo. Si vas a informar del problema, adjunta el log a la issue.
 

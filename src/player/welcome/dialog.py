@@ -1,6 +1,7 @@
 import wx
 
 from ..i18n import _
+from ..reading_dialog import add_reading_field
 
 
 class WelcomeDialog(wx.Dialog):
@@ -74,17 +75,7 @@ class WelcomeDialog(wx.Dialog):
         page = wx.Panel(self.book)
         page_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        text_label = wx.StaticText(page, label=_("{name}:").format(name=name))
-        page_sizer.Add(text_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
-
-        text_ctrl = wx.TextCtrl(
-            page,
-            value=text,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_BESTWRAP,
-        )
-        text_ctrl.SetName(name)
-        text_ctrl.SetInsertionPoint(0)
-        page_sizer.Add(text_ctrl, 1, wx.ALL | wx.EXPAND, 10)
+        text_ctrl = add_reading_field(page, page_sizer, name, text)
 
         page.SetSizer(page_sizer)
         page.text_ctrl = text_ctrl

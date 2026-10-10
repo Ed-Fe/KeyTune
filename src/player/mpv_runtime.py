@@ -109,11 +109,21 @@ def _is_valid_runtime_dir(directory: Path) -> bool:
     return any((directory / dll_name).is_file() for dll_name in _RUNTIME_DLL_NAMES)
 
 
-def bootstrap_mpv_runtime() -> bool:
+def ensure_c_numeric_locale() -> None:
+    """MPV refuses to start (``mpv_create`` returns NULL) unless LC_NUMERIC is "C".
+
+    Setting it once at startup is not enough: ytmusicapi changes the locale of
+    the whole process when it builds a client, so every later player creation
+    has to put it back first.
+    """
     try:
         locale.setlocale(locale.LC_NUMERIC, "C")
     except locale.Error:
         pass
+
+
+def bootstrap_mpv_runtime() -> bool:
+    ensure_c_numeric_locale()
 
     if not sys.platform.startswith("win"):
         return False
@@ -132,6 +142,16 @@ def bootstrap_mpv_runtime() -> bool:
 
     _get_logger().warning("MPV runtime not found on Windows; playback may not be available")
     return False
+
+
+def find_runtime_library() -> Path | None:
+    """The MPV DLL the bootstrap would use, or ``None`` when no candidate folder has one."""
+    for runtime_dir in _candidate_runtime_dirs():
+        for dll_name in _RUNTIME_DLL_NAMES:
+            dll_path = runtime_dir / dll_name
+            if dll_path.is_file():
+                return dll_path
+    return None
 
 
 def _get_logger():

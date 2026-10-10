@@ -208,6 +208,56 @@ class YouTubeMusicAuthTests(unittest.TestCase):
             if cookie_file_path:
                 pathlib.Path(cookie_file_path).unlink(missing_ok=True)
 
+    def _assert_ytmusicapi_reads(self, headers_raw, expected_sapisid):
+        from ytmusicapi.auth.browser import setup_browser
+        from ytmusicapi.helpers import sapisid_from_cookie
+        import json
+
+        headers = json.loads(setup_browser(headers_raw=headers_raw))
+        self.assertEqual(sapisid_from_cookie(headers["cookie"]), expected_sapisid)
+        return headers
+
+    def test_cookie_outside_the_standard_does_not_hide_the_auth_cookie(self):
+        for odd_cookie in ("PREF=a b", "NOME=joão", "ST[1]=v", "X=a\\b", "a(b)=1"):
+            with self.subTest(odd_cookie=odd_cookie):
+                headers_raw = prepare_browser_auth_input(f"Cookie: {odd_cookie}; SID=x; __Secure-3PAPISID=segredo")
+
+                headers = self._assert_ytmusicapi_reads(headers_raw, "segredo")
+                self.assertIn("SID=x", headers["cookie"])
+
+    def test_sapisid_stands_in_for_a_missing_third_party_cookie(self):
+        headers_raw = prepare_browser_auth_input("Cookie: SID=x; SAPISID=segredo")
+
+        self._assert_ytmusicapi_reads(headers_raw, "segredo")
+
+    def test_pasted_headers_get_the_fields_ytmusicapi_requires(self):
+        headers_raw = prepare_browser_auth_input("Cookie: SID=x; __Secure-3PAPISID=segredo\nUser-Agent: Teste")
+
+        headers = self._assert_ytmusicapi_reads(headers_raw, "segredo")
+        self.assertEqual(headers["x-goog-authuser"], "0")
+
+    def test_bare_cookie_value_is_accepted(self):
+        headers_raw = prepare_browser_auth_input("SID=x; __Secure-3PAPISID=segredo")
+
+        self._assert_ytmusicapi_reads(headers_raw, "segredo")
+        self.assertIn(
+            "\tSID\tx",
+            build_browser_auth_cookie_file_content(headers_raw),
+        )
+
+    def test_netscape_cookies_pasted_with_spaces_instead_of_tabs(self):
+        pasted = (
+            "# Netscape HTTP Cookie File\n"
+            ".youtube.com    TRUE    /    TRUE    0    __Secure-3PAPISID    segredo\n"
+            "#HttpOnly_.youtube.com TRUE / TRUE 0 SID x\n"
+        )
+
+        self._assert_ytmusicapi_reads(prepare_browser_auth_input(pasted), "segredo")
+        self.assertIn("#HttpOnly_.youtube.com\tTRUE\t/\tTRUE\t0\tSID\tx", build_browser_auth_cookie_file_content(pasted))
+
+    def test_text_without_cookies_is_left_for_ytmusicapi_to_reject(self):
+        self.assertEqual(prepare_browser_auth_input("texto qualquer"), "texto qualquer")
+
     def test_sanitize_sensitive_text_redacts_cookie_and_tokens(self):
         raw_error = (
             "ERROR: Cookie: SID=abc123; HSID=def456; Authorization: Bearer xyz987 "

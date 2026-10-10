@@ -150,8 +150,10 @@ footer {
         <li class="toc-level-3"><a href="#gestionar-playlists-de-youtube-music">Gestionar playlists de YouTube Music</a></li>
         <li class="toc-level-3"><a href="#conectar-tu-cuenta">Conectar tu cuenta</a></li>
         <li class="toc-level-4"><a href="#que-son-las-cookies">Qué son las cookies</a></li>
-        <li class="toc-level-4"><a href="#conectar-desde-el-navegador">Conectar desde el navegador</a></li>
-        <li class="toc-level-4"><a href="#alternativa-exportar-el-cookies-txt">Alternativa: exportar el cookies.txt</a></li>
+        <li class="toc-level-4"><a href="#por-que-se-cae-la-conexion-el-cambio-de-cookies">Por qué se cae la conexión: el cambio de cookies</a></li>
+        <li class="toc-level-4"><a href="#conectar-con-un-cookies-txt-recomendado">Conectar con un cookies.txt (recomendado)</a></li>
+        <li class="toc-level-4"><a href="#conectar-desde-el-navegador-instalado">Conectar desde el navegador instalado</a></li>
+        <li class="toc-level-4"><a href="#mas-de-una-cuenta-de-google">Más de una cuenta de Google</a></li>
         <li class="toc-level-4"><a href="#seguridad">Seguridad</a></li>
         <li class="toc-level-3"><a href="#atajos-de-keytube">Atajos de KeyTube</a></li>
         <li class="toc-level-2"><a href="#radios-en-linea">Radios en línea</a></li>
@@ -697,48 +699,55 @@ footer {
 <p><strong>Crear una playlist.</strong> Usa <strong>Nueva playlist...</strong> (en la sección <em>Playlists y mixes</em>) para crear una vacía, o <strong>Crear nueva playlist...</strong> en el diálogo de agregar pistas para crearla ya con la selección. En ambos casos el reproductor pide el <strong>nombre</strong> y la <strong>privacidad</strong>: <em>Privada</em> (solo tú la ves), <em>No listada</em> (visible para quien tenga el enlace) o <em>Pública</em> (aparece en tu perfil y puede salir en búsquedas). El valor predeterminado es Privada.</p>
 <p><strong>Eliminar una playlist.</strong> Selecciona la playlist en <em>Playlists y mixes</em> y usa <strong>Eliminar playlist...</strong>. Solo se pueden eliminar playlists que creaste.</p>
 <h3 id="conectar-tu-cuenta">Conectar tu cuenta</h3>
-<p>Para usar tu biblioteca (playlists guardadas, historial, «me gusta» y valoraciones), conecta una cuenta. El diálogo <strong>Conectar cuenta</strong> ofrece dos modos:</p>
+<p>Para usar tu biblioteca (listas guardadas, historial, me gusta y valoraciones), conecta una cuenta. KeyTune no pide tu contraseña: usa las cookies del navegador en el que iniciaste sesión en YouTube.</p>
+<p>Abre KeyTube (<code>Ctrl+Shift+Y</code>) y, en la sección <strong>Cuenta y biblioteca</strong>, activa <strong>Conectar cuenta...</strong>. El diálogo <strong>Conectar a YouTube</strong> tiene dos modos:</p>
 <ol>
-<li><strong>Extraer del navegador instalado</strong>: elige Firefox, Google Chrome, Microsoft Edge, Brave u Opera en la lista y haz clic en <strong>Conectar</strong>. KeyTune extrae la sesión del perfil del navegador con <code>yt-dlp</code>. Firefox es el más recomendado, por funcionar mejor en Windows.</li>
-<li><strong>Importar archivo o texto manual</strong>: para navegadores que no están en la lista, o configuraciones personalizadas, importa un archivo <code>cookies.txt</code> o pega las cabeceras HTTP de la sesión.</li>
+<li><strong>Introducir manualmente (archivo o texto)</strong>: el modo predeterminado y el que dura. Exportas un <code>cookies.txt</code> desde una ventana privada y eliges el archivo.</li>
+<li><strong>Extraer del navegador instalado</strong>: más rápido, pero la conexión se cae cuando vuelves a usar YouTube en ese navegador.</li>
 </ol>
-<p>En Windows, Chrome, Edge y Brave pueden exigir que el navegador esté completamente cerrado y, en algunas versiones, la propia protección del navegador impide la extracción. Si ocurre, usa Firefox o la importación manual.</p>
+<p>El botón <strong>Cómo exportar las cookies...</strong> abre un resumen de estas instrucciones en un cuadro de lectura.</p>
 <h4 id="que-son-las-cookies">Qué son las cookies</h4>
-<p>Las cookies son pequeños archivos de texto que los navegadores guardan para recordar preferencias e inicios de sesión. Cuando entras en YouTube Music, el navegador guarda cookies con tu autenticación. Al conectar la cuenta en KeyTune, la aplicación usa esa sesión para acceder a tu biblioteca sin pedirte la contraseña.</p>
-<h4 id="conectar-desde-el-navegador">Conectar desde el navegador</h4>
-<ol>
-<li>Entra en tu cuenta de <a href="https://music.youtube.com/">YouTube Music</a> en el navegador (Chrome, Edge, Firefox, Brave u Opera).</li>
-<li>En KeyTune, abre KeyTube (<code>Ctrl+Shift+Y</code>).</li>
-<li>En la sección <strong>Cuenta y biblioteca</strong>, haz clic en <strong>Conectar cuenta...</strong>.</li>
-<li>Elige <strong>Extraer del navegador instalado</strong>.</li>
-<li>Elige el navegador en la lista y haz clic en <strong>Conectar</strong>.</li>
-</ol>
-<h4 id="alternativa-exportar-el-cookies-txt">Alternativa: exportar el cookies.txt</h4>
-<p>Usa este camino si eliges el modo manual o tienes un navegador que no es compatible directamente.</p>
+<p>Las cookies son pequeños archivos de texto que los navegadores guardan para recordar preferencias e inicios de sesión. Cuando entras en YouTube Music, el navegador guarda cookies con tu autenticación. Al conectar la cuenta en KeyTune, la aplicación usa esa sesión para acceder a tu biblioteca.</p>
+<h4 id="por-que-se-cae-la-conexion-el-cambio-de-cookies">Por qué se cae la conexión: el cambio de cookies</h4>
+<p>Por seguridad, YouTube cambia las cookies de la cuenta con frecuencia mientras usas el sitio. Cuando el navegador recibe las cookies nuevas, las que guardó KeyTune dejan de valer, y la cuenta aparece como desconectada aunque ayer funcionara. No es un fallo de KeyTune ni de tu cuenta.</p>
+<p>El cambio solo ocurre en una sesión que se sigue usando. Por eso el camino que dura es exportar las cookies de una sesión que el navegador no volverá a abrir: una ventana privada, cerrada justo después de la exportación.</p>
+<p>Cuando las cookies dejan de valer, KeyTune avisa de que YouTube ya no las acepta. Conecta de nuevo con un archivo nuevo; el anterior no vuelve a funcionar.</p>
+<h4 id="conectar-con-un-cookies-txt-recomendado">Conectar con un cookies.txt (recomendado)</h4>
 <p><strong>Antes de empezar</strong>, instala en el navegador la extensión <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">Get cookies.txt LOCALLY</a>.</p>
-<p><strong>1. Activar la extensión en pestañas de incógnito.</strong> En una pestaña de incógnito, Google no renueva las cookies a cada rato durante el uso normal del navegador.</p>
+<p><strong>1. Activar la extensión en ventanas privadas.</strong></p>
 <ol>
 <li>Pulsa <code>Ctrl+L</code> para enfocar la barra de direcciones.</li>
 <li>Pulsa <code>Escape</code> para salir del cuadro de edición de la barra de direcciones.</li>
 <li>Pulsa <code>Alt+F</code> para abrir el menú del navegador.</li>
-<li>Con las flechas, ve hasta <strong>Extensiones</strong>, abre el submenú con <code>Enter</code> y elige <strong>Administrar extensiones</strong>.</li>
-<li>Busca <strong>Get cookies.txt LOCALLY</strong> y haz clic en <strong>Detalles</strong> (o «Más información»).</li>
-<li>En la página de detalles, activa <strong>Permitir en pestañas privadas</strong> (o <strong>Permitir en incógnito</strong>).</li>
+<li>Con las flechas, ve a <strong>Extensiones</strong>, abre el submenú con <code>Enter</code> y elige <strong>Gestionar extensiones</strong>.</li>
+<li>Busca <strong>Get cookies.txt LOCALLY</strong> y haz clic en <strong>Detalles</strong> (o "Más información").</li>
+<li>En la página de detalles, activa <strong>Permitir en pestañas privadas</strong> (o <strong>Permitir en modo incógnito</strong>).</li>
 <li>Cierra la página y vuelve al navegador.</li>
 </ol>
 <p><strong>2. Iniciar sesión y exportar las cookies.</strong></p>
 <ol>
-<li>Abre una pestaña de incógnito (<code>Ctrl+Shift+N</code> o <code>Ctrl+Shift+P</code>).</li>
-<li>Ve a <a href="https://music.youtube.com/">music.youtube.com</a>.</li>
-<li>Inicia sesión con tu cuenta de Google.</li>
+<li>Abre una ventana privada (<code>Ctrl+Shift+N</code> o <code>Ctrl+Shift+P</code>). Debe ser la única ventana privada abierta.</li>
+<li>Ve a <a href="https://music.youtube.com/">music.youtube.com</a> e inicia sesión con tu cuenta de Google.</li>
 <li>Abre la extensión <strong>Get cookies.txt LOCALLY</strong> y haz clic en <strong>Exportar</strong> (o <strong>Download</strong>) para guardar el <code>cookies.txt</code>.</li>
-<li>Cierra la pestaña de incógnito sin visitar otros sitios.</li>
+<li>Cierra la ventana privada sin abrir nada más en ella.</li>
 </ol>
+<p>Esto suele bastar. Si la cuenta se cae igualmente, repite la exportación con un paso más, recomendado por <code>yt-dlp</code>: después de iniciar sesión y antes de exportar, pulsa <code>Ctrl+L</code>, escribe <code>youtube.com/robots.txt</code> y pulsa <code>Enter</code>. Se abre una página solo de texto; no hace falta hacer nada en ella. Exporta las cookies con esa página abierta y cierra la ventana.</p>
 <p><strong>3. Importar en KeyTune.</strong></p>
 <ol>
-<li>En el diálogo <strong>Conectar cuenta...</strong>, elige <strong>Importar archivo o texto manual</strong>.</li>
-<li>Selecciona el <code>cookies.txt</code> descargado (o pega el texto de las cabeceras) y haz clic en <strong>Conectar</strong>.</li>
+<li>En el diálogo <strong>Conectar a YouTube</strong>, deja elegido <strong>Introducir manualmente (archivo o texto)</strong>.</li>
+<li>En <strong>Archivo de conexión</strong>, elige el <code>cookies.txt</code> descargado y activa <strong>Conectar</strong>.</li>
 </ol>
+<p>En lugar del archivo, también puedes pegar en <strong>Datos copiados del navegador</strong> el contenido del <code>cookies.txt</code>, las cabeceras HTTP de una petición de YouTube Music o solo el valor de la cabecera <code>Cookie</code>.</p>
+<h4 id="conectar-desde-el-navegador-instalado">Conectar desde el navegador instalado</h4>
+<p>Usa este modo si no quieres instalar la extensión. Copia la sesión normal del navegador con <code>yt-dlp</code>, así que vale lo dicho en <a href="#por-que-se-cae-la-conexion-el-cambio-de-cookies">Por qué se cae la conexión</a>: la conexión dura mientras no uses YouTube en ese navegador. Funciona mejor con un navegador en el que no ves YouTube.</p>
+<ol>
+<li>Inicia sesión en tu cuenta en <a href="https://music.youtube.com/">YouTube Music</a> en ese navegador y ciérralo por completo.</li>
+<li>En el diálogo <strong>Conectar a YouTube</strong>, elige <strong>Extraer del navegador instalado</strong>.</li>
+<li>Elige el navegador en la lista y activa <strong>Conectar</strong>.</li>
+</ol>
+<p>Firefox es el que mejor funciona. En Windows, Chrome, Edge y Brave protegen las cookies de una forma que <code>yt-dlp</code> no puede abrir, y la exportación suele fallar; en ese caso usa Firefox o el modo manual.</p>
+<h4 id="mas-de-una-cuenta-de-google">Más de una cuenta de Google</h4>
+<p>Si la sesión tiene más de una cuenta de Google, KeyTune pregunta cuál usar justo después de conectar. La biblioteca y las suscripciones pasan a ser de esa cuenta. Para cambiarla después, activa <strong>Actualizar acceso...</strong> y conecta de nuevo.</p>
 <h4 id="seguridad">Seguridad</h4>
 <p>El <code>cookies.txt</code> guarda la autenticación de tu cuenta. Por eso:</p>
 <ul>
@@ -1053,6 +1062,8 @@ footer {
 <p>Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo. Las notas llegan en el idioma de la interfaz.</p>
 <p>Para leer qué cambió en cada versión, incluidas las anteriores, usa <strong>Ayuda &gt; Historial de cambios</strong>: elige la versión en la lista y lee el texto justo debajo.</p>
 <h2 id="solucion-de-problemas">Solución de problemas</h2>
+<p><strong>Empieza por el diagnóstico.</strong> <strong>Ayuda &gt; Diagnóstico</strong> prueba lo que KeyTune necesita para reproducir: la biblioteca de MPV y sus dependencias en Windows, el inicio del reproductor, los dispositivos de audio, <code>yt-dlp</code>, Node.js, YouTube.js, FFmpeg, la cuenta de YouTube y, resolviendo un video público de verdad, si YouTube responde a YouTube.js y a <code>yt-dlp</code>. El informe se abre en un cuadro de lectura, con los problemas primero y, en cada uno, qué hacer. <strong>Copiar informe</strong> lleva el texto al portapapeles, para adjuntarlo a un informe de error. El diagnóstico solo lee y prueba; no instala ni cambia nada.</p>
+<p>Si el reproductor no consigue iniciarse al abrir KeyTune, el mismo diagnóstico se ejecuta solo, muestra el motivo y la aplicación se cierra a continuación.</p>
 <p><strong>La aplicación no se abre bien.</strong> Comprueba que la instalación terminó sin errores (reinstalar con el instalador más reciente resuelve la mayoría de los casos) y que el sistema tiene permiso para acceder a los archivos o carpetas que intentaste abrir.</p>
 <p><strong>El reproductor no encuentra el runtime de MPV.</strong> Comprueba que está en uno de estos lugares: una carpeta <code>mpv/</code> junto al ejecutable, <code>MPV_HOME</code>, <code>MPV_DLL_DIR</code>, la caché guardada de la ejecución anterior o una instalación compatible de Chocolatey.</p>
 <p><strong>La asociación de archivos no funciona como esperabas.</strong> Son dos pasos separados. Primero, KeyTune debe estar registrado como opción (durante la instalación, o después en <strong>Configuración &gt; Preferencias &gt; General &gt; Registrar como reproductor predeterminado</strong>). Segundo, debe estar elegido como aplicación predeterminada para esos formatos en la configuración de aplicaciones predeterminadas de Windows. Registrar no basta para que KeyTune sea el predeterminado.</p>
@@ -1060,7 +1071,7 @@ footer {
 <p><strong>Una conversión falló.</strong> Comprueba que el archivo se abre con normalidad en el reproductor y que la carpeta de destino admite escritura. El mensaje de FFmpeg se muestra y se anuncia; los archivos dañados o en formatos poco comunes pueden no convertirse.</p>
 <p><strong>Una descarga o una transmisión en vivo no funciona.</strong> Comprueba que los <strong>Recursos adicionales</strong> están activados y actualizados (<code>yt-dlp</code> cambia con frecuencia para seguir a YouTube). En una descarga, comprueba también que la carpeta existe y admite escritura. El error 429 indica un bloqueo temporal de YouTube por exceso de peticiones: espera unos minutos e inténtalo de nuevo.</p>
 <p><strong>Una radio en línea no suena o la lista no se abre.</strong> El directorio de Radio Browser y las propias emisoras a veces están fuera de servicio. Prueba otra radio de la lista, o vuelve a la lista y ábrela de nuevo.</p>
-<p><strong>La sesión de YouTube caducó, o el reproductor pide autenticación otra vez.</strong> Exporta las cookies del navegador como se describe en <a href="#conectar-tu-cuenta">Conectar tu cuenta</a> y vuelve a conectar.</p>
+<p><strong>La cuenta de YouTube aparece desconectada, o el reproductor pide conectar de nuevo.</strong> El navegador cambió las cookies que KeyTune había guardado; consulta <a href="#por-que-se-cae-la-conexion-el-cambio-de-cookies">Por qué se cae la conexión</a>. Exporta un <code>cookies.txt</code> nuevo desde una ventana privada, como en <a href="#conectar-con-un-cookies-txt-recomendado">Conectar con un cookies.txt</a>, y conecta de nuevo. Si la biblioteca aparece vacía o es de otra persona, la sesión tiene más de una cuenta de Google: conecta de nuevo y elige la cuenta correcta.</p>
 <p><strong>Otros problemas.</strong> Activa el registro de logs en <code>Ctrl+,</code> &gt; <strong>General</strong> &gt; <strong>Registro de logs</strong>. Con <strong>Registrar logs de diagnóstico</strong> activado y el nivel en <em>Depuración</em>, el reproductor escribe información detallada en <code>keytune.log</code>, en la carpeta de datos. <strong>Abrir la carpeta de logs</strong> te lleva hasta el archivo. Si vas a informar del problema, adjunta el log a la issue.</p>
 <h2 id="plugins-y-marketplace">Plugins y marketplace</h2>
 <p>Abre <strong>Configuración &gt; Gestionar plugins...</strong> para instalar un archivo <code>.ktplugin</code> o elegir <strong>Abrir marketplace</strong>. Selecciona un plugin, comprueba autor, versión, origen, permisos y aislamiento y confirma con <strong>Instalar y activar</strong>. El gestor también activa, desactiva y desinstala plugins.</p>
@@ -1070,7 +1081,7 @@ footer {
 <p>KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El código fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">docs/manual.es.md</a>.</p>
 <p>Para ejecutar el proyecto desde el código, instala las dependencias con <code>uv sync</code> y abre el reproductor con <code>uv run keytune</code>. Las reglas de redacción del manual, el changelog y los commits están en <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generado el 06/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 09/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

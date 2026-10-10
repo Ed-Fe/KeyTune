@@ -8,7 +8,7 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..radio.media import is_radio_media
-from ..reading_dialog import show_reading_dialog
+from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
@@ -341,13 +341,7 @@ class FrameUIMixin:
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
         instructions_label = wx.StaticText(dialog, label=_("Ajuda rápida de atalhos:"))
-        instructions = wx.TextCtrl(
-            dialog,
-            value=self._keyboard_help_text(),
-            style=wx.TE_MULTILINE | wx.TE_READONLY,
-        )
-        instructions.SetName(_("Ajuda rápida de atalhos"))
-        instructions.SetInsertionPoint(0)
+        instructions = create_reading_field(dialog, _("Ajuda rápida de atalhos"), self._keyboard_help_text())
 
         button_sizer = dialog.CreateStdDialogButtonSizer(wx.OK)
         if button_sizer is not None:
@@ -571,6 +565,7 @@ class FrameUIMixin:
         self.menu_open_manual_id = wx.NewIdRef()
         self.menu_changelog_id = wx.NewIdRef()
         self.menu_keyboard_help_id = wx.NewIdRef()
+        self.menu_diagnostics_id = wx.NewIdRef()
         self.menu_show_welcome_screen_id = wx.NewIdRef()
         self.menu_about_id = wx.NewIdRef()
         help_menu.Append(self.menu_show_welcome_screen_id, _("Mostrar tela de &boas-vindas"))
@@ -580,6 +575,7 @@ class FrameUIMixin:
         help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
+        help_menu.Append(self.menu_diagnostics_id, _("&Diagnóstico"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
 
@@ -860,6 +856,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_manual, id=self.menu_open_manual_id)
         self.Bind(wx.EVT_MENU, self.on_open_about, id=self.menu_about_id)
         self.Bind(wx.EVT_MENU, self.on_open_changelog, id=self.menu_changelog_id)
+        self.Bind(wx.EVT_MENU, self.on_run_diagnostics, id=self.menu_diagnostics_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
         self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)

@@ -6,6 +6,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _
+from ..reading_dialog import create_reading_field
 from ..widgets import ROW_BORDER, describe_control
 from .shortcuts import (
     SCOPE_GLOBAL,
@@ -60,7 +61,7 @@ class ShortcutCaptureDialog(wx.Dialog):
         sizer.Add(self.capture_ctrl, 0, wx.ALL | wx.EXPAND, 10)
 
         status_label = wx.StaticText(panel, label=_("Situação:"))
-        self.status_ctrl = wx.TextCtrl(panel, style=wx.TE_READONLY | wx.TE_MULTILINE | wx.TE_NO_VSCROLL)
+        self.status_ctrl = create_reading_field(panel, _("Situação"))
         self.status_ctrl.SetMinSize(self.FromDIP(wx.Size(320, 48)))
         sizer.Add(status_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
         sizer.Add(self.status_ctrl, 0, wx.ALL | wx.EXPAND, 10)

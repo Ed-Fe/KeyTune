@@ -50,9 +50,13 @@ self.name_ctrl = wx.TextCtrl(parent)          # created right after its label
 - Do not create anything between a label and its control.
 - Do not let an intro paragraph be the last static text before a list: it
   becomes the list's name.
-- Read-only text (details, comments, logs, help) follows the same rule. Use
-  `reading_dialog.add_reading_field` or `show_reading_dialog`; from a frame,
-  `self._show_reading_dialog(...)`. Never `wx.MessageBox` for item details.
+- Read-only text (details, comments, logs, help) follows the same rule, and is
+  always built by `reading_dialog`: `create_reading_field` (the field alone),
+  `add_reading_field` (label + field) or `show_reading_dialog`; from a frame,
+  `self._show_reading_dialog(...)`. Never a bare `wx.TextCtrl(...TE_READONLY)`:
+  the standard field does not wrap, so each arrow press reads a whole line of
+  the text instead of the fragment that fit the window, and the audit rejects
+  one that wraps. Never `wx.MessageBox` for item details.
 
 ### 2. Number fields and label-less controls need an explicit name
 
@@ -149,7 +153,7 @@ option moves or is renamed.
 | Label + any control on a row | `widgets.add_labeled_row(sizer, label, control)` |
 | Folder field with button | `widgets.add_directory_row(...)` |
 | Uniform right column | `widgets.equalize_row_controls(root)` |
-| Read-only text | `reading_dialog.add_reading_field` / `show_reading_dialog` |
+| Read-only text | `reading_dialog.create_reading_field` / `add_reading_field` / `show_reading_dialog` |
 
 `preferences/dialog.py` and `smart_library/smart_playlist_dialog.py` are the
 reference forms.

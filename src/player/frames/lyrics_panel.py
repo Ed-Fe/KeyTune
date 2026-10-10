@@ -5,6 +5,7 @@ import wx
 from ..accessibility import attach_named_accessible
 from ..i18n import _
 from ..lyrics import fetch_lyrics
+from ..reading_dialog import create_reading_field
 
 
 class LyricsPanel(wx.Panel):
@@ -27,13 +28,8 @@ class LyricsPanel(wx.Panel):
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # TE_DONTWRAP keeps each lyric line on a single caret line: a screen
-        # reader then reads a whole line per arrow press instead of the short
-        # fragments that soft word-wrap produces. Long lines scroll horizontally.
-        self.lyrics_text_ctrl = wx.TextCtrl(
-            self,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_DONTWRAP | wx.HSCROLL | wx.VSCROLL,
-        )
+        # The app's standard read-only field: one whole lyric line per arrow press.
+        self.lyrics_text_ctrl = create_reading_field(self, _("Letra da música"))
         # EVT_CHAR_HOOK lets the panel own copy/navigation keys before the main
         # player's global shortcuts can act on them.
         self.lyrics_text_ctrl.Bind(wx.EVT_CHAR_HOOK, self._on_text_char_hook)

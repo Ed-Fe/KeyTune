@@ -16,14 +16,16 @@ YTMUSIC_BROWSER_AUTH_FILE_NAME = "ytmusic_browser.json"
 YTMUSIC_BROWSER_AUTH_COOKIE_FILE_NAME = "ytmusic_cookies.txt"
 _REDACTED_VALUE = "[oculto]"
 _NETSCAPE_HTTP_ONLY_PREFIX = "#HttpOnly_"
+# Ordem de preferência: o ytmusicapi só lê o primeiro, mas os três carregam o mesmo valor.
+_SAPISID_COOKIE_NAMES = ("__Secure-3PAPISID", "SAPISID", "__Secure-1PAPISID")
 
 # Pares (nome_yt_dlp, rótulo exibido) para navegadores suportados nativamente
 # pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
 SUPPORTED_BROWSERS: tuple[tuple[str, str], ...] = (
     ("firefox", _("Firefox (recomendado)")),
-    ("edge", _("Microsoft Edge")),
-    ("chrome", _("Google Chrome")),
-    ("brave", _("Brave")),
+    ("edge", _("Microsoft Edge (pode falhar no Windows)")),
+    ("chrome", _("Google Chrome (pode falhar no Windows)")),
+    ("brave", _("Brave (pode falhar no Windows)")),
     ("opera", _("Opera")),
 )
 
@@ -33,6 +35,8 @@ class YouTubeMusicPlaybackAuth:
     cookie_header: str = ""
     user_agent: str = ""
     cookie_file_path: str = ""
+    # Qual das contas Google da sessão o KeyTune usa (o X-Goog-AuthUser salvo).
+    account_index: int = 0
 
     @property
     def yt_dlp_http_headers(self):
@@ -295,6 +299,13 @@ def prepare_browser_auth_input(raw_input, *, source_name="entrada"):
     if cookie_header:
         return _build_headers_raw_from_cookie(cookie_header)
 
+    browser_headers = _extract_browser_auth_headers(_headers_from_raw_text(normalized_input))
+    if browser_headers:
+        return _headers_dict_to_raw(browser_headers)
+
+    if _looks_like_bare_cookie_header(normalized_input):
+        return _build_headers_raw_from_cookie(" ".join(normalized_input.split()))
+
     return normalized_input
 
 
@@ -419,7 +430,16 @@ def load_saved_playback_auth(auth_file_path=None, *, cookie_file_path=None, pers
         cookie_header=cookie_header,
         user_agent=user_agent,
         cookie_file_path=saved_cookie_file_path,
+        account_index=account_index_from_headers(headers),
     )
+
+
+def account_index_from_headers(headers) -> int:
+    """O índice da conta Google gravado em ``X-Goog-AuthUser``; 0 se faltar ou for inválido."""
+    try:
+        return max(0, int(_get_header_value(headers, "x-goog-authuser") or 0))
+    except ValueError:
+        return 0
 
 
 def _is_valid_browser_auth_cookie_file(file_path):
@@ -496,6 +516,10 @@ def _extract_browser_auth_headers(payload):
     lowered_keys = {str(key).lower() for key in normalized_headers.keys()}
     if "cookie" not in lowered_keys:
         return None
+
+    for key in list(normalized_headers):
+        if key.strip().lower() == "cookie":
+            normalized_headers[key] = _normalize_cookie_header(normalized_headers[key])
 
     origin = (
         _get_header_value(normalized_headers, "x-origin")
@@ -698,23 +722,72 @@ def _parse_netscape_cookie_line(raw_line):
 
     parts = line.split("\t")
     if len(parts) < 7:
-        return None
+        # Copiar o cookies.txt de um editor ou de uma página costuma trocar as tabulações por espaços.
+        parts = line.split(None, 6)
+        if len(parts) < 7 or parts[1].upper() not in ("TRUE", "FALSE") or parts[3].upper() not in ("TRUE", "FALSE"):
+            return None
     return parts[:7], http_only
 
 
-def _netscape_cookie_file_from_cookie_header(cookie_header):
+def _cookie_pairs_from_header(cookie_header):
+    pairs = []
+    seen_names = set()
+    for chunk in str(cookie_header or "").replace('"', "").split(";"):
+        name, separator, value = chunk.strip().partition("=")
+        name = name.strip()
+        value = value.strip()
+        if not separator or not name or not value or name in seen_names:
+            continue
+        seen_names.add(name)
+        pairs.append((name, value))
+    return pairs
+
+
+def _sapisid_from_cookie_pairs(cookie_pairs):
+    values = dict(cookie_pairs)
+    for cookie_name in _SAPISID_COOKIE_NAMES:
+        if values.get(cookie_name):
+            return values[cookie_name]
+    return ""
+
+
+def _simple_cookie_accepts(name, value):
     cookie = SimpleCookie()
     try:
-        cookie.load(str(cookie_header or "").replace('"', ""))
+        cookie.load(f"{name}={value}")
     except Exception:
-        return ""
+        return False
+    return name in cookie
 
+
+def _normalize_cookie_header(cookie_header):
+    """Devolve o cabeçalho Cookie em uma forma que o ytmusicapi consegue ler.
+
+    O ytmusicapi procura ``__Secure-3PAPISID`` com ``SimpleCookie``, que para de
+    ler (ou falha) no primeiro cookie fora do padrão, como um valor com espaço
+    ou acento. Um único cookie assim antes do de autenticação fazia a conexão
+    inteira ser recusada, então ele sai e os de autenticação vão para a frente.
+    """
+    cookie_pairs = _cookie_pairs_from_header(cookie_header)
+    sapisid = _sapisid_from_cookie_pairs(cookie_pairs)
+    if not sapisid:
+        return str(cookie_header or "").strip()
+
+    names = {name for name, _value in cookie_pairs}
+    if _SAPISID_COOKIE_NAMES[0] not in names:
+        cookie_pairs.insert(0, (_SAPISID_COOKIE_NAMES[0], sapisid))
+    cookie_pairs.sort(key=lambda pair: pair[0] not in _SAPISID_COOKIE_NAMES)
+    return "; ".join(f"{name}={value}" for name, value in cookie_pairs if _simple_cookie_accepts(name, value))
+
+
+def _looks_like_bare_cookie_header(raw_text):
+    """O valor do cabeçalho Cookie colado sozinho, sem o ``Cookie:`` na frente."""
+    return bool(_sapisid_from_cookie_pairs(_cookie_pairs_from_header(raw_text)))
+
+
+def _netscape_cookie_file_from_cookie_header(cookie_header):
     normalized_lines = ["# Netscape HTTP Cookie File"]
-    for morsel in cookie.values():
-        normalized_name = str(morsel.key or "").strip()
-        normalized_value = str(morsel.value or "").strip()
-        if not normalized_name or not normalized_value:
-            continue
+    for normalized_name, normalized_value in _cookie_pairs_from_header(cookie_header):
         normalized_lines.append(
             "\t".join([
                 ".youtube.com",
@@ -776,7 +849,7 @@ def _normalize_cookie_expiry(expiry_value):
 
 
 def _build_headers_raw_from_cookie(cookie_header):
-    normalized_cookie_header = str(cookie_header or "").strip()
+    normalized_cookie_header = _normalize_cookie_header(cookie_header)
     if not normalized_cookie_header:
         return ""
 
@@ -813,20 +886,7 @@ def _headers_dict_to_raw(headers):
 
 
 def _authorization_from_cookie(cookie_header, origin):
-    cookie = SimpleCookie()
-    try:
-        cookie.load(str(cookie_header or "").replace('"', ""))
-    except Exception:
-        return ""
-
-    sapisid = ""
-    for cookie_name in ("__Secure-3PAPISID", "SAPISID", "__Secure-1PAPISID"):
-        morsel = cookie.get(cookie_name)
-        if morsel is not None:
-            sapisid = str(morsel.value or "").strip()
-            if sapisid:
-                break
-
+    sapisid = _sapisid_from_cookie_pairs(_cookie_pairs_from_header(cookie_header))
     if not sapisid:
         return ""
 

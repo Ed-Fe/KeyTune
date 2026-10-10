@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from player.frames.youtube_music import FrameYouTubeMusicMixin
 import player.frames.youtube_music as youtube_music_frame_module
+import player.frames.youtube_music.auth as youtube_music_auth_module
 from player.frames.youtube_music.auth import AuthMixin
 from player.playlists import PlaylistState, ScreenTabState
 from player.youtube_music.service import (
@@ -87,11 +88,18 @@ class _DummyFrame(FrameYouTubeMusicMixin):
         return state if isinstance(state, PlaylistState) else None
 
 
+INVALID_AUTH_MESSAGE = (
+    "O YouTube não aceita mais os cookies salvos: eles venceram ou o navegador os trocou. "
+            "Conecte a conta de novo. O manual explica como exportar cookies que duram."
+)
+
+
 class YouTubeMusicFrameTests(unittest.TestCase):
     def test_connect_from_browser_runs_export_outside_the_ui_handler(self):
         service = Mock()
         service.save_browser_auth_from_browser.return_value = "C:/KeyTune/ytmusic_browser.json"
         service.get_connected_account_name.return_value = "Conta teste"
+        service.list_session_accounts.return_value = [(0, "Conta teste")]
         frame = _DummyFrame(service)
         captured_task = {}
 
@@ -136,8 +144,50 @@ class YouTubeMusicFrameTests(unittest.TestCase):
 
         result = captured_task["worker"]()
 
-        self.assertEqual(result, ("C:/KeyTune/ytmusic_browser.json", "Conta teste"))
+        self.assertEqual(result, ("C:/KeyTune/ytmusic_browser.json", "Conta teste", [(0, "Conta teste")]))
         service.save_browser_auth_from_browser.assert_called_once_with("firefox")
+
+    def test_one_account_in_the_session_connects_without_asking(self):
+        service = Mock()
+        frame = _DummyFrame(service)
+
+        self.assertIsNone(AuthMixin._choose_youtube_music_session_account(frame, service, [(0, "Conta teste")]))
+        service.saved_account_index.assert_not_called()
+
+    def test_choosing_another_account_of_the_session_returns_its_index(self):
+        service = Mock()
+        service.saved_account_index.return_value = 0
+        frame = _DummyFrame(service)
+        shown = {}
+
+        class _FakeChoiceDialog:
+            def __init__(self, _parent, _message, _title, choices):
+                shown["choices"] = list(choices)
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_exc):
+                return False
+
+            def SetSelection(self, index):
+                shown["preselected"] = index
+
+            def ShowModal(self):
+                return youtube_music_frame_module.wx.ID_OK
+
+            def GetSelection(self):
+                return shown["answer"]
+
+        accounts = [(0, "Pessoal"), (1, "Canal")]
+        with patch.object(youtube_music_auth_module.wx, "SingleChoiceDialog", _FakeChoiceDialog):
+            shown["answer"] = 1
+            self.assertEqual(AuthMixin._choose_youtube_music_session_account(frame, service, accounts), 1)
+            shown["answer"] = 0
+            self.assertIsNone(AuthMixin._choose_youtube_music_session_account(frame, service, accounts))
+
+        self.assertEqual(shown["choices"], ["Pessoal", "Canal"])
+        self.assertEqual(shown["preselected"], 0)
 
     def test_connect_uses_manual_input_when_the_dialog_reports_manual_mode(self):
         service = Mock()
@@ -246,15 +296,15 @@ class YouTubeMusicFrameTests(unittest.TestCase):
         self.assertFalse(frame._youtube_music_library_has_more_playlists())
         self.assertEqual(
             frame._youtube_music_status_message(),
-            "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente.",
+            INVALID_AUTH_MESSAGE,
         )
         self.assertEqual(
             frame.announcements,
-            ["Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."],
+            [INVALID_AUTH_MESSAGE],
         )
         self.assertEqual(
             frame.status_updates,
-            ["Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."],
+            [INVALID_AUTH_MESSAGE],
         )
         self.assertGreaterEqual(frame.menu_refresh_calls, 1)
 

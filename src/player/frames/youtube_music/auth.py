@@ -6,7 +6,10 @@ from player.youtube_music.dialog import YouTubeMusicBrowserAuthDialog
 
 class AuthMixin:
     def _handle_invalid_youtube_music_auth(self, service, *, announce=True):
-        message = _("Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente.")
+        message = _(
+            "O YouTube não aceita mais os cookies salvos: eles venceram ou o navegador os trocou. "
+            "Conecte a conta de novo. O manual explica como exportar cookies que duram."
+        )
         service.clear_client_cache()
 
         self._set_youtube_music_account_name("")
@@ -96,11 +99,24 @@ class AuthMixin:
                     headers_raw=headers_raw,
                     source_file_path=browser_json_path,
                 )
-            return saved_path, service.get_connected_account_name()
+            try:
+                accounts = service.list_session_accounts()
+            except Exception:
+                accounts = []
+            return saved_path, service.get_connected_account_name(), accounts
 
         def on_success(connection_result):
-            saved_path, account_name = connection_result
-            self._complete_youtube_music_connection(saved_path, account_name)
+            saved_path, account_name, accounts = connection_result
+            chosen_index = self._choose_youtube_music_session_account(service, accounts)
+            if chosen_index is None:
+                self._complete_youtube_music_connection(saved_path, account_name)
+                return
+            self._run_youtube_music_background_task(
+                lambda: service.select_session_account(chosen_index),
+                lambda chosen_name: self._complete_youtube_music_connection(saved_path, chosen_name),
+                # A conta padrão já está conectada; se a troca falhar, ela fica.
+                on_error=lambda _exc: self._complete_youtube_music_connection(saved_path, account_name),
+            )
 
         def on_error(exc):
             if not service.has_saved_browser_auth():
@@ -128,6 +144,28 @@ class AuthMixin:
             on_error=on_error,
             timeout_ms=90000,
         )
+
+    def _choose_youtube_music_session_account(self, service, accounts):
+        """Com mais de uma conta Google na sessão, pergunta qual usar.
+
+        Devolve o índice escolhido, ou ``None`` quando não há o que trocar.
+        """
+        if len(accounts) < 2:
+            return None
+        current_index = service.saved_account_index()
+        indexes = [index for index, _name in accounts]
+        with wx.SingleChoiceDialog(
+            self,
+            _("Esta sessão do navegador tem mais de uma conta Google. Qual delas o KeyTune deve usar?"),
+            _("Escolher a conta do YouTube"),
+            [name for _index, name in accounts],
+        ) as dialog:
+            if current_index in indexes:
+                dialog.SetSelection(indexes.index(current_index))
+            if dialog.ShowModal() != wx.ID_OK:
+                return None
+            chosen_index = indexes[dialog.GetSelection()]
+        return None if chosen_index == current_index else chosen_index
 
     def _complete_youtube_music_connection(self, saved_path, account_name):
         self._set_youtube_music_account_name(account_name)
