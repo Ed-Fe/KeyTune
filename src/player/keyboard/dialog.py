@@ -106,8 +106,13 @@ class ShortcutCaptureDialog(wx.Dialog):
 
     def _on_capture_key(self, event):
         key_code = event.GetKeyCode()
-        if key_code == wx.WXK_TAB and not event.ControlDown() and not event.AltDown():
-            event.Skip()
+        if key_code == wx.WXK_TAB:
+            # Tab nunca é atalho, com qualquer modificador: quem sai do campo
+            # ainda soltando o Ctrl ou o Alt da combinação que acabou de
+            # capturar não pode trocá-la por "Ctrl+Tab".
+            self.capture_ctrl.Navigate(
+                wx.NavigationKeyEvent.IsBackward if event.ShiftDown() else wx.NavigationKeyEvent.IsForward
+            )
             return
         if key_code == wx.WXK_ESCAPE and not event.HasAnyModifiers():
             event.Skip()
