@@ -176,13 +176,23 @@ function accountKey(request) {
   if (!cookie) {
     throw new Error("A conta do YouTube não está conectada.");
   }
-  return [createHash("sha256").update(cookie).digest("hex"), request.lang, request.location].join("|");
+  return [createHash("sha256").update(cookie).digest("hex"), accountIndex(request), request.lang, request.location].join("|");
+}
+
+// Qual das contas Google dos cookies responde, quando o navegador tinha mais de uma.
+function accountIndex(request) {
+  const index = Number.parseInt(request.account_index, 10);
+  return Number.isInteger(index) && index > 0 ? index : 0;
 }
 
 function accountClientFor(request) {
   const key = accountKey(request);
   if (accountClient.key !== key) {
-    const options = { cookie: String(request.cookie).trim(), lang: String(request.lang || "").trim() || "en" };
+    const options = {
+      cookie: String(request.cookie).trim(),
+      account_index: accountIndex(request),
+      lang: String(request.lang || "").trim() || "en",
+    };
     const location = String(request.location || "").trim().toUpperCase();
     if (location) {
       options.location = location;

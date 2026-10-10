@@ -27,7 +27,7 @@ CHANNEL_ID = "UC" + "a" * 22
 class SubscriptionsTests(unittest.TestCase):
     def setUp(self):
         self.youtubejs_enabled = self._patch(subscriptions, "youtubejs_resolver_enabled", True)
-        self.auth = self._patch(subscriptions, "load_saved_playback_auth", SimpleNamespace(cookie_header="SID=abc"))
+        self.auth = self._patch(subscriptions, "load_saved_playback_auth", SimpleNamespace(cookie_header="SID=abc", account_index=2))
 
     def _patch(self, target, name, return_value):
         patcher = patch.object(target, name, return_value=return_value)
@@ -49,7 +49,7 @@ class SubscriptionsTests(unittest.TestCase):
         with patch.object(subscriptions.youtubejs_runtime, "subscription_videos_page", return_value=(entries, True)) as page_fn:
             page = subscriptions.subscription_videos_page(20, 20)
 
-        page_fn.assert_called_once_with("SID=abc", start=20, count=20)
+        page_fn.assert_called_once_with("SID=abc", start=20, count=20, account_index=2)
         video = page.results[0]
         self.assertEqual(video.result_type, "video")
         self.assertEqual(video.subtitle, "Canal Um e Canal Dois")
@@ -112,7 +112,7 @@ class SubscriptionsTests(unittest.TestCase):
             subscriptions.subscription_videos_page(0, 20)
 
     def test_subscriptions_need_the_account(self):
-        self.auth.return_value = SimpleNamespace(cookie_header="")
+        self.auth.return_value = SimpleNamespace(cookie_header="", account_index=0)
 
         with self.assertRaisesRegex(RuntimeError, "Conecte a conta"):
             subscriptions.subscribed_channels_page(0, 20)

@@ -23,9 +23,9 @@ _SAPISID_COOKIE_NAMES = ("__Secure-3PAPISID", "SAPISID", "__Secure-1PAPISID")
 # pelo yt-dlp via --cookies-from-browser. A ordem determina a sequência na ListBox.
 SUPPORTED_BROWSERS: tuple[tuple[str, str], ...] = (
     ("firefox", _("Firefox (recomendado)")),
-    ("edge", _("Microsoft Edge")),
-    ("chrome", _("Google Chrome")),
-    ("brave", _("Brave")),
+    ("edge", _("Microsoft Edge (pode falhar no Windows)")),
+    ("chrome", _("Google Chrome (pode falhar no Windows)")),
+    ("brave", _("Brave (pode falhar no Windows)")),
     ("opera", _("Opera")),
 )
 
@@ -35,6 +35,8 @@ class YouTubeMusicPlaybackAuth:
     cookie_header: str = ""
     user_agent: str = ""
     cookie_file_path: str = ""
+    # Qual das contas Google da sessão o KeyTune usa (o X-Goog-AuthUser salvo).
+    account_index: int = 0
 
     @property
     def yt_dlp_http_headers(self):
@@ -428,7 +430,16 @@ def load_saved_playback_auth(auth_file_path=None, *, cookie_file_path=None, pers
         cookie_header=cookie_header,
         user_agent=user_agent,
         cookie_file_path=saved_cookie_file_path,
+        account_index=account_index_from_headers(headers),
     )
+
+
+def account_index_from_headers(headers) -> int:
+    """O índice da conta Google gravado em ``X-Goog-AuthUser``; 0 se faltar ou for inválido."""
+    try:
+        return max(0, int(_get_header_value(headers, "x-goog-authuser") or 0))
+    except ValueError:
+        return 0
 
 
 def _is_valid_browser_auth_cookie_file(file_path):

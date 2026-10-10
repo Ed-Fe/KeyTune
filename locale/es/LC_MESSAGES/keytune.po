@@ -6500,3 +6500,81 @@ msgstr "Comprueba la conexión a internet. Si funciona, actualiza los componente
 
 msgid "O yt-dlp abriu o vídeo, mas o YouTube não entregou nenhum formato reproduzível."
 msgstr "yt-dlp abrió el video, pero YouTube no entregó ningún formato reproducible."
+
+msgid "Brave (pode falhar no Windows)"
+msgstr "Brave (puede fallar en Windows)"
+
+msgid "Google Chrome (pode falhar no Windows)"
+msgstr "Google Chrome (puede fallar en Windows)"
+
+msgid "Microsoft Edge (pode falhar no Windows)"
+msgstr "Microsoft Edge (puede fallar en Windows)"
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Co&mo exportar os cookies..."
+msgstr "Có&mo exportar las cookies..."
+
+msgid "Como exportar os cookies"
+msgstr "Cómo exportar las cookies"
+
+msgid "Como exportar cookies que duram"
+msgstr "Cómo exportar cookies que duran"
+
+msgid "Conta {number}"
+msgstr "Cuenta {number}"
+
+msgid "Escolher a conta do YouTube"
+msgstr "Elegir la cuenta de YouTube"
+
+msgid "Esta sessão do navegador tem mais de uma conta Google. Qual delas o KeyTune deve usar?"
+msgstr "Esta sesión del navegador tiene más de una cuenta de Google. ¿Cuál debe usar KeyTune?"
+
+msgid "Estes cookies deixam de valer quando você volta a usar o YouTube nesse navegador. Feche o navegador antes de conectar."
+msgstr "Estas cookies dejan de valer cuando vuelves a usar YouTube en ese navegador. Cierra el navegador antes de conectar."
+
+msgid "Exportar do navegador instalado"
+msgstr "Extraer del navegador instalado"
+
+msgid "Instruções"
+msgstr "Instrucciones"
+
+msgid "Mais de uma conta Google"
+msgstr "Más de una cuenta de Google"
+
+msgid "O KeyTune conecta a conta com os cookies do navegador em que você entrou no YouTube."
+msgstr "KeyTune conecta la cuenta con las cookies del navegador en el que iniciaste sesión en YouTube."
+
+msgid "O YouTube não aceita mais os cookies salvos: eles venceram ou o navegador os trocou. Conecte a conta de novo. O manual explica como exportar cookies que duram."
+msgstr "YouTube ya no acepta las cookies guardadas: caducaron o el navegador las cambió. Conecta la cuenta de nuevo. El manual explica cómo exportar cookies que duran."
+
+msgid "O passo a passo completo está no manual, na seção Conectar a conta."
+msgstr "El paso a paso completo está en el manual, en la sección Conectar tu cuenta."
+
+msgid "Para a conexão durar, exporte os cookies de uma janela anônima e feche-a em seguida."
+msgstr "Para que la conexión dure, exporta las cookies desde una ventana privada y ciérrala enseguida."
+
+msgid "Por que a conexão cai"
+msgstr "Por qué se cae la conexión"
+
+msgid "Por segurança, o YouTube troca os cookies da conta com frequência enquanto você usa o site. Quando o navegador recebe os cookies novos, os que o KeyTune guardou deixam de valer e a conta aparece como desconectada. Não é defeito do KeyTune nem da sua conta."
+msgstr "Por seguridad, YouTube cambia las cookies de la cuenta con frecuencia mientras usas el sitio. Cuando el navegador recibe las cookies nuevas, las que guardó KeyTune dejan de valer y la cuenta aparece como desconectada. No es un fallo de KeyTune ni de tu cuenta."
+
+msgid "Se a sessão tiver mais de uma conta Google, o KeyTune pergunta qual usar logo depois de conectar."
+msgstr "Si la sesión tiene más de una cuenta de Google, KeyTune pregunta cuál usar justo después de conectar."
+
+msgid "Use uma sessão que o navegador nunca mais vai abrir:\n1. Instale no navegador uma extensão que exporta o cookies.txt e permita que ela funcione em janelas anônimas.\n2. Abra uma janela anônima e entre na sua conta em music.youtube.com.\n3. Exporte os cookies com a extensão.\n4. Feche a janela anônima sem abrir mais nada nela.\n5. No KeyTune, escolha o arquivo exportado e ative Conectar."
+msgstr "Usa una sesión que el navegador no volverá a abrir:\n1. Instala en el navegador una extensión que exporte el cookies.txt y permite que funcione en ventanas privadas.\n2. Abre una ventana privada e inicia sesión en tu cuenta en music.youtube.com.\n3. Exporta las cookies con la extensión.\n4. Cierra la ventana privada sin abrir nada más en ella.\n5. En KeyTune, elige el archivo exportado y activa Conectar."
+
+msgid "Isso costuma bastar. Se a conta cair mesmo assim, repita com um passo a mais, recomendado pelo yt-dlp: depois de entrar na conta e antes de exportar, pressione Ctrl+L, digite youtube.com/robots.txt e pressione Enter. Abre uma página só de texto; exporte os cookies com ela aberta."
+msgstr "Esto suele bastar. Si la cuenta se cae igualmente, repite con un paso más, recomendado por yt-dlp: después de iniciar sesión y antes de exportar, pulsa Ctrl+L, escribe youtube.com/robots.txt y pulsa Enter. Se abre una página solo de texto; exporta las cookies con ella abierta."
+
+msgid "É mais rápido, mas copia a sessão normal do navegador. A conexão dura enquanto você não usar o YouTube nesse navegador; depois os cookies são trocados e é preciso conectar de novo. Funciona melhor com um navegador em que você não assiste YouTube. No Windows, Chrome, Edge e Brave protegem os cookies e a exportação costuma falhar; prefira o Firefox."
+msgstr "Es más rápido, pero copia la sesión normal del navegador. La conexión dura mientras no uses YouTube en ese navegador; después las cookies se cambian y hay que conectar de nuevo. Funciona mejor con un navegador en el que no ves YouTube. En Windows, Chrome, Edge y Brave protegen las cookies y la exportación suele fallar; usa Firefox."
+
+msgid "O que o KeyTune precisa"
+msgstr "Qué necesita KeyTune"
+
+msgid "O KeyTune não pede a sua senha do Google. Para abrir a sua biblioteca, ele usa os cookies do YouTube: pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao KeyTune uma cópia desses cookies, em um arquivo cookies.txt. Este texto explica como gerar esse arquivo e por que o jeito de gerar importa."
+msgstr "KeyTune no pide tu contraseña de Google. Para abrir tu biblioteca, usa las cookies de YouTube: pequeños archivos en los que el navegador guarda tu inicio de sesión. Conectar la cuenta es entregar a KeyTune una copia de esas cookies, en un archivo cookies.txt. Este texto explica cómo generar ese archivo y por qué importa la forma de generarlo."

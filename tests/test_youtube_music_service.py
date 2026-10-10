@@ -112,6 +112,68 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             _fetch_account_info(client)
         client._send_request.assert_not_called()
 
+    def _service_with_saved_headers(self, temp_dir, headers):
+        import json
+
+        auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"
+        auth_path.write_text(json.dumps(headers), encoding="utf-8")
+        patcher = patch("player.youtube_music.service.get_browser_auth_file_path", return_value=str(auth_path))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        return YouTubeMusicService(), auth_path
+
+    def _module_answering_accounts(self, names_by_index):
+        def make_client(headers):
+            index = int(headers["x-goog-authuser"])
+            client = Mock()
+            if index in names_by_index:
+                client.get_account_info.return_value = {"accountName": names_by_index[index]}
+            else:
+                client.get_account_info.side_effect = KeyError("actions")
+                client._send_request.return_value = self._account_menu_response("0")
+            return client
+
+        return SimpleNamespace(YTMusic=make_client)
+
+    def test_session_accounts_are_listed_until_youtube_answers_logged_out(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            service, _auth_path = self._service_with_saved_headers(temp_dir, {"cookie": "SID=x", "X-Goog-AuthUser": "0"})
+            module = self._module_answering_accounts({0: "Pessoal", 1: "Canal"})
+
+            with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=module):
+                accounts = service.list_session_accounts()
+
+        self.assertEqual(accounts, [(0, "Pessoal"), (1, "Canal")])
+
+    def test_selecting_a_session_account_saves_its_index_and_keeps_one_header(self):
+        import json
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            service, auth_path = self._service_with_saved_headers(temp_dir, {"cookie": "SID=x", "X-Goog-AuthUser": "0"})
+            module = self._module_answering_accounts({0: "Pessoal", 1: "Canal"})
+
+            with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=module):
+                name = service.select_session_account(1)
+
+            saved = json.loads(auth_path.read_text(encoding="utf-8"))
+            self.assertEqual(service.saved_account_index(), 1)
+
+        self.assertEqual(name, "Canal")
+        self.assertEqual([key for key in saved if key.lower() == "x-goog-authuser"], ["x-goog-authuser"])
+        self.assertEqual(saved["x-goog-authuser"], "1")
+
+    def test_selecting_an_account_that_is_not_in_the_session_leaves_the_file_alone(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            service, auth_path = self._service_with_saved_headers(temp_dir, {"cookie": "SID=x", "X-Goog-AuthUser": "0"})
+            before = auth_path.read_text(encoding="utf-8")
+            module = self._module_answering_accounts({0: "Pessoal"})
+
+            with patch("player.youtube_music.service.import_ytmusicapi_module", return_value=module):
+                with self.assertRaises(RuntimeError):
+                    service.select_session_account(3)
+
+            self.assertEqual(auth_path.read_text(encoding="utf-8"), before)
+
     def test_save_browser_auth_replaces_both_files_after_validation(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             auth_path = pathlib.Path(temp_dir) / "ytmusic_browser.json"

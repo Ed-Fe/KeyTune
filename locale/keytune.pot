@@ -1918,7 +1918,7 @@ msgid "Brasil"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
-msgid "Brave"
+msgid "Brave (pode falhar no Windows)"
 msgstr ""
 
 #: src/player/frames/item_search.py
@@ -2049,6 +2049,10 @@ msgstr ""
 msgid "Cancelando..."
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Cancelar"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Cancelar edição do preset do equalizador"
 msgstr ""
@@ -2138,6 +2142,10 @@ msgstr ""
 msgid "Co&lar (Ctrl+V)"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Co&mo exportar os cookies..."
+msgstr ""
+
 #: src/player/frames/commands/browser_commands.py
 msgid "Colar\tCtrl+V"
 msgstr ""
@@ -2177,6 +2185,14 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Como a interface é organizada"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Como exportar cookies que duram"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Como exportar os cookies"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2279,6 +2295,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Conta e biblioteca"
+msgstr ""
+
+#: src/player/youtube_music/service.py
+msgid "Conta {number}"
 msgstr ""
 
 #: src/player/youtube_music/panel.py
@@ -3105,10 +3125,6 @@ msgstr ""
 msgid "Escolha a saída de áudio usada na reprodução."
 msgstr ""
 
-#: src/player/youtube_music/dialog.py
-msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-msgstr ""
-
 #: src/player/equalizer/panel.py
 msgid "Escolha o preset do equalizador."
 msgstr ""
@@ -3159,6 +3175,10 @@ msgstr ""
 msgid "Escolher &pasta..."
 msgstr ""
 
+#: src/player/frames/youtube_music/auth.py
+msgid "Escolher a conta do YouTube"
+msgstr ""
+
 #: src/player/convert/dialog.py
 msgid "Escolher pasta de destino"
 msgstr ""
@@ -3189,6 +3209,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
 msgid "Esta mídia tem só uma faixa de áudio."
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "Esta sessão do navegador tem mais de uma conta Google. Qual delas o KeyTune deve usar?"
 msgstr ""
 
 #: src/player/youtube_music/live_streams.py
@@ -3259,6 +3283,10 @@ msgstr ""
 msgid "Este tipo de arquivo não pode ser convertido."
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Estes cookies deixam de valer quando você volta a usar o YouTube nesse navegador. Feche o navegador antes de conectar."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Estilo da sequência e das transições."
 msgstr ""
@@ -3326,6 +3354,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Exporta os cookies do navegador selecionado ou valida o arquivo/texto informado e conecta sua conta do YouTube."
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Exportar do navegador instalado"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -3491,10 +3523,6 @@ msgstr ""
 msgid "Firefox (recomendado)"
 msgstr ""
 
-#: src/player/youtube_music/dialog.py
-msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
-msgstr ""
-
 #: src/player/youtube_music/streams.py
 msgid "Foi tentada uma atualização avançada do yt-dlp."
 msgstr ""
@@ -3544,7 +3572,7 @@ msgid "Global"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
-msgid "Google Chrome"
+msgid "Google Chrome (pode falhar no Windows)"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3656,10 +3684,6 @@ msgstr ""
 
 #: src/player/radio/folders.py
 msgid "Idiomas"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -3791,6 +3815,10 @@ msgid "Instale ou atualize em Preferências > Recursos adicionais."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
+msgid "Instruções"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
 msgid "Instruções sobre runtime JavaScript do YouTube Music"
 msgstr ""
 
@@ -3886,6 +3914,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/indexing.py
 msgid "Isso apaga o índice, os favoritos, as avaliações, o histórico e as posições de retomada. Continuar?"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Isso costuma bastar. Se a conta cair mesmo assim, repita com um passo a mais, recomendado pelo yt-dlp: depois de entrar na conta e antes de exportar, pressione Ctrl+L, digite youtube.com/robots.txt e pressione Enter. Abre uma página só de texto; exporte os cookies com ela aberta."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -4181,6 +4213,10 @@ msgstr ""
 msgid "MP4"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "Mais de uma conta Google"
+msgstr ""
+
 #: src/player/radio/folders.py
 msgid "Mais ouvidas"
 msgstr ""
@@ -4270,7 +4306,7 @@ msgid "Meu país"
 msgstr ""
 
 #: src/player/youtube_music/auth.py
-msgid "Microsoft Edge"
+msgid "Microsoft Edge (pode falhar no Windows)"
 msgstr ""
 
 #: src/player/sleep_timer/dialog.py
@@ -5205,10 +5241,6 @@ msgstr ""
 msgid "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."
 msgstr ""
 
-#: src/player/frames/youtube_music/auth.py
-msgid "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."
-msgstr ""
-
 #: src/player/update/service.py
 msgid "Não foi possível validar a integridade do arquivo."
 msgstr ""
@@ -5324,12 +5356,20 @@ msgstr ""
 msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "O KeyTune conecta a conta com os cookies do navegador em que você entrou no YouTube."
+msgstr ""
+
 #: src/player/diagnostics/report.py
 msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico encontrou o motivo abaixo."
 msgstr ""
 
 #: src/player/diagnostics/report.py
 msgid "O KeyTune não conseguiu iniciar o player e vai fechar. O diagnóstico não encontrou a causa. Erro: {error}"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "O KeyTune não pede a sua senha do Google. Para abrir a sua biblioteca, ele usa os cookies do YouTube: pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao KeyTune uma cópia desses cookies, em um arquivo cookies.txt. Este texto explica como gerar esse arquivo e por que o jeito de gerar importa."
 msgstr ""
 
 #: src/player/diagnostics/checks.py
@@ -5406,6 +5446,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
+msgstr ""
+
+#: src/player/frames/youtube_music/auth.py
+msgid "O YouTube não aceita mais os cookies salvos: eles venceram ou o navegador os trocou. Conecte a conta de novo. O manual explica como exportar cookies que duram."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -5601,6 +5645,10 @@ msgstr ""
 msgid "O pacote {name} não passou na validação de integridade."
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "O passo a passo completo está no manual, na seção Conectar a conta."
+msgstr ""
+
 #: src/player/diagnostics/dialog.py
 msgid "O player não iniciou"
 msgstr ""
@@ -5651,6 +5699,10 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "O que mudou nesta versão:"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "O que o KeyTune precisa"
 msgstr ""
 
 #: src/player/frames/convert.py
@@ -5943,6 +5995,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Panamá"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Para a conexão durar, exporte os cookies de uma janela anônima e feche-a em seguida."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -6285,6 +6341,14 @@ msgstr ""
 
 #: src/player/radio/folders.py
 msgid "Por estado ou região"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Por que a conexão cai"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Por segurança, o YouTube troca os cookies da conta com frequência enquanto você usa o site. Quando o navegador recebe os cookies novos, os que o KeyTune guardou deixam de valer e a conta aparece como desconectada. Não é defeito do KeyTune nem da sua conta."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -7043,6 +7107,10 @@ msgid "Saída de áudio usada na reprodução."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
+msgid "Se a sessão tiver mais de uma conta Google, o KeyTune pergunta qual usar logo depois de conectar."
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
 msgid "Se preferir entender o cenário técnico antes de instalar, abra a guia oficial do yt-dlp sobre EJS e desafios JavaScript."
 msgstr ""
 
@@ -7674,6 +7742,10 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "Use uma sessão que o navegador nunca mais vai abrir:\n1. Instale no navegador uma extensão que exporta o cookies.txt e permita que ela funcione em janelas anônimas.\n2. Abra uma janela anônima e entre na sua conta em music.youtube.com.\n3. Exporte os cookies com a extensão.\n4. Feche a janela anônima sem abrir mais nada nela.\n5. No KeyTune, escolha o arquivo exportado e ative Conectar."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -8805,6 +8877,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Áustria"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "É mais rápido, mas copia a sessão normal do navegador. A conexão dura enquanto você não usar o YouTube nesse navegador; depois os cookies são trocados e é preciso conectar de novo. Funciona melhor com um navegador em que você não assiste YouTube. No Windows, Chrome, Edge e Brave protegem os cookies e a exportação costuma falhar; prefira o Firefox."
 msgstr ""
 
 #: src/player/youtube_music/models.py

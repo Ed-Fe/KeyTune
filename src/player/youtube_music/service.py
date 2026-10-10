@@ -1,8 +1,10 @@
+import json
 import os
 import tempfile
 
 from .auth import (
     YTMUSIC_BROWSER_AUTH_FILE_NAME,
+    account_index_from_headers,
     export_cookies_from_browser,
     get_browser_auth_file_path,
     get_browser_auth_cookie_file_path,
@@ -30,6 +32,9 @@ from ..i18n import _
 
 
 _logger = get_logger(__name__)
+
+# Quantas contas Google da mesma sessão o KeyTune procura ao conectar.
+_MAX_SESSION_ACCOUNTS = 6
 
 
 class YouTubeMusicAuthValidationError(RuntimeError):
@@ -403,6 +408,67 @@ class YouTubeMusicService:
         self._reset_stream_playback_mode()
         _logger.info("YouTube Music browser auth saved (source=%s)", source_name)
         return target_path
+
+    # -- Contas da sessão -----------------------------------------------------
+
+    def _read_saved_browser_auth_headers(self):
+        with open(self.browser_auth_file_path, "r", encoding="utf-8") as auth_file:
+            headers = json.load(auth_file)
+        if not isinstance(headers, dict):
+            raise RuntimeError(_("A autenticação salva do YouTube não é mais válida."))
+        return headers
+
+    @staticmethod
+    def _headers_for_account(headers, account_index):
+        selected = {key: value for key, value in headers.items() if str(key).lower() != "x-goog-authuser"}
+        selected["x-goog-authuser"] = str(int(account_index))
+        return selected
+
+    def saved_account_index(self):
+        """O índice da conta Google em uso na sessão salva."""
+        try:
+            return account_index_from_headers(self._read_saved_browser_auth_headers())
+        except (OSError, ValueError, RuntimeError):
+            return 0
+
+    def list_session_accounts(self):
+        """``[(índice, nome)]`` das contas Google conectadas na sessão salva.
+
+        Um navegador com várias contas Google manda os cookies de todas, e o
+        ``X-Goog-AuthUser`` diz qual delas responde. O YouTube responde como
+        desconectado a um índice que não existe, e a lista para aí.
+        """
+        headers = self._read_saved_browser_auth_headers()
+        ytmusicapi = import_ytmusicapi_module()
+        accounts = []
+        for account_index in range(_MAX_SESSION_ACCOUNTS):
+            try:
+                account_info = _fetch_account_info(
+                    ytmusicapi.YTMusic(self._headers_for_account(headers, account_index))
+                )
+            except Exception:
+                break
+            name = str(account_info.get("accountName") or account_info.get("channelHandle") or "").strip()
+            accounts.append((account_index, name or _("Conta {number}").format(number=account_index + 1)))
+        return accounts
+
+    def select_session_account(self, account_index):
+        """Passa a usar outra conta Google da mesma sessão; devolve o nome dela."""
+        headers = self._headers_for_account(self._read_saved_browser_auth_headers(), account_index)
+        account_info = _fetch_account_info(import_ytmusicapi_module().YTMusic(headers))
+
+        target_path = self.browser_auth_file_path
+        staged_path = target_path + ".tmp"
+        with open(staged_path, "w", encoding="utf-8") as auth_file:
+            json.dump(headers, auth_file, ensure_ascii=True, indent=4, sort_keys=True)
+        harden_sensitive_file_permissions(staged_path)
+        os.replace(staged_path, target_path)
+
+        self.clear_client_cache()
+        self._account_info = account_info
+        self._feedback.set_active_account(account_info)
+        _logger.info("YouTube Music session account switched (index=%s)", int(account_index))
+        return self.get_connected_account_name()
 
     def save_browser_auth_from_browser(self, browser_name: str) -> str:
         """Exporta cookies diretamente do navegador instalado e salva a autenticação.

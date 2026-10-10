@@ -3,18 +3,68 @@ import os
 import wx
 
 from ..i18n import _, ngettext
+from ..reading_dialog import show_reading_dialog
 from .auth import SUPPORTED_BROWSERS
 
 # Constantes de modo para o diálogo de autenticação
 AUTH_MODE_BROWSER = "browser"
 AUTH_MODE_MANUAL = "manual"
+# A ordem das opções do RadioBox: o modo manual vem primeiro por ser o que dura.
+_AUTH_MODES = (AUTH_MODE_MANUAL, AUTH_MODE_BROWSER)
+
+
+def cookie_export_help_text():
+    """O que são os cookies, como exportá-los e por que a conexão cai; lido na caixa de leitura."""
+    return "\n\n".join(
+        (
+            _("O que o KeyTune precisa"),
+            _(
+                "O KeyTune não pede a sua senha do Google. Para abrir a sua biblioteca, ele usa os cookies do "
+                "YouTube: pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao "
+                "KeyTune uma cópia desses cookies, em um arquivo cookies.txt. Este texto explica como gerar esse "
+                "arquivo e por que o jeito de gerar importa."
+            ),
+            _("Como exportar cookies que duram"),
+            _(
+                "Use uma sessão que o navegador nunca mais vai abrir:\n"
+                "1. Instale no navegador uma extensão que exporta o cookies.txt e permita que ela funcione "
+                "em janelas anônimas.\n"
+                "2. Abra uma janela anônima e entre na sua conta em music.youtube.com.\n"
+                "3. Exporte os cookies com a extensão.\n"
+                "4. Feche a janela anônima sem abrir mais nada nela.\n"
+                "5. No KeyTune, escolha o arquivo exportado e ative Conectar."
+            ),
+            _(
+                "Isso costuma bastar. Se a conta cair mesmo assim, repita com um passo a mais, recomendado pelo "
+                "yt-dlp: depois de entrar na conta e antes de exportar, pressione Ctrl+L, digite "
+                "youtube.com/robots.txt e pressione Enter. Abre uma página só de texto; exporte os cookies com "
+                "ela aberta."
+            ),
+            _("Por que a conexão cai"),
+            _(
+                "Por segurança, o YouTube troca os cookies da conta com frequência enquanto você usa o site. "
+                "Quando o navegador recebe os cookies novos, os que o KeyTune guardou deixam de valer e a conta "
+                "aparece como desconectada. Não é defeito do KeyTune nem da sua conta."
+            ),
+            _("Exportar do navegador instalado"),
+            _(
+                "É mais rápido, mas copia a sessão normal do navegador. A conexão dura enquanto você não usar o "
+                "YouTube nesse navegador; depois os cookies são trocados e é preciso conectar de novo. Funciona "
+                "melhor com um navegador em que você não assiste YouTube. No Windows, Chrome, Edge e Brave "
+                "protegem os cookies e a exportação costuma falhar; prefira o Firefox."
+            ),
+            _("Mais de uma conta Google"),
+            _("Se a sessão tiver mais de uma conta Google, o KeyTune pergunta qual usar logo depois de conectar."),
+            _("O passo a passo completo está no manual, na seção Conectar a conta."),
+        )
+    )
 
 
 class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     """Diálogo de conexão do YouTube Music com dois modos:
 
+    - **Manual** (padrão): cola texto ou seleciona um arquivo exportado.
     - **Navegador**: seleciona na ListBox e exporta direto do perfil instalado.
-    - **Manual**: cola texto ou seleciona arquivo (comportamento anterior).
     """
 
     def __init__(self, parent):
@@ -23,7 +73,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             title=_("Conectar ao YouTube"),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
         )
-        self._auth_mode = AUTH_MODE_BROWSER
+        self._auth_mode = AUTH_MODE_MANUAL
         self.SetMinSize((640, 500))
         self._build_ui()
         self.SetSize((780, 600))
@@ -41,13 +91,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         # Instrução geral no topo
         instructions = wx.StaticText(
             self,
-            label=_(
-                "Escolha como deseja conectar sua conta do YouTube.\n\n"
-                "Opção 1 — Navegador instalado: selecione o navegador na lista e clique em "
-                "\"Conectar\". O player importará os cookies automaticamente.\n\n"
-                "Opção 2 — Manual: cole os dados do navegador ou escolha um arquivo "
-                "browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-            ),
+            label=_("O KeyTune conecta a conta com os cookies do navegador em que você entrou no YouTube."),
         )
         instructions.Wrap(720)
         root_sizer.Add(instructions, 0, wx.ALL | wx.EXPAND, 12)
@@ -57,8 +101,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             self,
             label=_("Modo de conexão"),
             choices=[
-                _("&Exportar do navegador instalado"),
                 _("&Informar manualmente (arquivo ou texto)"),
+                _("&Exportar do navegador instalado"),
             ],
             majorDimension=1,
             style=wx.RA_SPECIFY_COLS,
@@ -97,9 +141,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         browser_hint = wx.StaticText(
             self._browser_panel,
             label=_(
-                "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir "
-                "que o navegador seja completamente fechado ou impedir a extração; nesse caso, "
-                "use o Firefox ou a importação manual."
+                "Estes cookies deixam de valer quando você volta a usar o YouTube nesse navegador. "
+                "Feche o navegador antes de conectar."
             ),
         )
         browser_hint.Wrap(700)
@@ -141,13 +184,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         rotation_warning = wx.StaticText(
             self._manual_panel,
-            label=_(
-                "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você "
-                "continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como "
-                "desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela "
-                "anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir "
-                "o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
-            ),
+            label=_("Para a conexão durar, exporte os cookies de uma janela anônima e feche-a em seguida."),
         )
         rotation_warning.Wrap(700)
         rotation_warning.SetName(_("Aviso sobre validade dos cookies do YouTube Music"))
@@ -160,6 +197,10 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         root_sizer.Add(self._browser_panel, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
         root_sizer.Add(self._manual_panel, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 12)
+
+        help_button = wx.Button(self, label=_("Co&mo exportar os cookies..."))
+        help_button.Bind(wx.EVT_BUTTON, self._on_show_export_help)
+        root_sizer.Add(help_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 12)
 
         # Botões padrão
         button_sizer = self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL)
@@ -174,15 +215,16 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
             )
         cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:
-            cancel_button.SetLabel(_("&Cancelar"))
+            # Sem mnemônico: o C já é do Conectar, e Esc cancela.
+            cancel_button.SetLabel(_("Cancelar"))
 
         if button_sizer is not None:
             root_sizer.Add(button_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 12)
 
         self.SetSizer(root_sizer)
 
-        # Estado inicial: painel de navegador ativo
-        self._apply_mode(AUTH_MODE_BROWSER)
+        # Estado inicial: modo manual, o primeiro da lista
+        self._apply_mode(AUTH_MODE_MANUAL)
 
         # Ligação de eventos
         self.mode_radio.Bind(wx.EVT_RADIOBOX, self._on_mode_changed)
@@ -212,10 +254,16 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     # Lógica de alternância de modo
     # ------------------------------------------------------------------
 
+    def _on_show_export_help(self, _event):
+        show_reading_dialog(
+            self,
+            title=_("Como exportar os cookies"),
+            label=_("Instruções"),
+            text=cookie_export_help_text(),
+        )
+
     def _on_mode_changed(self, _event):
-        selection = self.mode_radio.GetSelection()
-        mode = AUTH_MODE_BROWSER if selection == 0 else AUTH_MODE_MANUAL
-        self._apply_mode(mode)
+        self._apply_mode(self.get_auth_mode())
 
     def _apply_mode(self, mode: str):
         self._auth_mode = mode
@@ -232,8 +280,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     def get_auth_mode(self) -> str:
         """Retorna ``AUTH_MODE_BROWSER`` ou ``AUTH_MODE_MANUAL``."""
         selection = self.mode_radio.GetSelection()
-        if selection != wx.NOT_FOUND:
-            return AUTH_MODE_BROWSER if selection == 0 else AUTH_MODE_MANUAL
+        if 0 <= selection < len(_AUTH_MODES):
+            return _AUTH_MODES[selection]
         return self._auth_mode
 
     def get_selected_browser(self) -> str:

@@ -142,15 +142,27 @@ def media_details(media_url):
     return _request_action("details", media_url=str(media_url or "").strip())
 
 
-def subscription_videos_page(cookie_header, *, start, count):
-    """Uma página dos vídeos novos das inscrições da conta dona de *cookie_header*."""
-    response = _request_action("subscription_videos", cookie=str(cookie_header or "").strip(), start=start, count=count)
+def subscription_videos_page(cookie_header, *, start, count, account_index=0):
+    """Uma página dos vídeos novos das inscrições da conta *account_index* de *cookie_header*."""
+    response = _request_action(
+        "subscription_videos",
+        cookie=str(cookie_header or "").strip(),
+        account_index=int(account_index or 0),
+        start=start,
+        count=count,
+    )
     return list(response.get("entries") or []), bool(response.get("has_more"))
 
 
-def subscribed_channels_page(cookie_header, *, start, count):
-    """Uma página dos canais em que a conta dona de *cookie_header* está inscrita."""
-    response = _request_action("subscribed_channels", cookie=str(cookie_header or "").strip(), start=start, count=count)
+def subscribed_channels_page(cookie_header, *, start, count, account_index=0):
+    """Uma página dos canais em que a conta *account_index* de *cookie_header* está inscrita."""
+    response = _request_action(
+        "subscribed_channels",
+        cookie=str(cookie_header or "").strip(),
+        account_index=int(account_index or 0),
+        start=start,
+        count=count,
+    )
     return list(response.get("entries") or []), bool(response.get("has_more"))
 
 
