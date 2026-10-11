@@ -25,6 +25,7 @@
 
 ### Corregido
 
+- **YouTube.js reproduce solo el audio**: la reproducción con YouTube.js ahora pide a YouTube solo el audio de la pista, mucho más pequeño que el vídeo de 360p usado hasta ahora, y solo recurre al vídeo si el audio no llega.
 - **Me gusta completo**: la lista **Me gusta** del inicio de YouTube Music muestra todas las pistas con «me gusta» de la cuenta. Antes se detenía en los primeros cientos, mientras que la misma playlist abierta desde **Tus playlists y mixes** llegaba entera. Ahora se carga poco a poco: baja hasta el final de la lista para traer más.
 - **Títulos de YouTube en tu idioma**: las listas de videos de canales y playlists de YouTube llegaban siempre con los títulos en inglés cuando el canal los traduce. Ahora siguen el **Idioma del contenido** de las preferencias. Y, con ese idioma en **El mismo de KeyTune**, cambiar el idioma de la interfaz ya vale para el contenido, sin volver a abrir el reproductor.
 - **Idioma de la interfaz sin reabrir a mano**: al cambiar el idioma de la interfaz en las preferencias, KeyTune ofrece reiniciar al instante. Se cierra, se abre de nuevo en el idioma elegido y recupera las pestañas de la sesión.

@@ -25,6 +25,7 @@
 
 ### Corrigido
 
+- **YouTube.js toca só o áudio**: a reprodução pelo YouTube.js passou a pedir ao YouTube apenas o áudio da faixa, que é bem menor que o vídeo de 360p usado até aqui, e só cai no vídeo se o áudio não vier.
 - **Curtidas completas**: a lista **Curtidas** do início do YouTube Music mostra todas as faixas curtidas da conta. Antes ela parava nas primeiras centenas, enquanto a mesma playlist aberta por **Suas playlists e mixes** vinha inteira. Agora ela carrega aos poucos: desça até o fim da lista para trazer mais.
 - **Títulos do YouTube no seu idioma**: as listas de vídeos de canais e playlists do YouTube vinham sempre com os títulos em inglês quando o canal os traduz. Agora seguem o **Idioma do conteúdo** das preferências. E, com esse idioma em **O mesmo do KeyTune**, trocar o idioma da interface já vale para o conteúdo, sem reabrir o player.
 - **Idioma da interface sem reabrir à mão**: ao trocar o idioma da interface nas preferências, o KeyTune oferece reiniciar na hora. Ele fecha, abre de novo no idioma escolhido e traz de volta as abas da sessão.

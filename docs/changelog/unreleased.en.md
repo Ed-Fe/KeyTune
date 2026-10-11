@@ -25,6 +25,7 @@
 
 ### Fixed
 
+- **YouTube.js plays audio only**: playback through YouTube.js now asks YouTube for just the track's audio, which is much smaller than the 360p video used until now, and only falls back to the video if the audio doesn't come through.
 - **Complete liked songs**: the **Liked songs** list on the YouTube Music home shows every track the account has liked. Before, it stopped at the first few hundred, while the same playlist opened from **Your playlists and mixes** came in full. It now loads a part at a time: go down to the end of the list to bring more.
 - **YouTube titles in your language**: the video lists of YouTube channels and playlists always came with English titles when the channel translates them. They now follow the **Content language** in the preferences. And with that language set to **Same as KeyTune**, changing the interface language applies to the content at once, without reopening the player.
 - **Interface language without reopening by hand**: when you change the interface language in the preferences, KeyTune offers to restart at once. It closes, opens again in the chosen language and brings back the tabs of the session.

@@ -25,24 +25,47 @@ async function measuredLength(format, streamUrl) {
   return contentLength;
 }
 
+// Os clientes que entregam só o áudio (itag 140, AAC) com URL direta, do mais leve ao
+// mais pesado. O ANDROID com o vídeo 360p (itag 18) fica por último, como reserva.
+const ATTEMPTS = [
+  { client: "YTMUSIC", pick: audioOnly },
+  { client: "MWEB", pick: audioOnly },
+  { client: "ANDROID", pick: (info) => info.chooseFormat({ itag: 18 }) },
+];
+
+function audioOnly(info) {
+  const formats = (info.streaming_data?.adaptive_formats || []).filter((f) => f.has_audio && !f.has_video);
+  const aac = formats.filter((f) => String(f.mime_type || "").startsWith("audio/mp4"));
+  const best = (list) => list.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0];
+  const format = best(aac) || best(formats);
+  if (!format) {
+    throw new Error("sem formato de áudio");
+  }
+  return format;
+}
+
+async function directFormat(innertube, videoId) {
+  const failures = [];
+  for (const { client, pick } of ATTEMPTS) {
+    try {
+      const info = await innertube.getBasicInfo(videoId, { client });
+      const format = pick(info);
+      const streamUrl = await format.decipher(innertube.session.player);
+      if (streamUrl) {
+        return { info, format, streamUrl };
+      }
+      failures.push(`${client}: sem URL`);
+    } catch (error) {
+      failures.push(`${client}: ${error instanceof Error ? error.message : error}`);
+    }
+  }
+  throw new Error(`O YouTube.js não retornou uma URL direta de mídia: ${failures.join("; ")}.`);
+}
+
 export async function resolve(request) {
   const videoId = requireVideoId(request);
   const innertube = await clientFor();
-  let info;
-  let format;
-  let streamUrl = "";
-  let resolutionError;
-  try {
-    info = await innertube.getBasicInfo(videoId, { client: "ANDROID" });
-    format = info.chooseFormat({ itag: 18 });
-    streamUrl = await format.decipher(innertube.session.player);
-  } catch (error) {
-    resolutionError = error;
-  }
-  if (!streamUrl) {
-    const detail = resolutionError instanceof Error ? `: ${resolutionError.message}` : "";
-    throw new Error(`O YouTube.js não retornou uma URL direta de mídia${detail}.`);
-  }
+  const { info, format, streamUrl } = await directFormat(innertube, videoId);
   const contentLength = await measuredLength(format, streamUrl);
   if (!contentLength) {
     throw new Error("O YouTube.js não informou o tamanho da mídia.");
