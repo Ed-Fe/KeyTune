@@ -6,8 +6,8 @@ from dataclasses import replace
 import wx
 
 from player.youtube_music import notifications as youtube_notifications
-from player.youtube_music.account_session import account_connected
-from player.youtube_music.notification_store import YouTubeNotificationStore
+from player.youtube_music.account_session import account_connected, optional_account_session
+from player.youtube_music.notification_store import YouTubeNotificationStore, account_scope
 
 from ... import interface_sounds
 from ...i18n import _
@@ -24,11 +24,12 @@ _FIRST_CHECK_DELAY_MS = 45_000
 
 class NotificationsMixin:
     def _youtube_notification_store(self):
+        """Os ids já avisados da conta conectada agora."""
         store = getattr(self, "_youtube_notification_store_instance", None)
         if store is None:
             store = YouTubeNotificationStore()
             self._youtube_notification_store_instance = store
-        return store
+        return store.scoped(account_scope(*optional_account_session()))
 
     def _build_youtube_notifications_view(self):
         def fetch_page(start, count):
