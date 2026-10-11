@@ -1,6 +1,9 @@
+import threading
+
 import wx
 
-from .single_instance import ACTION_FOCUS, ACTION_OPEN, SingleInstanceServer
+from .exit_watchdog import INTERPRETER_EXIT_DEADLINE_SECONDS, arm_exit_watchdog
+from .single_instance import ACTION_FOCUS, ACTION_OPEN, UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer
 
 
 def _load_quick_player_request(paths):
@@ -54,7 +57,18 @@ def main(initial_paths=None):
             frame.focus_from_relaunch()
 
     def _on_message(message):
-        wx.CallAfter(_deliver_message, message)
+        # Roda na thread do pipe: só confirma depois que a interface tratou o
+        # pedido, para o novo processo saber se esta instância está viva.
+        handled = threading.Event()
+
+        def deliver():
+            try:
+                _deliver_message(message)
+            finally:
+                handled.set()
+
+        wx.CallAfter(deliver)
+        return handled.wait(UI_ACK_TIMEOUT_SECONDS)
 
     settings, quick_paths = _load_quick_player_request(initial_paths)
     if quick_paths:
@@ -66,4 +80,5 @@ def main(initial_paths=None):
 
     app.MainLoop()
 
+    arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS)
     ipc_server.shutdown()

@@ -12,4 +12,5 @@
 
 ### Corrigido
 
+- **KeyTune que não reabria depois de fechar ou atualizar**: se o encerramento travava, o KeyTune ficava vivo em segundo plano, sem janela, e abrir de novo não mostrava nada. Agora o encerramento sempre termina, e quem abre o KeyTune encerra uma cópia travada e abre normalmente.
 - **Curtidas completas**: a lista **Curtidas** do início do YouTube Music mostra todas as faixas curtidas da conta. Antes ela parava nas primeiras centenas, enquanto a mesma playlist aberta por **Suas playlists e mixes** vinha inteira. Agora ela carrega aos poucos: desça até o fim da lista para trazer mais.
