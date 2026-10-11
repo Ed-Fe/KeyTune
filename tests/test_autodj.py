@@ -1183,7 +1183,7 @@ class AutoDJTests(unittest.TestCase):
             def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, session=None): self.fill_calls.append(session); return True
-            def _announce(self, message): self.announcements.append(message)
+            def _announce(self, message, category=None): self.announcements.append(message)
 
         frame = Frame()
         self.assertTrue(frame.on_replace_autodj_next(None))

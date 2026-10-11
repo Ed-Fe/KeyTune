@@ -426,7 +426,7 @@ class _Frame(ResultsNavigationMixin, SearchMixin, BrowseMixin, LibraryStateMixin
         self._open_youtube_music_link = Mock(return_value=True)
         self.background_tasks = 0
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _get_youtube_music_service(self):

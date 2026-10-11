@@ -43,7 +43,7 @@ class _SleepTimerFrame(FrameSleepTimerMixin):
         self.playing = True
         self._initialize_sleep_timer_state()
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _set_status_message(self, message, auto_clear_ms=6000):

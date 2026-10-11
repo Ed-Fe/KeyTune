@@ -305,6 +305,10 @@ msgstr ""
 msgid "&Instalar pacote..."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Interromper a fala do leitor de tela"
+msgstr ""
+
 #: src/player/frames/ui.py
 #: src/player/frames/youtube_music/state.py
 msgid "&KeyTube por aba\tCtrl+Shift+Y"
@@ -1979,6 +1983,18 @@ msgstr ""
 msgid "Avisos (WARNING)"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Avisos de eventos que falam"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Avisos de eventos que falam:"
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Avisos do temporizador"
+msgstr ""
+
 #: src/player/keyboard/dialog.py
 msgid "Ação"
 msgstr ""
@@ -2464,6 +2480,10 @@ msgstr ""
 msgid "Chat ao vivo: mensagem enviada"
 msgstr ""
 
+#: src/player/announcements.py
+msgid "Chat ao vivo: mensagem enviada ou chat encerrado"
+msgstr ""
+
 #: src/player/interface_sounds/labels.py
 msgid "Chat ao vivo: mensagem nova"
 msgstr ""
@@ -2474,6 +2494,14 @@ msgstr ""
 
 #: src/player/interface_sounds/labels.py
 msgid "Chat ao vivo: mensagem que cita o seu nome"
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Chat ao vivo: mensagens novas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3094,6 +3122,10 @@ msgstr ""
 msgid "Deseja remover todos os {count} itens da fila de reprodução?"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Desligado, o aviso espera o leitor terminar o que está dizendo."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Desmarcada, a aba segue o equalizador de todas as abas."
 msgstr ""
@@ -3311,6 +3343,7 @@ msgstr ""
 msgid "Download cancelado. {done} de {total} itens já foram baixados."
 msgstr ""
 
+#: src/player/announcements.py
 #: src/player/interface_sounds/labels.py
 msgid "Download concluído"
 msgstr ""
@@ -3705,6 +3738,10 @@ msgid "Espaço"
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Espaço liga ou desliga o aviso do item."
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Espaço liga ou desliga o som do item; ao ligar, ele toca."
 msgstr ""
 
@@ -3944,6 +3981,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/live_chat.py
 msgid "Falar as mensagens do chat"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Falar os avisos de &eventos com o KeyTune ativo"
 msgstr ""
 
 #: src/player/frames/youtube_music/tasks.py
@@ -5567,6 +5608,10 @@ msgstr ""
 #: src/player/frames/youtube_music/notifications.py
 #: src/player/keyboard/shortcuts.py
 msgid "Notificações do YouTube"
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Notificações novas do YouTube"
 msgstr ""
 
 #: src/player/youtube_music/models.py

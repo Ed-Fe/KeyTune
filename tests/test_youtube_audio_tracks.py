@@ -187,7 +187,7 @@ class _Frame(AudioTrackMixin):
         self._queue_media_start = Mock()
         self._capture_active_playlist_state = Mock()
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _get_active_playlist_state(self):

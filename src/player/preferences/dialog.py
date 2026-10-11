@@ -34,6 +34,7 @@ from ..download.panel import DownloadOptionsPanel
 from .. import interface_sounds
 from ..i18n import _, available_languages, language_display_name
 from ..interface_sounds.custom import CustomSoundError, import_custom_sound
+from ..announcements import announcement_labels
 from ..interface_sounds.labels import sound_labels
 from ..log import get_log_dir
 from ..widgets import (
@@ -282,6 +283,33 @@ class PreferencesDialog(wx.Dialog):
             _("Ativar a&núncios de acessibilidade"),
             _("Anuncia mudanças como tempo, volume e troca de abas."),
         )
+        self.announcements_interrupt_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("&Interromper a fala do leitor de tela"),
+            _("Desligado, o aviso espera o leitor terminar o que está dizendo."),
+        )
+        self.announcements_in_window_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Falar os avisos de &eventos com o KeyTune ativo"),
+            _("Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."),
+        )
+        self._announcement_names = [name for name, _label in announcement_labels()]
+        announcements_label = wx.StaticText(box, label=_("Avisos de eventos que falam:"))
+        self.announcements_list = wx.CheckListBox(
+            box,
+            choices=[label for _name, label in announcement_labels()],
+            size=self.FromDIP(wx.Size(-1, 110)),
+        )
+        describe_control(
+            self.announcements_list,
+            _("Avisos de eventos que falam"),
+            _("Espaço liga ou desliga o aviso do item."),
+        )
+        sizer.Add(announcements_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
+        sizer.Add(self.announcements_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        self.announcements_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_announcements)
 
         box, sizer = self._create_group(page, page_sizer, _("Sons de aviso"))
         self.interface_sounds_enabled_checkbox = self._add_checkbox(
@@ -666,6 +694,12 @@ class PreferencesDialog(wx.Dialog):
         sizer.Add(note, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
         return note
 
+    def _on_toggle_announcements(self, _event=None):
+        enabled = self.announcements_enabled_checkbox.GetValue()
+        self.announcements_interrupt_checkbox.Enable(enabled)
+        self.announcements_in_window_checkbox.Enable(enabled)
+        self.announcements_list.Enable(enabled)
+
     def _on_toggle_interface_sounds(self, _event=None):
         enabled = self.interface_sounds_enabled_checkbox.GetValue()
         self.interface_sounds_volume_ctrl.Enable(enabled)
@@ -862,6 +896,14 @@ class PreferencesDialog(wx.Dialog):
         self.minimize_to_tray_checkbox.SetValue(settings.minimize_to_tray)
         self.close_to_tray_checkbox.SetValue(settings.close_to_tray)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
+        self.announcements_interrupt_checkbox.SetValue(settings.announcements_interrupt)
+        self.announcements_in_window_checkbox.SetValue(settings.announcements_in_window)
+        disabled_announcements = set(settings.announcements_disabled)
+        for index, name in enumerate(self._announcement_names):
+            self.announcements_list.Check(index, name not in disabled_announcements)
+        if self._announcement_names:
+            self.announcements_list.SetSelection(0)
+        self._on_toggle_announcements()
         self.interface_sounds_enabled_checkbox.SetValue(settings.interface_sounds_enabled)
         self.interface_sounds_volume_ctrl.SetValue(max(1, settings.interface_sounds_volume))
         disabled_sounds = set(settings.interface_sounds_disabled)
@@ -966,6 +1008,11 @@ class PreferencesDialog(wx.Dialog):
         settings.minimize_to_tray = self.minimize_to_tray_checkbox.GetValue()
         settings.close_to_tray = self.close_to_tray_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
+        settings.announcements_interrupt = self.announcements_interrupt_checkbox.GetValue()
+        settings.announcements_in_window = self.announcements_in_window_checkbox.GetValue()
+        settings.announcements_disabled = [
+            name for index, name in enumerate(self._announcement_names) if not self.announcements_list.IsChecked(index)
+        ]
         settings.interface_sounds_enabled = self.interface_sounds_enabled_checkbox.GetValue()
         settings.interface_sounds_volume = self.interface_sounds_volume_ctrl.GetValue()
         settings.interface_sounds_disabled = [

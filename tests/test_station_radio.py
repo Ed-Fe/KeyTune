@@ -67,7 +67,7 @@ class _StationFrame(StationRadioMixin):
     def _refresh_playlist_browser(self):
         self.refreshed = True
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _set_status_message(self, message):

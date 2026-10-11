@@ -86,7 +86,7 @@ class _Frame(DetailsMixin, CommentsMixin):
         self.announcements = []
         self.dialogs = []
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _run_youtube_music_background_task(self, worker, on_success, on_error=None):

@@ -176,7 +176,7 @@ class _Frame(CommentsMixin, ResultsNavigationMixin):
         self.panel.get_selected_search_result_ids.return_value = []
         self.refreshed = 0
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _youtube_music_library_page_size(self):

@@ -83,6 +83,11 @@ from ..download.options import (
     normalize_sample_rate,
     normalize_video_quality,
 )
+from ..announcements import (
+    DEFAULT_ANNOUNCEMENTS_IN_WINDOW,
+    DEFAULT_ANNOUNCEMENTS_INTERRUPT,
+    normalize_disabled_announcements,
+)
 from ..interface_sounds import (
     DEFAULT_INTERFACE_SOUNDS_ENABLED,
     DEFAULT_INTERFACE_SOUNDS_VOLUME,
@@ -104,6 +109,12 @@ class AppSettings:
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
+    # Falar por cima do que o leitor de tela já está dizendo, ou esperar a vez.
+    announcements_interrupt: bool = DEFAULT_ANNOUNCEMENTS_INTERRUPT
+    # Falar os avisos de eventos (chat, notificações) com a janela do KeyTune ativa.
+    announcements_in_window: bool = DEFAULT_ANNOUNCEMENTS_IN_WINDOW
+    # As categorias de aviso desligadas uma a uma (ver ``announcements.py``).
+    announcements_disabled: list = field(default_factory=list)
     interface_sounds_enabled: bool = DEFAULT_INTERFACE_SOUNDS_ENABLED
     interface_sounds_volume: int = DEFAULT_INTERFACE_SOUNDS_VOLUME
     # Os sons desligados um a um; os demais tocam enquanto a opção geral está ligada.
@@ -214,6 +225,9 @@ class AppSettings:
             "confirm_on_exit": self.confirm_on_exit,
             "quick_player_enabled": self.quick_player_enabled,
             "announcements_enabled": self.announcements_enabled,
+            "announcements_interrupt": self.announcements_interrupt,
+            "announcements_in_window": self.announcements_in_window,
+            "announcements_disabled": list(self.announcements_disabled),
             "interface_sounds_enabled": self.interface_sounds_enabled,
             "interface_sounds_volume": self.interface_sounds_volume,
             "interface_sounds_disabled": list(self.interface_sounds_disabled),
@@ -304,6 +318,13 @@ class AppSettings:
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
+        settings.announcements_interrupt = bool(
+            data.get("announcements_interrupt", settings.announcements_interrupt)
+        )
+        settings.announcements_in_window = bool(
+            data.get("announcements_in_window", settings.announcements_in_window)
+        )
+        settings.announcements_disabled = normalize_disabled_announcements(data.get("announcements_disabled"))
         settings.interface_sounds_enabled = bool(
             data.get("interface_sounds_enabled", settings.interface_sounds_enabled)
         )

@@ -16,6 +16,7 @@ from player.youtube_music.models import YouTubeResultPage
 from player.youtube_music.playlists import extract_video_id_from_text
 
 from ... import interface_sounds
+from ...announcements import ANNOUNCE_CHAT_MESSAGES, ANNOUNCE_CHAT_STATUS
 from ...i18n import _
 from ...log import get_logger
 from .navigation import YouTubeResultsView
@@ -93,7 +94,11 @@ class LiveChatMixin:
             self._youtube_live_chat_viewer = update.viewer
             results = list(update.messages)
             if update.can_send or update.restriction:
-                results.insert(0, send_chat_message_item(update.restriction))
+                # A linha de escrever fica no fim, depois das mensagens mais novas, e a lista
+                # abre nela: a seta para cima lê as mais recentes, sem descer até o fim.
+                send_item = send_chat_message_item(update.restriction)
+                results.append(send_item)
+                view.focus_result_id = send_item.stable_id
             return YouTubeResultPage(results=tuple(results))
 
         view = YouTubeResultsView(
@@ -167,7 +172,7 @@ class LiveChatMixin:
             return
         if update is not None and update.ended:
             interface_sounds.play_for(self, interface_sounds.SOUND_CHAT_ENDED)
-            self._announce(_("O chat ao vivo terminou."))
+            self._announce(_("O chat ao vivo terminou."), ANNOUNCE_CHAT_STATUS)
             return
         if update is not None and update.viewer:
             self._youtube_live_chat_viewer = update.viewer
@@ -185,7 +190,7 @@ class LiveChatMixin:
             return
         rows = [result for result in view.results if getattr(result, "result_type", "") == "action"]
         kept = [result for result in view.results if getattr(result, "result_type", "") != "action"] + new_messages
-        view.results = rows + kept[-youtube_live_chat.LIVE_CHAT_MAX_MESSAGES:]
+        view.results = kept[-youtube_live_chat.LIVE_CHAT_MAX_MESSAGES:] + rows
         if view is self._youtube_music_current_results_view():
             self._show_youtube_music_results_view(announce=False, selected_id=self._youtube_music_selected_result_id())
             interface_sounds.play_for(
@@ -194,7 +199,7 @@ class LiveChatMixin:
             )
             if self._youtube_live_chat_speaks():
                 for text in youtube_live_chat.spoken_messages(new_messages):
-                    self._announce(text)
+                    self._announce(text, ANNOUNCE_CHAT_MESSAGES)
 
     def send_youtube_live_chat_message(self, restriction=None):
         """Pede o texto e o envia ao chat da lista na tela; com *restriction*, só diz por que não dá."""
@@ -221,7 +226,7 @@ class LiveChatMixin:
 
         def on_success(_result):
             interface_sounds.play_for(self, interface_sounds.SOUND_CHAT_SENT)
-            self._announce(_("Mensagem enviada."))
+            self._announce(_("Mensagem enviada."), ANNOUNCE_CHAT_STATUS)
 
         def on_error(exc):
             interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)

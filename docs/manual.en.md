@@ -487,7 +487,7 @@ On a broadcast that is on air, **View the live chat**, in the **Actions...** men
 - The list has the latest messages and grows by itself: KeyTune fetches the new ones every 4 seconds and puts them at the end, keeping the last 500.
 - Messages that arrive are spoken, at most three at a time in a busy chat. **Stop speaking the chat messages**, in the **Actions...** menu, turns the speech off; the list keeps growing.
 - `Enter` opens the whole message in a reading box.
-- **Send a message...**, the first line of the list, sends a message with your account. It only appears with the account connected. When the chat does not accept messages from your account (subscribers only or members only, for example), the line says **You cannot write in this chat** and the reason YouTube gives.
+- **Send a message...**, the last line of the list, after the newest messages, sends a message with your account. The list opens on it: `Up arrow` reads the most recent message, with no need to go down to the end. It only appears with the account connected. When the chat does not accept messages from your account (subscribers only or members only, for example), the line says **You cannot write in this chat** and the reason YouTube gives.
 - `Backspace` leaves the chat and stops following it. When the broadcast ends, KeyTune tells you.
 
 The **View live chat of the current media** command has no default shortcut; to give it one, use **Settings > Customize keyboard**.
@@ -797,6 +797,8 @@ With AutoDJ installed, there are two more options: **AutoDJ profile** (*Smooth* 
 ### Accessibility
 
 The first option is **Enable accessibility announcements**. When on, the player announces changes of time, volume, tab switching and status to the screen reader. When off, those announcements stop. The on-demand announcement shortcuts (`T`, `V` and `S`) work either way. See [Accessibility features](#accessibility-features).
+
+**Interrupt the screen reader speech** comes off: the announcement waits for the reader to finish what it is saying instead of cutting it off. When on, the announcement speaks at once, over it. **Speak event notices while KeyTune is active** decides whether the notices that arrive by themselves speak while you are in the KeyTune window; when off, they only speak with KeyTune in the background (the sounds keep playing). The **Event notices that speak** list turns each one on or off: new live chat messages, message sent or chat ended, new YouTube notifications, finished download and sleep timer warnings.
 
 The **Alert sounds** group has **Play alert sounds**, which turns all of them on or off at once, **Alert sounds volume** and the **Sounds that play** list, with one box per sound: `Space` turns the item's sound on or off and, when turned on, it plays so you know which one it is. Below the list, **Listen to the sound** plays the selected item's, **Choose a file for the sound...** puts an audio file from your computer in its place and **Back to the original sound** undoes the change. The chosen file is copied into KeyTune's data and cut at 5 seconds; with FFmpeg installed any audio format works, without it only 16-bit WAV. They are short sounds, each for one event:
 

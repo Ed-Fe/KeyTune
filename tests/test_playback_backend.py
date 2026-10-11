@@ -53,7 +53,7 @@ class _DummyFrame(PlayerBackendMixin):
     def _set_status_message(self, message, **_kwargs):
         self.status_messages.append(message)
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
 

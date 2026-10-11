@@ -36,7 +36,7 @@ class _Frame(FrameYouTubeMusicMixin):
         self.playlists = []
         self._youtube_music_results_views().extend(views)
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _get_current_tab_index(self):

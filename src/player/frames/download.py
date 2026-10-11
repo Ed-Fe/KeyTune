@@ -14,6 +14,7 @@ import time
 
 import wx
 
+from ..announcements import ANNOUNCE_DOWNLOADS
 from ..download.dialog import DownloadDialog
 from ..download.ffmpeg import (
     FFMPEG_APPROXIMATE_DOWNLOAD_MB,
@@ -551,7 +552,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         _logger.info("Download finished: %s", file_name)
         interface_sounds.play_for(self, interface_sounds.SOUND_DOWNLOAD_DONE)
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_DOWNLOADS)
 
     def _on_batch_download_finished(self, token, plan, results, failures, total):
         if not self._finish_download_state(token):
@@ -581,7 +582,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         for title, reason in failures:
             _logger.warning("Batch download item failed (%s): %s", title, reason)
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_DOWNLOADS)
         if failures and done:
             wx.CallAfter(offer_task_failures, self, _("Falhas no download"), failures)
 

@@ -10,6 +10,7 @@ from player.youtube_music.account_session import account_connected, optional_acc
 from player.youtube_music.notification_store import YouTubeNotificationStore, account_scope
 
 from ... import interface_sounds
+from ...announcements import ANNOUNCE_NOTIFICATIONS
 from ...i18n import _
 from ...log import get_logger
 from .comments import CommentsContext
@@ -230,7 +231,7 @@ class NotificationsMixin:
         if self._youtube_notification_goes_to_windows() and self._show_youtube_windows_notification(message):
             return True
         interface_sounds.play_for(self, interface_sounds.SOUND_NOTIFICATION)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_NOTIFICATIONS)
         return True
 
     def _youtube_notification_goes_to_windows(self):

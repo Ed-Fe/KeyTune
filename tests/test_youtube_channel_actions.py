@@ -200,7 +200,7 @@ class _Frame(ChannelActionsMixin, CommentsMixin):
         self.loaded.append((view, kwargs))
         return True
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _ensure_youtube_music_authenticated(self):

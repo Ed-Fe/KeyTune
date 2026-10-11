@@ -100,7 +100,7 @@ class _ExplorerFrame(FrameExplorerMixin):
     def __bool__(self):
         return True
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _normalize_path(self, path):
@@ -237,7 +237,7 @@ class _NavigationFrame(FrameLibraryNavigationMixin):
         self._add_recent_media_paths = Mock()
         self._resolve_playlist_state_index = Mock(return_value=0)
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _normalize_path(self, path):

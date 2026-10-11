@@ -50,7 +50,7 @@ class _SearchFrame(FrameItemSearchMixin):
     def _get_browser_panel(self):
         return self._browser
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _set_status_message(self, message, auto_clear_ms=6000):

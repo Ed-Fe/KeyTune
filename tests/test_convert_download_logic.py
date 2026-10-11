@@ -48,7 +48,7 @@ class _ConvertFrame(FrameConvertMixin):
         self._explorer_convert_paths = Mock()
         self._explorer_selected_paths = Mock(return_value=["C:\\musicas\\a.mp3"])
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
 
@@ -129,7 +129,7 @@ class _DownloadFrame(FrameDownloadMixin):
         self._begin_download = Mock()
         self.download_youtube_music_search_selection = Mock()
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
 

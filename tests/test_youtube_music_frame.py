@@ -57,7 +57,7 @@ class _DummyFrame(FrameYouTubeMusicMixin):
     def _refresh_youtube_music_menu_state(self):
         self.menu_refresh_calls += 1
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(str(message))
 
     def _set_status_message(self, message, auto_clear_ms=0):

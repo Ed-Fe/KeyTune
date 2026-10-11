@@ -12,6 +12,7 @@ from ..constants import (
     SLEEP_TIMER_WARNING_MINUTES,
 )
 from .. import interface_sounds
+from ..announcements import ANNOUNCE_TIMER
 from ..i18n import _, ngettext
 from ..sleep_timer import SleepTimerDialog
 
@@ -212,7 +213,8 @@ class FrameSleepTimerMixin:
                     "Temporizador: falta {minutes} minuto.",
                     "Temporizador: faltam {minutes} minutos.",
                     warning_minutes,
-                ).format(minutes=warning_minutes)
+                ).format(minutes=warning_minutes),
+                ANNOUNCE_TIMER,
             )
             return
 

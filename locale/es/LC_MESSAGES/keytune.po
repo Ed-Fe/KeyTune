@@ -7624,3 +7624,36 @@ msgstr "No puedes escribir en este chat: {reason}"
 #: src/player/frames/update.py
 msgid "A última atualização, para a versão {target}, não foi concluída. Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. Se o problema continuar, envie o arquivo de log ao desenvolvedor."
 msgstr "La última actualización, a la versión {target}, no se completó. Sigues en la versión {current}. Inténtalo de nuevo desde Ayuda > Comprobar actualizaciones. Si el problema continúa, envía el archivo de registro al desarrollador."
+
+msgid "Chat ao vivo: mensagens novas"
+msgstr "Chat en vivo: mensajes nuevos"
+
+msgid "Chat ao vivo: mensagem enviada ou chat encerrado"
+msgstr "Chat en vivo: mensaje enviado o chat terminado"
+
+msgid "Notificações novas do YouTube"
+msgstr "Notificaciones nuevas de YouTube"
+
+msgid "Avisos do temporizador"
+msgstr "Avisos del temporizador"
+
+msgid "&Interromper a fala do leitor de tela"
+msgstr "&Interrumpir la voz del lector de pantalla"
+
+msgid "Desligado, o aviso espera o leitor terminar o que está dizendo."
+msgstr "Desactivado, el aviso espera a que el lector termine lo que está diciendo."
+
+msgid "Falar os avisos de &eventos com o KeyTune ativo"
+msgstr "Decir los avisos de &eventos con KeyTune activo"
+
+msgid "Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."
+msgstr "Chat y notificaciones. Desactivado, solo hablan con KeyTune en segundo plano."
+
+msgid "Avisos de eventos que falam:"
+msgstr "Avisos de eventos que hablan:"
+
+msgid "Avisos de eventos que falam"
+msgstr "Avisos de eventos que hablan"
+
+msgid "Espaço liga ou desliga o aviso do item."
+msgstr "Espacio activa o desactiva el aviso del elemento."

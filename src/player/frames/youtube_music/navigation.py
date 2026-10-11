@@ -58,6 +58,8 @@ class YouTubeResultsView:
     kind: str = ""
     # De que a lista trata, para as ações que valem para ela inteira (comentar num vídeo ou post).
     context: object = None
+    # O item em que a lista abre, quando não é o primeiro (a linha de escrever do chat).
+    focus_result_id: str = ""
 
 
 def results_view_summary(view, *, with_hint=True):
@@ -226,6 +228,8 @@ class ResultsNavigationMixin:
             self._reset_youtube_music_results_views(view)
             # Depois de pesquisar, o foco vai do campo de busca para a lista.
             self._youtube_music_pending_results_focus = bool(view.results)
+        if view.focus_result_id:
+            self._youtube_music_pending_result_selection = view.focus_result_id
         self._show_youtube_music_results_view(announce=True)
 
     def _youtube_music_selected_result_id(self):

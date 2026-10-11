@@ -79,7 +79,7 @@ class _SearchFrame(SearchMixin, FrameLibraryNavigationMixin):
         self._play_media = Mock()
         self._select_tab = Mock()
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _run_youtube_music_background_task(self, worker, on_success, on_error=None):

@@ -30,7 +30,7 @@ class _Frame(FrameConvertMixin):
     def _get_active_playlist_state(self):
         return self._state
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _set_status_message(self, message, *, auto_clear_ms=6000):

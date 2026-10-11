@@ -175,7 +175,7 @@ class _Frame(NotificationsMixin):
         self._youtube_notification_store_instance = store
         self.integration_enabled = True
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _set_status_message(self, message):

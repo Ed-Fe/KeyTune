@@ -141,7 +141,7 @@ class _Frame(LiveChatMixin, CommentsMixin, ResultsNavigationMixin):
         self.panel.get_selected_search_result_ids.return_value = []
         self.busy = False
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _youtube_music_library_page_size(self):
@@ -198,8 +198,10 @@ class LiveChatFrameTests(unittest.TestCase):
         view = self._open(frame, LiveChatUpdate(messages=(_message(1),), can_send=True))
 
         self.assertEqual(view.title, "Chat ao vivo de Jornal")
-        self.assertEqual([item.choice_label for item in view.results], ["Enviar uma mensagem...", "@pessoa1: Mensagem 1"])
+        self.assertEqual([item.choice_label for item in view.results], ["@pessoa1: Mensagem 1", "Enviar uma mensagem..."])
         self.assertFalse(view.has_more)
+        # A lista abre na linha de escrever, que fica depois das mensagens mais novas.
+        self.assertEqual(view.focus_result_id, "action:send_chat_message")
         self.wx.CallLater.assert_called_once_with(4000, frame._update_youtube_live_chat)
 
     def test_without_the_account_there_is_no_send_row(self):
@@ -224,7 +226,7 @@ class LiveChatFrameTests(unittest.TestCase):
 
         frame._on_youtube_live_chat_updated(view, LiveChatUpdate(messages=(_message(1), _message(2))))
 
-        self.assertEqual([item.stable_id for item in view.results], ["action:send_chat_message", "chat:m1", "chat:m2"])
+        self.assertEqual([item.stable_id for item in view.results], ["chat:m1", "chat:m2", "action:send_chat_message"])
         self.assertEqual(frame.announcements, ["@pessoa2: Mensagem 2"])
         self.assertEqual(self.wx.CallLater.call_count, 2)
 
@@ -249,7 +251,7 @@ class LiveChatFrameTests(unittest.TestCase):
         with patch.object(live_chat, "LIVE_CHAT_MAX_MESSAGES", 3):
             frame._append_youtube_live_chat_messages(view, [_message(index) for index in range(1, 6)])
 
-        self.assertEqual([item.stable_id for item in view.results], ["action:send_chat_message", "chat:m3", "chat:m4", "chat:m5"])
+        self.assertEqual([item.stable_id for item in view.results], ["chat:m3", "chat:m4", "chat:m5", "action:send_chat_message"])
 
     def test_the_end_of_the_broadcast_stops_the_following(self):
         frame = _Frame()

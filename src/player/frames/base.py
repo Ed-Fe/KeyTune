@@ -2,6 +2,7 @@ import wx
 
 from .. import interface_sounds
 from ..accessibility import ScreenReaderAnnouncer
+from ..announcements import should_speak as should_speak_announcement
 from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
 from ..log import setup_logging
 from ..preferences import load_settings, save_settings
@@ -151,10 +152,21 @@ class MediaPlayerFrame(
         self._schedule_startup_update_check()
         wx.CallAfter(self._show_welcome_screen_if_first_run)
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
+        """Fala *message*. Com *category*, vale também a preferência dessa categoria de aviso."""
         if not self.settings.announcements_enabled:
             return
-        self.announcer.speak(message)
+        if category is not None and not should_speak_announcement(
+            self.settings, category, window_active=self._window_is_active_for_announcements()
+        ):
+            return
+        self.announcer.speak(message, interrupt=bool(getattr(self.settings, "announcements_interrupt", False)))
+
+    def _window_is_active_for_announcements(self):
+        try:
+            return bool(self.IsShown() and not self.IsIconized() and self.IsActive())
+        except Exception:
+            return False
 
     def _save_settings(self):
         try:

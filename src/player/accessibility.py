@@ -96,11 +96,12 @@ class ScreenReaderAnnouncer:
         self._worker_thread = threading.Thread(target=self._worker, daemon=True)
         self._worker_thread.start()
 
-    def speak(self, message):
+    def speak(self, message, interrupt=True):
+        """Fala *message*; com ``interrupt=False`` espera a fala do leitor de tela acabar."""
         if not self._enabled or not message:
             return
 
-        self._queue.put(message)
+        self._queue.put((message, bool(interrupt)))
 
     def close(self):
         self.request_close()
@@ -138,12 +139,12 @@ class ScreenReaderAnnouncer:
             return
 
         while True:
-            message = self._queue.get()
-            if message is self._stop_token:
+            item = self._queue.get()
+            if item is self._stop_token:
                 break
 
             try:
-                self._speak_message(message)
+                self._speak_message(*item)
             except Exception:
                 continue
 
@@ -156,7 +157,7 @@ class ScreenReaderAnnouncer:
             except queue.Empty:
                 return
 
-    def _speak_message(self, message):
+    def _speak_message(self, message, interrupt=True):
         if not self._output:
             return
 
@@ -168,7 +169,7 @@ class ScreenReaderAnnouncer:
                 pass
 
         try:
-            self._output.speak(message, interrupt=True)
+            self._output.speak(message, interrupt=interrupt)
             return
         except TypeError:
             pass

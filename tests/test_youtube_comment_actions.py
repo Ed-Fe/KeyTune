@@ -109,7 +109,7 @@ class _Frame(CommentActionsMixin, CommentsMixin, ResultsNavigationMixin):
         if view is not None:
             self._youtube_music_results_views().append(view)
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announcements.append(message)
 
     def _ensure_youtube_music_authenticated(self):

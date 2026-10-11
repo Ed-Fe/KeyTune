@@ -487,7 +487,7 @@ En una transmisión que está en el aire, **Ver el chat en vivo**, en el menú *
 - La lista trae los mensajes más recientes y crece sola: KeyTune busca los nuevos cada 4 segundos y los pone al final, guardando los últimos 500.
 - Los mensajes que llegan se dicen, como máximo tres cada vez en un chat con mucho movimiento. **Dejar de decir los mensajes del chat**, en el menú **Acciones...**, apaga la voz; la lista sigue creciendo.
 - `Enter` abre el mensaje completo en un cuadro de lectura.
-- **Enviar un mensaje...**, la primera línea de la lista, envía un mensaje con tu cuenta. Solo aparece con la cuenta conectada. Cuando el chat no acepta mensajes de tu cuenta (solo para suscriptores o solo para miembros, por ejemplo), la línea dice **No puedes escribir en este chat** y el motivo que da YouTube.
+- **Enviar un mensaje...**, la última línea de la lista, después de los mensajes más nuevos, envía un mensaje con tu cuenta. La lista se abre en ella: `Flecha arriba` lee el mensaje más reciente, sin tener que bajar hasta el final. Solo aparece con la cuenta conectada. Cuando el chat no acepta mensajes de tu cuenta (solo para suscriptores o solo para miembros, por ejemplo), la línea dice **No puedes escribir en este chat** y el motivo que da YouTube.
 - `Retroceso` sale del chat y deja de seguirlo. Cuando la transmisión termina, KeyTune avisa.
 
 El comando **Ver chat en vivo del contenido actual** no tiene atajo de fábrica; para darle uno, usa **Configuración > Personalizar teclado**.
@@ -797,6 +797,8 @@ Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace 
 ### Accesibilidad
 
 La primera opción es **Activar anuncios de accesibilidad**. Activada, el reproductor anuncia al lector de pantalla los cambios de tiempo, volumen, cambio de pestañas y estado. Desactivada, esos anuncios se detienen. Los atajos de anuncio bajo demanda (`T`, `V` y `S`) funcionan en cualquier caso. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
+
+**Interrumpir la voz del lector de pantalla** viene desactivada: el anuncio espera a que el lector termine lo que está diciendo, en lugar de cortarlo. Activada, el anuncio habla al instante, por encima. **Decir los avisos de eventos con KeyTune activo** decide si los avisos que llegan solos hablan mientras estás en la ventana de KeyTune; desactivada, solo hablan con KeyTune en segundo plano (los sonidos siguen sonando). La lista **Avisos de eventos que hablan** activa y desactiva cada uno: mensajes nuevos del chat en vivo, mensaje enviado o chat terminado, notificaciones nuevas de YouTube, descarga terminada y avisos del temporizador.
 
 El grupo **Sonidos de aviso** tiene **Reproducir sonidos de aviso**, que los activa o desactiva todos a la vez, **Volumen de los sonidos de aviso** y la lista **Sonidos que suenan**, con una casilla por sonido: `Espacio` activa o desactiva el sonido del elemento y, al activarlo, suena para que sepas cuál es. Debajo de la lista, **Escuchar el sonido** reproduce el del elemento seleccionado, **Elegir un archivo para el sonido...** pone un audio de tu equipo en su lugar y **Volver al sonido original** deshace el cambio. El archivo elegido se copia a los datos de KeyTune y se corta a los 5 segundos; con FFmpeg instalado sirve cualquier formato de audio, sin él solo WAV de 16 bits. Son sonidos cortos, cada uno para un suceso:
 
