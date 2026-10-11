@@ -137,6 +137,7 @@ def normalize_youtube_entry(entry, *, show_owner=True):
         source_badge="YouTube",
         owner_browse_id=str(entry.get("channel_id") or "").strip() if owner else "",
         owner_title=owner,
+        is_live=str(entry.get("live_status") or "").strip() == "is_live",
     )
 
 

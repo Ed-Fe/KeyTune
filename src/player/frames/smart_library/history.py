@@ -11,6 +11,7 @@ from ...constants import (
     SMART_LIBRARY_HISTORY_MINIMUM_MS,
     SMART_LIBRARY_HISTORY_PROGRESS_FRACTION,
 )
+from ... import interface_sounds
 from ...i18n import _
 from ...smart_library import HISTORY_ACTION_ENQUEUE, PlaybackHistoryDialog
 
@@ -108,6 +109,7 @@ class SmartLibraryHistoryMixin:
             self._announce_smart_library_unavailable()
             return
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         with wx.MessageDialog(
             self,
             _("Deseja apagar todo o histórico de reprodução?"),

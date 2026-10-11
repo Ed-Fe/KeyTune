@@ -1,3 +1,4 @@
+from ... import interface_sounds
 from ...i18n import _, ngettext
 import wx
 
@@ -72,6 +73,9 @@ class PlaylistEditMixin:
             normalized_message = str(message or _("Avaliação da mídia atual enviada ao YouTube Music.")).strip()
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
+            interface_sounds.play_for(
+                self, interface_sounds.SOUND_LIKE if normalized_rating == "LIKE" else interface_sounds.SOUND_UNLIKE
+            )
             self._announce(normalized_message)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
@@ -81,6 +85,7 @@ class PlaylistEditMixin:
                 self._play_adjacent_item(1)
 
         def on_error(exc):
+            interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
             wx.MessageBox(
                 _("Não foi possível avaliar a mídia atual no YouTube.") + "\n\n" + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
                 "KeyTube",
@@ -268,6 +273,7 @@ class PlaylistEditMixin:
 
         # Editing a remote playlist changes the user's account and is not
         # undoable from the player, so confirm before touching the server.
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         confirmation = wx.MessageBox(
             ngettext(
                 "Remover {count} faixa da playlist \"{title}\" no YouTube Music?",
@@ -422,6 +428,7 @@ class PlaylistEditMixin:
 
         # Deleting a remote playlist removes it from the account entirely and
         # is not undoable from the player, so confirm before touching the server.
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         confirmation = wx.MessageBox(
             _("Excluir a playlist \"{title}\" do YouTube Music?").format(title=playlist_title)
             + "\n\n"

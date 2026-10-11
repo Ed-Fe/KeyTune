@@ -2,6 +2,9 @@ import { Innertube, UniversalCache } from "youtubei.js";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
+import { createAccountFetch, createAccountHandlers } from "./account.mjs";
+import { createCommentHandlers, rememberRawEntities } from "./comments.mjs";
+import { createLiveChatHandlers } from "./live_chat.mjs";
 
 const RESULT_PREFIX = "KEYTUNE_YOUTUBEJS_RESULT=";
 const PROBE_TIMEOUT_MS = 15_000;
@@ -170,6 +173,7 @@ clientFor();
 // O cliente da conta: os mesmos cookies do YouTube Music. Fica separado dos anônimos
 // porque, com os cookies, o YouTube recusa a reprodução pelos clientes que o KeyTune usa.
 let accountClient = { key: "", client: null };
+const accountFetch = createAccountFetch(rememberRawEntities);
 
 function accountKey(request) {
   const cookie = String(request.cookie || "").trim();
@@ -192,6 +196,9 @@ function accountClientFor(request) {
       cookie: String(request.cookie).trim(),
       account_index: accountIndex(request),
       lang: String(request.lang || "").trim() || "en",
+      // Mantém as leituras em dia com o que a conta acabou de mudar e guarda, de cada lote
+      // de comentários, o que responder, editar e apagar usam.
+      fetch: accountFetch,
     };
     const location = String(request.location || "").trim().toUpperCase();
     if (location) {
@@ -387,89 +394,6 @@ async function search(request) {
   return listingPage(listing, start, count, listing.feed?.has_continuation);
 }
 
-function commentEntry(thread, listing) {
-  const comment = thread.comment || thread;
-  if (!comment?.comment_id) {
-    return null;
-  }
-  listing.threads?.set(comment.comment_id, thread);
-  return {
-    id: comment.comment_id,
-    author: textOf(comment.author?.name),
-    text: textOf(comment.content),
-    likes: textOf(comment.like_count),
-    published: textOf(comment.published_time),
-    reply_count: textOf(comment.reply_count),
-    // Só os comentários principais guardam a conversa de onde saem as respostas.
-    has_replies: Boolean(listing.threads && thread.has_replies),
-    pinned: Boolean(comment.is_pinned),
-    title: "-",
-  };
-}
-
-async function comments(request) {
-  const videoId = videoIdFrom(request.media_url);
-  if (!videoId) {
-    throw new Error("URL do YouTube sem identificador de vídeo.");
-  }
-  const { start, count } = pageBounds(request);
-  const key = JSON.stringify(["comments", request.lang, request.location, videoId]);
-  let listing = listings.get(key);
-  if (!listing || start === 0) {
-    const innertube = await clientFor(request);
-    listing = { entries: [], seen: new Set(), threads: new Map(), feed: null };
-    try {
-      listing.feed = await innertube.getComments(videoId);
-    } catch (error) {
-      // É assim que a biblioteca avisa que o vídeo está com os comentários desativados.
-      if (!String(error?.message).includes("did not have any content")) {
-        throw error;
-      }
-    }
-    collectEntries(listing, listing.feed?.contents, (thread) => commentEntry(thread, listing));
-  }
-  rememberListing(key, listing);
-  while (listing.entries.length < start + count && listing.feed?.has_continuation) {
-    listing.feed = await listing.feed.getContinuation();
-    collectEntries(listing, listing.feed.contents, (thread) => commentEntry(thread, listing));
-  }
-  return listingPage(listing, start, count, listing.feed?.has_continuation);
-}
-
-async function commentReplies(request) {
-  const videoId = videoIdFrom(request.media_url);
-  const commentId = String(request.comment_id || "");
-  const { start, count } = pageBounds(request);
-  const key = JSON.stringify(["replies", request.lang, request.location, videoId, commentId]);
-  let listing = listings.get(key);
-  if (!listing || start === 0) {
-    const parent = listings.get(JSON.stringify(["comments", request.lang, request.location, videoId]));
-    const thread = parent?.threads.get(commentId);
-    if (!thread) {
-      throw new Error("Os comentários deste vídeo precisam ser abertos de novo.");
-    }
-    listing = { entries: [], seen: new Set(), innertube: await clientFor(request), next: null };
-    // O YouTube manda as respostas em dois formatos, conforme a sessão; os dois chegam aqui.
-    const replyData = thread.comment_replies_data;
-    takeReplyNodes(listing, [...(replyData?.sub_threads || []), ...(replyData?.contents || [])]);
-  }
-  rememberListing(key, listing);
-  while (listing.entries.length < start + count && listing.next) {
-    const endpoint = listing.next.button?.endpoint || listing.next.endpoint;
-    listing.next = null;
-    const response = await endpoint.call(listing.innertube.actions, { parse: true });
-    for (const action of response.on_response_received_endpoints || []) {
-      takeReplyNodes(listing, [...(action.contents || [])]);
-    }
-  }
-  return listingPage(listing, start, count, listing.next);
-}
-
-function takeReplyNodes(listing, nodes) {
-  collectEntries(listing, nodes.filter((node) => node.type !== "ContinuationItem"), (reply) => commentEntry(reply, listing));
-  listing.next = nodes.find((node) => node.type === "ContinuationItem") || listing.next;
-}
-
 async function audioTrackFormats(innertube, videoId) {
   const info = await innertube.getBasicInfo(videoId, { client: "IOS" });
   const formats = new Map();
@@ -594,15 +518,32 @@ async function resolve(request) {
   };
 }
 
+// O que os módulos de comentários e da conta usam daqui: os clientes e as listas paginadas.
+const listingTools = {
+  clientFor,
+  accountClientFor,
+  accountKey,
+  accountListing,
+  feedVideoEntry,
+  listings,
+  rememberListing,
+  pageBounds,
+  collectEntries,
+  listingPage,
+  textOf,
+  videoIdFrom,
+};
+
 const HANDLERS = {
   resolve,
   search,
-  comments,
-  comment_replies: commentReplies,
   audio_tracks: audioTracks,
   details,
   subscription_videos: subscriptionVideos,
   subscribed_channels: subscribedChannels,
+  ...createCommentHandlers(listingTools),
+  ...createAccountHandlers(listingTools),
+  ...createLiveChatHandlers(listingTools),
 };
 
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });

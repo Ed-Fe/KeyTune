@@ -12,8 +12,15 @@ from dataclasses import dataclass, field
 import wx
 
 from player.youtube_music.folders import (
+    ACTION_CHANNEL_ABOUT,
+    ACTION_CHANNEL_SEARCH,
+    ACTION_CHANNEL_SUBSCRIPTION,
+    ACTION_SEND_CHAT_MESSAGE,
+    ACTION_WRITE_COMMENT,
     FOLDER_LIBRARY,
     FOLDER_SECTION,
+    channel_action_items,
+    channel_posts_item,
     home_folder_items,
     section_folder_items,
 )
@@ -22,6 +29,7 @@ from player.youtube_music.models import (
     YOUTUBE_CHANNEL_SECTIONS,
 )
 
+from ... import interface_sounds
 from ...i18n import _, ngettext
 
 
@@ -48,13 +56,16 @@ class YouTubeResultsView:
     summary: str = ""
     # ``VIEW_KIND_HOME`` ou ``VIEW_KIND_LIBRARY``; vazio nas demais.
     kind: str = ""
+    # De que a lista trata, para as ações que valem para ela inteira (comentar num vídeo ou post).
+    context: object = None
 
 
 def results_view_summary(view, *, with_hint=True):
     if view.summary:
         return view.summary
 
-    result_count = len(view.results)
+    # As linhas de ação (escrever um comentário, inscrever-se) não são itens da lista.
+    result_count = sum(1 for result in view.results if getattr(result, "result_type", "") != "action")
     if result_count == 0:
         return _("{title}: nenhum item.").format(title=view.title)
 
@@ -138,10 +149,11 @@ class ResultsNavigationMixin:
         sections = container_sections(result)
         if sections and not section_id:
             # Canal e artista têm várias listas: primeiro se escolhe qual ver.
-            return YouTubeResultsView(
-                title=container_title(result),
-                results=section_folder_items(result, sections),
-            )
+            items = section_folder_items(result, sections)
+            if getattr(result, "result_type", "") == "channel":
+                items.append(channel_posts_item(result))
+                items.extend(channel_action_items(result))
+            return YouTubeResultsView(title=container_title(result), results=items)
         service = self._get_youtube_music_service()
 
         def fetch_page(start, count):
@@ -161,8 +173,9 @@ class ResultsNavigationMixin:
     def _load_youtube_music_results_view(self, view, *, mode, error_message=None, focus_results=False):
         """Carrega a primeira página de *view* e a mostra.
 
-        *mode*: ``"reset"`` recomeça a navegação a partir do início (nova busca) e
-        ``"push"`` abre por cima da lista atual. *focus_results* leva o foco à lista
+        *mode*: ``"reset"`` recomeça a navegação a partir do início (nova busca),
+        ``"push"`` abre por cima da lista atual e ``"replace"`` põe no lugar dela
+        (a mesma lista em outra ordem). *focus_results* leva o foco à lista
         quando ela chega, para o que é aberto de fora dela (menu, atalho).
         """
         if error_message is None:
@@ -202,6 +215,11 @@ class ResultsNavigationMixin:
         if mode == "push":
             views[-1].selected_id = self._youtube_music_selected_result_id()
             views.append(view)
+            interface_sounds.play_for(self, interface_sounds.SOUND_OPEN)
+            if focus_results:
+                self._youtube_music_pending_results_focus = bool(view.results)
+        elif mode == "replace" and len(views) > 1:
+            views[-1] = view
             if focus_results:
                 self._youtube_music_pending_results_focus = bool(view.results)
         else:
@@ -236,6 +254,8 @@ class ResultsNavigationMixin:
         if result is None or not getattr(result, "can_browse", False):
             self._announce(_("Este resultado não tem conteúdo para abrir."))
             return False
+        if getattr(result, "result_type", "") == "action":
+            return self._run_youtube_music_action_item(result)
 
         if getattr(result, "kind", "") == FOLDER_SECTION:
             container, section_id = result.payload
@@ -246,6 +266,10 @@ class ResultsNavigationMixin:
             view = self._build_youtube_music_folder_view(result)
         elif getattr(result, "result_type", "") == "comment":
             view = self._build_youtube_music_replies_view(result)
+        elif getattr(result, "result_type", "") == "post":
+            view = self._build_youtube_music_post_comments_view(result)
+        elif getattr(result, "result_type", "") == "notification":
+            view = self._build_youtube_notification_conversation_view(result)
         else:
             view = self._build_youtube_music_container_view(result)
         if view is None:
@@ -265,6 +289,58 @@ class ResultsNavigationMixin:
             self._auto_load_youtube_music_library_if_needed()
         return started
 
+    def _run_youtube_music_action_item(self, item):
+        """Faz o que a linha de ação *item* diz: comentar na lista ou cuidar do canal."""
+        if item.kind == ACTION_WRITE_COMMENT:
+            return self.write_youtube_music_comment(self._youtube_music_current_results_view().context)
+        if item.kind == ACTION_CHANNEL_SUBSCRIPTION:
+            return self.manage_youtube_channel_subscription(item.payload)
+        if item.kind == ACTION_CHANNEL_ABOUT:
+            return self.show_youtube_channel_about(item.payload)
+        if item.kind == ACTION_CHANNEL_SEARCH:
+            return self.search_youtube_channel(item.payload)
+        if item.kind == ACTION_SEND_CHAT_MESSAGE:
+            return self.send_youtube_live_chat_message()
+        return False
+
+    def _replace_youtube_music_result(self, old_result, new_result=None):
+        """Troca *old_result* por *new_result* na lista atual, ou o tira dela sem *new_result*."""
+        view = self._youtube_music_current_results_view()
+        for index, result in enumerate(view.results):
+            if result.stable_id != old_result.stable_id:
+                continue
+            if new_result is None:
+                del view.results[index]
+                neighbors = view.results[index:index + 1] or view.results[-1:]
+                selected_id = neighbors[0].stable_id if neighbors else ""
+            else:
+                view.results[index] = new_result
+                selected_id = new_result.stable_id
+            self._show_youtube_music_results_view(announce=False, selected_id=selected_id)
+            return True
+        return False
+
+    def _reload_youtube_music_results_view(self, view):
+        """Busca de novo o começo de *view*, se ela ainda é a lista na tela."""
+        if view is not self._youtube_music_current_results_view() or view.fetch_page is None:
+            return False
+        page_size = self._youtube_music_library_page_size()
+
+        def worker():
+            return view.fetch_page(0, page_size)
+
+        def on_success(page):
+            if view is not self._youtube_music_current_results_view():
+                return
+            selected_id = self._youtube_music_selected_result_id()
+            view.results = list(page.results)
+            view.has_more = bool(page.has_more and page.results)
+            view.next_start = page_size
+            self._show_youtube_music_results_view(announce=False, selected_id=selected_id)
+
+        # Sem aviso de erro: a ação que pediu a recarga já foi feita e anunciada.
+        return self._run_youtube_music_background_task(worker, on_success, on_error=lambda _exc: None)
+
     def on_youtube_music_results_back(self):
         views = self._youtube_music_results_views()
         if len(views) <= 1:
@@ -272,6 +348,7 @@ class ResultsNavigationMixin:
             return False
 
         views.pop()
+        interface_sounds.play_for(self, interface_sounds.SOUND_BACK)
         self._show_youtube_music_results_view(announce=True, selected_id=views[-1].selected_id)
         return True
 
@@ -284,6 +361,7 @@ class ResultsNavigationMixin:
 
         start = view.next_start
         page_size = self._youtube_music_library_page_size()
+        interface_sounds.play_for(self, interface_sounds.SOUND_LOADING)
         self._announce(_("Carregando mais itens."))
 
         def worker():

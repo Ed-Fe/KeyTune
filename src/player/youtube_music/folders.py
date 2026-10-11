@@ -1,8 +1,8 @@
 """Itens da lista do YouTube Music que só servem para entrar.
 
 A aba mostra tudo numa lista só: o início traz a biblioteca, as curtidas, o
-histórico, as inscrições, o que está em alta e os moods e gêneros, e cada um abre por cima,
-como uma pasta. Aqui ficam esses itens; quem busca o conteúdo é a janela.
+histórico, as inscrições, as notificações, o que está em alta e os moods e gêneros, e cada
+um abre por cima, como uma pasta. Aqui ficam esses itens; quem busca o conteúdo é a janela.
 """
 
 from dataclasses import dataclass
@@ -14,8 +14,10 @@ from .models import get_chart_country_groups
 FOLDER_LIBRARY = "library"
 FOLDER_LIKED = "liked"
 FOLDER_HISTORY = "history"
+FOLDER_WATCH_HISTORY = "watch_history"
 FOLDER_SUBSCRIPTION_VIDEOS = "subscription_videos"
 FOLDER_SUBSCRIBED_CHANNELS = "subscribed_channels"
+FOLDER_NOTIFICATIONS = "notifications"
 FOLDER_CHARTS = "charts"
 FOLDER_CHART_GROUP = "chart_group"
 FOLDER_CHART_COUNTRY = "chart_country"
@@ -23,6 +25,13 @@ FOLDER_MOODS = "moods"
 FOLDER_MOOD_SECTION = "mood_section"
 FOLDER_MOOD_CATEGORY = "mood_category"
 FOLDER_SECTION = "section"
+FOLDER_CHANNEL_POSTS = "channel_posts"
+
+ACTION_WRITE_COMMENT = "write_comment"
+ACTION_CHANNEL_SUBSCRIPTION = "channel_subscription"
+ACTION_CHANNEL_ABOUT = "channel_about"
+ACTION_CHANNEL_SEARCH = "channel_search"
+ACTION_SEND_CHAT_MESSAGE = "send_chat_message"
 
 
 @dataclass(frozen=True)
@@ -60,13 +69,66 @@ class YouTubeFolderItem:
         return self.title
 
 
+@dataclass(frozen=True)
+class YouTubeActionItem:
+    """Um item que faz algo com a lista em que está (comentar, inscrever-se): Enter executa."""
+
+    kind: str
+    title: str
+    # De que a ação trata, quando não é da lista inteira: o canal, por exemplo.
+    payload: object = None
+
+    # A lista trata a ação como um resultado que não toca nem é salvo.
+    result_type = "action"
+    source = ""
+    playlist_id = ""
+    video_id = ""
+    browse_id = ""
+    playback_url = ""
+    detail_text = ""
+    library_playlist = False
+    can_browse = True
+    opens_on_enter = True
+    can_save = False
+    can_open = False
+
+    @property
+    def stable_id(self):
+        return f"action:{self.kind}"
+
+    @property
+    def choice_label(self):
+        return self.title
+
+
+def write_comment_item():
+    """A primeira linha de uma lista de comentários em que a conta pode escrever."""
+    return YouTubeActionItem(ACTION_WRITE_COMMENT, _("Escrever um comentário..."))
+
+
+def send_chat_message_item():
+    """A primeira linha de um chat ao vivo em que a conta pode escrever."""
+    return YouTubeActionItem(ACTION_SEND_CHAT_MESSAGE, _("Enviar uma mensagem..."))
+
+
+def channel_action_items(channel):
+    """O que a conta faz com um canal, depois das listas dele."""
+    return [
+        YouTubeActionItem(ACTION_CHANNEL_SEARCH, _("Buscar neste canal..."), payload=channel),
+        YouTubeActionItem(ACTION_CHANNEL_SUBSCRIPTION, _("Inscrição e notificações do canal..."), payload=channel),
+        YouTubeActionItem(ACTION_CHANNEL_ABOUT, _("Sobre o canal"), payload=channel),
+    ]
+
+
 def home_folder_items():
     return [
         YouTubeFolderItem(FOLDER_LIBRARY, _("Suas playlists e mixes"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIKED, _("Curtidas"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_HISTORY, _("Histórico"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_HISTORY, _("Histórico do YouTube Music"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_WATCH_HISTORY, _("Histórico do YouTube"), requires_auth=True),
         YouTubeFolderItem(FOLDER_SUBSCRIPTION_VIDEOS, _("Vídeos das inscrições"), requires_auth=True),
         YouTubeFolderItem(FOLDER_SUBSCRIBED_CHANNELS, _("Canais inscritos"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_NOTIFICATIONS, _("Notificações"), requires_auth=True),
         YouTubeFolderItem(FOLDER_CHARTS, _("Em alta")),
         YouTubeFolderItem(FOLDER_MOODS, _("Moods e gêneros")),
     ]
@@ -93,6 +155,11 @@ def section_folder_items(container, sections):
         YouTubeFolderItem(FOLDER_SECTION, section.label, payload=(container, section.section_id))
         for section in sections
     ]
+
+
+def channel_posts_item(channel):
+    """A aba "Posts" de um canal, que vem do YouTube.js e não das seções do catálogo."""
+    return YouTubeFolderItem(FOLDER_CHANNEL_POSTS, _("Posts"), payload=channel)
 
 
 def mood_category_items(categories):

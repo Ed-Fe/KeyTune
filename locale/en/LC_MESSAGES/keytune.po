@@ -7028,3 +7028,586 @@ msgstr "Loading the whole list."
 
 msgid "Carregando todas as playlists do YouTube Music."
 msgstr "Loading all YouTube Music playlists."
+
+msgid "&Notificações do YouTube"
+msgstr "YouTube &notifications"
+
+msgid "&Tocar o vídeo do post"
+msgstr "&Play the post's video"
+
+msgid "A cada {minutes} minutos"
+msgstr "Every {minutes} minutes"
+
+msgid "Apagar este comentário da sua conta do YouTube? Isto não pode ser desfeito."
+msgstr "Delete this comment from your YouTube account? This cannot be undone."
+
+msgid "Apagar o meu comentário"
+msgstr "Delete my comment"
+
+msgid "Apagar o meu comentário..."
+msgstr "Delete my comment..."
+
+msgid "Avisar das notificações novas"
+msgstr "Announce new notifications"
+
+msgid "Cancelar a inscrição"
+msgstr "Unsubscribe"
+
+msgid "Carregando os dados do canal."
+msgstr "Loading the channel's information."
+
+msgid "Comentário apagado."
+msgstr "Comment deleted."
+
+msgid "Comentário curtido."
+msgstr "Comment liked."
+
+msgid "Comentário editado."
+msgstr "Comment edited."
+
+msgid "Comentário marcado com não gostei."
+msgstr "Comment disliked."
+
+msgid "Comentário publicado."
+msgstr "Comment posted."
+
+msgid "Comentário, publicado com a sua conta do YouTube:"
+msgstr "Comment, posted with your YouTube account:"
+
+msgid "Comentários do post de {author}"
+msgstr "Comments on {author}'s post"
+
+msgid "Conecte a conta do YouTube para fazer isto."
+msgstr "Connect your YouTube account to do this."
+
+msgid "Consultando a inscrição em {channel}."
+msgstr "Checking your subscription to {channel}."
+
+msgid "Curtida removida."
+msgstr "Like removed."
+
+msgid "Curtir o comentário"
+msgstr "Like the comment"
+
+msgid "Editar o meu comentário"
+msgstr "Edit my comment"
+
+msgid "Editar o meu comentário..."
+msgstr "Edit my comment..."
+
+msgid "Escrever um comentário"
+msgstr "Write a comment"
+
+msgid "Escrever um comentário..."
+msgstr "Write a comment..."
+
+msgid "Inscrição cancelada em {channel}."
+msgstr "Unsubscribed from {channel}."
+
+msgid "Inscrição e notificações do canal..."
+msgstr "Channel subscription and notifications..."
+
+msgid "Inscrição feita em {channel}."
+msgstr "Subscribed to {channel}."
+
+msgid "Inscrição no canal"
+msgstr "Channel subscription"
+
+msgid "Isto precisa do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "This needs YouTube.js, turned on in Preferences > Additional resources."
+
+msgid "Ler o post inteiro (Enter)"
+msgstr "Read the whole post (Enter)"
+
+msgid "Links:"
+msgstr "Links:"
+
+msgid "Marcar como lida"
+msgstr "Mark as read"
+
+msgid "Nada foi escrito: o comentário não foi enviado."
+msgstr "Nothing was written: the comment was not sent."
+
+msgid "Notificação marcada como lida."
+msgstr "Notification marked as read."
+
+msgid "Notificação ocultada."
+msgstr "Notification hidden."
+
+msgid "Notificações"
+msgstr "Notifications"
+
+msgid "Notificações do YouTube"
+msgstr "YouTube notifications"
+
+msgid "Nova notificação do YouTube: {title}"
+msgstr "New YouTube notification: {title}"
+
+msgid "Novo texto do comentário:"
+msgstr "New text of the comment:"
+
+msgid "Nunca"
+msgstr "Never"
+
+msgid "Não foi possível apagar o comentário."
+msgstr "Could not delete the comment."
+
+msgid "Não foi possível avaliar o comentário."
+msgstr "Could not rate the comment."
+
+msgid "Não foi possível carregar as notificações agora."
+msgstr "Could not load the notifications right now."
+
+msgid "Não foi possível carregar os dados do canal agora."
+msgstr "Could not load the channel's information right now."
+
+msgid "Não foi possível consultar a inscrição neste canal."
+msgstr "Could not check your subscription to this channel."
+
+msgid "Não foi possível editar o comentário."
+msgstr "Could not edit the comment."
+
+msgid "Não foi possível marcar a notificação como lida."
+msgstr "Could not mark the notification as read."
+
+msgid "Não foi possível ocultar a notificação."
+msgstr "Could not hide the notification."
+
+msgid "Não foi possível publicar a resposta."
+msgstr "Could not post the reply."
+
+msgid "Não foi possível publicar o comentário."
+msgstr "Could not post the comment."
+
+msgid "Não gostei do comentário"
+msgstr "Dislike the comment"
+
+msgid "Não gostei removido."
+msgstr "Dislike removed."
+
+msgid "Não receber notificações"
+msgstr "Receive no notifications"
+
+msgid "O KeyTune consulta a caixa da conta e fala as notificações que chegaram."
+msgstr "KeyTune checks the account's inbox and speaks the notifications that arrived."
+
+msgid "O YouTube não aceitou a mudança em {channel}."
+msgstr "YouTube did not accept the change to {channel}."
+
+msgid "O comentário está vazio."
+msgstr "The comment is empty."
+
+msgid "Ocultar esta notificação"
+msgstr "Hide this notification"
+
+msgid "Os dados do canal precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "The channel's information needs YouTube.js, turned on in Preferences > Additional resources."
+
+msgid "Os posts dos canais precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Channel posts need YouTube.js, turned on in Preferences > Additional resources."
+
+msgid "País: {country}"
+msgstr "Country: {country}"
+
+msgid "Post"
+msgstr "Post"
+
+msgid "Post de {author}"
+msgstr "Post by {author}"
+
+msgid "Posts"
+msgstr "Posts"
+
+msgid "Posts de {channel}"
+msgstr "Posts by {channel}"
+
+msgid "Receber notificações personalizadas"
+msgstr "Receive personalized notifications"
+
+msgid "Receber todas as notificações"
+msgstr "Receive all notifications"
+
+msgid "Remover a curtida"
+msgstr "Remove the like"
+
+msgid "Remover o não gostei"
+msgstr "Remove the dislike"
+
+msgid "Responder a {author}"
+msgstr "Reply to {author}"
+
+msgid "Responder..."
+msgstr "Reply..."
+
+msgid "Resposta publicada."
+msgstr "Reply posted."
+
+msgid "Resposta, publicada com a sua conta do YouTube:"
+msgstr "Reply, posted with your YouTube account:"
+
+msgid "Sobre o canal"
+msgstr "About the channel"
+
+msgid "Sobre {channel}"
+msgstr "About {channel}"
+
+msgid "Ver &comentários"
+msgstr "View &comments"
+
+msgid "Você está inscrito em {channel}. O que este canal avisa:"
+msgstr "You are subscribed to {channel}. What this channel notifies you of:"
+
+msgid "Você não está inscrito em {channel}. Inscrever-se?"
+msgstr "You are not subscribed to {channel}. Subscribe?"
+
+msgid "com imagem"
+msgstr "with image"
+
+msgid "enquete"
+msgstr "poll"
+
+msgid "enquete: {choices}"
+msgstr "poll: {choices}"
+
+msgid "nenhuma notificação"
+msgstr "no notifications"
+
+msgid "notificações personalizadas"
+msgstr "personalized notifications"
+
+msgid "não lida"
+msgstr "unread"
+
+msgid "post sem texto"
+msgstr "post without text"
+
+msgid "seu comentário"
+msgstr "your comment"
+
+msgid "todas as notificações"
+msgstr "all notifications"
+
+msgid "você curtiu"
+msgstr "you liked it"
+
+msgid "você não gostou"
+msgstr "you disliked it"
+
+msgid "vídeo: {title}"
+msgstr "video: {title}"
+
+msgid "{channel}: {level}."
+msgstr "{channel}: {level}."
+
+msgid "{count} comentários"
+msgstr "{count} comments"
+
+msgid "{count} novas notificações do YouTube. A mais recente: {title}"
+msgstr "{count} new YouTube notifications. The latest: {title}"
+
+msgid "Abrir (Enter)"
+msgstr "Open (Enter)"
+
+msgid "Não há ações para este item."
+msgstr "There are no actions for this item."
+
+msgid "Ver comentários (Seta para a direita)"
+msgstr "View comments (Right arrow)"
+
+msgid "Ver respostas (Seta para a direita)"
+msgstr "View replies (Right arrow)"
+
+msgid "&Votar na enquete..."
+msgstr "&Vote in the poll..."
+
+msgid "A busca no canal precisa do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "Searching in the channel needs YouTube.js, turned on in Preferences > Additional resources."
+
+msgid "A mensagem está vazia."
+msgstr "The message is empty."
+
+msgid "A mídia atual não é do YouTube: não há chat ao vivo."
+msgstr "The current media is not from YouTube: there is no live chat."
+
+msgid "As mensagens do chat não serão mais faladas."
+msgstr "Chat messages will no longer be spoken."
+
+msgid "As mensagens do chat serão faladas."
+msgstr "Chat messages will be spoken."
+
+msgid "Busca por {query} em {channel}"
+msgstr "Search for {query} in {channel}"
+
+msgid "Buscar neste canal"
+msgstr "Search in this channel"
+
+msgid "Buscar neste canal..."
+msgstr "Search in this channel..."
+
+msgid "Buscar nos vídeos de {channel}:"
+msgstr "Search in {channel}'s videos:"
+
+msgid "Chat ao vivo"
+msgstr "Live chat"
+
+msgid "Chat ao vivo de {title}"
+msgstr "Live chat of {title}"
+
+msgid "Conversa da notificação"
+msgstr "Notification's conversation"
+
+msgid "Digite algo para buscar no canal."
+msgstr "Type something to search in the channel."
+
+msgid "Enquete de {author}. Votar em:"
+msgstr "Poll by {author}. Vote for:"
+
+msgid "Enviar uma mensagem"
+msgstr "Send a message"
+
+msgid "Enviar uma mensagem..."
+msgstr "Send a message..."
+
+msgid "Este item não tem chat ao vivo."
+msgstr "This item has no live chat."
+
+msgid "Falar as mensagens do chat"
+msgstr "Speak the chat messages"
+
+msgid "Gostei da mídia atual (YouTube)"
+msgstr "Like the current media (YouTube)"
+
+msgid "Histórico do YouTube"
+msgstr "YouTube history"
+
+msgid "Histórico do YouTube Music"
+msgstr "YouTube Music history"
+
+msgid "Ler a mensagem inteira (Enter)"
+msgstr "Read the whole message (Enter)"
+
+msgid "Marca as faixas e os vídeos no histórico da sua conta."
+msgstr "Marks tracks and videos in your account's history."
+
+msgid "Mensagem"
+msgstr "Message"
+
+msgid "Mensagem de {author}"
+msgstr "Message from {author}"
+
+msgid "Mensagem enviada."
+msgstr "Message sent."
+
+msgid "Mensagem, enviada ao chat com a sua conta do YouTube:"
+msgstr "Message, sent to the chat with your YouTube account:"
+
+msgid "Nada foi escrito: a mensagem não foi enviada."
+msgstr "Nothing was written: the message was not sent."
+
+msgid "Não foi possível abrir o chat ao vivo."
+msgstr "Could not open the live chat."
+
+msgid "Não foi possível enviar a mensagem."
+msgstr "Could not send the message."
+
+msgid "Não gostei da mídia atual (YouTube)"
+msgstr "Dislike the current media (YouTube)"
+
+msgid "O YouTube não registrou o voto."
+msgstr "YouTube did not record the vote."
+
+msgid "O aviso fica na central de notificações em vez de ser falado pelo KeyTune."
+msgstr "The notice stays in the notification center instead of being spoken by KeyTune."
+
+msgid "O chat ao vivo precisa do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr "The live chat needs YouTube.js, turned on in Preferences > Additional resources."
+
+msgid "O chat ao vivo terminou."
+msgstr "The live chat has ended."
+
+msgid "Ordenar pelos mais recentes"
+msgstr "Sort by newest"
+
+msgid "Ordenar pelos principais"
+msgstr "Sort by top comments"
+
+msgid "Parar de falar as mensagens do chat"
+msgstr "Stop speaking the chat messages"
+
+msgid "Salvar o que ouvi e assisti no &histórico do YouTube"
+msgstr "Save what I listened to and watched in the YouTube &history"
+
+msgid "Usar a notificação do &Windows com o KeyTune em segundo plano"
+msgstr "Use the &Windows notification while KeyTune is in the background"
+
+msgid "Ver a conversa (Seta para a direita)"
+msgstr "View the conversation (Right arrow)"
+
+msgid "Ver c&hat ao vivo da mídia atual"
+msgstr "View live c&hat of the current media"
+
+msgid "Ver chat ao vivo da mídia atual"
+msgstr "View live chat of the current media"
+
+msgid "Ver o chat ao vivo"
+msgstr "View the live chat"
+
+msgid "Votar na enquete"
+msgstr "Vote in the poll"
+
+msgid "Votar na enquete..."
+msgstr "Vote in the poll..."
+
+msgid "Voto registrado: {choice}."
+msgstr "Vote recorded: {choice}."
+
+msgid "{title}, mais recentes primeiro"
+msgstr "{title}, newest first"
+
+msgid "Sons de aviso"
+msgstr "Alert sounds"
+
+msgid "Tocar &sons de aviso"
+msgstr "Play alert &sounds"
+
+msgid "Sons curtos para o chat, as notificações, as listas, a fila e os avisos do player."
+msgstr "Short sounds for the chat, notifications, lists, the queue and the player alerts."
+
+msgid "Volume dos sons de aviso"
+msgstr "Alert sounds volume"
+
+msgid "De 1 a 100, sem depender do volume da mídia."
+msgstr "From 1 to 100, apart from the media volume."
+
+msgid "Sons que tocam:"
+msgstr "Sounds that play:"
+
+msgid "Sons que tocam"
+msgstr "Sounds that play"
+
+msgid "Espaço liga ou desliga o som do item; ao ligar, ele toca."
+msgstr "Space turns the item's sound on or off; when turned on, it plays."
+
+msgid "Chat ao vivo: mensagem nova"
+msgstr "Live chat: new message"
+
+msgid "Chat ao vivo: mensagem que cita o seu nome"
+msgstr "Live chat: message that mentions your name"
+
+msgid "Chat ao vivo: mensagem paga"
+msgstr "Live chat: paid message"
+
+msgid "Chat ao vivo: mensagem enviada"
+msgstr "Live chat: message sent"
+
+msgid "Chat ao vivo: chat encerrado"
+msgstr "Live chat: chat ended"
+
+msgid "Notificação nova do YouTube"
+msgstr "New YouTube notification"
+
+msgid "Curtir"
+msgstr "Like"
+
+msgid "Remover a curtida ou não gostei"
+msgstr "Remove the like or dislike"
+
+msgid "Ação da conta que deu certo"
+msgstr "Account action that worked"
+
+msgid "Ação que falhou"
+msgstr "Action that failed"
+
+msgid "Fim ou começo da lista"
+msgstr "End or start of the list"
+
+msgid "Pasta ou lista aberta"
+msgstr "Folder or list opened"
+
+msgid "Volta à pasta ou lista anterior"
+msgstr "Back to the previous folder or list"
+
+msgid "Mais itens sendo carregados"
+msgstr "More items being loaded"
+
+msgid "Aba aberta"
+msgstr "Tab opened"
+
+msgid "Aba fechada"
+msgstr "Tab closed"
+
+msgid "Item posto na fila"
+msgstr "Item put in the queue"
+
+msgid "Item tirado da fila"
+msgstr "Item taken out of the queue"
+
+msgid "Download concluído"
+msgstr "Download finished"
+
+msgid "Aviso do temporizador"
+msgstr "Sleep timer warning"
+
+msgid "Pergunta de confirmação"
+msgstr "Confirmation question"
+
+msgid "Ouvir o som"
+msgstr "Listen to the sound"
+
+msgid "Escolher um arquivo para o som..."
+msgstr "Choose a file for the sound..."
+
+msgid "Voltar ao som original"
+msgstr "Back to the original sound"
+
+msgid "Um áudio do computador toca no lugar do som do item selecionado."
+msgstr "An audio file from the computer plays in place of the selected item's sound."
+
+msgid "{sound} (arquivo escolhido)"
+msgstr "{sound} (chosen file)"
+
+msgid "Escolher o som de: {sound}"
+msgstr "Choose the sound of: {sound}"
+
+msgid "Arquivos de áudio"
+msgstr "Audio files"
+
+msgid "Arquivo escolhido para o som."
+msgstr "File chosen for the sound."
+
+msgid "O som voltou ao original."
+msgstr "The sound is back to the original."
+
+msgid "Sem o FFmpeg, só serve arquivo WAV de 16 bits."
+msgstr "Without FFmpeg, only a 16-bit WAV file works."
+
+msgid "Sem o FFmpeg, o som precisa ter até {seconds} segundos."
+msgstr "Without FFmpeg, the sound must be up to {seconds} seconds long."
+
+msgid "O arquivo escolhido não foi encontrado."
+msgstr "The chosen file was not found."
+
+msgid "Não foi possível converter o arquivo escolhido."
+msgstr "The chosen file could not be converted."
+
+msgid "O arquivo escolhido não é um áudio que o KeyTune consiga usar."
+msgstr "The chosen file is not audio that KeyTune can use."
+
+msgid "Atualização nova do KeyTune"
+msgstr "New KeyTune update"
+
+msgid "Tela de boas-vindas"
+msgstr "Welcome screen"
+
+msgid "KeyTune aberto"
+msgstr "KeyTune opened"
+
+msgid "KeyTune fechado"
+msgstr "KeyTune closed"
+
+msgid "O idioma da interface muda quando o KeyTune é aberto de novo. Deseja reiniciar o KeyTune agora?"
+msgstr "The interface language changes when KeyTune is opened again. Do you want to restart KeyTune now?"
+
+msgid "Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."
+msgstr "Applies when KeyTune is opened again; on confirming, it offers to restart."
+

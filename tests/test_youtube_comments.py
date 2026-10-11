@@ -65,6 +65,10 @@ class CommentsPageTests(unittest.TestCase):
         patcher = patch("player.youtube_music.comments.youtubejs_resolver_enabled", return_value=True)
         self.addCleanup(patcher.stop)
         self.youtubejs_enabled = patcher.start()
+        # Sem conta conectada, a não ser no teste que a põe.
+        account = patch("player.youtube_music.comments.optional_account_session", return_value=("", 0))
+        self.addCleanup(account.stop)
+        self.account = account.start()
 
     def test_youtubejs_brings_each_page(self):
         with patch.object(comments.youtubejs_runtime, "comments_page", return_value=([_entry(1), _entry(2)], True)) as page_fn:
@@ -74,6 +78,53 @@ class CommentsPageTests(unittest.TestCase):
         self.assertEqual([comment.comment_id for comment in page.results], ["c1", "c2"])
         self.assertTrue(page.has_more)
         self.assertEqual(page.results[0].media_url, URL)
+
+    def test_with_the_account_the_comments_come_ready_to_act_on(self):
+        self.account.return_value = ("SID=abc", 2)
+        entry = _entry(1, liked=True, mine=True, can_rate=True, can_reply=True, can_edit=True, can_delete=True)
+        with patch.object(comments.youtubejs_runtime, "comments_page", return_value=([entry], False)) as page_fn:
+            page = comments.comments_page(URL, 0, 20)
+
+        page_fn.assert_called_once_with(URL, start=0, count=20, cookie_header="SID=abc", account_index=2)
+        comment = page.results[0]
+        self.assertTrue(comment.can_rate and comment.can_reply and comment.can_edit and comment.can_delete)
+        self.assertEqual(comment.choice_label, "@pessoa1: Comentário 1 — seu comentário · você curtiu")
+
+    def test_where_the_account_can_comment_the_list_starts_with_the_write_row(self):
+        self.account.return_value = ("SID=abc", 0)
+        with patch.object(comments.youtubejs_runtime, "comments_page", return_value=([_entry(1)], True, True)):
+            first = comments.comments_page(URL, 0, 20)
+            second = comments.comments_page(URL, 20, 20)
+
+        self.assertEqual([item.result_type for item in first.results], ["action", "comment"])
+        self.assertEqual(first.results[0].choice_label, "Escrever um comentário...")
+        self.assertTrue(first.results[0].opens_on_enter)
+        # Só a primeira página traz a linha: as seguintes continuam a lista.
+        self.assertEqual([item.result_type for item in second.results], ["comment"])
+
+    def test_the_newest_first_and_a_linked_conversation_are_asked_to_youtubejs(self):
+        with patch.object(comments.youtubejs_runtime, "comments_page", return_value=([_entry(1)], False)) as page_fn:
+            comments.comments_page(URL, 0, 20, newest=True)
+            comments.comments_page(URL, 0, 20, linked_comment="c9")
+
+        self.assertEqual(page_fn.call_args_list[0].kwargs, {"start": 0, "count": 20, "sort": "newest"})
+        self.assertEqual(page_fn.call_args_list[1].kwargs, {"start": 0, "count": 20, "linked_comment": "c9"})
+
+    def test_without_permission_to_comment_there_is_no_write_row(self):
+        with patch.object(comments.youtubejs_runtime, "comments_page", return_value=([_entry(1)], False, False)):
+            page = comments.comments_page(URL, 0, 20)
+
+        self.assertEqual([item.result_type for item in page.results], ["comment"])
+
+    def test_when_the_account_is_refused_the_comments_come_read_only(self):
+        self.account.return_value = ("SID=abc", 0)
+        with patch.object(
+            comments.youtubejs_runtime, "comments_page", side_effect=[RuntimeError("403"), ([_entry(1)], False)]
+        ) as page_fn:
+            page = comments.comments_page(URL, 0, 20)
+
+        self.assertEqual(page_fn.call_args_list[1].kwargs, {"start": 0, "count": 20})
+        self.assertFalse(page.results[0].can_reply)
 
     def test_without_youtubejs_yt_dlp_brings_only_the_first_batch(self):
         self.youtubejs_enabled.return_value = False
@@ -163,11 +214,27 @@ class CommentsNavigationTests(unittest.TestCase):
         with patch.object(comments, "comments_page", return_value=page) as comments_page:
             self.assertTrue(frame.show_youtube_music_comments())
 
-        comments_page.assert_called_once_with(URL, 0, 20)
+        comments_page.assert_called_once_with(URL, 0, 20, newest=False, linked_comment="")
         view = frame._youtube_music_current_results_view()
         self.assertEqual(view.title, "Comentários de Clipe")
         self.assertEqual(len(frame._youtube_music_results_views()), 2)
         self.assertTrue(view.has_more)
+
+    def test_changing_the_order_puts_the_other_list_in_its_place(self):
+        frame = _Frame(self._video())
+        with patch.object(comments, "comments_page", return_value=YouTubeResultPage()) as comments_page:
+            frame.show_youtube_music_comments()
+            self.assertTrue(frame.toggle_youtube_music_comments_order())
+
+        self.assertEqual(comments_page.call_args_list[1].kwargs, {"newest": True, "linked_comment": ""})
+        view = frame._youtube_music_current_results_view()
+        self.assertEqual(view.title, "Comentários de Clipe, mais recentes primeiro")
+        # A lista trocou de lugar com a anterior: voltar leva a quem estava embaixo dela.
+        self.assertEqual(len(frame._youtube_music_results_views()), 2)
+
+        with patch.object(comments, "comments_page", return_value=YouTubeResultPage()):
+            frame.toggle_youtube_music_comments_order()
+        self.assertEqual(frame._youtube_music_current_results_view().title, "Comentários de Clipe")
 
     def test_right_arrow_on_a_comment_opens_its_replies(self):
         frame = _Frame()

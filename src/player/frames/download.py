@@ -36,6 +36,7 @@ from ..download.plan import (
     unique_file_stem,
 )
 from ..download.runner import DownloadCancelled, DownloadCancelToken, run_download
+from .. import interface_sounds
 from ..i18n import _
 from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
@@ -269,6 +270,7 @@ class FrameDownloadMixin(TaskProgressMixin):
             lines.append(
                 _("{count} itens que não podem ser baixados serão ignorados.").format(count=selection.skipped)
             )
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         response = wx.MessageBox(
             "\n".join(lines),
             _("Baixar mídia"),
@@ -301,6 +303,7 @@ class FrameDownloadMixin(TaskProgressMixin):
             "Não: baixar agora na qualidade original, sem conversão.\n"
             "Cancelar: não baixar."
         ).format(what=what, size=FFMPEG_APPROXIMATE_DOWNLOAD_MB)
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         response = wx.MessageBox(
             message,
             _("FFmpeg necessário"),
@@ -546,6 +549,7 @@ class FrameDownloadMixin(TaskProgressMixin):
             parts.append(difference)
         message = " ".join(parts)
         _logger.info("Download finished: %s", file_name)
+        interface_sounds.play_for(self, interface_sounds.SOUND_DOWNLOAD_DONE)
         self._set_status_message(message)
         self._announce(message)
 
@@ -554,6 +558,9 @@ class FrameDownloadMixin(TaskProgressMixin):
             return
 
         done = len(results)
+        interface_sounds.play_for(
+            self, interface_sounds.SOUND_DOWNLOAD_DONE if done else interface_sounds.SOUND_FAILURE
+        )
         if done == 0:
             reason = failures[0][1] if failures else ""
             message = _("Não foi possível baixar nenhum dos {total} itens: {reason}").format(
@@ -607,6 +614,7 @@ class FrameDownloadMixin(TaskProgressMixin):
             state_text = _("Download em andamento: {percent}%.").format(percent=percent)
         else:
             state_text = _("Download em andamento.")
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         response = wx.MessageBox(
             state_text + "\n\n" + _("Deseja cancelar o download?"),
             _("Baixar mídia"),

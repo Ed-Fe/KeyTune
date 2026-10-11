@@ -16,6 +16,7 @@ from urllib import error, request
 from ..constants import APP_TITLE, APP_VERSION, UPDATE_DOWNLOAD_CHUNK_SIZE, UPDATE_HTTP_TIMEOUT_SECONDS
 from ..session import get_app_storage_dir
 from ..i18n import _
+from .content_locale import content_language
 
 
 YTDLP_EXECUTABLE_NAME = "yt-dlp.exe" if sys.platform.startswith("win") else "yt-dlp"
@@ -334,7 +335,7 @@ def extract_info(
         format_selector=format_selector,
         cookie_file_path=cookie_file_path,
         http_headers=http_headers,
-        extractor_args=extractor_args,
+        extractor_args=_with_content_language(extractor_args),
         js_runtimes=js_runtimes,
         socket_timeout_seconds=socket_timeout_seconds,
         noplaylist=noplaylist,
@@ -483,6 +484,17 @@ def download_media(
         if resolved_candidate.is_file():
             downloaded_paths.append(str(resolved_candidate))
     return downloaded_paths
+
+
+def _with_content_language(extractor_args):
+    """*extractor_args* mais o idioma do conteúdo.
+
+    Sem ele o yt-dlp pede as listas do YouTube em inglês, e os títulos que têm
+    tradução chegam em inglês.
+    """
+    merged = {name: dict(args) for name, args in (extractor_args or {}).items() if isinstance(args, dict)}
+    merged.setdefault("youtube", {}).setdefault("lang", content_language())
+    return merged
 
 
 def _build_yt_dlp_command(

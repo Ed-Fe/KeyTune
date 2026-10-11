@@ -339,7 +339,7 @@ El favorito y la valoración aparecen junto al nombre, en la propia lista, por e
 
 Una pista solo entra en el historial después de sonar lo bastante para contar como escuchada, y las entradas más antiguas salen cuando el historial supera el límite de las preferencias.
 
-Este historial es local y no tiene relación con **Guardar lo que escuché en el historial de YouTube Music**, que se registra en tu cuenta de YouTube Music.
+Este historial es local y no tiene relación con **Guardar lo que escuché y vi en el historial de YouTube**, que se registra en tu cuenta de YouTube.
 
 ### Reanudar donde lo dejaste
 
@@ -390,13 +390,15 @@ La pestaña tiene dos partes. Arriba, la sección **Cuenta y biblioteca**; abajo
 
 ### La lista
 
-La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las listas](#como-funcionan-las-listas)) y empieza en **Inicio**, con siete elementos:
+La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las listas](#como-funcionan-las-listas)) y empieza en **Inicio**, con nueve elementos:
 
 - **Tus playlists y mixes**: las de la cuenta conectada. `Enter` abre la playlist en una pestaña propia, desde donde se puede editar en la cuenta; `Flecha derecha` muestra las pistas en la propia lista. Requiere cuenta conectada.
 - **Me gusta**: las pistas con «me gusta» (la playlist *Me gusta* de tu cuenta). Requiere cuenta conectada.
-- **Historial**: tu historial de reproducción de YouTube Music. Requiere cuenta conectada.
+- **Historial de YouTube Music**: tu historial de reproducción de YouTube Music. Requiere cuenta conectada.
+- **Historial de YouTube**: los vídeos que viste en YouTube, del más reciente al más antiguo. Requiere cuenta conectada y YouTube.js activado.
 - **Videos de las suscripciones**: los vídeos nuevos de los canales a los que estás suscrito, con duración, visualizaciones y fecha. Requiere cuenta conectada y YouTube.js activado.
-- **Canales suscritos**: los canales a los que estás suscrito. Cada uno se abre como cualquier canal, para elegir entre vídeos, Shorts, transmisiones en vivo y playlists. Requiere cuenta conectada y YouTube.js activado. Las dos listas de suscripciones son de solo lectura: suscribirse y cancelar la suscripción se siguen haciendo en YouTube.
+- **Canales suscritos**: los canales a los que estás suscrito. Cada uno se abre como cualquier canal, para elegir entre vídeos, Shorts, transmisiones en vivo, playlists y publicaciones. Requiere cuenta conectada y YouTube.js activado. Para suscribirte, cancelar o cambiar lo que avisa un canal, consulta [Suscripción y notificaciones de un canal](#suscripcion-y-notificaciones-de-un-canal).
+- **Notificaciones**: la bandeja de notificaciones de tu cuenta de YouTube. Requiere cuenta conectada y YouTube.js activado. Consulta [Notificaciones de YouTube](#notificaciones-de-youtube).
 - **Tendencias**: *Global* y los continentes. Entra en un continente, elige el país, y las listas y destacados en tendencia aparecen como playlists que puedes reproducir, abrir o guardar en la biblioteca. No requiere cuenta.
 - **Estados de ánimo y géneros**: las categorías de estados de ánimo y géneros de YouTube Music (*Concentración*, *Entrenamiento*, *Pop*, *Rock*...). Entra en una categoría para ver sus playlists. No requiere cuenta.
 
@@ -404,7 +406,7 @@ En KeyTube, además:
 
 - `Retroceso` vuelve un nivel cada vez, hasta **Inicio**. Se puede encadenar: de un artista a un álbum, de un canal a una playlist suya.
 - Cada lista trae una parte de los elementos cada vez (25, o lo que esté en **Elementos cargados por vez**, en las preferencias). Al llegar al final, bajar más trae la parte siguiente. **Cargar la lista completa**, en el menú **Acciones...**, trae de una vez lo que falta; en una búsqueda o en un canal, que no tienen un final conocido, se detiene en 1000 elementos cada vez.
-- El botón **Acciones...** abre el menú del elemento: **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Cargar la lista completa**, **Ver comentarios**, **Ver detalles**, **Ir al canal** (o **Ir al artista**, seguido del nombre), **Agregar selección...** (en una playlist nueva o en una abierta), **Descargar selección...** y **Guardar en YouTube Music** (playlists o pistas compatibles). En una de tus playlists, el menú también trae **Eliminar playlist de YouTube Music...**, que la elimina de la cuenta, con confirmación, y solo vale para playlists que creaste. En un comentario, trae **Leer el comentario completo**.
+- El botón **Acciones...** (o `Shift+F10`) abre el menú del elemento, solo con lo que vale para él, en bloques. Primero, lo que hacen `Enter` y las flechas: **Reproducir** y **Añadir sin reproducir** en un vídeo, una pista o una playlist; **Abrir** en una carpeta, un canal o un artista; **Ver contenido** en una playlist o un álbum. Después, lo demás que se puede hacer con el elemento: **Ver comentarios**, **Ver detalles** e **Ir al canal** (o **Ir al artista**, seguido del nombre) en un vídeo o una pista; **Suscripción y notificaciones del canal...** y **Acerca del canal** en un canal de YouTube; las acciones de un comentario, una publicación o una notificación, descritas más abajo. A continuación, adónde llevar la selección: **Agregar selección...** (a una playlist nueva o a una abierta), **Descargar selección...**, **Guardar en YouTube Music** (playlists o pistas compatibles) y, en una playlist que creaste, **Eliminar playlist de YouTube Music...**, con confirmación. Por último, lo que vale para la lista en pantalla: **Escribir un comentario...** en una lista de comentarios, **Cargar la lista completa** cuando aún quedan elementos por traer y **Volver a la lista anterior**.
 - `Shift+Enter` en una de tus playlists añade las pistas a la playlist actual sin reproducir.
 - `Ctrl+Shift+B` (o **Descargar selección...**) descarga lo que está seleccionado. Con una **playlist o un álbum**, KeyTune busca todas las pistas de dentro y lo descarga todo. Tú eliges la carpeta de destino; cada playlist o álbum se convierte en una **subcarpeta con su nombre**, y las pistas y vídeos sueltos quedan en la propia carpeta, incluso en una selección mixta. Dos listas con el mismo nombre reciben carpetas separadas (*Mix* y *Mix (2)*), y una pista que está en dos playlists se descarga en las dos, para que cada carpeta quede completa.
 
@@ -417,7 +419,7 @@ Justo encima de la lista, una línea indica dónde estás y cuántos elementos h
 - **En** y **Tipo**: dos cuadros junto al campo. **En** elige dónde buscar (*YouTube Music* o *YouTube*) y **Tipo**, qué buscar allí. En ambos, la primera letra salta a la opción.
     - En *YouTube Music*: *Canciones* (pistas del catálogo), *Vídeos* (videoclips y vídeos de YouTube Music), *Álbumes* (álbumes, sencillos y EP), *Artistas* y *Playlists* (del catálogo de YouTube Music).
     - En *YouTube*: *Vídeos* (en general, sin exigir cuenta), *Canales* y *Playlists*.
-- **Dentro de un canal o artista**: al entrar, la lista muestra primero lo que hay para ver. En un canal de YouTube: *Vídeos*, *Shorts*, *En vivo* y *Playlists*. En un artista de YouTube Music: *Canciones*, *Álbumes*, *Sencillos y EP*, *Vídeos* y *Artistas similares*. Entra en lo que quieras; `Retroceso` vuelve para elegir otro.
+- **Dentro de un canal o artista**: al entrar, la lista muestra primero lo que hay para ver. En un canal de YouTube: *Vídeos*, *Shorts*, *En vivo*, *Playlists* y *Publicaciones*, seguidos de **Buscar en este canal...**, **Suscripción y notificaciones del canal...** y **Acerca del canal**. **Buscar en este canal...** pide un texto y muestra los vídeos del canal que coinciden con él. En un artista de YouTube Music: *Canciones*, *Álbumes*, *Sencillos y EP*, *Vídeos* y *Artistas similares*. Entra en lo que quieras; `Retroceso` vuelve para elegir otro.
 
 ### Detalles de vídeos y canciones
 
@@ -432,6 +434,63 @@ Justo encima de la lista, una línea indica dónde estás y cuántos elementos h
 - `Flecha derecha`, en un comentario con respuestas, abre las respuestas.
 
 Con YouTube.js activado (**Preferencias > Recursos adicionales**), los comentarios llegan en menos de un segundo, en el idioma del contenido, con paginación y respuestas. Sin él, KeyTune usa yt-dlp, que es más lento, trae solo los 20 primeros comentarios, sin respuestas, y con las fechas en inglés.
+
+### Escribir, responder y valorar comentarios
+
+Con la cuenta conectada y YouTube.js activado, los comentarios llegan por tu cuenta y el menú **Acciones...** gana lo que se puede hacer con ella. Lo que escribes se publica en YouTube con tu nombre.
+
+- **Escribir un comentario...**: es la primera línea de la lista de comentarios. `Enter` abre un cuadro para el texto y lo publica en el vídeo, la canción o la publicación de la que trata la lista. El mismo comando está al final del menú **Acciones...**, para cuando ya bajaste en la lista. La línea solo aparece donde tu cuenta puede comentar.
+- **Responder...**: publica una respuesta al comentario seleccionado.
+- **Me gusta el comentario** y **No me gusta el comentario**: valoran el comentario. Después, la línea dice *te gustó* o *no te gustó*, y el menú pasa a ofrecer **Quitar el me gusta** o **Quitar el no me gusta**.
+- **Editar mi comentario...** y **Eliminar mi comentario...**: aparecen solo en los comentarios que YouTube reconoce como tuyos, marcados con *tu comentario*. Eliminar pide confirmación y no se puede deshacer.
+
+En el cuadro de texto, `Enter` hace un salto de línea; ve con `Tab` hasta **OK** para enviar, o pulsa `Esc` para desistir. Algunos comentarios no aceptan respuestas, y en ellos **Responder...** no aparece. Sin la cuenta, o cuando YouTube rechaza la cuenta, los comentarios siguen apareciendo, solo para lectura.
+
+**Ordenar por los más recientes**, al final del menú **Acciones...** de una lista de comentarios, cambia los comentarios principales por los más recientes; **Ordenar por los principales** vuelve. Solo funciona con YouTube.js activado.
+
+### Notificaciones de YouTube
+
+**Notificaciones**, en el **Inicio** de KeyTube (o **Ver > Notificaciones de YouTube**), muestra la bandeja de notificaciones de tu cuenta: vídeos nuevos de los canales con la campana activada, respuestas a tus comentarios y lo demás que YouTube avise. Requiere cuenta conectada y YouTube.js activado.
+
+- Cada línea trae el texto de la notificación, cuándo llegó y *no leída*, si es el caso.
+- `Enter` reproduce el vídeo del que habla la notificación y la marca como leída. `Shift+Enter` añade el vídeo a la playlist sin reproducirlo.
+- `Flecha derecha`, en la notificación de un comentario o de una respuesta, abre los comentarios del vídeo empezando por la conversación de la que habla.
+- En el menú **Acciones...**: **Marcar como leída**, **Ocultar esta notificación** (que la quita de tu bandeja en YouTube), **Ver comentarios** y **Ver detalles**.
+
+KeyTune también avisa cuando llega una notificación nueva: consulta la bandeja cada 15 minutos y dice lo que llegó, por ejemplo *Nueva notificación de YouTube: Canal subió el vídeo...*. El intervalo está en **Preferencias > KeyTube > Avisar de las notificaciones nuevas**, donde también se puede desactivar el aviso. YouTube no entrega las notificaciones a KeyTune en el momento, así que el aviso puede tardar hasta el intervalo elegido. En la primera consulta, solo toma nota de lo que ya estaba en la bandeja, sin decir nada. Con KeyTune minimizado, en la bandeja o detrás de otra ventana, el aviso sale como notificación de Windows: queda en el centro de notificaciones, el lector de pantalla lo lee desde allí, y activarlo abre la lista de notificaciones. Para oírlo siempre desde KeyTune, desactiva **Usar la notificación de Windows con KeyTune en segundo plano**.
+
+El comando **Notificaciones de YouTube** no tiene atajo de fábrica; para darle uno, usa **Configuración > Personalizar teclado**.
+
+### Suscripción y notificaciones de un canal
+
+**Suscripción y notificaciones del canal...** consulta tu suscripción a un canal de YouTube y permite cambiarla. El comando es una de las líneas de dentro del canal, después de **Publicaciones**, y también está en el menú **Acciones...** del canal, en una búsqueda o en **Canales suscritos**. Desde un vídeo, usa **Ir al canal** y elige la línea. Requiere cuenta conectada y YouTube.js activado.
+
+- Si no estás suscrito, KeyTune pregunta si quieres suscribirte.
+- Si ya lo estás, muestra lo que avisa el canal y permite elegir entre **Recibir todas las notificaciones**, **Recibir notificaciones personalizadas**, **No recibir notificaciones** y **Cancelar la suscripción**.
+
+**Acerca del canal**, en los mismos lugares, abre un cuadro de lectura con la descripción del canal, los suscriptores, la cantidad de vídeos, las visualizaciones, el país, la fecha de alta y los enlaces.
+
+### Publicaciones de los canales
+
+Dentro de un canal de YouTube, **Publicaciones** muestra lo que el canal publicó en su pestaña de publicaciones (la antigua comunidad). No requiere cuenta, solo YouTube.js activado.
+
+- Cada línea trae el canal, el texto, la fecha, los «me gusta» y cuántos comentarios hay. Una publicación con vídeo, encuesta o imagen lo dice en la línea.
+- `Enter` abre la publicación completa en un cuadro de lectura, con los botones **Ver comentarios** y, cuando hay vídeo, **Reproducir el vídeo de la publicación**.
+- `Flecha derecha` abre los comentarios de la publicación, que funcionan como los de un vídeo.
+
+Con la cuenta conectada, una publicación con encuesta trae **Votar en la encuesta...**, en el menú **Acciones...** y en el cuadro de lectura de la publicación: elige la opción y confirma. Votar por otra opción cambia el voto. Las imágenes de las publicaciones no se muestran.
+
+### Chat en vivo
+
+En una transmisión que está en el aire, **Ver el chat en vivo**, en el menú **Acciones...**, abre el chat en la propia lista. Para la transmisión que está sonando, usa **Reproducción > Ver chat en vivo del contenido actual**. Requiere YouTube.js activado.
+
+- La lista trae los mensajes más recientes y crece sola: KeyTune busca los nuevos cada 4 segundos y los pone al final, guardando los últimos 500.
+- Los mensajes que llegan se dicen, como máximo tres cada vez en un chat con mucho movimiento. **Dejar de decir los mensajes del chat**, en el menú **Acciones...**, apaga la voz; la lista sigue creciendo.
+- `Enter` abre el mensaje completo en un cuadro de lectura.
+- **Enviar un mensaje...**, la primera línea de la lista, envía un mensaje con tu cuenta. Solo aparece con la cuenta conectada y en un chat que acepta mensajes de ella.
+- `Retroceso` sale del chat y deja de seguirlo. Cuando la transmisión termina, KeyTune avisa.
+
+El comando **Ver chat en vivo del contenido actual** no tiene atajo de fábrica; para darle uno, usa **Configuración > Personalizar teclado**.
 
 ### Idioma del audio
 
@@ -737,7 +796,17 @@ Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace 
 
 ### Accesibilidad
 
-Tiene una sola opción: **Activar anuncios de accesibilidad**. Activada, el reproductor anuncia al lector de pantalla los cambios de tiempo, volumen, cambio de pestañas y estado. Desactivada, esos anuncios se detienen. Los atajos de anuncio bajo demanda (`T`, `V` y `S`) funcionan en cualquier caso. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
+La primera opción es **Activar anuncios de accesibilidad**. Activada, el reproductor anuncia al lector de pantalla los cambios de tiempo, volumen, cambio de pestañas y estado. Desactivada, esos anuncios se detienen. Los atajos de anuncio bajo demanda (`T`, `V` y `S`) funcionan en cualquier caso. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
+
+El grupo **Sonidos de aviso** tiene **Reproducir sonidos de aviso**, que los activa o desactiva todos a la vez, **Volumen de los sonidos de aviso** y la lista **Sonidos que suenan**, con una casilla por sonido: `Espacio` activa o desactiva el sonido del elemento y, al activarlo, suena para que sepas cuál es. Debajo de la lista, **Escuchar el sonido** reproduce el del elemento seleccionado, **Elegir un archivo para el sonido...** pone un audio de tu equipo en su lugar y **Volver al sonido original** deshace el cambio. El archivo elegido se copia a los datos de KeyTune y se corta a los 5 segundos; con FFmpeg instalado sirve cualquier formato de audio, sin él solo WAV de 16 bits. Son sonidos cortos, cada uno para un suceso:
+
+- **Chat en vivo**: mensaje nuevo, mensaje pagado, mensaje de otra persona que cita tu nombre, mensaje enviado y fin del chat. Cuando llegan varios mensajes juntos, suena uno solo, el del más importante: el que cita tu nombre, después el pagado.
+- **Cuenta de YouTube**: notificación nueva, dar me gusta, quitar el me gusta o marcar no me gusta, y acción que salió bien o falló (comentar, suscribirse, votar, marcar una notificación como leída).
+- **Listas**: flecha arriba en el primer elemento o flecha abajo en el último, carpeta o lista abierta, vuelta a la anterior y más elementos cargándose.
+- **Pantalla de bienvenida**: la primera vez que se abre KeyTune, su sonido suena entero y solo después aparece la pantalla.
+- **Reproductor**: KeyTune abierto y KeyTune cerrado (al cerrar, la ventana desaparece al instante y el programa termina cuando acaba el sonido, en cerca de 1 segundo), pantalla de bienvenida, actualización nueva de KeyTune, pestaña abierta o cerrada, elemento puesto en la cola de reproducción o sacado de ella, descarga terminada, aviso del temporizador de que falta poco y pregunta de confirmación hecha por la ventana principal.
+
+Su volumen no depende del volumen del contenido. Cuando el aviso va a la notificación de Windows, el sonido de la notificación es el del propio Windows.
 
 ### Biblioteca
 
@@ -771,11 +840,16 @@ Reúne las opciones de YouTube y de YouTube Music. Solo tienen efecto con la int
 **Reproducción**
 
 - **Reproducir pistas relacionadas al final de la playlist**: cuando termina la última pista de YouTube Music, o cuando pides la siguiente estando en la última, el reproductor busca pistas relacionadas (la radio de YouTube Music) y sigue sonando, sin pausa entre una y otra. La tecla `A` lo activa y desactiva durante la reproducción. Las pistas que ya están en la playlist no entran de nuevo.
-- **Guardar lo que escuché en el historial de YouTube Music**: activada por defecto. Al escuchar una pista el tiempo suficiente (alrededor del 30% de la duración, entre 15 y 30 segundos), el reproductor la marca como vista en el historial de tu cuenta. Desactívala para reproducir sin registrar nada.
+- **Guardar lo que escuché y vi en el historial de YouTube**: activada por defecto. Al escuchar una pista de YouTube Music o ver un vídeo de YouTube el tiempo suficiente (alrededor del 30% de la duración, entre 15 y 30 segundos), el reproductor lo marca en el historial de tu cuenta. Los vídeos del YouTube normal necesitan YouTube.js activado. Desactívala para reproducir sin registrar nada.
+
+**Cuenta de YouTube**
+
+- **Avisar de las notificaciones nuevas**: cada cuánto tiempo KeyTune consulta las notificaciones de tu cuenta de YouTube y dice las que llegaron: cada 5, 15 (el valor por defecto), 30 o 60 minutos, o **Nunca**. Requiere cuenta conectada y YouTube.js activado. Consulta [Notificaciones de YouTube](#notificaciones-de-youtube).
+- **Usar la notificación de Windows con KeyTune en segundo plano**: activada por defecto. Con la ventana minimizada, en la bandeja o detrás de otra, el aviso de notificación nueva va al centro de notificaciones de Windows en lugar de decirlo KeyTune.
 
 **Idioma y región**
 
-- **Idioma del contenido**: el idioma que se pide a YouTube en las búsquedas y en los textos que devuelve (recuentos, fechas). El valor predeterminado es **El mismo de KeyTune**. Vale para las búsquedas de YouTube con YouTube.js activado; las búsquedas de YouTube Music usan solo la región.
+- **Idioma del contenido**: el idioma que se pide a YouTube en las búsquedas y en los textos que devuelve (recuentos, fechas). El valor predeterminado es **El mismo de KeyTune**. Con **El mismo de KeyTune**, cambiar el **Idioma de la interfaz** ya cambia el idioma del contenido, incluso antes de que el reproductor se vuelva a abrir. Vale para las búsquedas y las listas de YouTube, incluidos los títulos que el canal tradujo; las búsquedas de YouTube Music usan solo la región. Una lista que ya está abierta se queda como llegó: ábrela de nuevo para verla en el idioma nuevo.
 - **Región del contenido**: el país que se usa en las búsquedas de YouTube y de YouTube Music. Con **Automática**, YouTube decide según tu conexión.
 - **Audio de los vídeos doblados**: algunos vídeos traen el audio original y doblajes. Aquí eliges qué suena: **La que YouTube entregue** (el valor predeterminado), **Original del video** o el doblaje en un idioma. Los vídeos sin la pista pedida suenan con normalidad. Una pista que no es la predeterminada pasa por yt-dlp y tarda unos segundos más en empezar.
 

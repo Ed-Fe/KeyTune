@@ -40,6 +40,7 @@ from ..constants import (
     DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY,
     DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP,
     DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS,
+    DEFAULT_YOUTUBE_NOTIFICATION_CHECK_MINUTES,
     LOGGING_LEVELS,
     MAX_CROSSFADE_SECONDS,
     MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
@@ -58,6 +59,7 @@ from ..constants import (
     REPEAT_OFF,
     SEEK_STEP_MS,
     VOLUME_STEP,
+    YOUTUBE_NOTIFICATION_CHECK_MINUTES,
 )
 from ..convert.options import (
     AUDIO_BITRATES,
@@ -81,6 +83,13 @@ from ..download.options import (
     normalize_sample_rate,
     normalize_video_quality,
 )
+from ..interface_sounds import (
+    DEFAULT_INTERFACE_SOUNDS_ENABLED,
+    DEFAULT_INTERFACE_SOUNDS_VOLUME,
+    normalize_custom,
+    normalize_disabled,
+    normalize_volume,
+)
 from ..keyboard.shortcuts import SCOPE_GLOBAL, SCOPE_LOCAL, normalize_overrides
 from ..equalizer.models import DEFAULT_EQUALIZER_PRESET_ID, EqualizerPreset
 
@@ -95,6 +104,12 @@ class AppSettings:
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
+    interface_sounds_enabled: bool = DEFAULT_INTERFACE_SOUNDS_ENABLED
+    interface_sounds_volume: int = DEFAULT_INTERFACE_SOUNDS_VOLUME
+    # Os sons desligados um a um; os demais tocam enquanto a opção geral está ligada.
+    interface_sounds_disabled: list = field(default_factory=list)
+    # O arquivo escolhido para tocar no lugar de cada som: {som: caminho}.
+    interface_sounds_custom: dict = field(default_factory=dict)
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
     live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
     audio_output_device_id: str = ""
@@ -116,6 +131,9 @@ class AppSettings:
     youtube_music_use_youtubejs: bool = DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS
     youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_save_history: bool = DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY
+    youtube_notification_check_minutes: int = DEFAULT_YOUTUBE_NOTIFICATION_CHECK_MINUTES
+    # Com o KeyTune em segundo plano, o aviso sai como notificação do Windows.
+    youtube_notification_windows_toast: bool = True
     # Vazio: o idioma segue o do KeyTune e a região fica a cargo do YouTube.
     youtube_content_language: str = ""
     youtube_content_region: str = ""
@@ -196,6 +214,10 @@ class AppSettings:
             "confirm_on_exit": self.confirm_on_exit,
             "quick_player_enabled": self.quick_player_enabled,
             "announcements_enabled": self.announcements_enabled,
+            "interface_sounds_enabled": self.interface_sounds_enabled,
+            "interface_sounds_volume": self.interface_sounds_volume,
+            "interface_sounds_disabled": list(self.interface_sounds_disabled),
+            "interface_sounds_custom": dict(self.interface_sounds_custom),
             "disable_video_output": self.disable_video_output,
             "live_video_enabled": self.live_video_enabled,
             "audio_output_device_id": (
@@ -219,6 +241,8 @@ class AppSettings:
             "youtube_music_use_youtubejs": self.youtube_music_use_youtubejs,
             "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_save_history": self.youtube_music_save_history,
+            "youtube_notification_check_minutes": self.youtube_notification_check_minutes,
+            "youtube_notification_windows_toast": self.youtube_notification_windows_toast,
             "youtube_content_language": self.youtube_content_language,
             "youtube_content_region": self.youtube_content_region,
             "radio_country_code": self.radio_country_code,
@@ -280,6 +304,14 @@ class AppSettings:
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
+        settings.interface_sounds_enabled = bool(
+            data.get("interface_sounds_enabled", settings.interface_sounds_enabled)
+        )
+        settings.interface_sounds_volume = normalize_volume(
+            data.get("interface_sounds_volume", settings.interface_sounds_volume)
+        )
+        settings.interface_sounds_disabled = normalize_disabled(data.get("interface_sounds_disabled"))
+        settings.interface_sounds_custom = normalize_custom(data.get("interface_sounds_custom"))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
         settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))
         raw_audio_output_device_id = normalize_audio_output_device_id(data.get("audio_output_device_id"))
@@ -340,6 +372,14 @@ class AppSettings:
         )
         settings.youtube_music_save_history = bool(
             data.get("youtube_music_save_history", settings.youtube_music_save_history)
+        )
+        notification_check_minutes = data.get(
+            "youtube_notification_check_minutes", settings.youtube_notification_check_minutes
+        )
+        if notification_check_minutes in YOUTUBE_NOTIFICATION_CHECK_MINUTES:
+            settings.youtube_notification_check_minutes = notification_check_minutes
+        settings.youtube_notification_windows_toast = bool(
+            data.get("youtube_notification_windows_toast", settings.youtube_notification_windows_toast)
         )
         settings.youtube_content_language = str(data.get("youtube_content_language") or "").strip()
         settings.youtube_content_region = str(data.get("youtube_content_region") or "").strip().upper()

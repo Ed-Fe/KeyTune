@@ -73,7 +73,7 @@ def _build_youtubejs(output_dir, args):
     with tempfile.TemporaryDirectory(prefix="keytune-youtubejs-resource-", dir=output_dir.parent) as temporary:
         content = Path(temporary) / "content"
         content.mkdir()
-        for filename in ("resolve.mjs", "package.json", "package-lock.json"):
+        for filename in ("resolve.mjs", "comments.mjs", "account.mjs", "live_chat.mjs", "package.json", "package-lock.json"):
             shutil.copy2(source_dir / filename, content / filename)
         node_path = Path(shutil.which(args.node_executable) or args.node_executable).resolve()
         npm_cli = node_path.parent / "node_modules" / "npm" / "bin" / "npm-cli.js"
@@ -90,7 +90,7 @@ def _build_youtubejs(output_dir, args):
             content,
             "youtubejs",
             args.app_version,
-            ["resolve.mjs", "node_modules/youtubei.js"],
+            ["resolve.mjs", "comments.mjs", "account.mjs", "live_chat.mjs", "node_modules/youtubei.js"],
             {"YouTube.js": str(package.get("version") or "")},
         )
         _archive_resource(output_dir, "youtubejs", content, args.architecture)

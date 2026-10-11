@@ -2,10 +2,13 @@ import wx
 
 from ...about import AboutDialog
 from ...changelog import ChangelogDialog
+from ... import interface_sounds
+from ...interface_sounds.custom import remove_unused_custom_sounds
 from ...i18n import _
 from ...log import setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
 from ...preferences import AudioOutputDialog, PreferencesDialog
+from ...restart import request_restart
 
 
 class AppCommandsMixin:
@@ -38,6 +41,8 @@ class AppCommandsMixin:
             dialog.Destroy()
 
         setup_logging(self.settings.logging_enabled, self.settings.logging_level)
+        # Os arquivos de som trocados ou abandonados na tela não servem mais para nada.
+        remove_unused_custom_sounds(self.settings.interface_sounds_custom)
 
         if not self.settings.remember_last_folder:
             self.settings.last_open_dir = ""
@@ -86,6 +91,24 @@ class AppCommandsMixin:
             self._announce(_("Preferências salvas."))
         else:
             self._announce(_("Preferências salvas, mas o dispositivo de áudio anterior foi mantido."))
+
+        if self.settings.language != previous_settings.language:
+            self._offer_restart_for_language()
+
+    def _offer_restart_for_language(self):
+        """O idioma da interface só muda com o player aberto de novo: oferece reabri-lo já."""
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
+        with wx.MessageDialog(
+            self,
+            _("O idioma da interface muda quando o KeyTune é aberto de novo. Deseja reiniciar o KeyTune agora?"),
+            _("Idioma da interface"),
+            wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION,
+        ) as dialog:
+            if dialog.ShowModal() != wx.ID_YES:
+                return
+        self._app_restart_pending = True
+        request_restart()
+        self.Close()
 
     def on_cycle_audio_output_device(self, _event):
         dialog = AudioOutputDialog(
@@ -200,7 +223,10 @@ class AppCommandsMixin:
         if callable(close_to_tray_requested) and close_to_tray_requested(event):
             return
 
-        if not getattr(self, "_update_restart_pending", False) and self.settings.confirm_on_exit and event.CanVeto():
+        # Reiniciando (atualização ou troca de idioma) não há o que confirmar nem som de despedida.
+        restarting = getattr(self, "_update_restart_pending", False) or getattr(self, "_app_restart_pending", False)
+        if not restarting and self.settings.confirm_on_exit and event.CanVeto():
+            interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
             with wx.MessageDialog(
                 self,
                 _("Deseja realmente sair do KeyTune?"),
@@ -218,6 +244,10 @@ class AppCommandsMixin:
             self.crossfade_timer.Stop()
         if hasattr(self, "sleep_timer") and self.sleep_timer.IsRunning():
             self.sleep_timer.Stop()
+        if hasattr(self, "_stop_youtube_notification_checks"):
+            self._stop_youtube_notification_checks()
+        if hasattr(self, "_stop_youtube_live_chat_updates"):
+            self._stop_youtube_live_chat_updates()
         self._dispose_equalizer_ui_cache()
         if hasattr(self, "plugin_service"):
             self.plugin_service.stop_all()
@@ -235,6 +265,7 @@ class AppCommandsMixin:
         self._begin_library_loader_shutdown()
         self._begin_player_backend_shutdown()
         self._begin_smart_library_shutdown()
+        closing_sound = not restarting and interface_sounds.play_for(self, interface_sounds.SOUND_APP_CLOSED)
         self.announcer.request_close()
 
         self._save_session()
@@ -246,6 +277,10 @@ class AppCommandsMixin:
         self._unregister_global_hotkeys()
         self._shutdown_tray()
         self.announcer.close()
+        if closing_sound:
+            # O som toca enquanto o resto fecha; a janela some já e só o fim dele é esperado.
+            self.Hide()
+            interface_sounds.wait_until_played()
         self.Destroy()
 
     def _enqueue_selected_item(self):
@@ -313,6 +348,10 @@ class AppCommandsMixin:
         return added > 0
 
     def _announce_queue_toggle(self, added, removed, added_label, removed_label):
+        if added:
+            interface_sounds.play_for(self, interface_sounds.SOUND_QUEUE_ADDED)
+        elif removed:
+            interface_sounds.play_for(self, interface_sounds.SOUND_QUEUE_REMOVED)
         if added and removed:
             self._announce(
                 _("{added} itens adicionados e {removed} removidos da fila de reprodução.").format(

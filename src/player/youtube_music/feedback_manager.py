@@ -234,10 +234,15 @@ class YouTubeMusicFeedbackManager:
         return _("Avaliação da mídia atual removida no YouTube.")
 
     def report_playback_to_history(self, media_path):
-        """Report a media item as played to the user's YouTube Music history."""
+        """Report a media item as played to the account's history.
+
+        YouTube Music tracks go through ytmusicapi; plain YouTube videos through YouTube.js.
+        """
         normalized_media_path = normalize_media_path(media_path)
         if not is_music_youtube_url(normalized_media_path):
-            return False
+            from .watch_history import report_video_watched
+
+            return report_video_watched(normalized_media_path)
 
         video_id = extract_video_id_from_text(normalized_media_path)
         if not video_id:

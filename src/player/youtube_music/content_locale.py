@@ -39,6 +39,7 @@ CONTENT_REGION_CODES = tuple(code for code, _label in CONTENT_REGIONS)
 _lock = threading.Lock()
 _language = ""
 _region = ""
+_app_language = ""
 
 
 def normalize_content_language(language):
@@ -56,30 +57,34 @@ def normalize_content_region(region):
     return wanted if wanted in CONTENT_REGION_CODES else ""
 
 
-def configure_content_locale(*, language="", region=""):
-    """Guarda as preferências; devolve se alguma coisa mudou."""
-    global _language, _region
+def _from_app_language(app_language):
+    """O idioma do conteúdo que corresponde a *app_language*, um idioma do KeyTune; vazio sem correspondência."""
+    app_language = str(app_language or "").replace("-", "_")
+    return normalize_content_language(app_language) or normalize_content_language(app_language.split("_")[0])
+
+
+def configure_content_locale(*, language="", region="", app_language=""):
+    """Guarda as preferências; devolve se alguma coisa mudou.
+
+    *app_language* é o idioma escolhido para o KeyTune: ele só passa a valer na
+    interface quando o player reabre, mas o conteúdo o segue na hora.
+    """
+    global _language, _region, _app_language
 
     language = normalize_content_language(language)
     region = normalize_content_region(region)
+    app_language = _from_app_language(app_language)
     with _lock:
-        changed = (language, region) != (_language, _region)
-        _language, _region = language, region
+        changed = (language, region, app_language) != (_language, _region, _app_language)
+        _language, _region, _app_language = language, region, app_language
     return changed
 
 
 def content_language():
     """O idioma pedido ao YouTube: o escolhido ou, sem escolha, o do KeyTune."""
     with _lock:
-        language = _language
-    if language:
-        return language
-    app_language = str(get_active_language() or "").replace("-", "_")
-    return (
-        normalize_content_language(app_language)
-        or normalize_content_language(app_language.split("_")[0])
-        or "en"
-    )
+        language = _language or _app_language
+    return language or _from_app_language(get_active_language()) or "en"
 
 
 def content_region():

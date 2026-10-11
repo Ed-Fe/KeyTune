@@ -339,7 +339,7 @@ Favorite status and rating appear next to the name, in the list itself, for exam
 
 A track only enters the history after playing long enough to count as listened, and the oldest entries drop out when the history goes over the limit in the preferences.
 
-This history is local and has no relation to **Save what I listened to in the YouTube Music history**, which records to your YouTube Music account.
+This history is local and has no relation to **Save what I listened to and watched in the YouTube history**, which records to your YouTube account.
 
 ### Resume where you stopped
 
@@ -390,13 +390,15 @@ The tab has two parts. At the top, the **Account and library** section; below it
 
 ### The list
 
-The list works like the folder explorer (see [How lists work](#how-lists-work)) and starts at **Home**, with seven items:
+The list works like the folder explorer (see [How lists work](#how-lists-work)) and starts at **Home**, with nine items:
 
 - **Your playlists and mixes**: those of the connected account. `Enter` opens the playlist in its own tab, where you can edit it in the account; `Right arrow` shows the tracks in the list itself. Requires a connected account.
 - **Liked songs**: the tracks you liked (the *Liked Music* playlist of your account). Requires a connected account.
-- **History**: your YouTube Music playback history. Requires a connected account.
+- **YouTube Music history**: your YouTube Music playback history. Requires a connected account.
+- **YouTube history**: the videos you watched on YouTube, newest first. Requires a connected account and YouTube.js turned on.
 - **Videos from subscriptions**: the new videos from the channels you are subscribed to, with duration, views and date. Requires a connected account and YouTube.js turned on.
-- **Subscribed channels**: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts and playlists. Requires a connected account and YouTube.js turned on. Both subscription lists are read-only: subscribing and unsubscribing are still done on YouTube.
+- **Subscribed channels**: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts, playlists and posts. Requires a connected account and YouTube.js turned on. To subscribe, unsubscribe or change what a channel notifies you of, see [A channel's subscription and notifications](#a-channels-subscription-and-notifications).
+- **Notifications**: your YouTube account's notification inbox. Requires a connected account and YouTube.js turned on. See [YouTube notifications](#youtube-notifications).
 - **Trending**: *Global* and the continents. Go into a continent, choose the country, and the charts and highlights that are trending appear as playlists you can play, open or save to the library. Does not require an account.
 - **Moods and genres**: YouTube Music's mood and genre categories (*Focus*, *Workout*, *Pop*, *Rock*...). Go into a category to see its playlists. Does not require an account.
 
@@ -404,7 +406,7 @@ In KeyTube, also:
 
 - `Backspace` goes back one level at a time, down to **Home**. You can chain: from an artist to an album, from a channel to one of its playlists.
 - Each list brings part of the items at a time (25, or whatever is set in **Items loaded at a time**, in the preferences). At the end, going further down brings the next part. **Load the whole list**, in the **Actions...** menu, brings what is missing all at once; in a search or a channel, which have no known end, it stops at 1000 items at a time.
-- The **Actions...** button opens the item's menu: **Play**, **Add without playing**, **View contents**, **Back to the previous list**, **Load the whole list**, **View comments**, **View details**, **Go to the channel** (or **Go to the artist**, followed by the name), **Add selection...** (to a new playlist or to an open one), **Download selection...** and **Save to YouTube Music** (compatible playlists or tracks). On one of your playlists, the menu also has **Delete YouTube Music playlist...**, which deletes it from the account, with confirmation, and only works for playlists you created. On a comment, it has **Read the whole comment**.
+- The **Actions...** button (or `Shift+F10`) opens the item's menu, with only what applies to it, in blocks. First, what `Enter` and the arrows do: **Play** and **Add without playing** on a video, a track or a playlist; **Open** on a folder, a channel or an artist; **View contents** on a playlist or an album. Then, what else you can do with the item: **View comments**, **View details** and **Go to the channel** (or **Go to the artist**, followed by the name) on a video or a track; **Channel subscription and notifications...** and **About the channel** on a YouTube channel; the actions of a comment, a post or a notification, described further down. Next, where to take the selection: **Add selection...** (to a new playlist or an open one), **Download selection...**, **Save to YouTube Music** (compatible playlists or tracks) and, on a playlist you created, **Delete YouTube Music playlist...**, with confirmation. Last, what applies to the list on screen: **Write a comment...** in a comments list, **Load the whole list** when there are still items to bring and **Back to the previous list**.
 - `Shift+Enter` on one of your playlists adds the tracks to the current playlist without playing.
 - `Ctrl+Shift+B` (or **Download selection...**) downloads what is selected. With a **playlist or an album**, KeyTune fetches all the tracks inside and downloads everything. You choose the destination folder; each playlist or album becomes a **subfolder with its name**, and standalone tracks and videos stay in the folder itself, even in a mixed selection. Two lists with the same name get separate folders (*Mix* and *Mix (2)*), and a track that is in two playlists is downloaded in both, so each folder is complete.
 
@@ -417,7 +419,7 @@ Just above the list, a line tells you where you are and how many items there are
 - **In** and **Type**: two boxes next to the field. **In** chooses where to search (*YouTube Music* or *YouTube*) and **Type**, what to search for there. In both, the first letter jumps to the option.
     - In *YouTube Music*: *Songs* (tracks from the catalog), *Videos* (music videos and YouTube Music videos), *Albums* (albums, singles and EPs), *Artists* and *Playlists* (from the YouTube Music catalog).
     - In *YouTube*: *Videos* (in general, no account required), *Channels* and *Playlists*.
-- **Inside a channel or artist**: when you go in, the list shows what there is to see first. In a YouTube channel: *Videos*, *Shorts*, *Live* and *Playlists*. In a YouTube Music artist: *Songs*, *Albums*, *Singles and EPs*, *Videos* and *Similar artists*. Go into whichever you like; `Backspace` goes back to choose another.
+- **Inside a channel or artist**: when you go in, the list shows what there is to see first. In a YouTube channel: *Videos*, *Shorts*, *Live*, *Playlists* and *Posts*, followed by **Search in this channel...**, **Channel subscription and notifications...** and **About the channel**. **Search in this channel...** asks for a text and lists the channel's videos that match it. In a YouTube Music artist: *Songs*, *Albums*, *Singles and EPs*, *Videos* and *Similar artists*. Go into whichever you like; `Backspace` goes back to choose another.
 
 ### Video and song details
 
@@ -432,6 +434,63 @@ Just above the list, a line tells you where you are and how many items there are
 - `Right arrow`, on a comment with replies, opens the replies.
 
 With YouTube.js turned on (**Preferences > Additional resources**), comments arrive in under a second, in the content language, with pagination and replies. Without it, KeyTune uses yt-dlp, which is slower, brings only the first 20 comments, without replies, and with dates in English.
+
+### Writing, replying to and rating comments
+
+With the account connected and YouTube.js turned on, comments come through your account and the **Actions...** menu gains what you can do with it. What you write is published on YouTube under your name.
+
+- **Write a comment...**: it is the first line of the comments list. `Enter` opens a box for the text and posts it on the video, song or post the list is about. The same command is at the end of the **Actions...** menu, for when you are already further down the list. The line only appears where your account can comment.
+- **Reply...**: posts a reply to the selected comment.
+- **Like the comment** and **Dislike the comment**: rate the comment. Afterwards the line says *you liked it* or *you disliked it*, and the menu offers **Remove the like** or **Remove the dislike**.
+- **Edit my comment...** and **Delete my comment...**: appear only on comments YouTube recognizes as yours, marked *your comment*. Deleting asks for confirmation and cannot be undone.
+
+In the text box, `Enter` breaks the line; go to **OK** with `Tab` to send, or press `Esc` to give up. Some comments do not accept replies, and on those **Reply...** does not appear. Without the account, or when YouTube refuses the account, comments still appear, read-only.
+
+**Sort by newest**, at the end of the **Actions...** menu of a comments list, swaps the top comments for the newest ones; **Sort by top comments** goes back. It only works with YouTube.js turned on.
+
+### YouTube notifications
+
+**Notifications**, in KeyTube's **Home** (or **View > YouTube notifications**), shows your account's notification inbox: new videos from channels with the bell on, replies to your comments and whatever else YouTube notifies you of. Requires a connected account and YouTube.js turned on.
+
+- Each line has the notification text, when it arrived and *unread*, when that is the case.
+- `Enter` plays the video the notification is about and marks it as read. `Shift+Enter` adds the video to the playlist without playing.
+- `Right arrow`, on the notification of a comment or a reply, opens the video's comments starting at the conversation it is about.
+- In the **Actions...** menu: **Mark as read**, **Hide this notification** (which removes it from your inbox on YouTube), **View comments** and **View details**.
+
+KeyTune also tells you when a new notification arrives: it checks the inbox every 15 minutes and speaks what came in, for example *New YouTube notification: Channel uploaded the video...*. The interval is in **Preferences > KeyTube > Announce new notifications**, where you can also turn the announcement off. YouTube does not deliver notifications to KeyTune as they happen, so the announcement can take up to the chosen interval. On the very first check, it only takes note of what was already in the inbox, without speaking. With KeyTune minimized, in the tray or behind another window, the notice comes as a Windows notification: it stays in the notification center, the screen reader reads it from there, and activating it opens the notifications list. To always hear it from KeyTune, turn off **Use the Windows notification while KeyTune is in the background**.
+
+The **YouTube notifications** command has no default shortcut; to give it one, use **Settings > Customize keyboard**.
+
+### A channel's subscription and notifications
+
+**Channel subscription and notifications...** checks your subscription to a YouTube channel and lets you change it. The command is one of the lines inside the channel, after **Posts**, and is also in the channel's **Actions...** menu, in a search or in **Subscribed channels**. From a video, use **Go to the channel** and pick the line. Requires a connected account and YouTube.js turned on.
+
+- If you are not subscribed, KeyTune asks whether you want to subscribe.
+- If you are, it shows what the channel notifies you of and lets you choose between **Receive all notifications**, **Receive personalized notifications**, **Receive no notifications** and **Unsubscribe**.
+
+**About the channel**, in the same places, opens a reading box with the channel's description, subscribers, number of videos, views, country, join date and links.
+
+### Channel posts
+
+Inside a YouTube channel, **Posts** lists what the channel published in its posts tab (the former community tab). It needs no account, only YouTube.js turned on.
+
+- Each line has the channel, the text, the date, the likes and how many comments there are. A post with a video, a poll or an image says so on the line.
+- `Enter` opens the whole post in a reading box, with the buttons **View comments** and, when there is a video, **Play the post's video**.
+- `Right arrow` opens the post's comments, which work like a video's.
+
+With the account connected, a post with a poll has **Vote in the poll...**, in the **Actions...** menu and in the post's reading box: choose the option and confirm. Voting for another option changes your vote. Post images are not shown.
+
+### Live chat
+
+On a broadcast that is on air, **View the live chat**, in the **Actions...** menu, opens the chat in the list itself. For the broadcast that is playing, use **Playback > View live chat of the current media**. Requires YouTube.js turned on.
+
+- The list has the latest messages and grows by itself: KeyTune fetches the new ones every 4 seconds and puts them at the end, keeping the last 500.
+- Messages that arrive are spoken, at most three at a time in a busy chat. **Stop speaking the chat messages**, in the **Actions...** menu, turns the speech off; the list keeps growing.
+- `Enter` opens the whole message in a reading box.
+- **Send a message...**, the first line of the list, sends a message with your account. It only appears with the account connected and in a chat that accepts messages from it.
+- `Backspace` leaves the chat and stops following it. When the broadcast ends, KeyTune tells you.
+
+The **View live chat of the current media** command has no default shortcut; to give it one, use **Settings > Customize keyboard**.
 
 ### Audio language
 
@@ -737,7 +796,17 @@ With AutoDJ installed, there are two more options: **AutoDJ profile** (*Smooth* 
 
 ### Accessibility
 
-It has a single option: **Enable accessibility announcements**. When on, the player announces changes of time, volume, tab switching and status to the screen reader. When off, those announcements stop. The on-demand announcement shortcuts (`T`, `V` and `S`) work either way. See [Accessibility features](#accessibility-features).
+The first option is **Enable accessibility announcements**. When on, the player announces changes of time, volume, tab switching and status to the screen reader. When off, those announcements stop. The on-demand announcement shortcuts (`T`, `V` and `S`) work either way. See [Accessibility features](#accessibility-features).
+
+The **Alert sounds** group has **Play alert sounds**, which turns all of them on or off at once, **Alert sounds volume** and the **Sounds that play** list, with one box per sound: `Space` turns the item's sound on or off and, when turned on, it plays so you know which one it is. Below the list, **Listen to the sound** plays the selected item's, **Choose a file for the sound...** puts an audio file from your computer in its place and **Back to the original sound** undoes the change. The chosen file is copied into KeyTune's data and cut at 5 seconds; with FFmpeg installed any audio format works, without it only 16-bit WAV. They are short sounds, each for one event:
+
+- **Live chat**: a new message, a paid message, a message from someone else that mentions your name, a message sent and the chat ending. When several messages arrive together, only one sound plays, the one for the most important: the one that mentions your name, then the paid one.
+- **YouTube account**: a new notification, liking, removing the like or disliking, and an action that worked or failed (commenting, subscribing, voting, marking a notification as read).
+- **Lists**: up arrow on the first item or down arrow on the last, a folder or list opened, going back to the previous one and more items being loaded.
+- **Welcome screen**: the first time KeyTune opens, its sound plays through and only then the screen appears.
+- **Player**: KeyTune opened and KeyTune closed (on closing, the window goes away at once and the program ends when the sound finishes, in about 1 second), the welcome screen, a new KeyTune update, a tab opened or closed, an item put in the playback queue or taken out of it, a finished download, the sleep timer warning that little time is left and a confirmation question asked by the main window.
+
+Their volume does not depend on the media volume. When the alert goes to a Windows notification, the notification sound is the one from Windows itself.
 
 ### Library
 
@@ -771,11 +840,16 @@ Gathers the YouTube and YouTube Music options. They only take effect with the in
 **Playback**
 
 - **Play related tracks at the end of the playlist**: when the last YouTube Music track ends, or when you ask for the next one while on the last, the player fetches related tracks (the YouTube Music radio) and keeps playing, with no pause between one and the next. The `A` key turns it on and off during playback. Tracks that are already in the playlist don't come in again.
-- **Save what I listened to in the YouTube Music history**: on by default. When you listen to a track long enough (about 30% of the duration, between 15 and 30 seconds), the player marks it as watched in your account's history. Turn it off to play without recording anything.
+- **Save what I listened to and watched in the YouTube history**: on by default. When you listen to a YouTube Music track or watch a YouTube video long enough (about 30% of the duration, between 15 and 30 seconds), the player marks it in your account's history. Regular YouTube videos need YouTube.js turned on. Turn it off to play without recording anything.
+
+**YouTube account**
+
+- **Announce new notifications**: how often KeyTune checks your YouTube account's notifications and speaks the ones that arrived: every 5, 15 (the default), 30 or 60 minutes, or **Never**. Requires a connected account and YouTube.js turned on. See [YouTube notifications](#youtube-notifications).
+- **Use the Windows notification while KeyTune is in the background**: on by default. With the window minimized, in the tray or behind another one, the new-notification notice goes to the Windows notification center instead of being spoken by KeyTune.
 
 **Language and region**
 
-- **Content language**: the language requested from YouTube in searches and in the texts it returns (counts, dates). The default is **Same as KeyTune**. It applies to YouTube searches with YouTube.js turned on; YouTube Music searches use only the region.
+- **Content language**: the language requested from YouTube in searches and in the texts it returns (counts, dates). The default is **Same as KeyTune**. With **Same as KeyTune**, changing the **Interface language** changes the content language at once, even before the player reopens. It applies to YouTube searches and lists, including the titles a channel has translated; YouTube Music searches use only the region. A list that is already open stays as it came: open it again to see it in the new language.
 - **Content region**: the country used in YouTube and YouTube Music searches. With **Automatic**, YouTube decides from your connection.
 - **Audio of dubbed videos**: some videos come with the original audio and dubs. Here you choose what plays: **Whatever YouTube delivers** (the default), **The video's original** or the dub in a language. Videos without the requested track play normally. A track that isn't the default goes through yt-dlp and takes a few seconds longer to start.
 

@@ -153,6 +153,7 @@ class DependencyMixin:
         configure_content_locale(
             language=getattr(self.settings, "youtube_content_language", ""),
             region=getattr(self.settings, "youtube_content_region", ""),
+            app_language=getattr(self.settings, "language", ""),
         )
         if configure_audio_preference(getattr(self.settings, "youtube_audio_language", "")):
             # O que já estava resolvido (e o que foi adiantado) ainda é da faixa de áudio anterior.
@@ -304,6 +305,7 @@ class DependencyMixin:
 
     def _handle_youtube_music_preferences_change(self, previous_settings):
         self._configure_youtube_music_dependency_management()
+        self._schedule_youtube_notification_check()
 
         had_managed_dependencies = bool(getattr(previous_settings, "youtube_music_manage_dependencies", False))
         has_managed_dependencies = bool(getattr(self.settings, "youtube_music_manage_dependencies", False))

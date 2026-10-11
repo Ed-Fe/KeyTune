@@ -5,6 +5,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
+from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..radio.media import is_radio_media
@@ -373,17 +374,27 @@ class FrameUIMixin:
     def _show_welcome_screen_if_first_run(self):
         if self.settings.welcome_screen_completed:
             return
-        self._show_welcome_dialog()
+        # Na primeira vez o som toca inteiro e só então a tela aparece, para o
+        # leitor de tela não falar por cima dele.
+        delay_ms = 0
+        if interface_sounds.play_for(self, interface_sounds.SOUND_WELCOME):
+            delay_ms = int(interface_sounds.seconds_until_played() * 1000)
+        if delay_ms:
+            wx.CallLater(delay_ms, self._show_welcome_dialog, play_sound=False)
+        else:
+            self._show_welcome_dialog(play_sound=False)
 
     def on_show_welcome_screen(self, _event):
         self._show_welcome_dialog()
 
-    def _show_welcome_dialog(self):
+    def _show_welcome_dialog(self, *, play_sound=True):
         dialog = WelcomeDialog(
             self,
             on_open_manual=self._open_manual_document,
             on_show_shortcuts=self._show_keyboard_help_dialog,
         )
+        if play_sound:
+            interface_sounds.play_for(self, interface_sounds.SOUND_WELCOME)
         try:
             dialog.ShowModal()
         finally:
@@ -404,6 +415,7 @@ class FrameUIMixin:
         self.menu_youtube_music_refresh_library_id = wx.NewIdRef()
         self.menu_open_youtube_music_id = wx.NewIdRef()
         self.menu_open_radio_id = wx.NewIdRef()
+        self.menu_open_youtube_notifications_id = wx.NewIdRef()
         self.menu_save_playlist_id = wx.NewIdRef()
         self.menu_close_media_id = wx.NewIdRef()
         self.menu_close_tab_id = wx.NewIdRef()
@@ -464,6 +476,7 @@ class FrameUIMixin:
         self.menu_add_to_youtube_playlist_id = wx.NewIdRef()
         self.menu_show_media_comments_id = wx.NewIdRef()
         self.menu_show_media_details_id = wx.NewIdRef()
+        self.menu_show_media_live_chat_id = wx.NewIdRef()
         self.menu_choose_audio_track_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
@@ -498,6 +511,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_add_to_youtube_playlist_id, _("Adicionar à Playlist do &YouTube Music\tCtrl+Shift+A"))
         playback_menu.Append(self.menu_show_media_comments_id, _("Ver &comentários da mídia atual\tCtrl+Shift+M"))
         playback_menu.Append(self.menu_show_media_details_id, _("Ver &detalhes da mídia atual\tCtrl+Shift+I"))
+        playback_menu.Append(self.menu_show_media_live_chat_id, _("Ver c&hat ao vivo da mídia atual"))
         playback_menu.Append(self.menu_choose_audio_track_id, _("&Idioma do áudio da mídia atual..."))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
@@ -528,6 +542,7 @@ class FrameUIMixin:
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
+        view_menu.Append(self.menu_open_youtube_notifications_id, _("&Notificações do YouTube"))
         view_menu.Append(self.menu_open_radio_id, _("&Rádios online por aba\tCtrl+Shift+N"))
         view_menu.AppendSeparator()
         self.menu_find_item_id = wx.NewIdRef()
@@ -787,6 +802,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_refresh_youtube_music_library, id=self.menu_youtube_music_refresh_library_id)
         self.Bind(wx.EVT_MENU, self.on_open_youtube_music, id=self.menu_open_youtube_music_id)
         self.Bind(wx.EVT_MENU, self.on_open_radio, id=self.menu_open_radio_id)
+        self.Bind(wx.EVT_MENU, self.on_open_youtube_notifications, id=self.menu_open_youtube_notifications_id)
         self.Bind(wx.EVT_MENU, self.on_save_playlist, id=self.menu_save_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_previous_track, id=self.menu_previous_track_id)
         self.Bind(wx.EVT_MENU, self.on_play_pause, id=self.menu_play_pause_id)
@@ -796,6 +812,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_add_to_youtube_playlist, id=self.menu_add_to_youtube_playlist_id)
         self.Bind(wx.EVT_MENU, self.on_show_media_comments, id=self.menu_show_media_comments_id)
         self.Bind(wx.EVT_MENU, self.on_show_media_details, id=self.menu_show_media_details_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_live_chat, id=self.menu_show_media_live_chat_id)
         self.Bind(wx.EVT_MENU, self.on_choose_audio_track, id=self.menu_choose_audio_track_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
@@ -962,6 +979,9 @@ class FrameUIMixin:
 
     def on_show_media_details(self, _event):
         self.show_current_media_details()
+
+    def on_show_media_live_chat(self, _event):
+        self.show_current_media_live_chat()
 
     def on_choose_audio_track(self, _event):
         self.choose_current_media_audio_track()

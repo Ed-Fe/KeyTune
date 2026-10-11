@@ -339,7 +339,7 @@ Favorito e avaliação aparecem ao lado do nome, na própria lista, por exemplo 
 
 Uma faixa só entra no histórico depois de tocar o bastante para contar como ouvida, e as entradas mais antigas saem quando o histórico passa do limite das preferências.
 
-Este histórico é local e não tem relação com **Salvar o que ouvi no histórico do YouTube Music**, que registra na sua conta do YouTube Music.
+Este histórico é local e não tem relação com **Salvar o que ouvi e assisti no histórico do YouTube**, que registra na sua conta do YouTube.
 
 ### Retomar de onde parou
 
@@ -390,13 +390,15 @@ A aba tem duas partes. Em cima, a seção **Conta e biblioteca**; embaixo, o cam
 
 ### A lista
 
-A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#como-as-listas-funcionam)) e começa no **Início**, com sete itens:
+A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#como-as-listas-funcionam)) e começa no **Início**, com nove itens:
 
 - **Suas playlists e mixes**: as da conta conectada. `Enter` abre a playlist numa aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista. Exige conta conectada.
 - **Curtidas**: as faixas curtidas (a playlist *Curtidas* da sua conta). Exige conta conectada.
-- **Histórico**: seu histórico de reprodução do YouTube Music. Exige conta conectada.
+- **Histórico do YouTube Music**: seu histórico de reprodução do YouTube Music. Exige conta conectada.
+- **Histórico do YouTube**: os vídeos que você assistiu no YouTube, do mais recente para o mais antigo. Exige conta conectada e o YouTube.js ativado.
 - **Vídeos das inscrições**: os vídeos novos dos canais em que você está inscrito, com duração, visualizações e data. Exige conta conectada e o YouTube.js ativado.
-- **Canais inscritos**: os canais em que você está inscrito. Cada um abre como qualquer canal, para você escolher entre vídeos, Shorts, transmissões ao vivo e playlists. Exige conta conectada e o YouTube.js ativado. As duas listas de inscrições são só para leitura: inscrever-se e cancelar a inscrição continuam sendo feitos no YouTube.
+- **Canais inscritos**: os canais em que você está inscrito. Cada um abre como qualquer canal, para você escolher entre vídeos, Shorts, transmissões ao vivo, playlists e posts. Exige conta conectada e o YouTube.js ativado. Para se inscrever, cancelar ou mudar o que um canal avisa, veja [Inscrição e notificações de um canal](#inscricao-e-notificacoes-de-um-canal).
+- **Notificações**: a caixa de notificações da sua conta do YouTube. Exige conta conectada e o YouTube.js ativado. Veja [Notificações do YouTube](#notificacoes-do-youtube).
 - **Em alta**: *Global* e os continentes. Entre num continente, escolha o país, e as paradas e destaques em alta aparecem como playlists que você pode tocar, abrir ou salvar na biblioteca. Não exige conta.
 - **Moods e gêneros**: as categorias de climas e gêneros do YouTube Music (*Foco*, *Treino*, *Pop*, *Rock*...). Entre numa categoria para ver as playlists dela. Não exige conta.
 
@@ -404,7 +406,7 @@ No KeyTube, vale ainda:
 
 - `Backspace` volta um nível por vez, até o **Início**. Dá para encadear: de um artista para um álbum, de um canal para uma playlist dele.
 - Cada lista traz uma parte dos itens por vez (25, ou o que estiver em **Itens carregados por vez**, nas preferências). Ao chegar ao fim, descer mais traz a parte seguinte. **Carregar a lista inteira**, no menu **Ações...**, traz de uma vez o que falta; numa busca ou num canal, que não têm fim conhecido, para em 1000 itens por vez.
-- O botão **Ações...** abre o menu do item: **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Carregar a lista inteira**, **Ver comentários**, **Ver detalhes**, **Ir para o canal** (ou **Ir para o artista**, seguido do nome), **Adicionar seleção...** (numa nova playlist ou numa aberta), **Baixar seleção...** e **Salvar no YouTube Music** (playlists ou faixas compatíveis). Numa das suas playlists, o menu também traz **Excluir playlist do YouTube Music...**, que a exclui da conta, com confirmação, e só vale para playlists que você criou. Num comentário, traz **Ler o comentário inteiro**.
+- O botão **Ações...** (ou `Shift+F10`) abre o menu do item, só com o que vale para ele, em blocos. Primeiro, o que `Enter` e as setas fazem: **Tocar** e **Adicionar sem tocar** num vídeo, numa faixa ou numa playlist; **Abrir** numa pasta, num canal ou num artista; **Ver conteúdo** numa playlist ou num álbum. Depois, o que mais dá para fazer com o item: **Ver comentários**, **Ver detalhes** e **Ir para o canal** (ou **Ir para o artista**, seguido do nome) num vídeo ou numa faixa; **Inscrição e notificações do canal...** e **Sobre o canal** num canal do YouTube; as ações de um comentário, de um post ou de uma notificação, descritas mais abaixo. Em seguida, para onde levar a seleção: **Adicionar seleção...** (numa nova playlist ou numa aberta), **Baixar seleção...**, **Salvar no YouTube Music** (playlists ou faixas compatíveis) e, numa playlist que você criou, **Excluir playlist do YouTube Music...**, com confirmação. Por último, o que vale para a lista na tela: **Escrever um comentário...** numa lista de comentários, **Carregar a lista inteira** quando ainda há itens a trazer e **Voltar à lista anterior**.
 - `Shift+Enter` numa das suas playlists adiciona as faixas à playlist atual sem tocar.
 - `Ctrl+Shift+B` (ou **Baixar seleção...**) baixa o que está selecionado. Com uma **playlist ou um álbum**, o KeyTune busca todas as faixas de dentro e baixa tudo. Você escolhe a pasta de destino; cada playlist ou álbum vira uma **subpasta com o nome dele**, e as faixas e vídeos avulsos ficam na própria pasta, inclusive numa seleção mista. Duas listas com o mesmo nome ganham pastas separadas (*Mix* e *Mix (2)*), e uma faixa que está em duas playlists é baixada nas duas, para cada pasta ficar completa.
 
@@ -417,7 +419,7 @@ Logo acima da lista, uma linha diz onde você está e quantos itens há (por exe
 - **Em** e **Tipo**: duas caixas ao lado do campo. **Em** escolhe onde buscar (*YouTube Music* ou *YouTube*) e **Tipo**, o que buscar ali. Nas duas, a primeira letra pula para a opção.
     - No *YouTube Music*: *Músicas* (faixas do catálogo), *Vídeos* (videoclipes e vídeos do YouTube Music), *Álbuns* (álbuns, singles e EPs), *Artistas* e *Playlists* (do catálogo do YouTube Music).
     - No *YouTube*: *Vídeos* (em geral, sem exigir conta), *Canais* e *Playlists*.
-- **Dentro de um canal ou artista**: ao entrar, a lista mostra primeiro o que há para ver. Num canal do YouTube: *Vídeos*, *Shorts*, *Ao vivo* e *Playlists*. Num artista do YouTube Music: *Músicas*, *Álbuns*, *Singles e EPs*, *Vídeos* e *Artistas parecidos*. Entre no que quiser; `Backspace` volta para escolher outro.
+- **Dentro de um canal ou artista**: ao entrar, a lista mostra primeiro o que há para ver. Num canal do YouTube: *Vídeos*, *Shorts*, *Ao vivo*, *Playlists* e *Posts*, seguidos de **Buscar neste canal...**, **Inscrição e notificações do canal...** e **Sobre o canal**. **Buscar neste canal...** pede um texto e lista os vídeos do canal que batem com ele. Num artista do YouTube Music: *Músicas*, *Álbuns*, *Singles e EPs*, *Vídeos* e *Artistas parecidos*. Entre no que quiser; `Backspace` volta para escolher outro.
 
 ### Detalhes de vídeos e músicas
 
@@ -432,6 +434,63 @@ Logo acima da lista, uma linha diz onde você está e quantos itens há (por exe
 - `Seta para a direita`, num comentário com respostas, abre as respostas.
 
 Com o YouTube.js ativado (**Preferências > Recursos adicionais**), os comentários chegam em menos de um segundo, no idioma do conteúdo, com paginação e respostas. Sem ele, o KeyTune usa o yt-dlp, que é mais lento, traz só os 20 primeiros comentários, sem respostas, e com datas em inglês.
+
+### Escrever, responder e avaliar comentários
+
+Com a conta conectada e o YouTube.js ativado, os comentários chegam pela sua conta e o menu **Ações...** ganha o que dá para fazer com ela. O que você escreve é publicado no YouTube com o seu nome.
+
+- **Escrever um comentário...**: é a primeira linha da lista de comentários. `Enter` abre uma caixa para o texto e publica no vídeo, na música ou no post de que a lista trata. O mesmo comando fica no fim do menu **Ações...**, para quando você já desceu na lista. A linha só aparece onde a sua conta pode comentar.
+- **Responder...**: publica uma resposta ao comentário selecionado.
+- **Curtir o comentário** e **Não gostei do comentário**: avaliam o comentário. Depois, a linha diz *você curtiu* ou *você não gostou*, e o menu passa a oferecer **Remover a curtida** ou **Remover o não gostei**.
+- **Editar o meu comentário...** e **Apagar o meu comentário...**: aparecem só nos comentários que o YouTube reconhece como seus, marcados com *seu comentário*. Apagar pede confirmação e não pode ser desfeito.
+
+Na caixa de texto, `Enter` quebra a linha; vá com `Tab` até **OK** para enviar, ou pressione `Esc` para desistir. Alguns comentários não aceitam resposta, e neles **Responder...** não aparece. Sem a conta, ou quando o YouTube recusa a conta, os comentários continuam aparecendo, só para leitura.
+
+**Ordenar pelos mais recentes**, no fim do menu **Ações...** de uma lista de comentários, troca os comentários principais pelos mais recentes; **Ordenar pelos principais** volta. Só vale com o YouTube.js ativado.
+
+### Notificações do YouTube
+
+**Notificações**, no **Início** do KeyTube (ou **Exibir > Notificações do YouTube**), mostra a caixa de notificações da sua conta: vídeos novos dos canais com o sino ligado, respostas aos seus comentários e o que mais o YouTube avisar. Exige conta conectada e o YouTube.js ativado.
+
+- Cada linha traz o texto da notificação, quando ela chegou e *não lida*, se for o caso.
+- `Enter` toca o vídeo de que a notificação fala e a marca como lida. `Shift+Enter` adiciona o vídeo à playlist sem tocar.
+- `Seta para a direita`, na notificação de um comentário ou de uma resposta, abre os comentários do vídeo começando pela conversa de que ela fala.
+- No menu **Ações...**: **Marcar como lida**, **Ocultar esta notificação** (que a tira da sua caixa no YouTube), **Ver comentários** e **Ver detalhes**.
+
+O KeyTune também avisa quando chega notificação nova: ele consulta a caixa a cada 15 minutos e fala o que chegou, por exemplo *Nova notificação do YouTube: Canal enviou o vídeo...*. O intervalo fica em **Preferências > KeyTube > Avisar das notificações novas**, onde também dá para desligar o aviso. O YouTube não entrega as notificações na hora para o KeyTune, então o aviso pode demorar até o intervalo escolhido. Na primeira consulta, ele só toma nota do que já estava na caixa, sem falar nada. Com o KeyTune minimizado, na bandeja ou atrás de outra janela, o aviso sai como notificação do Windows: fica na central de notificações, o leitor de tela o lê de lá, e ativá-lo abre a lista de notificações. Para ouvir sempre pelo KeyTune, desligue **Usar a notificação do Windows com o KeyTune em segundo plano**.
+
+O comando **Notificações do YouTube** não tem atalho de fábrica; para dar um a ele, use **Configurações > Personalizar teclado**.
+
+### Inscrição e notificações de um canal
+
+**Inscrição e notificações do canal...** consulta a sua inscrição num canal do YouTube e deixa mudá-la. O comando é uma das linhas de dentro do canal, depois de **Posts**, e também está no menu **Ações...** do canal, numa busca ou em **Canais inscritos**. A partir de um vídeo, use **Ir para o canal** e escolha a linha. Exige conta conectada e o YouTube.js ativado.
+
+- Se você não está inscrito, o KeyTune pergunta se quer se inscrever.
+- Se já está, ele mostra o que o canal avisa e deixa escolher entre **Receber todas as notificações**, **Receber notificações personalizadas**, **Não receber notificações** e **Cancelar a inscrição**.
+
+**Sobre o canal**, nos mesmos lugares, abre uma caixa de leitura com a descrição do canal, os inscritos, a quantidade de vídeos, as visualizações, o país, a data de entrada e os links.
+
+### Posts dos canais
+
+Dentro de um canal do YouTube, **Posts** lista o que o canal publicou na aba de posts (a antiga comunidade). Não exige conta, só o YouTube.js ativado.
+
+- Cada linha traz o canal, o texto, a data, as curtidas e quantos comentários há. Um post com vídeo, enquete ou imagem diz isso na linha.
+- `Enter` abre o post inteiro numa caixa de leitura, com os botões **Ver comentários** e, quando há vídeo, **Tocar o vídeo do post**.
+- `Seta para a direita` abre os comentários do post, que funcionam como os de um vídeo.
+
+Com a conta conectada, um post com enquete traz **Votar na enquete...**, no menu **Ações...** e na caixa de leitura do post: escolha a opção e confirme. Votar em outra opção troca o voto. As imagens dos posts não são mostradas.
+
+### Chat ao vivo
+
+Numa transmissão que está no ar, **Ver o chat ao vivo**, no menu **Ações...**, abre o chat na própria lista. Para a transmissão que está tocando, use **Reprodução > Ver chat ao vivo da mídia atual**. Exige o YouTube.js ativado.
+
+- A lista traz as mensagens mais recentes e cresce sozinha: o KeyTune busca as novas a cada 4 segundos e as põe no fim, guardando as últimas 500.
+- As mensagens que chegam são faladas, no máximo três por vez num chat movimentado. **Parar de falar as mensagens do chat**, no menu **Ações...**, desliga a fala; a lista continua crescendo.
+- `Enter` abre a mensagem inteira numa caixa de leitura.
+- **Enviar uma mensagem...**, a primeira linha da lista, envia uma mensagem com a sua conta. Só aparece com a conta conectada e num chat que aceita mensagens dela.
+- `Backspace` sai do chat e para de acompanhá-lo. Quando a transmissão acaba, o KeyTune avisa.
+
+O comando **Ver chat ao vivo da mídia atual** não tem atalho de fábrica; para dar um a ele, use **Configurações > Personalizar teclado**.
 
 ### Idioma do áudio
 
@@ -741,7 +800,17 @@ Com o AutoDJ instalado, há duas opções a mais: **Perfil do AutoDJ** (*Suave* 
 
 ### Acessibilidade
 
-Tem uma opção só: **Ativar anúncios de acessibilidade**. Ligada, o player anuncia ao leitor de tela mudanças de tempo, volume, troca de abas e status. Desligada, esses anúncios param. Os atalhos de anúncio sob demanda (`T`, `V` e `S`) funcionam em qualquer caso. Veja [Acessibilidade](#recursos-de-acessibilidade).
+A primeira opção é **Ativar anúncios de acessibilidade**. Ligada, o player anuncia ao leitor de tela mudanças de tempo, volume, troca de abas e status. Desligada, esses anúncios param. Os atalhos de anúncio sob demanda (`T`, `V` e `S`) funcionam em qualquer caso. Veja [Acessibilidade](#recursos-de-acessibilidade).
+
+O grupo **Sons de aviso** tem **Tocar sons de aviso**, que liga ou desliga todos de uma vez, **Volume dos sons de aviso** e a lista **Sons que tocam**, com uma caixa por som: `Espaço` liga ou desliga o som do item e, ao ligar, ele toca para você saber qual é. Abaixo da lista, **Ouvir o som** toca o do item selecionado, **Escolher um arquivo para o som...** põe um áudio do seu computador no lugar dele e **Voltar ao som original** desfaz a troca. O arquivo escolhido é copiado para os dados do KeyTune e cortado em 5 segundos; com o FFmpeg instalado serve qualquer formato de áudio, sem ele só WAV de 16 bits. São sons curtos, cada um para um acontecimento:
+
+- **Chat ao vivo**: mensagem nova, mensagem paga, mensagem de outra pessoa que cita o seu nome, mensagem enviada e chat encerrado. Quando chegam várias mensagens juntas, toca um som só, o da mais importante: a que cita o seu nome, depois a paga.
+- **Conta do YouTube**: notificação nova, curtir, remover a curtida ou marcar não gostei, e ação que deu certo ou falhou (comentar, inscrever-se, votar, marcar notificação como lida).
+- **Listas**: seta para cima no primeiro item ou para baixo no último, pasta ou lista aberta, volta à anterior e mais itens sendo carregados.
+- **Tela de boas-vindas**: na primeira vez que o KeyTune abre, o som dela toca inteiro e só depois a tela aparece.
+- **Player**: KeyTune aberto e KeyTune fechado (ao fechar, a janela some na hora e o programa termina quando o som acaba, em cerca de 1 segundo), tela de boas-vindas, atualização nova do KeyTune, aba aberta ou fechada, item posto na fila de reprodução ou tirado dela, download concluído, aviso do temporizador de que falta pouco e pergunta de confirmação feita pela janela principal.
+
+O volume deles não depende do volume da mídia. Com o aviso indo para a notificação do Windows, o som da notificação é o do próprio Windows.
 
 ### Biblioteca
 
@@ -775,11 +844,16 @@ Reúne as opções do YouTube e do YouTube Music. Elas só têm efeito com a int
 **Reprodução**
 
 - **Tocar faixas relacionadas ao fim da playlist**: quando a última faixa do YouTube Music acaba, ou quando você pede a próxima estando na última, o player busca faixas relacionadas (a rádio do YouTube Music) e segue tocando, sem pausa entre uma e outra. A tecla `A` liga e desliga durante a reprodução. Faixas que já estão na playlist não entram de novo.
-- **Salvar o que ouvi no histórico do YouTube Music**: ligada por padrão. Ao ouvir uma faixa por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player a marca como assistida no histórico da sua conta. Desligue para tocar sem registrar nada.
+- **Salvar o que ouvi e assisti no histórico do YouTube**: ligada por padrão. Ao ouvir uma faixa do YouTube Music ou assistir a um vídeo do YouTube por tempo suficiente (cerca de 30% da duração, entre 15 e 30 segundos), o player o marca no histórico da sua conta. Os vídeos do YouTube comum precisam do YouTube.js ativado. Desligue para tocar sem registrar nada.
+
+**Conta do YouTube**
+
+- **Avisar das notificações novas**: de quanto em quanto tempo o KeyTune consulta as notificações da sua conta do YouTube e fala as que chegaram: a cada 5, 15 (o padrão), 30 ou 60 minutos, ou **Nunca**. Exige conta conectada e o YouTube.js ativado. Veja [Notificações do YouTube](#notificacoes-do-youtube).
+- **Usar a notificação do Windows com o KeyTune em segundo plano**: ligada por padrão. Com a janela minimizada, na bandeja ou atrás de outra, o aviso de notificação nova vai para a central de notificações do Windows em vez de ser falado pelo KeyTune.
 
 **Idioma e região**
 
-- **Idioma do conteúdo**: o idioma pedido ao YouTube nas buscas e nos textos que ele devolve (contagens, datas). O padrão é **O mesmo do KeyTune**. Vale para as buscas do YouTube com o YouTube.js ativado; as buscas do YouTube Music usam só a região.
+- **Idioma do conteúdo**: o idioma pedido ao YouTube nas buscas e nos textos que ele devolve (contagens, datas). O padrão é **O mesmo do KeyTune**. Com **O mesmo do KeyTune**, trocar o **Idioma da interface** já muda o idioma do conteúdo, antes mesmo de o player reabrir. Vale para as buscas e as listas do YouTube, incluindo os títulos que o canal traduziu; as buscas do YouTube Music usam só a região. Uma lista já aberta continua como veio: abra-a de novo para vê-la no idioma novo.
 - **Região do conteúdo**: o país usado nas buscas do YouTube e do YouTube Music. Em **Automática**, o YouTube decide pela sua conexão.
 - **Áudio dos vídeos dublados**: alguns vídeos trazem o áudio original e dublagens. Aqui você escolhe o que toca: **A que o YouTube entregar** (o padrão), **Original do vídeo** ou a dublagem num idioma. Vídeos sem a faixa pedida tocam normalmente. Uma faixa que não é a padrão passa pelo yt-dlp e leva alguns segundos a mais para começar.
 

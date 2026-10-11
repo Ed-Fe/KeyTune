@@ -1,5 +1,6 @@
 import wx
 
+from .. import interface_sounds
 from ..i18n import _
 from ..equalizer.backend import (
     build_mpv_equalizer_filter,
@@ -598,6 +599,7 @@ class FrameEqualizerMixin:
             self._announce(_("Presets embutidos não podem ser excluídos."))
             return
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         with wx.MessageDialog(
             self,
             _("Deseja realmente excluir o preset {name}?").format(name=preset.name),
