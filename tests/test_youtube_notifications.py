@@ -196,6 +196,10 @@ class NotificationCheckTests(unittest.TestCase):
         call_later = patch.object(frame_notifications.wx, "CallLater")
         self.addCleanup(call_later.stop)
         self.call_later = call_later.start()
+        # Sem depender da conta que estiver salva no computador de quem roda o teste.
+        session = patch.object(frame_notifications, "optional_account_session", return_value=("", 0))
+        self.addCleanup(session.stop)
+        session.start()
 
     def test_the_first_check_ever_only_takes_note(self):
         frame = _Frame(self.store)
