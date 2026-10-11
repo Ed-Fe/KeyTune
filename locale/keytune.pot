@@ -1984,10 +1984,6 @@ msgid "Avisos (WARNING)"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Avisos de eventos que falam"
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Avisos de eventos que falam:"
 msgstr ""
 
@@ -3735,14 +3731,6 @@ msgstr ""
 
 #: src/player/keyboard/shortcuts.py
 msgid "Espaço"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Espaço liga ou desliga o aviso do item."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Espaço liga ou desliga o som do item; ao ligar, ele toca."
 msgstr ""
 
 #: src/player/quick_player/panel.py
@@ -8527,10 +8515,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Sons de aviso"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Sons que tocam"
 msgstr ""
 
 #: src/player/preferences/dialog.py

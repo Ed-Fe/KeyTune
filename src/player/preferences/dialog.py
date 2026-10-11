@@ -304,11 +304,6 @@ class PreferencesDialog(wx.Dialog):
             [label for _name, label in announcement_labels()],
             size=self.FromDIP(wx.Size(-1, 130)),
         )
-        describe_control(
-            self.announcements_list,
-            _("Avisos de eventos que falam"),
-            _("Espaço liga ou desliga o aviso do item."),
-        )
         sizer.Add(announcements_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
         sizer.Add(self.announcements_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
         self.announcements_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_announcements)
@@ -334,11 +329,6 @@ class PreferencesDialog(wx.Dialog):
         sounds_label = wx.StaticText(box, label=_("Sons que tocam:"))
         self.interface_sounds_list = CheckList(
             box, [label for _name, label in sound_labels()], size=self.FromDIP(wx.Size(-1, 190))
-        )
-        describe_control(
-            self.interface_sounds_list,
-            _("Sons que tocam"),
-            _("Espaço liga ou desliga o som do item; ao ligar, ele toca."),
         )
         sizer.Add(sounds_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
         sizer.Add(self.interface_sounds_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
