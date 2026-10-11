@@ -7611,3 +7611,5 @@ msgstr "The interface language changes when KeyTune is opened again. Do you want
 msgid "Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."
 msgstr "Applies when KeyTune is opened again; on confirming, it offers to restart."
 
+msgid "Você não pode escrever neste chat: {reason}"
+msgstr "You cannot write in this chat: {reason}"

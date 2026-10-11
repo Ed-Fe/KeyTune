@@ -487,7 +487,7 @@ On a broadcast that is on air, **View the live chat**, in the **Actions...** men
 - The list has the latest messages and grows by itself: KeyTune fetches the new ones every 4 seconds and puts them at the end, keeping the last 500.
 - Messages that arrive are spoken, at most three at a time in a busy chat. **Stop speaking the chat messages**, in the **Actions...** menu, turns the speech off; the list keeps growing.
 - `Enter` opens the whole message in a reading box.
-- **Send a message...**, the first line of the list, sends a message with your account. It only appears with the account connected and in a chat that accepts messages from it.
+- **Send a message...**, the first line of the list, sends a message with your account. It only appears with the account connected. When the chat does not accept messages from your account (subscribers only or members only, for example), the line says **You cannot write in this chat** and the reason YouTube gives.
 - `Backspace` leaves the chat and stops following it. When the broadcast ends, KeyTune tells you.
 
 The **View live chat of the current media** command has no default shortcut; to give it one, use **Settings > Customize keyboard**.

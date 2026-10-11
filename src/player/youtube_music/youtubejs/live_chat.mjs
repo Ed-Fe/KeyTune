@@ -94,8 +94,23 @@ export function createLiveChatHandlers({ clientFor, accountClientFor, videoIdFro
     chat.sendParams =
       contents.actionPanel?.liveChatMessageInputRenderer?.sendButton?.buttonRenderer?.serviceEndpoint
         ?.sendLiveChatMessageEndpoint?.params || chat.sendParams;
-    chat.viewer = contents.actionPanel?.liveChatMessageInputRenderer?.authorName?.simpleText || chat.viewer || "";
-    return { entries, can_send: Boolean(chat.account && chat.sendParams), ended: false, viewer: chat.viewer };
+    chat.viewer =
+      contents.actionPanel?.liveChatMessageInputRenderer?.authorName?.simpleText ||
+      (typeof contents.viewerName === "string" ? contents.viewerName : "") ||
+      chat.viewer ||
+      "";
+    // Num chat só para inscritos ou membros, o YouTube manda o motivo no lugar do campo de escrita.
+    const restricted = contents.actionPanel?.liveChatRestrictedParticipationRenderer?.message;
+    if (contents.actionPanel) {
+      chat.restriction = restricted ? messageText(restricted) || restricted.simpleText || "" : "";
+    }
+    return {
+      entries,
+      can_send: Boolean(chat.account && chat.sendParams),
+      ended: false,
+      viewer: chat.viewer,
+      restriction: chat.account ? chat.restriction || "" : "",
+    };
   }
 
   async function liveChatSend(request) {

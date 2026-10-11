@@ -280,7 +280,8 @@ def live_chat(media_url, *, restart=False, cookie_header="", account_index=0):
     """O que chegou no chat ao vivo de *media_url* desde o último pedido.
 
     Devolve ``(mensagens, se a conta pode enviar, se a transmissão acabou, nome da
-    conta no chat)``; *restart* recomeça das mensagens mais recentes.
+    conta no chat, por que a conta não pode enviar)``; *restart* recomeça das
+    mensagens mais recentes.
     """
     response = _request_action(
         "live_chat",
@@ -293,6 +294,7 @@ def live_chat(media_url, *, restart=False, cookie_header="", account_index=0):
         bool(response.get("can_send")),
         bool(response.get("ended")),
         str(response.get("viewer") or "").strip(),
+        str(response.get("restriction") or "").strip(),
     )
 
 

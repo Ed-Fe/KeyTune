@@ -92,8 +92,8 @@ class LiveChatMixin:
             update = youtube_live_chat.live_chat_update(media_url, restart=True)
             self._youtube_live_chat_viewer = update.viewer
             results = list(update.messages)
-            if update.can_send:
-                results.insert(0, send_chat_message_item())
+            if update.can_send or update.restriction:
+                results.insert(0, send_chat_message_item(update.restriction))
             return YouTubeResultPage(results=tuple(results))
 
         view = YouTubeResultsView(
@@ -195,8 +195,12 @@ class LiveChatMixin:
                 for text in youtube_live_chat.spoken_messages(new_messages):
                     self._announce(text)
 
-    def send_youtube_live_chat_message(self):
-        """Pede o texto e o envia ao chat da lista na tela."""
+    def send_youtube_live_chat_message(self, restriction=None):
+        """Pede o texto e o envia ao chat da lista na tela; com *restriction*, só diz por que não dá."""
+        if restriction:
+            interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
+            self._announce(_("Você não pode escrever neste chat: {reason}").format(reason=restriction))
+            return False
         view = self._youtube_music_current_results_view()
         if not isinstance(view.context, LiveChatContext) or not self._ensure_youtube_music_authenticated():
             return False

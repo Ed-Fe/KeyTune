@@ -106,8 +106,14 @@ def write_comment_item():
     return YouTubeActionItem(ACTION_WRITE_COMMENT, _("Escrever um comentário..."))
 
 
-def send_chat_message_item():
-    """A primeira linha de um chat ao vivo em que a conta pode escrever."""
+def send_chat_message_item(restriction=""):
+    """A primeira linha de um chat ao vivo: escrever ou, com *restriction*, por que a conta não pode."""
+    if restriction:
+        return YouTubeActionItem(
+            ACTION_SEND_CHAT_MESSAGE,
+            _("Você não pode escrever neste chat: {reason}").format(reason=restriction),
+            payload=restriction,
+        )
     return YouTubeActionItem(ACTION_SEND_CHAT_MESSAGE, _("Enviar uma mensagem..."))
 
 

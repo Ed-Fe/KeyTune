@@ -487,7 +487,7 @@ En una transmisión que está en el aire, **Ver el chat en vivo**, en el menú *
 - La lista trae los mensajes más recientes y crece sola: KeyTune busca los nuevos cada 4 segundos y los pone al final, guardando los últimos 500.
 - Los mensajes que llegan se dicen, como máximo tres cada vez en un chat con mucho movimiento. **Dejar de decir los mensajes del chat**, en el menú **Acciones...**, apaga la voz; la lista sigue creciendo.
 - `Enter` abre el mensaje completo en un cuadro de lectura.
-- **Enviar un mensaje...**, la primera línea de la lista, envía un mensaje con tu cuenta. Solo aparece con la cuenta conectada y en un chat que acepta mensajes de ella.
+- **Enviar un mensaje...**, la primera línea de la lista, envía un mensaje con tu cuenta. Solo aparece con la cuenta conectada. Cuando el chat no acepta mensajes de tu cuenta (solo para suscriptores o solo para miembros, por ejemplo), la línea dice **No puedes escribir en este chat** y el motivo que da YouTube.
 - `Retroceso` sale del chat y deja de seguirlo. Cuando la transmisión termina, KeyTune avisa.
 
 El comando **Ver chat en vivo del contenido actual** no tiene atajo de fábrica; para darle uno, usa **Configuración > Personalizar teclado**.
