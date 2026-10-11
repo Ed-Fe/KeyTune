@@ -7657,3 +7657,9 @@ msgstr "Avisos de eventos que hablan"
 
 msgid "Espaço liga ou desliga o aviso do item."
 msgstr "Espacio activa o desactiva el aviso del elemento."
+
+msgid "{item}: ligado"
+msgstr "{item}: activado"
+
+msgid "{item}: desligado"
+msgstr "{item}: desactivado"

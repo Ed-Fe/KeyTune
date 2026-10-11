@@ -7657,3 +7657,9 @@ msgstr "Event notices that speak"
 
 msgid "Espaço liga ou desliga o aviso do item."
 msgstr "Space turns the item's notice on or off."
+
+msgid "{item}: ligado"
+msgstr "{item}: on"
+
+msgid "{item}: desligado"
+msgstr "{item}: off"

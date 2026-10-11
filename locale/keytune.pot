@@ -10037,6 +10037,14 @@ msgstr ""
 msgid "{item}: ainda não está na biblioteca."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "{item}: desligado"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "{item}: ligado"
+msgstr ""
+
 #: src/player/frames/smart_library/ratings.py
 msgid "{item}: {favorite}, {rating}, {played}."
 msgstr ""
