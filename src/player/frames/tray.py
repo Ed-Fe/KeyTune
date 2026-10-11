@@ -178,6 +178,7 @@ class FrameTrayMixin:
             not self.settings.close_to_tray
             or getattr(self, "_exit_requested", False)
             or getattr(self, "_update_restart_pending", False)
+            or getattr(self, "_app_restart_pending", False)
             or not event.CanVeto()
             or not self._tray_supported()
         ):

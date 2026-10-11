@@ -1,5 +1,6 @@
 import wx
 
+from .restart import relaunch, restart_requested
 from .single_instance import ACTION_FOCUS, ACTION_OPEN, SingleInstanceServer
 
 
@@ -67,3 +68,5 @@ def main(initial_paths=None):
     app.MainLoop()
 
     ipc_server.shutdown()
+    if restart_requested():
+        relaunch()

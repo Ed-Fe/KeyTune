@@ -1,5 +1,6 @@
 import wx
 
+from ...list_edge_sound import play_list_edge_sound
 from ...constants import LARGE_SEEK_STEP_MS
 from ...playlists import ScreenTabState
 
@@ -204,6 +205,9 @@ class KeyNavigationMixin:
         # help). This covers the lyrics reader and every edit field (Filtro,
         # busca, link).
         focused_window = wx.Window.FindFocus()
+        # Só o som: a tecla segue o caminho normal dela. A lista da playlist toca o
+        # dela no próprio painel, porque as setas de lá não chegam até aqui.
+        play_list_edge_sound(focused_window, event)
         if isinstance(focused_window, wx.TextEntry) and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1):
             autodj_panel = self._autodj_navigation_panel()
             is_autodj_info_tab = bool(

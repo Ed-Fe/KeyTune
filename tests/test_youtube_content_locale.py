@@ -29,6 +29,24 @@ class ContentLocaleTests(unittest.TestCase):
             ):
                 self.assertEqual(content_locale.content_language(), expected)
 
+    def test_the_language_chosen_for_keytune_counts_before_the_restart(self):
+        with patch.object(content_locale, "get_active_language", return_value="en"):
+            content_locale.configure_content_locale(app_language="pt_BR")
+            self.assertEqual(content_locale.content_language(), "pt")
+            content_locale.configure_content_locale(language="es", app_language="pt_BR")
+            self.assertEqual(content_locale.content_language(), "es")
+
+    def test_yt_dlp_asks_for_the_content_language(self):
+        from player.youtube_music import yt_dlp_runtime
+
+        content_locale.configure_content_locale(language="pt")
+
+        self.assertEqual(yt_dlp_runtime._with_content_language(None), {"youtube": {"lang": "pt"}})
+        self.assertEqual(
+            yt_dlp_runtime._with_content_language({"youtube": {"player_client": ["web"]}}),
+            {"youtube": {"player_client": ["web"], "lang": "pt"}},
+        )
+
     def test_a_chosen_language_and_region_go_with_every_youtubejs_request(self):
         content_locale.configure_content_locale(language="pt_pt", region="pt")
 

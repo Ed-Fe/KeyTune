@@ -5,6 +5,7 @@ import wx
 
 from ..accessibility import attach_named_accessible
 from ..i18n import _, ngettext
+from ..list_edge_sound import play_list_edge_sound
 from .text import normalize_search_text
 
 
@@ -665,6 +666,9 @@ class PlaylistBrowserPanel(wx.Panel):
         if event.ControlDown() or event.AltDown():
             event.Skip()
             return
+
+        # A linha de "lista vazia" é a única da lista: qualquer seta já bate na borda.
+        play_list_edge_sound(self.items_list, event)
 
         if key_code == wx.WXK_TAB:
             if self._on_tab and self._on_tab(backward=event.ShiftDown()):

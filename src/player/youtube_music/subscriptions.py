@@ -1,10 +1,11 @@
-"""Inscrições da conta do YouTube: os vídeos novos e os canais.
+"""Inscrições da conta do YouTube: os vídeos novos, os canais, inscrever-se e o sino.
 
-Só o YouTube.js lê isso, com os cookies que a conta do YouTube já salvou.
-É só leitura: inscrever-se ou cancelar continua sendo feito no YouTube.
+Só o YouTube.js faz isso, com os cookies que a conta do YouTube já salvou.
 """
 
 from __future__ import annotations
+
+from dataclasses import dataclass
 
 from ..i18n import _
 from . import youtubejs_runtime
@@ -49,3 +50,54 @@ def subscribed_channels_page(start, count):
             cookie_header, start=start, count=count, account_index=account_index
         )
     )
+
+
+BELL_ALL = "all"
+BELL_PERSONALIZED = "personalized"
+BELL_NONE = "none"
+
+
+@dataclass(frozen=True)
+class ChannelSubscription:
+    """Se a conta está inscrita num canal e o que o sino dele avisa (vazio sem inscrição)."""
+
+    subscribed: bool = False
+    notifications: str = ""
+
+
+def bell_label(level):
+    return {
+        BELL_ALL: _("todas as notificações"),
+        BELL_PERSONALIZED: _("notificações personalizadas"),
+        BELL_NONE: _("nenhuma notificação"),
+    }.get(level, "")
+
+
+def channel_subscription(channel_id):
+    """A inscrição da conta em *channel_id*."""
+    cookie_header, account_index = _account()
+    state = youtubejs_runtime.channel_state(cookie_header, channel_id, account_index=account_index)
+    return ChannelSubscription(
+        subscribed=bool(state.get("subscribed")),
+        notifications=str(state.get("notifications") or ""),
+    )
+
+
+def _channel_action(channel_id, operation):
+    cookie_header, account_index = _account()
+    youtubejs_runtime.channel_action(cookie_header, channel_id, operation, account_index=account_index)
+
+
+def subscribe_to_channel(channel_id):
+    _channel_action(channel_id, "subscribe")
+
+
+def unsubscribe_from_channel(channel_id):
+    _channel_action(channel_id, "unsubscribe")
+
+
+def set_channel_notifications(channel_id, level):
+    """Muda o sino de um canal em que a conta está inscrita: tudo, personalizado ou nada."""
+    if level not in (BELL_ALL, BELL_PERSONALIZED, BELL_NONE):
+        raise ValueError(f"Nível de notificação desconhecido: {level}")
+    _channel_action(channel_id, f"notify_{level}")

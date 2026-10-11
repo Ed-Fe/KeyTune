@@ -419,6 +419,8 @@ class YouTubeMediaSearchResult:
     # O canal (YouTube) ou o artista (YouTube Music) de um vídeo ou faixa, para ir até ele.
     owner_browse_id: str = ""
     owner_title: str = ""
+    # Uma transmissão que está no ar agora: tem chat ao vivo.
+    is_live: bool = False
 
     def owner_result(self):
         """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""

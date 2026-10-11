@@ -1,5 +1,6 @@
 import wx
 
+from .. import interface_sounds
 from ..accessibility import ScreenReaderAnnouncer
 from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
 from ..log import setup_logging
@@ -86,6 +87,7 @@ class MediaPlayerFrame(
         self._startup_update_check_scheduled = False
         self._update_check_in_progress = False
         self._update_restart_pending = False
+        self._app_restart_pending = False
         self._startup_initialization_started = False
         self._startup_ready = False
         self._suppress_next_auto_advance = False
@@ -114,6 +116,9 @@ class MediaPlayerFrame(
 
         self.Centre()
         self.Show()
+        if self.settings.welcome_screen_completed:
+            # Na primeira vez quem toca é o som da tela de boas-vindas.
+            interface_sounds.play_for(self, interface_sounds.SOUND_APP_OPENED)
         wx.CallAfter(self._finish_startup_initialization)
 
     def _finish_startup_initialization(self):
@@ -141,6 +146,8 @@ class MediaPlayerFrame(
         self._initialize_plugin_service()
         self._open_initial_paths()
         self._initialize_youtube_music_startup_state()
+        # As abas restauradas ao abrir não fazem som; as abertas daqui em diante, sim.
+        self._tab_sounds_ready = True
         self._schedule_startup_update_check()
         wx.CallAfter(self._show_welcome_screen_if_first_run)
 

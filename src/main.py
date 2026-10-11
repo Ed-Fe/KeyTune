@@ -118,12 +118,14 @@ def main():
 
     initial_paths = _collect_initial_paths()
 
+    from player.restart import started_by_restart
     from player.single_instance import try_send_to_existing_instance
 
     # Single instance: forward this launch to a running KeyTune (files to play,
     # or a focus request for a bare launch) and exit. Only start a new instance
-    # when none is already running.
-    if try_send_to_existing_instance(initial_paths):
+    # when none is already running. A KeyTune that reopened itself skips this:
+    # the one that asked for the restart may still be winding down.
+    if not started_by_restart() and try_send_to_existing_instance(initial_paths):
         return 0
 
     from player.app import main as app_main

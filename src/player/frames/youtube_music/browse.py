@@ -3,9 +3,10 @@ import threading
 
 import wx
 
-from player.youtube_music import subscriptions
+from player.youtube_music import subscriptions, watch_history
 from player.youtube_music.folders import (
     FOLDER_CHART_COUNTRY,
+    FOLDER_CHANNEL_POSTS,
     FOLDER_CHART_GROUP,
     FOLDER_CHARTS,
     FOLDER_HISTORY,
@@ -14,8 +15,10 @@ from player.youtube_music.folders import (
     FOLDER_MOOD_CATEGORY,
     FOLDER_MOOD_SECTION,
     FOLDER_MOODS,
+    FOLDER_NOTIFICATIONS,
     FOLDER_SUBSCRIBED_CHANNELS,
     FOLDER_SUBSCRIPTION_VIDEOS,
+    FOLDER_WATCH_HISTORY,
     chart_country_items,
     chart_folder_items,
     mood_category_items,
@@ -47,10 +50,16 @@ class BrowseMixin:
             )
         if kind == FOLDER_HISTORY:
             return YouTubeResultsView(title=folder.title, fetch_page=whole_list(service.get_history))
+        if kind == FOLDER_WATCH_HISTORY:
+            return YouTubeResultsView(title=folder.title, fetch_page=watch_history.watch_history_page)
         if kind == FOLDER_SUBSCRIPTION_VIDEOS:
             return YouTubeResultsView(title=folder.title, fetch_page=subscriptions.subscription_videos_page)
         if kind == FOLDER_SUBSCRIBED_CHANNELS:
             return YouTubeResultsView(title=folder.title, fetch_page=subscriptions.subscribed_channels_page)
+        if kind == FOLDER_NOTIFICATIONS:
+            return self._build_youtube_notifications_view()
+        if kind == FOLDER_CHANNEL_POSTS:
+            return self._build_youtube_channel_posts_view(payload)
         if kind == FOLDER_CHARTS:
             return YouTubeResultsView(title=folder.title, results=chart_folder_items())
         if kind == FOLDER_CHART_GROUP:

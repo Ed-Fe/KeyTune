@@ -27,10 +27,14 @@ from ..constants import (
     MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     REPEAT_MODE_LABELS,
     REPEAT_MODES,
+    YOUTUBE_NOTIFICATION_CHECK_MINUTES,
 )
 from ..download.ffmpeg import ffmpeg_available
 from ..download.panel import DownloadOptionsPanel
+from .. import interface_sounds
 from ..i18n import _, available_languages, language_display_name
+from ..interface_sounds.custom import CustomSoundError, import_custom_sound
+from ..interface_sounds.labels import sound_labels
 from ..log import get_log_dir
 from ..widgets import (
     ROW_BORDER,
@@ -123,7 +127,7 @@ class PreferencesDialog(wx.Dialog):
             self._language_choice_codes.append(code)
             language_labels.append(language_display_name(code))
         self.language_choice = self._add_choice(
-            box, sizer, _("Idioma da interface"), _("Aplicado na próxima vez que o KeyTune for aberto."), language_labels
+            box, sizer, _("Idioma da interface"), _("Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."), language_labels
         )
 
         box, sizer = self._create_group(page, page_sizer, _("Inicialização e sessão"))
@@ -279,6 +283,56 @@ class PreferencesDialog(wx.Dialog):
             _("Anuncia mudanças como tempo, volume e troca de abas."),
         )
 
+        box, sizer = self._create_group(page, page_sizer, _("Sons de aviso"))
+        self.interface_sounds_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Tocar &sons de aviso"),
+            _("Sons curtos para o chat, as notificações, as listas, a fila e os avisos do player."),
+        )
+        self.interface_sounds_volume_ctrl = self._add_spin(
+            box,
+            sizer,
+            _("Volume dos sons de aviso"),
+            _("De 1 a 100, sem depender do volume da mídia."),
+            1,
+            100,
+        )
+        self._interface_sound_names = [name for name, _label in sound_labels()]
+        self._interface_sound_labels = [label for _name, label in sound_labels()]
+        self._interface_sounds_custom = {}
+        sounds_label = wx.StaticText(box, label=_("Sons que tocam:"))
+        self.interface_sounds_list = wx.CheckListBox(
+            box, choices=[label for _name, label in sound_labels()], size=self.FromDIP(wx.Size(-1, 170))
+        )
+        describe_control(
+            self.interface_sounds_list,
+            _("Sons que tocam"),
+            _("Espaço liga ou desliga o som do item; ao ligar, ele toca."),
+        )
+        sizer.Add(sounds_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
+        sizer.Add(self.interface_sounds_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        buttons = wx.BoxSizer(wx.HORIZONTAL)
+        self.interface_sound_play_button = wx.Button(box, label=_("Ouvir o som"))
+        self.interface_sound_choose_button = wx.Button(box, label=_("Escolher um arquivo para o som..."))
+        self.interface_sound_reset_button = wx.Button(box, label=_("Voltar ao som original"))
+        describe_control(
+            self.interface_sound_choose_button,
+            self.interface_sound_choose_button.GetLabelText(),
+            _("Um áudio do computador toca no lugar do som do item selecionado."),
+        )
+        for button, handler in (
+            (self.interface_sound_play_button, self._on_play_interface_sound),
+            (self.interface_sound_choose_button, self._on_choose_interface_sound),
+            (self.interface_sound_reset_button, self._on_reset_interface_sound),
+        ):
+            button.Bind(wx.EVT_BUTTON, handler)
+            buttons.Add(button, 0, wx.RIGHT, ROW_BORDER)
+        sizer.Add(buttons, 0, wx.ALL, ROW_BORDER)
+        self.interface_sounds_list.Bind(wx.EVT_LISTBOX, self._refresh_interface_sound_buttons)
+        self.interface_sounds_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_interface_sounds)
+        self.interface_sounds_list.Bind(wx.EVT_CHECKLISTBOX, self._on_check_interface_sound)
+
         self.notebook.AddPage(page, _("Acessibilidade"))
 
     def _build_smart_library_tab(self):
@@ -431,8 +485,28 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_save_history_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("Salvar o que ouvi no &histórico do YouTube Music"),
-            _("Marca as faixas ouvidas no histórico da sua conta."),
+            _("Salvar o que ouvi e assisti no &histórico do YouTube"),
+            _("Marca as faixas e os vídeos no histórico da sua conta."),
+        )
+
+        box, sizer = self._create_group(page, page_sizer, _("Conta do YouTube"))
+        self.youtube_notification_check_choice = self._add_choice(
+            box,
+            sizer,
+            _("Avisar das notificações novas"),
+            _("O KeyTune consulta a caixa da conta e fala as notificações que chegaram."),
+            [_("Nunca")]
+            + [
+                _("A cada {minutes} minutos").format(minutes=minutes)
+                for minutes in YOUTUBE_NOTIFICATION_CHECK_MINUTES
+                if minutes
+            ],
+        )
+        self.youtube_notification_windows_toast_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Usar a notificação do &Windows com o KeyTune em segundo plano"),
+            _("O aviso fica na central de notificações em vez de ser falado pelo KeyTune."),
         )
 
         box, sizer = self._create_group(page, page_sizer, _("Idioma e região"))
@@ -592,6 +666,90 @@ class PreferencesDialog(wx.Dialog):
         sizer.Add(note, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
         return note
 
+    def _on_toggle_interface_sounds(self, _event=None):
+        enabled = self.interface_sounds_enabled_checkbox.GetValue()
+        self.interface_sounds_volume_ctrl.Enable(enabled)
+        self.interface_sounds_list.Enable(enabled)
+        self._refresh_interface_sound_buttons()
+
+    def _selected_interface_sound(self):
+        index = self.interface_sounds_list.GetSelection()
+        return index if 0 <= index < len(self._interface_sound_names) else -1
+
+    def _refresh_interface_sound_buttons(self, event=None):
+        if event is not None:
+            event.Skip()
+        index = self._selected_interface_sound()
+        enabled = self.interface_sounds_enabled_checkbox.GetValue() and index >= 0
+        self.interface_sound_play_button.Enable(enabled)
+        self.interface_sound_choose_button.Enable(enabled)
+        self.interface_sound_reset_button.Enable(
+            enabled and self._interface_sound_names[index] in self._interface_sounds_custom
+        )
+
+    def _refresh_interface_sound_label(self, index):
+        label = self._interface_sound_labels[index]
+        if self._interface_sound_names[index] in self._interface_sounds_custom:
+            label = _("{sound} (arquivo escolhido)").format(sound=label)
+        checked = self.interface_sounds_list.IsChecked(index)
+        self.interface_sounds_list.SetString(index, label)
+        self.interface_sounds_list.Check(index, checked)
+
+    def _play_interface_sound_at(self, index):
+        name = self._interface_sound_names[index]
+        return interface_sounds.play(
+            name, self.interface_sounds_volume_ctrl.GetValue(), self._interface_sounds_custom.get(name, "")
+        )
+
+    def _on_play_interface_sound(self, _event):
+        index = self._selected_interface_sound()
+        if index >= 0:
+            self._play_interface_sound_at(index)
+
+    def _on_choose_interface_sound(self, _event):
+        index = self._selected_interface_sound()
+        if index < 0:
+            return
+        with wx.FileDialog(
+            self,
+            _("Escolher o som de: {sound}").format(sound=self._interface_sound_labels[index]),
+            wildcard=_("Arquivos de áudio")
+            + "|*.wav;*.mp3;*.ogg;*.oga;*.opus;*.flac;*.m4a;*.aac;*.wma|"
+            + _("Todos os arquivos")
+            + "|*.*",
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+        ) as dialog:
+            if dialog.ShowModal() != wx.ID_OK:
+                return
+            source_path = dialog.GetPath()
+        name = self._interface_sound_names[index]
+        try:
+            with wx.BusyCursor():
+                self._interface_sounds_custom[name] = import_custom_sound(name, source_path)
+        except CustomSoundError as exc:
+            wx.MessageBox(str(exc), _("Sons de aviso"), wx.OK | wx.ICON_ERROR, self)
+            return
+        self._refresh_interface_sound_label(index)
+        self._refresh_interface_sound_buttons()
+        self._play_interface_sound_at(index)
+        self._announce_from_parent(_("Arquivo escolhido para o som."))
+
+    def _on_reset_interface_sound(self, _event):
+        index = self._selected_interface_sound()
+        if index < 0 or self._interface_sounds_custom.pop(self._interface_sound_names[index], None) is None:
+            return
+        self._refresh_interface_sound_label(index)
+        self._refresh_interface_sound_buttons()
+        self.interface_sounds_list.SetFocus()
+        self._play_interface_sound_at(index)
+        self._announce_from_parent(_("O som voltou ao original."))
+
+    def _on_check_interface_sound(self, event):
+        """Toca o som que acabou de ser ligado, no volume escolhido, para saber qual é."""
+        index = event.GetInt()
+        if 0 <= index < len(self._interface_sound_names) and self.interface_sounds_list.IsChecked(index):
+            self._play_interface_sound_at(index)
+
     def _on_toggle_logging_enabled(self, _event):
         self._refresh_logging_controls()
         if self.logging_enabled_checkbox.GetValue():
@@ -704,6 +862,16 @@ class PreferencesDialog(wx.Dialog):
         self.minimize_to_tray_checkbox.SetValue(settings.minimize_to_tray)
         self.close_to_tray_checkbox.SetValue(settings.close_to_tray)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
+        self.interface_sounds_enabled_checkbox.SetValue(settings.interface_sounds_enabled)
+        self.interface_sounds_volume_ctrl.SetValue(max(1, settings.interface_sounds_volume))
+        disabled_sounds = set(settings.interface_sounds_disabled)
+        self._interface_sounds_custom = dict(settings.interface_sounds_custom)
+        for index, name in enumerate(self._interface_sound_names):
+            self.interface_sounds_list.Check(index, name not in disabled_sounds)
+            self._refresh_interface_sound_label(index)
+        if self._interface_sound_names:
+            self.interface_sounds_list.SetSelection(0)
+        self._on_toggle_interface_sounds()
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
         self.live_video_checkbox.SetValue(settings.live_video_enabled)
         self.default_volume_ctrl.SetValue(settings.default_volume)
@@ -725,6 +893,10 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
+        self.youtube_notification_check_choice.SetSelection(
+            self._choice_index(YOUTUBE_NOTIFICATION_CHECK_MINUTES, settings.youtube_notification_check_minutes)
+        )
+        self.youtube_notification_windows_toast_checkbox.SetValue(settings.youtube_notification_windows_toast)
         self.youtube_content_language_choice.SetSelection(
             self._choice_index(self._youtube_content_language_codes, settings.youtube_content_language)
         )
@@ -794,6 +966,14 @@ class PreferencesDialog(wx.Dialog):
         settings.minimize_to_tray = self.minimize_to_tray_checkbox.GetValue()
         settings.close_to_tray = self.close_to_tray_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
+        settings.interface_sounds_enabled = self.interface_sounds_enabled_checkbox.GetValue()
+        settings.interface_sounds_volume = self.interface_sounds_volume_ctrl.GetValue()
+        settings.interface_sounds_disabled = [
+            name
+            for index, name in enumerate(self._interface_sound_names)
+            if not self.interface_sounds_list.IsChecked(index)
+        ]
+        settings.interface_sounds_custom = dict(self._interface_sounds_custom)
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
         settings.live_video_enabled = self.live_video_checkbox.GetValue()
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
@@ -819,6 +999,10 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
+        settings.youtube_notification_check_minutes = YOUTUBE_NOTIFICATION_CHECK_MINUTES[
+            max(self.youtube_notification_check_choice.GetSelection(), 0)
+        ]
+        settings.youtube_notification_windows_toast = self.youtube_notification_windows_toast_checkbox.GetValue()
         settings.youtube_content_language = self._youtube_content_language_codes[
             max(self.youtube_content_language_choice.GetSelection(), 0)
         ]
