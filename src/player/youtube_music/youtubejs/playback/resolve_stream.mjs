@@ -25,12 +25,14 @@ async function measuredLength(format, streamUrl) {
   return contentLength;
 }
 
-// Os clientes que entregam só o áudio (itag 140, AAC) com URL direta, do mais leve ao
-// mais pesado. O ANDROID com o vídeo 360p (itag 18) fica por último, como reserva.
+// Do que já sabemos que toca inteiro para o que ainda é uma aposta: o ANDROID com o vídeo
+// 360p (itag 18) vem primeiro; o áudio puro do YTMUSIC e do MWEB só entra se ele falhar.
+// Esses clientes costumam exigir um PO token e o YouTube corta o arquivo depois dos
+// primeiros blocos, por isso cada candidato é conferido antes de ser aceito.
 const ATTEMPTS = [
+  { client: "ANDROID", pick: (info) => info.chooseFormat({ itag: 18 }) },
   { client: "YTMUSIC", pick: audioOnly },
   { client: "MWEB", pick: audioOnly },
-  { client: "ANDROID", pick: (info) => info.chooseFormat({ itag: 18 }) },
 ];
 
 function audioOnly(info) {
@@ -44,6 +46,22 @@ function audioOnly(info) {
   return format;
 }
 
+// Pede um trecho do meio e um do fim do arquivo, onde o corte por falta de PO token aparece.
+async function playsThrough(streamUrl, contentLength) {
+  const spots = [Math.min(3 * 1024 * 1024, contentLength - 1), contentLength - 1];
+  for (const spot of new Set(spots)) {
+    const probe = await fetch(streamUrl, {
+      headers: { Range: `bytes=${spot}-${spot}` },
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    });
+    await probe.body?.cancel();
+    if (probe.status !== 206) {
+      return false;
+    }
+  }
+  return true;
+}
+
 async function directFormat(innertube, videoId) {
   const failures = [];
   for (const { client, pick } of ATTEMPTS) {
@@ -51,10 +69,20 @@ async function directFormat(innertube, videoId) {
       const info = await innertube.getBasicInfo(videoId, { client });
       const format = pick(info);
       const streamUrl = await format.decipher(innertube.session.player);
-      if (streamUrl) {
-        return { info, format, streamUrl };
+      if (!streamUrl) {
+        failures.push(`${client}: sem URL`);
+        continue;
       }
-      failures.push(`${client}: sem URL`);
+      const contentLength = await measuredLength(format, streamUrl);
+      if (!contentLength) {
+        failures.push(`${client}: sem tamanho`);
+        continue;
+      }
+      if (!(await playsThrough(streamUrl, contentLength))) {
+        failures.push(`${client}: o YouTube cortou o arquivo`);
+        continue;
+      }
+      return { info, format, streamUrl, contentLength };
     } catch (error) {
       failures.push(`${client}: ${error instanceof Error ? error.message : error}`);
     }
@@ -65,11 +93,7 @@ async function directFormat(innertube, videoId) {
 export async function resolve(request) {
   const videoId = requireVideoId(request);
   const innertube = await clientFor();
-  const { info, format, streamUrl } = await directFormat(innertube, videoId);
-  const contentLength = await measuredLength(format, streamUrl);
-  if (!contentLength) {
-    throw new Error("O YouTube.js não informou o tamanho da mídia.");
-  }
+  const { info, format, streamUrl, contentLength } = await directFormat(innertube, videoId);
 
   return {
     stream_url: await registerStream({
