@@ -130,11 +130,9 @@ class LiveChatMixin:
             except Exception:
                 pass
 
-    def _schedule_youtube_live_chat_update(self):
+    def _schedule_youtube_live_chat_update(self, seconds=youtube_live_chat.LIVE_CHAT_POLL_SECONDS):
         self._stop_youtube_live_chat_updates()
-        self._youtube_live_chat_timer = wx.CallLater(
-            youtube_live_chat.LIVE_CHAT_POLL_SECONDS * 1000, self._update_youtube_live_chat
-        )
+        self._youtube_live_chat_timer = wx.CallLater(int(seconds * 1000), self._update_youtube_live_chat)
 
     def _update_youtube_live_chat(self):
         """Pede as mensagens novas, numa thread própria: não ocupa a aba nem bloqueia a troca de faixa."""
@@ -175,7 +173,10 @@ class LiveChatMixin:
             self._youtube_live_chat_viewer = update.viewer
         if update is not None and update.messages:
             self._append_youtube_live_chat_messages(view, update.messages)
-        self._schedule_youtube_live_chat_update()
+        if update is not None:
+            self._schedule_youtube_live_chat_update(update.poll_seconds)
+        else:
+            self._schedule_youtube_live_chat_update()
 
     def _append_youtube_live_chat_messages(self, view, messages):
         known_ids = {result.stable_id for result in view.results}

@@ -29,6 +29,21 @@ def _message(index, **extra):
 
 
 class LiveChatTests(unittest.TestCase):
+    def test_the_wait_follows_what_the_youtube_asks_within_limits(self):
+        self.assertEqual(live_chat.poll_seconds_for(0), live_chat.LIVE_CHAT_POLL_SECONDS)
+        self.assertEqual(live_chat.poll_seconds_for(1000), live_chat.LIVE_CHAT_POLL_SECONDS)
+        self.assertEqual(live_chat.poll_seconds_for(8000), 8)
+        self.assertEqual(live_chat.poll_seconds_for(120000), live_chat.LIVE_CHAT_MAX_POLL_SECONDS)
+        self.assertEqual(live_chat.poll_seconds_for("lixo"), live_chat.LIVE_CHAT_POLL_SECONDS)
+
+    def test_the_update_carries_the_wait_the_youtube_asked(self):
+        with patch.object(live_chat, "youtubejs_resolver_enabled", return_value=True), patch.object(
+            live_chat.youtubejs_runtime, "live_chat", return_value=([], False, False, "", 9000)
+        ), patch.object(live_chat, "optional_account_session", return_value=("", 0)):
+            update = live_chat.live_chat_update("https://www.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(update.poll_seconds, 9)
+
     def setUp(self):
         patcher = patch.object(live_chat, "youtubejs_resolver_enabled", return_value=True)
         self.addCleanup(patcher.stop)

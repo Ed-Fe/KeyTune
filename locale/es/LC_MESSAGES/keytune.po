@@ -7611,3 +7611,9 @@ msgstr "El idioma de la interfaz cambia cuando KeyTune se abre de nuevo. ¿Quier
 msgid "Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."
 msgstr "Vale cuando KeyTune se abre de nuevo; al confirmar, ofrece reiniciar."
 
+
+msgid "O processo do YouTube.js não respondeu."
+msgstr "El proceso de YouTube.js no respondió."
+
+msgid "O processo do YouTube.js foi encerrado."
+msgstr "El proceso de YouTube.js se cerró."

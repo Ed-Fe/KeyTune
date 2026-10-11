@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import io
 import pathlib
 from subprocess import CompletedProcess
 import sys
@@ -16,6 +15,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.youtube_music import youtubejs_runtime
+from test_youtubejs_worker import FakeProcess
 
 
 class YouTubeJSRuntimeTests(unittest.TestCase):
@@ -66,15 +66,8 @@ class YouTubeJSRuntimeTests(unittest.TestCase):
     )
     @patch("player.youtube_music.youtubejs_runtime.subprocess.Popen")
     def test_worker_process_is_reused(self, start_process, _find_runtimes, _is_file, _is_dir):
-        response_line = 'KEYTUNE_YOUTUBEJS_RESULT={"stream_url":"https://example.com/audio"}\n'
-        worker = SimpleNamespace(
-            stdin=io.StringIO(),
-            stdout=io.StringIO(response_line + response_line),
-            poll=Mock(return_value=None),
-            kill=Mock(),
-            wait=Mock(),
-        )
-        start_process.return_value = worker
+        process = FakeProcess(lambda request, respond: respond({"stream_url": "https://example.com/audio"}))
+        start_process.return_value = process
 
         first = youtubejs_runtime._request_worker({"media_url": "primeira"})
         second = youtubejs_runtime._request_worker({"media_url": "segunda"})
@@ -83,14 +76,17 @@ class YouTubeJSRuntimeTests(unittest.TestCase):
         self.assertEqual(second["stream_url"], "https://example.com/audio")
         start_process.assert_called_once()
         self.assertIs(start_process.call_args.kwargs["stderr"], youtubejs_runtime.subprocess.STDOUT)
+        self.assertTrue(start_process.call_args.args[0][1].endswith("resolve.mjs"))
 
     def test_validate_dependencies_checks_script_and_package_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             resolver_dir = pathlib.Path(temporary)
-            resolver_script = resolver_dir / "resolve.mjs"
             package_dir = resolver_dir / "node_modules" / "youtubei.js"
-            resolver_script.write_text("export {};", encoding="utf-8")
+            (resolver_dir / "lib").mkdir()
+            for name in ("resolve.mjs", "actions.mjs", "lib/text.mjs"):
+                (resolver_dir / name).write_text("export {};", encoding="utf-8")
             package_dir.mkdir(parents=True)
+            (package_dir / "ignored.mjs").write_text("syntax error", encoding="utf-8")
             with patch.object(
                 youtubejs_runtime,
                 "find_all_available_javascript_runtimes",
@@ -110,9 +106,10 @@ class YouTubeJSRuntimeTests(unittest.TestCase):
             ) as run:
                 youtubejs_runtime.validate_youtubejs_dependencies()
 
-        self.assertEqual(run.call_count, 2)
-        self.assertIn("--check", run.call_args_list[0].args[0])
-        self.assertIn("await import('youtubei.js')", run.call_args_list[1].args[0])
+        commands = [call.args[0] for call in run.call_args_list]
+        checked = [pathlib.Path(command[-1]).name for command in commands if "--check" in command]
+        self.assertEqual(checked, ["actions.mjs", "text.mjs", "resolve.mjs"])
+        self.assertIn("await import('youtubei.js')", commands[-1])
 
     @patch("player.youtube_music.youtubejs_runtime.os.path.isfile", return_value=True)
     @patch("player.youtube_music.youtubejs_runtime.os.path.isdir", return_value=False)

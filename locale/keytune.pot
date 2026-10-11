@@ -3153,7 +3153,7 @@ msgstr ""
 #: src/player/frames/youtube_music/notifications.py
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/frames/youtube_music/search.py
-#: src/player/youtube_music/youtubejs_runtime.py
+#: src/player/youtube_music/youtubejs_worker.py
 msgid "Detalhes: {detail}"
 msgstr ""
 
@@ -6353,7 +6353,7 @@ msgstr ""
 msgid "O YouTube recusou a reprodução. Tentando outro perfil..."
 msgstr ""
 
-#: src/player/youtube_music/youtubejs_runtime.py
+#: src/player/youtube_music/youtubejs_worker.py
 msgid "O YouTube.js demorou demais para responder."
 msgstr ""
 
@@ -6578,8 +6578,16 @@ msgstr ""
 msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_worker.py
+msgid "O processo do YouTube.js foi encerrado."
+msgstr ""
+
 #: src/player/youtube_music/youtubejs_runtime.py
 msgid "O processo do YouTube.js não passou na validação: {detail}"
+msgstr ""
+
+#: src/player/youtube_music/youtubejs_worker.py
+msgid "O processo do YouTube.js não respondeu."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py

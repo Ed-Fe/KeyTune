@@ -17,7 +17,7 @@ from player.frames.youtube_music import notifications as frame_notifications
 from player.frames.youtube_music.notifications import NotificationsMixin
 from player.youtube_music import notifications
 from player.youtube_music.folders import FOLDER_NOTIFICATIONS, home_folder_items
-from player.youtube_music.notification_store import YouTubeNotificationStore
+from player.youtube_music.notification_store import YouTubeNotificationStore, account_scope
 from player.youtube_music.notifications import notification_from_entry
 
 
@@ -109,6 +109,33 @@ class NewNotificationsTests(unittest.TestCase):
 
 
 class NotificationStoreTests(unittest.TestCase):
+    def test_each_account_keeps_its_own_seen_notifications(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = pathlib.Path(folder) / "notifications.json"
+            store = YouTubeNotificationStore(path)
+            first, second = account_scope("SID=a", 0), account_scope("SID=b", 0)
+            store.scoped(first).remember(["n1"])
+
+            reopened = YouTubeNotificationStore(path)
+
+        self.assertNotEqual(first, second)
+        self.assertEqual(reopened.scoped(first).seen_ids(), {"n1"})
+        self.assertTrue(reopened.scoped(first).has_baseline)
+        self.assertFalse(reopened.scoped(second).has_baseline)
+        self.assertEqual(reopened.scoped(second).seen_ids(), set())
+
+    def test_the_account_name_does_not_hold_the_cookie(self):
+        self.assertNotIn("SID=secret", account_scope("SID=secret", 1))
+        self.assertEqual(account_scope("", 0), "")
+
+    def test_the_file_from_before_accounts_still_loads(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = pathlib.Path(folder) / "notifications.json"
+            path.write_text('{"seen": ["n1"]}', encoding="utf-8")
+            store = YouTubeNotificationStore(path)
+
+        self.assertEqual(store.seen_ids(), {"n1"})
+
     def test_what_was_seen_survives_a_restart(self):
         with tempfile.TemporaryDirectory() as folder:
             path = pathlib.Path(folder) / "notifications.json"

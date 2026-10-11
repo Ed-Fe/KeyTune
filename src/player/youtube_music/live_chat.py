@@ -15,8 +15,10 @@ from .account_session import optional_account_session, require_account_session
 from .dependencies import youtubejs_resolver_enabled
 
 
-# De quanto em quanto tempo a janela pede as mensagens novas.
+# De quanto em quanto tempo a janela pede as mensagens novas, no mínimo; o YouTube pode
+# pedir mais espera (até o teto abaixo) e a janela o respeita.
 LIVE_CHAT_POLL_SECONDS = 4
+LIVE_CHAT_MAX_POLL_SECONDS = 15
 # Quantas mensagens a lista guarda; as mais antigas saem.
 LIVE_CHAT_MAX_MESSAGES = 500
 # Num chat movimentado, quantas das mensagens novas são faladas a cada vez.
@@ -75,6 +77,17 @@ class LiveChatUpdate:
     ended: bool = False
     # Como a conta aparece no chat; vazio sem conta ou quando o YouTube não diz.
     viewer: str = ""
+    # Quanto esperar até o próximo pedido.
+    poll_seconds: float = LIVE_CHAT_POLL_SECONDS
+
+
+def poll_seconds_for(timeout_ms):
+    """Quanto esperar até o próximo pedido: o que o YouTube pediu, entre o mínimo e o teto."""
+    try:
+        requested = float(timeout_ms or 0) / 1000
+    except (TypeError, ValueError):
+        requested = 0
+    return min(max(requested, LIVE_CHAT_POLL_SECONDS), LIVE_CHAT_MAX_POLL_SECONDS)
 
 
 def message_from_entry(entry):
@@ -99,13 +112,14 @@ def live_chat_update(media_url, *, restart=False):
         raise RuntimeError(_("O chat ao vivo precisa do YouTube.js, ativado em Preferências > Recursos adicionais."))
     cookie_header, account_index = optional_account_session()
     account = {"cookie_header": cookie_header, "account_index": account_index} if cookie_header else {}
-    entries, can_send, ended, *viewer = youtubejs_runtime.live_chat(media_url, restart=restart, **account)
+    entries, can_send, ended, *extra = youtubejs_runtime.live_chat(media_url, restart=restart, **account)
     messages = [message_from_entry(entry) for entry in entries]
     return LiveChatUpdate(
         messages=tuple(message for message in messages if message is not None),
         can_send=can_send,
         ended=ended,
-        viewer=str(viewer[0] or "").strip() if viewer else "",
+        viewer=str(extra[0] or "").strip() if extra else "",
+        poll_seconds=poll_seconds_for(extra[1] if len(extra) > 1 else 0),
     )
 
 
