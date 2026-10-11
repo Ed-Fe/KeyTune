@@ -198,6 +198,9 @@ _SILENT_INSTALL_FLAGS = (
 )
 
 
+_INSTALLER_STARTUP_CHECK_SECONDS = 2.0
+
+
 def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pid: int | None = None) -> None:
     """Run the downloaded setup .exe silently to upgrade in place.
 
@@ -224,15 +227,30 @@ def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pi
         if needs_elevation:
             _launch_elevated(runner_installer)
         else:
-            subprocess.Popen(
+            process = subprocess.Popen(
                 [str(runner_installer), *_SILENT_INSTALL_FLAGS],
                 cwd=str(runner_directory),
                 close_fds=True,
             )
+            _ensure_installer_did_not_fail_at_once(process)
         _logger.info("Installer update launched (elevated=%s): %s", needs_elevation, runner_installer)
     except OSError as exc:
         _logger.error("Failed to launch installer update: %s", exc)
         raise UpdateError(_("Não foi possível abrir o instalador da atualização.")) from exc
+
+
+def _ensure_installer_did_not_fail_at_once(process: subprocess.Popen) -> None:
+    """Falha cedo se o instalador morrer logo ao abrir (bloqueio, erro de início).
+
+    Sem isso o KeyTune fecharia para atualizar e nada o reabriria. Um código 0
+    é normal (o setup pode reabrir a si mesmo elevado); só código de erro conta.
+    """
+    try:
+        return_code = process.wait(timeout=_INSTALLER_STARTUP_CHECK_SECONDS)
+    except subprocess.TimeoutExpired:
+        return
+    if return_code != 0:
+        raise OSError(f"Installer exited immediately with code {return_code}")
 
 
 def _launch_elevated(installer: Path) -> None:
