@@ -39,6 +39,7 @@ from ..interface_sounds.labels import sound_labels
 from ..log import get_log_dir
 from ..widgets import (
     ROW_BORDER,
+    CheckList,
     add_choice_row,
     add_labeled_row,
     create_group,
@@ -298,10 +299,10 @@ class PreferencesDialog(wx.Dialog):
         self._announcement_names = [name for name, _label in announcement_labels()]
         self._announcement_labels = [label for _name, label in announcement_labels()]
         announcements_label = wx.StaticText(box, label=_("Avisos de eventos que falam:"))
-        self.announcements_list = wx.CheckListBox(
+        self.announcements_list = CheckList(
             box,
-            choices=[label for _name, label in announcement_labels()],
-            size=self.FromDIP(wx.Size(-1, 110)),
+            [label for _name, label in announcement_labels()],
+            size=self.FromDIP(wx.Size(-1, 130)),
         )
         describe_control(
             self.announcements_list,
@@ -311,8 +312,7 @@ class PreferencesDialog(wx.Dialog):
         sizer.Add(announcements_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
         sizer.Add(self.announcements_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
         self.announcements_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_announcements)
-        self.announcements_list.Bind(wx.EVT_CHECKLISTBOX, self._on_check_announcement)
-
+        
         box, sizer = self._create_group(page, page_sizer, _("Sons de aviso"))
         self.interface_sounds_enabled_checkbox = self._add_checkbox(
             box,
@@ -332,8 +332,8 @@ class PreferencesDialog(wx.Dialog):
         self._interface_sound_labels = [label for _name, label in sound_labels()]
         self._interface_sounds_custom = {}
         sounds_label = wx.StaticText(box, label=_("Sons que tocam:"))
-        self.interface_sounds_list = wx.CheckListBox(
-            box, choices=[label for _name, label in sound_labels()], size=self.FromDIP(wx.Size(-1, 170))
+        self.interface_sounds_list = CheckList(
+            box, [label for _name, label in sound_labels()], size=self.FromDIP(wx.Size(-1, 190))
         )
         describe_control(
             self.interface_sounds_list,
@@ -359,9 +359,9 @@ class PreferencesDialog(wx.Dialog):
             button.Bind(wx.EVT_BUTTON, handler)
             buttons.Add(button, 0, wx.RIGHT, ROW_BORDER)
         sizer.Add(buttons, 0, wx.ALL, ROW_BORDER)
-        self.interface_sounds_list.Bind(wx.EVT_LISTBOX, self._refresh_interface_sound_buttons)
+        self.interface_sounds_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self._refresh_interface_sound_buttons)
         self.interface_sounds_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_interface_sounds)
-        self.interface_sounds_list.Bind(wx.EVT_CHECKLISTBOX, self._on_check_interface_sound)
+        self.interface_sounds_list.Bind(wx.EVT_LIST_ITEM_CHECKED, self._on_check_interface_sound)
 
         self.notebook.AddPage(page, _("Acessibilidade"))
 
@@ -723,30 +723,11 @@ class PreferencesDialog(wx.Dialog):
             enabled and self._interface_sound_names[index] in self._interface_sounds_custom
         )
 
-    @staticmethod
-    def _label_with_state(label, checked):
-        """A caixa de marcação da lista não chega ao leitor de tela: o estado vai escrito no item."""
-        return (_("{item}: ligado") if checked else _("{item}: desligado")).format(item=label)
-
     def _refresh_interface_sound_label(self, index):
         label = self._interface_sound_labels[index]
         if self._interface_sound_names[index] in self._interface_sounds_custom:
             label = _("{sound} (arquivo escolhido)").format(sound=label)
-        checked = self.interface_sounds_list.IsChecked(index)
-        self.interface_sounds_list.SetString(index, self._label_with_state(label, checked))
-        self.interface_sounds_list.Check(index, checked)
-
-    def _refresh_announcement_label(self, index):
-        checked = self.announcements_list.IsChecked(index)
-        self.announcements_list.SetString(
-            index, self._label_with_state(self._announcement_labels[index], checked)
-        )
-        self.announcements_list.Check(index, checked)
-
-    def _on_check_announcement(self, event):
-        index = event.GetInt()
-        if 0 <= index < len(self._announcement_names):
-            self._refresh_announcement_label(index)
+        self.interface_sounds_list.SetItemText(index, label)
 
     def _play_interface_sound_at(self, index):
         name = self._interface_sound_names[index]
@@ -799,12 +780,10 @@ class PreferencesDialog(wx.Dialog):
 
     def _on_check_interface_sound(self, event):
         """Toca o som que acabou de ser ligado, no volume escolhido, para saber qual é."""
-        index = event.GetInt()
-        if not 0 <= index < len(self._interface_sound_names):
+        index = event.GetIndex()
+        if getattr(self, "_populating_lists", False) or not 0 <= index < len(self._interface_sound_names):
             return
-        self._refresh_interface_sound_label(index)
-        if self.interface_sounds_list.IsChecked(index):
-            self._play_interface_sound_at(index)
+        self._play_interface_sound_at(index)
 
     def _on_toggle_logging_enabled(self, _event):
         self._refresh_logging_controls()
@@ -920,10 +899,10 @@ class PreferencesDialog(wx.Dialog):
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
         self.announcements_interrupt_checkbox.SetValue(settings.announcements_interrupt)
         self.announcements_in_window_checkbox.SetValue(settings.announcements_in_window)
+        self._populating_lists = True
         disabled_announcements = set(settings.announcements_disabled)
         for index, name in enumerate(self._announcement_names):
             self.announcements_list.Check(index, name not in disabled_announcements)
-            self._refresh_announcement_label(index)
         if self._announcement_names:
             self.announcements_list.SetSelection(0)
         self._on_toggle_announcements()
@@ -934,6 +913,7 @@ class PreferencesDialog(wx.Dialog):
         for index, name in enumerate(self._interface_sound_names):
             self.interface_sounds_list.Check(index, name not in disabled_sounds)
             self._refresh_interface_sound_label(index)
+        self._populating_lists = False
         if self._interface_sound_names:
             self.interface_sounds_list.SetSelection(0)
         self._on_toggle_interface_sounds()

@@ -11,6 +11,46 @@ from .i18n import _
 ROW_BORDER = 4
 
 
+class CheckList(wx.ListCtrl):
+    """Lista de itens com caixa de marcação que o leitor de tela entende.
+
+    A ``wx.CheckListBox`` desenha a caixa por conta própria e o Windows não expõe o
+    estado dela; a lista nativa com caixas diz "marcado" ou "não marcado" sozinha, e
+    `Espaço` fala só o novo estado. Os métodos seguem a ``CheckListBox``.
+    """
+
+    def __init__(self, parent, choices, size=wx.DefaultSize):
+        super().__init__(
+            parent,
+            style=wx.LC_REPORT | wx.LC_NO_HEADER | wx.LC_SINGLE_SEL | wx.BORDER_THEME,
+            size=size,
+        )
+        self.EnableCheckBoxes(True)
+        self.InsertColumn(0, "")
+        for index, label in enumerate(choices):
+            self.InsertItem(index, label)
+        self.Bind(wx.EVT_SIZE, self._fit_column)
+
+    def _fit_column(self, event):
+        event.Skip()
+        width = self.GetClientSize().width
+        if width > 0:
+            self.SetColumnWidth(0, width)
+
+    def IsChecked(self, index):
+        return self.IsItemChecked(index)
+
+    def Check(self, index, check=True):
+        self.CheckItem(index, check)
+
+    def GetSelection(self):
+        return self.GetFirstSelected()
+
+    def SetSelection(self, index):
+        self.Select(index)
+        self.Focus(index)
+
+
 def create_group(parent, label):
     """Grupo com moldura; devolve ``(caixa, sizer)``.
 
