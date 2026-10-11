@@ -131,9 +131,7 @@ export async function liveChatSend(request) {
   if (!Array.isArray(actions)) {
     throw new Error("O YouTube não confirmou o envio da mensagem.");
   }
-  // Um pedido de atestado quer dizer que o YouTube barrou a mensagem até a conta ser verificada.
-  if (actions.some((action) => action.runAttestationCommand)) {
-    throw new Error("O YouTube pediu uma verificação da conta e a mensagem não foi enviada.");
-  }
+  // O pedido de atestado (runAttestationCommand) vem junto com a mensagem já publicada: é uma
+  // checagem anti-robô feita depois do envio, não uma recusa. A mensagem aparece no chat.
   return { ok: true };
 }
