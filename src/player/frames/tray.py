@@ -156,7 +156,13 @@ class FrameTrayMixin:
             self.Iconize(False)
             self.Raise()
         else:
-            self.Iconize(True)
+            # Pedido do próprio KeyTune (atalho global, com ele sem foco): vale
+            # como minimizar a janela, então segue a preferência da bandeja.
+            self._app_requested_minimize = True
+            try:
+                self.Iconize(True)
+            finally:
+                self._app_requested_minimize = False
 
     def _bring_to_front(self):
         if getattr(self, "_hidden_in_tray", False) or not self.IsShown() or self.IsIconized():
@@ -169,7 +175,12 @@ class FrameTrayMixin:
 
     def _on_iconize_to_tray(self, event):
         event.Skip()
-        if event.IsIconized() and self.settings.minimize_to_tray and self._tray_supported():
+        if not (event.IsIconized() and self.settings.minimize_to_tray and self._tray_supported()):
+            return
+        # Win+D (e Win+M) minimizam todas as janelas, inclusive as sem foco: aí o
+        # KeyTune só minimiza, para voltar com Win+D de novo. Só vai para a
+        # bandeja quando é ele que o usuário minimiza, com o foco nele.
+        if self.IsActive() or getattr(self, "_app_requested_minimize", False):
             wx.CallAfter(self._hide_to_tray)
 
     def _close_to_tray_requested(self, event):
