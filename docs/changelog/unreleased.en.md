@@ -12,5 +12,5 @@
 
 ### Fixed
 
-- **KeyTune not reopening after closing or updating**: if shutdown hung, KeyTune stayed alive in the background with no window, and opening it again showed nothing. Shutdown now always finishes, and launching KeyTune ends a stalled copy and opens normally.
+- **KeyTune not reopening after closing or updating**: if shutdown hung, KeyTune stayed alive in the background with no window, and opening it again showed nothing. Shutdown now always finishes, and launching KeyTune ends a stalled copy and opens normally. If an update does not finish, KeyTune says so the next time it opens.
 - **Complete liked songs**: the **Liked songs** list on the YouTube Music home shows every track the account has liked. Before, it stopped at the first few hundred, while the same playlist opened from **Your playlists and mixes** came in full. It now loads a part at a time: go down to the end of the list to bring more.

@@ -12,5 +12,5 @@
 
 ### Corregido
 
-- **KeyTune que no se reabría tras cerrar o actualizar**: si el cierre se colgaba, KeyTune seguía vivo en segundo plano, sin ventana, y abrirlo de nuevo no mostraba nada. Ahora el cierre siempre termina, y al abrir KeyTune se cierra una copia colgada y se abre con normalidad.
+- **KeyTune que no se reabría tras cerrar o actualizar**: si el cierre se colgaba, KeyTune seguía vivo en segundo plano, sin ventana, y abrirlo de nuevo no mostraba nada. Ahora el cierre siempre termina, y al abrir KeyTune se cierra una copia colgada y se abre con normalidad. Si una actualización no se completa, KeyTune lo avisa la próxima vez que se abre.
 - **Me gusta completo**: la lista **Me gusta** del inicio de YouTube Music muestra todas las pistas con «me gusta» de la cuenta. Antes se detenía en los primeros cientos, mientras que la misma playlist abierta desde **Tus playlists y mixes** llegaba entera. Ahora se carga poco a poco: baja hasta el final de la lista para traer más.

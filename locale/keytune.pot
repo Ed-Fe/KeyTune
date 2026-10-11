@@ -890,6 +890,10 @@ msgstr ""
 msgid "A área de transferência está vazia."
 msgstr ""
 
+#: src/player/frames/update.py
+msgid "A última atualização, para a versão {target}, não foi concluída. Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. Se o problema continuar, envie o arquivo de log ao desenvolvedor."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "A&bas"
 msgstr ""

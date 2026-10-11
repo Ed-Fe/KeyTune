@@ -215,6 +215,7 @@ class AppCommandsMixin:
                     event.Veto()
                     return
 
+        _logger.info("Shutting down (update restart: %s)", bool(getattr(self, "_update_restart_pending", False)))
         arm_exit_watchdog(SHUTDOWN_DEADLINE_SECONDS)
 
         # Cada etapa roda isolada: uma exceção em uma delas não pode impedir as
@@ -223,7 +224,7 @@ class AppCommandsMixin:
             try:
                 action(*args)
             except Exception:
-                _logger.exception("Falha ao encerrar uma etapa: %s", getattr(action, "__name__", action))
+                _logger.exception("Shutdown step failed: %s", getattr(action, "__name__", action))
 
         def stop_timers():
             for name in ("progress_timer", "crossfade_timer", "sleep_timer"):
@@ -264,6 +265,7 @@ class AppCommandsMixin:
         step(self._shutdown_tray)
         step(self.announcer.close)
         self.Destroy()
+        _logger.info("Shutdown finished; window destroyed")
 
     def _enqueue_selected_item(self):
         # A fila pertence sempre à playlist que está tocando (opção a): assim

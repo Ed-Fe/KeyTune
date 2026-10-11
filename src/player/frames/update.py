@@ -14,6 +14,7 @@ from ..update import (
     check_for_update,
     format_byte_count,
     launch_installer_update,
+    take_failed_update,
     unsupported_install_message,
 )
 
@@ -24,7 +25,19 @@ class FrameUpdateMixin:
             return
 
         self._startup_update_check_scheduled = True
+        failed_update = take_failed_update()
+        if failed_update is not None:
+            wx.CallLater(STARTUP_UPDATE_CHECK_DELAY_MS, self._warn_failed_update, failed_update)
         wx.CallLater(STARTUP_UPDATE_CHECK_DELAY_MS, self._start_update_check, False)
+
+    def _warn_failed_update(self, failed_update):
+        message = _(
+            "A última atualização, para a versão {target}, não foi concluída. "
+            "Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. "
+            "Se o problema continuar, envie o arquivo de log ao desenvolvedor."
+        ).format(target=failed_update.target_version, current=failed_update.current_version)
+        self._announce(message)
+        wx.MessageBox(message, _("Atualizações"), wx.OK | wx.ICON_WARNING, self)
 
     def on_check_for_updates(self, _event):
         self._on_manual_check_for_additional_updates()
@@ -133,7 +146,7 @@ class FrameUpdateMixin:
         try:
             self._save_settings()
             self._save_session()
-            launch_installer_update(downloaded_file_path)
+            launch_installer_update(downloaded_file_path, target_version=update_info.latest_version)
         except UpdateError as exc:
             wx.MessageBox(str(exc), _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             return

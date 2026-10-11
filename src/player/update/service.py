@@ -199,9 +199,15 @@ _SILENT_INSTALL_FLAGS = (
 
 
 _INSTALLER_STARTUP_CHECK_SECONDS = 2.0
+_PENDING_UPDATE_FILE_NAME = "pending_update.json"
 
 
-def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pid: int | None = None) -> None:
+def launch_installer_update(
+    installer_path: str | os.PathLike[str],
+    *,
+    parent_pid: int | None = None,
+    target_version: str = "",
+) -> None:
     """Run the downloaded setup .exe silently to upgrade in place.
 
     The installer closes the running KeyTune (``CloseApplications=yes``),
@@ -223,6 +229,7 @@ def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pi
     install_info = read_install_info()
     needs_elevation = install_info is not None and install_info.mode == "machine"
 
+    record_pending_update(target_version)
     try:
         if needs_elevation:
             _launch_elevated(runner_installer)
@@ -236,7 +243,65 @@ def launch_installer_update(installer_path: str | os.PathLike[str], *, parent_pi
         _logger.info("Installer update launched (elevated=%s): %s", needs_elevation, runner_installer)
     except OSError as exc:
         _logger.error("Failed to launch installer update: %s", exc)
+        clear_pending_update()
         raise UpdateError(_("Não foi possível abrir o instalador da atualização.")) from exc
+
+
+@dataclass(frozen=True)
+class PendingUpdate:
+    target_version: str
+    current_version: str
+
+
+def _pending_update_path() -> Path:
+    from ..session import get_app_storage_dir
+
+    return Path(get_app_storage_dir()) / _PENDING_UPDATE_FILE_NAME
+
+
+def record_pending_update(target_version: str) -> None:
+    """Anota que uma atualização foi entregue ao instalador.
+
+    No próximo início, ``take_failed_update`` compara com a versão em execução
+    para saber se o instalador concluiu o trabalho.
+    """
+    try:
+        _pending_update_path().write_text(
+            json.dumps({"target_version": normalize_version(target_version), "from_version": normalize_version(APP_VERSION)}),
+            encoding="utf-8",
+        )
+    except OSError as exc:
+        _logger.warning("Could not record the pending update marker: %s", exc)
+
+
+def clear_pending_update() -> None:
+    try:
+        _pending_update_path().unlink()
+    except OSError:
+        pass
+
+
+def take_failed_update() -> PendingUpdate | None:
+    """Lê e apaga a anotação; devolve os dados só se a atualização não se completou."""
+    path = _pending_update_path()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    clear_pending_update()
+
+    target_version = normalize_version(str(data.get("target_version") or "")) if isinstance(data, dict) else ""
+    current_version = normalize_version(APP_VERSION)
+    if not target_version or not is_newer_version(target_version, current_version):
+        _logger.info("Previous update completed (now on %s)", current_version)
+        return None
+    _logger.warning(
+        "The previous update to %s did not complete; still running %s. See the Inno Setup log "
+        "('Setup Log *.txt') in the temporary folder.",
+        target_version,
+        current_version,
+    )
+    return PendingUpdate(target_version=target_version, current_version=current_version)
 
 
 def _ensure_installer_did_not_fail_at_once(process: subprocess.Popen) -> None:

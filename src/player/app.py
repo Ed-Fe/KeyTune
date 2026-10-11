@@ -1,9 +1,14 @@
+import os
 import threading
 
 import wx
 
+from .constants import APP_VERSION
 from .exit_watchdog import INTERPRETER_EXIT_DEADLINE_SECONDS, arm_exit_watchdog
+from .log import get_logger
 from .single_instance import ACTION_FOCUS, ACTION_OPEN, UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer
+
+_logger = get_logger(__name__)
 
 
 def _load_quick_player_request(paths):
@@ -77,8 +82,10 @@ def main(initial_paths=None):
         open_full_player(initial_paths)
 
     ipc_server = SingleInstanceServer(_on_message)
+    _logger.info("KeyTune %s started (pid %s)", APP_VERSION, os.getpid())
 
     app.MainLoop()
 
+    _logger.info("Main loop finished (pid %s)", os.getpid())
     arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS)
     ipc_server.shutdown()
