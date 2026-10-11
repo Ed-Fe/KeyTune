@@ -83,12 +83,22 @@ export async function liveChat(request) {
   chat.continuation = next?.continuation || chat.continuation;
   const input = contents.actionPanel?.liveChatMessageInputRenderer;
   chat.sendParams = input?.sendButton?.buttonRenderer?.serviceEndpoint?.sendLiveChatMessageEndpoint?.params || chat.sendParams;
-  chat.viewer = input?.authorName?.simpleText || chat.viewer || "";
+  chat.viewer =
+    input?.authorName?.simpleText ||
+    (typeof contents.viewerName === "string" ? contents.viewerName : "") ||
+    chat.viewer ||
+    "";
+  // Num chat só para inscritos ou membros, o YouTube manda o motivo no lugar do campo de escrita.
+  const restricted = contents.actionPanel?.liveChatRestrictedParticipationRenderer?.message;
+  if (contents.actionPanel) {
+    chat.restriction = restricted ? messageText(restricted) || restricted.simpleText || "" : "";
+  }
   return {
     entries,
     can_send: Boolean(chat.account && chat.sendParams),
     ended: false,
     viewer: chat.viewer,
+    restriction: chat.account ? chat.restriction || "" : "",
     // Quanto o YouTube pede para esperar até o próximo pedido.
     timeout_ms: Number(next?.timeoutMs) || 0,
   };

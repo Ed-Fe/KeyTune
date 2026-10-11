@@ -215,7 +215,8 @@ def live_chat(media_url, *, restart=False, cookie_header="", account_index=0):
 
     Devolve ``(mensagens, se a conta pode enviar, se a transmissão acabou, nome da
     conta no chat, milissegundos que o YouTube pede para esperar até o próximo
-    pedido)``; *restart* recomeça das mensagens mais recentes.
+    pedido, por que a conta não pode enviar)``; *restart* recomeça das mensagens
+    mais recentes.
     """
     response = _request_action(
         "live_chat",
@@ -229,6 +230,7 @@ def live_chat(media_url, *, restart=False, cookie_header="", account_index=0):
         bool(response.get("ended")),
         str(response.get("viewer") or "").strip(),
         int(response.get("timeout_ms") or 0),
+        str(response.get("restriction") or "").strip(),
     )
 
 

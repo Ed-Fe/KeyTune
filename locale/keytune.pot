@@ -9123,6 +9123,11 @@ msgstr ""
 msgid "Você não está inscrito em {channel}. Inscrever-se?"
 msgstr ""
 
+#: src/player/frames/youtube_music/live_chat.py
+#: src/player/youtube_music/folders.py
+msgid "Você não pode escrever neste chat: {reason}"
+msgstr ""
+
 #: src/player/youtube_music/library_manager.py
 msgid "Você só pode excluir playlists que você criou."
 msgstr ""

@@ -79,6 +79,21 @@ class LiveChatTests(unittest.TestCase):
         chat.assert_called_once_with(URL, restart=False, cookie_header="SID=abc", account_index=2)
         self.assertTrue(update.can_send)
 
+    def test_a_restricted_chat_says_why_the_account_cannot_write(self):
+        self.account.return_value = ("SID=abc", 0)
+        reply = ([], False, False, "@eu", 0, "Modo exclusivo para inscritos")
+        with patch.object(live_chat.youtubejs_runtime, "live_chat", return_value=reply):
+            update = live_chat.live_chat_update(URL)
+
+        self.assertFalse(update.can_send)
+        self.assertEqual(update.viewer, "@eu")
+        self.assertEqual(update.restriction, "Modo exclusivo para inscritos")
+        from player.youtube_music.folders import send_chat_message_item
+
+        row = send_chat_message_item(update.restriction)
+        self.assertIn("Modo exclusivo para inscritos", row.title)
+        self.assertEqual(row.payload, "Modo exclusivo para inscritos")
+
     def test_sending_needs_the_account_and_some_text(self):
         with patch.object(live_chat, "require_account_session", return_value=("SID=abc", 1)), patch.object(
             live_chat.youtubejs_runtime, "live_chat_send"

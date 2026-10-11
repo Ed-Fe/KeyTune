@@ -300,7 +300,7 @@ class ResultsNavigationMixin:
         if item.kind == ACTION_CHANNEL_SEARCH:
             return self.search_youtube_channel(item.payload)
         if item.kind == ACTION_SEND_CHAT_MESSAGE:
-            return self.send_youtube_live_chat_message()
+            return self.send_youtube_live_chat_message(restriction=item.payload)
         return False
 
     def _replace_youtube_music_result(self, old_result, new_result=None):

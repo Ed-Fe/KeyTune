@@ -7617,3 +7617,6 @@ msgstr "El proceso de YouTube.js no respondió."
 
 msgid "O processo do YouTube.js foi encerrado."
 msgstr "El proceso de YouTube.js se cerró."
+
+msgid "Você não pode escrever neste chat: {reason}"
+msgstr "No puedes escribir en este chat: {reason}"

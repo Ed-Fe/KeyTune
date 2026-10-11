@@ -77,6 +77,8 @@ class LiveChatUpdate:
     ended: bool = False
     # Como a conta aparece no chat; vazio sem conta ou quando o YouTube não diz.
     viewer: str = ""
+    # O motivo que o YouTube dá para a conta não poder escrever (chat só de inscritos, por exemplo).
+    restriction: str = ""
     # Quanto esperar até o próximo pedido.
     poll_seconds: float = LIVE_CHAT_POLL_SECONDS
 
@@ -113,13 +115,15 @@ def live_chat_update(media_url, *, restart=False):
     cookie_header, account_index = optional_account_session()
     account = {"cookie_header": cookie_header, "account_index": account_index} if cookie_header else {}
     entries, can_send, ended, *extra = youtubejs_runtime.live_chat(media_url, restart=restart, **account)
+    viewer, timeout_ms, restriction = (list(extra) + ["", 0, ""])[:3]
     messages = [message_from_entry(entry) for entry in entries]
     return LiveChatUpdate(
         messages=tuple(message for message in messages if message is not None),
         can_send=can_send,
         ended=ended,
-        viewer=str(extra[0] or "").strip() if extra else "",
-        poll_seconds=poll_seconds_for(extra[1] if len(extra) > 1 else 0),
+        viewer=str(viewer or "").strip(),
+        restriction="" if can_send else str(restriction or "").strip(),
+        poll_seconds=poll_seconds_for(timeout_ms),
     )
 
 
