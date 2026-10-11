@@ -2,6 +2,7 @@ from .dialog import UpdateAvailableDialog, UpdateDownloadDialog
 from .service import (
     UpdateCancelledError,
     UpdateError,
+    PendingUpdate,
     UpdateInfo,
     can_self_update,
     check_for_update,
@@ -11,6 +12,7 @@ from .service import (
     is_newer_version,
     launch_installer_update,
     normalize_version,
+    take_failed_update,
     unsupported_install_message,
 )
 
@@ -19,6 +21,7 @@ __all__ = [
     "UpdateCancelledError",
     "UpdateDownloadDialog",
     "UpdateError",
+    "PendingUpdate",
     "UpdateInfo",
     "can_self_update",
     "check_for_update",
@@ -28,5 +31,6 @@ __all__ = [
     "is_newer_version",
     "launch_installer_update",
     "normalize_version",
+    "take_failed_update",
     "unsupported_install_message",
 ]

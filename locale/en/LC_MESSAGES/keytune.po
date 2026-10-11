@@ -7620,3 +7620,7 @@ msgstr "The YouTube.js process was closed."
 
 msgid "Você não pode escrever neste chat: {reason}"
 msgstr "You cannot write in this chat: {reason}"
+
+#: src/player/frames/update.py
+msgid "A última atualização, para a versão {target}, não foi concluída. Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. Se o problema continuar, envie o arquivo de log ao desenvolvedor."
+msgstr "The last update, to version {target}, did not finish. You are still on version {current}. Try again from Help > Check for updates. If the problem continues, send the log file to the developer."

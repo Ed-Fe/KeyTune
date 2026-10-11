@@ -8,7 +8,9 @@ background listener is started so future launches can forward here.
 """
 
 import os
+import signal
 import threading
+import time
 from multiprocessing.connection import Client, Listener
 
 from .constants import APP_TITLE
@@ -32,6 +34,13 @@ ACTION_OPEN = "open"
 ACTION_FOCUS = "focus"
 
 
+# Quanto esperar a confirmação da instância existente. A UI dela confirma em
+# até ``UI_ACK_TIMEOUT_SECONDS``; o cliente espera um pouco mais que isso.
+UI_ACK_TIMEOUT_SECONDS = 5.0
+_CLIENT_REPLY_TIMEOUT_SECONDS = 8.0
+_STALLED_EXIT_WAIT_SECONDS = 5.0
+
+
 def try_send_to_existing_instance(paths: list[str]) -> bool:
     """Forward this launch to an already-running instance.
 
@@ -39,9 +48,11 @@ def try_send_to_existing_instance(paths: list[str]) -> bool:
     the files **without** stealing focus); an empty *paths* sends a ``focus``
     request (the running window comes to front).
 
-    Returns ``True`` if the message was delivered, meaning the caller should
-    exit.  Returns ``False`` when no other instance is listening and the
-    caller should continue with normal startup.
+    Returns ``True`` if the running instance confirmed it handled the launch,
+    meaning the caller should exit.  Returns ``False`` when no other instance is
+    listening, or when the listening process is stalled (its pipe answers but
+    its interface does not, e.g. a half-closed process left behind by an
+    update); a stalled process is terminated and the caller starts normally.
     """
     if paths:
         message = {"action": ACTION_OPEN, "paths": list(paths)}
@@ -49,11 +60,49 @@ def try_send_to_existing_instance(paths: list[str]) -> bool:
         message = {"action": ACTION_FOCUS}
     try:
         conn = Client(_PIPE_ADDRESS, authkey=_PIPE_AUTH_KEY)
-        conn.send(message)
-        conn.close()
-        return True
     except (ConnectionRefusedError, FileNotFoundError, OSError):
         return False
+
+    reply = None
+    try:
+        conn.send(message)
+        if conn.poll(_CLIENT_REPLY_TIMEOUT_SECONDS):
+            reply = conn.recv()
+        else:
+            logger.warning("A instância em execução não respondeu ao pipe de instância única.")
+    except EOFError:
+        # Instâncias antigas fecham o pipe sem confirmar: tratam como entregue.
+        return True
+    except OSError:
+        return False
+    finally:
+        try:
+            conn.close()
+        except OSError:
+            pass
+
+    if isinstance(reply, dict) and reply.get("handled") is not False:
+        return True
+
+    _terminate_stalled_instance(reply.get("pid") if isinstance(reply, dict) else None)
+    return False
+
+
+def _terminate_stalled_instance(pid) -> None:
+    if not isinstance(pid, int) or pid <= 0 or pid == os.getpid():
+        return
+    logger.warning("Encerrando a instância travada do KeyTune (pid %s).", pid)
+    try:
+        os.kill(pid, signal.SIGTERM)  # TerminateProcess no Windows
+    except OSError:
+        return
+    deadline = time.monotonic() + _STALLED_EXIT_WAIT_SECONDS
+    while time.monotonic() < deadline:
+        try:
+            Client(_PIPE_ADDRESS, authkey=_PIPE_AUTH_KEY).close()
+        except (ConnectionRefusedError, FileNotFoundError, OSError):
+            return
+        time.sleep(0.2)
 
 
 class SingleInstanceServer:
@@ -62,7 +111,9 @@ class SingleInstanceServer:
     *on_message_received* is called **from a background thread** with a message
     dict (``{"action": "open", "paths": [...]}`` or ``{"action": "focus"}``).
     Callers that need to touch the UI must bridge to the main thread (e.g.
-    ``wx.CallAfter``).
+    ``wx.CallAfter``).  It should return ``False`` when the interface did not
+    handle the message in time, so the launching process knows this instance is
+    stalled; any other return value counts as handled.
     """
 
     def __init__(self, on_message_received):
@@ -83,10 +134,15 @@ class SingleInstanceServer:
                 conn = self._listener.accept()
                 try:
                     message = conn.recv()
+                    handled = True
+                    if message and self._callback:
+                        handled = self._callback(message) is not False
+                    try:
+                        conn.send({"handled": handled, "pid": os.getpid()})
+                    except OSError:
+                        pass
                 finally:
                     conn.close()
-                if message and self._callback:
-                    self._callback(message)
             except OSError:
                 if not self._running:
                     break

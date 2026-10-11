@@ -2,13 +2,16 @@ import wx
 
 from ...about import AboutDialog
 from ...changelog import ChangelogDialog
+from ...exit_watchdog import SHUTDOWN_DEADLINE_SECONDS, arm_exit_watchdog
 from ... import interface_sounds
 from ...interface_sounds.custom import remove_unused_custom_sounds
 from ...i18n import _
-from ...log import setup_logging
+from ...log import get_logger, setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
 from ...preferences import AudioOutputDialog, PreferencesDialog
 from ...restart import request_restart
+
+_logger = get_logger(__name__)
 
 
 class AppCommandsMixin:
@@ -238,50 +241,66 @@ class AppCommandsMixin:
                     event.Veto()
                     return
 
-        if hasattr(self, "progress_timer") and self.progress_timer.IsRunning():
-            self.progress_timer.Stop()
-        if hasattr(self, "crossfade_timer") and self.crossfade_timer.IsRunning():
-            self.crossfade_timer.Stop()
-        if hasattr(self, "sleep_timer") and self.sleep_timer.IsRunning():
-            self.sleep_timer.Stop()
-        if hasattr(self, "_stop_youtube_notification_checks"):
-            self._stop_youtube_notification_checks()
-        if hasattr(self, "_stop_youtube_live_chat_updates"):
-            self._stop_youtube_live_chat_updates()
-        self._dispose_equalizer_ui_cache()
-        if hasattr(self, "plugin_service"):
-            self.plugin_service.stop_all()
-        self._shutdown_autodj_service()
-        self._shutdown_download()
-        self._shutdown_convert()
+        _logger.info("Shutting down (update restart: %s)", bool(getattr(self, "_update_restart_pending", False)))
+        arm_exit_watchdog(SHUTDOWN_DEADLINE_SECONDS)
+
+        # Cada etapa roda isolada: uma exceção em uma delas não pode impedir as
+        # seguintes nem o Destroy(), senão o processo fica vivo sem janela.
+        def step(action, *args):
+            try:
+                action(*args)
+            except Exception:
+                _logger.exception("Shutdown step failed: %s", getattr(action, "__name__", action))
+
+        def stop_timers():
+            for name in ("progress_timer", "crossfade_timer", "sleep_timer"):
+                timer = getattr(self, name, None)
+                if timer is not None and timer.IsRunning():
+                    timer.Stop()
+
+        def stop_plugins():
+            if hasattr(self, "plugin_service"):
+                self.plugin_service.stop_all()
+
+        step(stop_timers)
+        for name in ("_stop_youtube_notification_checks", "_stop_youtube_live_chat_updates"):
+            stopper = getattr(self, name, None)
+            if stopper is not None:
+                step(stopper)
+        step(self._dispose_equalizer_ui_cache)
+        step(stop_plugins)
+        step(self._shutdown_autodj_service)
+        step(self._shutdown_download)
+        step(self._shutdown_convert)
 
         # Signal every background worker to stop up front so their shutdown
         # waits overlap instead of stacking. The session save (disk I/O) then
         # runs while those workers wind down, and the joins happen afterwards.
         # A posição de retomada precisa ser gravada antes de a fila da
         # biblioteca ser fechada, senão a última faixa perde o ponto de parada.
-        self._flush_smart_library_playback_state()
+        step(self._flush_smart_library_playback_state)
 
-        self._begin_library_loader_shutdown()
-        self._begin_player_backend_shutdown()
-        self._begin_smart_library_shutdown()
+        step(self._begin_library_loader_shutdown)
+        step(self._begin_player_backend_shutdown)
+        step(self._begin_smart_library_shutdown)
         closing_sound = not restarting and interface_sounds.play_for(self, interface_sounds.SOUND_APP_CLOSED)
-        self.announcer.request_close()
+        step(self.announcer.request_close)
 
-        self._save_session()
+        step(self._save_session)
 
-        self._finish_library_loader_shutdown()
-        self._finish_player_backend_shutdown()
-        self._finish_smart_library_shutdown()
-        self._shutdown_smtc_service()
-        self._unregister_global_hotkeys()
-        self._shutdown_tray()
-        self.announcer.close()
+        step(self._finish_library_loader_shutdown)
+        step(self._finish_player_backend_shutdown)
+        step(self._finish_smart_library_shutdown)
+        step(self._shutdown_smtc_service)
+        step(self._unregister_global_hotkeys)
+        step(self._shutdown_tray)
+        step(self.announcer.close)
         if closing_sound:
             # O som toca enquanto o resto fecha; a janela some já e só o fim dele é esperado.
             self.Hide()
             interface_sounds.wait_until_played()
         self.Destroy()
+        _logger.info("Shutdown finished; window destroyed")
 
     def _enqueue_selected_item(self):
         # A fila pertence sempre à playlist que está tocando (opção a): assim

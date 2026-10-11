@@ -1,7 +1,15 @@
+import os
+import threading
+
 import wx
 
+from .constants import APP_VERSION
+from .exit_watchdog import INTERPRETER_EXIT_DEADLINE_SECONDS, arm_exit_watchdog
+from .log import get_logger
 from .restart import relaunch, restart_requested
-from .single_instance import ACTION_FOCUS, ACTION_OPEN, SingleInstanceServer
+from .single_instance import ACTION_FOCUS, ACTION_OPEN, UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer
+
+_logger = get_logger(__name__)
 
 
 def _load_quick_player_request(paths):
@@ -55,7 +63,18 @@ def main(initial_paths=None):
             frame.focus_from_relaunch()
 
     def _on_message(message):
-        wx.CallAfter(_deliver_message, message)
+        # Roda na thread do pipe: só confirma depois que a interface tratou o
+        # pedido, para o novo processo saber se esta instância está viva.
+        handled = threading.Event()
+
+        def deliver():
+            try:
+                _deliver_message(message)
+            finally:
+                handled.set()
+
+        wx.CallAfter(deliver)
+        return handled.wait(UI_ACK_TIMEOUT_SECONDS)
 
     settings, quick_paths = _load_quick_player_request(initial_paths)
     if quick_paths:
@@ -64,9 +83,12 @@ def main(initial_paths=None):
         open_full_player(initial_paths)
 
     ipc_server = SingleInstanceServer(_on_message)
+    _logger.info("KeyTune %s started (pid %s)", APP_VERSION, os.getpid())
 
     app.MainLoop()
 
+    _logger.info("Main loop finished (pid %s)", os.getpid())
+    arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS)
     ipc_server.shutdown()
     if restart_requested():
         relaunch()

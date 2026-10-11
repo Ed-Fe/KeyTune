@@ -25,6 +25,7 @@
 
 ### Corrigido
 
+- **KeyTune que não reabria depois de fechar ou atualizar**: se o encerramento travava, o KeyTune ficava vivo em segundo plano, sem janela, e abrir de novo não mostrava nada. Agora o encerramento sempre termina, e quem abre o KeyTune encerra uma cópia travada e abre normalmente. Se uma atualização não for concluída, o KeyTune avisa na próxima abertura.
 - **Curtidas completas**: a lista **Curtidas** do início do YouTube Music mostra todas as faixas curtidas da conta. Antes ela parava nas primeiras centenas, enquanto a mesma playlist aberta por **Suas playlists e mixes** vinha inteira. Agora ela carrega aos poucos: desça até o fim da lista para trazer mais.
 - **Títulos do YouTube no seu idioma**: as listas de vídeos de canais e playlists do YouTube vinham sempre com os títulos em inglês quando o canal os traduz. Agora seguem o **Idioma do conteúdo** das preferências. E, com esse idioma em **O mesmo do KeyTune**, trocar o idioma da interface já vale para o conteúdo, sem reabrir o player.
 - **Idioma da interface sem reabrir à mão**: ao trocar o idioma da interface nas preferências, o KeyTune oferece reiniciar na hora. Ele fecha, abre de novo no idioma escolhido e traz de volta as abas da sessão.
