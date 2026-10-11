@@ -11,6 +11,7 @@ from ..constants import (
     SLEEP_TIMER_TICK_INTERVAL_MS,
     SLEEP_TIMER_WARNING_MINUTES,
 )
+from .. import interface_sounds
 from ..i18n import _, ngettext
 from ..sleep_timer import SleepTimerDialog
 
@@ -205,6 +206,7 @@ class FrameSleepTimerMixin:
             if self._sleep_timer_last_warning_minutes == warning_minutes:
                 return
             self._sleep_timer_last_warning_minutes = warning_minutes
+            interface_sounds.play_for(self, interface_sounds.SOUND_TIMER_WARNING)
             self._announce(
                 ngettext(
                     "Temporizador: falta {minutes} minuto.",

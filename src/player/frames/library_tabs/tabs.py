@@ -2,6 +2,7 @@ import os
 
 import wx
 
+from ... import interface_sounds
 from ...i18n import _
 from ...playlists import (
     PlaylistState,
@@ -52,6 +53,8 @@ class TabManagementMixin:
             self.notebook.AddPage(page, state.title, select=select)
         else:
             self.notebook.InsertPage(index, page, state.title, select=select)
+        if getattr(self, "_tab_sounds_ready", False):
+            interface_sounds.play_for(self, interface_sounds.SOUND_TAB_OPENED)
 
         if isinstance(state, PlaylistState) and self.active_playlist_index is None:
             self.active_playlist_index = index
@@ -474,6 +477,7 @@ class TabManagementMixin:
                     self._unload_player()
                 self._reset_playlist_tabs()
                 self._refresh_playlist_browser()
+                interface_sounds.play_for(self, interface_sounds.SOUND_TAB_CLOSED)
                 self._announce(_("Fechou {title}. Nova playlist vazia.").format(title=current_state.title))
                 return True
 
@@ -508,6 +512,7 @@ class TabManagementMixin:
 
             self.playlists.pop(current_index)
             self.notebook.DeletePage(current_index)
+            interface_sounds.play_for(self, interface_sounds.SOUND_TAB_CLOSED)
 
             if active_playlist_index != wx.NOT_FOUND:
                 if current_index == active_playlist_index:

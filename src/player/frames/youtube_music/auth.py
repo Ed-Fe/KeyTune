@@ -1,3 +1,4 @@
+from ... import interface_sounds
 from ...i18n import _
 import wx
 
@@ -200,6 +201,7 @@ class AuthMixin:
             self._refresh_youtube_music_menu_state()
             return
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         with wx.MessageDialog(
             self,
             _("Deseja remover a autenticação salva do YouTube neste computador?"),

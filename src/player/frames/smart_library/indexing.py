@@ -9,6 +9,7 @@ import os
 
 import wx
 
+from ... import interface_sounds
 from ...i18n import _, ngettext
 
 
@@ -164,6 +165,7 @@ class SmartLibraryIndexingMixin:
             self._announce_smart_library_unavailable()
             return
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         with wx.MessageDialog(
             self,
             _(

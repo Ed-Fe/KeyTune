@@ -7,6 +7,7 @@ em vez de uma faixa solta.
 
 import wx
 
+from ... import interface_sounds
 from ...i18n import _, ngettext
 from ...smart_library import (
     SEARCH_RESULT_ACTION_ENQUEUE,
@@ -86,6 +87,7 @@ class SmartLibrarySearchMixin:
             return False
 
         self._refresh_playlist_browser()
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUEUE_ADDED)
         self._announce(_("{item} adicionado à fila de reprodução.").format(item=label or media_path))
         return True
 

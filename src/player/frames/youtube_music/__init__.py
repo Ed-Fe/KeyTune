@@ -18,14 +18,19 @@ from ._helpers import (
     find_all_available_javascript_runtimes,
     is_missing_javascript_runtime_error_message,
 )
+from .actions_menu import ActionsMenuMixin
 from .audio_tracks import AudioTrackMixin
 from .auth import AuthMixin
 from .browse import BrowseMixin
+from .channel_actions import ChannelActionsMixin
+from .comment_actions import CommentActionsMixin
 from .comments import CommentsMixin
 from .dependencies import DependencyMixin
 from .details import DetailsMixin
 from .lifecycle import LifecycleMixin
+from .live_chat import LiveChatMixin
 from .navigation import ResultsNavigationMixin
+from .notifications import NotificationsMixin
 from .playlists import PlaylistEditMixin
 from .search import SearchMixin
 from .state import LibraryStateMixin
@@ -38,10 +43,15 @@ class FrameYouTubeMusicMixin(
     LibraryStateMixin,
     AuthMixin,
     SearchMixin,
+    ActionsMenuMixin,
     ResultsNavigationMixin,
     PlaylistEditMixin,
     BrowseMixin,
     CommentsMixin,
+    CommentActionsMixin,
+    ChannelActionsMixin,
+    NotificationsMixin,
+    LiveChatMixin,
     DetailsMixin,
     AudioTrackMixin,
     LifecycleMixin,

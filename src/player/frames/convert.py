@@ -33,6 +33,7 @@ from ..download.ffmpeg import (
     find_ffmpeg_directory,
     install_managed_ffmpeg,
 )
+from .. import interface_sounds
 from ..i18n import _
 from ..library.playlist_io import is_remote_media_path
 from ..log import get_logger
@@ -294,6 +295,7 @@ class FrameConvertMixin(TaskProgressMixin):
             self._announce(_("A conversão precisa do FFmpeg, que não foi encontrado. Instale-o e tente de novo."))
             return None
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         response = wx.MessageBox(
             _(
                 "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. "
@@ -498,6 +500,7 @@ class FrameConvertMixin(TaskProgressMixin):
             state_text = _("Conversão em andamento: {percent}%.").format(percent=percent)
         else:
             state_text = _("Conversão em andamento.")
+        interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
         response = wx.MessageBox(
             state_text + "\n\n" + _("Deseja cancelar a conversão?"),
             _("Converter mídia"),

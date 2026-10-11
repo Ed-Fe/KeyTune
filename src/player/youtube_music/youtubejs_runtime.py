@@ -1,10 +1,20 @@
+"""O YouTube.js dentro do KeyTune: os componentes, os processos Node e como falar com eles.
+
+Dois processos Node, cada um com o seu trabalho, para que um nunca atrapalhe o outro:
+
+- **reprodução** (``resolve.mjs``): resolve o vídeo e serve a faixa ao MPV por um proxy
+  local. Fica de pé enquanto a música toca;
+- **ações** (``actions.mjs``): busca, detalhes, conta, comentários, notificações, canais
+  e chat ao vivo. Se uma ação demora ou o processo morre, a música não sente.
+
+Este módulo também instala e valida os componentes (Node.js e o pacote YouTube.js).
+As funções de cada ação ficam em ``youtubejs_actions`` e também valem por aqui.
+"""
+
 from __future__ import annotations
 
 import atexit
-from collections import deque
-import json
 import os
-import queue
 import subprocess
 import threading
 from pathlib import Path
@@ -13,6 +23,7 @@ from dataclasses import dataclass
 from .auth import sanitize_sensitive_text
 from .content_locale import youtubejs_locale
 from .yt_dlp_runtime import find_all_available_javascript_runtimes
+from .youtubejs_worker import NodeWorker
 from ..i18n import _
 from ..optional_resources import (
     get_optional_resource_dir,
@@ -23,9 +34,23 @@ from ..optional_resources import (
 
 
 YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS = 30
-_RESULT_PREFIX = "KEYTUNE_YOUTUBEJS_RESULT="
-_worker_process = None
-_worker_lock = threading.RLock()
+# O processo da reprodução recebe só isto; todo o resto vai ao processo das ações.
+_PLAYBACK_ACTIONS = frozenset({"resolve"})
+# Ações que mudam algo no YouTube: nunca são reenviadas se o processo morrer depois de
+# recebê-las, porque o YouTube pode já tê-las feito (um comentário ou uma mensagem duplicada).
+_WRITE_ACTIONS = frozenset(
+    {
+        "add_to_history",
+        "channel_action",
+        "comment_action",
+        "create_comment",
+        "live_chat_send",
+        "notification_action",
+        "post_vote",
+    }
+)
+_PLAYBACK_SCRIPT = "resolve.mjs"
+_ACTIONS_SCRIPT = "actions.mjs"
 
 
 @dataclass(slots=True)
@@ -33,17 +58,6 @@ class YouTubeJSStreamInfo:
     stream_url: str
     display_title: str = ""
     display_artist: str = ""
-
-
-def warm_up():
-    def start_worker():
-        try:
-            with _worker_lock:
-                _ensure_worker()
-        except Exception:
-            pass
-
-    threading.Thread(target=start_worker, daemon=True).start()
 
 
 def youtubejs_dependencies_available():
@@ -107,86 +121,34 @@ def resolve_stream(media_url, *, cookie_header="", user_agent=""):
     )
 
 
-def search_page(query, kind, *, start, count):
-    """Uma página da busca do YouTube: entradas no formato da listagem do yt-dlp e se há mais."""
-    response = _request_action("search", query=str(query or "").strip(), kind=str(kind or ""), start=start, count=count)
-    return list(response.get("entries") or []), bool(response.get("has_more"))
-
-
-def comments_page(media_url, *, start, count):
-    """Uma página dos comentários de um vídeo e se há mais."""
-    response = _request_action("comments", media_url=str(media_url or "").strip(), start=start, count=count)
-    return list(response.get("entries") or []), bool(response.get("has_more"))
-
-
-def comment_replies_page(media_url, comment_id, *, start, count):
-    """Uma página das respostas a um comentário aberto por :func:`comments_page`."""
-    response = _request_action(
-        "comment_replies",
-        media_url=str(media_url or "").strip(),
-        comment_id=str(comment_id or "").strip(),
-        start=start,
-        count=count,
-    )
-    return list(response.get("entries") or []), bool(response.get("has_more"))
-
-
-def audio_tracks(media_url, *, names=True):
-    """As faixas de áudio de um vídeo dublado; com *names*, os nomes vêm no idioma do conteúdo."""
-    response = _request_action("audio_tracks", media_url=str(media_url or "").strip(), names=bool(names))
-    return list(response.get("tracks") or [])
-
-
-def media_details(media_url):
-    """Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data."""
-    return _request_action("details", media_url=str(media_url or "").strip())
-
-
-def subscription_videos_page(cookie_header, *, start, count, account_index=0):
-    """Uma página dos vídeos novos das inscrições da conta *account_index* de *cookie_header*."""
-    response = _request_action(
-        "subscription_videos",
-        cookie=str(cookie_header or "").strip(),
-        account_index=int(account_index or 0),
-        start=start,
-        count=count,
-    )
-    return list(response.get("entries") or []), bool(response.get("has_more"))
-
-
-def subscribed_channels_page(cookie_header, *, start, count, account_index=0):
-    """Uma página dos canais em que a conta *account_index* de *cookie_header* está inscrita."""
-    response = _request_action(
-        "subscribed_channels",
-        cookie=str(cookie_header or "").strip(),
-        account_index=int(account_index or 0),
-        start=start,
-        count=count,
-    )
-    return list(response.get("entries") or []), bool(response.get("has_more"))
-
-
-def _request_action(action, **fields):
-    """Pede uma ação ao processo do YouTube.js, com o idioma e a região do conteúdo."""
+def request_action(action, **fields):
+    """Pede uma ação ao processo das ações, com o idioma e a região do conteúdo."""
     response = _request_worker({"action": action, **youtubejs_locale(), **fields})
     if response.get("error"):
         raise RuntimeError(sanitize_sensitive_text(response["error"]))
     return response
 
 
+def _worker_scripts(resolver_dir):
+    """Todos os módulos do worker (sem os pacotes de terceiros), para conferir um a um."""
+    scripts = []
+    for folder, subfolders, filenames in os.walk(resolver_dir):
+        subfolders[:] = [name for name in subfolders if name != "node_modules"]
+        scripts.extend(Path(folder) / name for name in filenames if name.endswith(".mjs"))
+    return sorted(scripts)
+
+
 def validate_youtubejs_dependencies() -> None:
     """Validate the managed Node.js resolver without making a network request."""
     node_executable = find_all_available_javascript_runtimes().get("node", "")
     resolver_dir = _youtubejs_resolver_dir()
-    resolver_script = resolver_dir / "resolve.mjs"
     package_dir = _youtubejs_package_dir()
-    if not node_executable or not resolver_script.is_file() or not package_dir.is_dir():
+    entry_scripts = [resolver_dir / _PLAYBACK_SCRIPT, resolver_dir / _ACTIONS_SCRIPT]
+    if not node_executable or not all(script.is_file() for script in entry_scripts) or not package_dir.is_dir():
         raise RuntimeError(_("O Node.js ou o pacote YouTube.js não pôde ser preparado."))
 
-    commands = (
-        [node_executable, "--check", str(resolver_script)],
-        [node_executable, "--input-type=module", "--eval", "await import('youtubei.js')"],
-    )
+    commands = [[node_executable, "--check", str(script)] for script in _worker_scripts(resolver_dir)]
+    commands.append([node_executable, "--input-type=module", "--eval", "await import('youtubei.js')"])
     for command in commands:
         try:
             completed = subprocess.run(
@@ -211,119 +173,64 @@ def validate_youtubejs_dependencies() -> None:
             )
 
 
-def _request_worker(request):
-    with _worker_lock:
-        for attempt in range(2):
-            worker = _ensure_worker()
-            try:
-                worker.stdin.write(json.dumps(request) + "\n")
-                worker.stdin.flush()
-                return _read_worker_response(worker)
-            except (BrokenPipeError, OSError, RuntimeError):
-                _discard_worker(worker)
-                if attempt:
-                    raise
-    raise RuntimeError("O processo do YouTube.js não respondeu.")
+def _spawn_worker(script_name):
+    """Um ``spawn`` para o ``NodeWorker`` que sobe *script_name* com o Node do KeyTune."""
+
+    def spawn():
+        node_executable = find_all_available_javascript_runtimes().get("node", "")
+        resolver_dir = _youtubejs_resolver_dir()
+        resolver_script = resolver_dir / script_name
+        youtubejs_package = _youtubejs_package_dir()
+        if not node_executable or not os.path.isfile(resolver_script) or not os.path.isdir(youtubejs_package):
+            raise RuntimeError("O resolvedor experimental YouTube.js não está instalado.")
+
+        creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        return subprocess.Popen(
+            [node_executable, str(resolver_script), _youtubejs_cache_dir()],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=str(resolver_dir),
+            creationflags=creation_flags,
+        )
+
+    return spawn
 
 
-def _ensure_worker():
-    global _worker_process
-
-    if _worker_process is not None and _worker_process.poll() is None:
-        return _worker_process
-
-    node_executable = find_all_available_javascript_runtimes().get("node", "")
-    resolver_dir = _youtubejs_resolver_dir()
-    resolver_script = resolver_dir / "resolve.mjs"
-    youtubejs_package = _youtubejs_package_dir()
-    if not node_executable or not os.path.isfile(resolver_script) or not os.path.isdir(youtubejs_package):
-        raise RuntimeError("O resolvedor experimental YouTube.js não está instalado.")
-
-    creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
-    _worker_process = subprocess.Popen(
-        [node_executable, str(resolver_script), _youtubejs_cache_dir()],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        cwd=str(resolver_dir),
-        creationflags=creation_flags,
-    )
-    return _worker_process
+_playback_worker = NodeWorker("playback", _spawn_worker(_PLAYBACK_SCRIPT), sanitize=sanitize_sensitive_text)
+_actions_worker = NodeWorker("actions", _spawn_worker(_ACTIONS_SCRIPT), sanitize=sanitize_sensitive_text)
 
 
-def _read_worker_response(worker):
-    result_queue = queue.Queue(maxsize=1)
-    diagnostics = deque(maxlen=20)
-    diagnostics_lock = threading.Lock()
+def warm_up():
+    """Sobe o processo da reprodução em segundo plano, para a primeira faixa não esperar por ele."""
 
-    def diagnostic_text() -> str:
-        with diagnostics_lock:
-            return " | ".join(diagnostics)[-2000:]
-
-    def read_result():
+    def start_worker():
         try:
-            while line := worker.stdout.readline():
-                if line.startswith(_RESULT_PREFIX):
-                    result_queue.put((line, None))
-                    return
-                normalized_line = " ".join(str(line or "").split())
-                if normalized_line:
-                    with diagnostics_lock:
-                        diagnostics.append(sanitize_sensitive_text(normalized_line))
-            result_queue.put(("", RuntimeError("O processo do YouTube.js foi encerrado.")))
-        except Exception as exc:
-            result_queue.put(("", exc))
+            _playback_worker.ensure_started()
+        except Exception:
+            pass
 
-    reader = threading.Thread(target=read_result, daemon=True)
-    reader.start()
-    reader.join(YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS)
-    if reader.is_alive():
-        message = _("O YouTube.js demorou demais para responder.")
-        detail = diagnostic_text()
-        if detail:
-            message += " " + _("Detalhes: {detail}").format(detail=detail)
-        raise RuntimeError(message)
-
-    response_line, error = result_queue.get_nowait()
-    if error is not None:
-        message = str(error)
-        detail = diagnostic_text()
-        if detail:
-            message += " " + _("Detalhes: {detail}").format(detail=detail)
-        raise RuntimeError(message) from error
-    return _parse_response(response_line)
+    threading.Thread(target=start_worker, daemon=True).start()
 
 
-def _parse_response(response_line):
-    try:
-        response = json.loads(str(response_line or "")[len(_RESULT_PREFIX):])
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("O YouTube.js retornou uma resposta inválida.") from exc
-    if not isinstance(response, dict):
-        raise RuntimeError("O YouTube.js retornou uma resposta inválida.")
-    return response
-
-
-def _discard_worker(worker):
-    global _worker_process
-
-    if _worker_process is worker:
-        _worker_process = None
-    if worker.poll() is None:
-        worker.kill()
-    try:
-        worker.wait(timeout=2)
-    except subprocess.TimeoutExpired:
-        pass
+def _request_worker(request):
+    """Manda *request* ao processo certo; o tempo e as repetições dependem da ação."""
+    action = str(request.get("action") or "resolve")
+    worker = _playback_worker if action in _PLAYBACK_ACTIONS else _actions_worker
+    return worker.request(
+        request,
+        timeout=YOUTUBEJS_RESOLUTION_TIMEOUT_SECONDS,
+        replay_safe=action not in _WRITE_ACTIONS,
+    )
 
 
 def _stop_worker():
-    with _worker_lock:
-        if _worker_process is not None:
-            _discard_worker(_worker_process)
+    """Encerra os dois processos (os componentes vão ser trocados, por exemplo)."""
+    _playback_worker.stop()
+    _actions_worker.stop()
 
 
 def _youtubejs_cache_dir():
@@ -354,3 +261,6 @@ def _youtubejs_package_dir() -> Path:
 
 
 atexit.register(_stop_worker)
+
+# As ações viram funções deste módulo (``youtubejs_runtime.comments_page(...)``).
+from .youtubejs_actions import *  # noqa: E402,F401,F403

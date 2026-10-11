@@ -3,7 +3,7 @@ from ...i18n import _, ngettext
 import wx
 
 from player.youtube_music.models import YOUTUBE_SEARCH_SOURCE_YOUTUBE, get_search_scope_option
-from player.youtube_music.playlists import is_watch_playlist_id, looks_like_link
+from player.youtube_music.playlists import looks_like_link
 
 from .navigation import YouTubeResultsView
 
@@ -11,123 +11,6 @@ from ...playlists import PlaylistState
 
 
 class SearchMixin:
-    def _on_youtube_music_show_search_actions_menu(self, panel, anchor_window=None):
-        selected_results = self._selected_youtube_music_search_results()
-        can_go_back = self._youtube_music_can_go_back_in_results()
-        if not selected_results and not can_go_back:
-            self._announce(_("Selecione ao menos um item da lista para abrir o menu de ações."))
-            return False
-
-        single_result = selected_results[0] if len(selected_results) == 1 else None
-        can_add_selection = bool(self._search_results_can_add_to_current_playlist(selected_results))
-
-        menu = wx.Menu()
-
-        def append(label, handler, enabled=True):
-            menu_item = menu.Append(wx.ID_ANY, label)
-            menu_item.Enable(bool(enabled))
-            menu.Bind(wx.EVT_MENU, lambda _event: handler(), id=menu_item.GetId())
-
-        append(
-            _("Tocar (Enter)"),
-            lambda: self._add_youtube_music_search_results_to_current_playlist(play=True),
-            can_add_selection,
-        )
-        append(
-            _("Adicionar sem tocar (Shift+Enter)"),
-            lambda: self._add_youtube_music_search_results_to_current_playlist(play=False),
-            can_add_selection,
-        )
-        append(
-            _("Ver conteúdo (Seta para a direita)"),
-            self.on_browse_youtube_music_search_result,
-            single_result is not None and getattr(single_result, "can_browse", False),
-        )
-        append(_("Voltar à lista anterior (Backspace)"), self.on_youtube_music_results_back, can_go_back)
-        append(
-            _("Carregar a lista inteira"),
-            self.on_load_all_youtube_music_results,
-            self._youtube_music_current_results_view().has_more,
-        )
-        if single_result is not None and getattr(single_result, "result_type", "") == "comment":
-            append(_("Ler o comentário inteiro (Enter)"), lambda: self._read_youtube_music_comment(single_result))
-        else:
-            append(
-                _("Ver comentários"),
-                self.show_youtube_music_comments,
-                single_result is not None and bool(self._youtube_music_comments_url(single_result)),
-            )
-        if single_result is not None and getattr(single_result, "result_type", "") != "comment":
-            append(
-                _("Ver detalhes"),
-                self.show_youtube_music_details,
-                bool(self._youtube_music_comments_url(single_result)),
-            )
-        owner = single_result.owner_result() if hasattr(single_result, "owner_result") else None
-        if owner is not None:
-            owner_label = _("Ir para o canal {name}") if owner.result_type == "channel" else _("Ir para o artista {name}")
-            append(
-                owner_label.format(name=owner.title).replace("&", "&&"),
-                lambda: self.on_browse_youtube_music_search_result(owner, focus_results=True),
-            )
-        menu.AppendSeparator()
-
-        add_menu = wx.Menu()
-        open_new_item = add_menu.Append(wx.ID_ANY, _("Abrir seleção em nova playlist"))
-
-        add_targets = self._youtube_music_search_playlist_tab_targets()
-        target_items = []
-        if add_targets:
-            add_menu.AppendSeparator()
-        for target in add_targets:
-            menu_item = add_menu.Append(wx.ID_ANY, target["label"])
-            target_items.append((menu_item, target))
-
-        open_new_item.Enable(can_add_selection)
-        for menu_item, _target in target_items:
-            menu_item.Enable(can_add_selection)
-
-        menu.AppendSubMenu(add_menu, _("Adicionar seleção..."))
-
-        download_item = menu.Append(wx.ID_ANY, _("Baixar seleção...\tCtrl+Shift+B"))
-        download_item.Enable(self._youtube_music_search_results_can_download(selected_results))
-        menu.Bind(
-            wx.EVT_MENU,
-            lambda _event: self.download_youtube_music_search_selection(),
-            id=download_item.GetId(),
-        )
-
-        add_menu.Bind(
-            wx.EVT_MENU,
-            lambda _event: self._open_youtube_music_search_results_in_new_playlist(),
-            id=open_new_item.GetId(),
-        )
-        for menu_item, target in target_items:
-            add_menu.Bind(
-                wx.EVT_MENU,
-                lambda _event, target_index=target["index"]: self._add_youtube_music_search_results_to_playlist_tab(target_index),
-                id=menu_item.GetId(),
-            )
-
-        append(
-            _("Salvar no YouTube Music"),
-            self._save_youtube_music_search_result,
-            any(getattr(result, "can_save", False) for result in selected_results),
-        )
-        if single_result is not None and getattr(single_result, "library_playlist", False):
-            append(
-                _("Excluir playlist do YouTube Music..."),
-                self._delete_selected_youtube_music_library_playlist,
-                not is_watch_playlist_id(single_result.playlist_id),
-            )
-
-        popup_parent = anchor_window or getattr(panel, "search_results_list", None) or self
-        try:
-            popup_parent.PopupMenu(menu)
-        finally:
-            menu.Destroy()
-        return True
-
     def _youtube_music_search_download_entries(self, search_results=None):
         """``(endereço, título)`` dos resultados selecionados que podem ser baixados."""
         if search_results is None:
@@ -484,6 +367,10 @@ class SearchMixin:
 
         if len(search_results) == 1 and getattr(search_results[0], "result_type", "") == "comment":
             return self._read_youtube_music_comment(search_results[0])
+        if len(search_results) == 1 and getattr(search_results[0], "result_type", "") == "post":
+            return self._read_youtube_music_post(search_results[0])
+        if len(search_results) == 1 and getattr(search_results[0], "result_type", "") == "chat":
+            return self._read_youtube_live_chat_message(search_results[0])
 
         if play and len(search_results) == 1 and getattr(search_results[0], "library_playlist", False):
             # Uma playlist da sua biblioteca abre na aba dela, de onde dá para editá-la na conta.
@@ -525,6 +412,9 @@ class SearchMixin:
                 )
             if play:
                 self._play_youtube_music_search_item(target_state, play_item)
+                if any(getattr(result, "result_type", "") == "notification" for result in search_results):
+                    # Tocar o vídeo de uma notificação é o que a marca como lida no YouTube.
+                    self._mark_youtube_notifications_read(search_results)
             self._refresh_playlist_browser()
             self._update_title()
 

@@ -1,0 +1,61 @@
+"""O nome de cada som de aviso, como aparece nas preferências."""
+
+from ..i18n import _
+from . import (
+    SOUND_APP_CLOSED,
+    SOUND_APP_OPENED,
+    SOUND_BACK,
+    SOUND_CHAT_ENDED,
+    SOUND_CHAT_MENTION,
+    SOUND_CHAT_MESSAGE,
+    SOUND_CHAT_PAID,
+    SOUND_CHAT_SENT,
+    SOUND_DOWNLOAD_DONE,
+    SOUND_FAILURE,
+    SOUND_LIKE,
+    SOUND_LIST_EDGE,
+    SOUND_LOADING,
+    SOUND_NOTIFICATION,
+    SOUND_OPEN,
+    SOUND_QUESTION,
+    SOUND_QUEUE_ADDED,
+    SOUND_QUEUE_REMOVED,
+    SOUND_SUCCESS,
+    SOUND_TAB_CLOSED,
+    SOUND_TAB_OPENED,
+    SOUND_TIMER_WARNING,
+    SOUND_UNLIKE,
+    SOUND_UPDATE_AVAILABLE,
+    SOUND_WELCOME,
+)
+
+
+def sound_labels():
+    """``(som, nome)`` de cada som, na ordem em que as preferências os mostram."""
+    return [
+        (SOUND_APP_OPENED, _("KeyTune aberto")),
+        (SOUND_APP_CLOSED, _("KeyTune fechado")),
+        (SOUND_CHAT_MESSAGE, _("Chat ao vivo: mensagem nova")),
+        (SOUND_CHAT_MENTION, _("Chat ao vivo: mensagem que cita o seu nome")),
+        (SOUND_CHAT_PAID, _("Chat ao vivo: mensagem paga")),
+        (SOUND_CHAT_SENT, _("Chat ao vivo: mensagem enviada")),
+        (SOUND_CHAT_ENDED, _("Chat ao vivo: chat encerrado")),
+        (SOUND_NOTIFICATION, _("Notificação nova do YouTube")),
+        (SOUND_LIKE, _("Curtir")),
+        (SOUND_UNLIKE, _("Remover a curtida ou não gostei")),
+        (SOUND_SUCCESS, _("Ação da conta que deu certo")),
+        (SOUND_FAILURE, _("Ação que falhou")),
+        (SOUND_LIST_EDGE, _("Fim ou começo da lista")),
+        (SOUND_OPEN, _("Pasta ou lista aberta")),
+        (SOUND_BACK, _("Volta à pasta ou lista anterior")),
+        (SOUND_LOADING, _("Mais itens sendo carregados")),
+        (SOUND_TAB_OPENED, _("Aba aberta")),
+        (SOUND_TAB_CLOSED, _("Aba fechada")),
+        (SOUND_QUEUE_ADDED, _("Item posto na fila")),
+        (SOUND_QUEUE_REMOVED, _("Item tirado da fila")),
+        (SOUND_DOWNLOAD_DONE, _("Download concluído")),
+        (SOUND_TIMER_WARNING, _("Aviso do temporizador")),
+        (SOUND_QUESTION, _("Pergunta de confirmação")),
+        (SOUND_UPDATE_AVAILABLE, _("Atualização nova do KeyTune")),
+        (SOUND_WELCOME, _("Tela de boas-vindas")),
+    ]

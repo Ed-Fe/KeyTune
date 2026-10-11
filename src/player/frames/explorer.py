@@ -20,6 +20,7 @@ from ..folder_sort import (
     FOLDER_SORT_SIZE,
     FOLDER_SORT_TYPE,
 )
+from .. import interface_sounds
 from ..i18n import _, ngettext
 from .background import run_in_background
 from ..library import (
@@ -230,6 +231,7 @@ class FrameExplorerMixin:
         if parent_path is None:
             self._announce(_("Você já está na pasta raiz."))
             return
+        interface_sounds.play_for(self, interface_sounds.SOUND_BACK)
         self._explorer_navigate(parent_path, selected_path=state.current_path)
 
     def on_explorer_activate_item(self, item_index):
@@ -241,6 +243,7 @@ class FrameExplorerMixin:
         if entry.is_parent:
             self.on_explorer_go_back()
         elif entry.is_directory:
+            interface_sounds.play_for(self, interface_sounds.SOUND_OPEN)
             self._explorer_navigate(entry.path)
         else:
             self._explorer_play_paths([entry.path])

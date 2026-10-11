@@ -1,10 +1,29 @@
-"""Comentários de vídeos e músicas na lista da aba do YouTube Music."""
+"""Comentários de vídeos, músicas e posts na lista da aba do YouTube Music."""
+
+from dataclasses import dataclass, replace
 
 from player.youtube_music import comments as youtube_comments
+from player.youtube_music import posts as youtube_posts
+from player.youtube_music.dependencies import youtubejs_resolver_enabled
 from player.youtube_music.playlists import extract_video_id_from_text
 
 from ...i18n import _
 from .navigation import YouTubeResultsView
+
+
+@dataclass(frozen=True)
+class CommentsContext:
+    """De quem são os comentários de uma lista e em que ordem ela está."""
+
+    # De um vídeo (*media_url*) ou de um *post* de canal.
+    media_url: str = ""
+    post: object = None
+    # O título da lista sem a ordem, para trocar de ordem sem perdê-lo.
+    title: str = ""
+    # Os mais recentes primeiro, em vez dos principais.
+    newest: bool = False
+    # A conversa que vem na frente: o comentário de que uma notificação fala.
+    linked_comment: str = ""
 
 
 class CommentsMixin:
@@ -43,18 +62,60 @@ class CommentsMixin:
             return False
         return self._open_youtube_music_comments_view(media_path, media_title)
 
-    def _open_youtube_music_comments_view(self, media_url, media_title):
-        title = youtube_comments.comments_view_title(media_title)
+    def _build_youtube_music_comments_view(self, context):
+        """A lista dos comentários de *context*, na ordem que ele diz."""
+        if context.post is not None:
+            def fetch_page(start, count):
+                return youtube_posts.post_comments_page(context.post, start, count, newest=context.newest)
+        else:
+            def fetch_page(start, count):
+                return youtube_comments.comments_page(
+                    context.media_url,
+                    start,
+                    count,
+                    newest=context.newest,
+                    linked_comment=context.linked_comment,
+                )
 
-        def fetch_page(start, count):
-            return youtube_comments.comments_page(media_url, start, count)
+        title = youtube_comments.newest_view_title(context.title) if context.newest else context.title
+        return YouTubeResultsView(title=title, fetch_page=fetch_page, context=context)
 
-        self._announce(_("Abrindo {title}.").format(title=title))
+    def _open_youtube_music_comments_view(self, media_url, media_title, *, linked_comment=""):
+        context = CommentsContext(
+            media_url=media_url,
+            title=youtube_comments.comments_view_title(media_title),
+            linked_comment=linked_comment,
+        )
+        view = self._build_youtube_music_comments_view(context)
+        self._announce(_("Abrindo {title}.").format(title=view.title))
         return self._load_youtube_music_results_view(
-            YouTubeResultsView(title=title, fetch_page=fetch_page),
+            view,
             mode="push",
             error_message=_("Não foi possível carregar os comentários agora."),
             # Aberta pelo menu ou pelo atalho: sem isto o foco fica no campo de busca.
+            focus_results=True,
+        )
+
+    def _youtube_music_comments_list_menu_entries(self):
+        """A troca de ordem, para o menu de ações de uma lista de comentários."""
+        context = self._youtube_music_current_results_view().context
+        # A conversa de uma notificação tem a ordem dela; o yt-dlp só traz os principais.
+        if not isinstance(context, CommentsContext) or context.linked_comment or not youtubejs_resolver_enabled():
+            return []
+        label = _("Ordenar pelos principais") if context.newest else _("Ordenar pelos mais recentes")
+        return [(label, self.toggle_youtube_music_comments_order)]
+
+    def toggle_youtube_music_comments_order(self):
+        """Troca a lista de comentários na tela entre os principais e os mais recentes."""
+        context = self._youtube_music_current_results_view().context
+        if not isinstance(context, CommentsContext):
+            return False
+        view = self._build_youtube_music_comments_view(replace(context, newest=not context.newest))
+        self._announce(_("Abrindo {title}.").format(title=view.title))
+        return self._load_youtube_music_results_view(
+            view,
+            mode="replace",
+            error_message=_("Não foi possível carregar os comentários agora."),
             focus_results=True,
         )
 

@@ -15,6 +15,9 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from player.optional_resources import RESOURCE_REVISIONS
 
 
+# As pastas de módulos do worker do YouTube.js, ao lado de resolve.mjs e actions.mjs.
+WORKER_FOLDERS = ("lib", "handlers", "playback")
+
 RESOURCE_LABELS = {
     "node": "NodeJS",
     "youtube": "YouTubePython",
@@ -73,8 +76,10 @@ def _build_youtubejs(output_dir, args):
     with tempfile.TemporaryDirectory(prefix="keytune-youtubejs-resource-", dir=output_dir.parent) as temporary:
         content = Path(temporary) / "content"
         content.mkdir()
-        for filename in ("resolve.mjs", "package.json", "package-lock.json"):
+        for filename in ("resolve.mjs", "actions.mjs", "package.json", "package-lock.json"):
             shutil.copy2(source_dir / filename, content / filename)
+        for folder in WORKER_FOLDERS:
+            shutil.copytree(source_dir / folder, content / folder)
         node_path = Path(shutil.which(args.node_executable) or args.node_executable).resolve()
         npm_cli = node_path.parent / "node_modules" / "npm" / "bin" / "npm-cli.js"
         npm_path = shutil.which("npm")
@@ -90,7 +95,7 @@ def _build_youtubejs(output_dir, args):
             content,
             "youtubejs",
             args.app_version,
-            ["resolve.mjs", "node_modules/youtubei.js"],
+            ["resolve.mjs", "actions.mjs", *WORKER_FOLDERS, "node_modules/youtubei.js"],
             {"YouTube.js": str(package.get("version") or "")},
         )
         _archive_resource(output_dir, "youtubejs", content, args.architecture)

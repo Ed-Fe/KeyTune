@@ -515,9 +515,10 @@ class ResultsNavigationTests(unittest.TestCase):
 
         self.assertEqual(
             [item.title for item in frame._youtube_music_search_results()],
-            [section.label for section in YOUTUBE_CHANNEL_SECTIONS],
+            [section.label for section in YOUTUBE_CHANNEL_SECTIONS]
+            + ["Posts", "Buscar neste canal...", "Inscrição e notificações do canal...", "Sobre o canal"],
         )
-        self.assertEqual(frame.announcements[-1], "Canal Canal de teste: 4 itens.")
+        self.assertEqual(frame.announcements[-1], "Canal Canal de teste: 5 itens.")
         self.assertFalse(frame._youtube_music_pending_results_focus)
         service.fetch_browse_page.assert_not_called()
 
@@ -750,9 +751,11 @@ class HomeListTests(unittest.TestCase):
             [
                 "Suas playlists e mixes",
                 "Curtidas",
-                "Histórico",
+                "Histórico do YouTube Music",
+                "Histórico do YouTube",
                 "Vídeos das inscrições",
                 "Canais inscritos",
+                "Notificações",
                 "Em alta",
                 "Moods e gêneros",
             ],

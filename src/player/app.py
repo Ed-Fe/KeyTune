@@ -6,6 +6,7 @@ import wx
 from .constants import APP_VERSION
 from .exit_watchdog import INTERPRETER_EXIT_DEADLINE_SECONDS, arm_exit_watchdog
 from .log import get_logger
+from .restart import relaunch, restart_requested
 from .single_instance import ACTION_FOCUS, ACTION_OPEN, UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer
 
 _logger = get_logger(__name__)
@@ -89,3 +90,5 @@ def main(initial_paths=None):
     _logger.info("Main loop finished (pid %s)", os.getpid())
     arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS)
     ipc_server.shutdown()
+    if restart_requested():
+        relaunch()

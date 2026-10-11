@@ -5,6 +5,7 @@ import threading
 import wx
 
 from ..constants import STARTUP_UPDATE_CHECK_DELAY_MS
+from .. import interface_sounds
 from ..i18n import _
 from ..update import (
     UpdateAvailableDialog,
@@ -111,6 +112,7 @@ class FrameUpdateMixin:
         if not can_self_update():
             install_message = unsupported_install_message()
 
+        interface_sounds.play_for(self, interface_sounds.SOUND_UPDATE_AVAILABLE)
         with UpdateAvailableDialog(self, update_info, install_message=install_message) as dialog:
             if dialog.ShowModal() != wx.ID_OK:
                 return

@@ -27,7 +27,8 @@ class YouTubeHistoryMixin:
 
     def _prepare_youtube_music_history_tracking(self, media_path):
         normalized_media_path = str(media_path or "").strip()
-        if not is_music_youtube_url(normalized_media_path):
+        # Vale para as faixas do YouTube Music e para os vídeos do YouTube comum.
+        if not is_youtube_music_media(normalized_media_path):
             self._clear_youtube_music_history_tracking()
             return False
 
