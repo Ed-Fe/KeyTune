@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import sys
 import threading
+from ..constants import APP_VERSION
 from ..i18n import _
 from typing import Callable, Optional
 
@@ -176,7 +177,12 @@ class SmtcService:
             self._available = True
             return True
         except Exception as exc:
-            _logger.warning("Failed to start SMTC service: %s", exc)
+            _logger.warning(
+                "Failed to start SMTC service (KeyTune %s, packaged=%s): %s",
+                APP_VERSION,
+                bool(getattr(sys, "frozen", False)),
+                exc,
+            )
             self._cleanup_locked()
             return False
 
