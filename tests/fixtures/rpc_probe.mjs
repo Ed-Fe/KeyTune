@@ -22,4 +22,5 @@ await serve({
   },
   laneOf: (action) => (action === "slow" || action === "hang" || action === "fast" ? "main" : null),
   timeoutMs: 400,
+  staleAfterMs: 1000,
 });

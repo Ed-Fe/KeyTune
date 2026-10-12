@@ -62,6 +62,7 @@ class PlaylistState:
     # Os Shorts do YouTube: cada item repete até o próximo, e a fila se enche sozinha.
     shorts_session: bool = False
     shorts_loading: bool = False
+    shorts_advance_when_loaded: bool = False
     autodj_source_title: str | None = None
     autodj_source_items: list[str] = field(default_factory=list)
     autodj_source_labels: list[str] = field(default_factory=list)

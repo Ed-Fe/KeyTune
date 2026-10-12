@@ -103,6 +103,26 @@ class RpcProtocolTests(unittest.TestCase):
         self.assertIn("demorou demais", answers[1]["error"])
         self.assertEqual(answers[2]["value"], "depois")
 
+    def test_a_request_that_waited_too_long_in_its_lane_is_refused_without_running(self):
+        for request_id in range(1, 6):
+            self.send(request_id, "slow", value=request_id)
+
+        answers = self.wait_for(5, timeout=8)
+
+        self.assertEqual(answers[1]["value"], 1)
+        self.assertIn("ocupado", answers[5]["error"])
+
+    def test_a_live_link_gives_the_video_id(self):
+        script = (
+            "import('./src/player/youtube_music/youtubejs/lib/text.mjs')"
+            ".then((text) => console.log(text.videoIdFrom('https://www.youtube.com/live/jfKfPfyJRdk?si=x')))"
+        )
+        completed = subprocess.run(
+            [shutil.which("node"), "-e", script], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=20
+        )
+
+        self.assertEqual(completed.stdout.strip(), "jfKfPfyJRdk")
+
     def test_a_stray_rejection_does_not_take_the_process_down(self):
         self.send(1, "stray")
         answers = self.wait_for(1)

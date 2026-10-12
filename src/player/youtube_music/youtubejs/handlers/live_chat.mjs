@@ -9,6 +9,7 @@ import { requireVideoId } from "../lib/text.mjs";
 
 const MAX_CHATS = 3;
 const MAX_SEEN_MESSAGES = 2000;
+const NO_LIVE_CHAT = "Este vídeo não tem chat ao vivo.";
 
 // Um chat aberto por vídeo e por tipo de cliente: a continuação e o que já foi entregue.
 const chats = new Map();
@@ -26,11 +27,19 @@ function messageText(message) {
 
 function messageEntry(action) {
   const item = action.addChatItemAction?.item || {};
-  const renderer = item.liveChatTextMessageRenderer || item.liveChatPaidMessageRenderer;
+  const renderer =
+    item.liveChatTextMessageRenderer ||
+    item.liveChatPaidMessageRenderer ||
+    item.liveChatMembershipItemRenderer ||
+    item.liveChatPaidStickerRenderer;
   if (!renderer?.id) {
     return null;
   }
-  const text = messageText(renderer.message);
+  // Um novo membro vem com o aviso do YouTube ("Novo membro") e, às vezes, uma mensagem
+  // dele; a figurinha paga só tem o nome dela.
+  const notice = renderer.headerSubtext ? messageText(renderer.headerSubtext) || renderer.headerSubtext.simpleText || "" : "";
+  const sticker = item.liveChatPaidStickerRenderer?.sticker?.accessibility?.accessibilityData?.label || "";
+  const text = [notice, messageText(renderer.message), sticker].filter(Boolean).join(" ");
   const amount = renderer.purchaseAmountText?.simpleText || "";
   if (!text && !amount) {
     return null;
@@ -43,7 +52,7 @@ async function openChat(request, videoId) {
   const innertube = account ? await accountClientFor(request) : await clientFor(request);
   const info = await innertube.getInfo(videoId);
   if (!info.livechat?.continuation || info.livechat.is_replay) {
-    throw new Error("Este vídeo não tem chat ao vivo.");
+    throw new Error(NO_LIVE_CHAT);
   }
   return { innertube, account, continuation: info.livechat.continuation, sendParams: "", seen: new Set() };
 }
@@ -63,8 +72,18 @@ export async function liveChat(request) {
   });
   const contents = response.data?.continuationContents?.liveChatContinuation;
   if (!contents) {
-    // A transmissão acabou: o YouTube para de devolver o chat.
     chats.delete(key);
+    // Sem o chat na resposta, ou a transmissão acabou ou só a continuação venceu (o chat
+    // ficou um tempo sem ser consultado). Abrir de novo, uma vez, diz qual dos dois.
+    if (!request.reopened) {
+      try {
+        return await liveChat({ ...request, restart: true, reopened: true });
+      } catch (error) {
+        if (error?.message !== NO_LIVE_CHAT) {
+          throw error;
+        }
+      }
+    }
     return { entries: [], can_send: false, ended: true };
   }
 

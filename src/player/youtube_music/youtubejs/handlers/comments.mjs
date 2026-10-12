@@ -115,6 +115,12 @@ export function postComments(request) {
 }
 
 function takeReplyNodes(listing, nodes) {
+  // A biblioteca só liga as ações aos comentários principais; sem isto, avaliar uma
+  // resposta falha com "Actions instance not set".
+  for (const node of nodes) {
+    node.setActions?.(listing.innertube.actions);
+    node.comment?.setActions?.(listing.innertube.actions);
+  }
   collectEntries(listing, nodes.filter((node) => node.type !== "ContinuationItem"), (reply) => commentEntry(reply, listing));
   listing.next = nodes.find((node) => node.type === "ContinuationItem") || listing.next;
 }

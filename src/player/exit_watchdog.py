@@ -21,8 +21,12 @@ _armed = False
 _lock = threading.Lock()
 
 
-def arm_exit_watchdog(seconds: float) -> None:
-    """Força a saída do processo em *seconds*, se ele ainda estiver vivo."""
+def arm_exit_watchdog(seconds: float, *, before_exit=None) -> None:
+    """Força a saída do processo em *seconds*, se ele ainda estiver vivo.
+
+    *before_exit* roda logo antes da saída forçada (reabrir o KeyTune num reinício, por
+    exemplo); só vale o do primeiro armamento.
+    """
     global _armed
     with _lock:
         if _armed:
@@ -32,6 +36,11 @@ def arm_exit_watchdog(seconds: float) -> None:
     def _force_exit():
         time.sleep(seconds)
         _logger.error("O encerramento do KeyTune excedeu %.0f s; forçando a saída.", seconds)
+        if before_exit is not None:
+            try:
+                before_exit()
+            except Exception:
+                pass
         os._exit(0)
 
     threading.Thread(target=_force_exit, name="keytune-exit-watchdog", daemon=True).start()

@@ -69,7 +69,11 @@ class ShortsMixin:
 
     def _shorts_session_refill(self, state, *, force=False):
         """Busca mais shorts quando a fila está acabando (ou já acabou, com *force*)."""
-        if not self._shorts_session_active(state) or getattr(state, "shorts_loading", False):
+        if not self._shorts_session_active(state):
+            return False
+        if getattr(state, "shorts_loading", False):
+            # A leva já está a caminho: quem pediu o próximo passa para ele quando ela chegar.
+            state.shorts_advance_when_loaded = bool(force or getattr(state, "shorts_advance_when_loaded", False))
             return False
         remaining = len(state.items) - 1 - max(0, int(state.current_index or 0))
         if remaining > SHORTS_REFILL_THRESHOLD and not force:
@@ -93,6 +97,8 @@ class ShortsMixin:
 
     def _finish_shorts_refill(self, state, results, announce_next):
         state.shorts_loading = False
+        announce_next = bool(announce_next or getattr(state, "shorts_advance_when_loaded", False))
+        state.shorts_advance_when_loaded = False
         if self._resolve_playlist_state_index(state) == wx.NOT_FOUND:
             return
         known = {extract_video_id_from_text(item) for item in state.items}

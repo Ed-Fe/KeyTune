@@ -7,9 +7,12 @@ import { createAccountFetch } from "./account_fetch.mjs";
 const MAX_CLIENTS = 3;
 const clients = new Map();
 let cacheDir = "";
+// Só quem decifra endereços de mídia (a reprodução) precisa do script do player do YouTube.
+let needsPlayer = true;
 
-export function configureClients({ cacheDirectory }) {
+export function configureClients({ cacheDirectory, retrievePlayer = true }) {
   cacheDir = cacheDirectory;
+  needsPlayer = retrievePlayer;
 }
 
 // Um cliente anônimo por idioma e região. A reprodução usa sempre o padrão
@@ -32,6 +35,7 @@ export function clientFor(request = {}) {
     cache: new UniversalCache(true, cacheDir),
     // A reprodução gera a sessão aqui, como sempre fez; as listas pedem a sessão ao YouTube.
     generate_session_locally: !request.lang,
+    retrieve_player: needsPlayer,
     lang,
   };
   if (location) {
@@ -78,6 +82,8 @@ export function accountClientFor(request) {
       cookie: String(request.cookie).trim(),
       account_index: accountIndex(request),
       lang: String(request.lang || "").trim() || "en",
+      // A conta nunca decifra endereços de mídia: o script do player não é baixado.
+      retrieve_player: false,
       // Mantém as leituras em dia com o que a conta acabou de mudar e guarda, de cada lote
       // de comentários, o que responder, editar e apagar usam.
       fetch: createAccountFetch((data) => responseListener(data)),

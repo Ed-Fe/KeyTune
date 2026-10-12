@@ -124,6 +124,26 @@ class NotificationStoreTests(unittest.TestCase):
         self.assertFalse(reopened.scoped(second).has_baseline)
         self.assertEqual(reopened.scoped(second).seen_ids(), set())
 
+    def test_renewed_cookies_keep_the_same_account(self):
+        before = account_scope("SAPISID=conta; SIDCC=ontem", 0)
+        after = account_scope("SIDCC=hoje; SAPISID=conta", 0)
+
+        self.assertEqual(before, after)
+        self.assertNotEqual(before, account_scope("SAPISID=outra; SIDCC=hoje", 0))
+        self.assertNotEqual(before, account_scope("SAPISID=conta; SIDCC=hoje", 1))
+
+    def test_the_file_keeps_only_the_latest_accounts(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = YouTubeNotificationStore(pathlib.Path(folder) / "notifications.json")
+            for index in range(7):
+                store.scoped(f"conta{index}").remember(["n1"])
+            store.scoped("conta2").remember(["n2"])
+
+            self.assertFalse(store.scoped("conta0").has_baseline)
+            self.assertFalse(store.scoped("conta1").has_baseline)
+            self.assertEqual(store.scoped("conta2").seen_ids(), {"n1", "n2"})
+            self.assertTrue(store.scoped("conta6").has_baseline)
+
     def test_the_account_name_does_not_hold_the_cookie(self):
         self.assertNotIn("SID=secret", account_scope("SID=secret", 1))
         self.assertEqual(account_scope("", 0), "")

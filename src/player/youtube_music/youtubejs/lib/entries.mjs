@@ -56,6 +56,22 @@ export function feedVideoEntry(node) {
       watched_percent: findWatchedPercent(node.thumbnail_overlays),
     };
   }
+  if (node.type === "CompactVideo" || node.type === "GridVideo") {
+    // Os cartões de antes do LockupView: o YouTube ainda os serve em algumas sessões.
+    const seconds = Number(node.duration?.seconds) || 0;
+    return {
+      id: node.video_id,
+      title: textOf(node.title),
+      channel: textOf(node.author?.name),
+      channel_id: /^UC[\w-]{22}$/.test(node.author?.id || "") ? node.author.id : "",
+      duration: seconds,
+      duration_text: seconds ? "" : textOf(node.duration?.text ?? node.duration),
+      view_count_text: textOf(node.short_view_count) || textOf(node.view_count) || textOf(node.views),
+      published: textOf(node.published),
+      live_status: node.is_live ? "is_live" : "",
+      watched_percent: findWatchedPercent(node.thumbnail_overlays),
+    };
+  }
   if (node.type !== "LockupView" || node.content_type !== "VIDEO") {
     return null;
   }

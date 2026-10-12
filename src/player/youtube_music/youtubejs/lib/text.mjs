@@ -14,7 +14,7 @@ export function videoIdFrom(value) {
   if (url.hostname === "youtu.be") {
     return url.pathname.split("/").filter(Boolean)[0] || "";
   }
-  if (url.pathname.startsWith("/shorts/") || url.pathname.startsWith("/embed/")) {
+  if (["/shorts/", "/embed/", "/live/"].some((prefix) => url.pathname.startsWith(prefix))) {
     return url.pathname.split("/").filter(Boolean)[1] || "";
   }
   return url.searchParams.get("v") || "";

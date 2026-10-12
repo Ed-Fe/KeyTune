@@ -88,7 +88,14 @@ def main(initial_paths=None):
     app.MainLoop()
 
     _logger.info("Main loop finished (pid %s)", os.getpid())
-    arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS)
+    relaunched = threading.Event()
+
+    def relaunch_once():
+        if restart_requested() and not relaunched.is_set():
+            relaunched.set()
+            relaunch()
+
+    # Se o fechamento travar, o vigia ainda reabre o KeyTune antes de forçar a saída.
+    arm_exit_watchdog(INTERPRETER_EXIT_DEADLINE_SECONDS, before_exit=relaunch_once)
     ipc_server.shutdown()
-    if restart_requested():
-        relaunch()
+    relaunch_once()

@@ -110,9 +110,12 @@ const proxyServer = createServer(async (request, response) => {
     response.end();
   } catch {
     if (!response.headersSent) {
-      response.writeHead(502);
+      response.writeHead(502).end();
+      return;
     }
-    response.end();
+    // O cabeçalho já prometeu o tamanho: cortar a conexão mostra ao MPV que faltou um
+    // pedaço, em vez de parecer o fim normal da faixa.
+    response.destroy();
   }
 });
 const proxyReady = new Promise((resolve, reject) => {

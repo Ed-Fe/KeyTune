@@ -36,8 +36,10 @@ ACTION_FOCUS = "focus"
 
 # Quanto esperar a confirmação da instância existente. A UI dela confirma em
 # até ``UI_ACK_TIMEOUT_SECONDS``; o cliente espera um pouco mais que isso.
-UI_ACK_TIMEOUT_SECONDS = 5.0
-_CLIENT_REPLY_TIMEOUT_SECONDS = 8.0
+# O prazo é folgado de propósito: sem confirmação, a instância é encerrada à força, e uma
+# janela só ocupada por alguns segundos (disco lento, lista grande) não pode cair nisso.
+UI_ACK_TIMEOUT_SECONDS = 15.0
+_CLIENT_REPLY_TIMEOUT_SECONDS = 18.0
 _STALLED_EXIT_WAIT_SECONDS = 5.0
 
 

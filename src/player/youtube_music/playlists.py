@@ -202,7 +202,7 @@ def is_youtube_music_media(media_path):
 
     parsed_url = urlparse(normalized_media_path)
     host = (parsed_url.netloc or "").lower()
-    if host in {"music.youtube.com", "www.youtube.com", "youtube.com", "youtu.be"}:
+    if host in {"music.youtube.com", "www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"}:
         return True
 
     return normalized_media_path.lower().startswith(YTMUSIC_SOURCE_PREFIX)

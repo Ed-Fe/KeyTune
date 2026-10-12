@@ -25,6 +25,7 @@ __all__ = [
     "post_vote",
     "watch_history_page",
     "add_to_watch_history",
+    "update_watch_time",
     "live_chat",
     "live_chat_send",
     "audio_tracks",
@@ -214,6 +215,17 @@ def add_to_watch_history(cookie_header, media_url, *, account_index=0):
     """Põe o vídeo *media_url* no histórico do YouTube da conta; devolve se o YouTube aceitou."""
     response = _request_action(
         "add_to_history", media_url=str(media_url or "").strip(), **_account_fields(cookie_header, account_index)
+    )
+    return bool(response.get("ok"))
+
+
+def update_watch_time(cookie_header, media_url, position_seconds, *, account_index=0):
+    """Diz ao YouTube até onde a conta assistiu *media_url*; devolve se o YouTube aceitou."""
+    response = _request_action(
+        "update_watch_time",
+        media_url=str(media_url or "").strip(),
+        position=max(0.0, float(position_seconds or 0)),
+        **_account_fields(cookie_header, account_index),
     )
     return bool(response.get("ok"))
 

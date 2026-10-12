@@ -1,7 +1,7 @@
 // O que o YouTube recomenda e as playlists da conta que o yt-dlp não alcança:
 // o início, Assistir mais tarde, os vídeos curtidos e os Shorts.
 
-import { accountClientFor, accountKey } from "../lib/clients.mjs";
+import { accountClientFor, accountKey, clientFor } from "../lib/clients.mjs";
 import { feedVideoEntry } from "../lib/entries.mjs";
 import { accountListing, pagedFeed } from "../lib/listings.mjs";
 import { requireVideoId } from "../lib/text.mjs";
@@ -38,8 +38,11 @@ export async function playlistAddVideo(request) {
   const videoId = requireVideoId(request);
   const playlistId = requirePlaylistId(request);
   const innertube = await accountClientFor(request);
-  const response = await innertube.playlist.addVideos(playlistId, [videoId]);
-  return { ok: response?.action_result !== undefined };
+  const response = await innertube.actions.execute("/browse/edit_playlist", {
+    playlistId,
+    actions: [{ action: "ACTION_ADD_VIDEO", addedVideoId: videoId }],
+  });
+  return { ok: response?.success !== false && response?.data?.status !== "STATUS_FAILED" };
 }
 
 // Tira um vídeo de uma playlist da conta.
@@ -47,8 +50,9 @@ export async function playlistRemoveVideo(request) {
   const videoId = requireVideoId(request);
   const playlistId = requirePlaylistId(request);
   const innertube = await accountClientFor(request);
-  const response = await innertube.playlist.removeVideos(playlistId, [videoId]);
-  return { ok: response?.action_result !== undefined };
+  // A biblioteca levanta erro quando o vídeo não está na playlist ou o YouTube recusa.
+  await innertube.playlist.removeVideos(playlistId, [videoId]);
+  return { ok: true };
 }
 
 // Os Shorts: o YouTube não tem uma lista para abrir, só uma sequência a partir de um
@@ -64,11 +68,14 @@ async function firstShortId(request) {
   return "";
 }
 
-// Os shorts que o YouTube sugere depois de *seed*, com título e canal. A sequência só traz
-// o endereço de cada um: o resto vem de uma leitura por short, feitas juntas.
+// Os shorts que o YouTube sugere depois de *seed*, com título e canal. A sequência vem
+// pela conta (são as recomendações dela) e só traz o endereço de cada um: o título e o
+// canal são dados públicos, lidos pelo cliente anônimo para não disparar uma rajada de
+// consultas com os cookies.
 async function shortsFrom(request, seed, limit) {
-  const innertube = await accountClientFor(request);
-  const info = await innertube.getShortsVideoInfo(seed);
+  const account = await accountClientFor(request);
+  const innertube = await clientFor(request);
+  const info = await account.getShortsVideoInfo(seed);
   const ids = [seed];
   for (const node of info.watch_next_feed || []) {
     // Os anúncios vêm na sequência como shorts; só eles trazem "adClientParams".

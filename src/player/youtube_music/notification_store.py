@@ -19,6 +19,11 @@ _logger = get_logger(__name__)
 
 NOTIFICATIONS_FILE_NAME = "youtube_notifications.json"
 MAX_SEEN_NOTIFICATIONS = 500
+# Quantas contas o arquivo guarda; a que ficou mais tempo sem uso sai.
+MAX_ACCOUNTS = 5
+# Os cookies que identificam a conta e não mudam enquanto ela está conectada; os outros
+# (SIDCC, PSIDTS...) são renovados o tempo todo.
+_STABLE_ACCOUNT_COOKIES = ("SAPISID", "__Secure-3PAPISID", "__Secure-1PAPISID")
 
 
 class _AccountNotifications:
@@ -99,7 +104,11 @@ class YouTubeNotificationStore:
             new_ids = [str(value) for value in notification_ids if str(value) not in known]
             if not new_ids and current is not None:
                 return
+            # A conta em uso vai para o fim; passando do limite, a mais antiga sai.
+            self._seen.pop(scope, None)
             self._seen[scope] = ((current or []) + new_ids)[-MAX_SEEN_NOTIFICATIONS:]
+            while len(self._seen) > MAX_ACCOUNTS:
+                del self._seen[next(iter(self._seen))]
             self._save()
 
     def _save(self):
@@ -113,7 +122,15 @@ class YouTubeNotificationStore:
 
 def account_scope(cookie_header, account_index=0):
     """Um nome estável para a conta dos cookies, sem guardar o cookie."""
-    if not str(cookie_header or "").strip():
+    cookie_header = str(cookie_header or "").strip()
+    if not cookie_header:
         return ""
-    digest = hashlib.sha256(f"{account_index}|{cookie_header}".encode("utf-8")).hexdigest()
+    identity = cookie_header
+    cookies = dict(part.strip().split("=", 1) for part in cookie_header.split(";") if "=" in part)
+    for name in _STABLE_ACCOUNT_COOKIES:
+        if cookies.get(name):
+            # Os cookies renovados não mudam o nome: a conta segue a mesma.
+            identity = cookies[name]
+            break
+    digest = hashlib.sha256(f"{account_index}|{identity}".encode("utf-8")).hexdigest()
     return digest[:16]

@@ -161,6 +161,9 @@ class AppCommandsMixin:
         maybe_report_youtube_music_history = getattr(self, "_maybe_report_youtube_music_history", None)
         if callable(maybe_report_youtube_music_history):
             maybe_report_youtube_music_history()
+        maybe_report_youtube_watch_time = getattr(self, "_maybe_report_youtube_watch_time", None)
+        if callable(maybe_report_youtube_watch_time):
+            maybe_report_youtube_watch_time()
         maybe_prefetch_related = getattr(self, "_maybe_prefetch_related_youtube_music", None)
         if callable(maybe_prefetch_related):
             maybe_prefetch_related()

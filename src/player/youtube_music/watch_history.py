@@ -32,3 +32,19 @@ def report_video_watched(media_url):
     if not cookie_header:
         return False
     return youtubejs_runtime.add_to_watch_history(cookie_header, media_url, account_index=account_index)
+
+
+def report_watch_position(media_url, position_seconds):
+    """Diz ao YouTube até onde a conta assistiu *media_url*, para continuar em outro aparelho.
+
+    ``False`` sem conta, sem YouTube.js ou quando *media_url* não é um vídeo do YouTube.
+    """
+    media_url = str(media_url or "").strip()
+    if not extract_video_id_from_text(media_url):
+        return False
+    cookie_header, account_index = optional_account_session()
+    if not cookie_header:
+        return False
+    return youtubejs_runtime.update_watch_time(
+        cookie_header, media_url, position_seconds, account_index=account_index
+    )

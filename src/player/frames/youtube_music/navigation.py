@@ -38,7 +38,7 @@ VIEW_KIND_HOME = "home"
 VIEW_KIND_LIBRARY = "library"
 
 # "Carregar a lista inteira" numa lista sem fim conhecido: o bloco pedido por vez e onde parar.
-_LOAD_ALL_PAGE_SIZE = 200
+_LOAD_ALL_PAGE_SIZE = 100
 _LOAD_ALL_MAX_ITEMS = 1000
 
 

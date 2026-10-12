@@ -46,6 +46,8 @@ _WRITE_ACTIONS = frozenset(
         "create_comment",
         "live_chat_send",
         "notification_action",
+        "playlist_add_video",
+        "playlist_remove_video",
         "post_vote",
     }
 )

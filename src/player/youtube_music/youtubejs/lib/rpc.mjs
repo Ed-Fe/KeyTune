@@ -9,6 +9,9 @@ import { createInterface } from "node:readline";
 
 const RESULT_PREFIX = "KEYTUNE_YOUTUBEJS_RESULT=";
 const HANDLER_TIMEOUT_MS = 25_000;
+// O KeyTune desiste de um pedido em 30 s. Um que ficou esse tempo na fila já não tem quem
+// o espere: rodá-lo só atrasaria os seguintes e mexeria numa lista que ninguém pediu.
+const STALE_AFTER_MS = 28_000;
 
 function withTimeout(promise, milliseconds) {
   let timer;
@@ -38,8 +41,15 @@ function guardAgainstCrashes() {
 
 // *handlers* mapeia a ação ao tratador; *laneOf(ação)* devolve o nome da pista dela, ou
 // nada para a ação que pode andar a qualquer hora. *defaultAction* vale quando o pedido
-// não diz qual é; *timeoutMs* é quanto um tratador pode levar.
-export async function serve({ handlers, laneOf = () => null, defaultAction = "", timeoutMs = HANDLER_TIMEOUT_MS }) {
+// não diz qual é; *timeoutMs* é quanto um tratador pode levar e *staleAfterMs* é quanto um
+// pedido pode esperar na fila antes de ser recusado sem rodar.
+export async function serve({
+  handlers,
+  laneOf = () => null,
+  defaultAction = "",
+  timeoutMs = HANDLER_TIMEOUT_MS,
+  staleAfterMs = STALE_AFTER_MS,
+}) {
   guardAgainstCrashes();
   const lanes = new Map();
 
@@ -51,7 +61,11 @@ export async function serve({ handlers, laneOf = () => null, defaultAction = "",
     return withTimeout(Promise.resolve().then(() => handler(request)), timeoutMs);
   }
 
-  async function answer(request) {
+  async function answer(request, receivedAt) {
+    if (Date.now() - receivedAt > staleAfterMs) {
+      reply(request.id, { error: "O YouTube.js estava ocupado e não chegou a atender este pedido." });
+      return;
+    }
     try {
       reply(request.id, await run(request));
     } catch (error) {
@@ -68,10 +82,11 @@ export async function serve({ handlers, laneOf = () => null, defaultAction = "",
       continue;
     }
     const lane = laneOf(request.action || defaultAction);
+    const receivedAt = Date.now();
     if (lane) {
-      lanes.set(lane, (lanes.get(lane) || Promise.resolve()).then(() => answer(request)));
+      lanes.set(lane, (lanes.get(lane) || Promise.resolve()).then(() => answer(request, receivedAt)));
     } else {
-      answer(request);
+      answer(request, receivedAt);
     }
   }
 }

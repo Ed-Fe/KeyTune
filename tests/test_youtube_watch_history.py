@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import threading
+import time
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -72,6 +74,63 @@ class WatchHistoryTests(unittest.TestCase):
         self.assertTrue(frame._prepare_youtube_music_history_tracking(MUSIC_URL))
         self.assertFalse(frame._prepare_youtube_music_history_tracking("C:/musica.mp3"))
         self.assertEqual(frame._youtube_music_history_tracking, {})
+
+    def test_the_watched_position_is_reported_with_the_account(self):
+        with patch.object(watch_history, "optional_account_session", return_value=("SID=abc", 1)), patch.object(
+            watch_history.youtubejs_runtime, "update_watch_time", return_value=True
+        ) as update:
+            self.assertTrue(watch_history.report_watch_position(VIDEO_URL, 93.5))
+            self.assertFalse(watch_history.report_watch_position("C:/musica.mp3", 10))
+
+        update.assert_called_once_with("SID=abc", VIDEO_URL, 93.5, account_index=1)
+
+    def _playing_frame(self, media_path, position_ms):
+        frame = YouTubeHistoryMixin()
+        frame._media_paths_match = lambda first, second: first == second
+        frame._player_loaded_media_path = lambda: media_path
+        frame.player = Mock()
+        frame.player.get_time.return_value = position_ms
+        frame._prepare_youtube_music_history_tracking(media_path)
+        return frame
+
+    def test_the_position_goes_to_youtube_only_after_the_video_is_in_the_history(self):
+        frame = self._playing_frame(VIDEO_URL, 40_000)
+        sent = []
+        frame._send_youtube_watch_time = lambda state: sent.append(state["position_ms"]) or True
+
+        self.assertFalse(frame._maybe_report_youtube_watch_time())
+        frame._youtube_music_history_tracking["reported"] = True
+        self.assertTrue(frame._maybe_report_youtube_watch_time())
+
+        self.assertEqual(sent, [40_000])
+
+    def test_music_tracks_do_not_report_a_position(self):
+        frame = self._playing_frame(MUSIC_URL, 40_000)
+        frame._youtube_music_history_tracking["reported"] = True
+
+        self.assertFalse(frame._maybe_report_youtube_watch_time())
+
+    def test_the_position_is_sent_again_only_when_it_moved_and_once_more_when_the_video_leaves(self):
+        frame = self._playing_frame(VIDEO_URL, 40_000)
+        state = frame._youtube_music_history_tracking
+        state["reported"] = True
+        done = threading.Event()
+        with patch.object(watch_history, "report_watch_position", side_effect=lambda *_args: done.set()) as report:
+            self.assertTrue(frame._maybe_report_youtube_watch_time())
+            self.assertTrue(done.wait(5))
+            while state.get("watch_time_busy"):
+                time.sleep(0.01)
+            # Dentro do intervalo, ou parado no mesmo ponto, nada novo é mandado.
+            self.assertFalse(frame._maybe_report_youtube_watch_time())
+            self.assertFalse(frame._flush_youtube_watch_time())
+
+            done.clear()
+            frame.player.get_time.return_value = 55_000
+            frame._maybe_report_youtube_watch_time()
+            frame._prepare_youtube_music_history_tracking("C:/musica.mp3")
+            self.assertTrue(done.wait(5))
+
+        self.assertEqual([call.args for call in report.call_args_list], [(VIDEO_URL, 40.0), (VIDEO_URL, 55.0)])
 
     def test_the_home_list_has_both_histories(self):
         folders = {folder.kind: folder for folder in flat_folder_items()}

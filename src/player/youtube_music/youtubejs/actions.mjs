@@ -9,7 +9,7 @@ import { rememberRawEntities } from "./handlers/comment_entities.mjs";
 import { commentReplies, comments, createComment, postComments } from "./handlers/comments.mjs";
 import { channelAbout, channelAction, channelSearch, channelState } from "./handlers/channels.mjs";
 import { accountPlaylist, homeFeed, playlistAddVideo, playlistRemoveVideo, shorts, shortsAfter } from "./handlers/discover.mjs";
-import { addToHistory, watchHistory } from "./handlers/history.mjs";
+import { addToHistory, updateWatchTime, watchHistory } from "./handlers/history.mjs";
 import { liveChat, liveChatSend } from "./handlers/live_chat.mjs";
 import { audioTracks, chapters, details, relatedVideos } from "./handlers/media.mjs";
 import { notificationAction, notifications } from "./handlers/notifications.mjs";
@@ -17,7 +17,7 @@ import { channelPosts, postVote } from "./handlers/posts.mjs";
 import { search } from "./handlers/search.mjs";
 import { subscribedChannels, subscriptionVideos } from "./handlers/subscriptions.mjs";
 
-configureClients({ cacheDirectory: process.argv[2] });
+configureClients({ cacheDirectory: process.argv[2], retrievePlayer: false });
 onAccountResponse(rememberRawEntities);
 
 const handlers = {
@@ -43,6 +43,7 @@ const handlers = {
   post_vote: postVote,
   watch_history: watchHistory,
   add_to_history: addToHistory,
+  update_watch_time: updateWatchTime,
   home_feed: homeFeed,
   account_playlist: accountPlaylist,
   playlist_add_video: playlistAddVideo,
