@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+The main news in this version: KeyTune now follows your YouTube account from the inside. You read and reply to comments, receive notifications, join live chats, subscribe to channels, read posts and vote in polls, all from the keyboard and with a screen reader. YouTube videos also get what music already had: history, resuming where you stopped (on your phone and TV too), radio and related videos, chapters and transcript. The KeyTube home was reorganized into **YouTube** and **YouTube Music**, and short sounds tell you what happens without relying on speech. The details are below.
+
 ### Added
 
 - **YouTube notifications**: **Notifications** shows the account's notification inbox. `Enter` plays the video and marks the notification as read, and the **Actions...** menu has **Mark as read** and **Hide this notification**. KeyTune checks the inbox every 15 minutes and speaks the new notifications. With KeyTune minimized, in the tray or behind another window, the notice goes to the Windows notification center, and activating it opens the list. The interval and that notice are in **Preferences > KeyTube**, where you can turn both off.

@@ -1,5 +1,7 @@
 ## [Sin publicar]
 
+Las principales novedades de esta versión: KeyTune pasa a acompañar tu cuenta de YouTube por dentro. Lees y respondes comentarios, recibes notificaciones, entras al chat en vivo, te suscribes a canales, lees publicaciones y votas en encuestas, todo con el teclado y con el lector de pantalla. Los vídeos de YouTube también ganan lo que la música ya tenía: historial, retomar donde lo dejaste (también en el teléfono y en la tele), radio y relacionados, capítulos y transcripción. El inicio de KeyTube se reorganizó en **YouTube** y **YouTube Music**, y sonidos cortos avisan de lo que pasa sin depender de la voz. Los detalles están abajo.
+
 ### Agregado
 
 - **Notificaciones de YouTube**: **Notificaciones** muestra la bandeja de notificaciones de la cuenta. `Enter` reproduce el vídeo y marca la notificación como leída, y el menú **Acciones...** trae **Marcar como leída** y **Ocultar esta notificación**. KeyTune consulta la bandeja cada 15 minutos y dice las notificaciones nuevas. Con KeyTune minimizado, en la bandeja o detrás de otra ventana, el aviso va al centro de notificaciones de Windows, y activarlo abre la lista. El intervalo y ese aviso están en **Preferencias > KeyTube**, donde se pueden desactivar los dos.
