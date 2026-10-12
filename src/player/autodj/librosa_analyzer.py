@@ -85,7 +85,9 @@ class LibrosaAnalyzer:
 
     def _analyze_with_worker(self, worker_command, path, *, cancel_event=None, deadline=None):
         creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
-        with tempfile.TemporaryDirectory(prefix="keytune-autodj-result-") as temporary:
+        with tempfile.TemporaryDirectory(
+            prefix="keytune-autodj-result-", ignore_cleanup_errors=True
+        ) as temporary:
             result_path = Path(temporary) / "result.json"
             output_path = Path(temporary) / "worker-output.log"
             with output_path.open("w+b") as worker_output_file:

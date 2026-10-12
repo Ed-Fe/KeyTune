@@ -27,6 +27,7 @@
 
 ### Fixed
 
+- **AutoDJ really off**: with AutoDJ turned off, a saved session no longer analyzes or mixes tracks, even with crossfade on, and **Play playlist with AutoDJ** is only available when it is on. Analysis also stopped failing when Windows still held the analyzer's temporary file.
 - **KeyTune not reopening after closing or updating**: if shutdown hung, KeyTune stayed alive in the background with no window, and opening it again showed nothing. Shutdown now always finishes, and launching KeyTune ends a stalled copy and opens normally. If an update does not finish, KeyTune says so the next time it opens.
 - **Complete liked songs**: the **Liked songs** list on the YouTube Music home shows every track the account has liked. Before, it stopped at the first few hundred, while the same playlist opened from **Your playlists and mixes** came in full. It now loads a part at a time: go down to the end of the list to bring more.
 - **YouTube titles in your language**: the video lists of YouTube channels and playlists always came with English titles when the channel translates them. They now follow the **Content language** in the preferences. And with that language set to **Same as KeyTune**, changing the interface language applies to the content at once, without reopening the player.

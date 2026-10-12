@@ -137,6 +137,9 @@ class FrameAutoDJMixin:
         return service.analyze(media_path, **kwargs)
 
     def on_start_autodj_session(self, _event):
+        if not bool(getattr(self.settings, "autodj_enabled", False)):
+            self._announce(_("Ative o AutoDJ no menu Reprodução para iniciar uma sessão."))
+            return False
         if not autodj_dependencies_available():
             self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."))
             return False
@@ -423,6 +426,13 @@ class FrameAutoDJMixin:
         upcoming_count = max(0, len(state.items) - state.current_index - 1)
         needed = max(0, 5 - upcoming_count)
         if needed <= 0 or not state.autodj_remaining_items:
+            return False
+        if not bool(getattr(self.settings, "autodj_enabled", False)):
+            # Com o AutoDJ desligado a fila segue a ordem da origem, sem análise.
+            if self._append_autodj_session_paths(state, count=needed):
+                if state is self._get_active_playlist_state():
+                    self._refresh_playlist_browser()
+                self._refresh_autodj_session_ui(state)
             return False
         state_key = id(state)
         if state_key in self._autodj_session_requests:
@@ -814,7 +824,8 @@ class FrameAutoDJMixin:
         stop_item = menu.FindItemById(getattr(self, "menu_stop_autodj_session_id", -1))
         if start_item is not None:
             start_item.Enable(bool(
-                autodj_dependencies_available()
+                getattr(self.settings, "autodj_enabled", False)
+                and autodj_dependencies_available()
                 and state
                 and not state.is_folder_tab
                 and not state.is_loading
@@ -825,7 +836,8 @@ class FrameAutoDJMixin:
             stop_item.Enable(bool(state and state.autodj_session))
 
     def _autodj_transition_pair(self, state):
-        if not bool(getattr(self.settings, "autodj_enabled", False)) and not bool(getattr(state, "autodj_session", False)):
+        # AutoDJ desligado não analisa nem mistura, nem numa sessão salva.
+        if not bool(getattr(self.settings, "autodj_enabled", False)):
             return None
         if state is None or state.is_folder_tab or not state.current_media_path:
             return None

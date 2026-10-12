@@ -35,7 +35,7 @@ class AutoDJRecoveryTests(unittest.TestCase):
         state.autodj_session = True
         state.autodj_remaining_items = [f"bad{i}.mp3" for i in range(6)] + ["good.mp3"]
         frame = FrameAutoDJMixin()
-        frame.settings = SimpleNamespace()
+        frame.settings = SimpleNamespace(autodj_enabled=True)
         frame.playlists = [state]
         frame._autodj_session_requests = {}
         frame._autodj_session_results = {}
@@ -145,7 +145,7 @@ class AutoDJRecoveryTests(unittest.TestCase):
             return analysis
 
         frame = FrameAutoDJMixin()
-        frame.settings = SimpleNamespace()
+        frame.settings = SimpleNamespace(autodj_enabled=True)
         frame.playlists = [state]
         frame.autodj_service = SimpleNamespace(max_parallel_analyses=1, analyze=analyze)
         frame._autodj_session_requests = {}

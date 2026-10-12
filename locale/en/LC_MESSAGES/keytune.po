@@ -3988,6 +3988,10 @@ msgstr "Enable AutoDJ under Preferences, Additional resources, and wait for inst
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr "Enable AutoDJ under Preferences, Additional resources, to review and install the required libraries."
 
+#: src/player/frames/autodj.py
+msgid "Ative o AutoDJ no menu Reprodução para iniciar uma sessão."
+msgstr "Turn on AutoDJ in the Playback menu to start a session."
+
 msgid "AutoDJ desativado."
 msgstr "AutoDJ disabled."
 

@@ -27,6 +27,7 @@
 
 ### Corregido
 
+- **AutoDJ apagado de verdad**: con el AutoDJ apagado, una sesión guardada ya no analiza ni mezcla las pistas, aunque el crossfade esté activado, y **Reproducir lista con AutoDJ** solo está disponible con él encendido. El análisis también dejó de fallar cuando Windows aún retenía el archivo temporal del analizador.
 - **KeyTune que no se reabría tras cerrar o actualizar**: si el cierre se colgaba, KeyTune seguía vivo en segundo plano, sin ventana, y abrirlo de nuevo no mostraba nada. Ahora el cierre siempre termina, y al abrir KeyTune se cierra una copia colgada y se abre con normalidad. Si una actualización no se completa, KeyTune lo avisa la próxima vez que se abre.
 - **Me gusta completo**: la lista **Me gusta** del inicio de YouTube Music muestra todas las pistas con «me gusta» de la cuenta. Antes se detenía en los primeros cientos, mientras que la misma playlist abierta desde **Tus playlists y mixes** llegaba entera. Ahora se carga poco a poco: baja hasta el final de la lista para traer más.
 - **Títulos de YouTube en tu idioma**: las listas de videos de canales y playlists de YouTube llegaban siempre con los títulos en inglés cuando el canal los traduce. Ahora siguen el **Idioma del contenido** de las preferencias. Y, con ese idioma en **El mismo de KeyTune**, cambiar el idioma de la interfaz ya vale para el contenido, sin volver a abrir el reproductor.
