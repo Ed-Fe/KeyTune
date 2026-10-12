@@ -110,7 +110,12 @@ class BrowserCommandsMixin:
         convert_selection_item.Enable(
             any(media_kind(path) for path in selected_paths if not is_remote_media_path(path))
         )
-        start_autodj_item.Enable(bool(current_state and len(current_state.items) > 1 and not current_state.autodj_session))
+        start_autodj_item.Enable(bool(
+            getattr(self.settings, "autodj_enabled", False)
+            and current_state
+            and len(current_state.items) > 1
+            and not current_state.autodj_session
+        ))
         remove_item.Enable(selected_count > 0 and can_edit_playlist)
         like_item.Enable(has_youtube_items and bool(like_rateable_paths))
         dislike_item.Enable(has_youtube_items and bool(dislike_rateable_paths))

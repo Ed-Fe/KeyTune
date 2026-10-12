@@ -132,7 +132,9 @@ class AutoDJService:
         cached = self.cache.get_remote(normalized, self.analyzer.analysis_version)
         if cached is not None:
             return asdict(cached)
-        with tempfile.TemporaryDirectory(prefix="keytune-autodj-") as temporary:
+        with tempfile.TemporaryDirectory(
+            prefix="keytune-autodj-", ignore_cleanup_errors=True
+        ) as temporary:
             target = Path(temporary) / "audio"
             retry_handler = self.remote_retry_handler if remote_resolver is None else None
             try:
