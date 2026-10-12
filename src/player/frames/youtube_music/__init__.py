@@ -35,6 +35,7 @@ from .notifications import NotificationsMixin
 from .playlists import PlaylistEditMixin
 from .resume_hints import ResumeHintsMixin
 from .search import SearchMixin
+from .shorts import ShortsMixin
 from .state import LibraryStateMixin
 from .tasks import BackgroundTaskMixin
 from .watch_later import WatchLaterMixin
@@ -55,6 +56,7 @@ class FrameYouTubeMusicMixin(
     CommentActionsMixin,
     ChannelActionsMixin,
     WatchLaterMixin,
+    ShortsMixin,
     ChaptersTranscriptMixin,
     NotificationsMixin,
     LiveChatMixin,

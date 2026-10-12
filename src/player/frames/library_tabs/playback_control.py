@@ -324,12 +324,18 @@ class PlaylistPlaybackMixin:
             defer_autodj_advance = getattr(self, "_defer_autodj_advance", None)
             if direction > 0 and callable(defer_autodj_advance) and defer_autodj_advance(state):
                 return
+            if direction > 0 and getattr(state, "shorts_session", False):
+                self._announce(_("Buscando mais shorts."))
+                self._shorts_session_refill(state, force=True)
+                return
             if direction > 0 and self._try_autoplay_related_youtube_music(state):
                 return
             boundary_message = _("Você já está no primeiro item.") if direction < 0 else _("Você já está no último item.")
             self._announce(boundary_message)
             return
 
+        if getattr(state, "shorts_session", False):
+            self._shorts_session_refill(state)
         allow_manual_crossfade = manual_autodj_transition is not None or bool(
             getattr(self.settings, "crossfade_on_manual_track_change", False)
         )

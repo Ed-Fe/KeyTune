@@ -8,7 +8,7 @@ import { commentAction } from "./handlers/comment_actions.mjs";
 import { rememberRawEntities } from "./handlers/comment_entities.mjs";
 import { commentReplies, comments, createComment, postComments } from "./handlers/comments.mjs";
 import { channelAbout, channelAction, channelSearch, channelState } from "./handlers/channels.mjs";
-import { accountPlaylist, homeFeed, playlistAddVideo, playlistRemoveVideo, shorts } from "./handlers/discover.mjs";
+import { accountPlaylist, homeFeed, playlistAddVideo, playlistRemoveVideo, shorts, shortsAfter } from "./handlers/discover.mjs";
 import { addToHistory, watchHistory } from "./handlers/history.mjs";
 import { liveChat, liveChatSend } from "./handlers/live_chat.mjs";
 import { audioTracks, chapters, details, relatedVideos } from "./handlers/media.mjs";
@@ -48,6 +48,7 @@ const handlers = {
   playlist_add_video: playlistAddVideo,
   playlist_remove_video: playlistRemoveVideo,
   shorts,
+  shorts_after: shortsAfter,
   live_chat: liveChat,
   live_chat_send: liveChatSend,
 };

@@ -64,6 +64,39 @@ async function firstShortId(request) {
   return "";
 }
 
+// Os shorts que o YouTube sugere depois de *seed*, com título e canal. A sequência só traz
+// o endereço de cada um: o resto vem de uma leitura por short, feitas juntas.
+async function shortsFrom(request, seed, limit) {
+  const innertube = await accountClientFor(request);
+  const info = await innertube.getShortsVideoInfo(seed);
+  const ids = [seed];
+  for (const node of info.watch_next_feed || []) {
+    const id = node.payload?.videoId || node.payload?.reelWatchEndpoint?.videoId;
+    if (id && !ids.includes(id)) {
+      ids.push(id);
+    }
+  }
+  const found = await Promise.all(
+    ids.slice(0, limit).map(async (id) => {
+      try {
+        const basic = (await innertube.getBasicInfo(id)).basic_info;
+        return basic?.title
+          ? {
+              id,
+              title: basic.title,
+              channel: basic.author || "",
+              duration: Number(basic.duration) || 60,
+              view_count_number_text: basic.view_count ? String(basic.view_count) : "",
+            }
+          : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return found.filter(Boolean);
+}
+
 export function shorts(request) {
   return pagedFeed(JSON.stringify(["shorts", accountKey(request)]), request, {
     openFeed: async () => {
@@ -71,32 +104,16 @@ export function shorts(request) {
       if (!seed) {
         throw new Error("O YouTube não trouxe nenhum short agora.");
       }
-      const innertube = await accountClientFor(request);
-      const info = await innertube.getShortsVideoInfo(seed);
-      // A sequência só traz o endereço de cada short: título e canal vêm de uma leitura
-      // por short, feitas juntas e só para os primeiros.
-      const ids = [seed];
-      for (const node of info.watch_next_feed || []) {
-        const id = node.payload?.videoId || node.payload?.reelWatchEndpoint?.videoId;
-        if (id && !ids.includes(id)) {
-          ids.push(id);
-        }
-      }
-      const found = await Promise.all(
-        ids.slice(0, SHORTS_LIMIT).map(async (id) => {
-          try {
-            const basic = (await innertube.getBasicInfo(id)).basic_info;
-            return basic?.title
-              ? { id, title: basic.title, channel: basic.author || "", duration: Number(basic.duration) || 60, view_count_number_text: basic.view_count ? String(basic.view_count) : "" }
-              : null;
-          } catch {
-            return null;
-          }
-        }),
-      );
-      return { items: found.filter(Boolean), has_continuation: false };
+      return { items: await shortsFrom(request, seed, SHORTS_LIMIT), has_continuation: false };
     },
     nodesOf: (feed) => feed.items,
     toEntry: (node) => node,
   });
+}
+
+// Mais shorts a partir do último que a conta viu: a sequência continua de onde parou.
+export async function shortsAfter(request) {
+  const seed = requireVideoId(request);
+  const entries = (await shortsFrom(request, seed, SHORTS_LIMIT)).filter((entry) => entry.id !== seed);
+  return { entries };
 }

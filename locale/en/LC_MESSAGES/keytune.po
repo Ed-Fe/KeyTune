@@ -7768,3 +7768,21 @@ msgstr "{title} saved to Watch later."
 
 msgid "{title} tirado de Assistir mais tarde."
 msgstr "{title} removed from Watch later."
+
+msgid "Abrindo os Shorts."
+msgstr "Opening Shorts."
+
+msgid "Shorts: {title}. Próximo item passa para o seguinte."
+msgstr "Shorts: {title}. Next item moves to the following one."
+
+msgid "O YouTube não trouxe nenhum short agora."
+msgstr "YouTube did not bring any short right now."
+
+msgid "Não foi possível abrir os Shorts agora."
+msgstr "Could not open Shorts now."
+
+msgid "Buscando mais shorts."
+msgstr "Looking for more shorts."
+
+msgid "O YouTube não trouxe mais shorts agora."
+msgstr "YouTube did not bring more shorts right now."

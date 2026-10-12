@@ -20,7 +20,6 @@ from player.youtube_music.folders import (
     FOLDER_MOOD_SECTION,
     FOLDER_MOODS,
     FOLDER_NOTIFICATIONS,
-    FOLDER_SHORTS,
     FOLDER_SUBSCRIBED_CHANNELS,
     FOLDER_SUBSCRIPTION_VIDEOS,
     FOLDER_WATCH_HISTORY,
@@ -78,8 +77,6 @@ class BrowseMixin:
             return YouTubeResultsView(
                 title=folder.title, fetch_page=account_lists.playlist_page(account_lists.LIKED_VIDEOS_PLAYLIST_ID)
             )
-        if kind == FOLDER_SHORTS:
-            return YouTubeResultsView(title=folder.title, fetch_page=account_lists.shorts_page)
         if kind == FOLDER_SUBSCRIPTION_VIDEOS:
             return YouTubeResultsView(title=folder.title, fetch_page=subscriptions.subscription_videos_page)
         if kind == FOLDER_SUBSCRIBED_CHANNELS:

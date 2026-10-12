@@ -1054,6 +1054,10 @@ msgstr ""
 msgid "Abrindo o site de {name} no navegador."
 msgstr ""
 
+#: src/player/frames/youtube_music/shorts.py
+msgid "Abrindo os Shorts."
+msgstr ""
+
 #: src/player/frames/radio/navigation.py
 #: src/player/frames/youtube_music/chapters_transcript.py
 #: src/player/frames/youtube_music/comments.py
@@ -2276,6 +2280,10 @@ msgstr ""
 msgid "Buscando letra..."
 msgstr ""
 
+#: src/player/frames/library_tabs/playback_control.py
+msgid "Buscando mais shorts."
+msgstr ""
+
 #: src/player/frames/library_tabs/station_radio.py
 msgid "Buscando músicas inéditas para a nova rádio."
 msgstr ""
@@ -3216,6 +3224,7 @@ msgstr ""
 #: src/player/frames/youtube_music/notifications.py
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/frames/youtube_music/search.py
+#: src/player/frames/youtube_music/shorts.py
 #: src/player/frames/youtube_music/watch_later.py
 #: src/player/youtube_music/youtubejs_worker.py
 msgid "Detalhes: {detail}"
@@ -5767,6 +5776,10 @@ msgstr ""
 msgid "Não foi possível abrir o site desta rádio."
 msgstr ""
 
+#: src/player/frames/youtube_music/shorts.py
+msgid "Não foi possível abrir os Shorts agora."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."
 msgstr ""
@@ -6444,6 +6457,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/channel_actions.py
 msgid "O YouTube não registrou o voto."
+msgstr ""
+
+#: src/player/frames/youtube_music/shorts.py
+msgid "O YouTube não trouxe mais shorts agora."
+msgstr ""
+
+#: src/player/frames/youtube_music/shorts.py
+msgid "O YouTube não trouxe nenhum short agora."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -8520,9 +8541,14 @@ msgstr ""
 msgid "Seta esquerda"
 msgstr ""
 
+#: src/player/frames/youtube_music/shorts.py
 #: src/player/youtube_music/folders.py
 #: src/player/youtube_music/models.py
 msgid "Shorts"
+msgstr ""
+
+#: src/player/frames/youtube_music/shorts.py
+msgid "Shorts: {title}. Próximo item passa para o seguinte."
 msgstr ""
 
 #: src/player/youtube_music/streams.py

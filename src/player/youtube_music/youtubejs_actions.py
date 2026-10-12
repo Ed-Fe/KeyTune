@@ -36,6 +36,7 @@ __all__ = [
     "playlist_add_video",
     "playlist_remove_video",
     "shorts_page",
+    "shorts_after",
     "subscription_videos_page",
     "subscribed_channels_page",
 ]
@@ -320,6 +321,14 @@ def shorts_page(cookie_header, *, start, count, account_index=0):
     """Uma página da sequência de Shorts que o YouTube sugere à conta, e se há mais."""
     response = _request_action("shorts", start=start, count=count, **_account_fields(cookie_header, account_index))
     return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def shorts_after(cookie_header, media_url, *, account_index=0):
+    """Os shorts que o YouTube sugere depois de *media_url*, no formato da listagem."""
+    response = _request_action(
+        "shorts_after", media_url=str(media_url or "").strip(), **_account_fields(cookie_header, account_index)
+    )
+    return list(response.get("entries") or [])
 
 
 def subscription_videos_page(cookie_header, *, start, count, account_index=0):

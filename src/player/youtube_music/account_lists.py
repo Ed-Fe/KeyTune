@@ -49,6 +49,13 @@ def shorts_page(start, count):
     return _page(entries, has_more)
 
 
+def shorts_after(media_url):
+    """Mais shorts, a partir de *media_url* (o último que a conta viu)."""
+    cookie_header, account_index = require_account_session()
+    entries = youtubejs_runtime.shorts_after(cookie_header, media_url, account_index=account_index)
+    return _page(entries, False).results
+
+
 def add_to_playlist(playlist_id, media_url):
     """Põe o vídeo *media_url* na playlist da conta; ``False`` quando o YouTube não aceitou."""
     if not extract_video_id_from_text(media_url):

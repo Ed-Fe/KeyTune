@@ -19,6 +19,7 @@ from player.youtube_music.folders import (
     ACTION_WRITE_COMMENT,
     FOLDER_LIBRARY,
     FOLDER_SECTION,
+    FOLDER_SHORTS,
     channel_action_items,
     channel_posts_item,
     home_folder_items,
@@ -269,6 +270,8 @@ class ResultsNavigationMixin:
         elif getattr(result, "result_type", "") == "folder":
             if result.requires_auth and not self._ensure_youtube_music_authenticated():
                 return False
+            if result.kind == FOLDER_SHORTS:
+                return self.start_youtube_shorts_session()
             view = self._build_youtube_music_folder_view(result)
         elif getattr(result, "result_type", "") == "comment":
             view = self._build_youtube_music_replies_view(result)
