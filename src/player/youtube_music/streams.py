@@ -56,7 +56,19 @@ _COOKIE_FORWARDING_ALLOWED_HOST_SUFFIXES = (
     "ytimg.com",
 )
 
+# O yt-dlp fala no idioma do conteúdo, então o aviso de restrição de idade chega em vários.
+_AGE_RESTRICTED_MARKERS = (
+    "confirm your age",
+    "age-restricted",
+    "age restricted",
+    "confirmar sua idade",
+    "confirmar tu edad",
+    "restrição de idade",
+    "restricción de edad",
+)
+
 _STREAM_DIAGNOSTIC_SIGNAL_LABELS = {
+    "age_restricted": _("vídeo com restrição de idade"),
     "auth_blocked": _("autenticação/bloqueio do YouTube"),
     "js_challenge": _("desafio JavaScript (EJS)"),
     "po_token": _("PO Token ausente"),
@@ -794,6 +806,9 @@ def _collect_stream_resolution_diagnostic_signals(messages, last_error):
     combined_text = "\n".join([*normalized_messages, normalized_last_error]).casefold()
     signals = set()
 
+    if any(term in combined_text for term in _AGE_RESTRICTED_MARKERS):
+        signals.add("age_restricted")
+
     if any(term in combined_text for term in ("not a bot", "sign in", "captcha", "429", "403")):
         signals.add("auth_blocked")
 
@@ -842,6 +857,12 @@ def _build_stream_resolution_error_message(
 ):
     normalized_last_error = sanitize_sensitive_text(last_error)
     normalized_diagnostic_signals = set(diagnostic_signals or ())
+    if "age_restricted" in normalized_diagnostic_signals:
+        return _(
+            "Este vídeo tem restrição de idade. Para tocá-lo, conecte a sua conta do YouTube na aba "
+            "KeyTube (Ctrl+Shift+Y), em Conta e biblioteca > Conectar conta..., usando uma conta com "
+            "a idade confirmada, e tente de novo."
+        )
     base_message = _("O yt-dlp não conseguiu abrir a faixa do YouTube Music.")
 
     if normalized_last_error:

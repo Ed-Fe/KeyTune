@@ -2000,6 +2000,10 @@ msgstr ""
 msgid "Aviso sobre instalação"
 msgstr ""
 
+#: src/player/youtube_music/panel.py
+msgid "Aviso sobre o YouTube"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Aviso sobre validade dos cookies do YouTube Music"
 msgstr ""
@@ -3892,6 +3896,10 @@ msgstr ""
 
 #: src/player/youtube_music/transcript.py
 msgid "Este vídeo não tem legenda no seu idioma, nem no idioma original, para transcrever."
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "Este vídeo tem restrição de idade. Para tocá-lo, conecte a sua conta do YouTube na aba KeyTube (Ctrl+Shift+Y), em Conta e biblioteca > Conectar conta..., usando uma conta com a idade confirmada, e tente de novo."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -6437,6 +6445,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "O YouTube exigiu validação JavaScript. Ative ou atualize os recursos adicionais para instalar o Node.js 24+ e tente novamente."
+msgstr ""
+
+#: src/player/youtube_music/panel.py
+msgid "O YouTube muda sem aviso, então algo daqui pode parar de funcionar sem explicação aparente. Atualize os recursos adicionais ou tente mais tarde."
 msgstr ""
 
 #: src/player/frames/youtube_music/auth.py
@@ -9846,6 +9858,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "vídeo"
+msgstr ""
+
+#: src/player/youtube_music/streams.py
+msgid "vídeo com restrição de idade"
 msgstr ""
 
 #: src/player/youtube_music/posts.py

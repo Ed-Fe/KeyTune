@@ -22,6 +22,27 @@ def _response(data, stderr_text=""):
     return SimpleNamespace(data=data, stdout_text="", stderr_text=stderr_text)
 
 
+class AgeRestrictedStreamTests(unittest.TestCase):
+    def test_recognizes_the_age_warning_in_every_language(self):
+        collect = youtube_music_streams._collect_stream_resolution_diagnostic_signals
+        for message in (
+            "Sign in to confirm your age",
+            "Faça login para confirmar sua idade",
+            "Inicia sesión para confirmar tu edad",
+            "This video is age-restricted",
+        ):
+            with self.subTest(message=message):
+                self.assertIn("age_restricted", collect([message], ""))
+
+    def test_age_restricted_error_says_what_to_do(self):
+        message = youtube_music_streams._build_stream_resolution_error_message(
+            "sem stream", attempted_profiles=1, diagnostic_signals={"age_restricted", "auth_blocked"}
+        )
+
+        self.assertIn("restrição de idade", message)
+        self.assertNotIn("Detalhes técnicos", message)
+
+
 class YouTubeMusicStreamsTests(unittest.TestCase):
     def setUp(self):
         configure_youtube_dependency_management(

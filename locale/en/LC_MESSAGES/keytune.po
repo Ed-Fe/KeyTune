@@ -7790,3 +7790,19 @@ msgstr "Looking for more shorts."
 
 msgid "O YouTube não trouxe mais shorts agora."
 msgstr "YouTube did not bring more shorts right now."
+
+#: src/player/youtube_music/streams.py
+msgid "vídeo com restrição de idade"
+msgstr "age-restricted video"
+
+#: src/player/youtube_music/streams.py
+msgid "Este vídeo tem restrição de idade. Para tocá-lo, conecte a sua conta do YouTube na aba KeyTube (Ctrl+Shift+Y), em Conta e biblioteca > Conectar conta..., usando uma conta com a idade confirmada, e tente de novo."
+msgstr "This video is age-restricted. To play it, connect your YouTube account in the KeyTube tab (Ctrl+Shift+Y), under Account and library > Connect account..., using an account with confirmed age, and try again."
+
+#: src/player/youtube_music/panel.py
+msgid "O YouTube muda sem aviso, então algo daqui pode parar de funcionar sem explicação aparente. Atualize os recursos adicionais ou tente mais tarde."
+msgstr "YouTube changes without notice, so something here may stop working for no apparent reason. Update the additional resources or try again later."
+
+#: src/player/youtube_music/panel.py
+msgid "Aviso sobre o YouTube"
+msgstr "Notice about YouTube"

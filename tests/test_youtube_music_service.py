@@ -292,6 +292,39 @@ class YouTubeMusicServiceTests(unittest.TestCase):
             [(False, "visionos"), (False, "web_embedded")],
         )
 
+    def test_retries_with_the_account_when_the_anonymous_stream_fails(self):
+        service = YouTubeMusicService()
+        media_path = "https://www.youtube.com/watch?v=abc123DEF45"
+        account_playback = ResolvedStreamPlayback(stream_url="https://manifest.example.invalid/age.m3u8")
+
+        def resolve(path, **kwargs):
+            if not kwargs["use_account_cookies"]:
+                raise RuntimeError("Sign in to confirm your age")
+            return account_playback
+
+        with patch.object(service, "has_saved_browser_auth", return_value=True), patch(
+            "player.youtube_music.service.resolve_music_stream_playback", side_effect=resolve
+        ) as resolve_stream:
+            result = service.resolve_stream_playback(media_path)
+
+        self.assertEqual(result.stream_url, account_playback.stream_url)
+        self.assertEqual(
+            [(call.kwargs["use_account_cookies"], call.kwargs["anonymous_player_client"]) for call in resolve_stream.call_args_list],
+            [(False, "visionos"), (True, "web_safari")],
+        )
+
+    def test_keeps_the_anonymous_error_without_an_account(self):
+        service = YouTubeMusicService()
+
+        with patch.object(service, "has_saved_browser_auth", return_value=False), patch(
+            "player.youtube_music.service.resolve_music_stream_playback",
+            side_effect=RuntimeError("sem stream"),
+        ) as resolve_stream:
+            with self.assertRaisesRegex(RuntimeError, "sem stream"):
+                service.resolve_stream_playback("https://www.youtube.com/watch?v=abc123DEF45")
+
+        self.assertEqual(resolve_stream.call_count, 1)
+
     def test_http_403_advances_stream_profiles_once_per_session(self):
         service = YouTubeMusicService()
 

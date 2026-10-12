@@ -60,6 +60,14 @@ class YouTubeMusicTabPanel(wx.Panel):
 		self.status_message_label = wx.StaticText(box, label="")
 		self.status_message_label.SetName(_("Mensagem da central do KeyTube"))
 		self.status_message_label.Wrap(620)
+		self.reliability_label = wx.StaticText(
+			box,
+			label=_(
+				"O YouTube muda sem aviso, então algo daqui pode parar de funcionar sem explicação "
+				"aparente. Atualize os recursos adicionais ou tente mais tarde."
+			),
+		)
+		self.reliability_label.Wrap(620)
 
 		attach_named_accessible(
 			self.connection_label,
@@ -76,10 +84,16 @@ class YouTubeMusicTabPanel(wx.Panel):
 			name=_("Mensagem da central do KeyTube"),
 			value_provider=lambda: self.status_message_label.GetLabel(),
 		)
+		attach_named_accessible(
+			self.reliability_label,
+			name=_("Aviso sobre o YouTube"),
+			value_provider=lambda: self.reliability_label.GetLabel(),
+		)
 
 		status_box.Add(self.connection_label, 0, wx.ALL | wx.EXPAND, 6)
 		status_box.Add(self.library_summary_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 		status_box.Add(self.status_message_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
+		status_box.Add(self.reliability_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
 
 		button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.connect_button = wx.Button(box, label=_("&Conectar conta..."))

@@ -21,6 +21,7 @@ from .client_provider import YouTubeMusicClientProvider
 from .content_locale import content_region
 from .dependencies import import_ytmusicapi_module
 from .feedback_manager import YouTubeMusicFeedbackManager
+from .live_streams import LiveNotStartedError
 from .library_manager import YouTubeMusicLibraryManager
 from .playlists import (
     build_playlist_source as build_playlist_source_fn,
@@ -35,6 +36,9 @@ from ..i18n import _
 
 
 _logger = get_logger(__name__)
+
+# O cliente que abre vídeos com restrição de idade quando a conta está conectada.
+_ACCOUNT_STREAM_PLAYBACK_PROFILE = "web_safari"
 
 # Quantas contas Google da mesma sessão o KeyTune procura ao conectar.
 _MAX_SESSION_ACCOUNTS = 6
@@ -309,13 +313,34 @@ class YouTubeMusicService:
         )
 
     def _resolve_stream_playback_uncached(self, media_path, *, prefer_video=False):
-        return resolve_music_stream_playback(
-            media_path,
-            use_account_cookies=False,
-            anonymous_player_client=self._stream_playback_profile,
-            prefer_video=prefer_video,
-            audio_track=yt_dlp_selector_for_playback(media_path),
-        )
+        audio_track = yt_dlp_selector_for_playback(media_path)
+        try:
+            return resolve_music_stream_playback(
+                media_path,
+                use_account_cookies=False,
+                anonymous_player_client=self._stream_playback_profile,
+                prefer_video=prefer_video,
+                audio_track=audio_track,
+            )
+        except LiveNotStartedError:
+            raise
+        except Exception as anonymous_error:
+            if not self.has_saved_auth():
+                raise
+            # Vídeos com restrição de idade só abrem com a conta: o YouTube recusa o
+            # cliente anônimo, e o da conta (com os cookies) devolve o vídeo com áudio e imagem.
+            _logger.info("Anonymous stream resolution failed; retrying with the connected account")
+            try:
+                return resolve_music_stream_playback(
+                    media_path,
+                    use_account_cookies=True,
+                    anonymous_player_client=_ACCOUNT_STREAM_PLAYBACK_PROFILE,
+                    allow_youtubejs=False,
+                    prefer_video=prefer_video,
+                    audio_track=audio_track,
+                )
+            except Exception:
+                raise anonymous_error
 
     def clear_stream_cache(self):
         """Esquece os streams já resolvidos, para valer uma nova escolha de faixa de áudio."""
