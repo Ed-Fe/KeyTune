@@ -71,6 +71,10 @@ async function shortsFrom(request, seed, limit) {
   const info = await innertube.getShortsVideoInfo(seed);
   const ids = [seed];
   for (const node of info.watch_next_feed || []) {
+    // Os anúncios vêm na sequência como shorts; só eles trazem "adClientParams".
+    if (node.payload?.adClientParams) {
+      continue;
+    }
     const id = node.payload?.videoId || node.payload?.reelWatchEndpoint?.videoId;
     if (id && !ids.includes(id)) {
       ids.push(id);

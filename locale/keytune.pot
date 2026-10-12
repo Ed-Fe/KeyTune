@@ -2280,10 +2280,6 @@ msgstr ""
 msgid "Buscando letra..."
 msgstr ""
 
-#: src/player/frames/library_tabs/playback_control.py
-msgid "Buscando mais shorts."
-msgstr ""
-
 #: src/player/frames/library_tabs/station_radio.py
 msgid "Buscando músicas inéditas para a nova rádio."
 msgstr ""

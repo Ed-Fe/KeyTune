@@ -325,7 +325,6 @@ class PlaylistPlaybackMixin:
             if direction > 0 and callable(defer_autodj_advance) and defer_autodj_advance(state):
                 return
             if direction > 0 and getattr(state, "shorts_session", False):
-                self._announce(_("Buscando mais shorts."))
                 self._shorts_session_refill(state, force=True)
                 return
             if direction > 0 and self._try_autoplay_related_youtube_music(state):
