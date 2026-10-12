@@ -7,6 +7,24 @@ uma música de três minutos seria irritante, não útil.
 
 from ...i18n import _, ngettext
 from ...library import is_remote_media_path
+from ...youtube_music.playlists import (
+    build_youtube_watch_url,
+    extract_video_id_from_text,
+    is_youtube_music_media,
+)
+
+
+def _resume_key(media_path):
+    """O endereço sob o qual a posição fica guardada.
+
+    Um vídeo do YouTube tem sempre a mesma linha do tempo, mas o endereço dele muda
+    (o do YouTube Music leva o id da rádio): todos viram o endereço comum do vídeo.
+    """
+    if is_youtube_music_media(media_path):
+        video_id = extract_video_id_from_text(media_path)
+        if video_id:
+            return build_youtube_watch_url(video_id)
+    return media_path
 
 
 class SmartLibraryResumeMixin:
@@ -15,7 +33,10 @@ class SmartLibraryResumeMixin:
             return False
         if self._smart_library() is None:
             return False
-        # Streams remotos não têm uma linha do tempo estável entre sessões.
+        # Streams de rádio e transmissões não têm linha do tempo estável entre sessões;
+        # um vídeo do YouTube tem, e a duração mínima já deixa as músicas de fora.
+        if is_youtube_music_media(media_path) and extract_video_id_from_text(media_path):
+            return True
         return not is_remote_media_path(media_path)
 
     def _library_resume_position_ms(self, media_path):
@@ -27,7 +48,7 @@ class SmartLibraryResumeMixin:
         if service is None:
             return 0
 
-        return service.resume_position_ms(media_path)
+        return service.resume_position_ms(_resume_key(media_path))
 
     def _announce_resume_position(self, media_path, position_ms):
         if position_ms <= 0:
@@ -58,11 +79,11 @@ class SmartLibraryResumeMixin:
             tracking_state = getattr(self, "_smart_library_playback_tracking", None)
             if tracking_state and tracking_state.get("resume_saved"):
                 tracking_state["resume_saved"] = False
-                service.forget_position(media_path)
+                service.forget_position(_resume_key(media_path))
             return False
 
         service.remember_position(
-            media_path,
+            _resume_key(media_path),
             position_ms,
             duration_ms=duration_ms,
             label=self._smart_library_label_for(media_path),
@@ -76,7 +97,7 @@ class SmartLibraryResumeMixin:
         service = self._smart_library()
         if service is None:
             return
-        service.forget_position(media_path)
+        service.forget_position(_resume_key(media_path))
 
     def _resume_entry_label(self, record):
         """Rótulo com o ponto de parada, para a lista "Continuar ouvindo"."""
