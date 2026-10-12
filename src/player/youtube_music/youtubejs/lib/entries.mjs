@@ -1,7 +1,7 @@
 // Os resultados do YouTube.js no formato da listagem do yt-dlp, para o KeyTune tratar
 // as duas fontes igual.
 
-import { findBadgeText, findChannelId, textOf } from "./text.mjs";
+import { findBadgeText, findChannelId, findWatchedPercent, textOf } from "./text.mjs";
 
 export function searchEntry(node) {
   if (node.type === "Video") {
@@ -14,6 +14,7 @@ export function searchEntry(node) {
       view_count_text: textOf(node.short_view_count) || textOf(node.view_count),
       published: textOf(node.published),
       live_status: node.is_live ? "is_live" : "",
+      watched_percent: findWatchedPercent(node.thumbnail_overlays),
     };
   }
   if (node.type === "Channel") {
@@ -59,6 +60,7 @@ export function feedVideoEntry(node) {
     channel: parts.slice(0, parts.length - tail).join(" "),
     channel_id: findChannelId(node.metadata),
     duration_text: findBadgeText(node.content_image),
+    watched_percent: findWatchedPercent(node.content_image),
     view_count_number_text: details.length > 1 ? details[0] : "",
     published: details[details.length - 1] || "",
   };

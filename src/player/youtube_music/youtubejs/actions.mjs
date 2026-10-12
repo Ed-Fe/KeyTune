@@ -10,7 +10,7 @@ import { commentReplies, comments, createComment, postComments } from "./handler
 import { channelAbout, channelAction, channelSearch, channelState } from "./handlers/channels.mjs";
 import { addToHistory, watchHistory } from "./handlers/history.mjs";
 import { liveChat, liveChatSend } from "./handlers/live_chat.mjs";
-import { audioTracks, details } from "./handlers/media.mjs";
+import { audioTracks, details, relatedVideos } from "./handlers/media.mjs";
 import { notificationAction, notifications } from "./handlers/notifications.mjs";
 import { channelPosts, postVote } from "./handlers/posts.mjs";
 import { search } from "./handlers/search.mjs";
@@ -23,6 +23,7 @@ const handlers = {
   search,
   audio_tracks: audioTracks,
   details,
+  related_videos: relatedVideos,
   subscription_videos: subscriptionVideos,
   subscribed_channels: subscribedChannels,
   comments,

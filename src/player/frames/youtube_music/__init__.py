@@ -32,6 +32,7 @@ from .live_chat import LiveChatMixin
 from .navigation import ResultsNavigationMixin
 from .notifications import NotificationsMixin
 from .playlists import PlaylistEditMixin
+from .resume_hints import ResumeHintsMixin
 from .search import SearchMixin
 from .state import LibraryStateMixin
 from .tasks import BackgroundTaskMixin
@@ -43,6 +44,7 @@ class FrameYouTubeMusicMixin(
     LibraryStateMixin,
     AuthMixin,
     SearchMixin,
+    ResumeHintsMixin,
     ActionsMenuMixin,
     ResultsNavigationMixin,
     PlaylistEditMixin,

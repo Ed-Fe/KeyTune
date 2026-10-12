@@ -421,6 +421,8 @@ class YouTubeMediaSearchResult:
     owner_title: str = ""
     # Uma transmissão que está no ar agora: tem chat ao vivo.
     is_live: bool = False
+    # Onde a conta parou num vídeo do histórico (segundos); 0 quando não há o que retomar.
+    resume_seconds: int = 0
 
     def owner_result(self):
         """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""

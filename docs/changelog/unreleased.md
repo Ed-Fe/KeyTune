@@ -17,6 +17,8 @@
 
 ### Alterado
 
+- **Retomar vídeos do histórico**: ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você parou no meio, o KeyTune começa de onde a conta parou e avisa a posição.
+- **Rádio e relacionados para vídeos do YouTube**: **Iniciar rádio desta faixa** (`Ctrl+R`) e o autoplay de relacionados, quando o vídeo é do YouTube comum, usam os vídeos que o próprio YouTube sugere depois dele, e não mais o rádio do YouTube Music, que só fazia sentido para músicas.
 - **Chat ao vivo com a linha de escrever no fim**: **Enviar uma mensagem...** agora é a última linha da lista, depois das mensagens mais novas, e a lista abre nela. Antes ficava no começo, e era preciso descer até o fim para ver as mensagens recentes.
 - **Anúncios sem interromper o leitor de tela**: os anúncios do KeyTune esperam o leitor terminar o que está dizendo, em vez de cortá-lo. Em **Preferências > Acessibilidade**, **Interromper a fala do leitor de tela** volta ao comportamento anterior, **Falar os avisos de eventos com o KeyTune ativo** escolhe se os avisos que chegam sozinhos falam na janela, e a lista **Avisos de eventos que falam** liga e desliga um a um: mensagens do chat, mensagem enviada ou chat encerrado, notificações do YouTube, download concluído e temporizador.
 - **Histórico em duas listas**: o item **Histórico**, no início do KeyTube, passou a se chamar **Histórico do YouTube Music**, ao lado do novo **Histórico do YouTube**. A opção **Salvar o que ouvi no histórico do YouTube Music** virou **Salvar o que ouvi e assisti no histórico do YouTube** e agora vale também para os vídeos.

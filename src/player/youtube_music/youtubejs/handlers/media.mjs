@@ -1,6 +1,7 @@
 // O que se sabe de um vídeo: as faixas de áudio (vídeos dublados) e os detalhes.
 
-import { clientFor } from "../lib/clients.mjs";
+import { accountClientFor, clientFor } from "../lib/clients.mjs";
+import { feedVideoEntry } from "../lib/entries.mjs";
 import { requireVideoId, textOf } from "../lib/text.mjs";
 
 async function audioTrackFormats(innertube, videoId) {
@@ -60,4 +61,22 @@ export async function details(request) {
     relative_date: textOf(primary?.relative_date),
     category: basic.category || "",
   };
+}
+
+// Os vídeos que o YouTube sugere depois deste (a coluna "A seguir"). Com a conta, vêm
+// personalizados; sem ela, o que o YouTube mostra para qualquer visitante.
+export async function relatedVideos(request) {
+  const videoId = requireVideoId(request);
+  const innertube = request.cookie ? await accountClientFor(request) : await clientFor(request);
+  const info = await innertube.getInfo(videoId);
+  const entries = [];
+  const seen = new Set([videoId]);
+  for (const node of info.watch_next_feed || []) {
+    const entry = feedVideoEntry(node);
+    if (entry?.id && entry.title && !seen.has(entry.id)) {
+      seen.add(entry.id);
+      entries.push(entry);
+    }
+  }
+  return { entries };
 }

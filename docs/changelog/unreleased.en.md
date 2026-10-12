@@ -17,6 +17,8 @@
 
 ### Changed
 
+- **Resume videos from history**: pressing `Enter` on a video in **YouTube history** that you stopped halfway now starts where the account left off and announces the position.
+- **Radio and related videos for YouTube videos**: **Start radio from this track** (`Ctrl+R`) and related autoplay, when the video is a regular YouTube video, use the videos YouTube itself suggests next instead of the YouTube Music radio, which only made sense for songs.
 - **Live chat with the write line at the end**: **Send a message...** is now the last line of the list, after the newest messages, and the list opens on it. Before, it was at the top and you had to go down to the end to see recent messages.
 - **Announcements that do not interrupt the screen reader**: KeyTune announcements wait for the reader to finish what it is saying instead of cutting it off. In **Preferences > Accessibility**, **Interrupt the screen reader speech** brings the old behavior back, **Speak event notices while KeyTune is active** chooses whether the notices that arrive by themselves speak in the window, and the **Event notices that speak** list turns each one on or off: chat messages, message sent or chat ended, YouTube notifications, finished download and sleep timer.
 - **History in two lists**: the **History** item, in KeyTube's home, is now called **YouTube Music history**, next to the new **YouTube history**. The **Save what I listened to in the YouTube Music history** option became **Save what I listened to and watched in the YouTube history** and now applies to videos too.

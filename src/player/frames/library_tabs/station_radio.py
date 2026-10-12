@@ -11,7 +11,12 @@ from ...constants import (
 from ...i18n import _
 from ...log import get_logger
 from ...playlists import PlaylistState
-from ...youtube_music.playlists import extract_video_id_from_text, is_youtube_music_media
+from ...youtube_music.playlists import (
+    extract_video_id_from_text,
+    is_regular_youtube_media,
+    is_youtube_music_media,
+)
+from ...youtube_music.related import youtube_related_content
 
 
 _logger = get_logger(__name__)
@@ -142,12 +147,19 @@ class StationRadioMixin:
 
             for _attempt in range(YOUTUBE_MUSIC_RADIO_NEW_STATION_ATTEMPTS):
                 try:
-                    content = youtube_music_service.get_radio_content(
-                        seed_video_id,
-                        limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
-                        exclude_video_ids=known_video_ids,
-                        continue_playlist_id=None,
-                    )
+                    if is_regular_youtube_media(seed_media_path):
+                        content = youtube_related_content(
+                            seed_video_id,
+                            limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+                            exclude_video_ids=known_video_ids,
+                        )
+                    else:
+                        content = youtube_music_service.get_radio_content(
+                            seed_video_id,
+                            limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+                            exclude_video_ids=known_video_ids,
+                            continue_playlist_id=None,
+                        )
                 except Exception as exc:
                     last_error = str(exc) or exc.__class__.__name__
                     _logger.warning("Fresh YouTube Music radio fetch failed: %s", exc, exc_info=True)

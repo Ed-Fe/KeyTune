@@ -138,7 +138,42 @@ def normalize_youtube_entry(entry, *, show_owner=True):
         owner_browse_id=str(entry.get("channel_id") or "").strip() if owner else "",
         owner_title=owner,
         is_live=str(entry.get("live_status") or "").strip() == "is_live",
+        resume_seconds=_resume_seconds(entry),
     )
+
+
+# Só vale retomar quando já passou do começo e ainda falta um bom pedaço.
+_RESUME_MIN_PERCENT = 3
+_RESUME_MAX_PERCENT = 95
+
+
+def _duration_seconds(entry):
+    try:
+        seconds = int(float(entry.get("duration") or 0))
+    except (TypeError, ValueError):
+        seconds = 0
+    if seconds > 0:
+        return seconds
+    parts = str(entry.get("duration_text") or "").strip().split(":")
+    if not 2 <= len(parts) <= 3 or not all(part.isdigit() for part in parts):
+        return 0
+    total = 0
+    for part in parts:
+        total = total * 60 + int(part)
+    return total
+
+
+def _resume_seconds(entry):
+    """Os segundos em que a conta parou o vídeo, a partir da barra de progresso do histórico."""
+    try:
+        percent = float(entry.get("watched_percent") or 0)
+    except (TypeError, ValueError):
+        return 0
+    if not _RESUME_MIN_PERCENT <= percent <= _RESUME_MAX_PERCENT:
+        return 0
+    if str(entry.get("live_status") or "").strip() == "is_live":
+        return 0
+    return int(_duration_seconds(entry) * percent / 100)
 
 
 def normalize_music_album_result(item, *, artist_name=""):

@@ -162,6 +162,7 @@ class SearchMixin:
                 continue
             prepared_items.append(playback_url)
             prepared_labels.append(search_result.choice_label)
+            self._remember_youtube_resume_hint(search_result)
 
         if not prepared_items:
             raise RuntimeError(_("A seleção atual não tem resultados reproduzíveis para adicionar à playlist escolhida."))

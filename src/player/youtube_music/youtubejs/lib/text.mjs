@@ -45,6 +45,26 @@ export function findBadgeText(node, depth = 0) {
   return "";
 }
 
+// Quanto do vídeo a conta já assistiu (0 a 100): a barra vermelha sob a miniatura.
+export function findWatchedPercent(node, depth = 0) {
+  if (!node || typeof node !== "object" || depth > 6) {
+    return 0;
+  }
+  if (node.type === "ThumbnailOverlayProgressBarView") {
+    return Number(node.start_percent) || 0;
+  }
+  if (node.type === "ThumbnailOverlayResumePlayback") {
+    return Number(node.percent_duration_watched) || 0;
+  }
+  for (const value of Array.isArray(node) ? node : Object.values(node)) {
+    const percent = findWatchedPercent(value, depth + 1);
+    if (percent) {
+      return percent;
+    }
+  }
+  return 0;
+}
+
 // O canal de um vídeo do feed vem só dentro dos comandos de toque do cartão.
 export function findChannelId(node, depth = 0) {
   if (typeof node === "string") {

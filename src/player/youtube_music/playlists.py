@@ -208,6 +208,15 @@ def is_youtube_music_media(media_path):
     return normalized_media_path.lower().startswith(YTMUSIC_SOURCE_PREFIX)
 
 
+def is_regular_youtube_media(media_path):
+    """Um vídeo do YouTube comum (não do YouTube Music): o rádio dele são os relacionados do YouTube."""
+    normalized_media_path = str(media_path or "").strip()
+    if not normalized_media_path or normalized_media_path.lower().startswith(YTMUSIC_SOURCE_PREFIX):
+        return False
+    host = (urlparse(normalized_media_path).netloc or "").lower()
+    return host in {"www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"}
+
+
 def is_music_youtube_url(media_path):
     normalized_media_path = str(media_path or "").strip()
     if not normalized_media_path:

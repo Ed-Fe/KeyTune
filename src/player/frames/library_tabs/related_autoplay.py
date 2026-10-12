@@ -12,7 +12,12 @@ from ...constants import (
 from ...i18n import _
 from ...log import get_logger
 from ...playlists import PlaylistState
-from ...youtube_music.playlists import extract_video_id_from_text, is_youtube_music_media
+from ...youtube_music.playlists import (
+    extract_video_id_from_text,
+    is_regular_youtube_media,
+    is_youtube_music_media,
+)
+from ...youtube_music.related import youtube_related_content
 
 
 _logger = get_logger(__name__)
@@ -167,12 +172,19 @@ class RelatedAutoplayMixin:
             radio_content = None
             error_message = ""
             try:
-                radio_content = youtube_music_service.get_radio_content(
-                    radio_video_id,
-                    limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
-                    exclude_video_ids=exclude_video_ids,
-                    continue_playlist_id=continue_playlist_id,
-                )
+                if is_regular_youtube_media(seed_media_path):
+                    radio_content = youtube_related_content(
+                        radio_video_id,
+                        limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+                        exclude_video_ids=exclude_video_ids,
+                    )
+                else:
+                    radio_content = youtube_music_service.get_radio_content(
+                        radio_video_id,
+                        limit=YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
+                        exclude_video_ids=exclude_video_ids,
+                        continue_playlist_id=continue_playlist_id,
+                    )
             except Exception as exc:
                 error_message = str(exc) or exc.__class__.__name__
                 _logger.warning(

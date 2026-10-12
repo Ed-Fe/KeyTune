@@ -114,6 +114,13 @@ class PlaylistPlaybackMixin:
             if resume_position_ms > 0:
                 state.last_position_ms = resume_position_ms
                 self._announce_resume_position(state.current_media_path, resume_position_ms)
+        take_youtube_resume_hint = getattr(self, "_take_youtube_resume_hint_ms", None)
+        if resume_position_ms <= 0 and callable(take_youtube_resume_hint):
+            # Vídeo do histórico do YouTube: retoma de onde a conta parou.
+            resume_position_ms = take_youtube_resume_hint(state.current_media_path)
+            if resume_position_ms > 0:
+                state.last_position_ms = resume_position_ms
+                self._announce_resume_position(state.current_media_path, resume_position_ms)
 
         self._update_title()
         self._update_time_bar()

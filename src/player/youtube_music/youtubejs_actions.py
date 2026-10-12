@@ -29,6 +29,7 @@ __all__ = [
     "live_chat_send",
     "audio_tracks",
     "media_details",
+    "related_videos",
     "subscription_videos_page",
     "subscribed_channels_page",
 ]
@@ -253,6 +254,14 @@ def audio_tracks(media_url, *, names=True):
 def media_details(media_url):
     """Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data."""
     return _request_action("details", media_url=str(media_url or "").strip())
+
+
+def related_videos(media_url, *, cookie_header="", account_index=0):
+    """Os vídeos que o YouTube sugere depois de *media_url* (a coluna "A seguir"), no formato da listagem."""
+    response = _request_action(
+        "related_videos", media_url=str(media_url or "").strip(), **_account_fields(cookie_header, account_index)
+    )
+    return list(response.get("entries") or [])
 
 
 def subscription_videos_page(cookie_header, *, start, count, account_index=0):
