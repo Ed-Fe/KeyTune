@@ -85,6 +85,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning
 - Groups: **Adicionado**, **Alterado**, **Obsoleto**, **Removido**, **Corrigido**, **Segurança**. Only the ones that have entries.
 - One entry per change the user notices. Internal refactors, tests and CI stay out unless they change something visible.
 
+**Shape of a release's notes**
+- Open with a short summary in prose (two or three sentences): what the version is about, in the user's words. Then the groups. A release that brings many features may split **Adicionado** into themed blocks with `####` headings (for example *Conta do YouTube*, *Reprodução*, *Acessibilidade*); the shape test ignores them.
+- Lead with the main features. Reorganizations and small additions come after.
+- If something may stop working for reasons outside the app (YouTube changes, for example), say so once, near the top, with what to do.
+- Describe a feature as it **is** in this release. A tweak to something that has not shipped yet belongs in that feature's own entry, not in **Alterado** or **Corrigido**. **Alterado** and **Corrigido** are only for what existed in an earlier release.
+- No filler about how the feature is used ("com o teclado e o leitor de tela"): the whole app is keyboard-first, so it adds nothing. No closing line that repeats the summary.
+- Menus, option lists and step by step go to the manual. The entry says what the feature does and where it starts.
+
 **Writing each entry**
 - Start with what the user sees or does, not what the code does.
 - Short bold name, colon, and one to three sentences: what changed, how to use it (shortcut or menu) and the relevant limit.

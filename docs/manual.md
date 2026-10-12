@@ -491,7 +491,7 @@ No menu **Ações...** de um vídeo do YouTube, **Ver capítulos** abre a lista 
 
 Para o vídeo que está tocando, use **Reprodução > Ver capítulos da mídia atual** e **Ver transcrição da mídia atual**. Eles não têm atalho de fábrica; para dar um a eles, use **Configurações > Personalizar teclado**.
 
-Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista.
+Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista. Ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você deixou no meio, o KeyTune começa de onde a conta parou e avisa a posição. Com a conta conectada, o YouTube.js ativado e **Salvar o que ouvi e assisti no histórico do YouTube** ligado, ele também informa ao YouTube até onde você assistiu, a cada meio minuto e quando o vídeo sai, e o celular, a TV e o site mostram o vídeo no mesmo ponto.
 
 ### Chat ao vivo
 
@@ -783,7 +783,7 @@ Avançar, voltar, embaralhar, modo de repetição, anunciar volume e trazer o Ke
 
 **Arquivo > Ocultar na bandeja do sistema** (ou `Ctrl+Alt+Shift+K`, com os atalhos globais ligados) esconde a janela e deixa um ícone perto do relógio, e a música continua. Para chegar ao ícone pelo teclado, use `Windows+B` e as setas. `Enter` no ícone mostra a janela de novo; o menu de contexto (`Shift+F10` ou a tecla de aplicativos) tem **Mostrar KeyTune**, **Reproduzir ou pausar**, **Faixa anterior**, **Próxima faixa**, **Parar**, **Anunciar status** e **Sair do KeyTune**. Ao voltar, o foco fica onde estava.
 
-Em **Preferências > Geral > Bandeja do sistema**, **Ao minimizar, ocultar na bandeja do sistema** faz o mesmo ao minimizar, e **Ao fechar, ocultar na bandeja do sistema** faz fechar a janela só escondê-la. Com essa opção ligada, para sair use **Arquivo > Sair** ou **Sair do KeyTune** no menu do ícone.
+Em **Preferências > Geral > Bandeja do sistema**, **Ao minimizar, ocultar na bandeja do sistema** faz o mesmo ao minimizar, e **Ao fechar, ocultar na bandeja do sistema** faz fechar a janela só escondê-la. Com essa opção ligada, para sair use **Arquivo > Sair** ou **Sair do KeyTune** no menu do ícone. `Win+D` e `Win+M`, com o foco em outro programa, só minimizam o KeyTune; ele só vai para a bandeja quando você o minimiza com o foco nele.
 
 ## Configurações
 
@@ -934,6 +934,8 @@ Se o player não conseguir iniciar ao abrir o KeyTune, o mesmo diagnóstico roda
 **Uma rádio online não toca ou a lista não abre.** O diretório do Radio Browser e as próprias estações às vezes ficam fora do ar. Tente outra rádio da lista, ou volte à lista e abra-a de novo.
 
 **A conta do YouTube aparece desconectada, ou o player pede para conectar de novo.** O navegador trocou os cookies que o KeyTune tinha guardado; veja [Por que a conexão cai](#por-que-a-conexao-cai-a-troca-de-cookies). Exporte um `cookies.txt` novo de uma janela anônima, como em [Conectar com um cookies.txt](#conectar-com-um-cookies-txt-recomendado), e conecte de novo. Se a biblioteca vier vazia ou de outra pessoa, a sessão tem mais de uma conta Google: conecte de novo e escolha a conta certa.
+
+**Um vídeo do YouTube não toca e o KeyTune fala em restrição de idade.** O YouTube só libera esses vídeos para uma conta com a idade confirmada. Conecte a conta na aba KeyTube (`Ctrl+Shift+Y`), em **Conta e biblioteca** > **Conectar conta...**, usando uma conta que já tenha confirmado a idade no YouTube. Eles tocam com imagem em qualidade média.
 
 **Outros problemas.** Ative o registro de logs em `Ctrl+,` > **Geral** > **Registro de logs**. Com **Registrar logs de diagnóstico** ligado e o nível em *Depuração*, o player grava informações detalhadas em `keytune.log`, na pasta de dados. **Abrir pasta de logs** leva até o arquivo. Se for relatar o problema, anexe o log à issue.
 

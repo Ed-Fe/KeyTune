@@ -491,7 +491,7 @@ En el menú **Acciones...** de un vídeo de YouTube, **Ver capítulos** abre sus
 
 Para el vídeo que se está reproduciendo, usa **Reproducción > Ver capítulos del medio actual** y **Ver transcripción del medio actual**. No tienen atajo de fábrica; para darles uno, usa **Configuración > Personalizar teclado**.
 
-Los vídeos largos de YouTube también vuelven desde donde los dejaste, como los pódcast: la posición se guarda entre sesiones, y **Continuar escuchando** los lista.
+Los vídeos largos de YouTube también vuelven desde donde los dejaste, como los pódcast: la posición se guarda entre sesiones, y **Continuar escuchando** los lista. Al pulsar `Intro` en un vídeo del **Historial de YouTube** que dejaste a medias, KeyTune empieza donde la cuenta lo dejó y anuncia la posición. Con la cuenta conectada, YouTube.js activado y **Guardar lo que escuché y vi en el historial de YouTube** activado, también informa a YouTube hasta dónde lo viste, cada medio minuto y cuando el vídeo sale, y el teléfono, la tele y el sitio muestran el vídeo en el mismo punto.
 
 ### Chat en vivo
 
@@ -779,7 +779,7 @@ Avanzar, retroceder, aleatorio, modo de repetición, anunciar volumen y traer Ke
 
 **Archivo > Ocultar en la bandeja del sistema** (o `Ctrl+Alt+Shift+K`, con los atajos globales activados) oculta la ventana y deja un icono junto al reloj, y la música sigue sonando. Para llegar al icono con el teclado, usa `Windows+B` y las flechas. `Intro` en el icono vuelve a mostrar la ventana; su menú contextual (`Shift+F10` o la tecla de aplicaciones) tiene **Mostrar KeyTune**, **Reproducir o pausar**, **Pista anterior**, **Siguiente pista**, **Detener**, **Anunciar estado** y **Salir de KeyTune**. Al volver, el foco queda donde estaba.
 
-En **Preferencias > General > Bandeja del sistema**, **Al minimizar, ocultar en la bandeja del sistema** hace lo mismo al minimizar, y **Al cerrar, ocultar en la bandeja del sistema** hace que cerrar la ventana solo la oculte. Con esa opción activada, sal con **Archivo > Salir** o **Salir de KeyTune** en el menú del icono.
+En **Preferencias > General > Bandeja del sistema**, **Al minimizar, ocultar en la bandeja del sistema** hace lo mismo al minimizar, y **Al cerrar, ocultar en la bandeja del sistema** hace que cerrar la ventana solo la oculte. Con esa opción activada, sal con **Archivo > Salir** o **Salir de KeyTune** en el menú del icono. `Windows+D` y `Windows+M`, con el foco en otro programa, solo minimizan KeyTune; solo va a la bandeja cuando lo minimizas con el foco en él.
 
 ## Configuración
 
@@ -930,6 +930,8 @@ Si el reproductor no consigue iniciarse al abrir KeyTune, el mismo diagnóstico 
 **Una radio en línea no suena o la lista no se abre.** El directorio de Radio Browser y las propias emisoras a veces están fuera de servicio. Prueba otra radio de la lista, o vuelve a la lista y ábrela de nuevo.
 
 **La cuenta de YouTube aparece desconectada, o el reproductor pide conectar de nuevo.** El navegador cambió las cookies que KeyTune había guardado; consulta [Por qué se cae la conexión](#por-que-se-cae-la-conexion-el-cambio-de-cookies). Exporta un `cookies.txt` nuevo desde una ventana privada, como en [Conectar con un cookies.txt](#conectar-con-un-cookies-txt-recomendado), y conecta de nuevo. Si la biblioteca aparece vacía o es de otra persona, la sesión tiene más de una cuenta de Google: conecta de nuevo y elige la cuenta correcta.
+
+**Un vídeo de YouTube no se reproduce y KeyTune habla de restricción de edad.** YouTube solo libera esos vídeos para una cuenta con la edad confirmada. Conecta la cuenta en la pestaña KeyTube (`Ctrl+Shift+Y`), en **Cuenta y biblioteca** > **Conectar cuenta...**, con una cuenta que ya haya confirmado la edad en YouTube. Se reproducen con imagen de calidad media.
 
 **Otros problemas.** Activa el registro de logs en `Ctrl+,` > **General** > **Registro de logs**. Con **Registrar logs de diagnóstico** activado y el nivel en *Depuración*, el reproductor escribe información detallada en `keytune.log`, en la carpeta de datos. **Abrir la carpeta de logs** te lleva hasta el archivo. Si vas a informar del problema, adjunta el log a la issue.
 

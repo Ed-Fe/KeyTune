@@ -491,7 +491,7 @@ In the **Actions...** menu of a YouTube video, **View chapters** opens its chapt
 
 For the video that is playing, use **Playback > View chapters of the current media** and **View transcript of the current media**. They have no default shortcut; to give them one, use **Settings > Customize keyboard**.
 
-Long YouTube videos also come back from where you stopped, like podcasts: the position is kept between sessions, and **Continue listening** lists them.
+Long YouTube videos also come back from where you stopped, like podcasts: the position is kept between sessions, and **Continue listening** lists them. When you press `Enter` on a video in **YouTube history** that you left halfway, KeyTune starts where the account left off and announces the position. With the account connected, YouTube.js turned on and **Save what I listened to and watched in the YouTube history** on, it also tells YouTube how far you watched, every half minute and when the video leaves, and your phone, TV and the site show the video at the same point.
 
 ### Live chat
 
@@ -779,7 +779,7 @@ Skip forward, skip back, shuffle, repeat mode, announce volume and bring KeyTune
 
 **File > Hide to system tray** (or `Ctrl+Alt+Shift+K`, with global shortcuts on) hides the window and leaves an icon near the clock, and the music keeps playing. To reach the icon from the keyboard, use `Windows+B` and the arrows. `Enter` on the icon shows the window again; its context menu (`Shift+F10` or the applications key) has **Show KeyTune**, **Play or pause**, **Previous track**, **Next track**, **Stop**, **Announce status** and **Exit KeyTune**. When the window comes back, focus is where it was.
 
-In **Preferences > General > System tray**, **When minimizing, hide to the system tray** does the same when you minimize, and **When closing, hide to the system tray** makes closing the window only hide it. With that option on, exit with **File > Exit** or **Exit KeyTune** in the icon menu.
+In **Preferences > General > System tray**, **When minimizing, hide to the system tray** does the same when you minimize, and **When closing, hide to the system tray** makes closing the window only hide it. With that option on, exit with **File > Exit** or **Exit KeyTune** in the icon menu. `Windows+D` and `Windows+M`, while another program has focus, only minimize KeyTune; it goes to the tray only when you minimize it while it has focus.
 
 ## Settings
 
@@ -930,6 +930,8 @@ If the player cannot start when KeyTune opens, the same diagnostics run by thems
 **An online radio station doesn't play or the list doesn't open.** The Radio Browser directory and the stations themselves are sometimes offline. Try another station from the list, or go back to the list and open it again.
 
 **The YouTube account shows as disconnected, or the player asks you to connect again.** The browser replaced the cookies KeyTune had kept; see [Why the connection drops](#why-the-connection-drops-cookie-rotation). Export a new `cookies.txt` from a private window, as in [Connect with a cookies.txt](#connect-with-a-cookies-txt-recommended), and connect again. If the library comes up empty or belongs to someone else, the session has more than one Google account: connect again and choose the right one.
+
+**A YouTube video does not play and KeyTune mentions an age restriction.** YouTube only releases these videos to an account with confirmed age. Connect the account in the KeyTube tab (`Ctrl+Shift+Y`), under **Account and library** > **Connect account...**, using an account that has already confirmed its age on YouTube. They play with medium-quality video.
 
 **Other problems.** Turn on log recording in `Ctrl+,` > **General** > **Log recording**. With **Record diagnostic logs** on and the level set to *Debug*, the player writes detailed information to `keytune.log`, in the data folder. **Open log folder** takes you to the file. If you report the problem, attach the log to the issue.
 
