@@ -80,7 +80,7 @@ class ActionsMenuTests(unittest.TestCase):
             _labels(frame, _video(owner_browse_id=CHANNEL_ID, owner_title="Canal")),
             [
                 ["Tocar (Enter)", "Adicionar sem tocar (Shift+Enter)"],
-                ["Ver comentários", "Ver detalhes", "Ir para o canal Canal"],
+                ["Ver comentários", "Ver detalhes", "Ir para o canal Canal", "Salvar em Assistir mais tarde"],
                 ["Adicionar seleção... >", "Baixar seleção...\tCtrl+Shift+B"],
             ],
         )
@@ -157,7 +157,7 @@ class ActionsMenuTests(unittest.TestCase):
 
         self.assertEqual(
             _labels(frame, _video(is_live=True))[1],
-            ["Ver comentários", "Ver detalhes", "Ver o chat ao vivo"],
+            ["Ver comentários", "Ver detalhes", "Ver o chat ao vivo", "Salvar em Assistir mais tarde"],
         )
 
     def test_a_chat_message_reads_and_the_list_has_the_chat_commands(self):

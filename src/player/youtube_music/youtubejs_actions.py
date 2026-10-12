@@ -30,6 +30,11 @@ __all__ = [
     "audio_tracks",
     "media_details",
     "related_videos",
+    "home_feed_page",
+    "account_playlist_page",
+    "playlist_add_video",
+    "playlist_remove_video",
+    "shorts_page",
     "subscription_videos_page",
     "subscribed_channels_page",
 ]
@@ -262,6 +267,52 @@ def related_videos(media_url, *, cookie_header="", account_index=0):
         "related_videos", media_url=str(media_url or "").strip(), **_account_fields(cookie_header, account_index)
     )
     return list(response.get("entries") or [])
+
+
+def home_feed_page(cookie_header, *, start, count, account_index=0):
+    """Uma página do início do YouTube da conta (o que ela vê ao abrir o site) e se há mais."""
+    response = _request_action("home_feed", start=start, count=count, **_account_fields(cookie_header, account_index))
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def account_playlist_page(cookie_header, playlist_id, *, start, count, account_index=0):
+    """Uma página de uma playlist que só a conta lê (Assistir mais tarde, curtidos) e se há mais."""
+    response = _request_action(
+        "account_playlist",
+        playlist_id=str(playlist_id or "").strip(),
+        start=start,
+        count=count,
+        **_account_fields(cookie_header, account_index),
+    )
+    return list(response.get("entries") or []), bool(response.get("has_more"))
+
+
+def playlist_add_video(cookie_header, playlist_id, media_url, *, account_index=0):
+    """Põe *media_url* na playlist da conta; devolve se o YouTube aceitou."""
+    response = _request_action(
+        "playlist_add_video",
+        playlist_id=str(playlist_id or "").strip(),
+        media_url=str(media_url or "").strip(),
+        **_account_fields(cookie_header, account_index),
+    )
+    return bool(response.get("ok"))
+
+
+def playlist_remove_video(cookie_header, playlist_id, media_url, *, account_index=0):
+    """Tira *media_url* da playlist da conta; devolve se o YouTube aceitou."""
+    response = _request_action(
+        "playlist_remove_video",
+        playlist_id=str(playlist_id or "").strip(),
+        media_url=str(media_url or "").strip(),
+        **_account_fields(cookie_header, account_index),
+    )
+    return bool(response.get("ok"))
+
+
+def shorts_page(cookie_header, *, start, count, account_index=0):
+    """Uma página da sequência de Shorts que o YouTube sugere à conta, e se há mais."""
+    response = _request_action("shorts", start=start, count=count, **_account_fields(cookie_header, account_index))
+    return list(response.get("entries") or []), bool(response.get("has_more"))
 
 
 def subscription_videos_page(cookie_header, *, start, count, account_index=0):

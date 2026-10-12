@@ -16,6 +16,10 @@ FOLDER_LIKED = "liked"
 FOLDER_HISTORY = "history"
 FOLDER_WATCH_HISTORY = "watch_history"
 FOLDER_SUBSCRIPTION_VIDEOS = "subscription_videos"
+FOLDER_HOME_FEED = "home_feed"
+FOLDER_WATCH_LATER = "watch_later"
+FOLDER_LIKED_VIDEOS = "liked_videos"
+FOLDER_SHORTS = "shorts"
 FOLDER_SUBSCRIBED_CHANNELS = "subscribed_channels"
 FOLDER_NOTIFICATIONS = "notifications"
 FOLDER_CHARTS = "charts"
@@ -128,11 +132,15 @@ def channel_action_items(channel):
 
 def home_folder_items():
     return [
+        YouTubeFolderItem(FOLDER_HOME_FEED, _("Recomendados do YouTube"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIBRARY, _("Suas playlists e mixes"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIKED, _("Curtidas"), requires_auth=True),
         YouTubeFolderItem(FOLDER_HISTORY, _("Histórico do YouTube Music"), requires_auth=True),
         YouTubeFolderItem(FOLDER_WATCH_HISTORY, _("Histórico do YouTube"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_WATCH_LATER, _("Assistir mais tarde"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_LIKED_VIDEOS, _("Vídeos curtidos do YouTube"), requires_auth=True),
         YouTubeFolderItem(FOLDER_SUBSCRIPTION_VIDEOS, _("Vídeos das inscrições"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SHORTS, _("Shorts"), requires_auth=True),
         YouTubeFolderItem(FOLDER_SUBSCRIBED_CHANNELS, _("Canais inscritos"), requires_auth=True),
         YouTubeFolderItem(FOLDER_NOTIFICATIONS, _("Notificações"), requires_auth=True),
         YouTubeFolderItem(FOLDER_CHARTS, _("Em alta")),

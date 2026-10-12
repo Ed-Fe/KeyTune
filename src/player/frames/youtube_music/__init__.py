@@ -36,6 +36,7 @@ from .resume_hints import ResumeHintsMixin
 from .search import SearchMixin
 from .state import LibraryStateMixin
 from .tasks import BackgroundTaskMixin
+from .watch_later import WatchLaterMixin
 
 
 class FrameYouTubeMusicMixin(
@@ -52,6 +53,7 @@ class FrameYouTubeMusicMixin(
     CommentsMixin,
     CommentActionsMixin,
     ChannelActionsMixin,
+    WatchLaterMixin,
     NotificationsMixin,
     LiveChatMixin,
     DetailsMixin,

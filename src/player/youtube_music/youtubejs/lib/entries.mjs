@@ -44,6 +44,18 @@ export function feedVideoEntry(node) {
   if (node.type === "Video") {
     return searchEntry(node);
   }
+  if (node.type === "PlaylistVideo") {
+    return {
+      id: node.id,
+      title: textOf(node.title),
+      channel: textOf(node.author?.name),
+      channel_id: /^UC[\w-]{22}$/.test(node.author?.id || "") ? node.author.id : "",
+      duration: Number(node.duration?.seconds) || 0,
+      view_count_text: textOf(node.video_info),
+      live_status: node.is_live ? "is_live" : "",
+      watched_percent: findWatchedPercent(node.thumbnail_overlays),
+    };
+  }
   if (node.type !== "LockupView" || node.content_type !== "VIDEO") {
     return null;
   }

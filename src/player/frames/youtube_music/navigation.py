@@ -60,6 +60,8 @@ class YouTubeResultsView:
     context: object = None
     # O item em que a lista abre, quando não é o primeiro (a linha de escrever do chat).
     focus_result_id: str = ""
+    # A playlist da conta que a lista mostra (Assistir mais tarde): dela dá para tirar itens.
+    playlist_id: str = ""
 
 
 def results_view_summary(view, *, with_hint=True):

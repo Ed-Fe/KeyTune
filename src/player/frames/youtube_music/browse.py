@@ -3,22 +3,26 @@ import threading
 
 import wx
 
-from player.youtube_music import subscriptions, watch_history
+from player.youtube_music import account_lists, subscriptions, watch_history
 from player.youtube_music.folders import (
     FOLDER_CHART_COUNTRY,
     FOLDER_CHANNEL_POSTS,
     FOLDER_CHART_GROUP,
     FOLDER_CHARTS,
     FOLDER_HISTORY,
+    FOLDER_HOME_FEED,
     FOLDER_LIBRARY,
     FOLDER_LIKED,
+    FOLDER_LIKED_VIDEOS,
     FOLDER_MOOD_CATEGORY,
     FOLDER_MOOD_SECTION,
     FOLDER_MOODS,
     FOLDER_NOTIFICATIONS,
+    FOLDER_SHORTS,
     FOLDER_SUBSCRIBED_CHANNELS,
     FOLDER_SUBSCRIPTION_VIDEOS,
     FOLDER_WATCH_HISTORY,
+    FOLDER_WATCH_LATER,
     chart_country_items,
     chart_folder_items,
     mood_category_items,
@@ -52,6 +56,20 @@ class BrowseMixin:
             return YouTubeResultsView(title=folder.title, fetch_page=whole_list(service.get_history))
         if kind == FOLDER_WATCH_HISTORY:
             return YouTubeResultsView(title=folder.title, fetch_page=watch_history.watch_history_page)
+        if kind == FOLDER_HOME_FEED:
+            return YouTubeResultsView(title=folder.title, fetch_page=account_lists.home_feed_page)
+        if kind == FOLDER_WATCH_LATER:
+            return YouTubeResultsView(
+                title=folder.title,
+                fetch_page=account_lists.playlist_page(account_lists.WATCH_LATER_PLAYLIST_ID),
+                playlist_id=account_lists.WATCH_LATER_PLAYLIST_ID,
+            )
+        if kind == FOLDER_LIKED_VIDEOS:
+            return YouTubeResultsView(
+                title=folder.title, fetch_page=account_lists.playlist_page(account_lists.LIKED_VIDEOS_PLAYLIST_ID)
+            )
+        if kind == FOLDER_SHORTS:
+            return YouTubeResultsView(title=folder.title, fetch_page=account_lists.shorts_page)
         if kind == FOLDER_SUBSCRIPTION_VIDEOS:
             return YouTubeResultsView(title=folder.title, fetch_page=subscriptions.subscription_videos_page)
         if kind == FOLDER_SUBSCRIBED_CHANNELS:
