@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import re
 
 from .dependencies import ensure_yt_dlp_executable_available
@@ -282,6 +283,30 @@ def _normalize_music_track_result(item, *, result_type):
         owner_browse_id=str(first_artist.get("id") or "").strip(),
         owner_title=str(first_artist.get("name") or "").strip(),
     )
+
+
+def normalize_music_home_item(item):
+    """Um item de uma fileira do início do YouTube Music: faixa, playlist, álbum ou artista."""
+    if not isinstance(item, dict):
+        return None
+
+    if str(item.get("videoId") or "").strip():
+        video_type = str(item.get("videoType") or "")
+        kind = "song" if not video_type or video_type.endswith("ATV") else "video"
+        return _normalize_music_track_result(item, result_type=kind)
+
+    browse_id = str(item.get("browseId") or "").strip()
+    if browse_id.startswith("UC") and not _playlist_id_from_result(item):
+        return normalize_music_artist_result(item)
+    if browse_id.startswith("MPRE") or str(item.get("audioPlaylistId") or "").strip():
+        return normalize_music_album_result(item)
+
+    playlist = _normalize_music_playlist_result(item)
+    if playlist is not None and not playlist.detail_text:
+        description = str(item.get("description") or "").strip()
+        if description:
+            playlist = dataclasses.replace(playlist, detail_text=description)
+    return playlist
 
 
 def _normalize_music_playlist_result(item):

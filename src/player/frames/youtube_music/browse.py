@@ -15,6 +15,8 @@ from player.youtube_music.folders import (
     FOLDER_LIKED,
     FOLDER_LIKED_VIDEOS,
     FOLDER_MOOD_CATEGORY,
+    FOLDER_MUSIC_HOME,
+    FOLDER_MUSIC_HOME_ROW,
     FOLDER_MOOD_SECTION,
     FOLDER_MOODS,
     FOLDER_NOTIFICATIONS,
@@ -27,6 +29,7 @@ from player.youtube_music.folders import (
     chart_folder_items,
     mood_category_items,
     mood_folder_items,
+    music_home_row_items,
 )
 from player.youtube_music.models import YOUTUBE_CHART_DEFAULT_COUNTRY_CODE, YouTubeResultPage
 
@@ -58,6 +61,13 @@ class BrowseMixin:
             return YouTubeResultsView(title=folder.title, fetch_page=watch_history.watch_history_page)
         if kind == FOLDER_HOME_FEED:
             return YouTubeResultsView(title=folder.title, fetch_page=account_lists.home_feed_page)
+        if kind == FOLDER_MUSIC_HOME:
+            return YouTubeResultsView(
+                title=folder.title,
+                fetch_page=whole_list(lambda: music_home_row_items(service.get_home_sections())),
+            )
+        if kind == FOLDER_MUSIC_HOME_ROW:
+            return YouTubeResultsView(title=folder.title, results=list(payload or ()))
         if kind == FOLDER_WATCH_LATER:
             return YouTubeResultsView(
                 title=folder.title,

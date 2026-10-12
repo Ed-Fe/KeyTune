@@ -750,6 +750,7 @@ class HomeListTests(unittest.TestCase):
             [item.title for item in frame._youtube_music_search_results()],
             [
                 "Recomendados do YouTube",
+                "Para você no YouTube Music",
                 "Suas playlists e mixes",
                 "Curtidas",
                 "Histórico do YouTube Music",

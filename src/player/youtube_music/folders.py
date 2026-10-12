@@ -17,6 +17,8 @@ FOLDER_HISTORY = "history"
 FOLDER_WATCH_HISTORY = "watch_history"
 FOLDER_SUBSCRIPTION_VIDEOS = "subscription_videos"
 FOLDER_HOME_FEED = "home_feed"
+FOLDER_MUSIC_HOME = "music_home"
+FOLDER_MUSIC_HOME_ROW = "music_home_row"
 FOLDER_WATCH_LATER = "watch_later"
 FOLDER_LIKED_VIDEOS = "liked_videos"
 FOLDER_SHORTS = "shorts"
@@ -133,6 +135,7 @@ def channel_action_items(channel):
 def home_folder_items():
     return [
         YouTubeFolderItem(FOLDER_HOME_FEED, _("Recomendados do YouTube"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_MUSIC_HOME, _("Para você no YouTube Music")),
         YouTubeFolderItem(FOLDER_LIBRARY, _("Suas playlists e mixes"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIKED, _("Curtidas"), requires_auth=True),
         YouTubeFolderItem(FOLDER_HISTORY, _("Histórico do YouTube Music"), requires_auth=True),
@@ -145,6 +148,13 @@ def home_folder_items():
         YouTubeFolderItem(FOLDER_NOTIFICATIONS, _("Notificações"), requires_auth=True),
         YouTubeFolderItem(FOLDER_CHARTS, _("Em alta")),
         YouTubeFolderItem(FOLDER_MOODS, _("Moods e gêneros")),
+    ]
+
+
+def music_home_row_items(sections):
+    """As fileiras do início do YouTube Music como pastas; cada uma abre as faixas e playlists dela."""
+    return [
+        YouTubeFolderItem(FOLDER_MUSIC_HOME_ROW, title, payload=tuple(results)) for title, results in sections
     ]
 
 

@@ -22,7 +22,7 @@ from .playlists import (
     playlist_track_count_text,
     track_display_label,
 )
-from .search import normalize_music_search_results, search_youtube_videos
+from .search import normalize_music_home_item, normalize_music_search_results, search_youtube_videos
 from ..log import get_logger
 from ..i18n import _
 
@@ -330,6 +330,39 @@ class YouTubeMusicLibraryManager:
 
         mixes.sort(key=lambda playlist: playlist.title.casefold())
         return mixes
+
+    def get_home_sections(self, *, limit=None, require_auth=False):
+        """As fileiras do início do YouTube Music: ``[(título, [resultados])]``.
+
+        Com a conta, vêm personalizadas ("Ouvir de novo", "Escolhas rápidas"); sem ela,
+        o que o YouTube Music mostra a qualquer visitante.
+        """
+        client = self._get_client(require_auth=require_auth)
+        try:
+            home_limit = max(1, int(limit)) if limit is not None else self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
+        except (TypeError, ValueError):
+            home_limit = self._HOME_ROWS_PLAYLIST_DISCOVERY_LIMIT
+        rows = client.get_home(limit=home_limit)
+
+        sections = []
+        for row in rows or []:
+            if not isinstance(row, dict):
+                continue
+            title = str(row.get("title") or "").strip()
+            results = []
+            seen = set()
+            for item in row.get("contents") or []:
+                result = normalize_music_home_item(item)
+                if result is None:
+                    continue
+                key = result.video_id or result.playlist_id or result.browse_id
+                if key in seen:
+                    continue
+                seen.add(key)
+                results.append(result)
+            if title and results:
+                sections.append((title, results))
+        return sections
 
     def get_library_playlists(self):
         """Return user library playlists merged with personalized mixes."""

@@ -662,6 +662,17 @@ class YouTubeMusicService:
     def get_personalized_mixes(self, *, limit=None):
         return self._library.get_personalized_mixes(limit=limit)
 
+    def get_home_sections(self, *, limit=None):
+        """As fileiras do início do YouTube Music: ``[(título, [resultados])]``."""
+        has_saved_auth = self.has_saved_browser_auth()
+        try:
+            return self._library.get_home_sections(limit=limit, require_auth=has_saved_auth)
+        except Exception:
+            if not has_saved_auth:
+                raise
+            _logger.warning("Authenticated YouTube Music home failed; retrying with the public client.")
+            return self._library.get_home_sections(limit=limit, require_auth=False)
+
     def get_library_playlists(self):
         return self._library.get_library_playlists()
 
