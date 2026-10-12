@@ -7663,3 +7663,108 @@ msgstr "{item}: activado"
 
 msgid "{item}: desligado"
 msgstr "{item}: desactivado"
+
+msgid "A legenda deste vídeo veio vazia."
+msgstr "El subtítulo de este video llegó vacío."
+
+msgid "A mídia atual não é do YouTube: não há capítulos para mostrar."
+msgstr "El medio actual no es de YouTube: no hay capítulos que mostrar."
+
+msgid "A mídia atual não é do YouTube: não há transcrição para mostrar."
+msgstr "El medio actual no es de YouTube: no hay transcripción que mostrar."
+
+msgid "Assistir mais tarde"
+msgstr "Ver más tarde"
+
+msgid "Capítulos"
+msgstr "Capítulos"
+
+msgid "Capítulos de {title}"
+msgstr "Capítulos de {title}"
+
+msgid "Carregando a transcrição."
+msgstr "Cargando la transcripción."
+
+msgid "Este item não tem capítulos para mostrar."
+msgstr "Este elemento no tiene capítulos que mostrar."
+
+msgid "Este item não tem transcrição para mostrar."
+msgstr "Este elemento no tiene transcripción que mostrar."
+
+msgid "Este vídeo não tem capítulos."
+msgstr "Este video no tiene capítulos."
+
+msgid "Este vídeo não tem legenda no seu idioma, nem no idioma original, para transcrever."
+msgstr "Este video no tiene subtítulos en tu idioma, ni en el idioma original, para transcribir."
+
+msgid "Não foi possível baixar a legenda do vídeo."
+msgstr "No se pudo descargar el subtítulo del video."
+
+msgid "Não foi possível carregar a transcrição agora."
+msgstr "No se pudo cargar la transcripción ahora."
+
+msgid "Não foi possível carregar os capítulos agora."
+msgstr "No se pudieron cargar los capítulos ahora."
+
+msgid "Não foi possível salvar em Assistir mais tarde."
+msgstr "No se pudo guardar en Ver más tarde."
+
+msgid "Não foi possível tirar de Assistir mais tarde."
+msgstr "No se pudo quitar de Ver más tarde."
+
+msgid "O yt-dlp não conseguiu consultar as legendas do vídeo."
+msgstr "yt-dlp no pudo consultar los subtítulos del video."
+
+msgid "Para você no YouTube Music"
+msgstr "Para ti en YouTube Music"
+
+msgid "Recomendados do YouTube"
+msgstr "Recomendados de YouTube"
+
+msgid "Salvar em Assistir mais tarde"
+msgstr "Guardar en Ver más tarde"
+
+msgid "Tirar de Assistir mais tarde"
+msgstr "Quitar de Ver más tarde"
+
+msgid "Transcrição"
+msgstr "Transcripción"
+
+msgid "Transcrição ({origin}, {language})."
+msgstr "Transcripción ({origin}, {language})."
+
+msgid "Transcrição de {title}"
+msgstr "Transcripción de {title}"
+
+msgid "Ver &transcrição da mídia atual"
+msgstr "Ver &transcripción del medio actual"
+
+msgid "Ver ca&pítulos da mídia atual"
+msgstr "Ver ca&pítulos del medio actual"
+
+msgid "Ver capítulos"
+msgstr "Ver capítulos"
+
+msgid "Ver capítulos da mídia atual"
+msgstr "Ver capítulos del medio actual"
+
+msgid "Ver transcrição"
+msgstr "Ver transcripción"
+
+msgid "Ver transcrição da mídia atual"
+msgstr "Ver transcripción del medio actual"
+
+msgid "Vídeos curtidos do YouTube"
+msgstr "Videos que te gustan de YouTube"
+
+msgid "legenda automática"
+msgstr "subtítulos automáticos"
+
+msgid "legenda do autor"
+msgstr "subtítulos del autor"
+
+msgid "{title} salvo em Assistir mais tarde."
+msgstr "{title} guardado en Ver más tarde."
+
+msgid "{title} tirado de Assistir mais tarde."
+msgstr "{title} quitado de Ver más tarde."

@@ -395,7 +395,12 @@ La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las 
 - **Tus playlists y mixes**: las de la cuenta conectada. `Enter` abre la playlist en una pestaña propia, desde donde se puede editar en la cuenta; `Flecha derecha` muestra las pistas en la propia lista. Requiere cuenta conectada.
 - **Me gusta**: las pistas con «me gusta» (la playlist *Me gusta* de tu cuenta). Requiere cuenta conectada.
 - **Historial de YouTube Music**: tu historial de reproducción de YouTube Music. Requiere cuenta conectada.
-- **Historial de YouTube**: los vídeos que viste en YouTube, del más reciente al más antiguo. Requiere cuenta conectada y YouTube.js activado.
+- **Historial de YouTube**: los vídeos que viste en YouTube, del más reciente al más antiguo. Requiere cuenta conectada y YouTube.js activado. Al pulsar `Enter` en un vídeo que dejaste a medias, KeyTune empieza donde la cuenta lo dejó.
+- **Recomendados de YouTube**: lo que YouTube te sugiere en el inicio, como en el sitio. Requiere cuenta conectada y YouTube.js activado.
+- **Para ti en YouTube Music**: las filas del inicio de YouTube Music (*Selecciones rápidas*, mixes, novedades...). Cada fila se abre como una carpeta. Con la cuenta conectada, son personalizadas.
+- **Ver más tarde**: la lista *Ver más tarde* de la cuenta. En el menú **Acciones...** de un vídeo, **Guardar en Ver más tarde** lo añade a ella, y **Quitar de Ver más tarde** lo elimina cuando estás en esta lista. Requiere cuenta conectada y YouTube.js activado.
+- **Vídeos que te gustan de YouTube**: los vídeos que marcaste con «Me gusta» en YouTube. Requiere cuenta conectada y YouTube.js activado.
+- **Shorts**: la secuencia de Shorts que YouTube sugiere a la cuenta. Requiere cuenta conectada y YouTube.js activado.
 - **Videos de las suscripciones**: los vídeos nuevos de los canales a los que estás suscrito, con duración, visualizaciones y fecha. Requiere cuenta conectada y YouTube.js activado.
 - **Canales suscritos**: los canales a los que estás suscrito. Cada uno se abre como cualquier canal, para elegir entre vídeos, Shorts, transmisiones en vivo, playlists y publicaciones. Requiere cuenta conectada y YouTube.js activado. Para suscribirte, cancelar o cambiar lo que avisa un canal, consulta [Suscripción y notificaciones de un canal](#suscripcion-y-notificaciones-de-un-canal).
 - **Notificaciones**: la bandeja de notificaciones de tu cuenta de YouTube. Requiere cuenta conectada y YouTube.js activado. Consulta [Notificaciones de YouTube](#notificaciones-de-youtube).
@@ -480,6 +485,14 @@ Dentro de un canal de YouTube, **Publicaciones** muestra lo que el canal public�
 
 Con la cuenta conectada, una publicación con encuesta trae **Votar en la encuesta...**, en el menú **Acciones...** y en el cuadro de lectura de la publicación: elige la opción y confirma. Votar por otra opción cambia el voto. Las imágenes de las publicaciones no se muestran.
 
+### Capítulos y transcripción
+
+En el menú **Acciones...** de un vídeo de YouTube, **Ver capítulos** abre sus capítulos en la propia lista; `Enter` en un capítulo reproduce el vídeo desde ese punto. **Ver transcripción** abre los subtítulos del vídeo como texto, con el tiempo de cada frase, en un cuadro de lectura. KeyTune usa los subtítulos del autor en tu idioma y, sin ellos, los generados en el idioma original del vídeo.
+
+Para el vídeo que se está reproduciendo, usa **Reproducción > Ver capítulos del medio actual** y **Ver transcripción del medio actual**. No tienen atajo de fábrica; para darles uno, usa **Configuración > Personalizar teclado**.
+
+Los vídeos largos de YouTube también vuelven desde donde los dejaste, como los pódcast: la posición se guarda entre sesiones, y **Continuar escuchando** los lista.
+
 ### Chat en vivo
 
 En una transmisión que está en el aire, **Ver el chat en vivo**, en el menú **Acciones...**, abre el chat en la propia lista. Para la transmisión que está sonando, usa **Reproducción > Ver chat en vivo del contenido actual**. Requiere YouTube.js activado.
@@ -509,7 +522,7 @@ Pega el enlace de una transmisión en vivo de YouTube en el campo **Buscar o peg
 
 ### Radio a partir de la pista actual
 
-Con una canción de YouTube Music sonando, pulsa `Ctrl+R` (o usa **Reproducción > Iniciar radio desde esta pista**). KeyTune abre una pestaña nueva, mantiene la posición de la reproducción y pone la pista actual como elemento 1, sin continuar la cola de la radio anterior.
+Con una canción de YouTube Music sonando, pulsa `Ctrl+R` (o usa **Reproducción > Iniciar radio desde esta pista**). KeyTune abre una pestaña nueva, mantiene la posición de la reproducción y pone la pista actual como elemento 1, sin continuar la cola de la radio anterior. En un vídeo de YouTube normal, la radio y la reproducción de relacionados usan los vídeos que el propio YouTube sugiere después de él.
 
 KeyTune evita repetir pistas de la playlist de origen y de las últimas radios que abriste. Como quien elige los candidatos es YouTube Music, no hay garantía de canciones distintas; si no hay novedades, la pestaña nueva se queda solo con la pista inicial.
 

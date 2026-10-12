@@ -395,7 +395,12 @@ A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#c
 - **Suas playlists e mixes**: as da conta conectada. `Enter` abre a playlist numa aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista. Exige conta conectada.
 - **Curtidas**: as faixas curtidas (a playlist *Curtidas* da sua conta). Exige conta conectada.
 - **Histórico do YouTube Music**: seu histórico de reprodução do YouTube Music. Exige conta conectada.
-- **Histórico do YouTube**: os vídeos que você assistiu no YouTube, do mais recente para o mais antigo. Exige conta conectada e o YouTube.js ativado.
+- **Histórico do YouTube**: os vídeos que você assistiu no YouTube, do mais recente para o mais antigo. Exige conta conectada e o YouTube.js ativado. Ao tocar com `Enter` um vídeo que você parou no meio, o KeyTune começa de onde a conta parou.
+- **Recomendados do YouTube**: o que o YouTube sugere para você no início, como no site. Exige conta conectada e o YouTube.js ativado.
+- **Para você no YouTube Music**: as fileiras do início do YouTube Music (*Escolhas rápidas*, mixes, lançamentos...). Cada fileira abre como uma pasta. Com a conta conectada, são personalizadas.
+- **Assistir mais tarde**: a playlist *Assistir mais tarde* da conta. No menu **Ações...** de um vídeo, **Salvar em Assistir mais tarde** põe o vídeo nela, e **Tirar de Assistir mais tarde** o remove quando você está nesta lista. Exige conta conectada e o YouTube.js ativado.
+- **Vídeos curtidos do YouTube**: os vídeos que você curtiu no YouTube. Exige conta conectada e o YouTube.js ativado.
+- **Shorts**: a sequência de Shorts que o YouTube sugere para a conta. Exige conta conectada e o YouTube.js ativado.
 - **Vídeos das inscrições**: os vídeos novos dos canais em que você está inscrito, com duração, visualizações e data. Exige conta conectada e o YouTube.js ativado.
 - **Canais inscritos**: os canais em que você está inscrito. Cada um abre como qualquer canal, para você escolher entre vídeos, Shorts, transmissões ao vivo, playlists e posts. Exige conta conectada e o YouTube.js ativado. Para se inscrever, cancelar ou mudar o que um canal avisa, veja [Inscrição e notificações de um canal](#inscricao-e-notificacoes-de-um-canal).
 - **Notificações**: a caixa de notificações da sua conta do YouTube. Exige conta conectada e o YouTube.js ativado. Veja [Notificações do YouTube](#notificacoes-do-youtube).
@@ -480,6 +485,14 @@ Dentro de um canal do YouTube, **Posts** lista o que o canal publicou na aba de 
 
 Com a conta conectada, um post com enquete traz **Votar na enquete...**, no menu **Ações...** e na caixa de leitura do post: escolha a opção e confirme. Votar em outra opção troca o voto. As imagens dos posts não são mostradas.
 
+### Capítulos e transcrição
+
+No menu **Ações...** de um vídeo do YouTube, **Ver capítulos** abre a lista de capítulos dele, na própria lista; `Enter` num capítulo toca o vídeo a partir daquele ponto. **Ver transcrição** abre a legenda do vídeo como texto, com o tempo de cada fala, numa caixa de leitura. O KeyTune usa a legenda do autor no seu idioma e, sem ela, a gerada no idioma original do vídeo.
+
+Para o vídeo que está tocando, use **Reprodução > Ver capítulos da mídia atual** e **Ver transcrição da mídia atual**. Eles não têm atalho de fábrica; para dar um a eles, use **Configurações > Personalizar teclado**.
+
+Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista.
+
 ### Chat ao vivo
 
 Numa transmissão que está no ar, **Ver o chat ao vivo**, no menu **Ações...**, abre o chat na própria lista. Para a transmissão que está tocando, use **Reprodução > Ver chat ao vivo da mídia atual**. Exige o YouTube.js ativado.
@@ -509,7 +522,7 @@ Cole o link de uma transmissão ao vivo do YouTube no campo **Buscar ou colar li
 
 ### Rádio a partir da faixa atual
 
-Com uma música do YouTube Music tocando, pressione `Ctrl+R` (ou use **Reprodução > Iniciar rádio desta faixa**). O KeyTune abre uma aba nova, mantém a posição da reprodução e põe a faixa atual como item 1, sem continuar a fila da rádio anterior.
+Com uma música do YouTube Music tocando, pressione `Ctrl+R` (ou use **Reprodução > Iniciar rádio desta faixa**). O KeyTune abre uma aba nova, mantém a posição da reprodução e põe a faixa atual como item 1, sem continuar a fila da rádio anterior. Num vídeo do YouTube comum, a rádio e a reprodução de relacionados usam os vídeos que o próprio YouTube sugere depois dele.
 
 O KeyTune evita repetir faixas da playlist de origem e das últimas rádios que você abriu. Como quem escolhe os candidatos é o YouTube Music, não há garantia de músicas diferentes; se não houver novidades, a aba nova fica só com a faixa inicial.
 

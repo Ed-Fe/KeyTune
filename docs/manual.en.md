@@ -395,7 +395,12 @@ The list works like the folder explorer (see [How lists work](#how-lists-work)) 
 - **Your playlists and mixes**: those of the connected account. `Enter` opens the playlist in its own tab, where you can edit it in the account; `Right arrow` shows the tracks in the list itself. Requires a connected account.
 - **Liked songs**: the tracks you liked (the *Liked Music* playlist of your account). Requires a connected account.
 - **YouTube Music history**: your YouTube Music playback history. Requires a connected account.
-- **YouTube history**: the videos you watched on YouTube, newest first. Requires a connected account and YouTube.js turned on.
+- **YouTube history**: the videos you watched on YouTube, newest first. Requires a connected account and YouTube.js turned on. When you press `Enter` on a video you stopped halfway, KeyTune starts where the account left off.
+- **Recommended on YouTube**: what YouTube suggests for you on its home page. Requires a connected account and YouTube.js turned on.
+- **For you on YouTube Music**: the rows of the YouTube Music home (*Quick picks*, mixes, new releases...). Each row opens as a folder. With a connected account they are personalized.
+- **Watch later**: your account's *Watch later* playlist. In a video's **Actions...** menu, **Save to Watch later** adds the video to it, and **Remove from Watch later** removes it while you are in this list. Requires a connected account and YouTube.js turned on.
+- **Liked YouTube videos**: the videos you liked on YouTube. Requires a connected account and YouTube.js turned on.
+- **Shorts**: the sequence of Shorts YouTube suggests to the account. Requires a connected account and YouTube.js turned on.
 - **Videos from subscriptions**: the new videos from the channels you are subscribed to, with duration, views and date. Requires a connected account and YouTube.js turned on.
 - **Subscribed channels**: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts, playlists and posts. Requires a connected account and YouTube.js turned on. To subscribe, unsubscribe or change what a channel notifies you of, see [A channel's subscription and notifications](#a-channels-subscription-and-notifications).
 - **Notifications**: your YouTube account's notification inbox. Requires a connected account and YouTube.js turned on. See [YouTube notifications](#youtube-notifications).
@@ -480,6 +485,14 @@ Inside a YouTube channel, **Posts** lists what the channel published in its post
 
 With the account connected, a post with a poll has **Vote in the poll...**, in the **Actions...** menu and in the post's reading box: choose the option and confirm. Voting for another option changes your vote. Post images are not shown.
 
+### Chapters and transcript
+
+In the **Actions...** menu of a YouTube video, **View chapters** opens its chapters in the list itself; `Enter` on a chapter plays the video from that point. **View transcript** opens the video's subtitles as text, with the time of each line, in a reading box. KeyTune uses the author's subtitles in your language and, without them, the ones generated in the video's original language.
+
+For the video that is playing, use **Playback > View chapters of the current media** and **View transcript of the current media**. They have no default shortcut; to give them one, use **Settings > Customize keyboard**.
+
+Long YouTube videos also come back from where you stopped, like podcasts: the position is kept between sessions, and **Continue listening** lists them.
+
 ### Live chat
 
 On a broadcast that is on air, **View the live chat**, in the **Actions...** menu, opens the chat in the list itself. For the broadcast that is playing, use **Playback > View live chat of the current media**. Requires YouTube.js turned on.
@@ -509,7 +522,7 @@ Paste the link of a YouTube live broadcast into the **Search or paste a link** f
 
 ### Radio from the current track
 
-With a YouTube Music song playing, press `Ctrl+R` (or use **Playback > Start radio from this track**). KeyTune opens a new tab, keeps the playback position and puts the current track as item 1, without continuing the previous radio's queue.
+With a YouTube Music song playing, press `Ctrl+R` (or use **Playback > Start radio from this track**). KeyTune opens a new tab, keeps the playback position and puts the current track as item 1, without continuing the previous radio's queue. On a regular YouTube video, radio and related autoplay use the videos YouTube itself suggests after it.
 
 KeyTune avoids repeating tracks from the source playlist and from the last radios you opened. Since YouTube Music is the one that picks the candidates, there is no guarantee of different songs; if there is nothing new, the new tab stays with just the first track.
 

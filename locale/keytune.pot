@@ -714,6 +714,10 @@ msgstr ""
 msgid "A janela sai da barra de tarefas e fica um ícone perto do relógio."
 msgstr ""
 
+#: src/player/youtube_music/transcript.py
+msgid "A legenda deste vídeo veio vazia."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "A lista de unidades não pode ser classificada."
 msgstr ""
@@ -754,6 +758,10 @@ msgstr ""
 msgid "A mídia atual não veio do YouTube Music ou do YouTube."
 msgstr ""
 
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "A mídia atual não é do YouTube: não há capítulos para mostrar."
+msgstr ""
+
 #: src/player/frames/youtube_music/live_chat.py
 msgid "A mídia atual não é do YouTube: não há chat ao vivo."
 msgstr ""
@@ -768,6 +776,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
 msgid "A mídia atual não é do YouTube: não há faixas de áudio para escolher."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "A mídia atual não é do YouTube: não há transcrição para mostrar."
 msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
@@ -1043,6 +1055,7 @@ msgid "Abrindo o site de {name} no navegador."
 msgstr ""
 
 #: src/player/frames/radio/navigation.py
+#: src/player/frames/youtube_music/chapters_transcript.py
 #: src/player/frames/youtube_music/comments.py
 #: src/player/frames/youtube_music/live_chat.py
 #: src/player/frames/youtube_music/navigation.py
@@ -1610,6 +1623,10 @@ msgstr ""
 
 #: src/player/frames/radio/actions.py
 msgid "As rádios selecionadas já estavam em {title}."
+msgstr ""
+
+#: src/player/youtube_music/folders.py
+msgid "Assistir mais tarde"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -2379,12 +2396,24 @@ msgstr ""
 msgid "Cancelar seleção de dispositivo de áudio"
 msgstr ""
 
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Capítulos"
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Capítulos de {title}"
+msgstr ""
+
 #: src/player/diagnostics/checks.py
 msgid "Carregada de {path}."
 msgstr ""
 
 #: src/player/frames/youtube_music/navigation.py
 msgid "Carregando a lista inteira."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Carregando a transcrição."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -2749,6 +2778,7 @@ msgid "Conteúdo da área de transferência não suportado."
 msgstr ""
 
 #: src/player/youtube_music/library_manager.py
+#: src/player/youtube_music/related.py
 #: src/player/youtube_music/service.py
 msgid "Conteúdo relacionado"
 msgstr ""
@@ -3176,6 +3206,7 @@ msgstr ""
 #: src/player/frames/youtube_music/auth.py
 #: src/player/frames/youtube_music/browse.py
 #: src/player/frames/youtube_music/channel_actions.py
+#: src/player/frames/youtube_music/chapters_transcript.py
 #: src/player/frames/youtube_music/comment_actions.py
 #: src/player/frames/youtube_music/dependencies.py
 #: src/player/frames/youtube_music/details.py
@@ -3185,6 +3216,7 @@ msgstr ""
 #: src/player/frames/youtube_music/notifications.py
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/frames/youtube_music/search.py
+#: src/player/frames/youtube_music/watch_later.py
 #: src/player/youtube_music/youtubejs_worker.py
 msgid "Detalhes: {detail}"
 msgstr ""
@@ -3809,6 +3841,10 @@ msgstr ""
 msgid "Este item já está na fila de reprodução."
 msgstr ""
 
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Este item não tem capítulos para mostrar."
+msgstr ""
+
 #: src/player/frames/youtube_music/live_chat.py
 msgid "Este item não tem chat ao vivo."
 msgstr ""
@@ -3825,6 +3861,10 @@ msgstr ""
 msgid "Este item não tem detalhes para mostrar."
 msgstr ""
 
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Este item não tem transcrição para mostrar."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Este plugin será executado dentro do processo do KeyTune e terá o mesmo acesso do aplicativo ao computador. Ative somente código de um autor em quem você confia plenamente."
 msgstr ""
@@ -3835,6 +3875,14 @@ msgstr ""
 
 #: src/player/frames/convert.py
 msgid "Este tipo de arquivo não pode ser convertido."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Este vídeo não tem capítulos."
+msgstr ""
+
+#: src/player/youtube_music/transcript.py
+msgid "Este vídeo não tem legenda no seu idioma, nem no idioma original, para transcrever."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -5789,6 +5837,10 @@ msgstr ""
 msgid "Não foi possível baixar a atualização."
 msgstr ""
 
+#: src/player/youtube_music/transcript.py
+msgid "Não foi possível baixar a legenda do vídeo."
+msgstr ""
+
 #: src/player/frames/download.py
 msgid "Não foi possível baixar a mídia: {reason}"
 msgstr ""
@@ -5815,6 +5867,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Não foi possível carregar a playlist do YouTube Music."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Não foi possível carregar a transcrição agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -5847,6 +5903,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Não foi possível carregar o marketplace: {error}"
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Não foi possível carregar os capítulos agora."
 msgstr ""
 
 #: src/player/frames/youtube_music/comments.py
@@ -6095,8 +6155,16 @@ msgstr ""
 msgid "Não foi possível reproduzir a mídia: {detail}."
 msgstr ""
 
+#: src/player/frames/youtube_music/watch_later.py
+msgid "Não foi possível salvar em Assistir mais tarde."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível salvar o resultado no YouTube Music."
+msgstr ""
+
+#: src/player/frames/youtube_music/watch_later.py
+msgid "Não foi possível tirar de Assistir mais tarde."
 msgstr ""
 
 #: src/player/frames/playback/audio_output.py
@@ -6692,6 +6760,7 @@ msgid "O vulkan-1.dll em uso é antigo. Reinstale o KeyTune, que leva o próprio
 msgstr ""
 
 #: src/player/youtube_music/playlists.py
+#: src/player/youtube_music/related.py
 msgid "O vídeo do YouTube não tem videoId válido."
 msgstr ""
 
@@ -6718,6 +6787,10 @@ msgstr ""
 #: src/player/download/runner.py
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O yt-dlp não conseguiu baixar a mídia."
+msgstr ""
+
+#: src/player/youtube_music/transcript.py
+msgid "O yt-dlp não conseguiu consultar as legendas do vídeo."
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -7009,6 +7082,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "Para reproduzir do YouTube Music, o yt-dlp precisa de um runtime JavaScript instalado no sistema ou nos recursos adicionais do KeyTune. Recomendamos o Node.js 24+, que também é utilizado pelo YouTube.js. Sem um runtime compatível, o yt-dlp não consegue resolver as assinaturas de áudio/vídeo do YouTube e nenhum cliente retorna formatos reproduzíveis. Ative ou atualize os recursos adicionais e tente novamente."
+msgstr ""
+
+#: src/player/youtube_music/folders.py
+msgid "Para você no YouTube Music"
 msgstr ""
 
 #: src/player/frames/download.py
@@ -7731,6 +7808,10 @@ msgstr ""
 msgid "Receber todas as notificações"
 msgstr ""
 
+#: src/player/youtube_music/folders.py
+msgid "Recomendados do YouTube"
+msgstr ""
+
 #: src/player/frames/playback/live.py
 msgid "Reconectando à transmissão ao vivo..."
 msgstr ""
@@ -8200,6 +8281,10 @@ msgstr ""
 msgid "Salvar em"
 msgstr ""
 
+#: src/player/frames/youtube_music/watch_later.py
+msgid "Salvar em Assistir mais tarde"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Salvar faixa na biblioteca"
 msgstr ""
@@ -8435,6 +8520,7 @@ msgstr ""
 msgid "Seta esquerda"
 msgstr ""
 
+#: src/player/youtube_music/folders.py
 #: src/player/youtube_music/models.py
 msgid "Shorts"
 msgstr ""
@@ -8705,6 +8791,10 @@ msgstr ""
 msgid "Tipos de atalho"
 msgstr ""
 
+#: src/player/frames/youtube_music/watch_later.py
+msgid "Tirar de Assistir mais tarde"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Toca numa janela pequena, sem carregar as playlists."
 msgstr ""
@@ -8784,6 +8874,18 @@ msgstr ""
 
 #: src/player/frames/playback/controls.py
 msgid "Tom: {pitch}."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Transcrição"
+msgstr ""
+
+#: src/player/youtube_music/transcript.py
+msgid "Transcrição ({origin}, {language})."
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Transcrição de {title}"
 msgstr ""
 
 #: src/player/youtube_music/details.py
@@ -9013,6 +9115,10 @@ msgstr ""
 msgid "Ver &permissões"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Ver &transcrição da mídia atual"
+msgstr ""
+
 #: src/player/frames/youtube_music/actions_menu.py
 msgid "Ver a conversa (Seta para a direita)"
 msgstr ""
@@ -9027,6 +9133,18 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Ver c&hat ao vivo da mídia atual"
+msgstr ""
+
+#: src/player/frames/ui.py
+msgid "Ver ca&pítulos da mídia atual"
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Ver capítulos"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ver capítulos da mídia atual"
 msgstr ""
 
 #: src/player/keyboard/shortcuts.py
@@ -9082,6 +9200,14 @@ msgstr ""
 
 #: src/player/frames/youtube_music/actions_menu.py
 msgid "Ver respostas (Seta para a direita)"
+msgstr ""
+
+#: src/player/frames/youtube_music/chapters_transcript.py
+msgid "Ver transcrição"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Ver transcrição da mídia atual"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -9300,6 +9426,10 @@ msgid "Vídeos"
 msgstr ""
 
 #: src/player/youtube_music/folders.py
+msgid "Vídeos curtidos do YouTube"
+msgstr ""
+
+#: src/player/youtube_music/folders.py
 msgid "Vídeos das inscrições"
 msgstr ""
 
@@ -9490,6 +9620,14 @@ msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "incluindo mídias remotas"
+msgstr ""
+
+#: src/player/youtube_music/transcript.py
+msgid "legenda automática"
+msgstr ""
+
+#: src/player/youtube_music/transcript.py
+msgid "legenda do autor"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -10199,6 +10337,14 @@ msgstr ""
 
 #: src/player/frames/radio/now_playing.py
 msgid "{station}: {title}"
+msgstr ""
+
+#: src/player/frames/youtube_music/watch_later.py
+msgid "{title} salvo em Assistir mais tarde."
+msgstr ""
+
+#: src/player/frames/youtube_music/watch_later.py
+msgid "{title} tirado de Assistir mais tarde."
 msgstr ""
 
 #: src/player/library/browser.py
