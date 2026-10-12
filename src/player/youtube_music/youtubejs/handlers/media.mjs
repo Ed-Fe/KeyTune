@@ -80,3 +80,25 @@ export async function relatedVideos(request) {
   }
   return { entries };
 }
+
+// Os capítulos de um vídeo: os que o autor marcou na descrição ou, sem eles, os que o
+// YouTube gera sozinho.
+export async function chapters(request) {
+  const videoId = requireVideoId(request);
+  const innertube = await clientFor(request);
+  const info = await innertube.getInfo(videoId);
+  const bar =
+    info.page?.[0]?.player_overlays?.item?.decorated_player_bar?.player_bar ||
+    info.player_overlays?.decorated_player_bar?.player_bar;
+  const markers = [...(bar?.markers_map || [])];
+  const marker =
+    markers.find((item) => item.marker_key === "DESCRIPTION_CHAPTERS") ||
+    markers.find((item) => item.marker_key === "AUTO_CHAPTERS");
+  const list = (marker?.value?.chapters || [])
+    .map((chapter) => ({
+      title: textOf(chapter.title),
+      start_seconds: Math.floor((Number(chapter.time_range_start_millis) || 0) / 1000),
+    }))
+    .filter((chapter) => chapter.title);
+  return { chapters: list, automatic: marker?.marker_key === "AUTO_CHAPTERS" };
+}

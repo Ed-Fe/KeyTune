@@ -477,6 +477,8 @@ class FrameUIMixin:
         self.menu_show_media_comments_id = wx.NewIdRef()
         self.menu_show_media_details_id = wx.NewIdRef()
         self.menu_show_media_live_chat_id = wx.NewIdRef()
+        self.menu_show_media_chapters_id = wx.NewIdRef()
+        self.menu_show_media_transcript_id = wx.NewIdRef()
         self.menu_choose_audio_track_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
@@ -512,6 +514,8 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_show_media_comments_id, _("Ver &comentários da mídia atual\tCtrl+Shift+M"))
         playback_menu.Append(self.menu_show_media_details_id, _("Ver &detalhes da mídia atual\tCtrl+Shift+I"))
         playback_menu.Append(self.menu_show_media_live_chat_id, _("Ver c&hat ao vivo da mídia atual"))
+        playback_menu.Append(self.menu_show_media_chapters_id, _("Ver ca&pítulos da mídia atual"))
+        playback_menu.Append(self.menu_show_media_transcript_id, _("Ver &transcrição da mídia atual"))
         playback_menu.Append(self.menu_choose_audio_track_id, _("&Idioma do áudio da mídia atual..."))
         playback_menu.Append(self.menu_enqueue_item_id, _("Adicionar à &Fila de Reprodução\tCtrl+Shift+F"))
         playback_menu.Append(self.menu_manage_queue_id, _("&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"))
@@ -813,6 +817,8 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_show_media_comments, id=self.menu_show_media_comments_id)
         self.Bind(wx.EVT_MENU, self.on_show_media_details, id=self.menu_show_media_details_id)
         self.Bind(wx.EVT_MENU, self.on_show_media_live_chat, id=self.menu_show_media_live_chat_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_chapters, id=self.menu_show_media_chapters_id)
+        self.Bind(wx.EVT_MENU, self.on_show_media_transcript, id=self.menu_show_media_transcript_id)
         self.Bind(wx.EVT_MENU, self.on_choose_audio_track, id=self.menu_choose_audio_track_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
@@ -982,6 +988,12 @@ class FrameUIMixin:
 
     def on_show_media_live_chat(self, _event):
         self.show_current_media_live_chat()
+
+    def on_show_media_chapters(self, _event):
+        self.show_current_media_chapters()
+
+    def on_show_media_transcript(self, _event):
+        self.show_current_media_transcript()
 
     def on_choose_audio_track(self, _event):
         self.choose_current_media_audio_track()

@@ -30,6 +30,7 @@ __all__ = [
     "audio_tracks",
     "media_details",
     "related_videos",
+    "media_chapters",
     "home_feed_page",
     "account_playlist_page",
     "playlist_add_video",
@@ -259,6 +260,12 @@ def audio_tracks(media_url, *, names=True):
 def media_details(media_url):
     """Os detalhes de um vídeo ou música: descrição, canal, visualizações, curtidas e data."""
     return _request_action("details", media_url=str(media_url or "").strip())
+
+
+def media_chapters(media_url):
+    """Os capítulos de *media_url*: ``(lista de {title, start_seconds}, se o YouTube os gerou)``."""
+    response = _request_action("chapters", media_url=str(media_url or "").strip())
+    return list(response.get("chapters") or []), bool(response.get("automatic"))
 
 
 def related_videos(media_url, *, cookie_header="", account_index=0):

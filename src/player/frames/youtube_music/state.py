@@ -312,6 +312,8 @@ class LibraryStateMixin:
                 getattr(self, "menu_show_media_comments_id", None),
                 getattr(self, "menu_show_media_details_id", None),
                 getattr(self, "menu_show_media_live_chat_id", None),
+                getattr(self, "menu_show_media_chapters_id", None),
+                getattr(self, "menu_show_media_transcript_id", None),
                 getattr(self, "menu_choose_audio_track_id", None),
             ):
                 if item_id is None:

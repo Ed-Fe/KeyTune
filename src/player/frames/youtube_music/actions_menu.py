@@ -90,6 +90,7 @@ class ActionsMenuMixin:
         entries.extend(self._youtube_music_post_menu_entries(single))
         entries.extend(self._youtube_music_channel_menu_entries(single))
         entries.extend(self._youtube_music_watch_later_menu_entries(single))
+        entries.extend(self._youtube_music_chapters_menu_entries(single))
         entries.extend(self._youtube_notification_menu_entries(single))
         return entries
 

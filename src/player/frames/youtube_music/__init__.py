@@ -23,6 +23,7 @@ from .audio_tracks import AudioTrackMixin
 from .auth import AuthMixin
 from .browse import BrowseMixin
 from .channel_actions import ChannelActionsMixin
+from .chapters_transcript import ChaptersTranscriptMixin
 from .comment_actions import CommentActionsMixin
 from .comments import CommentsMixin
 from .dependencies import DependencyMixin
@@ -54,6 +55,7 @@ class FrameYouTubeMusicMixin(
     CommentActionsMixin,
     ChannelActionsMixin,
     WatchLaterMixin,
+    ChaptersTranscriptMixin,
     NotificationsMixin,
     LiveChatMixin,
     DetailsMixin,

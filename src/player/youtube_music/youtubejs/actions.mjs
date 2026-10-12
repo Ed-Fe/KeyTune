@@ -11,7 +11,7 @@ import { channelAbout, channelAction, channelSearch, channelState } from "./hand
 import { accountPlaylist, homeFeed, playlistAddVideo, playlistRemoveVideo, shorts } from "./handlers/discover.mjs";
 import { addToHistory, watchHistory } from "./handlers/history.mjs";
 import { liveChat, liveChatSend } from "./handlers/live_chat.mjs";
-import { audioTracks, details, relatedVideos } from "./handlers/media.mjs";
+import { audioTracks, chapters, details, relatedVideos } from "./handlers/media.mjs";
 import { notificationAction, notifications } from "./handlers/notifications.mjs";
 import { channelPosts, postVote } from "./handlers/posts.mjs";
 import { search } from "./handlers/search.mjs";
@@ -25,6 +25,7 @@ const handlers = {
   audio_tracks: audioTracks,
   details,
   related_videos: relatedVideos,
+  chapters,
   subscription_videos: subscriptionVideos,
   subscribed_channels: subscribedChannels,
   comments,
