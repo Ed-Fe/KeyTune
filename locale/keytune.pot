@@ -1737,6 +1737,10 @@ msgstr ""
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Ative o AutoDJ no menu Reprodução para iniciar uma sessão."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Atuali&zar biblioteca"
 msgstr ""

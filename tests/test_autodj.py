@@ -974,7 +974,7 @@ class AutoDJTests(unittest.TestCase):
 
         class Frame(FrameAutoDJMixin):
             def __init__(self):
-                self.settings = SimpleNamespace(autodj_profile="smooth", autodj_beats=16)
+                self.settings = SimpleNamespace(autodj_enabled=True, autodj_profile="smooth", autodj_beats=16)
                 self.state = PlaylistState(title="AutoDJ — Nova")
                 self.state.set_items(["a.mp3"])
                 self.state.autodj_session = True
@@ -1025,7 +1025,7 @@ class AutoDJTests(unittest.TestCase):
 
         class Frame(FrameAutoDJMixin):
             def __init__(self):
-                self.settings = SimpleNamespace(autodj_profile="smooth", autodj_beats=16)
+                self.settings = SimpleNamespace(autodj_enabled=True, autodj_profile="smooth", autodj_beats=16)
                 self.state = PlaylistState(title="AutoDJ")
                 self.state.set_items(["a.mp3"])
                 self.state.autodj_session = True
@@ -1134,7 +1134,7 @@ class AutoDJTests(unittest.TestCase):
 
         class Frame(FrameAutoDJMixin):
             def __init__(self):
-                self.settings = SimpleNamespace()
+                self.settings = SimpleNamespace(autodj_enabled=True)
                 self.playlists = [source]
                 self.active_index = 0
                 self.notebook = Notebook()
@@ -1256,6 +1256,35 @@ class AutoDJTests(unittest.TestCase):
         self.assertFalse(state.autodj_preparation_paused)
         self.assertEqual(frame.fill_count, 1)
 
+    def test_disabled_autodj_does_not_prepare_or_mix_even_in_a_saved_session(self):
+        state = PlaylistState(title="AutoDJ")
+        state.set_items(["A.mp3", "B.mp3"])
+        state.autodj_session = True
+        state.autodj_remaining_items = ["C.mp3", "D.mp3"]
+
+        class Frame(FrameAutoDJMixin):
+            settings = SimpleNamespace(autodj_enabled=False, crossfade_seconds=4)
+            playlists = [state]
+            _autodj_transition_requests = {
+                ("A.mp3", "B.mp3"): {"status": "ready", "plan": SimpleNamespace(beat_count=8)}
+            }
+            _autodj_session_requests = {}
+            _autodj_session_results = {}
+            _autodj_session_retry_at = {}
+            autodj_service = object()
+
+            def _get_active_playlist_state(self): return state
+            def _get_playlist_state(self, _index=None): return state
+            def _refresh_playlist_browser(self): pass
+            def _refresh_autodj_session_ui(self, _state=None): pass
+
+        frame = Frame()
+        self.assertIsNone(frame._autodj_transition_pair(state))
+        self.assertIsNone(frame._prepared_autodj_transition(state))
+        frame._maybe_fill_autodj_session(state)
+        self.assertEqual(frame._autodj_session_requests, {})
+        self.assertEqual(state.items, ["A.mp3", "B.mp3", "C.mp3", "D.mp3"])
+
     def test_autodj_transition_description_exposes_mix_decisions(self):
         state = PlaylistState(title="AutoDJ")
         state.set_items(["A.mp3", "B.mp3"])
@@ -1269,7 +1298,7 @@ class AutoDJTests(unittest.TestCase):
         )
 
         class Frame(FrameAutoDJMixin):
-            settings = SimpleNamespace(autodj_enabled=False)
+            settings = SimpleNamespace(autodj_enabled=True)
             _autodj_transition_requests = {
                 ("A.mp3", "B.mp3"): {
                     "status": "ready",
@@ -1297,7 +1326,7 @@ class AutoDJTests(unittest.TestCase):
         )
 
         class Frame(FrameAutoDJMixin):
-            settings = SimpleNamespace(autodj_enabled=False)
+            settings = SimpleNamespace(autodj_enabled=True)
             _autodj_transition_requests = {
                 ("A.mp3", "B.mp3"): {
                     "status": "ready",
@@ -1334,7 +1363,7 @@ class AutoDJTests(unittest.TestCase):
             def GetPage(self, _index): return page
 
         class Frame(FrameAutoDJMixin):
-            settings = SimpleNamespace(autodj_enabled=False)
+            settings = SimpleNamespace(autodj_enabled=True)
             notebook = Notebook()
             _autodj_session_requests = {}
             _autodj_transition_requests = {}
