@@ -84,7 +84,12 @@ class LibrosaAnalyzer:
             process.wait()
 
     def _analyze_with_worker(self, worker_command, path, *, cancel_event=None, deadline=None):
-        creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        # Prioridade baixa: a análise não deve competir com a reprodução.
+        creation_flags = (
+            subprocess.CREATE_NO_WINDOW | subprocess.BELOW_NORMAL_PRIORITY_CLASS
+            if os.name == "nt"
+            else 0
+        )
         with tempfile.TemporaryDirectory(
             prefix="keytune-autodj-result-", ignore_cleanup_errors=True
         ) as temporary:
