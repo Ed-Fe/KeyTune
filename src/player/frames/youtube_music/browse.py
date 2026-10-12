@@ -9,6 +9,8 @@ from player.youtube_music.folders import (
     FOLDER_CHANNEL_POSTS,
     FOLDER_CHART_GROUP,
     FOLDER_CHARTS,
+    FOLDER_GROUP_MUSIC,
+    FOLDER_GROUP_YOUTUBE,
     FOLDER_HISTORY,
     FOLDER_HOME_FEED,
     FOLDER_LIBRARY,
@@ -46,6 +48,8 @@ class BrowseMixin:
             # Estas listas chegam inteiras de uma vez: não há página seguinte.
             return lambda _start, _count: YouTubeResultPage(results=tuple(fetch()), has_more=False)
 
+        if kind in (FOLDER_GROUP_YOUTUBE, FOLDER_GROUP_MUSIC):
+            return YouTubeResultsView(title=folder.title, results=list(payload or ()))
         if kind == FOLDER_LIBRARY:
             return self._build_youtube_music_library_view()
         if kind == FOLDER_LIKED:

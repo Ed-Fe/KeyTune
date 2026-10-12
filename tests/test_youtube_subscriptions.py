@@ -17,7 +17,7 @@ from player.youtube_music import subscriptions
 from player.youtube_music.folders import (
     FOLDER_SUBSCRIBED_CHANNELS,
     FOLDER_SUBSCRIPTION_VIDEOS,
-    home_folder_items,
+    flat_folder_items,
 )
 
 
@@ -118,7 +118,7 @@ class SubscriptionsTests(unittest.TestCase):
             subscriptions.subscribed_channels_page(0, 20)
 
     def test_the_home_folders_load_page_by_page_and_ask_for_the_account(self):
-        folders = {folder.kind: folder for folder in home_folder_items()}
+        folders = {folder.kind: folder for folder in flat_folder_items()}
         frame = BrowseMixin()
         frame._get_youtube_music_service = Mock()
 

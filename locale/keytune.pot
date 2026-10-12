@@ -9467,7 +9467,12 @@ msgstr ""
 msgid "YT Music"
 msgstr ""
 
+#: src/player/youtube_music/folders.py
+msgid "YouTube"
+msgstr ""
+
 #: src/player/smart_library/history_dialog.py
+#: src/player/youtube_music/folders.py
 msgid "YouTube Music"
 msgstr ""
 

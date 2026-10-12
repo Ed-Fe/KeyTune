@@ -21,6 +21,7 @@
 
 ### Alterado
 
+- **Início do KeyTube em grupos**: o início ficou com quatro itens. **YouTube** e **YouTube Music** reúnem, cada um, o que é do seu serviço, e **Em alta** e **Moods e gêneros** continuam soltos.
 - **Retomar vídeos do histórico**: ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você parou no meio, o KeyTune começa de onde a conta parou e avisa a posição.
 - **Rádio e relacionados para vídeos do YouTube**: **Iniciar rádio desta faixa** (`Ctrl+R`) e o autoplay de relacionados, quando o vídeo é do YouTube comum, usam os vídeos que o próprio YouTube sugere depois dele, e não mais o rádio do YouTube Music, que só fazia sentido para músicas.
 - **Chat ao vivo com a linha de escrever no fim**: **Enviar uma mensagem...** agora é a última linha da lista, depois das mensagens mais novas, e a lista abre nela. Antes ficava no começo, e era preciso descer até o fim para ver as mensagens recentes.

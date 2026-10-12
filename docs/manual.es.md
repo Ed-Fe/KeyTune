@@ -390,7 +390,7 @@ La pestaña tiene dos partes. Arriba, la sección **Cuenta y biblioteca**; abajo
 
 ### La lista
 
-La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las listas](#como-funcionan-las-listas)) y empieza en **Inicio**, con nueve elementos:
+La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las listas](#como-funcionan-las-listas)) y empieza en **Inicio**, con cuatro elementos: las carpetas **YouTube** y **YouTube Music**, más **Tendencias** y **Estados de ánimo y géneros**. **YouTube** reúne Recomendados de YouTube, Ver más tarde, Vídeos que te gustan de YouTube, Historial de YouTube, Vídeos de las suscripciones, Canales suscritos, Shorts y Notificaciones. **YouTube Music** reúne Para ti en YouTube Music, Tus playlists y mixes, Me gusta e Historial de YouTube Music. Cada uno de ellos:
 
 - **Tus playlists y mixes**: las de la cuenta conectada. `Enter` abre la playlist en una pestaña propia, desde donde se puede editar en la cuenta; `Flecha derecha` muestra las pistas en la propia lista. Requiere cuenta conectada.
 - **Me gusta**: las pistas con «me gusta» (la playlist *Me gusta* de tu cuenta). Requiere cuenta conectada.

@@ -390,7 +390,7 @@ A aba tem duas partes. Em cima, a seção **Conta e biblioteca**; embaixo, o cam
 
 ### A lista
 
-A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#como-as-listas-funcionam)) e começa no **Início**, com nove itens:
+A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#como-as-listas-funcionam)) e começa no **Início**, com quatro itens: as pastas **YouTube** e **YouTube Music**, e **Em alta** e **Moods e gêneros**. **YouTube** reúne Recomendados do YouTube, Assistir mais tarde, Vídeos curtidos do YouTube, Histórico do YouTube, Vídeos das inscrições, Canais inscritos, Shorts e Notificações. **YouTube Music** reúne Para você no YouTube Music, Suas playlists e mixes, Curtidas e Histórico do YouTube Music. Cada um deles:
 
 - **Suas playlists e mixes**: as da conta conectada. `Enter` abre a playlist numa aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista. Exige conta conectada.
 - **Curtidas**: as faixas curtidas (a playlist *Curtidas* da sua conta). Exige conta conectada.

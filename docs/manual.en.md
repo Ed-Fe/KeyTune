@@ -390,7 +390,7 @@ The tab has two parts. At the top, the **Account and library** section; below it
 
 ### The list
 
-The list works like the folder explorer (see [How lists work](#how-lists-work)) and starts at **Home**, with nine items:
+The list works like the folder explorer (see [How lists work](#how-lists-work)) and starts at **Home**, with four items: the **YouTube** and **YouTube Music** folders, plus **Trending** and **Moods and genres**. **YouTube** holds Recommended on YouTube, Watch later, Liked YouTube videos, YouTube history, Subscription videos, Subscribed channels, Shorts and Notifications. **YouTube Music** holds For you on YouTube Music, Your playlists and mixes, Liked and YouTube Music history. Each one of them:
 
 - **Your playlists and mixes**: those of the connected account. `Enter` opens the playlist in its own tab, where you can edit it in the account; `Right arrow` shows the tracks in the list itself. Requires a connected account.
 - **Liked songs**: the tracks you liked (the *Liked Music* playlist of your account). Requires a connected account.

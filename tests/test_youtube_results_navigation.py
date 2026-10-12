@@ -723,7 +723,17 @@ class ResultsNavigationTests(unittest.TestCase):
 
 
 def _folder(frame, title):
-    return next(item for item in frame._youtube_music_search_results() if item.title == title)
+    """A pasta *title* da lista na tela; as do início ficam dentro do grupo YouTube ou YouTube Music."""
+    results = frame._youtube_music_search_results()
+    for item in results:
+        if item.title == title:
+            return item
+    for group in results:
+        for child in getattr(group, "payload", None) or ():
+            if getattr(child, "title", "") == title and getattr(group, "kind", "").startswith("group_"):
+                frame.on_browse_youtube_music_search_result(group)
+                return child
+    raise StopIteration(title)
 
 
 class HomeListTests(unittest.TestCase):
@@ -749,18 +759,8 @@ class HomeListTests(unittest.TestCase):
         self.assertEqual(
             [item.title for item in frame._youtube_music_search_results()],
             [
-                "Recomendados do YouTube",
-                "Para você no YouTube Music",
-                "Suas playlists e mixes",
-                "Curtidas",
-                "Histórico do YouTube Music",
-                "Histórico do YouTube",
-                "Assistir mais tarde",
-                "Vídeos curtidos do YouTube",
-                "Vídeos das inscrições",
-                "Shorts",
-                "Canais inscritos",
-                "Notificações",
+                "YouTube",
+                "YouTube Music",
                 "Em alta",
                 "Moods e gêneros",
             ],
@@ -819,7 +819,8 @@ class HomeListTests(unittest.TestCase):
 
         self.assertFalse(frame.on_browse_youtube_music_search_result(_folder(frame, "Curtidas")))
         service.fetch_liked_songs_page.assert_not_called()
-        self.assertFalse(frame._youtube_music_can_go_back_in_results())
+        # Sem a conta a lista fica no grupo YouTube Music, onde a pasta está.
+        self.assertIn("Curtidas", [item.title for item in frame._youtube_music_search_results()])
 
         frame._ensure_youtube_music_authenticated.return_value = True
         self.assertTrue(frame.on_browse_youtube_music_search_result(_folder(frame, "Curtidas")))

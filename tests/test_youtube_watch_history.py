@@ -16,7 +16,7 @@ from player.frames.playback.youtube_history import YouTubeHistoryMixin
 from player.frames.youtube_music.browse import BrowseMixin
 from player.youtube_music import watch_history
 from player.youtube_music.feedback_manager import YouTubeMusicFeedbackManager
-from player.youtube_music.folders import FOLDER_HISTORY, FOLDER_WATCH_HISTORY, home_folder_items
+from player.youtube_music.folders import FOLDER_HISTORY, FOLDER_WATCH_HISTORY, flat_folder_items
 
 
 VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
@@ -74,7 +74,7 @@ class WatchHistoryTests(unittest.TestCase):
         self.assertEqual(frame._youtube_music_history_tracking, {})
 
     def test_the_home_list_has_both_histories(self):
-        folders = {folder.kind: folder for folder in home_folder_items()}
+        folders = {folder.kind: folder for folder in flat_folder_items()}
         frame = BrowseMixin()
         frame._get_youtube_music_service = Mock()
 

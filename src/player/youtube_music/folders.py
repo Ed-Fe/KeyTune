@@ -16,6 +16,8 @@ FOLDER_LIKED = "liked"
 FOLDER_HISTORY = "history"
 FOLDER_WATCH_HISTORY = "watch_history"
 FOLDER_SUBSCRIPTION_VIDEOS = "subscription_videos"
+FOLDER_GROUP_YOUTUBE = "group_youtube"
+FOLDER_GROUP_MUSIC = "group_music"
 FOLDER_HOME_FEED = "home_feed"
 FOLDER_MUSIC_HOME = "music_home"
 FOLDER_MUSIC_HOME_ROW = "music_home_row"
@@ -132,23 +134,46 @@ def channel_action_items(channel):
     ]
 
 
-def home_folder_items():
+def youtube_folder_items():
+    """O que é só do YouTube comum: o que a conta vê, guarda e acompanha nele."""
     return [
         YouTubeFolderItem(FOLDER_HOME_FEED, _("Recomendados do YouTube"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_WATCH_LATER, _("Assistir mais tarde"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_LIKED_VIDEOS, _("Vídeos curtidos do YouTube"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_WATCH_HISTORY, _("Histórico do YouTube"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SUBSCRIPTION_VIDEOS, _("Vídeos das inscrições"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SUBSCRIBED_CHANNELS, _("Canais inscritos"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_SHORTS, _("Shorts"), requires_auth=True),
+        YouTubeFolderItem(FOLDER_NOTIFICATIONS, _("Notificações"), requires_auth=True),
+    ]
+
+
+def music_folder_items():
+    """O que é só do YouTube Music: as playlists, as curtidas e o histórico de músicas."""
+    return [
         YouTubeFolderItem(FOLDER_MUSIC_HOME, _("Para você no YouTube Music")),
         YouTubeFolderItem(FOLDER_LIBRARY, _("Suas playlists e mixes"), requires_auth=True),
         YouTubeFolderItem(FOLDER_LIKED, _("Curtidas"), requires_auth=True),
         YouTubeFolderItem(FOLDER_HISTORY, _("Histórico do YouTube Music"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_WATCH_HISTORY, _("Histórico do YouTube"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_WATCH_LATER, _("Assistir mais tarde"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_LIKED_VIDEOS, _("Vídeos curtidos do YouTube"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_SUBSCRIPTION_VIDEOS, _("Vídeos das inscrições"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_SHORTS, _("Shorts"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_SUBSCRIBED_CHANNELS, _("Canais inscritos"), requires_auth=True),
-        YouTubeFolderItem(FOLDER_NOTIFICATIONS, _("Notificações"), requires_auth=True),
+    ]
+
+
+def home_folder_items():
+    """O início da aba: uma pasta para cada serviço e o que vale para os dois."""
+    return [
+        YouTubeFolderItem(FOLDER_GROUP_YOUTUBE, _("YouTube"), payload=tuple(youtube_folder_items())),
+        YouTubeFolderItem(FOLDER_GROUP_MUSIC, _("YouTube Music"), payload=tuple(music_folder_items())),
         YouTubeFolderItem(FOLDER_CHARTS, _("Em alta")),
         YouTubeFolderItem(FOLDER_MOODS, _("Moods e gêneros")),
     ]
+
+
+def flat_folder_items():
+    """Todas as pastas do início, sem os grupos que as reúnem."""
+    flat = []
+    for item in home_folder_items():
+        flat.extend(item.payload if item.kind in (FOLDER_GROUP_YOUTUBE, FOLDER_GROUP_MUSIC) else [item])
+    return flat
 
 
 def music_home_row_items(sections):

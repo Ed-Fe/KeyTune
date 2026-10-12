@@ -21,6 +21,7 @@
 
 ### Changed
 
+- **KeyTube home in groups**: the home now has four items. **YouTube** and **YouTube Music** each hold what belongs to their service, while **Trending** and **Moods and genres** stay on their own.
 - **Resume videos from history**: pressing `Enter` on a video in **YouTube history** that you stopped halfway now starts where the account left off and announces the position.
 - **Radio and related videos for YouTube videos**: **Start radio from this track** (`Ctrl+R`) and related autoplay, when the video is a regular YouTube video, use the videos YouTube itself suggests next instead of the YouTube Music radio, which only made sense for songs.
 - **Live chat with the write line at the end**: **Send a message...** is now the last line of the list, after the newest messages, and the list opens on it. Before, it was at the top and you had to go down to the end to see recent messages.

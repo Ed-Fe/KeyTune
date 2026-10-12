@@ -16,7 +16,7 @@ if str(SRC_ROOT) not in sys.path:
 from player.frames.youtube_music import notifications as frame_notifications
 from player.frames.youtube_music.notifications import NotificationsMixin
 from player.youtube_music import notifications
-from player.youtube_music.folders import FOLDER_NOTIFICATIONS, home_folder_items
+from player.youtube_music.folders import FOLDER_NOTIFICATIONS, flat_folder_items
 from player.youtube_music.notification_store import YouTubeNotificationStore, account_scope
 from player.youtube_music.notifications import notification_from_entry
 
@@ -361,7 +361,7 @@ class NotificationCheckTests(unittest.TestCase):
 
 class HomeFolderTests(unittest.TestCase):
     def test_the_inbox_is_on_the_home_list_and_asks_for_the_account(self):
-        folders = {folder.kind: folder for folder in home_folder_items()}
+        folders = {folder.kind: folder for folder in flat_folder_items()}
 
         self.assertEqual(folders[FOLDER_NOTIFICATIONS].title, "Notificações")
         self.assertTrue(folders[FOLDER_NOTIFICATIONS].requires_auth)
