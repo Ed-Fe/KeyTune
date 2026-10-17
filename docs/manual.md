@@ -493,7 +493,7 @@ Para o vídeo que está tocando, use **Reprodução > Ver capítulos da mídia a
 
 #### SponsorBlock
 
-O SponsorBlock é uma base aberta onde a comunidade marca trechos dos vídeos do YouTube: patrocínios, pedidos de inscrição, aberturas e trechos sem música em clipes. Com **Preferências > KeyTube > SponsorBlock** ligado, o KeyTune pula esses trechos e fala o que pulou. No mesmo grupo você escolhe as categorias e se o KeyTube pula sozinho ou só avisa. A opção vem desligada.
+O SponsorBlock é uma base aberta onde a comunidade marca trechos dos vídeos do YouTube: patrocínios, pedidos de inscrição, aberturas e trechos sem música em clipes. Com **Preferências > KeyTube > SponsorBlock** ligado, o KeyTune pula esses trechos, toca um som curto (o "Trecho do SponsorBlock pulado", em **Preferências > Acessibilidade > Sons de aviso**) e fala o que pulou. No mesmo grupo você escolhe as categorias e se o KeyTube pula sozinho ou só avisa. A opção vem desligada.
 
 Os comandos ficam em **Reprodução > SponsorBlock**: **Pular o trecho avisado** (no modo "Só avisar") e **Voltar ao último trecho pulado**, para quando o trecho estiver errado.
 

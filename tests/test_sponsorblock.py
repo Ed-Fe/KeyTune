@@ -117,6 +117,7 @@ class _Frame(SponsorBlockMixin):
             sponsorblock_categories=["sponsor"],
             sponsorblock_contribute=contribute,
             sponsorblock_user_id="",
+            interface_sounds_enabled=False,
         )
         self.player = Mock()
         self.player.get_media.return_value = object()

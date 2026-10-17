@@ -9135,6 +9135,10 @@ msgstr ""
 msgid "Trecho de {start} a {end}. Categoria:"
 msgstr ""
 
+#: src/player/interface_sounds/labels.py
+msgid "Trecho do SponsorBlock pulado"
+msgstr ""
+
 #: src/player/frames/playback/sponsorblock.py
 msgid "Trecho enviado ao SponsorBlock. Obrigado por ajudar!"
 msgstr ""

@@ -4,6 +4,7 @@ import threading
 
 import wx
 
+from ... import interface_sounds
 from ...i18n import _
 from .helpers import is_youtube_music_media
 
@@ -121,6 +122,7 @@ class SponsorBlockMixin:
     def _skip_sponsorblock_segment(self, segment):
         self.player.set_time(int(segment.end_seconds * 1000))
         self._update_time_bar()
+        interface_sounds.play_for(self, interface_sounds.SOUND_SEGMENT_SKIPPED)
         self._announce(
             _("Trecho pulado: {category}.").format(category=_sponsorblock().category_label(segment.category))
         )
