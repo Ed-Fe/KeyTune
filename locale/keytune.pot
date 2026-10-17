@@ -4287,6 +4287,10 @@ msgstr ""
 msgid "Funcionam mesmo com o KeyTune minimizado, na bandeja ou com outro programa em foco."
 msgstr ""
 
+#: src/player/youtube_music/sponsorblock.py
+msgid "Gancho ou saudação"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Geral"
 msgstr ""
@@ -6504,11 +6508,19 @@ msgid "O Node.js ou o pacote YouTube.js não pôde ser preparado."
 msgstr ""
 
 #: src/player/youtube_music/sponsorblock.py
+msgid "O SponsorBlock não encontrou esse trecho."
+msgstr ""
+
+#: src/player/youtube_music/sponsorblock.py
 msgid "O SponsorBlock recebeu muitos pedidos; tente mais tarde."
 msgstr ""
 
 #: src/player/youtube_music/sponsorblock.py
-msgid "O SponsorBlock recusou o {action}."
+msgid "O SponsorBlock recusou o trecho."
+msgstr ""
+
+#: src/player/youtube_music/sponsorblock.py
+msgid "O SponsorBlock recusou o voto."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -9151,6 +9163,10 @@ msgstr ""
 msgid "Trecho sem música em clipe"
 msgstr ""
 
+#: src/player/frames/playback/sponsorblock.py
+msgid "Trecho silenciado: {category}."
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "Trocar pró&xima"
 msgstr ""
@@ -9829,10 +9845,6 @@ msgstr ""
 msgid "enquete: {choices}"
 msgstr ""
 
-#: src/player/youtube_music/sponsorblock.py
-msgid "envio"
-msgstr ""
-
 #: src/player/youtube_music/youtubejs_runtime.py
 msgid "erro desconhecido"
 msgstr ""
@@ -10066,10 +10078,6 @@ msgstr ""
 
 #: src/player/youtube_music/comments.py
 msgid "você não gostou"
-msgstr ""
-
-#: src/player/youtube_music/sponsorblock.py
-msgid "voto"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -10436,6 +10444,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/lifecycle.py
 msgid "{media} mídias indexadas em {folders} pastas, {favorites} favoritas, {history} reproduções no histórico."
+msgstr ""
+
+#: src/player/youtube_music/sponsorblock.py
+msgid "{message} Motivo: {reason}"
 msgstr ""
 
 #: src/player/frames/sleep_timer.py

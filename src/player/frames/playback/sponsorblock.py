@@ -1,6 +1,7 @@
 """SponsorBlock na reprodução: pular os trechos marcados e, se o usuário quiser, contribuir."""
 
 import threading
+import time
 
 import wx
 
@@ -13,6 +14,9 @@ _SEGMENT_END_MARGIN_SECONDS = 0.5
 # Voltar para antes do início de um trecho já pulado faz ele valer de novo.
 _SEGMENT_REARM_MARGIN_SECONDS = 1.0
 _MINIMUM_SUBMITTED_SEGMENT_SECONDS = 1.0
+# Quando a busca falha (rede ou servidor), tenta de novo algumas vezes neste intervalo.
+_FETCH_RETRY_SECONDS = 30.0
+_FETCH_MAX_ATTEMPTS = 3
 
 
 def _sponsorblock():
@@ -62,6 +66,8 @@ class SponsorBlockMixin:
                 "segments": None,
                 "handled": set(),
                 "pending": None,
+                "attempts": 0,
+                "retry_at": None,
             }
             self._sponsorblock_state = state
             if video_id:
@@ -71,29 +77,44 @@ class SponsorBlockMixin:
     def _start_sponsorblock_fetch(self, state):
         video_id = state["video_id"]
         categories = list(state["categories"])
+        state["attempts"] += 1
+        state["retry_at"] = None
 
         def worker():
             segments = _sponsorblock().fetch_segments(video_id, categories)
 
             def deliver():
-                if getattr(self, "_sponsorblock_state", None) is state:
+                if getattr(self, "_sponsorblock_state", None) is not state:
+                    return
+                if segments is None:
+                    # Falhou: sem trechos por ora, e outra tentativa mais tarde.
+                    state["segments"] = state["segments"] or []
+                    if state["attempts"] < _FETCH_MAX_ATTEMPTS:
+                        state["retry_at"] = time.monotonic() + _FETCH_RETRY_SECONDS
+                else:
                     state["segments"] = segments
 
             wx.CallAfter(deliver)
 
         threading.Thread(target=worker, daemon=True, name="sponsorblock-fetch").start()
 
+    def _maybe_retry_sponsorblock_fetch(self, state):
+        retry_at = state.get("retry_at")
+        if retry_at is not None and state.get("video_id") and time.monotonic() >= retry_at:
+            self._start_sponsorblock_fetch(state)
+
     def _maybe_handle_sponsorblock_segment(self):
-        """Chamado pelo timer de progresso: pula, ou avisa, ao entrar num trecho marcado."""
+        """Chamado pelo timer de progresso: pula, silencia ou avisa ao entrar num trecho marcado."""
         if not self._sponsorblock_settings_enabled():
+            self._end_sponsorblock_mute()
             self._sponsorblock_state = None
             return False
         state = self._sponsorblock_state_for(self._sponsorblock_current_video_id())
-        segments = state.get("segments")
-        if not segments:
-            return False
+        self._maybe_retry_sponsorblock_fetch(state)
         position = self._sponsorblock_position_seconds()
-        if position is None:
+        self._update_sponsorblock_mute(state, position)
+        segments = state.get("segments")
+        if not segments or position is None:
             return False
 
         handled = state["handled"]
@@ -114,10 +135,43 @@ class SponsorBlockMixin:
                             end=self._format_sponsorblock_time(segment.end_seconds),
                         )
                     )
+                elif segment.action_type == _sponsorblock().ACTION_MUTE:
+                    self._start_sponsorblock_mute(state, segment)
                 else:
                     self._skip_sponsorblock_segment(segment)
                 return True
         return False
+
+    # Trechos de silenciar: o som volta ao sair do trecho, ao trocar de mídia ou ao desligar.
+
+    def _start_sponsorblock_mute(self, state, segment):
+        self._end_sponsorblock_mute()
+        self.player.audio_set_mute(True)
+        self._sponsorblock_muted = (state, segment, self.player)
+        self._announce(
+            _("Trecho silenciado: {category}.").format(category=_sponsorblock().category_label(segment.category))
+        )
+        self._report_sponsorblock_skip(segment)
+
+    def _update_sponsorblock_mute(self, state, position):
+        muted = getattr(self, "_sponsorblock_muted", None)
+        if muted is None:
+            return
+        muted_state, segment, player = muted
+        if (
+            muted_state is not state
+            or player is not getattr(self, "player", None)
+            or position is None
+            or not (segment.start_seconds <= position < segment.end_seconds)
+        ):
+            self._end_sponsorblock_mute()
+
+    def _end_sponsorblock_mute(self):
+        muted = getattr(self, "_sponsorblock_muted", None)
+        if muted is None:
+            return
+        self._sponsorblock_muted = None
+        muted[2].audio_set_mute(False)
 
     def _skip_sponsorblock_segment(self, segment):
         self.player.set_time(int(segment.end_seconds * 1000))
@@ -126,6 +180,9 @@ class SponsorBlockMixin:
         self._announce(
             _("Trecho pulado: {category}.").format(category=_sponsorblock().category_label(segment.category))
         )
+        self._report_sponsorblock_skip(segment)
+
+    def _report_sponsorblock_skip(self, segment):
         if self._sponsorblock_contribution_enabled() and segment.uuid:
             uuid = segment.uuid
             threading.Thread(
@@ -166,7 +223,8 @@ class SponsorBlockMixin:
         if segment is None:
             self._announce(_("Nenhum trecho do SponsorBlock foi pulado nesta mídia."))
             return False
-        # O trecho continua marcado como tratado: voltar a ele não o pula de novo.
+        # O trecho continua marcado como tratado: voltar a ele não o pula nem silencia de novo.
+        self._end_sponsorblock_mute()
         self.player.set_time(int(segment.start_seconds * 1000))
         self._update_time_bar()
         self._announce(
@@ -222,6 +280,9 @@ class SponsorBlockMixin:
         if end - start < _MINIMUM_SUBMITTED_SEGMENT_SECONDS:
             self._announce(_("O fim do trecho precisa vir depois do início marcado."))
             return False
+        # A duração é lida já: com o diálogo aberto a mídia pode avançar para a próxima.
+        length_ms = self.player.get_length() if hasattr(self, "player") else -1
+        duration = length_ms / 1000.0 if length_ms and length_ms > 0 else 0.0
 
         sponsorblock = _sponsorblock()
         categories = list(sponsorblock.CATEGORIES)
@@ -241,8 +302,6 @@ class SponsorBlockMixin:
             dialog.Destroy()
 
         user_id = self._sponsorblock_user_id()
-        length_ms = self.player.get_length() if hasattr(self, "player") else -1
-        duration = length_ms / 1000.0 if length_ms and length_ms > 0 else 0.0
         self._sponsorblock_marked_start = None
 
         def worker():

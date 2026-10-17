@@ -7806,3 +7806,177 @@ msgstr "YouTube changes without notice, so something here may stop working for n
 #: src/player/youtube_music/panel.py
 msgid "Aviso sobre o YouTube"
 msgstr "Notice about YouTube"
+
+msgid "&Marcar início de um trecho"
+msgstr "&Mark segment start"
+
+msgid "&Pular o trecho avisado"
+msgstr "&Skip the announced segment"
+
+msgid "&SponsorBlock"
+msgstr "&SponsorBlock"
+
+msgid "&Voltar ao último trecho pulado"
+msgstr "&Go back to the last skipped segment"
+
+msgid "A mídia atual não é um vídeo do YouTube."
+msgstr "The current media is not a YouTube video."
+
+msgid "Abertura"
+msgstr "Intro"
+
+msgid "Ajudar o SponsorBlock: enviar trechos novos e votar"
+msgstr "Help SponsorBlock: submit new segments and vote"
+
+msgid "Ao chegar num trecho"
+msgstr "When a segment is reached"
+
+msgid "Autopromoção"
+msgstr "Self-promotion"
+
+msgid "Categorias de trecho:"
+msgstr "Segment categories:"
+
+msgid "De volta ao início do trecho de {category}."
+msgstr "Back to the start of the {category} segment."
+
+msgid "Encerramento"
+msgstr "Outro"
+
+msgid "Enrolação fora do assunto"
+msgstr "Off-topic filler"
+
+msgid "Enviando o trecho..."
+msgstr "Submitting the segment..."
+
+msgid "Enviar trecho ao SponsorBlock"
+msgstr "Submit segment to SponsorBlock"
+
+msgid "Esse trecho já foi enviado."
+msgstr "This segment was already submitted."
+
+msgid "Gancho ou saudação"
+msgstr "Hook or greeting"
+
+msgid "Início do trecho marcado em {time}."
+msgstr "Segment start marked at {time}."
+
+msgid "Libera os comandos de marcar, enviar e votar; o SponsorBlock conta os trechos pulados."
+msgstr "Enables the mark, submit and vote commands; SponsorBlock counts the skipped segments."
+
+msgid "Marcar &fim e enviar o trecho..."
+msgstr "Mark &end and submit the segment..."
+
+msgid "Marque primeiro o início do trecho neste vídeo."
+msgstr "First mark the segment start in this video."
+
+msgid "Nenhum trecho do SponsorBlock foi pulado nesta mídia."
+msgstr "No SponsorBlock segment was skipped in this media."
+
+msgid "Nenhum trecho do SponsorBlock passou nesta mídia para votar."
+msgstr "No SponsorBlock segment has played in this media to vote on."
+
+msgid "Não foi possível falar com o SponsorBlock agora."
+msgstr "Could not reach SponsorBlock right now."
+
+msgid "Não há trecho do SponsorBlock para pular agora."
+msgstr "There is no SponsorBlock segment to skip right now."
+
+msgid "O SponsorBlock não encontrou esse trecho."
+msgstr "SponsorBlock could not find this segment."
+
+msgid "O SponsorBlock recebeu muitos pedidos; tente mais tarde."
+msgstr "SponsorBlock received too many requests; try again later."
+
+msgid "O SponsorBlock recusou o trecho."
+msgstr "SponsorBlock rejected the segment."
+
+msgid "O SponsorBlock recusou o voto."
+msgstr "SponsorBlock rejected the vote."
+
+msgid "O fim do trecho precisa vir depois do início marcado."
+msgstr "The segment end must come after the marked start."
+
+msgid "Para ajudar o SponsorBlock, ative a opção em Preferências, guia KeyTube, grupo SponsorBlock."
+msgstr "To help SponsorBlock, turn on the option in Preferences, KeyTube tab, SponsorBlock group."
+
+msgid "Patrocínio"
+msgstr "Sponsor"
+
+msgid "Patrocínios, pedidos de inscrição e trechos sem música nos vídeos do YouTube."
+msgstr "Sponsorships, subscribe requests and non-music parts in YouTube videos."
+
+msgid "Pedido de interação (curtir, inscrever-se)"
+msgstr "Interaction reminder (like, subscribe)"
+
+msgid "Prévia ou resumo"
+msgstr "Preview or recap"
+
+msgid "Pular e avisar"
+msgstr "Skip and announce"
+
+msgid "Pular sozinho ou só avisar; o comando Pular trecho do SponsorBlock pula quando avisado."
+msgstr "Skip automatically or only announce; the SponsorBlock skip command skips when announced."
+
+msgid "Pular trechos marcados pela comunidade SponsorBlock"
+msgstr "Skip segments marked by the SponsorBlock community"
+
+msgid "SponsorBlock"
+msgstr "SponsorBlock"
+
+msgid "SponsorBlock: marcar fim e enviar o trecho"
+msgstr "SponsorBlock: mark end and submit the segment"
+
+msgid "SponsorBlock: marcar início de um trecho"
+msgstr "SponsorBlock: mark segment start"
+
+msgid "SponsorBlock: pular o trecho avisado"
+msgstr "SponsorBlock: skip the announced segment"
+
+msgid "SponsorBlock: voltar ao último trecho pulado"
+msgstr "SponsorBlock: go back to the last skipped segment"
+
+msgid "SponsorBlock: votar que o último trecho está certo"
+msgstr "SponsorBlock: vote the last segment is right"
+
+msgid "SponsorBlock: votar que o último trecho está errado"
+msgstr "SponsorBlock: vote the last segment is wrong"
+
+msgid "Só avisar"
+msgstr "Only announce"
+
+msgid "Trecho de {category} aqui, até {end}."
+msgstr "{category} segment here, until {end}."
+
+msgid "Trecho de {start} a {end}. Categoria:"
+msgstr "Segment from {start} to {end}. Category:"
+
+msgid "Trecho do SponsorBlock pulado"
+msgstr "SponsorBlock segment skipped"
+
+msgid "Trecho enviado ao SponsorBlock. Obrigado por ajudar!"
+msgstr "Segment submitted to SponsorBlock. Thanks for helping!"
+
+msgid "Trecho pulado: {category}."
+msgstr "Segment skipped: {category}."
+
+msgid "Trecho sem música em clipe"
+msgstr "Non-music part in music video"
+
+msgid "Trecho silenciado: {category}."
+msgstr "Segment muted: {category}."
+
+msgid "Votar: último trecho está &certo"
+msgstr "Vote: last segment is &right"
+
+msgid "Votar: último trecho está &errado"
+msgstr "Vote: last segment is &wrong"
+
+msgid "Voto registrado. Obrigado por ajudar!"
+msgstr "Vote recorded. Thanks for helping!"
+
+msgid "YouTube"
+msgstr "YouTube"
+
+msgid "{message} Motivo: {reason}"
+msgstr "{message} Reason: {reason}"

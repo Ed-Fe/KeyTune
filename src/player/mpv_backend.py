@@ -411,6 +411,13 @@ class MPVPlayer:
         except Exception:
             pass
 
+    def audio_set_mute(self, muted):
+        # A propriedade mute do mpv é separada do volume: silenciar não mexe no volume do usuário.
+        try:
+            self._player.mute = bool(muted)
+        except Exception:
+            pass
+
     def set_rate(self, rate):
         try:
             self._player.speed = max(0.25, min(4.0, float(rate)))

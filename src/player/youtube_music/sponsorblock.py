@@ -35,8 +35,11 @@ SPONSORBLOCK_API_URL = "https://sponsor.ajay.app/api"
 _REQUEST_TIMEOUT_SECONDS = 8
 _HASH_PREFIX_LENGTH = 4
 
-# O único tipo de ação que o player cumpre: pular. Silenciar e capítulos ficam de fora.
-_SUPPORTED_ACTION_TYPES = ("skip",)
+# Os tipos de ação que o player cumpre: pular e silenciar. Capítulos e destaques ficam de fora.
+ACTION_SKIP = "skip"
+ACTION_MUTE = "mute"
+_SUPPORTED_ACTION_TYPES = (ACTION_SKIP, ACTION_MUTE)
+_REASON_MAX_LENGTH = 200
 
 
 def category_labels():
@@ -47,6 +50,7 @@ def category_labels():
         "intro": _("Abertura"),
         "outro": _("Encerramento"),
         "preview": _("Prévia ou resumo"),
+        "hook": _("Gancho ou saudação"),
         "filler": _("Enrolação fora do assunto"),
         "music_offtopic": _("Trecho sem música em clipe"),
     }
@@ -123,7 +127,11 @@ def parse_segments(payload, video_id, categories=None):
 
 
 def fetch_segments(video_id, categories):
-    """Os trechos de *video_id* nas *categories*; lista vazia quando não há ou a rede falha."""
+    """Os trechos de *video_id* nas *categories*.
+
+    Lista vazia quando o vídeo não tem trechos; ``None`` quando a rede ou o servidor
+    falham, para quem chamou tentar de novo mais tarde.
+    """
     video_id = str(video_id or "").strip()
     categories = normalize_categories(categories)
     if not video_id or not categories:
@@ -137,23 +145,40 @@ def fetch_segments(video_id, categories):
         payload = json.loads(_request(f"skipSegments/{prefix}", params=params))
     except urllib.error.HTTPError as exc:
         # 404 é a resposta normal para "nenhum vídeo com esse prefixo tem trechos".
-        if exc.code != 404:
-            _logger.debug("SponsorBlock respondeu %s para %s", exc.code, video_id)
-        return []
+        if exc.code == 404:
+            return []
+        _logger.debug("SponsorBlock respondeu %s para %s", exc.code, video_id)
+        return None
     except (urllib.error.URLError, OSError, ValueError) as exc:
         _logger.debug("SponsorBlock indisponível: %s", exc)
-        return []
+        return None
     return parse_segments(payload, video_id, categories)
 
 
-def _raise_for_contribution(exc, action):
+def _server_reason(exc):
+    """O motivo em texto que o servidor manda junto com a recusa, se houver."""
+    try:
+        reason = exc.read().decode("utf-8", errors="replace").strip()
+    except Exception:
+        return ""
+    if not reason or reason.startswith(("{", "[", "<")):
+        return ""
+    return reason[:_REASON_MAX_LENGTH]
+
+
+def _raise_for_contribution(exc, refused_message):
     if isinstance(exc, urllib.error.HTTPError):
         if exc.code == 429:
             raise SponsorBlockError(_("O SponsorBlock recebeu muitos pedidos; tente mais tarde.")) from exc
         if exc.code == 409:
             raise SponsorBlockError(_("Esse trecho já foi enviado.")) from exc
-        if exc.code == 403:
-            raise SponsorBlockError(_("O SponsorBlock recusou o {action}.").format(action=action)) from exc
+        if exc.code == 404:
+            raise SponsorBlockError(_("O SponsorBlock não encontrou esse trecho.")) from exc
+        if exc.code in (400, 403):
+            reason = _server_reason(exc)
+            if reason:
+                refused_message = _("{message} Motivo: {reason}").format(message=refused_message, reason=reason)
+            raise SponsorBlockError(refused_message) from exc
     raise SponsorBlockError(_("Não foi possível falar com o SponsorBlock agora.")) from exc
 
 
@@ -178,7 +203,7 @@ def submit_segment(video_id, user_id, start_seconds, end_seconds, category, vide
     try:
         _request("skipSegments", body=body, method="POST")
     except (urllib.error.URLError, OSError) as exc:
-        _raise_for_contribution(exc, _("envio"))
+        _raise_for_contribution(exc, _("O SponsorBlock recusou o trecho."))
 
 
 def vote_segment(segment_uuid, user_id, upvote):
@@ -187,7 +212,7 @@ def vote_segment(segment_uuid, user_id, upvote):
     try:
         _request("voteOnSponsorTime", params=params, method="POST")
     except (urllib.error.URLError, OSError) as exc:
-        _raise_for_contribution(exc, _("voto"))
+        _raise_for_contribution(exc, _("O SponsorBlock recusou o voto."))
 
 
 def report_skip(segment_uuid):

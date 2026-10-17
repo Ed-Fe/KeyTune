@@ -55,6 +55,7 @@ SPONSORBLOCK_CATEGORIES = (
     "intro",
     "outro",
     "preview",
+    "hook",
     "filler",
     "music_offtopic",
 )

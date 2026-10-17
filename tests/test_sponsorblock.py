@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import pathlib
 import sys
@@ -32,18 +33,24 @@ def _segment(start, end, category="sponsor", uuid="u1", action="skip"):
 
 
 class SponsorBlockClientTests(unittest.TestCase):
-    def test_parse_keeps_only_this_video_wanted_categories_and_skips(self):
+    def test_parse_keeps_only_this_video_wanted_categories_skips_and_mutes(self):
         payload = _payload(
             _segment(30, 40, uuid="b"),
             _segment(5, 10, category="intro", uuid="intro"),
             _segment(1, 2, action="mute", uuid="mute"),
+            _segment(3, 4, action="poi", uuid="poi"),
             _segment(9, 3, uuid="backwards"),
             _segment(0, 4, uuid="a"),
         ) + _payload(_segment(0, 9, uuid="other"), video_id="another")
 
         segments = sponsorblock.parse_segments(payload, VIDEO_ID, ["sponsor"])
 
-        self.assertEqual([segment.uuid for segment in segments], ["a", "b"])
+        self.assertEqual([segment.uuid for segment in segments], ["a", "mute", "b"])
+        self.assertEqual(segments[1].action_type, "mute")
+
+    def test_hook_is_a_known_category(self):
+        self.assertIn("hook", sponsorblock.CATEGORIES)
+        self.assertNotEqual(sponsorblock.category_label("hook"), "hook")
 
     def test_fetch_queries_by_hash_prefix(self):
         with patch.object(sponsorblock, "_request", return_value=json.dumps(_payload(_segment(1, 5)))) as request:
@@ -57,9 +64,28 @@ class SponsorBlockClientTests(unittest.TestCase):
 
     def test_fetch_never_raises(self):
         not_found = urllib.error.HTTPError("url", 404, "Not Found", {}, None)
-        for error in (not_found, urllib.error.URLError("offline"), OSError("boom")):
+        with patch.object(sponsorblock, "_request", side_effect=not_found):
+            self.assertEqual(sponsorblock.fetch_segments(VIDEO_ID, ["sponsor"]), [])
+        server_error = urllib.error.HTTPError("url", 502, "Bad Gateway", {}, None)
+        for error in (server_error, urllib.error.URLError("offline"), OSError("boom")):
             with patch.object(sponsorblock, "_request", side_effect=error):
-                self.assertEqual(sponsorblock.fetch_segments(VIDEO_ID, ["sponsor"]), [])
+                # None: falhou, vale tentar de novo; diferente de "não há trechos".
+                self.assertIsNone(sponsorblock.fetch_segments(VIDEO_ID, ["sponsor"]))
+
+    def test_refusal_carries_the_server_reason(self):
+        refused = urllib.error.HTTPError(
+            "url", 400, "Bad Request", {}, io.BytesIO(b"Segments must be longer than 1 second long")
+        )
+        with patch.object(sponsorblock, "_request", side_effect=refused):
+            with self.assertRaises(sponsorblock.SponsorBlockError) as caught:
+                sponsorblock.submit_segment(VIDEO_ID, "user", 1, 5, "sponsor")
+        self.assertIn("longer than 1 second", str(caught.exception))
+
+        missing = urllib.error.HTTPError("url", 404, "Not Found", {}, None)
+        with patch.object(sponsorblock, "_request", side_effect=missing):
+            with self.assertRaises(sponsorblock.SponsorBlockError) as caught:
+                sponsorblock.vote_segment("u1", "user", False)
+        self.assertNotIn("falar com", str(caught.exception))
 
     def test_contribution_errors_become_messages(self):
         limited = urllib.error.HTTPError("url", 429, "Too Many", {}, None)
@@ -139,8 +165,8 @@ class _Frame(SponsorBlockMixin):
         return state
 
 
-def _model(start, end, uuid="u1"):
-    return sponsorblock.SponsorSegment(uuid, "sponsor", "skip", start, end)
+def _model(start, end, uuid="u1", action="skip"):
+    return sponsorblock.SponsorSegment(uuid, "sponsor", action, start, end)
 
 
 class SponsorBlockPlaybackTests(unittest.TestCase):
@@ -176,6 +202,82 @@ class SponsorBlockPlaybackTests(unittest.TestCase):
         frame.player.set_time.assert_not_called()
         self.assertTrue(frame.on_sponsorblock_skip_segment(None))
         frame.player.set_time.assert_called_once_with(20000)
+
+    def test_mute_segment_mutes_and_unmutes_on_leaving(self):
+        frame = _Frame()
+        frame.load(_model(10, 20, action="mute"))
+
+        self.assertTrue(frame._maybe_handle_sponsorblock_segment())
+        frame.player.audio_set_mute.assert_called_once_with(True)
+        frame.player.set_time.assert_not_called()
+
+        frame.player.get_time.return_value = 15000
+        frame._maybe_handle_sponsorblock_segment()
+        frame.player.audio_set_mute.assert_called_once_with(True)
+
+        frame.player.get_time.return_value = 20000
+        frame._maybe_handle_sponsorblock_segment()
+        frame.player.audio_set_mute.assert_called_with(False)
+
+    def test_mute_ends_when_media_changes_or_feature_is_disabled(self):
+        frame = _Frame()
+        frame.load(_model(10, 20, action="mute"))
+        frame._maybe_handle_sponsorblock_segment()
+
+        with patch.object(frame, "_player_loaded_media_path", return_value="C:/musica.mp3"):
+            frame._maybe_handle_sponsorblock_segment()
+        frame.player.audio_set_mute.assert_called_with(False)
+
+        frame = _Frame()
+        frame.load(_model(10, 20, action="mute"))
+        frame._maybe_handle_sponsorblock_segment()
+        frame.settings.sponsorblock_enabled = False
+        frame._maybe_handle_sponsorblock_segment()
+        frame.player.audio_set_mute.assert_called_with(False)
+
+    def test_failed_fetch_is_retried_later(self):
+        frame = _Frame()
+        delivered = []
+        with patch("player.frames.playback.sponsorblock.threading.Thread") as thread, patch(
+            "player.frames.playback.sponsorblock.wx.CallAfter", side_effect=lambda fn: delivered.append(fn)
+        ), patch.object(sponsorblock, "fetch_segments", return_value=None) as fetch:
+            frame._maybe_handle_sponsorblock_segment()
+            thread.call_args.kwargs["target"]()
+            delivered.pop()()
+            state = frame._sponsorblock_state
+            self.assertEqual(state["segments"], [])
+            self.assertIsNotNone(state["retry_at"])
+
+            state["retry_at"] = 0
+            frame._maybe_handle_sponsorblock_segment()
+            self.assertEqual(thread.call_count, 2)
+            self.assertIsNone(state["retry_at"])
+        self.assertEqual(fetch.call_count, 1)
+
+    def test_submit_reads_duration_before_the_dialog(self):
+        frame = _Frame(contribute=True)
+        frame.player.get_length.return_value = 300000
+        frame._sponsorblock_marked_start = (VIDEO_ID, 5.0)
+
+        dialog = Mock()
+
+        def show_modal():
+            # Com o diálogo aberto, a mídia avançou para outra de outra duração.
+            frame.player.get_length.return_value = 999000
+            return 5100
+
+        dialog.ShowModal.side_effect = show_modal
+        dialog.GetSelection.return_value = 0
+        with patch("player.frames.playback.sponsorblock.wx") as wx_mock, patch(
+            "player.frames.playback.sponsorblock.threading.Thread"
+        ) as thread, patch.object(sponsorblock, "submit_segment") as submit:
+            wx_mock.SingleChoiceDialog.return_value = dialog
+            wx_mock.ID_OK = 5100
+            wx_mock.CallAfter = lambda *args: None
+            self.assertTrue(frame.on_sponsorblock_submit_segment(None))
+            thread.call_args.kwargs["target"]()
+
+        self.assertEqual(submit.call_args.args[-1], 300.0)
 
     def test_disabled_does_nothing(self):
         frame = _Frame()
