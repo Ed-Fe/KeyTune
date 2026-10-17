@@ -164,6 +164,9 @@ class AppCommandsMixin:
         maybe_report_youtube_watch_time = getattr(self, "_maybe_report_youtube_watch_time", None)
         if callable(maybe_report_youtube_watch_time):
             maybe_report_youtube_watch_time()
+        maybe_handle_sponsorblock = getattr(self, "_maybe_handle_sponsorblock_segment", None)
+        if callable(maybe_handle_sponsorblock):
+            maybe_handle_sponsorblock()
         maybe_prefetch_related = getattr(self, "_maybe_prefetch_related_youtube_music", None)
         if callable(maybe_prefetch_related):
             maybe_prefetch_related()

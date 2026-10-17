@@ -47,6 +47,23 @@ DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
 DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
 DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED = False
 DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY = True
+# SponsorBlock: categorias de trecho que a comunidade marca nos vídeos do YouTube.
+SPONSORBLOCK_CATEGORIES = (
+    "sponsor",
+    "selfpromo",
+    "interaction",
+    "intro",
+    "outro",
+    "preview",
+    "filler",
+    "music_offtopic",
+)
+DEFAULT_SPONSORBLOCK_CATEGORIES = ("sponsor", "selfpromo", "interaction", "music_offtopic")
+SPONSORBLOCK_MODE_SKIP = "skip"
+SPONSORBLOCK_MODE_NOTIFY = "notify"
+SPONSORBLOCK_MODES = (SPONSORBLOCK_MODE_SKIP, SPONSORBLOCK_MODE_NOTIFY)
+DEFAULT_SPONSORBLOCK_ENABLED = False
+DEFAULT_SPONSORBLOCK_CONTRIBUTE = False
 # De quantos em quantos minutos o KeyTune olha as notificações do YouTube; 0 não olha.
 YOUTUBE_NOTIFICATION_CHECK_MINUTES = (0, 5, 15, 30, 60)
 DEFAULT_YOUTUBE_NOTIFICATION_CHECK_MINUTES = 15

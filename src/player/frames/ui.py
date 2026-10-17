@@ -480,6 +480,12 @@ class FrameUIMixin:
         self.menu_show_media_chapters_id = wx.NewIdRef()
         self.menu_show_media_transcript_id = wx.NewIdRef()
         self.menu_choose_audio_track_id = wx.NewIdRef()
+        self.menu_sponsorblock_skip_id = wx.NewIdRef()
+        self.menu_sponsorblock_undo_id = wx.NewIdRef()
+        self.menu_sponsorblock_mark_start_id = wx.NewIdRef()
+        self.menu_sponsorblock_submit_id = wx.NewIdRef()
+        self.menu_sponsorblock_vote_up_id = wx.NewIdRef()
+        self.menu_sponsorblock_vote_down_id = wx.NewIdRef()
         self.menu_enqueue_item_id = wx.NewIdRef()
         self.menu_manage_queue_id = wx.NewIdRef()
         self.menu_open_equalizer_id = wx.NewIdRef()
@@ -535,6 +541,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_reset_pitch_id, _("Restaurar &Tom Original (Shift+\\)"))
         playback_menu.Append(self.menu_cycle_audio_output_device_id, _("Selecionar dispositivo de á&udio\tAlt+D"))
         playback_menu.AppendSubMenu(self._build_sleep_timer_menu(), _("Te&mporizador"))
+        playback_menu.AppendSubMenu(self._build_sponsorblock_menu(), _("&SponsorBlock"))
         announce_menu.Append(self.menu_announce_time_id, _("Anunciar &Tempo (T)"))
         announce_menu.Append(self.menu_announce_volume_id, _("Anunciar &Volume (V)"))
         announce_menu.Append(self.menu_announce_status_id, _("Anunciar &Status (S)"))
@@ -820,6 +827,12 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_show_media_chapters, id=self.menu_show_media_chapters_id)
         self.Bind(wx.EVT_MENU, self.on_show_media_transcript, id=self.menu_show_media_transcript_id)
         self.Bind(wx.EVT_MENU, self.on_choose_audio_track, id=self.menu_choose_audio_track_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_skip_segment, id=self.menu_sponsorblock_skip_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_undo_skip, id=self.menu_sponsorblock_undo_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_mark_start, id=self.menu_sponsorblock_mark_start_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_submit_segment, id=self.menu_sponsorblock_submit_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_vote_up, id=self.menu_sponsorblock_vote_up_id)
+        self.Bind(wx.EVT_MENU, self.on_sponsorblock_vote_down, id=self.menu_sponsorblock_vote_down_id)
         self.Bind(wx.EVT_MENU, self.on_enqueue_item, id=self.menu_enqueue_item_id)
         self.Bind(wx.EVT_MENU, self.on_manage_queue, id=self.menu_manage_queue_id)
         self.Bind(wx.EVT_MENU, self.on_download_current_media, id=self.menu_download_media_id)
@@ -982,6 +995,17 @@ class FrameUIMixin:
 
     def on_show_media_comments(self, _event):
         self.show_current_media_comments()
+
+    def _build_sponsorblock_menu(self):
+        menu = wx.Menu()
+        menu.Append(self.menu_sponsorblock_skip_id, _("&Pular o trecho avisado"))
+        menu.Append(self.menu_sponsorblock_undo_id, _("&Voltar ao último trecho pulado"))
+        menu.AppendSeparator()
+        menu.Append(self.menu_sponsorblock_mark_start_id, _("&Marcar início de um trecho"))
+        menu.Append(self.menu_sponsorblock_submit_id, _("Marcar &fim e enviar o trecho..."))
+        menu.Append(self.menu_sponsorblock_vote_up_id, _("Votar: último trecho está &certo"))
+        menu.Append(self.menu_sponsorblock_vote_down_id, _("Votar: último trecho está &errado"))
+        return menu
 
     def on_show_media_details(self, _event):
         self.show_current_media_details()

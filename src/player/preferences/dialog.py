@@ -555,7 +555,49 @@ class PreferencesDialog(wx.Dialog):
             [_("A que o YouTube entregar"), _("Original do vídeo")] + [label for _code, label in AUDIO_LANGUAGES],
         )
 
+        self._build_sponsorblock_group(page, page_sizer)
+
         self.notebook.AddPage(page, _("KeyTube"))
+
+    def _build_sponsorblock_group(self, page, page_sizer):
+        from ..youtube_music import sponsorblock
+
+        box, sizer = self._create_group(page, page_sizer, _("SponsorBlock"))
+        self.sponsorblock_enabled_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Pular trechos marcados pela comunidade SponsorBlock"),
+            _("Patrocínios, pedidos de inscrição e trechos sem música nos vídeos do YouTube."),
+        )
+        self._sponsorblock_modes = list(sponsorblock.MODES)
+        self.sponsorblock_mode_choice = self._add_choice(
+            box,
+            sizer,
+            _("Ao chegar num trecho"),
+            _("Pular sozinho ou só avisar; o comando Pular trecho do SponsorBlock pula quando avisado."),
+            [_("Pular e avisar"), _("Só avisar")],
+        )
+        self._sponsorblock_category_names = list(sponsorblock.CATEGORIES)
+        categories_label = wx.StaticText(box, label=_("Categorias de trecho:"))
+        self.sponsorblock_categories_list = CheckList(
+            box,
+            [sponsorblock.category_label(name) for name in self._sponsorblock_category_names],
+            size=self.FromDIP(wx.Size(-1, 130)),
+        )
+        sizer.Add(categories_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
+        sizer.Add(self.sponsorblock_categories_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
+        self.sponsorblock_contribute_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Ajudar o SponsorBlock: enviar trechos novos e votar"),
+            _("Libera os comandos de marcar, enviar e votar; o SponsorBlock conta os trechos pulados."),
+        )
+        self.sponsorblock_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_sponsorblock)
+
+    def _on_toggle_sponsorblock(self, _event=None):
+        enabled = self.sponsorblock_enabled_checkbox.GetValue()
+        self.sponsorblock_mode_choice.Enable(enabled)
+        self.sponsorblock_categories_list.Enable(enabled)
 
     def _build_radio_tab(self):
         page, page_sizer = self._create_tab_page()
@@ -928,6 +970,16 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
+        self.sponsorblock_enabled_checkbox.SetValue(settings.sponsorblock_enabled)
+        self.sponsorblock_mode_choice.SetSelection(
+            self._choice_index(self._sponsorblock_modes, settings.sponsorblock_mode)
+        )
+        for index, name in enumerate(self._sponsorblock_category_names):
+            self.sponsorblock_categories_list.Check(index, name in settings.sponsorblock_categories)
+        if self._sponsorblock_category_names:
+            self.sponsorblock_categories_list.SetSelection(0)
+        self.sponsorblock_contribute_checkbox.SetValue(settings.sponsorblock_contribute)
+        self._on_toggle_sponsorblock()
         self.youtube_notification_check_choice.SetSelection(
             self._choice_index(YOUTUBE_NOTIFICATION_CHECK_MINUTES, settings.youtube_notification_check_minutes)
         )
@@ -1039,6 +1091,14 @@ class PreferencesDialog(wx.Dialog):
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
+        settings.sponsorblock_enabled = self.sponsorblock_enabled_checkbox.GetValue()
+        settings.sponsorblock_mode = self._sponsorblock_modes[max(self.sponsorblock_mode_choice.GetSelection(), 0)]
+        settings.sponsorblock_categories = [
+            name
+            for index, name in enumerate(self._sponsorblock_category_names)
+            if self.sponsorblock_categories_list.IsChecked(index)
+        ]
+        settings.sponsorblock_contribute = self.sponsorblock_contribute_checkbox.GetValue()
         settings.youtube_notification_check_minutes = YOUTUBE_NOTIFICATION_CHECK_MINUTES[
             max(self.youtube_notification_check_choice.GetSelection(), 0)
         ]

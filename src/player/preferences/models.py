@@ -38,6 +38,12 @@ from ..constants import (
     DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
     DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES,
     DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY,
+    DEFAULT_SPONSORBLOCK_CATEGORIES,
+    DEFAULT_SPONSORBLOCK_CONTRIBUTE,
+    DEFAULT_SPONSORBLOCK_ENABLED,
+    SPONSORBLOCK_CATEGORIES,
+    SPONSORBLOCK_MODE_SKIP,
+    SPONSORBLOCK_MODES,
     DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP,
     DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS,
     DEFAULT_YOUTUBE_NOTIFICATION_CHECK_MINUTES,
@@ -142,6 +148,13 @@ class AppSettings:
     youtube_music_use_youtubejs: bool = DEFAULT_YOUTUBE_MUSIC_USE_YOUTUBEJS
     youtube_music_autoplay_related: bool = DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED
     youtube_music_save_history: bool = DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY
+    # SponsorBlock: pular (ou só avisar) os trechos que a comunidade marcou nos vídeos.
+    sponsorblock_enabled: bool = DEFAULT_SPONSORBLOCK_ENABLED
+    sponsorblock_mode: str = SPONSORBLOCK_MODE_SKIP
+    sponsorblock_categories: list = field(default_factory=lambda: list(DEFAULT_SPONSORBLOCK_CATEGORIES))
+    # Contribuir: enviar trechos novos e votar. O id é privado e só é gerado na primeira contribuição.
+    sponsorblock_contribute: bool = DEFAULT_SPONSORBLOCK_CONTRIBUTE
+    sponsorblock_user_id: str = ""
     youtube_notification_check_minutes: int = DEFAULT_YOUTUBE_NOTIFICATION_CHECK_MINUTES
     # Com o KeyTune em segundo plano, o aviso sai como notificação do Windows.
     youtube_notification_windows_toast: bool = True
@@ -255,6 +268,11 @@ class AppSettings:
             "youtube_music_use_youtubejs": self.youtube_music_use_youtubejs,
             "youtube_music_autoplay_related": self.youtube_music_autoplay_related,
             "youtube_music_save_history": self.youtube_music_save_history,
+            "sponsorblock_enabled": self.sponsorblock_enabled,
+            "sponsorblock_mode": self.sponsorblock_mode,
+            "sponsorblock_categories": list(self.sponsorblock_categories),
+            "sponsorblock_contribute": self.sponsorblock_contribute,
+            "sponsorblock_user_id": self.sponsorblock_user_id,
             "youtube_notification_check_minutes": self.youtube_notification_check_minutes,
             "youtube_notification_windows_toast": self.youtube_notification_windows_toast,
             "youtube_content_language": self.youtube_content_language,
@@ -394,6 +412,15 @@ class AppSettings:
         settings.youtube_music_save_history = bool(
             data.get("youtube_music_save_history", settings.youtube_music_save_history)
         )
+        settings.sponsorblock_enabled = bool(data.get("sponsorblock_enabled", settings.sponsorblock_enabled))
+        sponsorblock_mode = str(data.get("sponsorblock_mode") or "")
+        if sponsorblock_mode in SPONSORBLOCK_MODES:
+            settings.sponsorblock_mode = sponsorblock_mode
+        if "sponsorblock_categories" in data:
+            wanted = set(_string_list(data.get("sponsorblock_categories")))
+            settings.sponsorblock_categories = [category for category in SPONSORBLOCK_CATEGORIES if category in wanted]
+        settings.sponsorblock_contribute = bool(data.get("sponsorblock_contribute", settings.sponsorblock_contribute))
+        settings.sponsorblock_user_id = str(data.get("sponsorblock_user_id") or "").strip()
         notification_check_minutes = data.get(
             "youtube_notification_check_minutes", settings.youtube_notification_check_minutes
         )
