@@ -625,6 +625,9 @@ The `cookies.txt` holds your account's authentication. Because of that:
 - `Ctrl+Shift+M`: view the comments of the current media
 - `Ctrl+L`: like the current media
 - `Ctrl+Shift+L`: mark the current media as disliked (and skip to the next track)
+- `Ctrl+J`: skip the announced SponsorBlock segment; `Ctrl+Shift+J`: go back to the last skipped segment
+- `Ctrl+[` and `Ctrl+]`: mark the start and end of a segment to submit to SponsorBlock
+- `Ctrl+U` and `Ctrl+Shift+U`: vote that the last SponsorBlock segment is right or wrong
 - `A`: turn related content at the end of the playlist on or off
 - `Enter` in the search field: search; with results, focus goes to the list
 - `Esc`: close the tab, when it is focused

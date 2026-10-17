@@ -495,9 +495,9 @@ Para o vídeo que está tocando, use **Reprodução > Ver capítulos da mídia a
 
 O SponsorBlock é uma base aberta onde a comunidade marca trechos dos vídeos do YouTube: patrocínios, pedidos de inscrição, aberturas, ganchos e trechos sem música em clipes. Com **Preferências > KeyTube > SponsorBlock** ligado, o KeyTune pula esses trechos (ou só tira o som, quando a comunidade marcou o trecho para silenciar), toca um som curto (o "Trecho do SponsorBlock pulado", em **Preferências > Acessibilidade > Sons de aviso**) e fala o que pulou. No mesmo grupo você escolhe as categorias e se o KeyTube pula sozinho ou só avisa. A opção vem desligada. Se o SponsorBlock não responder, o KeyTune tenta de novo algumas vezes enquanto o vídeo toca.
 
-Os comandos ficam em **Reprodução > SponsorBlock**: **Pular o trecho avisado** (no modo "Só avisar") e **Voltar ao último trecho pulado**, para quando o trecho estiver errado.
+Os comandos ficam em **Reprodução > SponsorBlock**: **Pular o trecho avisado** (`Ctrl+J`, no modo "Só avisar") e **Voltar ao último trecho pulado** (`Ctrl+Shift+J`), para quando o trecho estiver errado.
 
-Para ajudar o SponsorBlock, ligue **Ajudar o SponsorBlock: enviar trechos novos e votar**. Aí você usa **Marcar início de um trecho** e, no fim dele, **Marcar fim e enviar o trecho...**, que pede a categoria. **Votar: último trecho está certo** e **está errado** avaliam o último trecho que passou. O KeyTune cria um identificador anônimo para os seus envios. Esses comandos não têm atalho de fábrica; para dar um a eles, use **Configurações > Personalizar teclado**. Os dados são do SponsorBlock (sponsor.ajay.app), sob a licença CC BY-NC-SA 4.0.
+Para ajudar o SponsorBlock, ligue **Ajudar o SponsorBlock: enviar trechos novos e votar**. Aí você usa **Marcar início de um trecho** (`Ctrl+[`) e, no fim dele, **Marcar fim e enviar o trecho...** (`Ctrl+]`), que pede a categoria. **Votar: último trecho está certo** (`Ctrl+U`) e **está errado** (`Ctrl+Shift+U`) avaliam o último trecho que passou. O KeyTune cria um identificador anônimo para os seus envios. Para trocar esses atalhos, use **Configurações > Personalizar teclado**. Os dados são do SponsorBlock (sponsor.ajay.app), sob a licença CC BY-NC-SA 4.0.
 
 Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista. Ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você deixou no meio, o KeyTune começa de onde a conta parou e avisa a posição. Com a conta conectada, o YouTube.js ativado e **Salvar o que ouvi e assisti no histórico do YouTube** ligado, ele também informa ao YouTube até onde você assistiu, a cada meio minuto e quando o vídeo sai, e o celular, a TV e o site mostram o vídeo no mesmo ponto.
 
@@ -634,6 +634,9 @@ O `cookies.txt` guarda a autenticação da sua conta. Por isso:
 - `Ctrl+L`: curtir a mídia atual
 - `Ctrl+Shift+L`: marcar a mídia atual como não gostei (e pular para a próxima faixa)
 - `A`: ligar ou desligar o conteúdo relacionado ao fim da playlist
+- `Ctrl+J`: pular o trecho do SponsorBlock avisado; `Ctrl+Shift+J`: voltar ao último trecho pulado
+- `Ctrl+[` e `Ctrl+]`: marcar o início e o fim de um trecho para enviar ao SponsorBlock
+- `Ctrl+U` e `Ctrl+Shift+U`: votar que o último trecho do SponsorBlock está certo ou errado
 - `Enter` no campo de busca: pesquisar; com resultados, o foco vai para a lista
 - `Esc`: fechar a aba, quando ela estiver em foco
 

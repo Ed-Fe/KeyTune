@@ -625,6 +625,9 @@ El `cookies.txt` guarda la autenticación de tu cuenta. Por eso:
 - `Ctrl+Shift+M`: ver los comentarios del medio actual
 - `Ctrl+L`: dar «me gusta» al medio actual
 - `Ctrl+Shift+L`: marcar el medio actual como «no me gusta» (y pasar a la siguiente pista)
+- `Ctrl+J`: saltar el fragmento de SponsorBlock avisado; `Ctrl+Shift+J`: volver al último fragmento saltado
+- `Ctrl+[` y `Ctrl+]`: marcar el inicio y el fin de un fragmento para enviarlo a SponsorBlock
+- `Ctrl+U` y `Ctrl+Shift+U`: votar que el último fragmento de SponsorBlock es correcto o incorrecto
 - `A`: activar o desactivar el contenido relacionado al final de la playlist
 - `Enter` en el campo de búsqueda: buscar; con resultados, el foco pasa a la lista
 - `Esc`: cerrar la pestaña, cuando tiene el foco
