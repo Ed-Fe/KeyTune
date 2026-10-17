@@ -491,6 +491,14 @@ No menu **Ações...** de um vídeo do YouTube, **Ver capítulos** abre a lista 
 
 Para o vídeo que está tocando, use **Reprodução > Ver capítulos da mídia atual** e **Ver transcrição da mídia atual**. Eles não têm atalho de fábrica; para dar um a eles, use **Configurações > Personalizar teclado**.
 
+#### SponsorBlock
+
+O SponsorBlock é uma base aberta onde a comunidade marca trechos dos vídeos do YouTube: patrocínios, pedidos de inscrição, aberturas e trechos sem música em clipes. Com **Preferências > KeyTube > SponsorBlock** ligado, o KeyTune pula esses trechos e fala o que pulou. No mesmo grupo você escolhe as categorias e se o KeyTube pula sozinho ou só avisa. A opção vem desligada.
+
+Os comandos ficam em **Reprodução > SponsorBlock**: **Pular o trecho avisado** (no modo "Só avisar") e **Voltar ao último trecho pulado**, para quando o trecho estiver errado.
+
+Para ajudar o SponsorBlock, ligue **Ajudar o SponsorBlock: enviar trechos novos e votar**. Aí você usa **Marcar início de um trecho** e, no fim dele, **Marcar fim e enviar o trecho...**, que pede a categoria. **Votar: último trecho está certo** e **está errado** avaliam o último trecho que passou. O KeyTune cria um identificador anônimo para os seus envios. Esses comandos não têm atalho de fábrica; para dar um a eles, use **Configurações > Personalizar teclado**. Os dados são do SponsorBlock (sponsor.ajay.app), sob a licença CC BY-NC-SA 4.0.
+
 Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista. Ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você deixou no meio, o KeyTune começa de onde a conta parou e avisa a posição. Com a conta conectada, o YouTube.js ativado e **Salvar o que ouvi e assisti no histórico do YouTube** ligado, ele também informa ao YouTube até onde você assistiu, a cada meio minuto e quando o vídeo sai, e o celular, a TV e o site mostram o vídeo no mesmo ponto.
 
 ### Chat ao vivo

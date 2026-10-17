@@ -24,6 +24,7 @@ from .helpers import (
 )
 from .live import LivePlaybackMixin
 from .media_metadata import MediaMetadataMixin
+from .sponsorblock import SponsorBlockMixin
 from .youtube_history import YouTubeHistoryMixin
 
 
@@ -35,6 +36,7 @@ class FramePlaybackMixin(
     PlaybackAdoptionMixin,
     LivePlaybackMixin,
     YouTubeHistoryMixin,
+    SponsorBlockMixin,
     MediaMetadataMixin,
     PlaybackControlsMixin,
 ):
