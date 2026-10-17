@@ -9,3 +9,8 @@
 ### Alterado
 
 - **Vídeo**: a opção **Mostrar o vídeo das transmissões ao vivo** saiu. As transmissões ao vivo agora seguem **Desativar saída de vídeo**, como o resto do app, e `Ctrl+Alt+V` passa a ativar ou desativar a saída de vídeo para tudo.
+
+### Corrigido
+
+- **Retomada de vídeos do YouTube**: músicas e vídeos curtos que a conta tinha deixado no meio às vezes começavam no meio, mesmo depois de ouvidos inteiros no KeyTune. A posição da conta agora só vale para vídeos acima da duração mínima de **Retomar de onde parou**, fora da margem do começo e do fim, e deixa de valer depois que o vídeo toca no KeyTune. Ao chegar ao fim, o vídeo conta como assistido até o fim no YouTube.
+- **Retomar de onde parou**: a duração mínima padrão caiu de 10 para 5 minutos.

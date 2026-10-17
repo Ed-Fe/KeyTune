@@ -3,6 +3,7 @@ import time
 
 import wx
 
+from ...constants import DEFAULT_SMART_LIBRARY_RESUME_EDGE_SECONDS
 from ...playlists import PlaylistState
 from .helpers import is_music_youtube_url, is_youtube_music_media
 
@@ -72,6 +73,9 @@ class YouTubeHistoryMixin:
             return False
 
         tracking_state["position_ms"] = int(current_time)
+        length = self.player.get_length()
+        if length is not None and length > 0:
+            tracking_state["length_ms"] = int(length)
         elapsed = time.monotonic() - tracking_state.get("watch_time_sent_at", 0.0)
         if elapsed < self._YOUTUBE_WATCH_TIME_INTERVAL_SECONDS:
             return False
@@ -84,8 +88,24 @@ class YouTubeHistoryMixin:
             return False
         return self._send_youtube_watch_time(tracking_state)
 
-    def _send_youtube_watch_time(self, tracking_state):
+    def _youtube_watch_time_to_send_ms(self, tracking_state):
+        """A posição a mandar ao YouTube: a duração inteira quando o vídeo chegou ao fim.
+
+        A última posição medida fica sempre um pouco antes do fim (o crossfade, o intervalo
+        do temporizador). Dentro da margem final de "Retomar de onde parou" o vídeo conta
+        como assistido até o fim, e a barra de progresso dele fica cheia, como no YouTube.
+        """
         position_ms = tracking_state.get("position_ms")
+        length_ms = tracking_state.get("length_ms")
+        if position_ms is None or not length_ms:
+            return position_ms
+        edges_ms = getattr(getattr(self, "settings", None), "smart_library_resume_edge_ms", None)
+        if edges_ms is None:
+            edges_ms = DEFAULT_SMART_LIBRARY_RESUME_EDGE_SECONDS * 1000
+        return length_ms if length_ms - position_ms <= edges_ms else position_ms
+
+    def _send_youtube_watch_time(self, tracking_state):
+        position_ms = self._youtube_watch_time_to_send_ms(tracking_state)
         if position_ms is None or tracking_state.get("watch_time_busy"):
             return False
         sent_position_ms = tracking_state.get("watch_time_sent_position_ms")

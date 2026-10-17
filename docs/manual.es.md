@@ -347,7 +347,7 @@ Este historial es local y no tiene relación con **Guardar lo que escuché y vi 
 Los podcasts, audiolibros y vídeos largos vuelven a sonar desde el punto en el que se detuvieron. La regla es conservadora a propósito:
 
 - vale solo para archivos locales, porque los streams no tienen una línea de tiempo estable entre sesiones;
-- vale solo para medios que superan la **duración mínima** configurada (10 minutos, por defecto);
+- vale solo para medios que superan la **duración mínima** configurada (5 minutos, por defecto);
 - detenerse dentro del **margen** configurado (30 segundos, por defecto) del principio o del final no crea un punto de reanudación;
 - llegar al final de la pista borra la marca, y la próxima vez empieza desde el principio.
 
@@ -396,7 +396,7 @@ La lista funciona como el explorador de carpetas (consulta [Cómo funcionan las 
 - **Tus playlists y mixes**: las de la cuenta conectada. `Enter` abre la playlist en una pestaña propia, desde donde se puede editar en la cuenta; `Flecha derecha` muestra las pistas en la propia lista. Requiere cuenta conectada.
 - **Me gusta**: las pistas con «me gusta» (la playlist *Me gusta* de tu cuenta). Requiere cuenta conectada.
 - **Historial de YouTube Music**: tu historial de reproducción de YouTube Music. Requiere cuenta conectada.
-- **Historial de YouTube**: los vídeos que viste en YouTube, del más reciente al más antiguo. Requiere cuenta conectada y YouTube.js activado. Al pulsar `Enter` en un vídeo que dejaste a medias, KeyTune empieza donde la cuenta lo dejó.
+- **Historial de YouTube**: los vídeos que viste en YouTube, del más reciente al más antiguo. Requiere cuenta conectada y YouTube.js activado. Al pulsar `Enter` en un vídeo largo que dejaste a medias, KeyTune empieza donde la cuenta lo dejó.
 - **Recomendados de YouTube**: lo que YouTube te sugiere en el inicio, como en el sitio. Requiere cuenta conectada y YouTube.js activado.
 - **Para ti en YouTube Music**: las filas del inicio de YouTube Music (*Selecciones rápidas*, mixes, novedades...). Cada fila se abre como una carpeta. Con la cuenta conectada, son personalizadas.
 - **Ver más tarde**: la lista *Ver más tarde* de la cuenta. En el menú **Acciones...** de un vídeo, **Guardar en Ver más tarde** lo añade a ella, y **Quitar de Ver más tarde** lo elimina cuando estás en esta lista. Requiere cuenta conectada y YouTube.js activado.
@@ -492,7 +492,7 @@ En el menú **Acciones...** de un vídeo de YouTube, **Ver capítulos** abre sus
 
 Para el vídeo que se está reproduciendo, usa **Reproducción > Ver capítulos del medio actual** y **Ver transcripción del medio actual**. No tienen atajo de fábrica; para darles uno, usa **Configuración > Personalizar teclado**.
 
-Los vídeos largos de YouTube también vuelven desde donde los dejaste, como los pódcast: la posición se guarda entre sesiones, y **Continuar escuchando** los lista. Al pulsar `Intro` en un vídeo del **Historial de YouTube** que dejaste a medias, KeyTune empieza donde la cuenta lo dejó y anuncia la posición. Con la cuenta conectada, YouTube.js activado y **Guardar lo que escuché y vi en el historial de YouTube** activado, también informa a YouTube hasta dónde lo viste, cada medio minuto y cuando el vídeo sale, y el teléfono, la tele y el sitio muestran el vídeo en el mismo punto.
+Los vídeos largos de YouTube también vuelven desde donde los dejaste, como los pódcast: la posición se guarda entre sesiones, y **Continuar escuchando** los lista. Un vídeo que la cuenta dejó a medias, en cualquier lista de YouTube, empieza donde la cuenta lo dejó y KeyTune anuncia la posición. Esto sigue las reglas de [Reanudar donde lo dejaste](#reanudar-donde-lo-dejaste): el vídeo tiene que superar la duración mínima y la posición tiene que quedar fuera del margen del principio y del final, así que una canción escuchada a medias en el navegador empieza desde el principio. Cuando el vídeo suena en KeyTune, vale la posición guardada aquí. Con la cuenta conectada, YouTube.js activado y **Guardar lo que escuché y vi en el historial de YouTube** activado, también informa a YouTube hasta dónde lo viste, cada medio minuto y cuando el vídeo sale. Un vídeo que llegó al margen del final cuenta como visto hasta el final. El teléfono, la tele y el sitio muestran el vídeo en el mismo punto.
 
 ### Chat en vivo
 

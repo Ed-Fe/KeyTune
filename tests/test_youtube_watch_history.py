@@ -90,8 +90,24 @@ class WatchHistoryTests(unittest.TestCase):
         frame._player_loaded_media_path = lambda: media_path
         frame.player = Mock()
         frame.player.get_time.return_value = position_ms
+        frame.player.get_length.return_value = 600_000
         frame._prepare_youtube_music_history_tracking(media_path)
         return frame
+
+    def test_a_video_that_reached_the_end_is_reported_as_watched_to_the_end(self):
+        # O crossfade e o temporizador deixam a última posição medida um pouco antes do fim.
+        frame = self._playing_frame(VIDEO_URL, 588_000)
+        frame._youtube_music_history_tracking["reported"] = True
+        frame._maybe_report_youtube_watch_time()
+
+        self.assertEqual(frame._youtube_watch_time_to_send_ms(frame._youtube_music_history_tracking), 600_000)
+
+    def test_a_video_stopped_before_the_end_keeps_its_position(self):
+        frame = self._playing_frame(VIDEO_URL, 500_000)
+        frame._youtube_music_history_tracking["reported"] = True
+        frame._maybe_report_youtube_watch_time()
+
+        self.assertEqual(frame._youtube_watch_time_to_send_ms(frame._youtube_music_history_tracking), 500_000)
 
     def test_the_position_goes_to_youtube_only_after_the_video_is_in_the_history(self):
         frame = self._playing_frame(VIDEO_URL, 40_000)

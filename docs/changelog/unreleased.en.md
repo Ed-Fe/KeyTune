@@ -9,3 +9,8 @@
 ### Changed
 
 - **Video**: the **Show the video of live broadcasts** option is gone. Live broadcasts now follow **Disable video output**, like the rest of the app, and `Ctrl+Alt+V` turns video output on or off for everything.
+
+### Fixed
+
+- **Resuming YouTube videos**: songs and short videos the account had left halfway sometimes started in the middle, even after being played in full in KeyTune. The account's position now only counts for videos longer than the minimum duration in **Resume where you stopped**, outside the margin at the start and the end, and stops counting once the video plays in KeyTune. When it reaches the end, the video counts as watched to the end on YouTube.
+- **Resume where you stopped**: the default minimum duration went down from 10 to 5 minutes.

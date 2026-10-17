@@ -104,6 +104,10 @@ class PlaylistPlaybackMixin:
                 announce_message=announce_message,
                 autodj_transition=autodj_transition,
             ):
+                # Entrou pelo crossfade, do começo: a posição da lista do YouTube não vale mais.
+                take_youtube_resume_hint = getattr(self, "_take_youtube_resume_hint_ms", None)
+                if callable(take_youtube_resume_hint):
+                    take_youtube_resume_hint(state.current_media_path)
                 return
 
         # Mídias longas (podcasts, audiolivros, vídeos) voltam de onde pararam.
@@ -115,10 +119,12 @@ class PlaylistPlaybackMixin:
                 state.last_position_ms = resume_position_ms
                 self._announce_resume_position(state.current_media_path, resume_position_ms)
         take_youtube_resume_hint = getattr(self, "_take_youtube_resume_hint_ms", None)
-        if resume_position_ms <= 0 and callable(take_youtube_resume_hint):
-            # Vídeo do histórico do YouTube: retoma de onde a conta parou.
-            resume_position_ms = take_youtube_resume_hint(state.current_media_path)
-            if resume_position_ms > 0:
+        if callable(take_youtube_resume_hint):
+            # Vídeo do YouTube já assistido em parte pela conta: retoma de onde ela parou,
+            # se a biblioteca não souber de uma posição mais nova. A dica é gasta de todo jeito.
+            youtube_resume_position_ms = take_youtube_resume_hint(state.current_media_path)
+            if resume_position_ms <= 0 and youtube_resume_position_ms > 0:
+                resume_position_ms = youtube_resume_position_ms
                 state.last_position_ms = resume_position_ms
                 self._announce_resume_position(state.current_media_path, resume_position_ms)
 

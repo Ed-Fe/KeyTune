@@ -140,12 +140,8 @@ def normalize_youtube_entry(entry, *, show_owner=True):
         owner_title=owner,
         is_live=str(entry.get("live_status") or "").strip() == "is_live",
         resume_seconds=_resume_seconds(entry),
+        duration_seconds=_duration_seconds(entry),
     )
-
-
-# Só vale retomar quando já passou do começo e ainda falta um bom pedaço.
-_RESUME_MIN_PERCENT = 3
-_RESUME_MAX_PERCENT = 95
 
 
 def _duration_seconds(entry):
@@ -165,12 +161,16 @@ def _duration_seconds(entry):
 
 
 def _resume_seconds(entry):
-    """Os segundos em que a conta parou o vídeo, a partir da barra de progresso do histórico."""
+    """Os segundos em que a conta parou o vídeo, a partir da barra de progresso da miniatura.
+
+    A barra aparece em qualquer lista, não só no histórico. Se a posição vale uma retomada
+    (vídeo longo, longe das pontas) quem decide é o player, com as regras de "Retomar de onde parou".
+    """
     try:
         percent = float(entry.get("watched_percent") or 0)
     except (TypeError, ValueError):
         return 0
-    if not _RESUME_MIN_PERCENT <= percent <= _RESUME_MAX_PERCENT:
+    if not 0 < percent < 100:
         return 0
     if str(entry.get("live_status") or "").strip() == "is_live":
         return 0

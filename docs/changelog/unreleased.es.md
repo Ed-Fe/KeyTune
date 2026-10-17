@@ -9,3 +9,8 @@
 ### Cambiado
 
 - **Vídeo**: la opción **Mostrar el video de las transmisiones en vivo** desapareció. Las transmisiones en vivo ahora siguen **Desactivar salida de video**, como el resto de la aplicación, y `Ctrl+Alt+V` activa o desactiva la salida de vídeo para todo.
+
+### Corregido
+
+- **Reanudar vídeos de YouTube**: canciones y vídeos cortos que la cuenta había dejado a medias a veces empezaban por la mitad, incluso después de escucharlos enteros en KeyTune. La posición de la cuenta ahora solo vale para vídeos que superan la duración mínima de **Reanudar donde lo dejaste**, fuera del margen del principio y del final, y deja de valer cuando el vídeo suena en KeyTune. Al llegar al final, el vídeo cuenta como visto hasta el final en YouTube.
+- **Reanudar donde lo dejaste**: la duración mínima por defecto bajó de 10 a 5 minutos.

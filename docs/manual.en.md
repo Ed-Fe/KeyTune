@@ -347,7 +347,7 @@ This history is local and has no relation to **Save what I listened to and watch
 Podcasts, audiobooks and long videos pick up from the point where they stopped. The rule is deliberately conservative:
 
 - it only applies to local files, because streams don't have a stable timeline between sessions;
-- it only applies to media longer than the configured **minimum duration** (10 minutes by default);
+- it only applies to media longer than the configured **minimum duration** (5 minutes by default);
 - stopping within the configured **margin** (30 seconds by default) of the start or the end does not create a resume point;
 - reaching the end of the track erases the mark, and the next time it starts from the beginning.
 
@@ -396,7 +396,7 @@ The list works like the folder explorer (see [How lists work](#how-lists-work)) 
 - **Your playlists and mixes**: those of the connected account. `Enter` opens the playlist in its own tab, where you can edit it in the account; `Right arrow` shows the tracks in the list itself. Requires a connected account.
 - **Liked songs**: the tracks you liked (the *Liked Music* playlist of your account). Requires a connected account.
 - **YouTube Music history**: your YouTube Music playback history. Requires a connected account.
-- **YouTube history**: the videos you watched on YouTube, newest first. Requires a connected account and YouTube.js turned on. When you press `Enter` on a video you stopped halfway, KeyTune starts where the account left off.
+- **YouTube history**: the videos you watched on YouTube, newest first. Requires a connected account and YouTube.js turned on. When you press `Enter` on a long video you stopped halfway, KeyTune starts where the account left off.
 - **Recommended on YouTube**: what YouTube suggests for you on its home page. Requires a connected account and YouTube.js turned on.
 - **For you on YouTube Music**: the rows of the YouTube Music home (*Quick picks*, mixes, new releases...). Each row opens as a folder. With a connected account they are personalized.
 - **Watch later**: your account's *Watch later* playlist. In a video's **Actions...** menu, **Save to Watch later** adds the video to it, and **Remove from Watch later** removes it while you are in this list. Requires a connected account and YouTube.js turned on.
@@ -492,7 +492,7 @@ In the **Actions...** menu of a YouTube video, **View chapters** opens its chapt
 
 For the video that is playing, use **Playback > View chapters of the current media** and **View transcript of the current media**. They have no default shortcut; to give them one, use **Settings > Customize keyboard**.
 
-Long YouTube videos also come back from where you stopped, like podcasts: the position is kept between sessions, and **Continue listening** lists them. When you press `Enter` on a video in **YouTube history** that you left halfway, KeyTune starts where the account left off and announces the position. With the account connected, YouTube.js turned on and **Save what I listened to and watched in the YouTube history** on, it also tells YouTube how far you watched, every half minute and when the video leaves, and your phone, TV and the site show the video at the same point.
+Long YouTube videos also come back from where you stopped, like podcasts: the position is kept between sessions, and **Continue listening** lists them. A video the account left halfway, in any YouTube list, starts where the account stopped and KeyTune announces the position. This follows the rules of [Resume where you stopped](#resume-where-you-stopped): the video must be longer than the minimum duration and the position must be outside the margin at the start and the end, so a song you listened to halfway in the browser starts from the beginning. Once the video plays in KeyTune, the position kept here is the one that counts. With the account connected, YouTube.js turned on and **Save what I listened to and watched in the YouTube history** on, it also tells YouTube how far you watched, every half minute and when the video leaves. A video that reached the margin at the end counts as watched to the end. Your phone, TV and the site show the video at the same point.
 
 ### Live chat
 

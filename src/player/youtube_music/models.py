@@ -423,6 +423,8 @@ class YouTubeMediaSearchResult:
     is_live: bool = False
     # Onde a conta parou num vídeo do histórico (segundos); 0 quando não há o que retomar.
     resume_seconds: int = 0
+    # A duração do vídeo (segundos), quando a lista informou; decide se vale retomar.
+    duration_seconds: int = 0
 
     def owner_result(self):
         """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""

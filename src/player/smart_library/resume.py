@@ -21,7 +21,8 @@ class ResumeStore:
         self._database = database
         self._records = record_store
 
-    def should_remember(self, position_ms, duration_ms, *, minimum_duration_ms, ignore_edges_ms):
+    @staticmethod
+    def should_remember(position_ms, duration_ms, *, minimum_duration_ms, ignore_edges_ms):
         """Se vale guardar a posição atual como ponto de retomada."""
         try:
             normalized_position_ms = int(position_ms or 0)

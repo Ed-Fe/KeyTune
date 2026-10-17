@@ -347,7 +347,7 @@ Este histórico é local e não tem relação com **Salvar o que ouvi e assisti 
 Podcasts, audiolivros e vídeos longos voltam a tocar do ponto em que pararam. A regra é conservadora de propósito:
 
 - vale só para arquivos locais, porque streams não têm uma linha do tempo estável entre sessões;
-- vale só para mídias acima da **duração mínima** configurada (10 minutos, por padrão);
+- vale só para mídias acima da **duração mínima** configurada (5 minutos, por padrão);
 - parar dentro da **margem** configurada (30 segundos, por padrão) do começo ou do fim não cria ponto de retomada;
 - chegar ao fim da faixa apaga a marca, e na próxima vez ela recomeça do início.
 
@@ -396,7 +396,7 @@ A lista funciona como o explorador de pastas (veja [Como as listas funcionam](#c
 - **Suas playlists e mixes**: as da conta conectada. `Enter` abre a playlist numa aba própria, de onde dá para editá-la na conta; `Seta para a direita` mostra as faixas na própria lista. Exige conta conectada.
 - **Curtidas**: as faixas curtidas (a playlist *Curtidas* da sua conta). Exige conta conectada.
 - **Histórico do YouTube Music**: seu histórico de reprodução do YouTube Music. Exige conta conectada.
-- **Histórico do YouTube**: os vídeos que você assistiu no YouTube, do mais recente para o mais antigo. Exige conta conectada e o YouTube.js ativado. Ao tocar com `Enter` um vídeo que você parou no meio, o KeyTune começa de onde a conta parou.
+- **Histórico do YouTube**: os vídeos que você assistiu no YouTube, do mais recente para o mais antigo. Exige conta conectada e o YouTube.js ativado. Ao tocar com `Enter` um vídeo longo que você parou no meio, o KeyTune começa de onde a conta parou.
 - **Recomendados do YouTube**: o que o YouTube sugere para você no início, como no site. Exige conta conectada e o YouTube.js ativado.
 - **Para você no YouTube Music**: as fileiras do início do YouTube Music (*Escolhas rápidas*, mixes, lançamentos...). Cada fileira abre como uma pasta. Com a conta conectada, são personalizadas.
 - **Assistir mais tarde**: a playlist *Assistir mais tarde* da conta. No menu **Ações...** de um vídeo, **Salvar em Assistir mais tarde** põe o vídeo nela, e **Tirar de Assistir mais tarde** o remove quando você está nesta lista. Exige conta conectada e o YouTube.js ativado.
@@ -500,7 +500,7 @@ Os comandos ficam em **Reprodução > SponsorBlock**: **Pular o trecho avisado**
 
 Para ajudar o SponsorBlock, ligue **Ajudar o SponsorBlock: enviar trechos novos e votar**. Aí você usa **Marcar início de um trecho** (`Ctrl+[`) e, no fim dele, **Marcar fim e enviar o trecho...** (`Ctrl+]`), que pede a categoria. **Votar: último trecho está certo** (`Ctrl+U`) e **está errado** (`Ctrl+Shift+U`) avaliam o último trecho que passou. O KeyTune cria um identificador anônimo para os seus envios. Para trocar esses atalhos, use **Configurações > Personalizar teclado**. Os dados são do SponsorBlock (sponsor.ajay.app), sob a licença CC BY-NC-SA 4.0.
 
-Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista. Ao tocar com `Enter` um vídeo do **Histórico do YouTube** que você deixou no meio, o KeyTune começa de onde a conta parou e avisa a posição. Com a conta conectada, o YouTube.js ativado e **Salvar o que ouvi e assisti no histórico do YouTube** ligado, ele também informa ao YouTube até onde você assistiu, a cada meio minuto e quando o vídeo sai, e o celular, a TV e o site mostram o vídeo no mesmo ponto.
+Os vídeos longos do YouTube também voltam de onde você parou, como os podcasts: a posição é guardada entre as sessões, e **Continuar ouvindo** os lista. Um vídeo que a conta deixou no meio, em qualquer lista do YouTube, começa de onde ela parou e o KeyTune avisa a posição. Isso segue as regras de [Retomar de onde parou](#retomar-de-onde-parou): o vídeo precisa passar da duração mínima e a posição precisa estar fora da margem do começo e do fim, então uma música ouvida pela metade no navegador recomeça do início. Depois que o vídeo toca no KeyTune, vale a posição guardada aqui. Com a conta conectada, o YouTube.js ativado e **Salvar o que ouvi e assisti no histórico do YouTube** ligado, ele também informa ao YouTube até onde você assistiu, a cada meio minuto e quando o vídeo sai. Um vídeo que chegou à margem do fim conta como assistido até o fim. O celular, a TV e o site mostram o vídeo no mesmo ponto.
 
 ### Chat ao vivo
 
