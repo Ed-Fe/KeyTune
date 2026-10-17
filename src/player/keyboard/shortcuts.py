@@ -317,7 +317,7 @@ def _local_actions():
             accelerator=True,
         ),
         A("sleep_timer", "playback", _("Configurar temporizador"), "Ctrl+Shift+D", "_open_sleep_timer_dialog", "menu_sleep_timer_dialog_id"),
-        A("toggle_live_video", "playback", _("Mostrar ou ocultar a imagem da transmissão ao vivo"), "Ctrl+Alt+V", "_toggle_live_video"),
+        A("toggle_video_output", "playback", _("Ativar ou desativar a saída de vídeo"), "Ctrl+Alt+V", "_toggle_video_output"),
         A("like_media", "playback", _("Gostei da mídia atual (YouTube)"), "Ctrl+L", "_shortcut_like_media"),
         A("dislike_media", "playback", _("Não gostei da mídia atual (YouTube)"), "Ctrl+Shift+L", "_shortcut_dislike_media"),
         # Navegação na mídia
@@ -359,6 +359,14 @@ def _local_actions():
         A("find_item", "view", _("Localizar item"), "Ctrl+F", "_open_item_search_dialog", "menu_find_item_id"),
         A("find_next", "view", _("Próximo resultado"), "F3", "_shortcut_find_next", "menu_find_next_item_id"),
         A("find_previous", "view", _("Resultado anterior"), "Shift+F3", "_shortcut_find_previous", "menu_find_previous_item_id"),
+        A(
+            "toggle_video_fullscreen",
+            "view",
+            _("Tela cheia do vídeo"),
+            "Alt+Enter",
+            "on_toggle_video_fullscreen",
+            "menu_toggle_video_fullscreen_id",
+        ),
         A("toggle_lyrics", "view", _("Mostrar ou ocultar a letra"), "Ctrl+Alt+L", "toggle_lyrics_panel"),
         A("open_equalizer", "view", _("Equalizador"), "Ctrl+Shift+E", "on_open_equalizer", "menu_open_equalizer_id"),
         A("open_youtube_music", "view", _("KeyTube por aba"), "Ctrl+Shift+Y", "on_open_youtube_music", "menu_open_youtube_music_id"),

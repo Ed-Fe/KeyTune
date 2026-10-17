@@ -39,7 +39,7 @@ O KeyTune toca mídia pelo runtime do MPV, e o instalador já o inclui. Se o pla
 Na primeira abertura, a janela mostra uma aba de playlist vazia. Ela tem estas áreas:
 
 - **Barra de menus**, no topo: **Arquivo**, **Reprodução**, **Exibir**, **Biblioteca**, **Abas**, **Configurações** e **Ajuda**.
-- **Área de abas**, que ocupa quase toda a janela. Cada aba é uma playlist (veja [Playlist, pastas e abas](#playlist-pastas-e-abas)) e se divide em duas partes lado a lado: à esquerda, o navegador de itens, que é a lista da playlist; à direita, a área do player. Para um vídeo, a área do player mostra o quadro de vídeo. Para áudio, ou sem nada carregado, mostra um texto de apoio com os atalhos mais usados.
+- **Área de abas**, que ocupa quase toda a janela. Cada aba é uma playlist (veja [Playlist, pastas e abas](#playlist-pastas-e-abas)) e se divide em duas partes lado a lado: à esquerda, o navegador de itens, que é a lista da playlist; à direita, a área do player. Para um vídeo, a área do player mostra o quadro de vídeo. Para áudio, ou sem nada carregado, mostra um texto de apoio em letra grande com os atalhos mais usados. `Alt+Enter`, ou **Exibir > Tela cheia do vídeo**, deixa só a área do player na tela inteira; `Alt+Enter` ou `Esc` voltam.
 - **Explorador de pastas**, à esquerda das abas quando aberto com `Ctrl+E`. Mostra as pastas e os arquivos de mídia do computador (veja [Explorador de pastas](#explorador-de-pastas)).
 - **Painel de tempo**, abaixo das abas: tempo decorrido, duração, barra de progresso e um resumo dos atalhos principais.
 - **Barra de status**, na borda de baixo: o resultado da última ação.
@@ -123,7 +123,8 @@ Abrem direto na janela principal, como antes: playlists `.m3u` e `.m3u8`, vídeo
 | `Shift+\` | Voltar ao tom original |
 | `Alt+D` | Escolher a saída de áudio |
 | `Ctrl+Alt+L` | Mostrar ou ocultar o painel de letras |
-| `Ctrl+Alt+V` | Alternar o vídeo das transmissões ao vivo |
+| `Ctrl+Alt+V` | Ativar ou desativar a saída de vídeo |
+| `Alt+Enter` | Tela cheia do vídeo (`Esc` também sai) |
 | `Ctrl+Shift+F` | Pôr o item selecionado na fila |
 | `Ctrl+Shift+Q` | Gerenciar a fila |
 | `Ctrl+Shift+D` | Configurar o temporizador |
@@ -522,7 +523,7 @@ O comando **Ver chat ao vivo da mídia atual** não tem atalho de fábrica; para
 Cole o link de uma transmissão ao vivo do YouTube no campo **Buscar ou colar link** (ou use `Ctrl+V`, como em qualquer link). O KeyTune reconhece a transmissão sozinho.
 
 - Ela toca no momento atual, sem retomar de uma posição salva. A barra de tempo mostra um rótulo fixo no lugar da duração, e `T` informa há quanto tempo você está assistindo.
-- Com **Mostrar o vídeo das transmissões ao vivo** ligado (o padrão), a imagem aparece na área do player mesmo com **Desativar saída de vídeo** marcado. O vídeo é limitado a 720p. Desligado, a transmissão toca só o áudio, na variante mais leve. `Ctrl+Alt+V` alterna a opção e reinicia a transmissão no novo modo.
+- Com a saída de vídeo ligada, a imagem aparece na área do player, limitada a 720p. Com **Desativar saída de vídeo** marcado, a transmissão toca só o áudio, na variante mais leve. `Ctrl+Alt+V` alterna a saída de vídeo e reinicia a transmissão no novo modo.
 - Não dá para avançar, voltar nem ir ao início ou ao fim. Pausar e retomar continua de onde parou.
 - Se a conexão cair, o player tenta reconectar até três vezes e avisa. Se a transmissão já tiver terminado, o player avisa em vez de tocar a gravação desde o começo.
 - Uma transmissão agendada que ainda não começou avisa; tente de novo quando ela iniciar.
@@ -815,8 +816,7 @@ A seção **Registro de logs** ajuda a investigar problemas. **Registrar logs de
 - **Crossfade (segundos)**: a sobreposição de áudio entre faixas na troca automática (0 a 12 s). Use 0 para desligar. Só vale entre arquivos de áudio.
 - **Aplicar crossfade ao trocar de faixa manualmente**: com a opção ligada, o crossfade vale também ao avançar ou voltar com os controles; por padrão, só no fim natural da faixa. Quando há uma transição do AutoDJ pronta, avançar usa esse plano mesmo com a opção desligada.
 - **Dispositivo de áudio**: a saída de som. *Padrão do sistema* segue o dispositivo principal do Windows.
-- **Desativar saída de vídeo (tocar só o áudio)**: toca só o áudio, inclusive de arquivos de vídeo. Evita janelas externas de vídeo.
-- **Mostrar o vídeo das transmissões ao vivo**: mostra a imagem das transmissões do YouTube na área do player mesmo com a saída de vídeo desativada para o resto do app. Desmarcado, a transmissão toca só o áudio. `Ctrl+Alt+V` alterna durante uma transmissão.
+- **Desativar saída de vídeo (tocar só o áudio)**: toca só o áudio, inclusive de arquivos de vídeo e transmissões ao vivo. Evita janelas externas de vídeo. `Ctrl+Alt+V` alterna a opção a qualquer momento.
 
 O **volume padrão**, os passos de **volume** e de **busca** (o quanto cada seta muda), a **repetição padrão** e o **embaralhamento** das playlists novas completam a aba e também fazem o que o nome diz.
 

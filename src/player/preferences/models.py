@@ -14,7 +14,6 @@ from ..constants import (
     DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE,
     DEFAULT_CROSSFADE_SECONDS,
     DEFAULT_DISABLE_VIDEO_OUTPUT,
-    DEFAULT_LIVE_VIDEO_ENABLED,
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
@@ -128,7 +127,6 @@ class AppSettings:
     # O arquivo escolhido para tocar no lugar de cada som: {som: caminho}.
     interface_sounds_custom: dict = field(default_factory=dict)
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
-    live_video_enabled: bool = DEFAULT_LIVE_VIDEO_ENABLED
     audio_output_device_id: str = ""
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
@@ -246,7 +244,6 @@ class AppSettings:
             "interface_sounds_disabled": list(self.interface_sounds_disabled),
             "interface_sounds_custom": dict(self.interface_sounds_custom),
             "disable_video_output": self.disable_video_output,
-            "live_video_enabled": self.live_video_enabled,
             "audio_output_device_id": (
                 self.audio_output_device_id if is_selectable_audio_output_device_id(self.audio_output_device_id) else ""
             ),
@@ -352,7 +349,6 @@ class AppSettings:
         settings.interface_sounds_disabled = normalize_disabled(data.get("interface_sounds_disabled"))
         settings.interface_sounds_custom = normalize_custom(data.get("interface_sounds_custom"))
         settings.disable_video_output = bool(data.get("disable_video_output", settings.disable_video_output))
-        settings.live_video_enabled = bool(data.get("live_video_enabled", settings.live_video_enabled))
         raw_audio_output_device_id = normalize_audio_output_device_id(data.get("audio_output_device_id"))
         settings.audio_output_device_id = (
             raw_audio_output_device_id if is_selectable_audio_output_device_id(raw_audio_output_device_id) else ""

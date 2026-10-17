@@ -57,7 +57,7 @@ class MediaMetadataMixin:
 
         resolved_playback = youtube_music_service.resolve_stream_playback(
             media_path,
-            prefer_video=self._live_video_enabled(),
+            prefer_video=self._video_output_enabled(),
         )
         return (
             resolved_playback.stream_url,

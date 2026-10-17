@@ -92,11 +92,10 @@ class PlaybackEngineMixin:
                     media_kwargs = {"http_headers": playback_http_headers}
                     live_video = False
                     if is_live:
-                        # A live never resumes and can show its picture even when
-                        # the rest of the app plays audio only.
+                        # A live never resumes and shows its picture when video output is on.
                         # A radio has no picture: asking for video would also mark
                         # the slot to be rebuilt before the next media.
-                        live_video = self._live_video_enabled() and not is_radio_media(request["media_path"])
+                        live_video = self._video_output_enabled() and not is_radio_media(request["media_path"])
                         media_kwargs.update(is_live=True, video=live_video)
                     media = player_instance.media_new(playback_media_path, **media_kwargs)
                     player.stop()
@@ -222,7 +221,16 @@ class PlaybackEngineMixin:
         self._playback_queue.put(request)
         return request
 
-    def _refresh_player_backend_for_video_output_setting(self):
+    def _toggle_video_output(self):
+        self.settings.disable_video_output = self._video_output_enabled()
+        self._save_settings()
+        if self._video_output_enabled():
+            message = _("Saída de vídeo ativada.")
+        else:
+            message = _("Saída de vídeo desativada.")
+        self._refresh_player_backend_for_video_output_setting(announce_message=message)
+
+    def _refresh_player_backend_for_video_output_setting(self, announce_message=""):
         self._capture_active_playlist_state()
         active_index = self._get_active_playlist_index()
         active_state = self._get_active_playlist_state()
@@ -240,10 +248,12 @@ class PlaybackEngineMixin:
                 tab_index=active_index,
                 restore_position_ms=restore_position_ms,
                 pause_after_start=pause_after_restore,
-                announce_message="",
+                announce_message=announce_message,
             )
             return
 
+        if announce_message:
+            self._announce(announce_message)
         self._update_title()
         self._update_time_bar()
 

@@ -13,6 +13,7 @@ from .download import FrameDownloadMixin
 from .autodj import FrameAutoDJMixin
 from .equalizer import FrameEqualizerMixin
 from .explorer import FrameExplorerMixin
+from .fullscreen import FrameFullscreenMixin
 from .global_hotkeys import FrameGlobalHotkeysMixin
 from .item_search import FrameItemSearchMixin
 from .keyboard import FrameKeyboardMixin
@@ -43,6 +44,7 @@ class MediaPlayerFrame(
     FrameRecentsMixin,
     FrameEqualizerMixin,
     FrameExplorerMixin,
+    FrameFullscreenMixin,
     FrameItemSearchMixin,
     FrameSmartLibraryMixin,
     FrameSleepTimerMixin,

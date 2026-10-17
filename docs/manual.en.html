@@ -225,7 +225,7 @@ footer {
 <p>The first time you open it, the window shows an empty playlist tab. It has these areas:</p>
 <ul>
 <li><strong>Menu bar</strong>, at the top: <strong>File</strong>, <strong>Playback</strong>, <strong>View</strong>, <strong>Library</strong>, <strong>Tabs</strong>, <strong>Settings</strong> and <strong>Help</strong>.</li>
-<li><strong>Tab area</strong>, which takes up most of the window. Each tab is a playlist (see <a href="#playlists-folders-and-tabs">Playlists, folders and tabs</a>) and is split into two parts side by side: on the left, the item browser, which is the playlist list; on the right, the player area. For a video, the player area shows the video frame. For audio, or with nothing loaded, it shows a help text with the most-used shortcuts.</li>
+<li><strong>Tab area</strong>, which takes up most of the window. Each tab is a playlist (see <a href="#playlists-folders-and-tabs">Playlists, folders and tabs</a>) and is split into two parts side by side: on the left, the item browser, which is the playlist list; on the right, the player area. For a video, the player area shows the video frame. For audio, or with nothing loaded, it shows a help text in large print with the most-used shortcuts. <code>Alt+Enter</code>, or <strong>View &gt; Full-screen video</strong>, leaves only the player area, filling the screen; <code>Alt+Enter</code> or <code>Esc</code> go back.</li>
 <li><strong>Folder explorer</strong>, to the left of the tabs when opened with <code>Ctrl+E</code>. It shows the folders and media files on the computer (see <a href="#folder-explorer">Folder explorer</a>).</li>
 <li><strong>Time panel</strong>, below the tabs: elapsed time, duration, progress bar and a summary of the main shortcuts.</li>
 <li><strong>Status bar</strong>, along the bottom edge: the result of the last action.</li>
@@ -416,7 +416,11 @@ footer {
 </tr>
 <tr>
 <td><code>Ctrl+Alt+V</code></td>
-<td>Toggle the video of live broadcasts</td>
+<td>Turn video output on or off</td>
+</tr>
+<tr>
+<td><code>Alt+Enter</code></td>
+<td>Full-screen video (<code>Esc</code> also exits)</td>
 </tr>
 <tr>
 <td><code>Ctrl+Shift+F</code></td>
@@ -744,7 +748,7 @@ footer {
 <p>Paste the link of a YouTube live broadcast into the <strong>Search or paste a link</strong> field (or use <code>Ctrl+V</code>, as with any link). KeyTune recognizes the broadcast on its own.</p>
 <ul>
 <li>It plays at the current moment, without resuming from a saved position. The time bar shows a fixed label in place of the duration, and <code>T</code> tells you how long you have been watching.</li>
-<li>With <strong>Show the video of live broadcasts</strong> turned on (the default), the picture appears in the player area even with <strong>Disable video output</strong> checked. The video is limited to 720p. Turned off, the broadcast plays only the audio, in the lightest variant. <code>Ctrl+Alt+V</code> toggles the option and restarts the broadcast in the new mode.</li>
+<li>With video output on, the picture appears in the player area, limited to 720p. With <strong>Disable video output</strong> checked, the broadcast plays only the audio, in the lightest variant. <code>Ctrl+Alt+V</code> toggles video output and restarts the broadcast in the new mode.</li>
 <li>You can't rewind, fast-forward, or go to the start or the end. Pausing and resuming continues from where it stopped.</li>
 <li>If the connection drops, the player tries to reconnect up to three times and lets you know. If the broadcast has already ended, the player lets you know instead of playing the recording from the beginning.</li>
 <li>A scheduled broadcast that hasn't started yet lets you know; try again when it starts.</li>
@@ -827,6 +831,9 @@ footer {
 <li><code>Ctrl+Shift+M</code>: view the comments of the current media</li>
 <li><code>Ctrl+L</code>: like the current media</li>
 <li><code>Ctrl+Shift+L</code>: mark the current media as disliked (and skip to the next track)</li>
+<li><code>Ctrl+J</code>: skip the announced SponsorBlock segment; <code>Ctrl+Shift+J</code>: go back to the last skipped segment</li>
+<li><code>Ctrl+[</code> and <code>Ctrl+]</code>: mark the start and end of a segment to submit to SponsorBlock</li>
+<li><code>Ctrl+U</code> and <code>Ctrl+Shift+U</code>: vote that the last SponsorBlock segment is right or wrong</li>
 <li><code>A</code>: turn related content at the end of the playlist on or off</li>
 <li><code>Enter</code> in the search field: search; with results, focus goes to the list</li>
 <li><code>Esc</code>: close the tab, when it is focused</li>
@@ -1048,8 +1055,7 @@ footer {
 <li><strong>Crossfade (seconds)</strong>: the audio overlap between tracks on the automatic change (0 to 12 s). Use 0 to turn it off. Only applies between audio files.</li>
 <li><strong>Apply crossfade when changing track manually</strong>: with the option on, the crossfade also applies when you skip forward or back with the controls; by default, only at the natural end of the track. When an AutoDJ transition is ready, skipping forward uses that plan even with the option off.</li>
 <li><strong>Audio device</strong>: the sound output. <em>System default</em> follows the main Windows device.</li>
-<li><strong>Disable video output (play audio only)</strong>: plays only the audio, including from video files. Avoids external video windows.</li>
-<li><strong>Show the video of live broadcasts</strong>: shows the picture of YouTube broadcasts in the player area even with video output disabled for the rest of the app. Unchecked, the broadcast plays only the audio. <code>Ctrl+Alt+V</code> toggles it during a broadcast.</li>
+<li><strong>Disable video output (play audio only)</strong>: plays only the audio, including from video files and live broadcasts. Avoids external video windows. <code>Ctrl+Alt+V</code> toggles it at any time.</li>
 </ul>
 <p>The <strong>default volume</strong>, the <strong>volume</strong> and <strong>seek</strong> steps (how much each arrow changes), the <strong>default repeat</strong> and <strong>shuffle</strong> for new playlists complete the tab and also do what the name says.</p>
 <p>With AutoDJ installed, there are two more options: <strong>AutoDJ profile</strong> (<em>Smooth</em> makes a long, balanced mix; <em>Party</em> concentrates the bass swap in the middle and raises the energy gradually; <em>Electronic</em> uses sharper cuts and a faster swap, designed for strong beats) and <strong>AutoDJ transition length</strong> (8, 16 or 32 beats, independent of the regular crossfade).</p>
@@ -1159,7 +1165,7 @@ footer {
 <p>KeyTune is an open-source project. The repository, issues, pull requests and releases are at <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. The source of this manual is at <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">docs/manual.en.md</a>.</p>
 <p>To run the project from source, install the dependencies with <code>uv sync</code> and open the player with <code>uv run keytune</code>. The writing rules for the manual, changelog and commits are in <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generated on 11/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
+        Generated on 17/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.en.md">view source on GitHub</a>
       </footer>
     </section>
   </main>

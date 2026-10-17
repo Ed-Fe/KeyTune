@@ -151,3 +151,23 @@ def add_directory_row(parent, sizer, label_text, help_text, dialog_message, brow
     sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, ROW_BORDER)
     sizer.Add(row, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
     return directory_ctrl
+
+
+def wrap_text_to_width(control, text, width):
+    """Quebra *text* em linhas que cabem em *width* pixels na fonte de *control*.
+
+    Mantém as quebras de linha do texto e só corta entre palavras; uma palavra
+    maior que a largura fica sozinha na linha.
+    """
+    wrapped_lines = []
+    for paragraph in str(text or "").split("\n"):
+        line = ""
+        for word in paragraph.split(" "):
+            candidate = f"{line} {word}" if line else word
+            if line and control.GetTextExtent(candidate).Width > width:
+                wrapped_lines.append(line)
+                line = word
+            else:
+                line = candidate
+        wrapped_lines.append(line)
+    return "\n".join(wrapped_lines)

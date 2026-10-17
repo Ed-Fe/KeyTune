@@ -39,7 +39,7 @@ KeyTune plays media through the MPV runtime, and the installer already includes 
 The first time you open it, the window shows an empty playlist tab. It has these areas:
 
 - **Menu bar**, at the top: **File**, **Playback**, **View**, **Library**, **Tabs**, **Settings** and **Help**.
-- **Tab area**, which takes up most of the window. Each tab is a playlist (see [Playlists, folders and tabs](#playlists-folders-and-tabs)) and is split into two parts side by side: on the left, the item browser, which is the playlist list; on the right, the player area. For a video, the player area shows the video frame. For audio, or with nothing loaded, it shows a help text with the most-used shortcuts.
+- **Tab area**, which takes up most of the window. Each tab is a playlist (see [Playlists, folders and tabs](#playlists-folders-and-tabs)) and is split into two parts side by side: on the left, the item browser, which is the playlist list; on the right, the player area. For a video, the player area shows the video frame. For audio, or with nothing loaded, it shows a help text in large print with the most-used shortcuts. `Alt+Enter`, or **View > Full-screen video**, leaves only the player area, filling the screen; `Alt+Enter` or `Esc` go back.
 - **Folder explorer**, to the left of the tabs when opened with `Ctrl+E`. It shows the folders and media files on the computer (see [Folder explorer](#folder-explorer)).
 - **Time panel**, below the tabs: elapsed time, duration, progress bar and a summary of the main shortcuts.
 - **Status bar**, along the bottom edge: the result of the last action.
@@ -123,7 +123,8 @@ These open straight in the main window, as before: `.m3u` and `.m3u8` playlists,
 | `Shift+\` | Back to the original pitch |
 | `Alt+D` | Choose the audio output |
 | `Ctrl+Alt+L` | Show or hide the lyrics panel |
-| `Ctrl+Alt+V` | Toggle the video of live broadcasts |
+| `Ctrl+Alt+V` | Turn video output on or off |
+| `Alt+Enter` | Full-screen video (`Esc` also exits) |
 | `Ctrl+Shift+F` | Put the selected item in the queue |
 | `Ctrl+Shift+Q` | Manage the queue |
 | `Ctrl+Shift+D` | Configure the sleep timer |
@@ -514,7 +515,7 @@ The **View live chat of the current media** command has no default shortcut; to 
 Paste the link of a YouTube live broadcast into the **Search or paste a link** field (or use `Ctrl+V`, as with any link). KeyTune recognizes the broadcast on its own.
 
 - It plays at the current moment, without resuming from a saved position. The time bar shows a fixed label in place of the duration, and `T` tells you how long you have been watching.
-- With **Show the video of live broadcasts** turned on (the default), the picture appears in the player area even with **Disable video output** checked. The video is limited to 720p. Turned off, the broadcast plays only the audio, in the lightest variant. `Ctrl+Alt+V` toggles the option and restarts the broadcast in the new mode.
+- With video output on, the picture appears in the player area, limited to 720p. With **Disable video output** checked, the broadcast plays only the audio, in the lightest variant. `Ctrl+Alt+V` toggles video output and restarts the broadcast in the new mode.
 - You can't rewind, fast-forward, or go to the start or the end. Pausing and resuming continues from where it stopped.
 - If the connection drops, the player tries to reconnect up to three times and lets you know. If the broadcast has already ended, the player lets you know instead of playing the recording from the beginning.
 - A scheduled broadcast that hasn't started yet lets you know; try again when it starts.
@@ -803,8 +804,7 @@ The **Log recording** section helps investigate problems. **Record diagnostic lo
 - **Crossfade (seconds)**: the audio overlap between tracks on the automatic change (0 to 12 s). Use 0 to turn it off. Only applies between audio files.
 - **Apply crossfade when changing track manually**: with the option on, the crossfade also applies when you skip forward or back with the controls; by default, only at the natural end of the track. When an AutoDJ transition is ready, skipping forward uses that plan even with the option off.
 - **Audio device**: the sound output. *System default* follows the main Windows device.
-- **Disable video output (play audio only)**: plays only the audio, including from video files. Avoids external video windows.
-- **Show the video of live broadcasts**: shows the picture of YouTube broadcasts in the player area even with video output disabled for the rest of the app. Unchecked, the broadcast plays only the audio. `Ctrl+Alt+V` toggles it during a broadcast.
+- **Disable video output (play audio only)**: plays only the audio, including from video files and live broadcasts. Avoids external video windows. `Ctrl+Alt+V` toggles it at any time.
 
 The **default volume**, the **volume** and **seek** steps (how much each arrow changes), the **default repeat** and **shuffle** for new playlists complete the tab and also do what the name says.
 

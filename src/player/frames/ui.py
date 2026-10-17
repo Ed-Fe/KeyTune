@@ -11,6 +11,7 @@ from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..radio.media import is_radio_media
 from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
+from ..widgets import wrap_text_to_width
 from .autodj_panel import AutoDJSessionPanel
 from .playback.live import is_live_media
 
@@ -138,13 +139,13 @@ class FrameUIMixin:
         return _(
             "Saída de vídeo desativada\n\n"
             "Esta mídia está tocando só o áudio.\n"
-            "Abra Preferências > Reprodução para reativar o vídeo quando quiser."
+            "Pressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para reativar o vídeo."
         )
 
     def _player_live_audio_only_text(self):
         return _(
             "Transmissão ao vivo só com áudio\n\n"
-            "O vídeo das transmissões ao vivo está desativado.\n"
+            "A saída de vídeo está desativada.\n"
             "Pressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
         )
 
@@ -153,7 +154,7 @@ class FrameUIMixin:
             return self._player_overlay_hint_text()
 
         if (
-            not self._live_video_enabled()
+            not self._video_output_enabled()
             and state is self._get_active_playlist_state()
             and is_live_media(self.player.get_media())
             and not is_radio_media(state.current_media_path)
@@ -203,7 +204,8 @@ class FrameUIMixin:
             "Alt+Home / End — Ir para o primeiro ou último item da playlist\n"
             "Ctrl+L — Curtir mídia atual no YouTube Music\n"
             "Ctrl+Alt+L — Alternar painel de letras\n"
-            "Ctrl+Alt+V — Alternar o vídeo das transmissões ao vivo\n"
+            "Ctrl+Alt+V — Ativar ou desativar a saída de vídeo\n"
+            "Alt+Enter — Tela cheia do vídeo (Esc também sai)\n"
             "Ctrl+Shift+L — Marcar mídia atual como não gostei no YouTube Music\n"
             "Ctrl+Shift+A — Adicionar a mídia atual a uma playlist do YouTube Music\n"
             "Ctrl+Shift+M — Ver os comentários da mídia atual\n"
@@ -278,17 +280,17 @@ class FrameUIMixin:
             playlist_state = self._get_playlist_state(index)
             overlay_text = self._player_overlay_text_for_state(playlist_state)
             show_overlay = bool(overlay_text)
-            if video_hint_overlay.GetLabel() != overlay_text:
-                video_hint_overlay.SetLabel(overlay_text)
-                page.video_hint_wrap_width = None
-            if video_hint_overlay.IsShown() != show_overlay:
-                video_hint_overlay.Show(show_overlay)
-
             if show_overlay:
                 wrap_width = max(260, video_panel.GetClientSize().Width - 80)
-                if getattr(page, "video_hint_wrap_width", None) != wrap_width:
-                    video_hint_overlay.Wrap(wrap_width)
+                if (getattr(page, "video_hint_text", None), getattr(page, "video_hint_wrap_width", None)) != (
+                    overlay_text,
+                    wrap_width,
+                ):
+                    video_hint_overlay.SetLabel(wrap_text_to_width(video_hint_overlay, overlay_text, wrap_width))
+                    page.video_hint_text = overlay_text
                     page.video_hint_wrap_width = wrap_width
+            if video_hint_overlay.IsShown() != show_overlay:
+                video_hint_overlay.Show(show_overlay)
             self._layout_video_page(page)
 
     def _layout_video_page(self, page):
@@ -551,6 +553,8 @@ class FrameUIMixin:
         self.view_menu = view_menu
         self.menu_playlist_browser_id = wx.NewIdRef()
         view_menu.Append(self.menu_playlist_browser_id, _("Alternar foco entre &itens e player (Tab)"))
+        self.menu_toggle_video_fullscreen_id = wx.NewIdRef()
+        view_menu.Append(self.menu_toggle_video_fullscreen_id, _("&Tela cheia do vídeo (Alt+Enter)"))
         view_menu.Append(self.menu_open_equalizer_id, _("Eq&ualizador\tCtrl+Shift+E"))
         view_menu.Append(self.menu_open_youtube_music_id, _("&KeyTube por aba\tCtrl+Shift+Y"))
         view_menu.Append(self.menu_open_youtube_notifications_id, _("&Notificações do YouTube"))
@@ -894,6 +898,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_open_changelog, id=self.menu_changelog_id)
         self.Bind(wx.EVT_MENU, self.on_run_diagnostics, id=self.menu_diagnostics_id)
         self.Bind(wx.EVT_MENU, self.on_show_keyboard_help, id=self.menu_keyboard_help_id)
+        self.Bind(wx.EVT_MENU, self.on_toggle_video_fullscreen, id=self.menu_toggle_video_fullscreen_id)
         self.Bind(wx.EVT_MENU, self.on_show_welcome_screen, id=self.menu_show_welcome_screen_id)
         self.Bind(wx.EVT_MENU, self.on_exit, id=wx.ID_EXIT)
 
@@ -969,7 +974,11 @@ class FrameUIMixin:
             style=wx.ALIGN_CENTER_HORIZONTAL,
         )
         video_hint_overlay.SetName(_("Ajuda visual do player"))
-        video_hint_overlay.SetForegroundColour(wx.Colour(235, 235, 235))
+        video_hint_overlay.SetForegroundColour(wx.Colour(255, 255, 255))
+        # Texto grande para quem tem baixa visão: o aviso ocupa a área do vídeo.
+        overlay_font = video_hint_overlay.GetFont()
+        overlay_font.SetPointSize(max(16, round(overlay_font.GetPointSize() * 1.8)))
+        video_hint_overlay.SetFont(overlay_font)
 
         video_panel_sizer = wx.BoxSizer(wx.VERTICAL)
         video_panel_sizer.Add(video_surface, 1, wx.EXPAND)
@@ -986,6 +995,7 @@ class FrameUIMixin:
         page.video_panel = video_panel
         page.video_surface = video_surface
         page.video_hint_overlay = video_hint_overlay
+        page.video_hint_text = None
         page.video_hint_wrap_width = None
         self._layout_video_page(page)
         return page

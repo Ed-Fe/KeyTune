@@ -39,7 +39,7 @@ KeyTune reproduce los medios con el runtime de MPV, y el instalador ya lo incluy
 La primera vez que lo abres, la ventana muestra una pestaña de playlist vacía. Tiene estas áreas:
 
 - **Barra de menús**, arriba: **Archivo**, **Reproducción**, **Ver**, **Biblioteca**, **Pestañas**, **Configuración** y **Ayuda**.
-- **Área de pestañas**, que ocupa casi toda la ventana. Cada pestaña es una playlist (consulta [Playlists, carpetas y pestañas](#playlists-carpetas-y-pestanas)) y se divide en dos partes lado a lado: a la izquierda, el navegador de elementos, que es la lista de la playlist; a la derecha, el área del reproductor. Para un vídeo, el área del reproductor muestra el cuadro de vídeo. Para audio, o sin nada cargado, muestra un texto de apoyo con los atajos más usados.
+- **Área de pestañas**, que ocupa casi toda la ventana. Cada pestaña es una playlist (consulta [Playlists, carpetas y pestañas](#playlists-carpetas-y-pestanas)) y se divide en dos partes lado a lado: a la izquierda, el navegador de elementos, que es la lista de la playlist; a la derecha, el área del reproductor. Para un vídeo, el área del reproductor muestra el cuadro de vídeo. Para audio, o sin nada cargado, muestra un texto de apoyo en letra grande con los atajos más usados. `Alt+Enter`, o **Ver > Vídeo a pantalla completa**, deja solo el área del reproductor ocupando toda la pantalla; `Alt+Enter` o `Esc` vuelven.
 - **Explorador de carpetas**, a la izquierda de las pestañas cuando se abre con `Ctrl+E`. Muestra las carpetas y los archivos de medios del equipo (consulta [Explorador de carpetas](#explorador-de-carpetas)).
 - **Panel de tiempo**, debajo de las pestañas: tiempo transcurrido, duración, barra de progreso y un resumen de los atajos principales.
 - **Barra de estado**, en el borde inferior: el resultado de la última acción.
@@ -123,7 +123,8 @@ Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.
 | `Shift+\` | Volver al tono original |
 | `Alt+D` | Elegir la salida de audio |
 | `Ctrl+Alt+L` | Mostrar u ocultar el panel de letras |
-| `Ctrl+Alt+V` | Alternar el vídeo de las transmisiones en vivo |
+| `Ctrl+Alt+V` | Activar o desactivar la salida de vídeo |
+| `Alt+Enter` | Vídeo a pantalla completa (`Esc` también sale) |
 | `Ctrl+Shift+F` | Poner el elemento seleccionado en la cola |
 | `Ctrl+Shift+Q` | Gestionar la cola |
 | `Ctrl+Shift+D` | Configurar el temporizador |
@@ -514,7 +515,7 @@ El comando **Ver chat en vivo del contenido actual** no tiene atajo de fábrica;
 Pega el enlace de una transmisión en vivo de YouTube en el campo **Buscar o pegar un enlace** (o usa `Ctrl+V`, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo.
 
 - Suena en el momento actual, sin reanudar desde una posición guardada. La barra de tiempo muestra una etiqueta fija en lugar de la duración, y `T` informa de cuánto tiempo llevas viéndola.
-- Con **Mostrar el video de las transmisiones en vivo** activado (el valor predeterminado), la imagen aparece en el área del reproductor incluso con **Desactivar salida de video** marcado. El vídeo se limita a 720p. Desactivado, la transmisión suena solo en audio, en la variante más ligera. `Ctrl+Alt+V` alterna la opción y reinicia la transmisión en el nuevo modo.
+- Con la salida de vídeo activada, la imagen aparece en el área del reproductor, limitada a 720p. Con **Desactivar salida de video** marcado, la transmisión suena solo en audio, en la variante más ligera. `Ctrl+Alt+V` alterna la salida de vídeo y reinicia la transmisión en el nuevo modo.
 - No se puede avanzar, retroceder ni ir al principio o al final. Pausar y reanudar continúa desde donde se quedó.
 - Si la conexión se corta, el reproductor intenta reconectar hasta tres veces y te avisa. Si la transmisión ya terminó, el reproductor avisa en lugar de reproducir la grabación desde el principio.
 - Una transmisión programada que aún no empezó avisa; inténtalo de nuevo cuando empiece.
@@ -803,8 +804,7 @@ La sección **Registro de logs** ayuda a investigar problemas. **Registrar logs 
 - **Crossfade (segundos)**: el solapamiento de audio entre pistas en el cambio automático (0 a 12 s). Usa 0 para desactivarlo. Solo vale entre archivos de audio.
 - **Aplicar el crossfade al cambiar de pista manualmente**: con la opción activada, el crossfade también se aplica al avanzar o retroceder con los controles; por defecto, solo en el final natural de la pista. Cuando hay una transición de AutoDJ lista, avanzar usa ese plan incluso con la opción desactivada.
 - **Dispositivo de audio**: la salida de sonido. *Predeterminado del sistema* sigue el dispositivo principal de Windows.
-- **Desactivar salida de video (reproducir solo el audio)**: reproduce solo el audio, incluso de archivos de vídeo. Evita ventanas externas de vídeo.
-- **Mostrar el video de las transmisiones en vivo**: muestra la imagen de las transmisiones de YouTube en el área del reproductor incluso con la salida de vídeo desactivada para el resto de la aplicación. Desmarcado, la transmisión suena solo en audio. `Ctrl+Alt+V` lo alterna durante una transmisión.
+- **Desactivar salida de video (reproducir solo el audio)**: reproduce solo el audio, incluso de archivos de vídeo y transmisiones en vivo. Evita ventanas externas de vídeo. `Ctrl+Alt+V` la alterna en cualquier momento.
 
 El **volumen predeterminado**, los pasos de **volumen** y de **búsqueda** (cuánto cambia cada flecha), la **repetición predeterminada** y el **modo aleatorio** de las playlists nuevas completan la pestaña y también hacen lo que dice su nombre.
 

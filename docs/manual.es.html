@@ -225,7 +225,7 @@ footer {
 <p>La primera vez que lo abres, la ventana muestra una pestaña de playlist vacía. Tiene estas áreas:</p>
 <ul>
 <li><strong>Barra de menús</strong>, arriba: <strong>Archivo</strong>, <strong>Reproducción</strong>, <strong>Ver</strong>, <strong>Biblioteca</strong>, <strong>Pestañas</strong>, <strong>Configuración</strong> y <strong>Ayuda</strong>.</li>
-<li><strong>Área de pestañas</strong>, que ocupa casi toda la ventana. Cada pestaña es una playlist (consulta <a href="#playlists-carpetas-y-pestanas">Playlists, carpetas y pestañas</a>) y se divide en dos partes lado a lado: a la izquierda, el navegador de elementos, que es la lista de la playlist; a la derecha, el área del reproductor. Para un vídeo, el área del reproductor muestra el cuadro de vídeo. Para audio, o sin nada cargado, muestra un texto de apoyo con los atajos más usados.</li>
+<li><strong>Área de pestañas</strong>, que ocupa casi toda la ventana. Cada pestaña es una playlist (consulta <a href="#playlists-carpetas-y-pestanas">Playlists, carpetas y pestañas</a>) y se divide en dos partes lado a lado: a la izquierda, el navegador de elementos, que es la lista de la playlist; a la derecha, el área del reproductor. Para un vídeo, el área del reproductor muestra el cuadro de vídeo. Para audio, o sin nada cargado, muestra un texto de apoyo en letra grande con los atajos más usados. <code>Alt+Enter</code>, o <strong>Ver &gt; Vídeo a pantalla completa</strong>, deja solo el área del reproductor ocupando toda la pantalla; <code>Alt+Enter</code> o <code>Esc</code> vuelven.</li>
 <li><strong>Explorador de carpetas</strong>, a la izquierda de las pestañas cuando se abre con <code>Ctrl+E</code>. Muestra las carpetas y los archivos de medios del equipo (consulta <a href="#explorador-de-carpetas">Explorador de carpetas</a>).</li>
 <li><strong>Panel de tiempo</strong>, debajo de las pestañas: tiempo transcurrido, duración, barra de progreso y un resumen de los atajos principales.</li>
 <li><strong>Barra de estado</strong>, en el borde inferior: el resultado de la última acción.</li>
@@ -416,7 +416,11 @@ footer {
 </tr>
 <tr>
 <td><code>Ctrl+Alt+V</code></td>
-<td>Alternar el vídeo de las transmisiones en vivo</td>
+<td>Activar o desactivar la salida de vídeo</td>
+</tr>
+<tr>
+<td><code>Alt+Enter</code></td>
+<td>Vídeo a pantalla completa (<code>Esc</code> también sale)</td>
 </tr>
 <tr>
 <td><code>Ctrl+Shift+F</code></td>
@@ -744,7 +748,7 @@ footer {
 <p>Pega el enlace de una transmisión en vivo de YouTube en el campo <strong>Buscar o pegar un enlace</strong> (o usa <code>Ctrl+V</code>, como con cualquier enlace). KeyTune reconoce la transmisión por sí solo.</p>
 <ul>
 <li>Suena en el momento actual, sin reanudar desde una posición guardada. La barra de tiempo muestra una etiqueta fija en lugar de la duración, y <code>T</code> informa de cuánto tiempo llevas viéndola.</li>
-<li>Con <strong>Mostrar el video de las transmisiones en vivo</strong> activado (el valor predeterminado), la imagen aparece en el área del reproductor incluso con <strong>Desactivar salida de video</strong> marcado. El vídeo se limita a 720p. Desactivado, la transmisión suena solo en audio, en la variante más ligera. <code>Ctrl+Alt+V</code> alterna la opción y reinicia la transmisión en el nuevo modo.</li>
+<li>Con la salida de vídeo activada, la imagen aparece en el área del reproductor, limitada a 720p. Con <strong>Desactivar salida de video</strong> marcado, la transmisión suena solo en audio, en la variante más ligera. <code>Ctrl+Alt+V</code> alterna la salida de vídeo y reinicia la transmisión en el nuevo modo.</li>
 <li>No se puede avanzar, retroceder ni ir al principio o al final. Pausar y reanudar continúa desde donde se quedó.</li>
 <li>Si la conexión se corta, el reproductor intenta reconectar hasta tres veces y te avisa. Si la transmisión ya terminó, el reproductor avisa en lugar de reproducir la grabación desde el principio.</li>
 <li>Una transmisión programada que aún no empezó avisa; inténtalo de nuevo cuando empiece.</li>
@@ -827,6 +831,9 @@ footer {
 <li><code>Ctrl+Shift+M</code>: ver los comentarios del medio actual</li>
 <li><code>Ctrl+L</code>: dar «me gusta» al medio actual</li>
 <li><code>Ctrl+Shift+L</code>: marcar el medio actual como «no me gusta» (y pasar a la siguiente pista)</li>
+<li><code>Ctrl+J</code>: saltar el fragmento de SponsorBlock avisado; <code>Ctrl+Shift+J</code>: volver al último fragmento saltado</li>
+<li><code>Ctrl+[</code> y <code>Ctrl+]</code>: marcar el inicio y el fin de un fragmento para enviarlo a SponsorBlock</li>
+<li><code>Ctrl+U</code> y <code>Ctrl+Shift+U</code>: votar que el último fragmento de SponsorBlock es correcto o incorrecto</li>
 <li><code>A</code>: activar o desactivar el contenido relacionado al final de la playlist</li>
 <li><code>Enter</code> en el campo de búsqueda: buscar; con resultados, el foco pasa a la lista</li>
 <li><code>Esc</code>: cerrar la pestaña, cuando tiene el foco</li>
@@ -1048,8 +1055,7 @@ footer {
 <li><strong>Crossfade (segundos)</strong>: el solapamiento de audio entre pistas en el cambio automático (0 a 12 s). Usa 0 para desactivarlo. Solo vale entre archivos de audio.</li>
 <li><strong>Aplicar el crossfade al cambiar de pista manualmente</strong>: con la opción activada, el crossfade también se aplica al avanzar o retroceder con los controles; por defecto, solo en el final natural de la pista. Cuando hay una transición de AutoDJ lista, avanzar usa ese plan incluso con la opción desactivada.</li>
 <li><strong>Dispositivo de audio</strong>: la salida de sonido. <em>Predeterminado del sistema</em> sigue el dispositivo principal de Windows.</li>
-<li><strong>Desactivar salida de video (reproducir solo el audio)</strong>: reproduce solo el audio, incluso de archivos de vídeo. Evita ventanas externas de vídeo.</li>
-<li><strong>Mostrar el video de las transmisiones en vivo</strong>: muestra la imagen de las transmisiones de YouTube en el área del reproductor incluso con la salida de vídeo desactivada para el resto de la aplicación. Desmarcado, la transmisión suena solo en audio. <code>Ctrl+Alt+V</code> lo alterna durante una transmisión.</li>
+<li><strong>Desactivar salida de video (reproducir solo el audio)</strong>: reproduce solo el audio, incluso de archivos de vídeo y transmisiones en vivo. Evita ventanas externas de vídeo. <code>Ctrl+Alt+V</code> la alterna en cualquier momento.</li>
 </ul>
 <p>El <strong>volumen predeterminado</strong>, los pasos de <strong>volumen</strong> y de <strong>búsqueda</strong> (cuánto cambia cada flecha), la <strong>repetición predeterminada</strong> y el <strong>modo aleatorio</strong> de las playlists nuevas completan la pestaña y también hacen lo que dice su nombre.</p>
 <p>Con AutoDJ instalado, hay dos opciones más: <strong>Perfil de AutoDJ</strong> (<em>Suave</em> hace una mezcla larga y equilibrada; <em>Fiesta</em> concentra el cambio de graves en el centro y sube la energía poco a poco; <em>Electrónica</em> usa cortes más fuertes y un cambio más rápido, pensado para ritmos marcados) y <strong>Duración de la transición de AutoDJ</strong> (8, 16 o 32 pulsos, independiente del crossfade normal).</p>
@@ -1159,7 +1165,7 @@ footer {
 <p>KeyTune es un proyecto de código abierto. El repositorio, las issues, los pull requests y las releases están en <a href="https://github.com/ed-fe/KeyTune">github.com/ed-fe/KeyTune</a>. El código fuente de este manual está en <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">docs/manual.es.md</a>.</p>
 <p>Para ejecutar el proyecto desde el código, instala las dependencias con <code>uv sync</code> y abre el reproductor con <code>uv run keytune</code>. Las reglas de redacción del manual, el changelog y los commits están en <code>.github/instructions/writing.instructions.md</code>.</p>
       <footer>
-        Generado el 11/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
+        Generado el 17/10/2026 &mdash; <a href="https://github.com/ed-fe/KeyTune/blob/main/docs/manual.es.md">ver código fuente en GitHub</a>
       </footer>
     </section>
   </main>

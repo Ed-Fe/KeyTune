@@ -56,9 +56,6 @@ class AppCommandsMixin:
 
         if self.settings.disable_video_output != previous_settings.disable_video_output:
             self._refresh_player_backend_for_video_output_setting()
-        elif self.settings.live_video_enabled != previous_settings.live_video_enabled:
-            # The backend refresh above already restarts whatever is playing.
-            self._apply_live_video_setting_change()
 
         audio_output_updated = True
         if self.settings.audio_output_device_id != previous_settings.audio_output_device_id:
@@ -135,6 +132,9 @@ class AppCommandsMixin:
         if self._suppress_tab_change_event:
             event.Skip()
             return
+
+        # A tela cheia mostra só o vídeo da aba em que foi aberta.
+        self._exit_video_fullscreen(announce=False)
 
         old_index = event.GetOldSelection()
         if old_index != wx.NOT_FOUND:

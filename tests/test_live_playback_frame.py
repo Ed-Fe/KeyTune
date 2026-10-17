@@ -44,7 +44,7 @@ class _WorkerFrame(PlaybackEngineMixin):
     def _set_player_loaded_media_path(self, _key, _path):
         pass
 
-    def _live_video_enabled(self):
+    def _video_output_enabled(self):
         return self._live_video
 
     def _mark_player_showing_live_video(self, player_key):
@@ -78,7 +78,7 @@ class LivePlaybackWorkerTests(unittest.TestCase):
         self.assertEqual(frame.marked_live_video, ["primary"])
         self.assertTrue(frame.finished[0][1])
 
-    def test_live_media_plays_audio_only_when_live_video_is_off(self):
+    def test_live_media_plays_audio_only_when_video_output_is_off(self):
         frame = _WorkerFrame(("https://live/91.m3u8", {}, "Jornal", "Canal", True), live_video=False)
 
         frame.run_request()
@@ -266,32 +266,29 @@ class LiveWatchedTimeTests(unittest.TestCase):
 
 
 class LiveVideoSlotTests(unittest.TestCase):
-    def _backend(self, *, disable_video_output, live_video_enabled):
+    def _backend(self, *, disable_video_output):
         class Frame(PlayerBackendMixin):
             pass
 
         frame = Frame()
-        frame.settings = SimpleNamespace(
-            disable_video_output=disable_video_output,
-            live_video_enabled=live_video_enabled,
-        )
+        frame.settings = SimpleNamespace(disable_video_output=disable_video_output)
         panel = Mock()
         panel.GetHandle.return_value = 4321
         frame._get_video_panel = lambda _index=None: panel
         return frame
 
-    def test_handle_is_available_for_a_live_even_with_video_output_disabled(self):
-        frame = self._backend(disable_video_output=True, live_video_enabled=True)
+    def test_handle_is_available_with_video_output_enabled(self):
+        frame = self._backend(disable_video_output=False)
 
         self.assertEqual(frame._video_output_handle(), 4321)
 
-    def test_no_handle_when_neither_video_nor_live_video_is_enabled(self):
-        frame = self._backend(disable_video_output=True, live_video_enabled=False)
+    def test_no_handle_with_video_output_disabled(self):
+        frame = self._backend(disable_video_output=True)
 
         self.assertIsNone(frame._video_output_handle())
 
     def test_slot_that_showed_live_video_is_tracked_until_recreated(self):
-        frame = self._backend(disable_video_output=True, live_video_enabled=True)
+        frame = self._backend(disable_video_output=False)
 
         self.assertFalse(frame._player_showed_live_video("primary"))
         frame._mark_player_showing_live_video("primary")
@@ -303,7 +300,7 @@ class LiveVideoSlotTests(unittest.TestCase):
             pass
 
         frame = Frame()
-        frame.settings = SimpleNamespace(disable_video_output=True, live_video_enabled=True)
+        frame.settings = SimpleNamespace(disable_video_output=True)
         frame._active_player_key = "primary"
         frame._playback_request_serial = 0
         frame._playback_queue = queue.Queue()
@@ -325,7 +322,7 @@ class LiveVideoSlotTests(unittest.TestCase):
             pass
 
         frame = Frame()
-        frame.settings = SimpleNamespace(disable_video_output=True, live_video_enabled=True)
+        frame.settings = SimpleNamespace(disable_video_output=True)
         frame._active_player_key = "primary"
         frame._playback_request_serial = 0
         frame._playback_queue = queue.Queue()
@@ -340,6 +337,39 @@ class LiveVideoSlotTests(unittest.TestCase):
             frame._queue_media_start("song.mp3", tab_index=0)
 
         frame._recreate_player_slot.assert_not_called()
+
+
+class VideoOutputToggleTests(unittest.TestCase):
+    def _frame(self, *, disable_video_output):
+        class Frame(PlayerBackendMixin, PlaybackEngineMixin):
+            pass
+
+        frame = Frame()
+        frame.settings = SimpleNamespace(disable_video_output=disable_video_output)
+        frame._save_settings = Mock()
+        frame._refresh_player_backend_for_video_output_setting = Mock()
+        return frame
+
+    def test_toggling_turns_video_on_saves_and_restarts_with_an_announcement(self):
+        frame = self._frame(disable_video_output=True)
+
+        frame._toggle_video_output()
+
+        self.assertFalse(frame.settings.disable_video_output)
+        frame._save_settings.assert_called_once_with()
+        frame._refresh_player_backend_for_video_output_setting.assert_called_once_with(
+            announce_message="Saída de vídeo ativada."
+        )
+
+    def test_toggling_again_turns_video_off(self):
+        frame = self._frame(disable_video_output=False)
+
+        frame._toggle_video_output()
+
+        self.assertTrue(frame.settings.disable_video_output)
+        frame._refresh_player_backend_for_video_output_setting.assert_called_once_with(
+            announce_message="Saída de vídeo desativada."
+        )
 
 
 if __name__ == "__main__":

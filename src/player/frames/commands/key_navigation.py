@@ -231,6 +231,26 @@ class KeyNavigationMixin:
         if callable(handle_custom_shortcut) and handle_custom_shortcut(event):
             return
 
+        # Alt+Enter alterna a tela cheia do vídeo; Esc também sai dela.
+        if (
+            key_code in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER)
+            and event.AltDown()
+            and not event.ControlDown()
+            and not event.ShiftDown()
+        ):
+            self.on_toggle_video_fullscreen()
+            return
+        video_fullscreen_active = getattr(self, "_video_fullscreen_active", None)
+        if callable(video_fullscreen_active) and video_fullscreen_active():
+            if key_code == wx.WXK_ESCAPE:
+                self._exit_video_fullscreen()
+                return
+            # A lista de itens está escondida: Tab e Ctrl+B deixam o foco no player.
+            is_tab = key_code == wx.WXK_TAB and not event.ControlDown() and not event.AltDown()
+            is_ctrl_b = event.ControlDown() and not event.AltDown() and key_code in (ord("B"), ord("b"))
+            if is_tab or is_ctrl_b:
+                return
+
         # Bare keys (no Ctrl/Alt) drive playback only while focus is on the
         # player surface — the frame or the playlist list. On any other control
         # (buttons, checkboxes, screen-tab widgets, the lyrics copy button) let
@@ -270,10 +290,10 @@ class KeyNavigationMixin:
             self.toggle_lyrics_panel()
             return
 
-        # Ctrl+Alt+V toggles the picture of live broadcasts (plain V announces
-        # the volume and Ctrl+V pastes).
+        # Ctrl+Alt+V toggles the video output (plain V announces the volume
+        # and Ctrl+V pastes).
         if event.ControlDown() and event.AltDown() and not event.ShiftDown() and key_code in (ord("V"), ord("v")):
-            self._toggle_live_video()
+            self._toggle_video_output()
             return
 
         # While the lyrics text is focused, Esc closes the panel. Caret keys are

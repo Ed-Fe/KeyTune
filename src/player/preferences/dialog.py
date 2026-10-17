@@ -263,13 +263,7 @@ class PreferencesDialog(wx.Dialog):
             box,
             sizer,
             _("Desativar saída de &vídeo (tocar só o áudio)"),
-            _("Toca só o áudio, mesmo em arquivos de vídeo."),
-        )
-        self.live_video_checkbox = self._add_checkbox(
-            box,
-            sizer,
-            _("Mostrar o vídeo das &transmissões ao vivo"),
-            _("Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."),
+            _("Toca só o áudio, mesmo em vídeos e transmissões ao vivo. Ctrl+Alt+V alterna."),
         )
 
         self.notebook.AddPage(page, _("Reprodução"))
@@ -950,7 +944,6 @@ class PreferencesDialog(wx.Dialog):
             self.interface_sounds_list.SetSelection(0)
         self._on_toggle_interface_sounds()
         self.disable_video_output_checkbox.SetValue(settings.disable_video_output)
-        self.live_video_checkbox.SetValue(settings.live_video_enabled)
         self.default_volume_ctrl.SetValue(settings.default_volume)
         self.crossfade_ctrl.SetValue(settings.crossfade_seconds)
         self.crossfade_on_manual_change_checkbox.SetValue(settings.crossfade_on_manual_track_change)
@@ -1067,7 +1060,6 @@ class PreferencesDialog(wx.Dialog):
         ]
         settings.interface_sounds_custom = dict(self._interface_sounds_custom)
         settings.disable_video_output = self.disable_video_output_checkbox.GetValue()
-        settings.live_video_enabled = self.live_video_checkbox.GetValue()
         settings.default_volume = int(self.default_volume_ctrl.GetValue())
         settings.crossfade_seconds = int(self.crossfade_ctrl.GetValue())
         settings.crossfade_on_manual_track_change = self.crossfade_on_manual_change_checkbox.GetValue()
