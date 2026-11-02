@@ -905,6 +905,10 @@ msgstr ""
 msgid "A rádio foi criada, mas o YouTube Music não retornou músicas inéditas agora."
 msgstr ""
 
+#: src/player/frames/library_tabs/station_radio.py
+msgid "A rádio foi criada, mas o YouTube Music só retornou músicas já presentes na playlist."
+msgstr ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "A seleção atual não contém itens do YouTube Music ou do YouTube."
 msgstr ""
@@ -3291,6 +3295,10 @@ msgstr ""
 msgid "Detalhes: {error}"
 msgstr ""
 
+#: src/player/frames/playback/engine.py
+msgid "Detalhes: {error}."
+msgstr ""
+
 #: src/player/diagnostics/dialog.py
 msgid "Diagnóstico do KeyTune"
 msgstr ""
@@ -5429,6 +5437,10 @@ msgstr ""
 msgid "Nenhum arquivo recente."
 msgstr ""
 
+#: src/player/frames/library_tabs/related_autoplay.py
+msgid "Nenhum conteúdo relacionado inédito encontrado."
+msgstr ""
+
 #: src/player/youtube_music/auth.py
 msgid "Nenhum cookie válido do YouTube foi encontrado no {browser}. Verifique se você está logado em music.youtube.com."
 msgstr ""
@@ -6286,6 +6298,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/watch_later.py
 msgid "Não foi possível tirar de Assistir mais tarde."
+msgstr ""
+
+#: src/player/frames/playback/engine.py
+msgid "Não foi possível trocar de faixa; a reprodução continua em {name}."
 msgstr ""
 
 #: src/player/frames/playback/audio_output.py

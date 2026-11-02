@@ -279,26 +279,38 @@ class RelatedAutoplayMixin:
             return
 
         if request.get("status") != "appended":
-            _logger.info("Related content added %d track(s) to playlist %r.", len(item_urls), state.title)
             # Remember the queue so the next fetch continues it instead of
             # opening a new radio around the same pool of tracks.
             state.radio_queue_playlist_id = str(getattr(radio_content, "playlist_id", "") or "").strip() or None
-            state.append_items(item_urls, getattr(radio_content, "item_labels", None))
+            inserted_items = state.append_items(item_urls, getattr(radio_content, "item_labels", None))
             request["status"] = "appended"
-            self._refresh_playlist_browser()
-            # Resolve the first new track's stream ahead of time, exactly like the
-            # normal next-track prefetch, so the upcoming transition is seamless.
-            prefetch_upcoming = getattr(self, "_prefetch_upcoming_media_stream", None)
-            if callable(prefetch_upcoming):
-                prefetch_upcoming(state)
-            if not advance_when_ready and hasattr(self, "_set_status_message"):
-                self._set_status_message(_("Conteúdo relacionado adicionado à playlist."))
+            if not inserted_items:
+                # Every fetched URL already matched an item in the playlist
+                # (the upstream video-id exclusion filter missed it): nothing
+                # new actually landed, so don't claim it did.
+                _logger.info("Related content fetch returned no track not already in playlist %r.", state.title)
+                if not advance_when_ready:
+                    if self._retry_related_youtube_music_with_new_seed(request, state, seed_media_path):
+                        return
+                    if hasattr(self, "_set_status_message"):
+                        self._set_status_message(_("Nenhum conteúdo relacionado inédito encontrado."))
+            else:
+                _logger.info("Related content added %d track(s) to playlist %r.", len(inserted_items), state.title)
+                self._refresh_playlist_browser()
+                # Resolve the first new track's stream ahead of time, exactly like
+                # the normal next-track prefetch, so the upcoming transition is seamless.
+                prefetch_upcoming = getattr(self, "_prefetch_upcoming_media_stream", None)
+                if callable(prefetch_upcoming):
+                    prefetch_upcoming(state)
+                if not advance_when_ready and hasattr(self, "_set_status_message"):
+                    self._set_status_message(_("Conteúdo relacionado adicionado à playlist."))
 
         if advance_when_ready:
             self._related_autoplay = None
             self._advance_into_related_content(state)
 
     def _advance_into_related_content(self, state):
+        revert_snapshot = self._snapshot_playlist_state_for_revert(state)
         target = state.move_in_playback_order(1)
         if not target:
             self._announce(_("Playlist {title} finalizada.").format(title=state.title))
@@ -307,5 +319,6 @@ class RelatedAutoplayMixin:
         self._play_media(
             index=self._get_active_playlist_index(),
             announce_message=_("Conteúdo relacionado."),
+            revert_snapshot=revert_snapshot,
         )
         return True

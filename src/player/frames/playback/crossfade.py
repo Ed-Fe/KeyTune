@@ -490,6 +490,11 @@ class CrossfadeMixin:
         tab_index = crossfade_state.get("tab_index")
         media_path = crossfade_state.get("media_path")
         announce_message = crossfade_state.get("announce_message")
+        # _cancel_crossfade_transition(invalidate_requests=True) below clears
+        # self._crossfade_state, so grab the pre-transition snapshot first —
+        # otherwise a failure on this retry would have no way to restore a
+        # queued pick/AutoDJ hand-off already consumed by the original advance.
+        revert_snapshot = crossfade_state.get("playlist_before_transition")
         state = self._get_playlist_state(tab_index)
         if not state or state.current_media_path != media_path:
             return False
@@ -504,6 +509,7 @@ class CrossfadeMixin:
             media_path,
             tab_index=tab_index,
             announce_message=announce_message,
+            revert_snapshot=revert_snapshot,
         )
         return True
 

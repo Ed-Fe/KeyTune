@@ -107,9 +107,16 @@ class ShortsMixin:
             if announce_next:
                 self._announce(_("O YouTube não trouxe mais shorts agora."))
             return
-        first_new_index = len(state.items)
-        state.append_items([r.playback_url for r in fresh], [short_label(r) for r in fresh])
+        inserted_items = state.append_items([r.playback_url for r in fresh], [short_label(r) for r in fresh])
         self._refresh_playlist_browser()
-        if announce_next and self._get_active_playlist_state() is state:
+        if not inserted_items:
+            # Every fresh result matched an item already in the list by exact
+            # URL (the video_id-based `known` filter above missed it): there
+            # is nothing new to jump to.
+            if announce_next:
+                self._announce(_("O YouTube não trouxe mais shorts agora."))
+            return
+        first_new_index = state.item_index_map.get(inserted_items[0])
+        if announce_next and first_new_index is not None and self._get_active_playlist_state() is state:
             state.select_index(first_new_index, reset_playback_order=False)
             self._play_media(index=self._get_active_playlist_index())

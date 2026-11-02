@@ -86,25 +86,20 @@ class FrameLibraryNavigationMixin:
         if not normalized_items:
             return 0, None
 
-        existing = set(state.items)
-        new_items = []
-        new_labels = []
-        for item, label in zip(normalized_items, normalized_labels):
-            if item in existing:
-                continue
-            existing.add(item)
-            new_items.append(item)
-            new_labels.append(label)
-
         first_requested = normalized_items[0]
+        # finish_library_load()/clear_folder_location() are no-ops here (the
+        # guard above already excludes a loading or folder state); kept for
+        # parity with every other code path that resets these before a
+        # playlist mutation.
+        state.finish_library_load()
+        state.clear_folder_location()
+        # Dedup-and-extend is PlaylistState.append_items' job: it also keeps
+        # the shuffle order in sync, which a manual state.items.extend() here
+        # would not.
+        new_items = state.append_items(normalized_items, normalized_labels)
         if not new_items:
             return 0, first_requested
 
-        state.finish_library_load()
-        state.clear_folder_location()
-        state.items.extend(new_items)
-        state.browser_item_labels.extend(new_labels)
-        state.refresh_browser_item_labels()
         self._maybe_rename_playlist_after_append(state)
         return len(new_items), new_items[0]
 

@@ -149,10 +149,10 @@ class PluginHostAdapter:
         state = self.frame._get_playlist_state(requested_index) if requested_index is not None else self.frame._get_active_playlist_state()
         if state is None:
             raise ValueError("Playlist de destino inexistente.")
-        state.append_items(paths)
+        inserted_paths = state.append_items(paths)
         if state is self.frame._get_tab_state():
             self.frame._refresh_playlist_browser()
-        return len(paths)
+        return len(inserted_paths)
 
     def _youtube_service(self):
         return self.frame._get_youtube_music_service()

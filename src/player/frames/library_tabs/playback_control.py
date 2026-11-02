@@ -33,6 +33,24 @@ class PlaylistPlaybackMixin:
 
         return _("{name}. Item {current} de {total}.").format(name=media_name, current=state.current_index + 1, total=state.item_count)
 
+    _PLAYLIST_REVERT_SNAPSHOT_FIELDS = (
+        "current_index", "current_media_path", "last_position_ms", "was_playing",
+        "custom_queue", "autodj_next_path", "autodj_history",
+        "playback_order", "playback_order_position", "playback_gain_db",
+    )
+
+    @classmethod
+    def _snapshot_playlist_state_for_revert(cls, state):
+        """Capture everything ``move_in_playback_order`` can consume (queued
+        picks, the AutoDJ hand-off target, shuffle position, history) before
+        advancing, so a failed switch can be undone as if it never
+        happened."""
+        return {
+            name: list(value) if isinstance(value, list) else value
+            for name in cls._PLAYLIST_REVERT_SNAPSHOT_FIELDS
+            for value in (getattr(state, name),)
+        }
+
     def _play_media(
         self,
         media_path=None,
@@ -40,11 +58,19 @@ class PlaylistPlaybackMixin:
         announce_message=None,
         allow_crossfade=False,
         autodj_transition=None,
+        revert_snapshot=None,
     ):
         self._suppress_next_auto_advance = False
         # Sem índice, toca na playlist que o usuário está vendo.
         target_index = self._get_selected_playlist_index() if index is None else index
         state = self._get_playlist_state(target_index)
+        if revert_snapshot is None:
+            # Fallback for any move_in_playback_order()->_play_media() call
+            # site that doesn't explicitly snapshot first: move_in_playback_order
+            # always stashes one right before it consumes custom_queue/
+            # autodj_next_path, so there is still something to recover from
+            # if the switch this call starts ends up failing.
+            revert_snapshot = getattr(state, "_last_move_snapshot", None)
         if not state:
             return
         # Tocar algo numa playlist é o que passa o player para ela.
@@ -137,6 +163,7 @@ class PlaylistPlaybackMixin:
             tab_index=target_index,
             announce_message=announce_message,
             restore_position_ms=resume_position_ms,
+            revert_snapshot=revert_snapshot,
         )
 
     def _youtube_music_media_is_disliked(self, media_path):
@@ -243,15 +270,7 @@ class PlaylistPlaybackMixin:
             else:
                 wrapped_cycle = state.current_index == state.item_count - 1
 
-        playlist_before_transition = {
-            name: list(value) if isinstance(value, list) else value
-            for name in (
-                "current_index", "current_media_path", "last_position_ms", "was_playing",
-                "custom_queue", "autodj_next_path", "autodj_history",
-                "playback_order", "playback_order_position", "playback_gain_db",
-            )
-            for value in (getattr(state, name),)
-        }
+        playlist_before_transition = self._snapshot_playlist_state_for_revert(state)
         target = state.move_in_playback_order(1, wrap=should_wrap)
         if not target:
             return False
@@ -262,6 +281,9 @@ class PlaylistPlaybackMixin:
             announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
             allow_crossfade=True,
             autodj_transition=prepared_autodj,
+            # Also covers the plain (non-crossfade) fallback _play_media can
+            # take when _start_crossfade() itself fails to begin.
+            revert_snapshot=playlist_before_transition,
         )
         if self._crossfade_state is not None:
             self._crossfade_state["playlist_before_transition"] = playlist_before_transition
@@ -325,6 +347,7 @@ class PlaylistPlaybackMixin:
             if direction > 0
             else None
         )
+        revert_snapshot = self._snapshot_playlist_state_for_revert(state)
         target = state.move_in_playback_order(-1 if direction < 0 else 1, wrap=should_wrap)
         if not target:
             defer_autodj_advance = getattr(self, "_defer_autodj_advance", None)
@@ -348,6 +371,7 @@ class PlaylistPlaybackMixin:
             index=self._get_active_playlist_index(),
             allow_crossfade=allow_manual_crossfade,
             autodj_transition=manual_autodj_transition,
+            revert_snapshot=revert_snapshot,
         )
 
     def _prepared_autodj_transition_for_manual_advance(self, state):
@@ -564,6 +588,7 @@ class PlaylistPlaybackMixin:
             else:
                 wrapped_cycle = state.current_index == state.item_count - 1
 
+        revert_snapshot = self._snapshot_playlist_state_for_revert(state)
         target = state.move_in_playback_order(1, wrap=should_wrap)
         if target:
             _logger.debug("Media end: advancing to next track in playback order.")
@@ -571,6 +596,7 @@ class PlaylistPlaybackMixin:
             self._play_media(
                 index=self._get_active_playlist_index(),
                 announce_message=f"{loop_prefix}{self._describe_playlist_position(state)}",
+                revert_snapshot=revert_snapshot,
             )
             return
 

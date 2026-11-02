@@ -99,6 +99,12 @@ class PlaybackEngineMixin:
                         media_kwargs.update(is_live=True, video=live_video)
                     media = player_instance.media_new(playback_media_path, **media_kwargs)
                     player.stop()
+                    # From here on the previous track is actually stopped: a
+                    # later failure (even if set_media/play itself raises)
+                    # leaves the backend in an unknown state, so
+                    # _finish_media_start must not try to revert the UI back
+                    # to "still playing the previous track".
+                    request["backend_mutated"] = True
                     player.set_media(media)
                     video_output_handle = request.get("video_output_handle")
                     if sys.platform.startswith("win") and video_output_handle:
@@ -163,6 +169,7 @@ class PlaybackEngineMixin:
         start_position_ms=0,
         expect_live=False,
         live_reconnect=False,
+        revert_snapshot=None,
     ):
         if not live_reconnect:
             # Anything other than our own reconnect supersedes a pending one.
@@ -207,6 +214,7 @@ class PlaybackEngineMixin:
             "start_position_ms": start_position_ms,
             "expect_live": bool(expect_live),
             "live_reconnect": bool(live_reconnect),
+            "revert_snapshot": revert_snapshot,
         }
         self._pending_playback_request_serial = request["serial"]
         if (
@@ -279,7 +287,78 @@ class PlaybackEngineMixin:
             return
 
         if not success:
-            self._set_player_loaded_media_path(player_key, None)
+            # _play_media already moved the UI (title, time bar, playlist
+            # selection) to this media before queuing it. If resolving the
+            # stream failed before the backend was touched, the previous
+            # track is still the one actually playing: revert the UI to it
+            # instead of leaving the window title pointing at a track that
+            # never started.
+            backend_mutated = bool(request.get("backend_mutated"))
+            get_loaded_media_path = getattr(self, "_player_loaded_media_path", None)
+            previously_loaded_media_path = (
+                get_loaded_media_path(player_key) if callable(get_loaded_media_path) else None
+            )
+            media_paths_match = getattr(self, "_media_paths_match", None)
+            # Only revert when we can land on a real, still-listed item: if
+            # the previously playing path was removed from the playlist
+            # meanwhile, there is nothing safe to select back to, so fall
+            # through to the regular failure announcement instead of leaving
+            # current_media_path and current_index pointing at different
+            # tracks.
+            restored_index = (
+                state.index_of_item(previously_loaded_media_path)
+                if previously_loaded_media_path
+                else None
+            )
+            reverted_to_previous_media = (
+                not backend_mutated
+                and not request.get("crossfade")
+                and previously_loaded_media_path
+                and restored_index is not None
+                and callable(media_paths_match)
+                and not media_paths_match(state.current_media_path, previously_loaded_media_path)
+            )
+            if reverted_to_previous_media:
+                revert_snapshot = request.get("revert_snapshot")
+                if (
+                    revert_snapshot
+                    and media_paths_match(revert_snapshot.get("current_media_path"), previously_loaded_media_path)
+                ):
+                    # The caller (e.g. Next/Previous, auto-advance) had
+                    # already consumed a queued pick or the AutoDJ hand-off
+                    # target via move_in_playback_order before this request
+                    # was even queued. A plain index/path revert would leave
+                    # that pick silently dropped, so restore everything the
+                    # advance could have touched, exactly as the crossfade
+                    # path already does for its own transitions.
+                    for name, value in revert_snapshot.items():
+                        setattr(state, name, value)
+                    # current_index/current_media_path are the one exception:
+                    # use the values already validated against the *current*
+                    # item_index_map above, not the snapshot's. The playlist
+                    # itself cannot have changed shape during this request
+                    # (nothing here mutates `items`), but this keeps the two
+                    # fields from ever disagreeing with what was just looked
+                    # up, instead of trusting the pre-move copy twice.
+                    state.current_index = restored_index
+                    state.current_media_path = previously_loaded_media_path
+                else:
+                    # No snapshot (e.g. a direct media_path selection that
+                    # never consumed the queue): a plain field assignment is
+                    # enough. Not select_index(): the previous track never
+                    # actually stopped, so none of select_index's "track
+                    # changed" side effects apply here — it would zero
+                    # last_position_ms again and, in an AutoDJ session,
+                    # record the failed (never-played) target into
+                    # autodj_history.
+                    state.current_index = restored_index
+                    state.current_media_path = previously_loaded_media_path
+                    state.sync_playback_order()
+                self._update_title()
+                self._update_time_bar()
+                self._refresh_playlist_browser()
+            else:
+                self._set_player_loaded_media_path(player_key, None)
             if request.get("crossfade"):
                 if self._fallback_pending_crossfade_to_regular_playback():
                     return
@@ -291,15 +370,37 @@ class PlaybackEngineMixin:
                 # The re-resolution itself failed (e.g. network still down): try again.
                 self._schedule_live_reconnect()
                 return
+            handled = False
             if error_message:
-                handled = False
                 if is_youtube_music_media(media_path) and hasattr(self, "_handle_youtube_javascript_runtime_error"):
                     try:
                         handled = bool(self._handle_youtube_javascript_runtime_error(error_message))
                     except Exception:
                         handled = False
-                if not handled:
-                    self._announce(_("Não foi possível iniciar a mídia: {error}.").format(error=error_message))
+            if reverted_to_previous_media:
+                # Whether or not a dependency self-heal just kicked off above,
+                # the user must hear that playback stayed on the previous
+                # track rather than silently inferring it from the title —
+                # but the real reason (region block, auth, network…) still
+                # matters and must not be swallowed just because we recovered
+                # the UI.
+                revert_message = _("Não foi possível trocar de faixa; a reprodução continua em {name}.").format(
+                    name=self._media_label(previously_loaded_media_path)
+                )
+                if error_message and not handled:
+                    revert_message = f"{revert_message} {_('Detalhes: {error}.').format(error=error_message)}"
+                self._announce(revert_message)
+                # The "Resolvendo {label}..." status set when queuing the
+                # failed switch never auto-clears on its own: correct it back
+                # to what is actually playing instead of leaving it stuck on
+                # the track that never started.
+                if hasattr(self, "_set_status_message"):
+                    self._set_status_message(
+                        _("Tocando: {name}").format(name=self._media_label(previously_loaded_media_path)),
+                        auto_clear_ms=0,
+                    )
+            elif error_message and not handled:
+                self._announce(_("Não foi possível iniciar a mídia: {error}.").format(error=error_message))
             return
 
         if request.get("crossfade"):

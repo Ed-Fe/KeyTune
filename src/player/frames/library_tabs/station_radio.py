@@ -208,17 +208,25 @@ class StationRadioMixin:
         if not target_state.items or target_state.items[0] != seed_media_path:
             return False
 
-        if item_urls:
-            target_state.append_items(item_urls, item_labels)
+        inserted_items = target_state.append_items(item_urls, item_labels) if item_urls else []
+        if inserted_items:
             target_state.radio_queue_playlist_id = str(radio_playlist_id or "").strip() or None
             if self._is_current_playlist_state(target_state):
                 self._refresh_playlist_browser()
                 prefetch_upcoming = getattr(self, "_prefetch_upcoming_media_stream", None)
                 if callable(prefetch_upcoming):
                     prefetch_upcoming(target_state)
+            # Some fetched URLs may already match an item already in the
+            # playlist and get silently skipped by append_items: count what
+            # was actually inserted, not what was requested.
             message = _("Nova rádio pronta com {count} músicas sem repetição recente.").format(
-                count=len(item_urls) + 1
+                count=len(inserted_items) + 1
             )
+        elif item_urls:
+            # Every fetched URL turned out to already be in the playlist:
+            # nothing new actually landed, so don't claim the radio is ready
+            # with a track count that includes zero new tracks.
+            message = _("A rádio foi criada, mas o YouTube Music só retornou músicas já presentes na playlist.")
         elif error_message:
             message = _("A rádio foi criada, mas não foi possível buscar músicas relacionadas: {error}.").format(
                 error=error_message
@@ -229,4 +237,4 @@ class StationRadioMixin:
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         self._announce(message)
-        return bool(item_urls)
+        return bool(inserted_items)

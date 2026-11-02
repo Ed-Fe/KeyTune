@@ -207,14 +207,38 @@ class PlaylistState:
             self.reset_playback_order(preferred_index=0)
 
     def append_items(self, new_items, new_labels=None):
-        normalized_new_items = [str(item) for item in new_items if item]
+        """Append *new_items*, skipping any already in the playlist.
+
+        Returns the list of paths actually inserted (a subset of
+        *new_items*, in order), so callers that report a count or assume a
+        specific resulting index can rely on what really landed rather than
+        on ``len(new_items)``.
+        """
+        raw_new_items = [str(item) for item in new_items if item]
+        if not raw_new_items:
+            return []
+
+        padded_labels = list(new_labels or []) + [None] * len(raw_new_items)
+        seen_paths = set(self.item_index_map)
+        normalized_new_items = []
+        normalized_new_labels = []
+        for item, label in zip(raw_new_items, padded_labels):
+            if item in seen_paths:
+                # Already in the playlist (e.g. a radio/related fetch
+                # surfacing a track that's already queued): skip it instead
+                # of creating a literal duplicate entry that can play again.
+                continue
+            seen_paths.add(item)
+            normalized_new_items.append(item)
+            normalized_new_labels.append(label)
+
         if not normalized_new_items:
-            return
+            return []
 
         combined_items = self.items + normalized_new_items
         combined_labels = list(self.browser_item_labels) + [
             str(label or "").strip() or self._fallback_browser_item_label(item)
-            for item, label in zip(normalized_new_items, list(new_labels or []) + [None] * len(normalized_new_items))
+            for item, label in zip(normalized_new_items, normalized_new_labels)
         ]
         self._apply_prepared_items(
             combined_items,
@@ -222,6 +246,7 @@ class PlaylistState:
             combined_labels,
         )
         self.sync_playback_order()
+        return normalized_new_items
 
     def enqueue_item(self, media_path, label=None):
         if not media_path:
@@ -229,18 +254,11 @@ class PlaylistState:
 
         normalized_path = str(media_path)
         if normalized_path not in self.item_index_map:
-            # Preserve the current shuffle order so appending a brand-new item
-            # for the queue doesn't reshuffle everything still to play.
-            preserved_order = list(self.playback_order) if self.shuffle_enabled else None
+            # append_items() -> sync_playback_order() already merges a
+            # brand-new index into the still-upcoming part of the shuffle
+            # order (or appends it in order when shuffle is off); no need to
+            # hand-roll that here too.
             self.append_items([normalized_path], [label])
-            if preserved_order is not None:
-                new_index = self.item_index_map.get(normalized_path)
-                if new_index is not None and new_index not in preserved_order:
-                    preserved_order.append(new_index)
-                if len(preserved_order) == len(self.items):
-                    self.playback_order = preserved_order
-                    if self.current_index in preserved_order:
-                        self.playback_order_position = preserved_order.index(self.current_index)
 
         if normalized_path not in self.item_index_map:
             return False
@@ -491,6 +509,18 @@ class PlaylistState:
             return
 
         random.shuffle(ordered_indices)
+        if (
+            len(ordered_indices) > 1
+            and preferred_index in ordered_indices
+            and ordered_indices[0] == preferred_index
+        ):
+            # anchor_current=False means "start a fresh, unanchored lap" —
+            # never "play preferred_index immediately again". A fully random
+            # draw can still land it first (e.g. the track that just ended,
+            # when a shuffled repeat-all lap wraps): keep it in this lap, just
+            # not as the very next track.
+            swap_with = random.randint(1, len(ordered_indices) - 1)
+            ordered_indices[0], ordered_indices[swap_with] = ordered_indices[swap_with], ordered_indices[0]
         self.playback_order = ordered_indices
         self.playback_order_position = (
             ordered_indices.index(preferred_index) if preferred_index in ordered_indices else 0
@@ -502,19 +532,68 @@ class PlaylistState:
             self.playback_order_position = 0
             return
 
+        if not self.playback_order:
+            self.reset_playback_order(preferred_index=self.current_index)
+            return
+
         expected_indices = set(range(len(self.items)))
         current_indices = set(self.playback_order)
 
-        if len(self.playback_order) != len(self.items) or current_indices != expected_indices:
+        if (
+            current_indices - expected_indices
+            or len(self.playback_order) != len(current_indices)
+        ):
+            # Either some stored index no longer points at the same item (a
+            # removal or a reorder can shift what every later index means),
+            # or the order holds a duplicated index (e.g. ``items`` itself
+            # has a duplicate path, so two old slots collapsed to the same
+            # new index) — the duplicate-index set still matches
+            # expected_indices and would otherwise be let through. Either
+            # way there is no safe way to patch it from here: rebuild from
+            # scratch, like before.
             self.reset_playback_order(preferred_index=self.current_index)
             return
+
+        missing_indices = [index for index in expected_indices if index not in current_indices]
+        if missing_indices:
+            # Pure growth (e.g. a radio/related-autoplay fetch appending more
+            # tracks, or enqueue_item() adding a brand-new item): every
+            # existing index is still valid and its relative order — played
+            # and still-upcoming alike — is left exactly as it was. The new
+            # indices are just appended after it. A full reshuffle (or even
+            # reshuffling just the upcoming tail together with the new
+            # items) would scatter already-heard tracks back into the pool
+            # and let them play again.
+            if self.shuffle_enabled:
+                random.shuffle(missing_indices)
+            else:
+                missing_indices.sort()
+            self.playback_order.extend(missing_indices)
 
         if self.current_index in self.playback_order:
             self.playback_order_position = self.playback_order.index(self.current_index)
 
+    _MOVE_SNAPSHOT_FIELDS = (
+        "current_index", "current_media_path", "last_position_ms", "was_playing",
+        "custom_queue", "autodj_next_path", "autodj_history",
+        "playback_order", "playback_order_position", "playback_gain_db",
+    )
+
     def move_in_playback_order(self, direction, wrap=False):
         if not self.items:
             return None
+
+        # Stashed before anything below consumes custom_queue/autodj_next_path
+        # or reshuffles playback_order, so a caller that forgets to snapshot
+        # before calling this (and _play_media ends up failing) can still
+        # recover everything this move is about to touch. Callers that do
+        # snapshot explicitly (see _snapshot_playlist_state_for_revert) just
+        # overwrite this with an equivalent copy.
+        self._last_move_snapshot = {
+            name: list(value) if isinstance(value, list) else value
+            for name in self._MOVE_SNAPSHOT_FIELDS
+            for value in (getattr(self, name),)
+        }
 
         self.sync_playback_order()
 
@@ -552,6 +631,10 @@ class PlaylistState:
             self.playback_order_position = len(self.playback_order) - 1
             return self.select_index(self.playback_order[self.playback_order_position], reset_playback_order=False)
 
+        # anchor_current=False starts a fresh, unanchored lap; reset_playback_order
+        # itself guarantees the just-finished track won't be drawn first, so a
+        # shuffled repeat-all lap boundary never reads as the same song twice
+        # in a row.
         self.reset_playback_order(preferred_index=self.current_index, anchor_current=False)
         if not self.playback_order:
             return None
