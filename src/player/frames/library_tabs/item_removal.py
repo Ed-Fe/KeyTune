@@ -29,6 +29,7 @@ class PlaylistItemRemovalMixin:
             self._stop_all_players(unload=False)
 
         state.items.pop(item_index)
+        state.browser_item_labels.pop(item_index)
         state.refresh_browser_item_labels()
 
         if not state.items:
@@ -102,6 +103,7 @@ class PlaylistItemRemovalMixin:
         removed_names = [self._media_label(state.items[index]) for index in reversed(valid_indexes)]
         for index in valid_indexes:
             state.items.pop(index)
+            state.browser_item_labels.pop(index)
         state.refresh_browser_item_labels()
 
         if not state.items:

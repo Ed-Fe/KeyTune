@@ -372,10 +372,13 @@ class PlaylistState:
         ]
         current_media_path = self.current_media_path
         normalized_items = list(items)
+        if browser_item_labels is None:
+            labels_by_item = dict(zip(old_items, self.browser_item_labels))
+            browser_item_labels = [labels_by_item.get(item) for item in normalized_items]
         self._apply_prepared_items(
             normalized_items,
             {item: index for index, item in enumerate(normalized_items)},
-            list(browser_item_labels or []),
+            list(browser_item_labels),
         )
         self.current_index = self.item_index_map.get(current_media_path, -1)
         if self.current_index < 0:
