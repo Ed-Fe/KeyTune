@@ -136,6 +136,9 @@ class PreferencesDialog(wx.Dialog):
         self.restore_session_checkbox = self._add_checkbox(
             box, sizer, _("&Restaurar sessão ao iniciar"), _("Reabre as abas da última sessão.")
         )
+        self.open_keytube_on_startup_checkbox = self._add_checkbox(
+            box, sizer, _("Abrir o &KeyTube ao iniciar"), _("A aba KeyTube abre junto com o app.")
+        )
         self.remember_window_size_checkbox = self._add_checkbox(
             box, sizer, _("Lembrar tamanho da &janela"), _("Restaura o tamanho da janela principal.")
         )
@@ -872,6 +875,8 @@ class PreferencesDialog(wx.Dialog):
         # guia KeyTube ficam sempre ao alcance do teclado, mesmo antes de a
         # integração ser ativada.
         managed_dependencies_enabled = self.youtube_music_manage_dependencies_checkbox.GetValue()
+        # Abrir o KeyTube ao iniciar só faz sentido com a integração ativa.
+        self.open_keytube_on_startup_checkbox.Enable(managed_dependencies_enabled)
         auto_update_enabled = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
         for control in (
             self.youtube_music_use_nightly_yt_dlp_checkbox,
@@ -916,6 +921,7 @@ class PreferencesDialog(wx.Dialog):
             language_index = 0
         self.language_choice.SetSelection(language_index)
         self.restore_session_checkbox.SetValue(settings.restore_session_on_startup)
+        self.open_keytube_on_startup_checkbox.SetValue(settings.open_keytube_on_startup)
         self.remember_window_size_checkbox.SetValue(settings.remember_window_size)
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
@@ -1039,6 +1045,7 @@ class PreferencesDialog(wx.Dialog):
         else:
             settings.language = ""
         settings.restore_session_on_startup = self.restore_session_checkbox.GetValue()
+        settings.open_keytube_on_startup = self.open_keytube_on_startup_checkbox.GetValue()
         settings.remember_window_size = self.remember_window_size_checkbox.GetValue()
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()

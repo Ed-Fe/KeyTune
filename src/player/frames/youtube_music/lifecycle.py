@@ -252,6 +252,13 @@ class LifecycleMixin:
             announce_message=_("Vídeo do YouTube aberto: {title}.").format(title=title),
         )
 
+    def _open_keytube_on_startup_if_enabled(self):
+        if not getattr(self.settings, "open_keytube_on_startup", False):
+            return
+        if not self._youtube_music_integration_enabled():
+            return
+        wx.CallAfter(self.on_open_youtube_music, None)
+
     def _initialize_youtube_music_startup_state(self):
         # Avoid an eager network round trip on startup just to fetch the
         # account name. The account is validated lazily when the user opens

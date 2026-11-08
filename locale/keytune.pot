@@ -585,6 +585,10 @@ msgstr ""
 msgid "5 estrelas"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "A aba KeyTube abre junto com o app."
+msgstr ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "A aba atual não é uma playlist editável do YouTube Music."
 msgstr ""
@@ -1142,6 +1146,10 @@ msgstr ""
 
 #: src/player/file_associations.py
 msgid "Abrir no {app}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Abrir o &KeyTube ao iniciar"
 msgstr ""
 
 #: src/player/frames/radio/actions.py

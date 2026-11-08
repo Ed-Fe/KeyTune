@@ -791,7 +791,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 ### General
 
-**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
+**Restore session on startup**, **Open KeyTube on startup** (unchecked by default and available only with the YouTube integration turned on in **Additional resources**; it opens the KeyTube tab together with the app), **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
 The **System tray** section has **When minimizing, hide to the system tray** and **When closing, hide to the system tray**; see [System tray](#system-tray).
 

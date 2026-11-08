@@ -803,7 +803,7 @@ As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Repr
 
 ### Geral
 
-**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
+**Restaurar sessão ao iniciar**, **Abrir o KeyTube ao iniciar** (vem desmarcado e só fica disponível com a integração com o YouTube ativada em **Recursos adicionais**; abre a aba KeyTube junto com o app), **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
 
 A seção **Bandeja do sistema** tem **Ao minimizar, ocultar na bandeja do sistema** e **Ao fechar, ocultar na bandeja do sistema**; veja [Bandeja do sistema](#bandeja-do-sistema).
 

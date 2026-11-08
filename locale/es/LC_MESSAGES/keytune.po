@@ -7995,3 +7995,9 @@ msgstr "Pantalla completa activada. Esc o Alt+Enter para salir."
 
 msgid "Tela cheia desativada."
 msgstr "Pantalla completa desactivada."
+
+msgid "Abrir o &KeyTube ao iniciar"
+msgstr "Abrir &KeyTube al iniciar"
+
+msgid "A aba KeyTube abre junto com o app."
+msgstr "La pestaña KeyTube se abre junto con la app."

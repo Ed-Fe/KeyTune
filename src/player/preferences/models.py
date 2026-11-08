@@ -17,6 +17,7 @@ from ..constants import (
     DEFAULT_LOGGING_ENABLED,
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
+    DEFAULT_OPEN_KEYTUBE_ON_STARTUP,
     DEFAULT_QUICK_PLAYER_ENABLED,
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
@@ -109,6 +110,7 @@ class AppSettings:
     # Interface language. Empty string means "follow the operating system".
     language: str = ""
     restore_session_on_startup: bool = DEFAULT_RESTORE_SESSION_ON_STARTUP
+    open_keytube_on_startup: bool = DEFAULT_OPEN_KEYTUBE_ON_STARTUP
     remember_window_size: bool = DEFAULT_REMEMBER_WINDOW_SIZE
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
@@ -231,6 +233,7 @@ class AppSettings:
         return {
             "language": self.language,
             "restore_session_on_startup": self.restore_session_on_startup,
+            "open_keytube_on_startup": self.open_keytube_on_startup,
             "remember_window_size": self.remember_window_size,
             "remember_last_folder": self.remember_last_folder,
             "confirm_on_exit": self.confirm_on_exit,
@@ -328,6 +331,7 @@ class AppSettings:
         settings = cls()
         settings.language = _normalize_language_preference(data.get("language", settings.language))
         settings.restore_session_on_startup = bool(data.get("restore_session_on_startup", settings.restore_session_on_startup))
+        settings.open_keytube_on_startup = bool(data.get("open_keytube_on_startup", settings.open_keytube_on_startup))
         settings.remember_window_size = bool(data.get("remember_window_size", settings.remember_window_size))
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
