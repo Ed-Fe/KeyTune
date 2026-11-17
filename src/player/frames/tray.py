@@ -14,6 +14,7 @@ import wx
 from ..constants import APP_TITLE
 from ..i18n import _
 from ..log import get_logger
+from ..announcements import ANNOUNCE_CONFIRMATIONS
 
 _logger = get_logger(__name__)
 
@@ -121,7 +122,7 @@ class FrameTrayMixin:
         self._focus_before_tray = wx.Window.FindFocus()
         self._hidden_in_tray = True
         self._refresh_tray_icon()
-        self._announce(_("KeyTune na bandeja do sistema."))
+        self._announce(_("KeyTune na bandeja do sistema."), ANNOUNCE_CONFIRMATIONS)
         self.Hide()
 
     def _restore_from_tray(self):

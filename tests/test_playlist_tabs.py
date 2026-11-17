@@ -16,6 +16,7 @@ from player.frames.library_tabs.tabs import TabManagementMixin
 from player.frames.playback.controls import PlaybackControlsMixin
 from player.frames.session import FrameSessionMixin
 from player.playlists import PlaylistState, build_playlist_title, is_youtube_watch_reference
+from player.announcements import ANNOUNCE_ERRORS
 
 
 class PreparedPlaylistTests(unittest.TestCase):
@@ -76,7 +77,7 @@ class PlaybackLoadingTests(unittest.TestCase):
         frame._toggle_play_pause()
 
         frame.on_open.assert_not_called()
-        frame._announce.assert_called_once_with("A mídia ainda está carregando.")
+        frame._announce.assert_called_once_with("A mídia ainda está carregando.", ANNOUNCE_ERRORS)
 
 
 class SessionRestoreTests(unittest.TestCase):

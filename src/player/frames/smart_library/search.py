@@ -14,6 +14,7 @@ from ...smart_library import (
     SEARCH_SCOPE_ALL,
     GlobalSearchDialog,
 )
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class SmartLibrarySearchMixin:
@@ -79,16 +80,19 @@ class SmartLibrarySearchMixin:
     def _enqueue_library_media(self, media_path, label=""):
         state = self._get_active_playlist_state()
         if state is None:
-            self._announce(_("Nenhuma playlist ativa para receber o item."))
+            self._announce(_("Nenhuma playlist ativa para receber o item."), ANNOUNCE_ERRORS)
             return False
 
         if not state.enqueue_item(media_path, label):
-            self._announce(_("Este item já está na fila de reprodução."))
+            self._announce(_("Este item já está na fila de reprodução."), ANNOUNCE_ERRORS)
             return False
 
         self._refresh_playlist_browser()
         interface_sounds.play_for(self, interface_sounds.SOUND_QUEUE_ADDED)
-        self._announce(_("{item} adicionado à fila de reprodução.").format(item=label or media_path))
+        self._announce(
+            _("{item} adicionado à fila de reprodução.").format(item=label or media_path),
+            ANNOUNCE_CONFIRMATIONS,
+        )
         return True
 
     def _open_favorites_playlist(self):
@@ -99,7 +103,7 @@ class SmartLibrarySearchMixin:
 
         favorites = service.favorites()
         if not favorites:
-            self._announce(_("Nenhum favorito ainda. Use Ctrl+D para marcar o item atual."))
+            self._announce(_("Nenhum favorito ainda. Use Ctrl+D para marcar o item atual."), ANNOUNCE_ERRORS)
             return
 
         self._open_prepared_media_playlist(

@@ -279,7 +279,7 @@ class PreferencesDialog(wx.Dialog):
             box,
             sizer,
             _("Ativar a&núncios de acessibilidade"),
-            _("Anuncia mudanças como tempo, volume e troca de abas."),
+            _("Desligado, nada é falado. Ligado, vale a escolha de cada aviso na lista abaixo."),
         )
         self.announcements_interrupt_checkbox = self._add_checkbox(
             box,
@@ -291,15 +291,15 @@ class PreferencesDialog(wx.Dialog):
             box,
             sizer,
             _("Falar os avisos de &eventos com o KeyTune ativo"),
-            _("Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."),
+            _("Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."),
         )
         self._announcement_names = [name for name, _label in announcement_labels()]
         self._announcement_labels = [label for _name, label in announcement_labels()]
-        announcements_label = wx.StaticText(box, label=_("Avisos de eventos que falam:"))
+        announcements_label = wx.StaticText(box, label=_("Avisos que falam:"))
         self.announcements_list = CheckList(
             box,
             [label for _name, label in announcement_labels()],
-            size=self.FromDIP(wx.Size(-1, 130)),
+            size=self.FromDIP(wx.Size(-1, 260)),
         )
         sizer.Add(announcements_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, ROW_BORDER)
         sizer.Add(self.announcements_list, 0, wx.ALL | wx.EXPAND, ROW_BORDER)

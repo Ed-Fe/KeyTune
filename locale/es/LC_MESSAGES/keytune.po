@@ -5397,8 +5397,8 @@ msgstr "Altura máxima del vídeo; sin ella, se usa la mejor disponible."
 msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
 msgstr "Analizar el BPM, los tiempos, la energía y la tonalidad de las pistas"
 
-msgid "Anuncia mudanças como tempo, volume e troca de abas."
-msgstr "Anuncia cambios como el tiempo, el volumen y el cambio de pestaña."
+msgid "Desligado, nada é falado. Ligado, vale a escolha de cada aviso na lista abaixo."
+msgstr "Desactivado, no se habla nada. Activado, vale la elección de cada aviso de la lista de abajo."
 
 msgid "Ao atingir o limite, as mais antigas saem."
 msgstr "Al alcanzar el límite, se eliminan las más antiguas."
@@ -7650,11 +7650,11 @@ msgstr "Desactivado, el aviso espera a que el lector termine lo que está dicien
 msgid "Falar os avisos de &eventos com o KeyTune ativo"
 msgstr "Decir los avisos de &eventos con KeyTune activo"
 
-msgid "Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."
-msgstr "Chat y notificaciones. Desactivado, solo hablan con KeyTune en segundo plano."
+msgid "Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."
+msgstr "Chat, notificaciones, descarga y temporizador. Desactivado, solo hablan con KeyTune en segundo plano."
 
-msgid "Avisos de eventos que falam:"
-msgstr "Avisos de eventos que hablan:"
+msgid "Avisos que falam:"
+msgstr "Avisos que hablan:"
 
 msgid "Avisos de eventos que falam"
 msgstr "Avisos de eventos que hablan"
@@ -8001,3 +8001,94 @@ msgstr "Abrir &KeyTube al iniciar"
 
 msgid "A aba KeyTube abre junto com o app."
 msgstr "La pestaña KeyTube se abre junto con la app."
+
+msgid "Reprodução: pausa, retomada, início e fim do arquivo, dispositivo de áudio"
+msgstr "Reproducción: pausa, reanudación, inicio y fin del archivo, dispositivo de audio"
+
+msgid "Troca de faixa e SponsorBlock: faixa que começou e trechos pulados"
+msgstr "Cambio de pista y SponsorBlock: pista que empezó y tramos saltados"
+
+msgid "Velocidade e tom ao mudar"
+msgstr "Velocidad y tono al cambiar"
+
+msgid "Modos ligados ou desligados: aleatório, repetição, equalizador, AutoDJ"
+msgstr "Modos activados o desactivados: aleatorio, repetición, ecualizador, AutoDJ"
+
+msgid "Navegação: abas, início e fim de listas, abertura de itens"
+msgstr "Navegación: pestañas, inicio y fin de listas, apertura de elementos"
+
+msgid "Progresso: carregando, pesquisando, iniciando"
+msgstr "Progreso: cargando, buscando, iniciando"
+
+msgid "Confirmações: copiado, salvo, adicionado, removido"
+msgstr "Confirmaciones: copiado, guardado, añadido, quitado"
+
+msgid "Erros e ações indisponíveis"
+msgstr "Errores y acciones no disponibles"
+
+msgid "Manual do usuário"
+msgstr "Manual del usuario"
+
+msgid "Seções:"
+msgstr "Secciones:"
+
+msgid "Seções"
+msgstr "Secciones"
+
+msgid "Tópicos da seção:"
+msgstr "Temas de la sección:"
+
+msgid "Tópicos da seção"
+msgstr "Temas de la sección"
+
+msgid "Texto"
+msgstr "Texto"
+
+msgid "Apresentação"
+msgstr "Presentación"
+
+msgid "Visão geral da seção"
+msgstr "Resumen de la sección"
+
+msgid "Não foi possível localizar o manual do KeyTune nesta instalação."
+msgstr "No se pudo encontrar el manual de KeyTune en esta instalación."
+
+msgid "Não foi possível localizar o manual do KeyTune. Verifique a pasta docs da instalação."
+msgstr "No se pudo encontrar el manual de KeyTune. Revisa la carpeta docs de la instalación."
+
+msgid "A rádio foi criada, mas o YouTube Music só retornou músicas já presentes na playlist."
+msgstr "La radio se creó, pero YouTube Music solo devolvió canciones que ya estaban en la lista."
+
+msgid "Detalhes: {error}."
+msgstr "Detalles: {error}."
+
+msgid "Nenhum conteúdo relacionado inédito encontrado."
+msgstr "No se encontró contenido relacionado nuevo."
+
+msgid "Não foi possível trocar de faixa; a reprodução continua em {name}."
+msgstr "No se pudo cambiar de pista; la reproducción continúa en {name}."
+
+msgid "Buscar no manual:"
+msgstr "Buscar en el manual:"
+
+msgid "Buscar no manual"
+msgstr "Buscar en el manual"
+
+msgid "Nada foi encontrado para esta busca."
+msgstr "No se encontró nada para esta búsqueda."
+
+msgid "Nada foi encontrado para \"{query}\"."
+msgstr "No se encontró nada para \"{query}\"."
+
+msgid "Busca limpa. O manual inteiro está de volta."
+msgstr "Búsqueda borrada. El manual completo está de vuelta."
+
+msgid "{count} tópico encontrado."
+msgid_plural "{count} tópicos encontrados."
+msgstr[0] "{count} tema encontrado."
+msgstr[1] "{count} temas encontrados."
+
+msgid "Em {count} seção."
+msgid_plural "Em {count} seções."
+msgstr[0] "En {count} sección."
+msgstr[1] "En {count} secciones."

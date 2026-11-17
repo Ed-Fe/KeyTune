@@ -10,6 +10,7 @@ from ...playlists import (
     default_playlist_title,
     is_youtube_watch_reference,
 )
+from ...announcements import ANNOUNCE_NAVIGATION, ANNOUNCE_PROGRESS
 
 
 class TabManagementMixin:
@@ -364,7 +365,10 @@ class TabManagementMixin:
             if callable(tab_state.on_activate):
                 tab_state.on_activate()
             if announce:
-                self._announce(tab_state.activation_message or _("Aba {num}: {title}.").format(num=index + 1, title=tab_state.title))
+                self._announce(
+                    tab_state.activation_message or _("Aba {num}: {title}.").format(num=index + 1, title=tab_state.title),
+                    ANNOUNCE_NAVIGATION,
+                )
             return
 
         state = self._get_playlist_state(index)
@@ -386,13 +390,17 @@ class TabManagementMixin:
         if not announce:
             return
         if state.is_loading:
-            self._announce(state.loading_message or _("Carregando {title}.").format(title=state.title))
+            self._announce(
+                state.loading_message or _("Carregando {title}.").format(title=state.title),
+                ANNOUNCE_PROGRESS,
+            )
         elif not state.current_media_path:
-            self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title))
+            self._announce(_("{title}. Nenhuma mídia tocando agora.").format(title=state.title), ANNOUNCE_NAVIGATION)
         else:
             self._announce(
                 f'{_("Aba {num}: {title}.").format(num=index + 1, title=state.title)} '
-                f"{self._describe_playlist_position(state)}".strip()
+                f"{self._describe_playlist_position(state)}".strip(),
+                ANNOUNCE_NAVIGATION
             )
 
     def _set_active_playlist(self, index):
@@ -478,7 +486,10 @@ class TabManagementMixin:
                 self._reset_playlist_tabs()
                 self._refresh_playlist_browser()
                 interface_sounds.play_for(self, interface_sounds.SOUND_TAB_CLOSED)
-                self._announce(_("Fechou {title}. Nova playlist vazia.").format(title=current_state.title))
+                self._announce(
+                    _("Fechou {title}. Nova playlist vazia.").format(title=current_state.title),
+                    ANNOUNCE_NAVIGATION,
+                )
                 return True
 
             # Uma tela (YouTube Music, equalizador...) ficou sozinha: ela dá lugar a
@@ -540,9 +551,9 @@ class TabManagementMixin:
                 suffix = f"{next_state.title}. {self._describe_playlist_position(next_state)}".strip()
             else:
                 suffix = f"{next_state.title}."
-            self._announce(_("Fechou {title}.").format(title=closed_name) + " " + suffix)
+            self._announce(_("Fechou {title}.").format(title=closed_name) + " " + suffix, ANNOUNCE_NAVIGATION)
         else:
-            self._announce(_("Aba fechada."))
+            self._announce(_("Aba fechada."), ANNOUNCE_NAVIGATION)
 
         return True
 

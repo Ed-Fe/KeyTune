@@ -35,6 +35,12 @@ from ..library import (
 )
 from ..log import get_logger
 from ..playlists import PlaylistState, ScreenTabState
+from ..announcements import (
+    ANNOUNCE_CONFIRMATIONS,
+    ANNOUNCE_ERRORS,
+    ANNOUNCE_NAVIGATION,
+    ANNOUNCE_PROGRESS,
+)
 
 
 _logger = get_logger(__name__)
@@ -140,7 +146,7 @@ class FrameExplorerMixin:
         if had_focus:
             self._leave_explorer_focus()
         if announce:
-            self._announce(_("Explorador de pastas fechado."))
+            self._announce(_("Explorador de pastas fechado."), ANNOUNCE_NAVIGATION)
 
     def _leave_explorer_focus(self):
         """Devolve o foco para onde ele estava antes de o explorador ser aberto."""
@@ -211,9 +217,12 @@ class FrameExplorerMixin:
 
         if not quiet:
             if isinstance(error, FileNotFoundError):
-                self._announce(_("A pasta não está mais disponível."))
+                self._announce(_("A pasta não está mais disponível."), ANNOUNCE_ERRORS)
             else:
-                self._announce(_("Não foi possível carregar a pasta selecionada: {error}.").format(error=error))
+                self._announce(
+                    _("Não foi possível carregar a pasta selecionada: {error}.").format(error=error),
+                    ANNOUNCE_ERRORS,
+                )
 
         failed_path = state.current_path
         if not failed_path:
@@ -229,7 +238,7 @@ class FrameExplorerMixin:
         state = self._explorer_state
         parent_path = explorer_parent_path(state.current_path)
         if parent_path is None:
-            self._announce(_("Você já está na pasta raiz."))
+            self._announce(_("Você já está na pasta raiz."), ANNOUNCE_ERRORS)
             return
         interface_sounds.play_for(self, interface_sounds.SOUND_BACK)
         self._explorer_navigate(parent_path, selected_path=state.current_path)
@@ -291,12 +300,12 @@ class FrameExplorerMixin:
     def _explorer_with_media(self, paths, action):
         """Chama *action* com as mídias de *paths*, lendo subpastas fora da interface."""
         if not paths:
-            self._announce(_("Nenhum item selecionado no explorador."))
+            self._announce(_("Nenhum item selecionado no explorador."), ANNOUNCE_ERRORS)
             return
 
         def deliver(media_paths):
             if not media_paths:
-                self._announce(_("Nenhuma mídia compatível foi encontrada na seleção."))
+                self._announce(_("Nenhuma mídia compatível foi encontrada na seleção."), ANNOUNCE_ERRORS)
                 return
             action(media_paths)
 
@@ -305,10 +314,13 @@ class FrameExplorerMixin:
             deliver(list(paths))
             return
         if any(explorer_parent_path(folder) == EXPLORER_ROOT for folder in folders):
-            self._announce(_("Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."))
+            self._announce(
+                _("Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."),
+                ANNOUNCE_ERRORS,
+            )
             return
 
-        self._announce(_("Lendo as pastas selecionadas..."))
+        self._announce(_("Lendo as pastas selecionadas..."), ANNOUNCE_PROGRESS)
         run_in_background(self, lambda: collect_media_paths(paths), deliver)
 
     def _explorer_play_paths(self, paths):
@@ -335,18 +347,22 @@ class FrameExplorerMixin:
     def _explorer_copy_selection(self, *, as_text=False):
         paths = self._explorer_selected_paths()
         if not paths:
-            self._announce(_("Nenhum item selecionado para copiar."))
+            self._announce(_("Nenhum item selecionado para copiar."), ANNOUNCE_ERRORS)
             return
 
         copied = self._copy_text_to_clipboard("\n".join(paths)) if as_text else self._copy_files_to_clipboard(paths)
         if not copied:
-            self._announce(_("Não foi possível acessar a área de transferência."))
+            self._announce(_("Não foi possível acessar a área de transferência."), ANNOUNCE_ERRORS)
         elif as_text:
             self._announce(
-                ngettext("Caminho copiado.", "{count} caminhos copiados.", len(paths)).format(count=len(paths))
+                ngettext("Caminho copiado.", "{count} caminhos copiados.", len(paths)).format(count=len(paths)),
+                ANNOUNCE_CONFIRMATIONS
             )
         else:
-            self._announce(ngettext("Item copiado.", "{count} itens copiados.", len(paths)).format(count=len(paths)))
+            self._announce(
+                ngettext("Item copiado.", "{count} itens copiados.", len(paths)).format(count=len(paths)),
+                ANNOUNCE_CONFIRMATIONS,
+            )
 
     def _explorer_reveal_in_file_manager(self, path):
         try:
@@ -355,7 +371,7 @@ class FrameExplorerMixin:
             else:
                 subprocess.Popen(["explorer", f"/select,{path}"])
         except OSError:
-            self._announce(_("Não foi possível abrir o Explorador de Arquivos do Windows."))
+            self._announce(_("Não foi possível abrir o Explorador de Arquivos do Windows."), ANNOUNCE_ERRORS)
 
     def _explorer_refresh(self):
         selected_paths = self._explorer_selected_paths()
@@ -377,7 +393,8 @@ class FrameExplorerMixin:
             _("Pasta classificada por {criterion}, em ordem {direction}.").format(
                 criterion=self._EXPLORER_SORT_LABELS.get(sort_by, self._EXPLORER_SORT_LABELS[FOLDER_SORT_NAME]),
                 direction=_("decrescente") if descending else _("crescente"),
-            )
+            ),
+            ANNOUNCE_CONFIRMATIONS
         )
 
     def _append_explorer_sort_menu(self, menu):
@@ -408,7 +425,7 @@ class FrameExplorerMixin:
 
     def on_show_explorer_sort_menu(self):
         if not self._explorer_state.current_path:
-            self._announce(_("A lista de unidades não pode ser classificada."))
+            self._announce(_("A lista de unidades não pode ser classificada."), ANNOUNCE_ERRORS)
             return
 
         menu = wx.Menu()

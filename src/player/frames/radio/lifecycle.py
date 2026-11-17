@@ -8,6 +8,7 @@ from player.radio.store import RadioLibraryStore
 from ...i18n import _
 from ...playlists import ScreenTabState
 from .navigation import radio_view_summary
+from ...announcements import ANNOUNCE_CONFIRMATIONS
 
 
 def _radio_tab_panel_class():
@@ -49,7 +50,10 @@ class RadioLifecycleMixin:
         self.settings.radio_country_name = str(country_name or "").strip()
         self._save_settings()
         self._apply_radio_region_change()
-        self._announce(_("{country} definido como o seu país nas rádios online.").format(country=country_name))
+        self._announce(
+            _("{country} definido como o seu país nas rádios online.").format(country=country_name),
+            ANNOUNCE_CONFIRMATIONS,
+        )
 
     def _apply_radio_region_change(self):
         """O país mudou: o início e as opções de busca da aba acompanham."""

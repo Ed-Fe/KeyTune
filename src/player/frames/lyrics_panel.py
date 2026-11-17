@@ -6,6 +6,7 @@ from ..accessibility import attach_named_accessible
 from ..i18n import _
 from ..lyrics import fetch_lyrics
 from ..reading_dialog import create_reading_field
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class LyricsPanel(wx.Panel):
@@ -148,15 +149,15 @@ class LyricsPanel(wx.Panel):
     def _copy_selection_or_all(self):
         selection = self.lyrics_text_ctrl.GetStringSelection()
         if self._copy_to_clipboard(selection or self.lyrics_text_ctrl.GetValue()):
-            self._announce(_("Trecho da letra copiado.") if selection else _("Letra copiada."))
+            self._announce(_("Trecho da letra copiado.") if selection else _("Letra copiada."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Não há letra para copiar."))
+            self._announce(_("Não há letra para copiar."), ANNOUNCE_ERRORS)
 
     def _copy_all(self):
         if self._copy_to_clipboard(self.lyrics_text_ctrl.GetValue()):
-            self._announce(_("Letra completa copiada."))
+            self._announce(_("Letra completa copiada."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Não há letra para copiar."))
+            self._announce(_("Não há letra para copiar."), ANNOUNCE_ERRORS)
 
     def _on_text_char_hook(self, event):
         """Add the two lyrics-specific niceties on top of the frame's global

@@ -46,7 +46,7 @@ class _TabsFrame(TabManagementMixin, FrameSessionMixin):
         self.player.get_time.return_value = 41000
         self.player.is_playing.return_value = True
         self.announcements = []
-        self._announce = self.announcements.append
+        self._announce = lambda message, category=None: self.announcements.append(message)
         self._update_title = Mock()
         self._update_time_bar = Mock()
         self._refresh_playlist_browser = Mock()

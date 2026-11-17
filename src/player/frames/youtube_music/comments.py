@@ -9,6 +9,7 @@ from player.youtube_music.playlists import extract_video_id_from_text
 
 from ...i18n import _
 from .navigation import YouTubeResultsView
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION
 
 
 @dataclass(frozen=True)
@@ -41,7 +42,7 @@ class CommentsMixin:
             result = self._selected_youtube_music_search_result()
         media_url = self._youtube_music_comments_url(result)
         if not media_url:
-            self._announce(_("Este item não tem comentários para mostrar."))
+            self._announce(_("Este item não tem comentários para mostrar."), ANNOUNCE_ERRORS)
             return False
         return self._open_youtube_music_comments_view(media_url, getattr(result, "title", ""))
 
@@ -50,7 +51,7 @@ class CommentsMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip()
         if not media_path or not extract_video_id_from_text(media_path):
-            self._announce(_("A mídia atual não é do YouTube: não há comentários para mostrar."))
+            self._announce(_("A mídia atual não é do YouTube: não há comentários para mostrar."), ANNOUNCE_ERRORS)
             return False
         return self.show_media_comments(media_path)
 
@@ -87,7 +88,7 @@ class CommentsMixin:
             linked_comment=linked_comment,
         )
         view = self._build_youtube_music_comments_view(context)
-        self._announce(_("Abrindo {title}.").format(title=view.title))
+        self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         return self._load_youtube_music_results_view(
             view,
             mode="push",
@@ -111,7 +112,7 @@ class CommentsMixin:
         if not isinstance(context, CommentsContext):
             return False
         view = self._build_youtube_music_comments_view(replace(context, newest=not context.newest))
-        self._announce(_("Abrindo {title}.").format(title=view.title))
+        self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         return self._load_youtube_music_results_view(
             view,
             mode="replace",

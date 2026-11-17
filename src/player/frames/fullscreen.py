@@ -7,6 +7,7 @@ barra de tempo, menus e barra de status) e devolve tudo como estava ao sair.
 import wx
 
 from ..i18n import _
+from ..announcements import ANNOUNCE_ERRORS, ANNOUNCE_STATE
 
 
 class FrameFullscreenMixin:
@@ -24,7 +25,7 @@ class FrameFullscreenMixin:
         page = notebook.GetCurrentPage() if notebook is not None else None
         video_panel = getattr(page, "video_panel", None)
         if not video_panel:
-            self._announce(_("Esta aba não tem área de vídeo."))
+            self._announce(_("Esta aba não tem área de vídeo."), ANNOUNCE_ERRORS)
             return
 
         focus = wx.Window.FindFocus()
@@ -49,7 +50,7 @@ class FrameFullscreenMixin:
         if focus is None or not focus or not focus.IsShownOnScreen():
             self._video_fullscreen_state["moved_focus"] = bool(self._focus_player_surface(video_panel))
 
-        self._announce(_("Tela cheia ativada. Esc ou Alt+Enter para sair."))
+        self._announce(_("Tela cheia ativada. Esc ou Alt+Enter para sair."), ANNOUNCE_STATE)
 
     def _exit_video_fullscreen(self, announce=True):
         state = getattr(self, "_video_fullscreen_state", None)
@@ -69,7 +70,7 @@ class FrameFullscreenMixin:
             focus.SetFocus()
 
         if announce:
-            self._announce(_("Tela cheia desativada."))
+            self._announce(_("Tela cheia desativada."), ANNOUNCE_STATE)
 
     def _relayout_video_fullscreen(self, page):
         if page is not None:

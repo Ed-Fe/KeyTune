@@ -18,6 +18,8 @@ from ..playback_handover import AdoptedPlayback
 from ..session import load_session
 from .launch import format_time_ms, initial_volume, quick_player_paths
 from .panel import QuickPlayerPanel
+from ..announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK, ANNOUNCE_SPEED_PITCH
+from ..announcements import should_speak as should_speak_announcement
 
 _logger = get_logger(__name__)
 
@@ -210,23 +212,23 @@ class QuickPlayerFrame(wx.Frame):
         self._ended = True
         self.panel.set_playing(False)
         self.panel.set_time(message, 0)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
 
     def _toggle_play_pause(self):
         if self._player is None:
             return
         if self._ended:
             self._play_current()
-            self._announce(_("Reprodução retomada."))
+            self._announce(_("Reprodução retomada."), ANNOUNCE_PLAYBACK)
             return
         if self._paused:
             self._player.play()
             self._paused = False
-            self._announce(_("Reprodução retomada."))
+            self._announce(_("Reprodução retomada."), ANNOUNCE_PLAYBACK)
         else:
             self._player.pause()
             self._paused = True
-            self._announce(_("Pausado."))
+            self._announce(_("Pausado."), ANNOUNCE_PLAYBACK)
         self.panel.set_playing(not self._paused)
 
     def _seek_relative(self, delta_ms):
@@ -254,7 +256,7 @@ class QuickPlayerFrame(wx.Frame):
         else:
             self._player.set_time(0)
             self._update_time()
-        self._announce(_("Início do arquivo."))
+        self._announce(_("Início do arquivo."), ANNOUNCE_PLAYBACK)
 
     def _seek_to_end(self):
         if self._player is None or self._ended:
@@ -264,7 +266,7 @@ class QuickPlayerFrame(wx.Frame):
         else:
             self._player.set_position(0.99)
         self._update_time()
-        self._announce(_("Fim do arquivo."))
+        self._announce(_("Fim do arquivo."), ANNOUNCE_PLAYBACK)
 
     def _change_volume(self, delta):
         self._volume = max(0, min(100, self._volume + delta))
@@ -275,7 +277,10 @@ class QuickPlayerFrame(wx.Frame):
         self._playback_rate = max(PLAYBACK_RATE_MIN, min(PLAYBACK_RATE_MAX, round(rate, 2)))
         if self._player is not None:
             self._player.set_rate(self._playback_rate)
-        self._announce(_("Velocidade de reprodução: {rate}.").format(rate=f"{self._playback_rate:g}x"))
+        self._announce(
+            _("Velocidade de reprodução: {rate}.").format(rate=f"{self._playback_rate:g}x"),
+            ANNOUNCE_SPEED_PITCH,
+        )
 
     def _playback_position(self):
         """``(posição, duração)`` em milissegundos; a duração é ``-1`` enquanto desconhecida."""
@@ -312,9 +317,12 @@ class QuickPlayerFrame(wx.Frame):
 
     # --- anúncios -----------------------------------------------------------
 
-    def _announce(self, message):
-        if self.settings.announcements_enabled:
-            self.announcer.speak(message)
+    def _announce(self, message, category=None):
+        if not self.settings.announcements_enabled:
+            return
+        if not should_speak_announcement(self.settings, category, window_active=True):
+            return
+        self.announcer.speak(message)
 
     def _announce_volume(self):
         self._announce(f"{self._volume}%.")
@@ -330,7 +338,7 @@ class QuickPlayerFrame(wx.Frame):
                 current=format_time_ms(current_ms),
                 total=format_time_ms(length_ms),
                 percent=round(current_ms / length_ms * 100),
-            )
+            ),
         )
 
     def _announce_status(self):

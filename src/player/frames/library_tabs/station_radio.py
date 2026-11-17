@@ -17,6 +17,7 @@ from ...youtube_music.playlists import (
     is_youtube_music_media,
 )
 from ...youtube_music.related import youtube_related_content
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 _logger = get_logger(__name__)
@@ -73,16 +74,16 @@ class StationRadioMixin:
         source_state = self._get_active_playlist_state()
         media_path = str(getattr(source_state, "current_media_path", "") or "").strip()
         if not media_path:
-            self._announce(_("Nenhuma mídia está tocando para iniciar uma rádio."))
+            self._announce(_("Nenhuma mídia está tocando para iniciar uma rádio."), ANNOUNCE_ERRORS)
             return False
         if not is_youtube_music_media(media_path):
-            self._announce(_("A mídia atual não é uma faixa compatível do YouTube Music."))
+            self._announce(_("A mídia atual não é uma faixa compatível do YouTube Music."), ANNOUNCE_ERRORS)
             return False
 
         seed_video_id = extract_video_id_from_text(media_path)
         youtube_music_service = self._youtube_music_service_for_playback()
         if not seed_video_id or youtube_music_service is None:
-            self._announce(_("O serviço do YouTube Music não está disponível para iniciar a rádio."))
+            self._announce(_("O serviço do YouTube Music não está disponível para iniciar a rádio."), ANNOUNCE_ERRORS)
             return False
 
         self._capture_active_playlist_state()
@@ -119,7 +120,7 @@ class StationRadioMixin:
         self._select_tab(target_index, announce=False)
         self._refresh_playlist_browser()
         message = _("Nova rádio iniciada com {name} como primeira faixa.").format(name=source_label)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("Buscando músicas inéditas para a nova rádio."))
 
@@ -236,5 +237,5 @@ class StationRadioMixin:
 
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
         return bool(inserted_items)

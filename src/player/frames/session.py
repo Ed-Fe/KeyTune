@@ -2,6 +2,7 @@ from ..constants import DEFAULT_VOLUME
 from ..playlists import TAB_TYPE_FOLDER, PlaylistState
 from ..i18n import _
 from ..session import load_session, save_session
+from ..announcements import ANNOUNCE_CONFIRMATIONS
 
 
 class FrameSessionMixin:
@@ -139,10 +140,14 @@ class FrameSessionMixin:
             refresh_autodj_ui(current_state)
         if current_state and current_state.current_media_path:
             self._announce(
-                _("Sessão restaurada com {count} abas. {title}.").format(count=len(self.playlists), title=current_state.title)
+                _("Sessão restaurada com {count} abas. {title}.").format(count=len(self.playlists), title=current_state.title),
+                ANNOUNCE_CONFIRMATIONS
             )
         else:
-            self._announce(_("Sessão restaurada com {count} abas.").format(count=len(self.playlists)))
+            self._announce(
+                _("Sessão restaurada com {count} abas.").format(count=len(self.playlists)),
+                ANNOUNCE_CONFIRMATIONS,
+            )
 
         if hasattr(self, "_set_status_message"):
             self._set_status_message(

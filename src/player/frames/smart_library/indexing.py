@@ -11,6 +11,7 @@ import wx
 
 from ... import interface_sounds
 from ...i18n import _, ngettext
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class SmartLibraryIndexingMixin:
@@ -58,7 +59,7 @@ class SmartLibraryIndexingMixin:
         normalized_path = str(folder_path or "").strip()
         if not normalized_path or not os.path.isdir(normalized_path):
             if announce:
-                self._announce(_("Pasta indisponível para indexar."))
+                self._announce(_("Pasta indisponível para indexar."), ANNOUNCE_ERRORS)
             return False
 
         if remember:
@@ -69,7 +70,8 @@ class SmartLibraryIndexingMixin:
             self._announce(
                 _("Indexando {name} na biblioteca. Isso continua em segundo plano.").format(
                     name=os.path.basename(normalized_path.rstrip("\\/")) or normalized_path
-                )
+                ),
+                ANNOUNCE_PROGRESS
             )
 
         started = service.index_folder(
@@ -80,7 +82,7 @@ class SmartLibraryIndexingMixin:
         if not started:
             self._smart_library_indexing = False
             if announce:
-                self._announce(_("Não foi possível iniciar a indexação."))
+                self._announce(_("Não foi possível iniciar a indexação."), ANNOUNCE_ERRORS)
         return started
 
     def _finish_library_indexing(self, summary, announce=True):
@@ -89,7 +91,7 @@ class SmartLibraryIndexingMixin:
             return
 
         if summary is None or summary.failed:
-            self._announce(_("A indexação não pôde ser concluída."))
+            self._announce(_("A indexação não pôde ser concluída."), ANNOUNCE_ERRORS)
             return
 
         message = ngettext(
@@ -97,7 +99,7 @@ class SmartLibraryIndexingMixin:
             "Indexação concluída: {count} mídias adicionadas à biblioteca.",
             summary.indexed_files,
         ).format(count=summary.indexed_files)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
 
@@ -144,7 +146,7 @@ class SmartLibraryIndexingMixin:
             if os.path.isdir(str(path or ""))
         ]
         if not folders:
-            self._announce(_("Nenhuma pasta indexada ainda. Use Biblioteca, Indexar pasta."))
+            self._announce(_("Nenhuma pasta indexada ainda. Use Biblioteca, Indexar pasta."), ANNOUNCE_ERRORS)
             return
 
         service.forget_missing_media()
@@ -156,7 +158,8 @@ class SmartLibraryIndexingMixin:
                 "Atualizando {count} pasta indexada em segundo plano.",
                 "Atualizando {count} pastas indexadas em segundo plano.",
                 len(folders),
-            ).format(count=len(folders))
+            ).format(count=len(folders)),
+            ANNOUNCE_PROGRESS
         )
 
     def _clear_library_index(self):
@@ -178,12 +181,12 @@ class SmartLibraryIndexingMixin:
                 return
 
         if not service.clear_everything():
-            self._announce(_("Não foi possível limpar a biblioteca."))
+            self._announce(_("Não foi possível limpar a biblioteca."), ANNOUNCE_ERRORS)
             return
 
         self.settings.smart_library_indexed_folders = []
         self._save_settings()
-        self._announce(_("Biblioteca limpa."))
+        self._announce(_("Biblioteca limpa."), ANNOUNCE_CONFIRMATIONS)
 
     def _announce_library_statistics(self):
         if self._smart_library() is None:
@@ -191,7 +194,7 @@ class SmartLibraryIndexingMixin:
             return
 
         summary = self._smart_library_summary_text()
-        self._announce(summary)
+        self._announce(summary, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(summary)
 

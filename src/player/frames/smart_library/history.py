@@ -14,6 +14,7 @@ from ...constants import (
 from ... import interface_sounds
 from ...i18n import _
 from ...smart_library import HISTORY_ACTION_ENQUEUE, PlaybackHistoryDialog
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class SmartLibraryHistoryMixin:
@@ -120,9 +121,9 @@ class SmartLibraryHistoryMixin:
                 return
 
         if service.clear_history():
-            self._announce(_("Histórico de reprodução apagado."))
+            self._announce(_("Histórico de reprodução apagado."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Não foi possível limpar o histórico."))
+            self._announce(_("Não foi possível limpar o histórico."), ANNOUNCE_ERRORS)
 
     def on_open_playback_history(self, _event):
         self._open_playback_history_dialog()

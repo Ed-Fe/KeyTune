@@ -2,6 +2,7 @@ import wx
 
 from ..i18n import _
 from ..library import ItemSearchDialog, normalize_search_text
+from ..announcements import ANNOUNCE_ERRORS
 
 
 class FrameItemSearchMixin:
@@ -37,7 +38,7 @@ class FrameItemSearchMixin:
         return str(getattr(self, "_item_search_query", "") or "")
 
     def _announce_no_item_search_target(self):
-        self._announce(_("Não há itens para localizar nesta aba."))
+        self._announce(_("Não há itens para localizar nesta aba."), ANNOUNCE_ERRORS)
 
     def _open_item_search_dialog(self):
         browser = self._item_search_browser()
@@ -58,7 +59,7 @@ class FrameItemSearchMixin:
             dialog.Destroy()
 
         if not query:
-            self._announce(_("Digite um texto para localizar."))
+            self._announce(_("Digite um texto para localizar."), ANNOUNCE_ERRORS)
             return
 
         self._item_search_query = query
@@ -95,7 +96,7 @@ class FrameItemSearchMixin:
         matches = self._item_search_matches(browser)
         if not matches:
             message = _('Nenhum item corresponde a "{query}".').format(query=query)
-            self._announce(message)
+            self._announce(message, ANNOUNCE_ERRORS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
             return False

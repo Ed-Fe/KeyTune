@@ -13,6 +13,7 @@ from player.youtube_music.playlists import (
 
 from ...playlists import PlaylistState
 from ._helpers import _youtube_music_has_saved_auth
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class LifecycleMixin:
@@ -132,7 +133,7 @@ class LifecycleMixin:
             self._refresh_youtube_music_screen_later()
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
-            self._announce(message)
+            self._announce(message, ANNOUNCE_ERRORS)
             return False
 
         # Building the panel for the first time can take a moment (widget
@@ -145,11 +146,13 @@ class LifecycleMixin:
         ):
             if getattr(self, "_youtube_music_dependency_update_in_progress", False):
                 self._announce(
-                    _("Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida.")
+                    _("Atualizando recursos adicionais do YouTube Music. A biblioteca será carregada em seguida."),
+                    ANNOUNCE_PROGRESS
                 )
             else:
                 self._announce(
-                    _("Carregando conta e biblioteca do YouTube Music. Por favor, aguarde.")
+                    _("Carregando conta e biblioteca do YouTube Music. Por favor, aguarde."),
+                    ANNOUNCE_PROGRESS
                 )
 
         self._open_screen_tab(
@@ -257,6 +260,23 @@ class LifecycleMixin:
             return
         if not self._youtube_music_integration_enabled():
             return
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            # A atualização automática dos recursos roda na abertura, no primeiro
+            # uso de cada dia com conta salva, e a central recusa abrir enquanto
+            # ela dura. Esperar o fim dela, em vez de desistir.
+            self._open_keytube_after_dependency_update = True
+            return
+        wx.CallAfter(self.on_open_youtube_music, None)
+
+    def _open_keytube_after_dependency_update_if_pending(self):
+        if not getattr(self, "_open_keytube_after_dependency_update", False):
+            return
+        if getattr(self, "_youtube_music_dependency_update_in_progress", False):
+            return
+        self._open_keytube_after_dependency_update = False
+        # Se a pessoa já abriu o KeyTube enquanto esperava, não tira o foco dela de novo.
+        if self._get_youtube_music_panel() is not None:
+            return
         wx.CallAfter(self.on_open_youtube_music, None)
 
     def _initialize_youtube_music_startup_state(self):
@@ -329,7 +349,7 @@ class LifecycleMixin:
                 self._youtube_music_library_status_message = _("Conta conectada: {name}.").format(name=account_name)
             self._refresh_youtube_music_menu_state()
             if account_name:
-                self._announce(_("YouTube reconectado: {name}.").format(name=account_name))
+                self._announce(_("YouTube reconectado: {name}.").format(name=account_name), ANNOUNCE_CONFIRMATIONS)
                 if hasattr(self, "_set_status_message"):
                     self._set_status_message(_("YouTube conectado como {name}.").format(name=account_name))
             self._refresh_pending_restored_youtube_music_tabs()
@@ -358,7 +378,10 @@ class LifecycleMixin:
             return False
 
         display_title = str(fallback_title or normalized_playlist_id).strip() or normalized_playlist_id
-        self._announce(_("Carregando playlist do YouTube Music: {title}.").format(title=display_title))
+        self._announce(
+            _("Carregando playlist do YouTube Music: {title}.").format(title=display_title),
+            ANNOUNCE_PROGRESS,
+        )
 
         def worker():
             return service.get_playlist_content(

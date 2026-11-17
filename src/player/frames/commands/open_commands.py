@@ -16,6 +16,7 @@ from ..background import run_in_background
 from ...i18n import _
 from ...playlists import ScreenTabState
 from ...youtube_music import extract_playlist_id_from_text
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class OpenCommandsMixin:
@@ -73,7 +74,7 @@ class OpenCommandsMixin:
         def finish(split):
             media_paths, _playlist_paths = split
             if not media_paths:
-                self._announce(_("Nenhuma mídia compatível para adicionar."))
+                self._announce(_("Nenhuma mídia compatível para adicionar."), ANNOUNCE_ERRORS)
                 return
             self._add_media_paths_without_playing(media_paths, verified=True)
 
@@ -86,7 +87,7 @@ class OpenCommandsMixin:
         browser = self._get_browser_panel()
         selected_items = browser.get_selected_item_paths() if browser else []
         if not selected_items:
-            self._announce(_("Nenhum item selecionado para copiar."))
+            self._announce(_("Nenhum item selecionado para copiar."), ANNOUNCE_ERRORS)
             return None
         return selected_items
 
@@ -96,15 +97,15 @@ class OpenCommandsMixin:
             return
 
         if not self._copy_text_to_clipboard("\n".join(selected_items)):
-            self._announce(_("Não foi possível acessar a área de transferência."))
+            self._announce(_("Não foi possível acessar a área de transferência."), ANNOUNCE_ERRORS)
             return
 
         if len(selected_items) == 1 and is_remote_media_path(selected_items[0]):
-            self._announce(_("Link copiado."))
+            self._announce(_("Link copiado."), ANNOUNCE_CONFIRMATIONS)
         elif len(selected_items) == 1:
-            self._announce(_("Caminho copiado."))
+            self._announce(_("Caminho copiado."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
+            self._announce(_("{count} itens copiados.").format(count=len(selected_items)), ANNOUNCE_CONFIRMATIONS)
 
     def on_copy_current_item(self, _event=None):
         selected_items = self._selected_item_paths_to_copy()
@@ -112,29 +113,29 @@ class OpenCommandsMixin:
             return
 
         if not self._copy_items_to_clipboard(selected_items):
-            self._announce(_("Não foi possível acessar a área de transferência."))
+            self._announce(_("Não foi possível acessar a área de transferência."), ANNOUNCE_ERRORS)
             return
 
         if len(selected_items) == 1:
-            self._announce(_("Item copiado."))
+            self._announce(_("Item copiado."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("{count} itens copiados.").format(count=len(selected_items)))
+            self._announce(_("{count} itens copiados.").format(count=len(selected_items)), ANNOUNCE_CONFIRMATIONS)
 
     def on_copy_playing_media_path(self, _event=None):
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state else ""
         if not media_path:
-            self._announce(_("Nenhuma mídia está sendo reproduzida no momento."))
+            self._announce(_("Nenhuma mídia está sendo reproduzida no momento."), ANNOUNCE_ERRORS)
             return False
 
         if not self._copy_text_to_clipboard(media_path):
-            self._announce(_("Não foi possível acessar a área de transferência."))
+            self._announce(_("Não foi possível acessar a área de transferência."), ANNOUNCE_ERRORS)
             return False
 
         if is_remote_media_path(media_path):
-            self._announce(_("Link da mídia atual copiado."))
+            self._announce(_("Link da mídia atual copiado."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Caminho da mídia atual copiado."))
+            self._announce(_("Caminho da mídia atual copiado."), ANNOUNCE_CONFIRMATIONS)
         return True
 
     def on_paste_open_from_clipboard(self, _event):
@@ -241,7 +242,7 @@ class OpenCommandsMixin:
 
     def _open_clipboard_playlist(self, playlist_source):
         if not self._open_playlist_source(playlist_source):
-            self._announce(_("Não foi possível abrir a playlist da área de transferência."))
+            self._announce(_("Não foi possível abrir a playlist da área de transferência."), ANNOUNCE_ERRORS)
 
     def _classify_clipboard_sources(self, sources):
         """Diz o que é cada item colado: ``(itens, erro)``, com itens ``(caminho, tipo)``.
@@ -283,7 +284,7 @@ class OpenCommandsMixin:
         sources = [str(source or "").strip() for source in sources or ()]
         sources = [source for source in sources if source]
         if not sources:
-            self._announce(_("A área de transferência está vazia."))
+            self._announce(_("A área de transferência está vazia."), ANNOUNCE_ERRORS)
             return
 
         all_remote = all(is_remote_media_path(source) for source in sources)
@@ -300,7 +301,7 @@ class OpenCommandsMixin:
 
     def _open_classified_clipboard_sources(self, pasted, error_message, *, play):
         if error_message:
-            self._announce(error_message)
+            self._announce(error_message, ANNOUNCE_ERRORS)
             return
         if pasted[0][1] == "playlist":
             self._open_clipboard_playlist(pasted[0][0])
@@ -316,20 +317,20 @@ class OpenCommandsMixin:
             self._finish_clipboard_paste(media_sources, play=play)
 
         if any(kind == "folder" for _path, kind in pasted):
-            self._announce(_("Lendo as pastas coladas..."))
+            self._announce(_("Lendo as pastas coladas..."), ANNOUNCE_PROGRESS)
             run_in_background(self, expand, finish)
         else:
             finish(expand())
 
     def _finish_clipboard_paste(self, media_sources, *, play):
         if not media_sources:
-            self._announce(_("Nenhuma mídia compatível foi encontrada no conteúdo colado."))
+            self._announce(_("Nenhuma mídia compatível foi encontrada no conteúdo colado."), ANNOUNCE_ERRORS)
             return
 
         if not play:
             self._add_media_paths_without_playing(media_sources, verified=True)
         elif not self._play_media_paths_in_current_playlist(media_sources):
-            self._announce(_("Não foi possível abrir a mídia da área de transferência."))
+            self._announce(_("Não foi possível abrir a mídia da área de transferência."), ANNOUNCE_ERRORS)
 
     def _play_media_paths_in_current_playlist(self, paths):
         """Põe *paths* na playlist atual e toca o primeiro novo.
@@ -398,11 +399,14 @@ class OpenCommandsMixin:
 
     def _open_split_external_files(self, media_paths, playlist_paths):
         if playlist_paths and media_paths:
-            self._announce(_("Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."))
+            self._announce(
+                _("Arquivos externos mistos não foram abertos. Use apenas mídias ou uma playlist."),
+                ANNOUNCE_ERRORS,
+            )
             return False
 
         if len(playlist_paths) > 1:
-            self._announce(_("A abertura externa aceita apenas uma playlist por vez."))
+            self._announce(_("A abertura externa aceita apenas uma playlist por vez."), ANNOUNCE_ERRORS)
             return False
 
         if media_paths:
@@ -411,13 +415,13 @@ class OpenCommandsMixin:
         if playlist_paths:
             return self._open_playlist_source(playlist_paths[0])
 
-        self._announce(_("Nenhum arquivo compatível foi recebido do Explorador."))
+        self._announce(_("Nenhum arquivo compatível foi recebido do Explorador."), ANNOUNCE_ERRORS)
         return False
 
     def on_save_playlist(self, _event):
         state = self._get_playlist_state()
         if not state or not state.items:
-            self._announce(_("A playlist atual está vazia."))
+            self._announce(_("A playlist atual está vazia."), ANNOUNCE_ERRORS)
             return
 
         default_name = os.path.basename(state.source_path) if state.source_path else f"{state.title}.m3u8"
@@ -448,7 +452,7 @@ class OpenCommandsMixin:
         self._update_title()
         self._refresh_playlist_browser()
         self._add_recent_path("recent_playlists", playlist_path)
-        self._announce(_("Playlist salva: {title}.").format(title=state.title))
+        self._announce(_("Playlist salva: {title}.").format(title=state.title), ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("Playlist salva em {path}").format(path=playlist_path))
 
@@ -482,4 +486,4 @@ class OpenCommandsMixin:
 
         if path:
             self._remove_recent_path(attribute_name, path)
-        self._announce(_("O item recente selecionado não está mais disponível."))
+        self._announce(_("O item recente selecionado não está mais disponível."), ANNOUNCE_ERRORS)

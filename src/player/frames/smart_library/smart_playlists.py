@@ -14,6 +14,7 @@ from ...smart_library import (
     SmartPlaylistRule,
     describe_smart_playlist_rule,
 )
+from ...announcements import ANNOUNCE_ERRORS
 
 
 class SmartLibraryPlaylistsMixin:
@@ -88,7 +89,8 @@ class SmartLibraryPlaylistsMixin:
             self._announce(
                 _("A playlist inteligente {name} não encontrou nenhuma mídia agora.").format(
                     name=rule.name
-                )
+                ),
+                ANNOUNCE_ERRORS
             )
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(

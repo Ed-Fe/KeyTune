@@ -7,6 +7,7 @@ rótulo do item.
 
 from ...i18n import _, ngettext
 from ...smart_library import format_rating
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class SmartLibraryRatingsMixin:
@@ -23,7 +24,7 @@ class SmartLibraryRatingsMixin:
 
         media_paths = self._smart_library_selected_media_paths()
         if not media_paths:
-            self._announce(_("Nenhum item selecionado para favoritar."))
+            self._announce(_("Nenhum item selecionado para favoritar."), ANNOUNCE_ERRORS)
             return
 
         if len(media_paths) == 1:
@@ -31,14 +32,14 @@ class SmartLibraryRatingsMixin:
             label = self._smart_library_label_for(media_path)
             new_state = service.toggle_favorite(media_path, label=label)
             if new_state is None:
-                self._announce(_("Não foi possível alterar o favorito deste item."))
+                self._announce(_("Não foi possível alterar o favorito deste item."), ANNOUNCE_ERRORS)
                 return
 
             self._refresh_marks_after_change()
             if new_state:
-                self._announce(_("{item} marcado como favorito.").format(item=label))
+                self._announce(_("{item} marcado como favorito.").format(item=label), ANNOUNCE_CONFIRMATIONS)
             else:
-                self._announce(_("{item} não é mais favorito.").format(item=label))
+                self._announce(_("{item} não é mais favorito.").format(item=label), ANNOUNCE_CONFIRMATIONS)
             return
 
         # Em seleção múltipla, favoritar todos é mais previsível do que
@@ -49,7 +50,7 @@ class SmartLibraryRatingsMixin:
                 marked += 1
 
         if not marked:
-            self._announce(_("Não foi possível favoritar os itens selecionados."))
+            self._announce(_("Não foi possível favoritar os itens selecionados."), ANNOUNCE_ERRORS)
             return
 
         self._refresh_marks_after_change()
@@ -58,7 +59,8 @@ class SmartLibraryRatingsMixin:
                 "{count} item marcado como favorito.",
                 "{count} itens marcados como favoritos.",
                 marked,
-            ).format(count=marked)
+            ).format(count=marked),
+            ANNOUNCE_CONFIRMATIONS
         )
 
     def _rate_selection(self, rating):
@@ -69,7 +71,7 @@ class SmartLibraryRatingsMixin:
 
         media_paths = self._smart_library_selected_media_paths()
         if not media_paths:
-            self._announce(_("Nenhum item selecionado para avaliar."))
+            self._announce(_("Nenhum item selecionado para avaliar."), ANNOUNCE_ERRORS)
             return
 
         rated = 0
@@ -78,7 +80,7 @@ class SmartLibraryRatingsMixin:
                 rated += 1
 
         if not rated:
-            self._announce(_("Não foi possível avaliar os itens selecionados."))
+            self._announce(_("Não foi possível avaliar os itens selecionados."), ANNOUNCE_ERRORS)
             return
 
         self._refresh_marks_after_change()
@@ -88,7 +90,8 @@ class SmartLibraryRatingsMixin:
                 _("{item}: {rating}.").format(
                     item=self._smart_library_label_for(media_paths[0]),
                     rating=rating_label,
-                )
+                ),
+                ANNOUNCE_CONFIRMATIONS
             )
         else:
             self._announce(
@@ -96,7 +99,8 @@ class SmartLibraryRatingsMixin:
                     "{count} item avaliado: {rating}.",
                     "{count} itens avaliados: {rating}.",
                     rated,
-                ).format(count=rated, rating=rating_label)
+                ).format(count=rated, rating=rating_label),
+                ANNOUNCE_CONFIRMATIONS
             )
 
         if hasattr(self, "_set_status_message"):
@@ -110,14 +114,14 @@ class SmartLibraryRatingsMixin:
 
         media_paths = self._smart_library_selected_media_paths()
         if not media_paths:
-            self._announce(_("Nenhum item selecionado."))
+            self._announce(_("Nenhum item selecionado."), ANNOUNCE_ERRORS)
             return
 
         media_path = media_paths[0]
         record = service.get_record(media_path)
         label = self._smart_library_label_for(media_path)
         if record is None:
-            self._announce(_("{item}: ainda não está na biblioteca.").format(item=label))
+            self._announce(_("{item}: ainda não está na biblioteca.").format(item=label), ANNOUNCE_ERRORS)
             return
 
         favorite_sentence = _("favorito") if record.favorite else _("não é favorito")
@@ -132,7 +136,8 @@ class SmartLibraryRatingsMixin:
                 favorite=favorite_sentence,
                 rating=format_rating(record.rating),
                 played=played_sentence,
-            )
+            ),
+            ANNOUNCE_CONFIRMATIONS
         )
 
     def on_toggle_favorite(self, _event):

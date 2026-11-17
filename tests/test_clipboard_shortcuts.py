@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
 from player.frames.commands.key_navigation import KeyNavigationMixin
 from player.frames.commands.open_commands import OpenCommandsMixin
 from player.playlists import PlaylistState, ScreenTabState
+from player.announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 def _run_inline(_owner, work, on_done):
@@ -203,7 +204,7 @@ class ClipboardShortcutTests(unittest.TestCase):
                 frame._open_clipboard_sources([folder])
 
         frame._play_media_paths_in_current_playlist.assert_called_once_with([str(first), str(second)])
-        frame._announce.assert_called_once_with("Lendo as pastas coladas...")
+        frame._announce.assert_called_once_with("Lendo as pastas coladas...", ANNOUNCE_PROGRESS)
 
     def test_pasted_folder_is_read_outside_the_interface_thread(self):
         frame = self._paste_frame()
@@ -276,7 +277,7 @@ class ClipboardShortcutTests(unittest.TestCase):
                 frame._open_clipboard_sources([folder])
 
         frame._play_media_paths_in_current_playlist.assert_not_called()
-        frame._announce.assert_called_with("Nenhuma mídia compatível foi encontrada no conteúdo colado.")
+        frame._announce.assert_called_with("Nenhuma mídia compatível foi encontrada no conteúdo colado.", ANNOUNCE_ERRORS)
 
     def test_copied_files_take_precedence_over_clipboard_text(self):
         frame = OpenCommandsMixin.__new__(OpenCommandsMixin)
@@ -345,7 +346,7 @@ class ClipboardShortcutTests(unittest.TestCase):
         frame.on_copy_current_item()
 
         frame._copy_items_to_clipboard.assert_called_once_with(selected_paths)
-        frame._announce.assert_called_once_with("2 itens copiados.")
+        frame._announce.assert_called_once_with("2 itens copiados.", ANNOUNCE_CONFIRMATIONS)
 
     @patch("player.frames.commands.open_commands.wx.FileDataObject")
     def test_copy_files_to_clipboard_publishes_every_selected_path(self, file_data_object_class):
@@ -374,7 +375,7 @@ class ClipboardShortcutTests(unittest.TestCase):
 
         self.assertTrue(result)
         frame._copy_text_to_clipboard.assert_called_once_with(media_path)
-        frame._announce.assert_called_once_with("Link da mídia atual copiado.")
+        frame._announce.assert_called_once_with("Link da mídia atual copiado.", ANNOUNCE_CONFIRMATIONS)
 
 
 if __name__ == "__main__":
