@@ -120,7 +120,8 @@ class PlaylistPlaybackMixin:
             if autodj_transition is not None
             else None
         )
-        if allow_crossfade and self._can_crossfade_to_media(
+        chapter_pending = getattr(self, "_youtube_chapter_start_pending", None)
+        if allow_crossfade and not (callable(chapter_pending) and chapter_pending(state.current_media_path)) and self._can_crossfade_to_media(
             state.current_media_path,
             duration_override_ms=transition_duration_ms,
         ):
@@ -153,6 +154,13 @@ class PlaylistPlaybackMixin:
                 resume_position_ms = youtube_resume_position_ms
                 state.last_position_ms = resume_position_ms
                 self._announce_resume_position(state.current_media_path, resume_position_ms)
+        take_chapter_start = getattr(self, "_take_youtube_chapter_start_ms", None)
+        if callable(take_chapter_start):
+            chapter_start_ms = take_chapter_start(state.current_media_path)
+            if chapter_start_ms is not None:
+                # Capítulo escolhido manda sobre qualquer posição guardada.
+                resume_position_ms = chapter_start_ms
+                state.last_position_ms = chapter_start_ms
 
         self._update_title()
         self._update_time_bar()

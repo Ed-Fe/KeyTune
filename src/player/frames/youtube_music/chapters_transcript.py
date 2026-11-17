@@ -76,7 +76,7 @@ class ChaptersTranscriptMixin:
                     video_id=video_id,
                     playback_url=build_youtube_watch_url(video_id),
                     source_badge="YouTube",
-                    resume_seconds=chapter.start_seconds,
+                    chapter_start_seconds=chapter.start_seconds,
                 )
                 for chapter in chapters
             )

@@ -425,6 +425,8 @@ class YouTubeMediaSearchResult:
     resume_seconds: int = 0
     # A duração do vídeo (segundos), quando a lista informou; decide se vale retomar.
     duration_seconds: int = 0
+    # O começo de um capítulo (segundos): tocar este item começa aí, sempre; ``None`` fora dos capítulos.
+    chapter_start_seconds: int | None = None
 
     def owner_result(self):
         """O canal ou artista deste vídeo ou faixa como resultado que dá para abrir; ``None`` sem ele."""
