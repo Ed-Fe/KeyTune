@@ -13,6 +13,7 @@ from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
 from .helpers import is_youtube_music_media
 from .live import is_live_media
+from ...announcements import ANNOUNCE_ERRORS
 
 
 _logger = get_logger(__name__)
@@ -390,14 +391,14 @@ class PlayerBackendMixin:
                     message = _("Não foi possível reproduzir a mídia: {detail}.").format(detail=error_detail)
                 if hasattr(self, "_set_status_message"):
                     self._set_status_message(message)
-                self._announce(message)
+                self._announce(message, ANNOUNCE_ERRORS)
             return
 
         if self._fallback_pending_crossfade_to_regular_playback():
             return
 
         self._cancel_crossfade_transition(stop_incoming=True, stop_outgoing=False, invalidate_requests=False)
-        self._announce(_("Não foi possível iniciar a próxima faixa para o crossfade."))
+        self._announce(_("Não foi possível iniciar a próxima faixa para o crossfade."), ANNOUNCE_ERRORS)
 
     def _smtc_refresh_if_active(self, player_key):
         if player_key != getattr(self, "_active_player_key", None):

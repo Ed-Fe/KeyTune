@@ -9,6 +9,7 @@ from ...autodj import TransitionProfile, mix_values
 from ...constants import CROSSFADE_TIMER_INTERVAL_MS, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ...library import is_audio_playback_media
 from .helpers import is_youtube_music_media
+from ...announcements import ANNOUNCE_TRACK_CHANGE
 
 
 class CrossfadeMixin:
@@ -382,9 +383,9 @@ class CrossfadeMixin:
         announce_message = crossfade_state.get("announce_message")
         if announce_message is not None:
             if announce_message:
-                self._announce(announce_message)
+                self._announce(announce_message, ANNOUNCE_TRACK_CHANGE)
         else:
-            self._announce(self._describe_playlist_position(state))
+            self._announce(self._describe_playlist_position(state), ANNOUNCE_TRACK_CHANGE)
 
         self._apply_volume_to_player(player_key, 0)
         tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)

@@ -15,6 +15,7 @@ from player.youtube_music.playlists import extract_video_id_from_text, is_music_
 TOPIC_CHANNEL_SUFFIX = " - Topic"
 
 from ...i18n import _
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class DetailsMixin:
@@ -24,7 +25,7 @@ class DetailsMixin:
             result = self._selected_youtube_music_search_result()
         media_url = self._youtube_music_comments_url(result)
         if not media_url:
-            self._announce(_("Este item não tem detalhes para mostrar."))
+            self._announce(_("Este item não tem detalhes para mostrar."), ANNOUNCE_ERRORS)
             return False
         return self._open_youtube_music_details(media_url)
 
@@ -33,7 +34,7 @@ class DetailsMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip()
         if not media_path or not extract_video_id_from_text(media_path):
-            self._announce(_("A mídia atual não é do YouTube: não há detalhes para mostrar."))
+            self._announce(_("A mídia atual não é do YouTube: não há detalhes para mostrar."), ANNOUNCE_ERRORS)
             return False
         return self._open_youtube_music_details(media_path)
 
@@ -64,7 +65,7 @@ class DetailsMixin:
                 self,
             )
 
-        self._announce(_("Carregando os detalhes."))
+        self._announce(_("Carregando os detalhes."), ANNOUNCE_PROGRESS)
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     @staticmethod

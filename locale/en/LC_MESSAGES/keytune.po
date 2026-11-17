@@ -5397,8 +5397,8 @@ msgstr "Maximum video height; without it, the best available is used."
 msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
 msgstr "Analyze the BPM, beats, energy and key of tracks"
 
-msgid "Anuncia mudanças como tempo, volume e troca de abas."
-msgstr "Announces changes such as time, volume and tab switching."
+msgid "Desligado, nada é falado. Ligado, vale a escolha de cada aviso na lista abaixo."
+msgstr "When off, nothing is spoken. When on, your choice for each notice in the list below applies."
 
 msgid "Ao atingir o limite, as mais antigas saem."
 msgstr "When the limit is reached, the oldest are removed."
@@ -7650,11 +7650,11 @@ msgstr "When off, the announcement waits for the reader to finish what it is say
 msgid "Falar os avisos de &eventos com o KeyTune ativo"
 msgstr "Speak &event notices while KeyTune is active"
 
-msgid "Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."
-msgstr "Chat and notifications. When off, they only speak with KeyTune in the background."
+msgid "Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."
+msgstr "Chat, notifications, download and sleep timer. When off, they only speak with KeyTune in the background."
 
-msgid "Avisos de eventos que falam:"
-msgstr "Event notices that speak:"
+msgid "Avisos que falam:"
+msgstr "Notices that speak:"
 
 msgid "Avisos de eventos que falam"
 msgstr "Event notices that speak"
@@ -7995,3 +7995,100 @@ msgstr "Full screen on. Esc or Alt+Enter to exit."
 
 msgid "Tela cheia desativada."
 msgstr "Full screen off."
+
+msgid "Abrir o &KeyTube ao iniciar"
+msgstr "Open &KeyTube on startup"
+
+msgid "A aba KeyTube abre junto com o app."
+msgstr "The KeyTube tab opens together with the app."
+
+msgid "Reprodução: pausa, retomada, início e fim do arquivo, dispositivo de áudio"
+msgstr "Playback: pause, resume, start and end of the file, audio device"
+
+msgid "Troca de faixa e SponsorBlock: faixa que começou e trechos pulados"
+msgstr "Track change and SponsorBlock: track that started and skipped segments"
+
+msgid "Velocidade e tom ao mudar"
+msgstr "Speed and pitch when they change"
+
+msgid "Modos ligados ou desligados: aleatório, repetição, equalizador, AutoDJ"
+msgstr "Modes turned on or off: shuffle, repeat, equalizer, AutoDJ"
+
+msgid "Navegação: abas, início e fim de listas, abertura de itens"
+msgstr "Navigation: tabs, start and end of lists, opening items"
+
+msgid "Progresso: carregando, pesquisando, iniciando"
+msgstr "Progress: loading, searching, starting"
+
+msgid "Confirmações: copiado, salvo, adicionado, removido"
+msgstr "Confirmations: copied, saved, added, removed"
+
+msgid "Erros e ações indisponíveis"
+msgstr "Errors and unavailable actions"
+
+msgid "Manual do usuário"
+msgstr "User manual"
+
+msgid "Seções:"
+msgstr "Sections:"
+
+msgid "Seções"
+msgstr "Sections"
+
+msgid "Tópicos da seção:"
+msgstr "Topics in the section:"
+
+msgid "Tópicos da seção"
+msgstr "Topics in the section"
+
+msgid "Texto"
+msgstr "Text"
+
+msgid "Apresentação"
+msgstr "Introduction"
+
+msgid "Visão geral da seção"
+msgstr "Section overview"
+
+msgid "Não foi possível localizar o manual do KeyTune nesta instalação."
+msgstr "The KeyTune manual could not be found in this installation."
+
+msgid "Não foi possível localizar o manual do KeyTune. Verifique a pasta docs da instalação."
+msgstr "The KeyTune manual could not be found. Check the docs folder of the installation."
+
+msgid "A rádio foi criada, mas o YouTube Music só retornou músicas já presentes na playlist."
+msgstr "The radio was created, but YouTube Music only returned songs already in the playlist."
+
+msgid "Detalhes: {error}."
+msgstr "Details: {error}."
+
+msgid "Nenhum conteúdo relacionado inédito encontrado."
+msgstr "No new related content found."
+
+msgid "Não foi possível trocar de faixa; a reprodução continua em {name}."
+msgstr "Could not switch tracks; playback continues on {name}."
+
+msgid "Buscar no manual:"
+msgstr "Search the manual:"
+
+msgid "Buscar no manual"
+msgstr "Search the manual"
+
+msgid "Nada foi encontrado para esta busca."
+msgstr "Nothing was found for this search."
+
+msgid "Nada foi encontrado para \"{query}\"."
+msgstr "Nothing was found for \"{query}\"."
+
+msgid "Busca limpa. O manual inteiro está de volta."
+msgstr "Search cleared. The whole manual is back."
+
+msgid "{count} tópico encontrado."
+msgid_plural "{count} tópicos encontrados."
+msgstr[0] "{count} topic found."
+msgstr[1] "{count} topics found."
+
+msgid "Em {count} seção."
+msgid_plural "Em {count} seções."
+msgstr[0] "In {count} section."
+msgstr[1] "In {count} sections."

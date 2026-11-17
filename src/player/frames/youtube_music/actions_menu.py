@@ -11,6 +11,7 @@ from player.youtube_music.folders import ACTION_SEND_CHAT_MESSAGE, ACTION_WRITE_
 from player.youtube_music.playlists import is_watch_playlist_id
 
 from ...i18n import _
+from ...announcements import ANNOUNCE_ERRORS
 
 
 class ActionsMenuMixin:
@@ -151,7 +152,7 @@ class ActionsMenuMixin:
     def _on_youtube_music_show_search_actions_menu(self, panel, anchor_window=None):
         sections = self._youtube_music_actions_menu_sections(self._selected_youtube_music_search_results())
         if not sections:
-            self._announce(_("Não há ações para este item."))
+            self._announce(_("Não há ações para este item."), ANNOUNCE_ERRORS)
             return False
 
         menu = wx.Menu()

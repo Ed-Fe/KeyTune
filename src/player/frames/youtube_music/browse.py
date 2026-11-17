@@ -35,6 +35,7 @@ from player.youtube_music.folders import (
 from player.youtube_music.models import YOUTUBE_CHART_DEFAULT_COUNTRY_CODE, YouTubeResultPage
 
 from .navigation import YouTubeResultsView
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class BrowseMixin:
@@ -133,12 +134,12 @@ class BrowseMixin:
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
             if announce:
-                self._announce(message)
+                self._announce(message, ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
         if announce:
-            self._announce(_("Atualizando playlists e mixes do YouTube Music."))
+            self._announce(_("Atualizando playlists e mixes do YouTube Music."), ANNOUNCE_PROGRESS)
 
         page_size = int(self._youtube_music_library_page_size())
         self._youtube_music_library_limit = page_size
@@ -265,7 +266,8 @@ class BrowseMixin:
                                 mix_added,
                             ).format(count=mix_added),
                         )
-                    )
+                    ),
+                    ANNOUNCE_CONFIRMATIONS
                 )
 
         def on_error(exc):
@@ -283,7 +285,7 @@ class BrowseMixin:
 
     def _load_more_youtube_music_playlists(self, *, load_all=False):
         if not self._youtube_music_library_has_more_playlists():
-            self._announce(_("Não há mais playlists para carregar."))
+            self._announce(_("Não há mais playlists para carregar."), ANNOUNCE_ERRORS)
             return False
 
         if not self._ensure_youtube_music_authenticated():
@@ -292,10 +294,10 @@ class BrowseMixin:
         service = self._get_youtube_music_service()
         if load_all:
             next_limit = None
-            self._announce(_("Carregando todas as playlists do YouTube Music."))
+            self._announce(_("Carregando todas as playlists do YouTube Music."), ANNOUNCE_PROGRESS)
         else:
             next_limit = self._youtube_music_current_library_limit() + int(self._youtube_music_library_page_size())
-            self._announce(_("Carregando mais playlists do YouTube Music."))
+            self._announce(_("Carregando mais playlists do YouTube Music."), ANNOUNCE_PROGRESS)
 
         def worker():
             return service.get_user_library_playlists(limit=next_limit)
@@ -364,7 +366,8 @@ class BrowseMixin:
                     "{count} playlist na biblioteca agora.",
                     "{count} playlists na biblioteca agora.",
                     playlist_count,
-                ).format(count=playlist_count)
+                ).format(count=playlist_count),
+                ANNOUNCE_CONFIRMATIONS
             )
 
         def on_error(exc):
@@ -418,7 +421,8 @@ class BrowseMixin:
                         "{count} mix personalizada carregada.",
                         "{count} mixes personalizadas carregadas.",
                         added,
-                    ).format(count=added)
+                    ).format(count=added),
+                    ANNOUNCE_CONFIRMATIONS
                 )
 
         def on_error(_exc):

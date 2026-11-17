@@ -33,6 +33,12 @@ class ResumeHintsMixin:
 
     def _remember_youtube_resume_hint(self, search_result):
         """Guarda onde retomar o vídeo de *search_result*, se a lista informou e vale retomar."""
+        chapter_start = getattr(search_result, "chapter_start_seconds", None)
+        chapter_video_id = str(getattr(search_result, "video_id", "") or "").strip()
+        if chapter_start is not None and chapter_video_id:
+            # Escolher um capítulo é pedido explícito: vale mesmo em vídeo curto ou já tocado.
+            self.__dict__.setdefault("_youtube_chapter_starts", {})[chapter_video_id] = int(chapter_start) * 1000
+            return
         position_ms = int(getattr(search_result, "resume_seconds", 0) or 0) * 1000
         duration_ms = int(getattr(search_result, "duration_seconds", 0) or 0) * 1000
         video_id = str(getattr(search_result, "video_id", "") or "").strip()
@@ -45,6 +51,18 @@ class ResumeHintsMixin:
             return
         hints = self.__dict__.setdefault("_youtube_resume_hints", {})
         hints[video_id] = position_ms
+
+    def _youtube_chapter_start_pending(self, media_path):
+        video_id = extract_video_id_from_text(media_path)
+        return bool(video_id) and video_id in self.__dict__.get("_youtube_chapter_starts", {})
+
+    def _take_youtube_chapter_start_ms(self, media_path):
+        """O começo do capítulo escolhido para *media_path* (ms), ou ``None``; vale uma vez só."""
+        video_id = extract_video_id_from_text(media_path)
+        starts = self.__dict__.get("_youtube_chapter_starts")
+        if not video_id or not starts:
+            return None
+        return starts.pop(video_id, None)
 
     def _take_youtube_resume_hint_ms(self, media_path):
         """A posição de retomada do vídeo *media_path*, ou 0; chamar sempre que ele começa a tocar.

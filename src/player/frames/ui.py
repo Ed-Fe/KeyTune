@@ -8,6 +8,7 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
+from ..manual import ManualDialog, load_manual
 from ..radio.media import is_radio_media
 from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
@@ -53,35 +54,22 @@ class FrameUIMixin:
             unique_candidates.append(candidate)
         return unique_candidates
 
-    def _manual_candidate_paths(self):
-        return self._doc_candidate_paths("manual")
-
     def _open_manual_document(self):
-        manual_path = next((path for path in self._manual_candidate_paths() if path.is_file()), None)
-        if manual_path is None:
+        sections = load_manual()
+        if not sections:
             wx.MessageBox(
-                _("Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."),
+                _("Não foi possível localizar o manual do KeyTune. Verifique a pasta docs da instalação."),
                 _("Manual do KeyTune"),
                 wx.OK | wx.ICON_ERROR,
                 self,
             )
             return False
 
+        dialog = ManualDialog(self, sections, announce=lambda message: self._announce(message))
         try:
-            launched = wx.LaunchDefaultBrowser(manual_path.resolve().as_uri())
-        except Exception:
-            launched = False
-
-        if not launched:
-            wx.MessageBox(
-                _("Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."),
-                _("Manual do KeyTune"),
-                wx.OK | wx.ICON_ERROR,
-                self,
-            )
-            return False
-
-        self._set_status_message(_("Abrindo manual: {name}").format(name=manual_path.name))
+            dialog.ShowModal()
+        finally:
+            dialog.Destroy()
         return True
 
     def _credits_candidate_paths(self):

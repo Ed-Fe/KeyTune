@@ -11,6 +11,7 @@ from player.radio.media import is_radio_media
 
 from ...i18n import _, ngettext
 from ...playlists import PlaylistState
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION
 
 
 class RadioActionsMixin:
@@ -62,7 +63,7 @@ class RadioActionsMixin:
     def _activate_selected_radio_stations(self, play=True):
         stations = self._selected_radio_stations()
         if not stations:
-            self._announce(_("Selecione ao menos uma rádio."))
+            self._announce(_("Selecione ao menos uma rádio."), ANNOUNCE_ERRORS)
             return False
         return self._play_radio_stations(stations, play=play)
 
@@ -70,7 +71,7 @@ class RadioActionsMixin:
         """Põe *stations* na playlist atual; com *play*, toca a primeira delas."""
         target_state = self._radio_playlist_target()
         if not isinstance(target_state, PlaylistState):
-            self._announce(_("Não foi possível localizar uma playlist de destino no player."))
+            self._announce(_("Não foi possível localizar uma playlist de destino no player."), ANNOUNCE_ERRORS)
             return False
 
         added_count, play_item = self._append_prepared_items_to_playlist(
@@ -104,10 +105,14 @@ class RadioActionsMixin:
                     "{count} rádio adicionada a {title}, sem tocar.",
                     "{count} rádios adicionadas a {title}, sem tocar.",
                     added_count,
-                ).format(count=added_count, title=target_state.title)
+                ).format(count=added_count, title=target_state.title),
+                ANNOUNCE_CONFIRMATIONS
             )
         else:
-            self._announce(_("As rádios selecionadas já estavam em {title}.").format(title=target_state.title))
+            self._announce(
+                _("As rádios selecionadas já estavam em {title}.").format(title=target_state.title),
+                ANNOUNCE_ERRORS,
+            )
 
         self._refresh_playlist_browser()
         self._update_title()
@@ -123,15 +128,18 @@ class RadioActionsMixin:
         # O favorito é o mesmo da playlist: o marcador de lá acompanha.
         self._refresh_marks_after_change()
         if became_favorite:
-            self._announce(_("{name} adicionada às rádios favoritas.").format(name=station.name))
+            self._announce(
+                _("{name} adicionada às rádios favoritas.").format(name=station.name),
+                ANNOUNCE_CONFIRMATIONS,
+            )
         else:
-            self._announce(_("{name} removida das rádios favoritas.").format(name=station.name))
+            self._announce(_("{name} removida das rádios favoritas.").format(name=station.name), ANNOUNCE_CONFIRMATIONS)
         return became_favorite
 
     def _toggle_selected_radio_favorite(self):
         stations = self._selected_radio_stations()
         if len(stations) != 1:
-            self._announce(_("Selecione uma rádio para favoritar."))
+            self._announce(_("Selecione uma rádio para favoritar."), ANNOUNCE_ERRORS)
             return False
         self._toggle_radio_favorite(stations[0])
         return True
@@ -147,7 +155,7 @@ class RadioActionsMixin:
     def _toggle_current_radio_favorite(self):
         station = self._current_radio_station()
         if station is None:
-            self._announce(_("Nenhuma rádio tocando agora."))
+            self._announce(_("Nenhuma rádio tocando agora."), ANNOUNCE_ERRORS)
             return False
         self._toggle_radio_favorite(station)
         return True
@@ -182,27 +190,27 @@ class RadioActionsMixin:
         self._sync_radio_local_views()
         self._refresh_radio_screen()
         self._refresh_marks_after_change()
-        self._announce(_("{name} adicionada às rádios favoritas.").format(name=station.name))
+        self._announce(_("{name} adicionada às rádios favoritas.").format(name=station.name), ANNOUNCE_CONFIRMATIONS)
         return True
 
     def _copy_selected_radio_stream_url(self):
         stations = self._selected_radio_stations()
         if len(stations) != 1:
-            self._announce(_("Selecione uma rádio para copiar o endereço do stream."))
+            self._announce(_("Selecione uma rádio para copiar o endereço do stream."), ANNOUNCE_ERRORS)
             return False
         if not self._copy_text_to_clipboard(stations[0].stream_url):
-            self._announce(_("Não foi possível copiar para a área de transferência."))
+            self._announce(_("Não foi possível copiar para a área de transferência."), ANNOUNCE_ERRORS)
             return False
-        self._announce(_("Endereço do stream copiado."))
+        self._announce(_("Endereço do stream copiado."), ANNOUNCE_CONFIRMATIONS)
         return True
 
     def _open_radio_homepage(self, station):
         # O endereço vem do diretório: só um site http(s) vai para o navegador.
         homepage = str(station.homepage or "").strip()
         if not homepage.lower().startswith(("http://", "https://")) or not wx.LaunchDefaultBrowser(homepage):
-            self._announce(_("Não foi possível abrir o site desta rádio."))
+            self._announce(_("Não foi possível abrir o site desta rádio."), ANNOUNCE_ERRORS)
             return False
-        self._announce(_("Abrindo o site de {name} no navegador.").format(name=station.name))
+        self._announce(_("Abrindo o site de {name} no navegador.").format(name=station.name), ANNOUNCE_NAVIGATION)
         return True
 
     def _show_radio_station_details(self, station):
@@ -237,11 +245,11 @@ class RadioActionsMixin:
 
         def finish(accepted, detail):
             if accepted:
-                self._announce(_("Voto registrado para {name}.").format(name=station.name))
+                self._announce(_("Voto registrado para {name}.").format(name=station.name), ANNOUNCE_CONFIRMATIONS)
             elif detail:
-                self._announce(_("O diretório não aceitou o voto: {detail}").format(detail=detail))
+                self._announce(_("O diretório não aceitou o voto: {detail}").format(detail=detail), ANNOUNCE_ERRORS)
             else:
-                self._announce(_("Não foi possível votar nesta rádio agora."))
+                self._announce(_("Não foi possível votar nesta rádio agora."), ANNOUNCE_ERRORS)
 
         def runner():
             try:

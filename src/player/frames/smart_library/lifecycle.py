@@ -18,6 +18,7 @@ from ...smart_library import (
     SOURCE_YOUTUBE_MUSIC,
     SmartLibraryService,
 )
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_STATE
 
 
 class SmartLibraryLifecycleMixin:
@@ -70,22 +71,23 @@ class SmartLibraryLifecycleMixin:
 
         if is_enabled:
             if self._create_smart_library_service() is not None:
-                self._announce(_("Biblioteca inteligente ativada."))
+                self._announce(_("Biblioteca inteligente ativada."), ANNOUNCE_STATE)
             else:
-                self._announce(_("Não foi possível ativar a biblioteca inteligente."))
+                self._announce(_("Não foi possível ativar a biblioteca inteligente."), ANNOUNCE_ERRORS)
             return
 
         self._begin_smart_library_shutdown()
         self._finish_smart_library_shutdown()
-        self._announce(_("Biblioteca inteligente desativada."))
+        self._announce(_("Biblioteca inteligente desativada."), ANNOUNCE_STATE)
 
     def _announce_smart_library_unavailable(self):
         if not getattr(self.settings, "smart_library_enabled", True):
             self._announce(
-                _("A biblioteca inteligente está desligada. Ative em Preferências, aba Biblioteca.")
+                _("A biblioteca inteligente está desligada. Ative em Preferências, aba Biblioteca."),
+                ANNOUNCE_ERRORS
             )
             return
-        self._announce(_("A biblioteca inteligente não está disponível agora."))
+        self._announce(_("A biblioteca inteligente não está disponível agora."), ANNOUNCE_ERRORS)
 
     # ------------------------------------------------------------------
     # Ajuda compartilhada pelos outros sub-mixins

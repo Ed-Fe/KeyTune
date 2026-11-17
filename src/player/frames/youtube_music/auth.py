@@ -3,6 +3,7 @@ from ...i18n import _
 import wx
 
 from player.youtube_music.dialog import YouTubeMusicBrowserAuthDialog
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class AuthMixin:
@@ -22,7 +23,7 @@ class AuthMixin:
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         if announce:
-            self._announce(message)
+            self._announce(message, ANNOUNCE_ERRORS)
         return False
 
     def _handle_youtube_music_auth_validation_failure(self, service, error, *, announce=True):
@@ -40,7 +41,7 @@ class AuthMixin:
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         if announce:
-            self._announce(message)
+            self._announce(message, ANNOUNCE_ERRORS)
         return False
 
     def _ensure_youtube_music_authenticated(self):
@@ -65,7 +66,7 @@ class AuthMixin:
         dialog = YouTubeMusicBrowserAuthDialog(self)
         try:
             if dialog.ShowModal() != wx.ID_OK:
-                self._announce(_("Conexão com o YouTube Music cancelada."))
+                self._announce(_("Conexão com o YouTube Music cancelada."), ANNOUNCE_ERRORS)
                 return
 
             auth_mode = dialog.get_auth_mode()
@@ -136,7 +137,7 @@ class AuthMixin:
             self._refresh_youtube_music_menu_state()
 
         connecting_message = _("Conectando a conta do YouTube...")
-        self._announce(connecting_message)
+        self._announce(connecting_message, ANNOUNCE_PROGRESS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(connecting_message)
         return self._run_youtube_music_background_task(
@@ -174,7 +175,7 @@ class AuthMixin:
         self._clear_youtube_music_library_cache(loaded=False, status_message=self._youtube_music_status_message())
         self._refresh_youtube_music_menu_state()
         self._refresh_pending_restored_youtube_music_tabs()
-        self._announce(_("Conta do YouTube conectada: {name}.").format(name=account_name))
+        self._announce(_("Conta do YouTube conectada: {name}.").format(name=account_name), ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("YouTube conectado como {name}.").format(name=account_name))
         self.on_refresh_youtube_music_library(None, announce=False)
@@ -197,7 +198,7 @@ class AuthMixin:
     def on_disconnect_youtube_music(self, _event):
         service = self._get_youtube_music_service()
         if not service.has_saved_browser_auth():
-            self._announce(_("Nenhuma conta do YouTube está conectada."))
+            self._announce(_("Nenhuma conta do YouTube está conectada."), ANNOUNCE_ERRORS)
             self._refresh_youtube_music_menu_state()
             return
 
@@ -218,7 +219,7 @@ class AuthMixin:
             status_message=_("A conta do YouTube foi desconectada desta instalação."),
         )
         self._refresh_youtube_music_menu_state()
-        self._announce(_("Conta do YouTube desconectada."))
+        self._announce(_("Conta do YouTube desconectada."), ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("YouTube desconectado."))
         wx.MessageBox(

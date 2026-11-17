@@ -1,4 +1,6 @@
 import os
+import sys
+from pathlib import Path
 
 import wx
 
@@ -11,6 +13,19 @@ AUTH_MODE_BROWSER = "browser"
 AUTH_MODE_MANUAL = "manual"
 # A ordem das opções do RadioBox: o modo manual vem primeiro por ser o que dura.
 _AUTH_MODES = (AUTH_MODE_MANUAL, AUTH_MODE_BROWSER)
+
+
+CONNECT_GUIDE_FILE_NAME = "conectar-conta-youtube.html"
+
+
+def connect_guide_path():
+    """O guia HTML de como conectar a conta do YouTube, na pasta docs; ``None`` se não existir."""
+    candidates = []
+    if getattr(sys, "frozen", False):
+        candidates.append(Path(sys.executable).resolve().parent / "docs" / CONNECT_GUIDE_FILE_NAME)
+    candidates.append(Path(__file__).resolve().parents[3] / "docs" / CONNECT_GUIDE_FILE_NAME)
+    candidates.append(Path.cwd() / "docs" / CONNECT_GUIDE_FILE_NAME)
+    return next((path for path in candidates if path.is_file()), None)
 
 
 def cookie_export_help_text():
@@ -255,6 +270,14 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     # ------------------------------------------------------------------
 
     def _on_show_export_help(self, _event):
+        """Abre o guia HTML de conexão no navegador; sem ele, lê o resumo numa caixa de leitura."""
+        guide_path = connect_guide_path()
+        if guide_path is not None:
+            try:
+                os.startfile(str(guide_path))
+                return
+            except OSError:
+                pass
         show_reading_dialog(
             self,
             title=_("Como exportar os cookies"),

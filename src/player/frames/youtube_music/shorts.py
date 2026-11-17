@@ -10,6 +10,7 @@ from player.youtube_music.playlists import extract_video_id_from_text
 from ...constants import REPEAT_ONE
 from ...i18n import _
 from ...log import get_logger
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION
 
 
 _logger = get_logger(__name__)
@@ -61,7 +62,7 @@ class ShortsMixin:
                 self,
             )
 
-        self._announce(_("Abrindo os Shorts."))
+        self._announce(_("Abrindo os Shorts."), ANNOUNCE_NAVIGATION)
         return self._run_youtube_music_background_task(worker, on_done, on_error=on_error)
 
     def _shorts_session_active(self, state):
@@ -105,7 +106,7 @@ class ShortsMixin:
         fresh = [result for result in results if result.video_id and result.video_id not in known]
         if not fresh:
             if announce_next:
-                self._announce(_("O YouTube não trouxe mais shorts agora."))
+                self._announce(_("O YouTube não trouxe mais shorts agora."), ANNOUNCE_ERRORS)
             return
         inserted_items = state.append_items([r.playback_url for r in fresh], [short_label(r) for r in fresh])
         self._refresh_playlist_browser()
@@ -114,7 +115,7 @@ class ShortsMixin:
             # URL (the video_id-based `known` filter above missed it): there
             # is nothing new to jump to.
             if announce_next:
-                self._announce(_("O YouTube não trouxe mais shorts agora."))
+                self._announce(_("O YouTube não trouxe mais shorts agora."), ANNOUNCE_ERRORS)
             return
         first_new_index = state.item_index_map.get(inserted_items[0])
         if announce_next and first_new_index is not None and self._get_active_playlist_state() is state:

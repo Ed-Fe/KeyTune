@@ -5,6 +5,7 @@ from ..diagnostics.dialog import show_diagnostics_report, show_player_startup_fa
 from ..i18n import _
 from ..log import get_logger
 from .background import run_in_background
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 _logger = get_logger(__name__)
 
@@ -12,10 +13,10 @@ _logger = get_logger(__name__)
 class FrameDiagnosticsMixin:
     def on_run_diagnostics(self, _event):
         if getattr(self, "_diagnostics_running", False):
-            self._announce(_("O diagnóstico já está em andamento."))
+            self._announce(_("O diagnóstico já está em andamento."), ANNOUNCE_ERRORS)
             return
         self._diagnostics_running = True
-        self._announce(_("Executando o diagnóstico..."))
+        self._announce(_("Executando o diagnóstico..."), ANNOUNCE_PROGRESS)
         youtube_service = self._get_youtube_music_service()
         youtubejs_enabled = bool(getattr(self.settings, "youtube_music_use_youtubejs", False))
         run_in_background(
@@ -26,12 +27,12 @@ class FrameDiagnosticsMixin:
 
     def _on_diagnostics_finished(self, results):
         self._diagnostics_running = False
-        self._announce(summarize(results))
+        self._announce(summarize(results), ANNOUNCE_CONFIRMATIONS)
         show_diagnostics_report(self, results)
 
     def _handle_player_startup_failure(self, error):
         """O MPV não iniciou: diz por quê e fecha, porque nada na janela funciona sem ele."""
         _logger.error("Playback backend could not be created: %s", error, exc_info=error)
-        self._announce(_("O player não iniciou."))
+        self._announce(_("O player não iniciou."), ANNOUNCE_ERRORS)
         show_player_startup_failure(self, error)
         self.Destroy()

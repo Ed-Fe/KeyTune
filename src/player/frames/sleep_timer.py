@@ -12,7 +12,7 @@ from ..constants import (
     SLEEP_TIMER_WARNING_MINUTES,
 )
 from .. import interface_sounds
-from ..announcements import ANNOUNCE_TIMER
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_TIMER
 from ..i18n import _, ngettext
 from ..sleep_timer import SleepTimerDialog
 
@@ -78,11 +78,11 @@ class FrameSleepTimerMixin:
             return was_armed
 
         if was_armed:
-            self._announce(_("Temporizador cancelado."))
+            self._announce(_("Temporizador cancelado."), ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(_("Temporizador cancelado."))
         else:
-            self._announce(_("Nenhum temporizador ativo."))
+            self._announce(_("Nenhum temporizador ativo."), ANNOUNCE_CONFIRMATIONS)
         return was_armed
 
     def _arm_sleep_timer_countdown(self, minutes):
@@ -108,7 +108,7 @@ class FrameSleepTimerMixin:
             "Temporizador ligado: {minutes} minutos.",
             normalized_minutes,
         ).format(minutes=normalized_minutes)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         self._refresh_sleep_timer_menu_state()
@@ -122,7 +122,7 @@ class FrameSleepTimerMixin:
         self._sleep_timer_last_warning_minutes = None
 
         message = _("Temporizador ligado: ao fim da faixa atual.")
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         self._refresh_sleep_timer_menu_state()
@@ -139,7 +139,7 @@ class FrameSleepTimerMixin:
 
     def _announce_sleep_timer_status(self):
         message = self._sleep_timer_status_sentence() or _("Nenhum temporizador ativo.")
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
 
@@ -182,7 +182,7 @@ class FrameSleepTimerMixin:
             if was_playing
             else _("Temporizador concluído.")
         )
-        self._announce(message)
+        self._announce(message, ANNOUNCE_TIMER)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message, auto_clear_ms=0)
         self._pause_playback_for_sleep_timer()
@@ -195,7 +195,7 @@ class FrameSleepTimerMixin:
         self._clear_sleep_timer()
         self._refresh_sleep_timer_menu_state()
         message = _("Temporizador: fim da faixa. Reprodução encerrada.")
-        self._announce(message)
+        self._announce(message, ANNOUNCE_TIMER)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message, auto_clear_ms=0)
 

@@ -6,6 +6,7 @@ from player.youtube_music import comment_actions
 
 from ... import interface_sounds
 from ...i18n import _
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class CommentActionsMixin:
@@ -34,7 +35,7 @@ class CommentActionsMixin:
         finally:
             dialog.Destroy()
         if not text:
-            self._announce(_("Nada foi escrito: o comentário não foi enviado."))
+            self._announce(_("Nada foi escrito: o comentário não foi enviado."), ANNOUNCE_ERRORS)
         return text
 
     def _run_youtube_music_comment_action(
@@ -70,7 +71,7 @@ class CommentActionsMixin:
             comment_actions.post_comment(text, media_url=context.media_url, post=context.post)
 
         def on_done(_result):
-            self._announce(_("Comentário publicado."))
+            self._announce(_("Comentário publicado."), ANNOUNCE_CONFIRMATIONS)
             if view.context is context:
                 # A lista na tela é a dos comentários que acabou de ganhar um.
                 self._reload_youtube_music_results_view(view)
@@ -86,14 +87,14 @@ class CommentActionsMixin:
             return False
         return self._run_youtube_music_comment_action(
             lambda: comment_actions.reply_to_comment(comment, text),
-            lambda _result: self._announce(_("Resposta publicada.")),
+            lambda _result: self._announce(_("Resposta publicada."), ANNOUNCE_CONFIRMATIONS),
             _("Não foi possível publicar a resposta."),
         )
 
     def rate_youtube_music_comment(self, comment, operation):
         def on_done(rated_comment):
             self._replace_youtube_music_result(comment, rated_comment)
-            self._announce(comment_actions.rating_done_message(operation))
+            self._announce(comment_actions.rating_done_message(operation), ANNOUNCE_CONFIRMATIONS)
 
         return self._run_youtube_music_comment_action(
             lambda: comment_actions.rate_comment(comment, operation),
@@ -115,7 +116,7 @@ class CommentActionsMixin:
 
         def on_done(edited_comment):
             self._replace_youtube_music_result(comment, edited_comment)
-            self._announce(_("Comentário editado."))
+            self._announce(_("Comentário editado."), ANNOUNCE_CONFIRMATIONS)
 
         return self._run_youtube_music_comment_action(
             lambda: comment_actions.edit_comment(comment, text),
@@ -136,7 +137,7 @@ class CommentActionsMixin:
 
         def on_done(_result):
             self._replace_youtube_music_result(comment)
-            self._announce(_("Comentário apagado."))
+            self._announce(_("Comentário apagado."), ANNOUNCE_CONFIRMATIONS)
 
         return self._run_youtube_music_comment_action(
             lambda: comment_actions.delete_comment(comment),

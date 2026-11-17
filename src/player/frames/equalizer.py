@@ -18,6 +18,7 @@ from ..equalizer.models import (
     normalize_custom_presets,
 )
 from ..playlists import PlaylistState, ScreenTabState
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_STATE
 
 
 def _equalizer_preset_dialog_class():
@@ -175,7 +176,7 @@ class FrameEqualizerMixin:
         preset = self._get_equalizer_preset(preset_id or current_preset_id)
         if preset is None:
             if announce:
-                self._announce(_("Nenhum preset de equalizador está disponível."))
+                self._announce(_("Nenhum preset de equalizador está disponível."), ANNOUNCE_ERRORS)
             return False
 
         if enabled is not None:
@@ -200,15 +201,16 @@ class FrameEqualizerMixin:
             self._announce(
                 self._equalizer_enabled_message(
                     state if uses_own else None, preset, include_description=bool(preset_id is not None)
-                )
+                ),
+                ANNOUNCE_STATE
             )
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(_("Equalizador: {name}.").format(name=preset.name))
         else:
             if uses_own:
-                self._announce(_("Equalizador desativado na aba {tab}.").format(tab=state.title))
+                self._announce(_("Equalizador desativado na aba {tab}.").format(tab=state.title), ANNOUNCE_STATE)
             else:
-                self._announce(_("Equalizador desativado."))
+                self._announce(_("Equalizador desativado."), ANNOUNCE_STATE)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(_("Equalizador desativado."))
         return applied
@@ -318,7 +320,7 @@ class FrameEqualizerMixin:
         if self._equalizer_supported():
             return True
 
-        self._announce(_("O equalizador não está disponível nesta instalação."))
+        self._announce(_("O equalizador não está disponível nesta instalação."), ANNOUNCE_ERRORS)
         return False
 
     def on_open_equalizer(self, _event):
@@ -343,7 +345,7 @@ class FrameEqualizerMixin:
     def on_toggle_equalizer_own(self, uses_own):
         state = self._get_equalizer_target_state()
         if not state:
-            self._announce(_("Nenhuma aba de mídia ativa para configurar o equalizador."))
+            self._announce(_("Nenhuma aba de mídia ativa para configurar o equalizador."), ANNOUNCE_ERRORS)
             self._refresh_equalizer_screen()
             return
 
@@ -355,9 +357,12 @@ class FrameEqualizerMixin:
         self._apply_equalizer_state_to_current_playback(state)
         self._refresh_equalizer_screen()
         if uses_own:
-            self._announce(_("A aba {tab} agora tem um equalizador só dela.").format(tab=state.title))
+            self._announce(_("A aba {tab} agora tem um equalizador só dela.").format(tab=state.title), ANNOUNCE_STATE)
         else:
-            self._announce(_("A aba {tab} voltou a seguir o equalizador de todas as abas.").format(tab=state.title))
+            self._announce(
+                _("A aba {tab} voltou a seguir o equalizador de todas as abas.").format(tab=state.title),
+                ANNOUNCE_STATE,
+            )
 
     def _validate_equalizer_preset_name(self, name, *, excluding_preset_id=None):
         normalized_name = str(name or "").strip().casefold()
@@ -457,7 +462,7 @@ class FrameEqualizerMixin:
 
         seed_preset = self._default_equalizer_preset()
         if seed_preset is None:
-            self._announce(_("Nenhum preset base está disponível para criar um preset novo."))
+            self._announce(_("Nenhum preset base está disponível para criar um preset novo."), ANNOUNCE_ERRORS)
             return
 
         payload = self._show_equalizer_preset_dialog(
@@ -481,7 +486,7 @@ class FrameEqualizerMixin:
         )
         self._append_custom_equalizer_preset(new_preset, refresh=False)
         self._set_equalizer_selection(preset_id=new_preset.preset_id, enabled=True, announce=False)
-        self._announce(_("Preset criado e aplicado: {name}.").format(name=new_preset.name))
+        self._announce(_("Preset criado e aplicado: {name}.").format(name=new_preset.name), ANNOUNCE_CONFIRMATIONS)
 
     def _current_equalizer_preset(self):
         _enabled, preset_id = self._equalizer_selection(self._get_equalizer_target_state())
@@ -511,7 +516,7 @@ class FrameEqualizerMixin:
 
         preset = self._current_equalizer_preset()
         if preset is None:
-            self._announce(_("Nenhum preset selecionado para editar."))
+            self._announce(_("Nenhum preset selecionado para editar."), ANNOUNCE_ERRORS)
             return
 
         if preset.is_builtin:
@@ -546,7 +551,7 @@ class FrameEqualizerMixin:
         self._replace_custom_equalizer_preset(updated_preset, refresh=False)
         self._apply_equalizer_state_to_current_playback(self._get_equalizer_target_state())
         self._refresh_equalizer_screen()
-        self._announce(_("Preset atualizado: {name}.").format(name=updated_preset.name))
+        self._announce(_("Preset atualizado: {name}.").format(name=updated_preset.name), ANNOUNCE_CONFIRMATIONS)
 
     def _duplicate_equalizer_preset(self, preset, *, title, intro_text):
         payload = self._show_equalizer_preset_dialog(
@@ -568,7 +573,10 @@ class FrameEqualizerMixin:
         )
         self._append_custom_equalizer_preset(duplicated_preset, refresh=False)
         self._set_equalizer_selection(preset_id=duplicated_preset.preset_id, enabled=True, announce=False)
-        self._announce(_("Preset criado e aplicado: {name}.").format(name=duplicated_preset.name))
+        self._announce(
+            _("Preset criado e aplicado: {name}.").format(name=duplicated_preset.name),
+            ANNOUNCE_CONFIRMATIONS,
+        )
         return True
 
     def on_duplicate_equalizer_preset(self):
@@ -577,7 +585,7 @@ class FrameEqualizerMixin:
 
         preset = self._current_equalizer_preset()
         if preset is None:
-            self._announce(_("Nenhum preset selecionado para duplicar."))
+            self._announce(_("Nenhum preset selecionado para duplicar."), ANNOUNCE_ERRORS)
             return
 
         self._duplicate_equalizer_preset(
@@ -592,11 +600,11 @@ class FrameEqualizerMixin:
 
         preset = self._current_equalizer_preset()
         if preset is None:
-            self._announce(_("Nenhum preset selecionado para excluir."))
+            self._announce(_("Nenhum preset selecionado para excluir."), ANNOUNCE_ERRORS)
             return
 
         if preset.is_builtin:
-            self._announce(_("Presets embutidos não podem ser excluídos."))
+            self._announce(_("Presets embutidos não podem ser excluídos."), ANNOUNCE_ERRORS)
             return
 
         interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
@@ -626,4 +634,4 @@ class FrameEqualizerMixin:
         self._save_settings()
         self._apply_equalizer_state_to_current_playback(self._get_equalizer_target_state())
         self._refresh_equalizer_screen()
-        self._announce(_("Preset excluído: {name}.").format(name=preset.name))
+        self._announce(_("Preset excluído: {name}.").format(name=preset.name), ANNOUNCE_CONFIRMATIONS)

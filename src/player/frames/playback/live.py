@@ -4,6 +4,7 @@ import wx
 
 from ...i18n import _
 from ...log import get_logger
+from ...announcements import ANNOUNCE_PLAYBACK
 
 _logger = get_logger(__name__)
 
@@ -52,7 +53,7 @@ class LivePlaybackMixin:
         self._cancel_live_reconnect(reset=False)
         self._live_reconnect_attempts = attempts + 1
         if attempts == 0:
-            self._announce(_("A conexão com a transmissão ao vivo foi perdida. Reconectando."))
+            self._announce(_("A conexão com a transmissão ao vivo foi perdida. Reconectando."), ANNOUNCE_PLAYBACK)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("Reconectando à transmissão ao vivo..."), auto_clear_ms=0)
 
@@ -102,6 +103,6 @@ class LivePlaybackMixin:
             state.was_playing = False
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message, auto_clear_ms=0)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_PLAYBACK)
         self._update_time_bar()
         self._refresh_playlist_browser()

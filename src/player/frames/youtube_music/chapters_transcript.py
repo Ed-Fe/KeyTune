@@ -13,6 +13,7 @@ from player.youtube_music.playlists import build_youtube_watch_url, extract_vide
 
 from ...i18n import _
 from .navigation import YouTubeResultsView
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_PROGRESS
 
 
 class ChaptersTranscriptMixin:
@@ -30,7 +31,7 @@ class ChaptersTranscriptMixin:
             result = self._selected_youtube_music_search_result()
         media_url = self._youtube_music_comments_url(result)
         if not media_url:
-            self._announce(missing_message)
+            self._announce(missing_message, ANNOUNCE_ERRORS)
             return "", ""
         return media_url, getattr(result, "title", "")
 
@@ -38,7 +39,7 @@ class ChaptersTranscriptMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip()
         if not media_path or not extract_video_id_from_text(media_path):
-            self._announce(missing_message)
+            self._announce(missing_message, ANNOUNCE_ERRORS)
             return "", ""
         return media_path, self._media_label(media_path)
 
@@ -76,13 +77,13 @@ class ChaptersTranscriptMixin:
                     video_id=video_id,
                     playback_url=build_youtube_watch_url(video_id),
                     source_badge="YouTube",
-                    resume_seconds=chapter.start_seconds,
+                    chapter_start_seconds=chapter.start_seconds,
                 )
                 for chapter in chapters
             )
             return YouTubeResultPage(results=results, has_more=False)
 
-        self._announce(_("Abrindo {title}.").format(title=view_title))
+        self._announce(_("Abrindo {title}.").format(title=view_title), ANNOUNCE_NAVIGATION)
         return self._load_youtube_music_results_view(
             YouTubeResultsView(title=view_title, fetch_page=fetch_page),
             mode="push",
@@ -123,5 +124,5 @@ class ChaptersTranscriptMixin:
                 self,
             )
 
-        self._announce(_("Carregando a transcrição."))
+        self._announce(_("Carregando a transcrição."), ANNOUNCE_PROGRESS)
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)

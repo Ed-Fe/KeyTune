@@ -1,4 +1,5 @@
 from ...i18n import _
+from ...announcements import ANNOUNCE_PLAYBACK
 
 
 class TransportCommandsMixin:
@@ -31,7 +32,7 @@ class TransportCommandsMixin:
                 state.last_position_ms = 0
                 state.autodj_waiting_for_next = False
             self._update_time_bar()
-            self._announce(_("Parado."))
+            self._announce(_("Parado."), ANNOUNCE_PLAYBACK)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(_("Parado."), auto_clear_ms=0)
             refresh_smtc = getattr(self, "_refresh_smtc_state", None)

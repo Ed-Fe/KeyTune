@@ -42,6 +42,7 @@ from ..process_control import CancelToken
 from .background import run_in_background
 from .selection import SCOPE_EXPLORER, SCOPE_SEARCH, focused_list_scope, selected_list_entries
 from .task_progress import TaskProgressMixin
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 _logger = get_logger(__name__)
@@ -128,7 +129,7 @@ class FrameConvertMixin(TaskProgressMixin):
             if any(is_remote_media_path(path) for path in media_paths):
                 self._announce_convert_needs_local_file()
             else:
-                self._announce(_("Nenhum arquivo de áudio ou vídeo do computador está selecionado."))
+                self._announce(_("Nenhum arquivo de áudio ou vídeo do computador está selecionado."), ANNOUNCE_ERRORS)
             return
 
         # Conferir cada arquivo no disco pode demorar numa pasta de rede.
@@ -143,7 +144,7 @@ class FrameConvertMixin(TaskProgressMixin):
             self._offer_to_cancel_conversion()
             return
         if not paths:
-            self._announce(_("Os arquivos selecionados não foram encontrados."))
+            self._announce(_("Os arquivos selecionados não foram encontrados."), ANNOUNCE_ERRORS)
             return
 
         counts = modes_for_sources(paths)
@@ -183,23 +184,24 @@ class FrameConvertMixin(TaskProgressMixin):
 
     def _announce_convert_needs_local_file(self):
         self._announce(
-            _("A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B).")
+            _("A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B)."),
+            ANNOUNCE_ERRORS
         )
 
     def _validated_convert_source(self):
         """Caminho da mídia atual se ela puder ser convertida; vazio (com aviso) se não."""
         media_path = self._current_convert_media_path()
         if not media_path:
-            self._announce(_("Nenhuma mídia está aberta para converter."))
+            self._announce(_("Nenhuma mídia está aberta para converter."), ANNOUNCE_ERRORS)
             return ""
         if is_remote_media_path(media_path):
             self._announce_convert_needs_local_file()
             return ""
         if not os.path.isfile(media_path):
-            self._announce(_("O arquivo da mídia atual não foi encontrado."))
+            self._announce(_("O arquivo da mídia atual não foi encontrado."), ANNOUNCE_ERRORS)
             return ""
         if not media_kind(media_path):
-            self._announce(_("Este tipo de arquivo não pode ser convertido."))
+            self._announce(_("Este tipo de arquivo não pode ser convertido."), ANNOUNCE_ERRORS)
             return ""
         return media_path
 
@@ -247,7 +249,7 @@ class FrameConvertMixin(TaskProgressMixin):
         # Os de outro tipo (numa seleção mista) também não entram nesta conversão.
         skipped += total_selected - len(source_paths)
         if not requests:
-            self._announce(_("Nenhum dos arquivos selecionados precisa desta conversão."))
+            self._announce(_("Nenhum dos arquivos selecionados precisa desta conversão."), ANNOUNCE_ERRORS)
             return
 
         install_ffmpeg = self._confirm_convert_ffmpeg()
@@ -292,7 +294,10 @@ class FrameConvertMixin(TaskProgressMixin):
             return False
 
         if not ffmpeg_install_supported():
-            self._announce(_("A conversão precisa do FFmpeg, que não foi encontrado. Instale-o e tente de novo."))
+            self._announce(
+                _("A conversão precisa do FFmpeg, que não foi encontrado. Instale-o e tente de novo."),
+                ANNOUNCE_ERRORS,
+            )
             return None
 
         interface_sounds.play_for(self, interface_sounds.SOUND_QUESTION)
@@ -317,9 +322,12 @@ class FrameConvertMixin(TaskProgressMixin):
         self._convert_batch_total = len(requests)
 
         if len(requests) > 1:
-            self._announce(_("Iniciando a conversão de {count} arquivos.").format(count=len(requests)))
+            self._announce(
+                _("Iniciando a conversão de {count} arquivos.").format(count=len(requests)),
+                ANNOUNCE_PROGRESS,
+            )
         else:
-            self._announce(_("Iniciando a conversão."))
+            self._announce(_("Iniciando a conversão."), ANNOUNCE_PROGRESS)
         self._set_status_message(_("Convertendo..."), auto_clear_ms=0)
         self._set_task_progress("convert", None)
 
@@ -444,7 +452,7 @@ class FrameConvertMixin(TaskProgressMixin):
         message = _("Conversão concluída: {name}.").format(name=os.path.basename(result.path))
         _logger.info("Conversion finished: %s", os.path.basename(result.path))
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def _on_batch_conversion_finished(self, token, results, failures, total, skipped):
         if not self._finish_convert_state(token):
@@ -467,7 +475,7 @@ class FrameConvertMixin(TaskProgressMixin):
         for name, reason in failures:
             _logger.warning("Batch conversion item failed (%s): %s", name, reason)
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if failures and done:
             wx.CallAfter(offer_task_failures, self, _("Falhas na conversão"), failures)
 
@@ -476,7 +484,7 @@ class FrameConvertMixin(TaskProgressMixin):
             return
         message = _("Não foi possível converter a mídia: {reason}").format(reason=reason)
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
 
     def _on_conversion_cancelled(self, token, done=0, total=1):
         if not self._finish_convert_state(token):
@@ -488,7 +496,7 @@ class FrameConvertMixin(TaskProgressMixin):
         else:
             message = _("Conversão cancelada.")
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def _offer_to_cancel_conversion(self):
         percent = self._convert_percent

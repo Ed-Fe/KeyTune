@@ -5,6 +5,7 @@ import wx
 from ...audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 from ...i18n import _
 from ...log import get_logger
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK
 
 
 _logger = get_logger(__name__)
@@ -161,7 +162,7 @@ class AudioOutputMixin:
 
         if announcement:
             try:
-                self._announce(announcement)
+                self._announce(announcement, ANNOUNCE_PLAYBACK)
             except Exception:
                 pass
 
@@ -381,7 +382,10 @@ class AudioOutputMixin:
             except Exception:
                 pass
             if announce:
-                self._announce(_("Não foi possível trocar o dispositivo de áudio: {error}.").format(error=exc))
+                self._announce(
+                    _("Não foi possível trocar o dispositivo de áudio: {error}.").format(error=exc),
+                    ANNOUNCE_ERRORS,
+                )
             return False
 
         self.settings.audio_output_device_id = normalized_device_id
@@ -394,8 +398,11 @@ class AudioOutputMixin:
                         selected_device = device
                         break
                 device_label = selected_device.menu_label if selected_device else normalized_device_id
-                self._announce(_("Dispositivo de áudio alterado para {label}.").format(label=device_label))
+                self._announce(
+                    _("Dispositivo de áudio alterado para {label}.").format(label=device_label),
+                    ANNOUNCE_PLAYBACK,
+                )
             else:
-                self._announce(_("Dispositivo de áudio alterado para o padrão do sistema."))
+                self._announce(_("Dispositivo de áudio alterado para o padrão do sistema."), ANNOUNCE_PLAYBACK)
 
         return True

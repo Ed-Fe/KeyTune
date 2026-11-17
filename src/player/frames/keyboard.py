@@ -17,6 +17,7 @@ from ..i18n import _
 from ..keyboard import KeyboardCustomizationDialog, Keymap, format_shortcut, is_bare_shortcut
 from ..keyboard.shortcuts import SCOPE_LOCAL, actions, normalize_shortcut
 from ..keyboard.wx_keys import accelerator_entry, shortcut_from_key_event
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 # "Em&baralhar (E)": a dica entre parênteses no fim do rótulo de um item de menu.
 _MENU_HINT_PATTERN = re.compile(r"\s*\([^()]*\)\s*$")
@@ -240,10 +241,11 @@ class FrameKeyboardMixin:
             self._announce(
                 _("Atalhos salvos. Não foi possível registrar {shortcuts}: já estão em uso por outro programa.").format(
                     shortcuts=", ".join(format_shortcut(shortcut) for shortcut in failed)
-                )
+                ),
+                ANNOUNCE_ERRORS
             )
         else:
-            self._announce(_("Atalhos salvos."))
+            self._announce(_("Atalhos salvos."), ANNOUNCE_CONFIRMATIONS)
 
     def _menu_bar_shortcuts(self):
         """Alt+letra de cada menu da barra, no idioma em uso: não podem virar atalho."""

@@ -4,6 +4,7 @@ import wx
 
 from ..constants import RECENT_ITEMS_LIMIT
 from ..i18n import _
+from ..announcements import ANNOUNCE_CONFIRMATIONS
 
 
 class FrameRecentsMixin:
@@ -189,4 +190,4 @@ class FrameRecentsMixin:
         setattr(self.settings, attribute_name, [])
         self._save_settings()
         self._refresh_recent_menus()
-        self._announce(announcement)
+        self._announce(announcement, ANNOUNCE_CONFIRMATIONS)

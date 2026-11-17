@@ -240,6 +240,7 @@ msgstr ""
 
 #: src/player/about/dialog.py
 #: src/player/changelog/dialog.py
+#: src/player/manual/dialog.py
 #: src/player/playlists/queue_dialog.py
 #: src/player/plugins/dialog.py
 #: src/player/reading_dialog.py
@@ -583,6 +584,10 @@ msgstr ""
 
 #: src/player/frames/commands/browser_commands.py
 msgid "5 estrelas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A aba KeyTube abre junto com o app."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -1078,10 +1083,6 @@ msgstr ""
 msgid "Abrindo créditos: {name}"
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Abrindo manual: {name}"
-msgstr ""
-
 #: src/player/frames/radio/actions.py
 msgid "Abrindo o site de {name} no navegador."
 msgstr ""
@@ -1142,6 +1143,10 @@ msgstr ""
 
 #: src/player/file_associations.py
 msgid "Abrir no {app}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Abrir o &KeyTube ao iniciar"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -1444,10 +1449,6 @@ msgstr ""
 msgid "Analisar BPM, batidas, energia e tonalidade de faixas"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Anuncia mudanças como tempo, volume e troca de abas."
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Anunciar &Status (S)"
 msgstr ""
@@ -1563,6 +1564,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Apresenta o player e o que é possível fazer com ele."
+msgstr ""
+
+#: src/player/manual/service.py
+msgid "Apresentação"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2060,12 +2065,12 @@ msgstr ""
 msgid "Avisos (WARNING)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Avisos de eventos que falam:"
-msgstr ""
-
 #: src/player/announcements.py
 msgid "Avisos do temporizador"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Avisos que falam:"
 msgstr ""
 
 #: src/player/keyboard/dialog.py
@@ -2307,6 +2312,10 @@ msgstr ""
 msgid "Busca global (Ctrl+G), favoritos, avaliações, histórico e retomada. Tudo fica no seu computador."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Busca limpa. O manual inteiro está de volta."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Busca novamente as playlists e mixes disponíveis na conta conectada."
 msgstr ""
@@ -2355,6 +2364,14 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Buscar no YouTube Music e no YouTube, ou colar um link"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Buscar no manual"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Buscar no manual:"
 msgstr ""
 
 #: src/player/frames/youtube_music/channel_actions.py
@@ -2590,7 +2607,7 @@ msgid "Chat ao vivo: mensagens novas"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Chat e notificações. Desligado, só falam com o KeyTune em segundo plano."
+msgid "Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -2773,6 +2790,10 @@ msgstr ""
 
 #: src/player/frames/commands/app_commands.py
 msgid "Confirmar saída"
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Confirmações: copiado, salvo, adicionado, removido"
 msgstr ""
 
 #: src/player/frames/youtube_music/channel_actions.py
@@ -3217,6 +3238,10 @@ msgid "Deseja remover todos os {count} itens da fila de reprodução?"
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Desligado, nada é falado. Ligado, vale a escolha de cada aviso na lista abaixo."
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Desligado, o aviso espera o leitor terminar o que está dizendo."
 msgstr ""
 
@@ -3581,6 +3606,12 @@ msgstr ""
 msgid "Em ordem"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Em {count} seção."
+msgid_plural "Em {count} seções."
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/player/frames/ui.py
 msgid "Em&baralhar (E)"
 msgstr ""
@@ -3746,6 +3777,10 @@ msgstr ""
 
 #: src/player/diagnostics/mpv_library.py
 msgid "Erro {code} ao carregar {name}."
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Erros e ações indisponíveis"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -5121,6 +5156,10 @@ msgstr ""
 msgid "Manual do KeyTune"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Manual do usuário"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Marca as faixas e os vídeos no histórico da sua conta."
 msgstr ""
@@ -5266,6 +5305,10 @@ msgstr ""
 msgid "Modo navegação de itens."
 msgstr ""
 
+#: src/player/announcements.py
+msgid "Modos ligados ou desligados: aleatório, repetição, equalizador, AutoDJ"
+msgstr ""
+
 #: src/player/youtube_music/browse.py
 #: src/player/youtube_music/library_manager.py
 #: src/player/youtube_music/service.py
@@ -5385,6 +5428,14 @@ msgstr ""
 msgid "Na fila, análise não confirmada"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Nada foi encontrado para \"{query}\"."
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Nada foi encontrado para esta busca."
+msgstr ""
+
 #: src/player/frames/youtube_music/live_chat.py
 msgid "Nada foi escrito: a mensagem não foi enviada."
 msgstr ""
@@ -5415,6 +5466,10 @@ msgstr ""
 
 #: src/player/keyboard/shortcuts.py
 msgid "Navegação na mídia"
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Navegação: abas, início e fim de listas, abertura de itens"
 msgstr ""
 
 #: src/player/keyboard/dialog.py
@@ -5876,10 +5931,6 @@ msgstr ""
 msgid "Não foi possível abrir o instalador da atualização."
 msgstr ""
 
-#: src/player/frames/ui.py
-msgid "Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."
-msgstr ""
-
 #: src/player/frames/youtube_music/dependencies.py
 msgid "Não foi possível abrir o navegador para mostrar a página solicitada."
 msgstr ""
@@ -6213,8 +6264,12 @@ msgstr ""
 msgid "Não foi possível localizar o checksum oficial do yt-dlp baixado."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Não foi possível localizar o manual do KeyTune nesta instalação."
+msgstr ""
+
 #: src/player/frames/ui.py
-msgid "Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
+msgid "Não foi possível localizar o manual do KeyTune. Verifique a pasta docs da instalação."
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -7824,6 +7879,10 @@ msgstr ""
 msgid "Progresso do download"
 msgstr ""
 
+#: src/player/announcements.py
+msgid "Progresso: carregando, pesquisando, iniciando"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Pré-amplificação"
 msgstr ""
@@ -8237,6 +8296,10 @@ msgstr ""
 #: src/player/frames/playback/controls.py
 #: src/player/quick_player/frame.py
 msgid "Reprodução retomada."
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Reprodução: pausa, retomada, início e fim do arquivo, dispositivo de áudio"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -8733,6 +8796,14 @@ msgstr ""
 msgid "Seta esquerda"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Seções"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Seções:"
+msgstr ""
+
 #: src/player/frames/youtube_music/shorts.py
 #: src/player/youtube_music/folders.py
 #: src/player/youtube_music/models.py
@@ -9028,6 +9099,10 @@ msgstr ""
 msgid "Tenta trazer presença de palco e mais ambiência."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Texto"
+msgstr ""
+
 #: src/player/library/search_dialog.py
 msgid "Texto a localizar"
 msgstr ""
@@ -9207,6 +9282,10 @@ msgstr ""
 msgid "Trecho silenciado: {category}."
 msgstr ""
 
+#: src/player/announcements.py
+msgid "Troca de faixa e SponsorBlock: faixa que começou e trechos pulados"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "Trocar pró&xima"
 msgstr ""
@@ -9233,6 +9312,14 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Título das mudanças"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Tópicos da seção"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Tópicos da seção:"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -9374,6 +9461,10 @@ msgstr ""
 #: src/player/frames/playback/controls.py
 #: src/player/quick_player/frame.py
 msgid "Velocidade de reprodução: {rate}."
+msgstr ""
+
+#: src/player/announcements.py
+msgid "Velocidade e tom ao mudar"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -9534,6 +9625,10 @@ msgstr ""
 
 #: src/player/changelog/dialog.py
 msgid "Versões:"
+msgstr ""
+
+#: src/player/manual/service.py
+msgid "Visão geral da seção"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -10378,6 +10473,12 @@ msgstr[1] ""
 #: src/player/frames/radio/actions.py
 msgid "{count} rádio adicionada a {title}, sem tocar."
 msgid_plural "{count} rádios adicionadas a {title}, sem tocar."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/player/manual/dialog.py
+msgid "{count} tópico encontrado."
+msgid_plural "{count} tópicos encontrados."
 msgstr[0] ""
 msgstr[1] ""
 

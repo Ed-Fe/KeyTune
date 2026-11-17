@@ -10,7 +10,12 @@ from player.youtube_music.account_session import account_connected, optional_acc
 from player.youtube_music.notification_store import YouTubeNotificationStore, account_scope
 
 from ... import interface_sounds
-from ...announcements import ANNOUNCE_NOTIFICATIONS
+from ...announcements import (
+    ANNOUNCE_CONFIRMATIONS,
+    ANNOUNCE_ERRORS,
+    ANNOUNCE_NAVIGATION,
+    ANNOUNCE_NOTIFICATIONS,
+)
 from ...i18n import _
 from ...log import get_logger
 from .comments import CommentsContext
@@ -70,7 +75,7 @@ class NotificationsMixin:
 
     def _open_youtube_notifications_view(self):
         view = self._build_youtube_notifications_view()
-        self._announce(_("Abrindo {title}.").format(title=view.title))
+        self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         return self._load_youtube_music_results_view(
             view,
             mode="push",
@@ -121,7 +126,8 @@ class NotificationsMixin:
                 self, interface_sounds.SOUND_SUCCESS if notifications else interface_sounds.SOUND_FAILURE
             )
             self._announce(
-                _("Notificação marcada como lida.") if notifications else _("Não foi possível marcar a notificação como lida.")
+                _("Notificação marcada como lida.") if notifications else _("Não foi possível marcar a notificação como lida."),
+                ANNOUNCE_ERRORS
             )
 
     def _hide_youtube_notification(self, notification):
@@ -131,7 +137,7 @@ class NotificationsMixin:
         def on_success(_result):
             self._replace_youtube_music_result(notification)
             interface_sounds.play_for(self, interface_sounds.SOUND_SUCCESS)
-            self._announce(_("Notificação ocultada."))
+            self._announce(_("Notificação ocultada."), ANNOUNCE_CONFIRMATIONS)
 
         def on_error(exc):
             interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)

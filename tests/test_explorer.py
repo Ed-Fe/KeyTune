@@ -29,6 +29,7 @@ from player.library.explorer import (
 )
 from player.library.models import FOLDER_ENTRY_DIRECTORY, FOLDER_ENTRY_FILE, FolderBrowserEntry
 from player.playlists import PlaylistState
+from player.announcements import ANNOUNCE_CONFIRMATIONS
 
 
 def _run_inline(_owner, work, on_done):
@@ -315,7 +316,7 @@ class EnqueuePathsTests(unittest.TestCase):
 
         self.assertEqual(state.custom_queue, ["b.mp3", "c.mp3"])
         self.assertEqual(state.items, ["a.mp3", "b.mp3", "c.mp3"])
-        frame._announce.assert_called_once_with("c.mp3 adicionado à fila de reprodução.")
+        frame._announce.assert_called_once_with("c.mp3 adicionado à fila de reprodução.", ANNOUNCE_CONFIRMATIONS)
 
 
 class LegacyFolderTabSessionTests(unittest.TestCase):
