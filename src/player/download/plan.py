@@ -9,6 +9,7 @@ entregar sozinho.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from urllib.parse import parse_qs, urlparse
 
@@ -87,7 +88,7 @@ def requires_ffmpeg(choice: DownloadChoice) -> bool:
     if choice.kind == DOWNLOAD_KIND_VIDEO:
         # Vídeo em alta resolução chega separado do áudio e precisa ser unido.
         return True
-    return AUDIO_QUALITY_SPECS[choice.audio_quality].converts
+    return AUDIO_QUALITY_SPECS[choice.audio_quality].needs_ffmpeg
 
 
 def build_download_plan(choice: DownloadChoice, *, ffmpeg_available: bool) -> DownloadPlan:
@@ -99,18 +100,21 @@ def build_download_plan(choice: DownloadChoice, *, ffmpeg_available: bool) -> Do
 
 def _build_audio_plan(choice, *, ffmpeg_available, needs_ffmpeg):
     spec = AUDIO_QUALITY_SPECS[choice.audio_quality]
-    selector = "bestaudio/best"
+    # Com um formato nativo (o M4A do YouTube), pede ele primeiro; se o site não
+    # tiver, vale o melhor áudio, convertido abaixo quando há FFmpeg.
+    selector = f"bestaudio[ext={spec.native_ext}]/bestaudio/best" if spec.native_ext else "bestaudio/best"
     if not ffmpeg_available:
         return DownloadPlan(selector, (), needs_ffmpeg, reduced_without_ffmpeg=needs_ffmpeg)
 
     arguments = ["--embed-metadata"]
     if spec.converts:
+        # Se o áudio baixado já é AAC, o yt-dlp só troca o recipiente para M4A.
         arguments.extend(("-x", "--audio-format", spec.codec))
         if spec.bitrate_kbps:
             arguments.extend(("--audio-quality", f"{spec.bitrate_kbps}K"))
-        # A taxa de amostragem só se aplica ao converter: o áudio original é
-        # copiado como veio e não passa pelo FFmpeg.
-        if choice.sample_rate != SAMPLE_RATE_ORIGINAL:
+        # A taxa de amostragem só se aplica ao recodificar: o áudio original, ou
+        # o nativo, é copiado como veio.
+        if spec.resamples and choice.sample_rate != SAMPLE_RATE_ORIGINAL:
             arguments.extend(("--postprocessor-args", f"ExtractAudio:-ar {int(choice.sample_rate)}"))
     return DownloadPlan(selector, tuple(arguments), needs_ffmpeg, reduced_without_ffmpeg=False)
 
@@ -142,6 +146,26 @@ def describe_quality_difference(choice: DownloadChoice, downloaded_height) -> st
         requested=choice.video_quality,
         actual=int(downloaded_height),
     )
+
+
+def describe_format_difference(choice: DownloadChoice, file_paths) -> str:
+    """Aviso para quando o site não tinha o formato nativo pedido e, sem FFmpeg
+    para converter, o áudio veio em outro; vazio se todos vieram no formato."""
+    if choice.kind == DOWNLOAD_KIND_VIDEO:
+        return ""
+    spec = AUDIO_QUALITY_SPECS[choice.audio_quality]
+    if not spec.native_ext:
+        return ""
+    wanted = "." + spec.native_ext
+    others = sorted(
+        {os.path.splitext(str(path))[1].lstrip(".").upper() for path in file_paths if path}
+        - {spec.native_ext.upper(), ""}
+    )
+    if not others:
+        return ""
+    return _(
+        "O site não tinha o áudio em {wanted} e, sem o FFmpeg para converter, ele veio em {formats}."
+    ).format(wanted=wanted.lstrip(".").upper(), formats=", ".join(others))
 
 
 _INVALID_FOLDER_CHARACTERS = '<>:"/\\|?*'

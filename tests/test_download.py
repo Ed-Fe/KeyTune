@@ -13,8 +13,10 @@ from player.download import ffmpeg as ffmpeg_module
 from player.download import runner
 from player.download.options import (
     AUDIO_QUALITIES,
+    AUDIO_QUALITY_SPECS,
     SAMPLE_RATES,
     VIDEO_QUALITIES,
+    audio_quality_label,
     normalize_audio_quality,
     normalize_download_kind,
     normalize_sample_rate,
@@ -24,6 +26,7 @@ from player.download.options import (
 from player.download.plan import (
     DownloadChoice,
     build_download_plan,
+    describe_format_difference,
     describe_quality_difference,
     download_source_url,
     requires_ffmpeg,
@@ -53,6 +56,11 @@ class DownloadOptionsTests(unittest.TestCase):
         self.assertEqual(normalize_sample_rate("48000"), 48000)
         self.assertEqual(normalize_sample_rate(96000), 0)
         self.assertEqual(normalize_sample_rate("abc"), 0)
+
+    def test_m4a_is_an_audio_quality_with_its_own_label(self):
+        self.assertIn("m4a", AUDIO_QUALITIES)
+        self.assertEqual(normalize_audio_quality("M4A"), "m4a")
+        self.assertEqual(audio_quality_label("m4a"), "M4A (AAC)")
 
     def test_every_option_table_starts_with_the_no_conversion_choice(self):
         self.assertEqual(AUDIO_QUALITIES[0], "original")
@@ -142,6 +150,40 @@ class DownloadPlanTests(unittest.TestCase):
 
         self.assertEqual(plan.arguments, ())
         self.assertTrue(plan.reduced_without_ffmpeg)
+
+    def test_m4a_prefers_the_native_m4a_and_converts_only_as_a_fallback(self):
+        choice = _choice(audio_quality="m4a", sample_rate=44100)
+
+        plan = build_download_plan(choice, ffmpeg_available=True)
+
+        self.assertEqual(plan.format_selector, "bestaudio[ext=m4a]/bestaudio/best")
+        # Sem --audio-quality e sem mudar a taxa: o M4A do YouTube é copiado, não recodificado.
+        self.assertEqual(plan.arguments, ("--embed-metadata", "-x", "--audio-format", "m4a"))
+        self.assertFalse(plan.reduced_without_ffmpeg)
+
+    def test_m4a_does_not_ask_for_ffmpeg_and_still_prefers_m4a_without_it(self):
+        choice = _choice(audio_quality="m4a")
+
+        plan = build_download_plan(choice, ffmpeg_available=False)
+
+        self.assertFalse(requires_ffmpeg(choice))
+        self.assertEqual(plan.format_selector, "bestaudio[ext=m4a]/bestaudio/best")
+        self.assertEqual(plan.arguments, ())
+        self.assertFalse(plan.reduced_without_ffmpeg)
+
+    def test_only_reencoding_qualities_accept_a_sample_rate(self):
+        self.assertFalse(AUDIO_QUALITY_SPECS["original"].resamples)
+        self.assertFalse(AUDIO_QUALITY_SPECS["m4a"].resamples)
+        self.assertTrue(AUDIO_QUALITY_SPECS["mp3_192"].resamples)
+        self.assertTrue(AUDIO_QUALITY_SPECS["flac"].resamples)
+
+    def test_format_difference_warns_only_when_m4a_came_in_another_format(self):
+        m4a = _choice(audio_quality="m4a")
+
+        self.assertEqual(describe_format_difference(m4a, ["C:/a/song.m4a"]), "")
+        self.assertIn("WEBM", describe_format_difference(m4a, ["C:/a/song.m4a", "C:/a/other.webm"]))
+        self.assertEqual(describe_format_difference(_choice(), ["C:/a/song.webm"]), "")
+        self.assertEqual(describe_format_difference(_choice(kind="video", audio_quality="m4a"), ["a.mp4"]), "")
 
     def test_video_selector_falls_back_to_best_when_the_height_is_missing(self):
         plan = build_download_plan(_choice(kind="video", video_quality="1080"), ffmpeg_available=True)

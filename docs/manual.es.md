@@ -257,7 +257,7 @@ Cosas que conviene saber:
 - **Calidad no disponible.** Si la calidad elegida no existe para ese medio, KeyTune descarga en la original y te avisa.
 - **Nombre del archivo.** El archivo recibe el mismo nombre que KeyTune muestra para la pista (`Artista — Título.mp3`). Una descarga nunca reemplaza un archivo que ya está en la carpeta: si el nombre existe, el nuevo recibe « (2)», « (3)» y así sucesivamente.
 - **Progreso.** Pulsa `Ctrl+Shift+B` otra vez durante una descarga para oír el progreso o cancelar.
-- **FFmpeg.** Convertir el audio (MP3, FLAC u otra frecuencia de muestreo) y descargar vídeo en alta resolución exigen FFmpeg. Si no se encuentra, KeyTune pregunta si puede descargarlo (unos 90 MB). Si lo rechazas, la descarga continúa en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.
+- **FFmpeg.** Convertir el audio (MP3, FLAC, M4A de un sitio que no lo tenga listo, u otra frecuencia de muestreo) y descargar vídeo en alta resolución exigen FFmpeg. Si no se encuentra, KeyTune pregunta si puede descargarlo (unos 90 MB). Si lo rechazas, la descarga continúa en la calidad original, sin conversión. También se usa un FFmpeg ya instalado en el sistema.
 
 **Varios elementos a la vez.** **Descargar selección** descarga los elementos seleccionados, y **Descargar playlist completa** descarga todos los de la pestaña en una subcarpeta con el nombre de la playlist. Los dos están en **Archivo > Descargar de internet** y en el menú contextual de la lista. KeyTune pide confirmación antes de empezar.
 
@@ -846,7 +846,7 @@ Controla la [biblioteca inteligente](#biblioteca-inteligente). Desactivar **Acti
 Define los valores predeterminados de `Ctrl+Shift+B`:
 
 - **Tipo de descarga predeterminado**: **Audio** o **Vídeo**.
-- **Calidad del audio**: **Original (sin conversión)** mantiene el audio como lo entrega YouTube; **MP3** (128, 192, 256 o 320 kbps) y **FLAC (sin pérdida)** convierten el audio y exigen FFmpeg.
+- **Calidad del audio**: **Original (sin conversión)** mantiene el audio como lo entrega YouTube; **M4A (AAC)** toma el audio que YouTube ya tiene en M4A, sin conversión y sin necesitar FFmpeg, con calidad un poco por debajo de Original (el Opus de YouTube suele tener una tasa mayor); de un sitio sin M4A, el audio se convierte con FFmpeg; **MP3** (128, 192, 256 o 320 kbps) y **FLAC (sin pérdida)** convierten el audio y exigen FFmpeg.
 - **Frecuencia de muestreo del audio**: **Original**, 44100 Hz o 48000 Hz. Solo vale cuando el audio se convierte. YouTube entrega 44,1 o 48 kHz, así que frecuencias mayores no aportarían ganancia de calidad.
 - **Calidad del vídeo**: **Mejor disponible** o una altura máxima de 2160p a 144p. Si la altura elegida no existe, el vídeo se descarga en la mejor calidad disponible.
 - **Carpeta de descarga**: dónde se guardan los archivos. Por defecto, **Descargas\KeyTune**, en la carpeta de tu usuario.

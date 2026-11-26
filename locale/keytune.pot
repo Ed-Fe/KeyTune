@@ -145,7 +145,6 @@ msgstr ""
 #: src/player/sleep_timer/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
 #: src/player/update/dialog.py
-#: src/player/youtube_music/dialog.py
 msgid "&Cancelar"
 msgstr ""
 
@@ -5197,6 +5196,7 @@ msgid "Luxemburgo"
 msgstr ""
 
 #: src/player/convert/options.py
+#: src/player/download/options.py
 msgid "M4A (AAC)"
 msgstr ""
 
@@ -7059,6 +7059,10 @@ msgstr ""
 msgid "O serviço do YouTube Music não está disponível para iniciar a rádio."
 msgstr ""
 
+#: src/player/download/plan.py
+msgid "O site não tinha o áudio em {wanted} e, sem o FFmpeg para converter, ele veio em {formats}."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "O som voltou ao original."
 msgstr ""
@@ -7247,7 +7251,7 @@ msgid "Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
+msgid "Original não converte. M4A vem pronto do YouTube, sem conversão, um pouco abaixo do Original; de outros sites, pode precisar do FFmpeg. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
 msgstr ""
 
 #: src/player/frames/convert.py
