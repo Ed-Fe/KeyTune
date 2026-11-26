@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "keytune"
-description = "KeyTune: media player focused on accessibility and keyboard-first use."
+description = "Keyboard-first music and video player for Windows, built for screen readers."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.14"

@@ -1,6 +1,7 @@
 name: Feature request
-description: Propose an improvement or a new feature.
+description: Propose an improvement or a new feature. Você pode escrever em português.
 title: "[Feature]: "
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:

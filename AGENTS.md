@@ -43,7 +43,7 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 - The updater contract spans `constants.py`, `installer/keytune.iss`, `.github/workflows/release-windows.yml`, and the release assets `KeyTune-Setup.exe` + `.sha256` — keep them in sync. Updates are installer-driven: the app downloads the setup and runs it `/VERYSILENT`; the Inno `[Run]` step relaunches; the installer also registers default-app `Capabilities`/`RegisteredApplications` (HKA).
 - The changelog is one file per version in `docs/changelog/` (`X.Y.Z.md` in Portuguese, plus `.en.md`/`.es.md`; `unreleased*.md` for the next one). The release publishes it as the release body and `release-notes.<lang>.md` assets, and the update dialog shows the active language; **Ajuda > Histórico de mudanças** reads the bundled files. Keep all three languages in step.
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
-- Full feature list and shortcut inventory: `README.md`, `docs/manual.md`.
+- Feature highlights: `README.md` (English) and `README.pt-BR.md`; full feature list and shortcut inventory: `docs/manual.md`.
 - Run `python scripts/generate_credits.py --language pt_BR --language en` after editing dependencies in `pyproject.toml` (or before a release) to keep `docs/credits.md` and `docs/credits.en.md` — shown by the About dialog — accurate; they're also regenerated automatically during Windows release builds.
 
 ## Detailed rules (`.github/`)

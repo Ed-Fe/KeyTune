@@ -12,4 +12,4 @@ name: "Git Workflow"
 - After creating the commit for a large new feature, perform the push as part of the same workflow unless the user explicitly asks you not to.
 - Before the commit, summarize the relevant files changed and the validation you ran so the user can confirm with context.
 - Do not create checkpoint or speculative commits for incomplete work unless the user explicitly asks for that.
-- Keep long feature inventories and shortcut lists in `README.md` instead of duplicating them in commit-oriented summaries or instructions.
+- Keep long feature inventories and shortcut lists in `docs/manual.md` (the READMEs carry only highlights) instead of duplicating them in commit-oriented summaries or instructions.
