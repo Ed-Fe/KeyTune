@@ -5,6 +5,9 @@ lista de tópicos da seção escolhida, o texto do tópico e a lista de links de
 Enter numa lista leva ao controle seguinte; Enter na busca filtra o manual pelas
 palavras digitadas. Enter num link, ou no texto, numa linha com link, segue o
 link: um trecho do manual abre aqui mesmo, um endereço abre no navegador.
+
+A janela não é modal: o player continua usável com ela aberta, e ``Alt+F6``
+alterna entre as duas (ver ``secondary_window``). Esc ou Fechar a destroem.
 """
 
 from __future__ import annotations
@@ -14,6 +17,7 @@ import wx
 from ..i18n import _, ngettext
 from ..links import open_link
 from ..reading_dialog import add_reading_field
+from ..secondary_window import bring_to_front, is_switch_window_key
 from .service import (
     ManualLink,
     ManualSection,
@@ -75,10 +79,12 @@ class ManualDialog(wx.Dialog):
 
         close_button = wx.Button(self, wx.ID_CLOSE, _("&Fechar"))
         close_button.SetDefault()
-        close_button.Bind(wx.EVT_BUTTON, lambda _event: self.EndModal(wx.ID_CLOSE))
+        close_button.Bind(wx.EVT_BUTTON, lambda _event: self.Close())
         root_sizer.Add(close_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 10)
 
         self.SetEscapeId(wx.ID_CLOSE)
+        self.Bind(wx.EVT_CLOSE, self._on_close)
+        self.Bind(wx.EVT_CHAR_HOOK, self._on_char_hook)
         self.SetSizerAndFit(root_sizer)
         self.SetMinSize(self.GetSize())
         self.CentreOnParent()
@@ -95,6 +101,22 @@ class ManualDialog(wx.Dialog):
             self.sections_list.SetSelection(0)
             self._show_section(0)
         self.sections_list.SetFocus()
+
+    def _on_close(self, _event):
+        # Aberta sem modo modal (o normal), fechar destrói a janela; a auditoria e
+        # quem ainda chamar ShowModal recebem o fim modal de sempre.
+        if self.IsModal():
+            self.EndModal(wx.ID_CLOSE)
+        else:
+            self.Destroy()
+
+    def _on_char_hook(self, event):
+        parent = self.GetParent()
+        # Com outro diálogo modal aberto (a tela de boas-vindas), a principal fica bloqueada.
+        if is_switch_window_key(event) and parent is not None and parent.IsEnabled() and not self.IsModal():
+            bring_to_front(parent)
+            return
+        event.Skip()
 
     @staticmethod
     def _empty_text() -> str:

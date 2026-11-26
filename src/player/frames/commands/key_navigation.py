@@ -3,6 +3,7 @@ import wx
 from ...list_edge_sound import play_list_edge_sound
 from ...constants import LARGE_SEEK_STEP_MS
 from ...playlists import ScreenTabState
+from ...secondary_window import is_switch_window_key, switch_to_secondary_window
 
 
 class KeyNavigationMixin:
@@ -208,6 +209,9 @@ class KeyNavigationMixin:
         # Só o som: a tecla segue o caminho normal dela. A lista da playlist toca o
         # dela no próprio painel, porque as setas de lá não chegam até aqui.
         play_list_edge_sound(focused_window, event)
+        # Alt+F6 vai para a janela secundária aberta (o manual), de qualquer controle.
+        if is_switch_window_key(event) and switch_to_secondary_window(self):
+            return
         if isinstance(focused_window, wx.TextEntry) and key_code not in (wx.WXK_ESCAPE, wx.WXK_F1):
             autodj_panel = self._autodj_navigation_panel()
             is_autodj_info_tab = bool(

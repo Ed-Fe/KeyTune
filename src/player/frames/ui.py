@@ -9,6 +9,7 @@ from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
 from ..manual import ManualDialog, load_manual
+from ..secondary_window import show_secondary_window
 from ..radio.media import is_radio_media
 from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
@@ -65,11 +66,13 @@ class FrameUIMixin:
             )
             return False
 
-        dialog = ManualDialog(self, sections, announce=lambda message: self._announce(message))
-        try:
-            dialog.ShowModal()
-        finally:
-            dialog.Destroy()
+        # Sem modo modal: o player continua usável, e pedir o manual de novo traz a
+        # janela que já está aberta (Alt+F6 também alterna entre as duas).
+        show_secondary_window(
+            self,
+            "manual",
+            lambda: ManualDialog(self, sections, announce=lambda message: self._announce(message)),
+        )
         return True
 
     def _credits_candidate_paths(self):
