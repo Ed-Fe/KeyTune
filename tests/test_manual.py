@@ -13,9 +13,13 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.manual import service
+from player.links import resolve_link
 from player.manual.service import (
+    ManualLink,
+    find_anchor,
     first_match_line_start,
     fold,
+    link_in_line,
     load_manual,
     manual_candidate_paths,
     parse_manual,
@@ -93,6 +97,66 @@ class ParseManualTests(unittest.TestCase):
     def test_a_three_column_table_names_the_columns(self):
         sections = parse_manual("## S\n\n### T\n\n| Para | A | B |\n| --- | --- | --- |\n| x | 1 | 2 |\n")
         self.assertEqual(sections[0].topics[0].text, "x. A: 1; B: 2.")
+
+
+class ManualLinkTests(unittest.TestCase):
+    def setUp(self):
+        self.sections = parse_manual(SAMPLE)
+
+    def test_a_topic_keeps_its_links_in_order(self):
+        self.assertEqual(
+            self.sections[1].topics[1].links,
+            [ManualLink("Atualizações", "#atualizacoes"), ManualLink("site", "https://exemplo.org")],
+        )
+
+    def test_headings_become_anchors_of_their_topics(self):
+        self.assertEqual(find_anchor(self.sections, "manual-de-teste"), (0, 0))
+        self.assertEqual(find_anchor(self.sections, "#reproduzir"), (1, 0))
+        self.assertEqual(find_anchor(self.sections, "atalhos"), (1, 1))
+        self.assertEqual(find_anchor(self.sections, "detalhe-fundo"), (1, 2))
+        self.assertIsNone(find_anchor(self.sections, "vazia"))
+
+    def test_an_empty_opening_hands_its_anchor_to_the_next_topic(self):
+        sections = parse_manual("## Seção\n\n### Primeiro\n\nTexto.\n")
+        self.assertEqual(find_anchor(sections, "secao"), (0, 0))
+
+    def test_repeated_headings_are_numbered_like_the_html(self):
+        sections = parse_manual("## A\n\n### Dicas\n\nUm.\n\n## B\n\n### Dicas\n\nDois.\n")
+        self.assertEqual(find_anchor(sections, "dicas"), (0, 0))
+        self.assertEqual(find_anchor(sections, "dicas-2"), (1, 0))
+
+    def test_the_link_in_a_line_is_the_one_under_the_cursor(self):
+        links = self.sections[1].topics[1].links
+        line = "Depois da tabela, veja Atualizações e o site (https://exemplo.org)."
+        self.assertEqual(link_in_line(links, line, line.index("site") + 1).target, "https://exemplo.org")
+        self.assertEqual(link_in_line(links, line, 0).target, "#atualizacoes")
+        self.assertIsNone(link_in_line(links, "Sem link aqui.", 0))
+
+    def test_every_internal_link_of_the_real_manuals_has_a_destination(self):
+        for name in ("manual.md", "manual.en.md", "manual.es.md"):
+            sections = parse_manual((DOCS / name).read_text(encoding="utf-8"))
+            for section in sections:
+                for topic in section.topics:
+                    for link in topic.links:
+                        if link.is_internal:
+                            with self.subTest(name=name, link=link.target):
+                                self.assertIsNotNone(find_anchor(sections, link.anchor))
+
+
+class ResolveLinkTests(unittest.TestCase):
+    def test_web_addresses_pass_and_other_schemes_do_not(self):
+        self.assertEqual(resolve_link("https://exemplo.org/a"), "https://exemplo.org/a")
+        self.assertIsNone(resolve_link("javascript:alert(1)"))
+        self.assertIsNone(resolve_link("file:///C:/Windows"))
+        self.assertIsNone(resolve_link("#ancora"))
+
+    def test_a_markdown_file_opens_as_its_html_inside_the_docs_folder(self):
+        with tempfile.TemporaryDirectory() as folder:
+            (pathlib.Path(folder) / "plugins.md").write_text("x", encoding="utf-8")
+            (pathlib.Path(folder) / "plugins.html").write_text("x", encoding="utf-8")
+            self.assertTrue(resolve_link("plugins.md", [folder]).endswith("plugins.html"))
+            self.assertIsNone(resolve_link("../plugins.md", [folder]))
+            self.assertIsNone(resolve_link("ausente.md", [folder]))
 
 
 class RealManualTests(unittest.TestCase):

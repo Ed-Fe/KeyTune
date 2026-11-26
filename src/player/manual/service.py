@@ -23,10 +23,39 @@ _TABLE_SEPARATOR = re.compile(r"^\s*\|?[\s:|-]+\|[\s:|-]*$")
 _LINK = re.compile(r"\[([^\]]+)\]\(([^)\s]+)\)")
 
 
+@dataclass(frozen=True)
+class ManualLink:
+    """Um link do manual: o texto dele e para onde ele leva.
+
+    *target* é uma âncora (``#recursos-de-acessibilidade``), que leva a outro
+    trecho do próprio manual, ou um endereço, que abre no navegador.
+    """
+
+    text: str
+    target: str
+
+    @property
+    def is_internal(self) -> bool:
+        return self.target.startswith("#")
+
+    @property
+    def anchor(self) -> str:
+        return self.target[1:] if self.is_internal else ""
+
+    def rendered_text(self) -> str:
+        """Como o link aparece no texto do tópico (ver ``_plain_inline``)."""
+        return self.text if self.is_internal else f"{self.text} ({self.target})"
+
+
 @dataclass
 class ManualTopic:
     title: str
     text: str = ""
+    # Os links do tópico, na ordem em que aparecem, sem repetir.
+    links: list[ManualLink] = field(default_factory=list)
+    # As âncoras que levam a este tópico: a do título dele, as dos ``####`` de
+    # dentro e, na abertura de uma seção, a do título da seção.
+    anchors: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -76,11 +105,13 @@ def parse_manual(markdown: str) -> list[ManualSection]:
     # Linhas do tópico em montagem, sem o título dele.
     current_topic: ManualTopic | None = None
     current_lines: list[str] = []
+    used_slugs: dict[str, int] = {}
 
     def close_topic():
         nonlocal current_topic, current_lines
         if current_topic is not None:
             current_topic.text = _lines_to_text(current_lines)
+            current_topic.links = _links_in(current_lines)
         current_topic = None
         current_lines = []
 
@@ -93,31 +124,111 @@ def parse_manual(markdown: str) -> list[ManualSection]:
     for line in markdown.splitlines():
         heading = _HEADING.match(line)
         level = len(heading.group(1)) if heading else 0
+        anchor = _heading_anchor(line, used_slugs) if heading else ""
         if level == 1:
             close_topic()
             section = open_section(_plain_inline(heading.group(2)))
-            current_topic = ManualTopic(title=_("Apresentação"))
+            current_topic = ManualTopic(title=_("Apresentação"), anchors=[anchor])
             section.topics.append(current_topic)
         elif level == 2:
             close_topic()
             section = open_section(_plain_inline(heading.group(2)))
-            current_topic = ManualTopic(title=_("Visão geral da seção"))
+            current_topic = ManualTopic(title=_("Visão geral da seção"), anchors=[anchor])
             section.topics.append(current_topic)
         elif level == 3 and section is not None:
             close_topic()
-            current_topic = ManualTopic(title=_plain_inline(heading.group(2)))
+            current_topic = ManualTopic(title=_plain_inline(heading.group(2)), anchors=[anchor])
             section.topics.append(current_topic)
         else:
             # Títulos mais fundos (####) ficam como uma linha de texto do tópico.
             if heading and level > 3:
                 line = heading.group(2)
+                if current_topic is not None:
+                    current_topic.anchors.append(anchor)
             current_lines.append(line)
     close_topic()
 
-    # A abertura que ficou sem texto (título seguido direto de outro título) some.
+    # A abertura que ficou sem texto (título seguido direto de outro título) some;
+    # as âncoras dela passam para o tópico seguinte, para o link continuar levando
+    # ao começo da seção.
     for section in sections:
-        section.topics = [topic for topic in section.topics if topic.text]
+        kept: list[ManualTopic] = []
+        orphan_anchors: list[str] = []
+        for topic in section.topics:
+            if topic.text:
+                topic.anchors = orphan_anchors + topic.anchors
+                orphan_anchors = []
+                kept.append(topic)
+            else:
+                orphan_anchors.extend(topic.anchors)
+        if orphan_anchors and kept:
+            kept[-1].anchors.extend(orphan_anchors)
+        section.topics = kept
     return [section for section in sections if section.topics]
+
+
+_RAW_HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
+
+
+def slugify_heading(title: str) -> str:
+    """A âncora de um título, igual à que ``scripts/render_manual.py`` gera no HTML."""
+    normalized = unicodedata.normalize("NFKD", title)
+    ascii_title = normalized.encode("ascii", "ignore").decode("ascii")
+    slug = re.sub(r"[^a-zA-Z0-9]+", "-", ascii_title.lower()).strip("-")
+    return slug or "section"
+
+
+def _heading_anchor(line: str, used_slugs: dict[str, int]) -> str:
+    # Mesma conta do HTML: o título cru, e um número a partir do segundo repetido.
+    match = _RAW_HEADING.match(line)
+    if not match:
+        return ""
+    base = slugify_heading(match.group(2).strip())
+    occurrence = used_slugs.get(base, 0)
+    used_slugs[base] = occurrence + 1
+    return base if occurrence == 0 else f"{base}-{occurrence + 1}"
+
+
+def _links_in(lines: list[str]) -> list[ManualLink]:
+    links: list[ManualLink] = []
+    for line in lines:
+        for match in _LINK.finditer(line):
+            link = ManualLink(text=_plain_inline(match.group(1)), target=match.group(2))
+            if link not in links:
+                links.append(link)
+    return links
+
+
+def find_anchor(sections: list[ManualSection], anchor: str) -> tuple[int, int] | None:
+    """``(seção, tópico)`` do tópico que tem a âncora *anchor*, ou ``None``."""
+    anchor = anchor.lstrip("#")
+    for section_index, section in enumerate(sections):
+        for topic_index, topic in enumerate(section.topics):
+            if anchor in topic.anchors:
+                return section_index, topic_index
+    return None
+
+
+def link_in_line(links: list[ManualLink], line: str, column: int = 0) -> ManualLink | None:
+    """O link que aparece na linha *line* do texto, o mais perto da coluna *column*.
+
+    Um link cujo texto contém a coluna ganha; sem nenhum, vale o primeiro da linha.
+    """
+    found: list[tuple[int, int, ManualLink]] = []
+    for link in links:
+        rendered = link.rendered_text()
+        if not rendered:
+            continue
+        start = line.find(rendered)
+        while start >= 0:
+            found.append((start, start + len(rendered), link))
+            start = line.find(rendered, start + 1)
+    if not found:
+        return None
+    for start, end, link in found:
+        if start <= column <= end:
+            return link
+    return min(found, key=lambda item: item[0])[2]
 
 
 def _lines_to_text(lines: list[str]) -> str:

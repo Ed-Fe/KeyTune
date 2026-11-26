@@ -144,6 +144,9 @@ msgstr "C&lear playback history"
 msgid "&Limpar tudo"
 msgstr "&Clear all"
 
+msgid "&Links do tópico:"
+msgstr "&Links in the topic:"
+
 msgid "&Localizar"
 msgstr "&Find"
 
@@ -251,6 +254,21 @@ msgstr "4 stars"
 
 msgid "5 estrelas"
 msgstr "5 stars"
+
+msgid "Abrindo no navegador: {text}."
+msgstr "Opening in the browser: {text}."
+
+msgid "Links do tópico"
+msgstr "Links in the topic"
+
+msgid "Não foi possível abrir o link {text}."
+msgstr "Could not open the link {text}."
+
+msgid "Não há link nesta linha."
+msgstr "There is no link on this line."
+
+msgid "O trecho \"{text}\" não foi encontrado no manual."
+msgstr "The part \"{text}\" was not found in the manual."
 
 msgid "[{source}: {title} - {artist}]"
 msgstr "[{source}: {title} - {artist}]"
@@ -3609,6 +3627,12 @@ msgstr "{seconds} s"
 msgid "{semitones:+d} semitons"
 msgstr "{semitones:+d} semitones"
 
+msgid "{text} (abre no navegador)"
+msgstr "{text} (opens in the browser)"
+
+msgid "{text} (no manual)"
+msgstr "{text} (in the manual)"
+
 msgid "{title} — carregando"
 msgstr "{title} — loading"
 
@@ -3622,6 +3646,9 @@ msgstr "{title} — {path}"
 
 msgid "{title}. Nenhuma mídia tocando agora."
 msgstr "{title}. No media playing now."
+
+msgid "{topic}, em {section}."
+msgstr "{topic}, in {section}."
 
 msgid "África"
 msgstr "Africa"

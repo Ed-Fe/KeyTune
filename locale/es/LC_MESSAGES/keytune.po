@@ -144,6 +144,9 @@ msgstr "&Vaciar el historial de reproducción"
 msgid "&Limpar tudo"
 msgstr "&Borrar todo"
 
+msgid "&Links do tópico:"
+msgstr "&Enlaces del tema:"
+
 msgid "&Localizar"
 msgstr "&Localizar"
 
@@ -251,6 +254,21 @@ msgstr "4 estrellas"
 
 msgid "5 estrelas"
 msgstr "5 estrellas"
+
+msgid "Abrindo no navegador: {text}."
+msgstr "Abriendo en el navegador: {text}."
+
+msgid "Links do tópico"
+msgstr "Enlaces del tema"
+
+msgid "Não foi possível abrir o link {text}."
+msgstr "No se pudo abrir el enlace {text}."
+
+msgid "Não há link nesta linha."
+msgstr "No hay ningún enlace en esta línea."
+
+msgid "O trecho \"{text}\" não foi encontrado no manual."
+msgstr "No se encontró la parte \"{text}\" en el manual."
 
 msgid "[{source}: {title} - {artist}]"
 msgstr "[{source}: {title} - {artist}]"
@@ -3609,6 +3627,12 @@ msgstr "{seconds} s"
 msgid "{semitones:+d} semitons"
 msgstr "{semitones:+d} semitonos"
 
+msgid "{text} (abre no navegador)"
+msgstr "{text} (se abre en el navegador)"
+
+msgid "{text} (no manual)"
+msgstr "{text} (en el manual)"
+
 msgid "{title} — carregando"
 msgstr "{title} — cargando"
 
@@ -3622,6 +3646,9 @@ msgstr "{title} — {path}"
 
 msgid "{title}. Nenhuma mídia tocando agora."
 msgstr "{title}. Ningún medio reproduciéndose ahora."
+
+msgid "{topic}, em {section}."
+msgstr "{topic}, en {section}."
 
 msgid "África"
 msgstr "África"

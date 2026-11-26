@@ -339,6 +339,10 @@ msgstr ""
 msgid "&Limpar tudo"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "&Links do tópico:"
+msgstr ""
+
 #: src/player/library/search_dialog.py
 msgid "&Localizar"
 msgstr ""
@@ -1093,6 +1097,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Abrindo créditos: {name}"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Abrindo no navegador: {text}."
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -5054,6 +5062,10 @@ msgstr ""
 msgid "Link da mídia atual copiado."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Links do tópico"
+msgstr ""
+
 #: src/player/youtube_music/channel_about.py
 msgid "Links:"
 msgstr ""
@@ -5939,6 +5951,10 @@ msgstr ""
 msgid "Não foi possível abrir o instalador da atualização."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Não foi possível abrir o link {text}."
+msgstr ""
+
 #: src/player/frames/youtube_music/dependencies.py
 msgid "Não foi possível abrir o navegador para mostrar a página solicitada."
 msgstr ""
@@ -6438,6 +6454,10 @@ msgstr ""
 
 #: src/player/frames/lyrics_panel.py
 msgid "Não há letra para copiar."
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Não há link nesta linha."
 msgstr ""
 
 #: src/player/frames/radio/navigation.py
@@ -6989,6 +7009,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "O som voltou ao original."
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "O trecho \"{text}\" não foi encontrado no manual."
 msgstr ""
 
 #: src/player/diagnostics/mpv_library.py
@@ -10743,6 +10767,14 @@ msgstr ""
 msgid "{station}: {title}"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "{text} (abre no navegador)"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "{text} (no manual)"
+msgstr ""
+
 #: src/player/frames/youtube_music/watch_later.py
 msgid "{title} salvo em Assistir mais tarde."
 msgstr ""
@@ -10784,6 +10816,10 @@ msgid "{title}: {count} item."
 msgid_plural "{title}: {count} itens."
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/player/manual/dialog.py
+msgid "{topic}, em {section}."
+msgstr ""
 
 #: src/player/changelog/dialog.py
 msgid "{version} ({date})"
