@@ -1,7 +1,8 @@
 # Roadmap
 
 This roadmap outlines the planned direction for KeyTune. Priorities may change
-as features are tested and feedback is collected.
+as features are tested and feedback is collected. What each version actually
+shipped is in [`docs/changelog/`](docs/changelog/).
 
 ## Version 1.3.0 — Playback Experience (delivered)
 
@@ -46,7 +47,7 @@ as features are tested and feedback is collected.
 - [x] Clearly communicate that in-process Python plugins have the same system access as KeyTune
 - Use first-party plugins to validate the API before declaring it stable
 
-## Version 2.0.0 — Extensible Platform
+## Version 2.0.0 — Extensible Platform (delivered)
 
 - [x] Stabilize the public plugin API
 - [x] Add process isolation for plugins that require stronger safety boundaries
@@ -54,13 +55,24 @@ as features are tested and feedback is collected.
 - Complete the stable AutoDJ experience based on beta feedback
 - [x] Document compatibility and migration guarantees for plugin developers
 
+## Versions 2.1 to 2.5 (delivered)
+
+- [x] KeyTube: YouTube and YouTube Music in one accessible list, with comments, live chat, notifications, channels, chapters and transcripts
+- [x] Online radio from the Radio Browser directory
+- [x] YouTube and YouTube Music downloads, and audio and video conversion with FFmpeg
+- [x] Folder explorer next to the tabs and a quick player for files opened from Windows
+- [x] Keyboard customization, global shortcuts and a system tray icon
+- [x] Diagnostics that explain what is missing for playback
+- [x] Alert sounds and finer control over spoken notices
+- [x] Full-screen video and SponsorBlock support
+
 ## Additional Ideas
 
 - Loudness normalization between tracks
 - Display BPM and musical key in media information
 - Analyze an entire playlist before playback starts
 - Synchronized, line-by-line lyrics
-- Last.fm, Discord, radio, and other integrations delivered as plugins
+- Last.fm, Discord, and other integrations delivered as plugins
 - Transition history with an option to retry or replace the upcoming track
 
 ## Development Principles

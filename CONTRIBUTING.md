@@ -1,47 +1,62 @@
 # Contributing to KeyTune
 
-Thank you for taking the time to contribute.
+Thanks for wanting to help. KeyTune is used every day by people who rely on a screen reader and the keyboard, so every change has to keep working that way. This guide covers what you need to know before you send one.
 
-KeyTune is a media player. Contributions should preserve the existing structure: avoid mouse-only flows, prefer small and focused changes over broad refactors, and keep changes aligned with the existing architecture.
+[Leia em português](CONTRIBUTING.pt-BR.md)
 
-## Before You Start
+## Ways to help
 
-- Fork the repository
-- Create a feature branch
-- Read the README to understand the current scope and project layout
-- Use the issue templates for bugs and feature requests, and open Discussions for ideas, questions, and broader feedback
+- **Report a bug** with the [bug report form](https://github.com/Ed-Fe/KeyTune/issues/new/choose). Paste the report from **Help > Diagnostics > Copy report** when the problem is about playback, YouTube or downloads.
+- **Suggest a feature** with the feature request form, or start a [discussion](https://github.com/Ed-Fe/KeyTune/discussions) if the idea is still loose.
+- **Translate** the interface, the manual or the installer. The [translation guide](docs/translations.md) explains the catalogs under `locale/`.
+- **Write a plugin**. The [plugin guide](docs/plugins.en.md) covers the API, permissions and the marketplace.
+- **Send code**. Issues labeled [good first issue](https://github.com/Ed-Fe/KeyTune/labels/good%20first%20issue) are a good place to start.
 
-## Local Setup
+## Local setup
 
-1. Install [uv](https://docs.astral.sh/uv/).
-2. Run `uv sync`. It creates `.venv` with Python 3.14 and installs the exact versions
-   from `uv.lock`, including the optional YouTube Music and AutoDJ dependencies.
-   Add packages with `uv add`, and upgrade with `uv lock --upgrade`.
-3. Download the MPV runtime with `uv run python scripts/download_mpv_runtime.py` if you do not already have a compatible libmpv installation.
-4. Run the app with `uv run keytune`.
+KeyTune runs on Windows. You need [uv](https://docs.astral.sh/uv/) and Git; uv installs Python 3.14 for you.
 
-## What to Check
+```powershell
+git clone https://github.com/<your-user>/KeyTune.git
+cd KeyTune
+uv sync
+uv run python scripts/download_mpv_runtime.py
+uv run keytune
+```
 
-- Keep changes aligned with the existing module boundaries in `src/player/`.
-- Avoid introducing unrelated refactors.
-- Keep the Windows release flow compatible with the existing build scripts and workflow.
+- `uv sync` creates `.venv` with the exact versions from `uv.lock`, including the optional YouTube and AutoDJ dependencies. Add a package with `uv add <package>` and upgrade with `uv lock --upgrade`.
+- The MPV script needs 7-Zip. If you already have libmpv, point `MPV_HOME` or `MPV_DLL_DIR` to it instead.
 
-## Validation
+## Rules every change follows
 
-Use the narrowest validation that fits the change:
+- **Keyboard first.** Every feature must be reachable from the keyboard. Keep existing shortcuts working, and never add a flow that needs the mouse.
+- **Screen reader first.** Every field, button, list and group needs a name the screen reader announces. Focus must never land on the native video area. Announcements go through `src/player/accessibility.py`.
+- **Building or changing a screen?** Read [`.github/instructions/ui-screens.instructions.md`](.github/instructions/ui-screens.instructions.md) first, build it with the helpers in `src/player/widgets.py` and `src/player/reading_dialog.py`, and register the new dialog or panel in the `SCREENS` list of the audit script.
+- **Portuguese is the source language.** Every user-facing string (labels, menus, status, announcements) is written in Portuguese and wrapped in `_()`. After changing those strings, run `python scripts/i18n.py extract` and then `python scripts/i18n.py compile`, and add the English and Spanish translations.
+- **One module, one job.** Keep UI, persistence, parsing and external services in separate modules, following the layout under `src/player/`. Windows-only code (`single_instance.py`, `file_associations.py`, `smtc/`) stays isolated and must fail gracefully on other systems.
+- **Small and focused.** Prefer a targeted change over a broad refactor, and open an issue first if you plan a large one.
 
-- `python -m compileall src` for a quick syntax check
-- `python -m unittest discover -s tests` when changing backend, parsing, or service logic
-- A focused manual check for UI and behavior changes
+The architecture is described in [`.github/instructions/player-architecture.instructions.md`](.github/instructions/player-architecture.instructions.md).
 
-## Pull Requests
+## Checks before a pull request
 
-Please include:
+- `python -m compileall src` for a quick syntax check.
+- `python -m unittest discover -s tests` for backend, parsing and service changes.
+- `uv run python scripts/audit_ui_accessibility.py` after any change to a dialog, panel, tab or preferences page. It checks that every control has an accessible name and that groups are real groups.
+- A manual pass with a screen reader (NVDA is the reference) over the keyboard flows you touched.
 
-- A short summary of what changed
-- Any validation you ran
-- Notes about behavior changes, especially if they affect playback, playlists, or the update flow
+## Changelog and manual
 
-## Need More Context?
+- Changes users will notice go into `docs/changelog/unreleased.md` (Portuguese), `unreleased.en.md` and `unreleased.es.md`. Keep the three in step.
+- When a feature or shortcut changes, update `docs/manual.md`, `docs/manual.en.md` and `docs/manual.es.md`.
+- Writing rules for both are in [`.github/instructions/writing.instructions.md`](.github/instructions/writing.instructions.md).
 
-If you are unsure where a change belongs, start from the existing module structure described in the README and keep the edit as small as possible.
+## Commits and pull requests
+
+- Commit messages and PR titles are in English and follow [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): summary`, in the imperative and lowercase, for example `fix(youtube): start playback at the chosen chapter`.
+- Fill in the pull request template: what changed, why, how you tested it, and anything that affects accessibility, playback, playlists or the update flow.
+- Keep one topic per pull request.
+
+## License
+
+By contributing, you agree that your contribution is released under the [MIT License](LICENSE).
