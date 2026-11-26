@@ -8,6 +8,7 @@ import wx
 from ... import interface_sounds
 from ...i18n import _
 from .helpers import is_youtube_music_media
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS, ANNOUNCE_TRACK_CHANGE
 
 # Folga para não pular um trecho que já está terminando, nem voltar a pulá-lo logo após o fim.
 _SEGMENT_END_MARGIN_SECONDS = 0.5
@@ -133,7 +134,8 @@ class SponsorBlockMixin:
                         _("Trecho de {category} aqui, até {end}.").format(
                             category=_sponsorblock().category_label(segment.category),
                             end=self._format_sponsorblock_time(segment.end_seconds),
-                        )
+                        ),
+                        ANNOUNCE_TRACK_CHANGE
                     )
                 elif segment.action_type == _sponsorblock().ACTION_MUTE:
                     self._start_sponsorblock_mute(state, segment)
@@ -149,7 +151,8 @@ class SponsorBlockMixin:
         self.player.audio_set_mute(True)
         self._sponsorblock_muted = (state, segment, self.player)
         self._announce(
-            _("Trecho silenciado: {category}.").format(category=_sponsorblock().category_label(segment.category))
+            _("Trecho silenciado: {category}.").format(category=_sponsorblock().category_label(segment.category)),
+            ANNOUNCE_TRACK_CHANGE
         )
         self._report_sponsorblock_skip(segment)
 
@@ -178,7 +181,8 @@ class SponsorBlockMixin:
         self._update_time_bar()
         interface_sounds.play_for(self, interface_sounds.SOUND_SEGMENT_SKIPPED)
         self._announce(
-            _("Trecho pulado: {category}.").format(category=_sponsorblock().category_label(segment.category))
+            _("Trecho pulado: {category}.").format(category=_sponsorblock().category_label(segment.category)),
+            ANNOUNCE_TRACK_CHANGE
         )
         self._report_sponsorblock_skip(segment)
 
@@ -212,7 +216,7 @@ class SponsorBlockMixin:
         if segment is None or position is None or not (
             segment.start_seconds - _SEGMENT_REARM_MARGIN_SECONDS <= position < segment.end_seconds
         ):
-            self._announce(_("Não há trecho do SponsorBlock para pular agora."))
+            self._announce(_("Não há trecho do SponsorBlock para pular agora."), ANNOUNCE_ERRORS)
             return False
         state["pending"] = None
         self._skip_sponsorblock_segment(segment)
@@ -221,7 +225,7 @@ class SponsorBlockMixin:
     def on_sponsorblock_undo_skip(self, _event):
         segment = self._last_sponsorblock_segment_here()
         if segment is None:
-            self._announce(_("Nenhum trecho do SponsorBlock foi pulado nesta mídia."))
+            self._announce(_("Nenhum trecho do SponsorBlock foi pulado nesta mídia."), ANNOUNCE_ERRORS)
             return False
         # O trecho continua marcado como tratado: voltar a ele não o pula nem silencia de novo.
         self._end_sponsorblock_mute()
@@ -230,7 +234,8 @@ class SponsorBlockMixin:
         self._announce(
             _("De volta ao início do trecho de {category}.").format(
                 category=_sponsorblock().category_label(segment.category)
-            )
+            ),
+            ANNOUNCE_TRACK_CHANGE
         )
         return True
 
@@ -240,12 +245,13 @@ class SponsorBlockMixin:
         """O id do vídeo atual, ou "" depois de explicar por que não dá para contribuir."""
         if not self._sponsorblock_contribution_enabled():
             self._announce(
-                _("Para ajudar o SponsorBlock, ative a opção em Preferências, guia KeyTube, grupo SponsorBlock.")
+                _("Para ajudar o SponsorBlock, ative a opção em Preferências, guia KeyTube, grupo SponsorBlock."),
+                ANNOUNCE_ERRORS
             )
             return ""
         video_id = self._sponsorblock_current_video_id()
         if not video_id:
-            self._announce(_("A mídia atual não é um vídeo do YouTube."))
+            self._announce(_("A mídia atual não é um vídeo do YouTube."), ANNOUNCE_ERRORS)
         return video_id
 
     def _sponsorblock_user_id(self):
@@ -263,7 +269,8 @@ class SponsorBlockMixin:
             return False
         self._sponsorblock_marked_start = (video_id, position)
         self._announce(
-            _("Início do trecho marcado em {time}.").format(time=self._format_sponsorblock_time(position))
+            _("Início do trecho marcado em {time}.").format(time=self._format_sponsorblock_time(position)),
+            ANNOUNCE_TRACK_CHANGE
         )
         return True
 
@@ -274,11 +281,11 @@ class SponsorBlockMixin:
             return False
         marked = getattr(self, "_sponsorblock_marked_start", None)
         if not marked or marked[0] != video_id:
-            self._announce(_("Marque primeiro o início do trecho neste vídeo."))
+            self._announce(_("Marque primeiro o início do trecho neste vídeo."), ANNOUNCE_ERRORS)
             return False
         start = marked[1]
         if end - start < _MINIMUM_SUBMITTED_SEGMENT_SECONDS:
-            self._announce(_("O fim do trecho precisa vir depois do início marcado."))
+            self._announce(_("O fim do trecho precisa vir depois do início marcado."), ANNOUNCE_ERRORS)
             return False
         # A duração é lida já: com o diálogo aberto a mídia pode avançar para a próxima.
         length_ms = self.player.get_length() if hasattr(self, "player") else -1
@@ -312,7 +319,7 @@ class SponsorBlockMixin:
                 message = str(exc)
             wx.CallAfter(self._announce, message)
 
-        self._announce(_("Enviando o trecho..."))
+        self._announce(_("Enviando o trecho..."), ANNOUNCE_PROGRESS)
         threading.Thread(target=worker, daemon=True, name="sponsorblock-submit").start()
         return True
 
@@ -321,7 +328,7 @@ class SponsorBlockMixin:
             return False
         segment = self._last_sponsorblock_segment_here()
         if segment is None or not segment.uuid:
-            self._announce(_("Nenhum trecho do SponsorBlock passou nesta mídia para votar."))
+            self._announce(_("Nenhum trecho do SponsorBlock passou nesta mídia para votar."), ANNOUNCE_ERRORS)
             return False
         sponsorblock = _sponsorblock()
         user_id = self._sponsorblock_user_id()

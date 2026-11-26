@@ -20,14 +20,14 @@ class ChangelogDialog(wx.Dialog):
         self.entries = list(entries) if entries is not None else list_changelog_entries()
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        versions_label = wx.StaticText(self, label=_("Versões:"))
+        versions_label = wx.StaticText(self, label=_("&Versões:"))
         self.versions_list = wx.ListBox(self, choices=[self._entry_label(entry) for entry in self.entries])
         self.versions_list.SetName(_("Versões"))
         self.versions_list.SetMinSize(self.FromDIP(wx.Size(520, 110)))
         root_sizer.Add(versions_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
         root_sizer.Add(self.versions_list, 0, wx.ALL | wx.EXPAND, 10)
 
-        self.notes_ctrl = add_reading_field(self, root_sizer, _("Mudanças da versão"), self._empty_text())
+        self.notes_ctrl = add_reading_field(self, root_sizer, _("&Mudanças da versão"), self._empty_text())
         self.notes_ctrl.SetMinSize(self.FromDIP(wx.Size(520, 260)))
 
         close_button = wx.Button(self, wx.ID_CLOSE, _("&Fechar"))

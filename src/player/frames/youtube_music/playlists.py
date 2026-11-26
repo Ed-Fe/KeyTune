@@ -10,6 +10,7 @@ from player.youtube_music.playlists import (
     is_watch_playlist_id,
     is_youtube_music_media,
 )
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class PlaylistEditMixin:
@@ -27,11 +28,11 @@ class PlaylistEditMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
-            self._announce(_("Nenhuma mídia está carregada para avaliar."))
+            self._announce(_("Nenhuma mídia está carregada para avaliar."), ANNOUNCE_ERRORS)
             return False
 
         if not is_youtube_music_media(media_path):
-            self._announce(_("A mídia atual não veio do YouTube Music ou do YouTube."))
+            self._announce(_("A mídia atual não veio do YouTube Music ou do YouTube."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -56,7 +57,7 @@ class PlaylistEditMixin:
                 )
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
-            self._announce(normalized_message)
+            self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
             if normalized_rating == "DISLIKE":
@@ -76,7 +77,7 @@ class PlaylistEditMixin:
             interface_sounds.play_for(
                 self, interface_sounds.SOUND_LIKE if normalized_rating == "LIKE" else interface_sounds.SOUND_UNLIKE
             )
-            self._announce(normalized_message)
+            self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
             current_state = self._get_active_playlist_state()
@@ -175,7 +176,7 @@ class PlaylistEditMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip() if state is not None else ""
         if not media_path:
-            self._announce(_("Nenhuma mídia está tocando para ser adicionada."))
+            self._announce(_("Nenhuma mídia está tocando para ser adicionada."), ANNOUNCE_ERRORS)
             return False
         return self._add_media_paths_to_youtube_playlist([media_path])
 
@@ -185,7 +186,7 @@ class PlaylistEditMixin:
     def _add_media_paths_to_youtube_playlist(self, media_paths):
         video_ids = self._youtube_music_video_ids_from_paths(media_paths)
         if not video_ids:
-            self._announce(_("A seleção não contém faixas do YouTube Music para adicionar."))
+            self._announce(_("A seleção não contém faixas do YouTube Music para adicionar."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -226,7 +227,7 @@ class PlaylistEditMixin:
             ).format(count=normalized_added, title=selected_playlist.title)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
-            self._announce(message)
+            self._announce(message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
 
@@ -238,23 +239,26 @@ class PlaylistEditMixin:
                 self,
             )
 
-        self._announce(_("Adicionando {count} {label} à playlist {title}...").format(count=track_count, label=track_label, title=selected_playlist.title))
+        self._announce(
+            _("Adicionando {count} {label} à playlist {title}...").format(count=track_count, label=track_label, title=selected_playlist.title),
+            ANNOUNCE_PROGRESS,
+        )
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _remove_selected_media_from_youtube_playlist(self, media_paths, item_indexes):
         state = self._get_playlist_state()
         if state is None or state.is_folder_tab:
-            self._announce(_("Abra uma playlist do YouTube Music para remover faixas dela."))
+            self._announce(_("Abra uma playlist do YouTube Music para remover faixas dela."), ANNOUNCE_ERRORS)
             return False
 
         playlist_id = extract_playlist_id_from_source(getattr(state, "source_path", None))
         if not playlist_id or is_watch_playlist_id(playlist_id):
-            self._announce(_("A aba atual não é uma playlist editável do YouTube Music."))
+            self._announce(_("A aba atual não é uma playlist editável do YouTube Music."), ANNOUNCE_ERRORS)
             return False
 
         video_ids = self._youtube_music_video_ids_from_paths(media_paths)
         if not video_ids:
-            self._announce(_("A seleção não contém faixas do YouTube Music para remover."))
+            self._announce(_("A seleção não contém faixas do YouTube Music para remover."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -316,7 +320,7 @@ class PlaylistEditMixin:
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
             if not local_indexes:
-                self._announce(message)
+                self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
         def on_error(exc):
             wx.MessageBox(
@@ -326,7 +330,10 @@ class PlaylistEditMixin:
                 self,
             )
 
-        self._announce(_("Removendo {count} {label} da playlist {title}...").format(count=track_count, label=track_label, title=playlist_title))
+        self._announce(
+            _("Removendo {count} {label} da playlist {title}...").format(count=track_count, label=track_label, title=playlist_title),
+            ANNOUNCE_PROGRESS,
+        )
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _prompt_for_new_youtube_music_playlist(self, *, track_count=0, default_name=""):
@@ -390,7 +397,7 @@ class PlaylistEditMixin:
                 message = _("Playlist \"{name}\" ({privacy}) criada no YouTube Music.").format(name=playlist_name, privacy=privacy_label)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
-            self._announce(message)
+            self._announce(message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
             # Surface the new playlist in the library list right away.
@@ -404,7 +411,10 @@ class PlaylistEditMixin:
                 self,
             )
 
-        self._announce(_("Criando a playlist \"{name}\" no YouTube Music...").format(name=playlist_name))
+        self._announce(
+            _("Criando a playlist \"{name}\" no YouTube Music...").format(name=playlist_name),
+            ANNOUNCE_PROGRESS,
+        )
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _delete_selected_youtube_music_library_playlist(self):
@@ -413,10 +423,10 @@ class PlaylistEditMixin:
         if getattr(selected_result, "library_playlist", False):
             playlist_id = str(selected_result.playlist_id or "").strip()
         if not playlist_id:
-            self._announce(_("Selecione uma playlist do YouTube Music para excluir."))
+            self._announce(_("Selecione uma playlist do YouTube Music para excluir."), ANNOUNCE_ERRORS)
             return False
         if is_watch_playlist_id(playlist_id):
-            self._announce(_("Mixes e rádios do YouTube Music não podem ser excluídos."))
+            self._announce(_("Mixes e rádios do YouTube Music não podem ser excluídos."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -447,7 +457,7 @@ class PlaylistEditMixin:
             message = _("Playlist \"{title}\" excluída do YouTube Music.").format(title=playlist_title)
             self._youtube_music_library_status_message = message
             self._refresh_youtube_music_screen_later()
-            self._announce(message)
+            self._announce(message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
             self.on_refresh_youtube_music_library(None, announce=False)
@@ -460,7 +470,10 @@ class PlaylistEditMixin:
                 self,
             )
 
-        self._announce(_("Excluindo a playlist \"{title}\" do YouTube Music...").format(title=playlist_title))
+        self._announce(
+            _("Excluindo a playlist \"{title}\" do YouTube Music...").format(title=playlist_title),
+            ANNOUNCE_PROGRESS,
+        )
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def _rate_selected_playlist_items(self, media_paths, rating):
@@ -471,7 +484,7 @@ class PlaylistEditMixin:
         ]
         youtube_media_paths = [media_path for media_path in normalized_media_paths if is_youtube_music_media(media_path)]
         if not youtube_media_paths:
-            self._announce(_("A seleção atual não contém itens do YouTube Music ou do YouTube."))
+            self._announce(_("A seleção atual não contém itens do YouTube Music ou do YouTube."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -496,7 +509,7 @@ class PlaylistEditMixin:
                 )
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
-            self._announce(normalized_message)
+            self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
             return False
@@ -539,7 +552,7 @@ class PlaylistEditMixin:
                 ).format(count=rated_count)
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
-            self._announce(normalized_message)
+            self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(normalized_message)
 

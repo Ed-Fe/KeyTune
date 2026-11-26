@@ -11,6 +11,7 @@ from ._helpers import (
     _youtube_music_has_saved_auth,
     _youtube_music_tab_panel_class,
 )
+from ...announcements import ANNOUNCE_ERRORS
 
 
 class LibraryStateMixin:
@@ -244,7 +245,7 @@ class LibraryStateMixin:
         self._refresh_youtube_music_screen_later()
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
         return False
 
     def _refresh_youtube_music_menu_state(self):

@@ -6,6 +6,7 @@ from player.youtube_music import audio_tracks as youtube_audio_tracks
 from player.youtube_music.playlists import extract_video_id_from_text
 
 from ...i18n import _
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class AudioTrackMixin:
@@ -14,10 +15,10 @@ class AudioTrackMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip()
         if not media_path or not extract_video_id_from_text(media_path):
-            self._announce(_("A mídia atual não é do YouTube: não há faixas de áudio para escolher."))
+            self._announce(_("A mídia atual não é do YouTube: não há faixas de áudio para escolher."), ANNOUNCE_ERRORS)
             return False
 
-        self._announce(_("Procurando as faixas de áudio desta mídia."))
+        self._announce(_("Procurando as faixas de áudio desta mídia."), ANNOUNCE_PROGRESS)
 
         def worker():
             return youtube_audio_tracks.list_audio_tracks(media_path)
@@ -43,7 +44,7 @@ class AudioTrackMixin:
             # A faixa mudou enquanto a lista chegava: a escolha já não seria desta mídia.
             return False
         if len(tracks) < 2:
-            self._announce(_("Esta mídia tem só uma faixa de áudio."))
+            self._announce(_("Esta mídia tem só uma faixa de áudio."), ANNOUNCE_ERRORS)
             return False
 
         choice, _for_this_media = youtube_audio_tracks.audio_choice_for(media_path)

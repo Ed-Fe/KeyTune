@@ -5,6 +5,7 @@ import threading
 import wx
 
 from player.youtube_music.auth import sanitize_sensitive_text
+from ...announcements import ANNOUNCE_ERRORS
 
 
 class BackgroundTaskMixin:
@@ -24,7 +25,8 @@ class BackgroundTaskMixin:
 
     def _announce_track_navigation_blocked_by_youtube_music(self):
         self._announce(
-            _("Aguarde o término da operação do YouTube Music antes de ir para a faixa anterior ou próxima.")
+            _("Aguarde o término da operação do YouTube Music antes de ir para a faixa anterior ou próxima."),
+            ANNOUNCE_ERRORS
         )
 
     def _play_windows_youtube_music_blocked_sound(self):
@@ -60,7 +62,7 @@ class BackgroundTaskMixin:
         if action_kind == "track-navigation":
             self._play_windows_youtube_music_blocked_sound()
 
-        self._announce(messages.get(action_kind, _("Aguarde o término da operação do YouTube Music.")))
+        self._announce(messages.get(action_kind, _("Aguarde o término da operação do YouTube Music.")), ANNOUNCE_ERRORS)
         return True
 
     def _set_youtube_music_operation_state(self, in_progress):
@@ -107,7 +109,10 @@ class BackgroundTaskMixin:
 
     def _run_youtube_music_background_task(self, worker, on_success, *, on_error=None, timeout_ms=None):
         if getattr(self, "_youtube_music_operation_in_progress", False):
-            self._announce(_("O YouTube Music já está processando uma solicitação. Aguarde um momento."))
+            self._announce(
+                _("O YouTube Music já está processando uma solicitação. Aguarde um momento."),
+                ANNOUNCE_ERRORS,
+            )
             return False
 
         self._begin_youtube_music_busy_state()
@@ -146,7 +151,8 @@ class BackgroundTaskMixin:
         self._cancel_youtube_music_task_watchdog()
         self._end_youtube_music_busy_state()
         self._announce(
-            _("A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento.")
+            _("A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."),
+            ANNOUNCE_ERRORS
         )
         self._drain_youtube_music_pending_callbacks()
 

@@ -14,6 +14,7 @@ from player.radio.folders import FOLDER_FAVORITES, FOLDER_RECENTS, home_folder_i
 from player.radio.models import RADIO_RESULTS_PAGE_SIZE
 
 from ...i18n import _, ngettext
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_PROGRESS
 
 
 VIEW_KIND_HOME = "home"
@@ -164,7 +165,7 @@ class RadioNavigationMixin:
             self._radio_pending_result_selection = selected_id
         self._refresh_radio_screen()
         if announce:
-            self._announce(radio_view_summary(self._radio_current_view(), with_hint=False))
+            self._announce(radio_view_summary(self._radio_current_view(), with_hint=False), ANNOUNCE_NAVIGATION)
 
     def on_browse_radio_result(self, result=None):
         """Abre a pasta selecionada para ver o que há dentro."""
@@ -176,14 +177,14 @@ class RadioNavigationMixin:
             else None
         )
         if content is None:
-            self._announce(_("Este item não tem conteúdo para abrir."))
+            self._announce(_("Este item não tem conteúdo para abrir."), ANNOUNCE_ERRORS)
             return False
 
         view = RadioResultsView(title=content.title, fetch_page=content.fetch_page, kind=content.kind)
         if content.fetch_page is None:
             view.results = list(content.results or [])
         else:
-            self._announce(_("Abrindo {title}.").format(title=view.title))
+            self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         self._load_radio_view(
             view,
             mode="push",
@@ -194,7 +195,7 @@ class RadioNavigationMixin:
     def on_radio_results_back(self):
         views = self._radio_views()
         if len(views) <= 1:
-            self._announce(_("Não há lista anterior para voltar."))
+            self._announce(_("Não há lista anterior para voltar."), ANNOUNCE_ERRORS)
             return False
 
         self._cancel_radio_task()
@@ -208,7 +209,7 @@ class RadioNavigationMixin:
             return False
 
         start = view.next_start
-        self._announce(_("Carregando mais itens."))
+        self._announce(_("Carregando mais itens."), ANNOUNCE_PROGRESS)
 
         def worker():
             return view.fetch_page(start, RADIO_RESULTS_PAGE_SIZE)
@@ -233,10 +234,11 @@ class RadioNavigationMixin:
                         "Mais {count} item. Total: {total}.",
                         "Mais {count} itens. Total: {total}.",
                         len(new_results),
-                    ).format(count=len(new_results), total=len(view.results))
+                    ).format(count=len(new_results), total=len(view.results)),
+                    ANNOUNCE_NAVIGATION
                 )
             else:
-                self._announce(_("Fim da lista: não há mais itens."))
+                self._announce(_("Fim da lista: não há mais itens."), ANNOUNCE_NAVIGATION)
 
         self._run_radio_task(
             worker,
@@ -252,7 +254,7 @@ class RadioNavigationMixin:
 
         query = panel.get_search_query()
         if not query:
-            self._announce(_("Digite o nome de uma rádio para pesquisar."))
+            self._announce(_("Digite o nome de uma rádio para pesquisar."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_radio_service()
@@ -261,7 +263,7 @@ class RadioNavigationMixin:
             return self._play_radio_stations([custom_station], play=True)
 
         country_code = self._radio_search_scopes()[panel.get_search_scope_index()][0]
-        self._announce(_("Pesquisando {query}.").format(query=query))
+        self._announce(_("Pesquisando {query}.").format(query=query), ANNOUNCE_PROGRESS)
 
         def fetch_page(start, count):
             return service.fetch_search_page(query, country_code=country_code, start=start, count=count)

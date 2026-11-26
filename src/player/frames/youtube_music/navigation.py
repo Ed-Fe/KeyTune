@@ -32,6 +32,7 @@ from player.youtube_music.models import (
 
 from ... import interface_sounds
 from ...i18n import _, ngettext
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_PROGRESS
 
 
 VIEW_KIND_HOME = "home"
@@ -252,14 +253,14 @@ class ResultsNavigationMixin:
             view=view,
         )
         if announce:
-            self._announce(results_view_summary(view, with_hint=False))
+            self._announce(results_view_summary(view, with_hint=False), ANNOUNCE_NAVIGATION)
 
     def on_browse_youtube_music_search_result(self, result=None, *, focus_results=False):
         """Abre a pasta, canal, artista, álbum ou playlist selecionado para ver o que há dentro."""
         if result is None:
             result = self._selected_youtube_music_search_result()
         if result is None or not getattr(result, "can_browse", False):
-            self._announce(_("Este resultado não tem conteúdo para abrir."))
+            self._announce(_("Este resultado não tem conteúdo para abrir."), ANNOUNCE_ERRORS)
             return False
         if getattr(result, "result_type", "") == "action":
             return self._run_youtube_music_action_item(result)
@@ -282,11 +283,11 @@ class ResultsNavigationMixin:
         else:
             view = self._build_youtube_music_container_view(result)
         if view is None:
-            self._announce(_("Este resultado não tem conteúdo para abrir."))
+            self._announce(_("Este resultado não tem conteúdo para abrir."), ANNOUNCE_ERRORS)
             return False
 
         if view.fetch_page is not None:
-            self._announce(_("Abrindo {title}.").format(title=view.title))
+            self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         started = self._load_youtube_music_results_view(
             view,
             mode="push",
@@ -353,7 +354,7 @@ class ResultsNavigationMixin:
     def on_youtube_music_results_back(self):
         views = self._youtube_music_results_views()
         if len(views) <= 1:
-            self._announce(_("Não há lista anterior para voltar."))
+            self._announce(_("Não há lista anterior para voltar."), ANNOUNCE_ERRORS)
             return False
 
         views.pop()
@@ -371,7 +372,7 @@ class ResultsNavigationMixin:
         start = view.next_start
         page_size = self._youtube_music_library_page_size()
         interface_sounds.play_for(self, interface_sounds.SOUND_LOADING)
-        self._announce(_("Carregando mais itens."))
+        self._announce(_("Carregando mais itens."), ANNOUNCE_PROGRESS)
 
         def worker():
             page = view.fetch_page(start, page_size)
@@ -385,11 +386,11 @@ class ResultsNavigationMixin:
         if view.kind == VIEW_KIND_LIBRARY and self._youtube_music_library_has_more_playlists():
             return self._load_more_youtube_music_playlists(load_all=True)
         if not view.has_more or view.fetch_page is None:
-            self._announce(_("Esta lista já está inteira."))
+            self._announce(_("Esta lista já está inteira."), ANNOUNCE_ERRORS)
             return False
 
         start = view.next_start
-        self._announce(_("Carregando a lista inteira."))
+        self._announce(_("Carregando a lista inteira."), ANNOUNCE_PROGRESS)
 
         def worker():
             if view.fetch_rest is not None:
@@ -431,10 +432,11 @@ class ResultsNavigationMixin:
                         "Mais {count} item. Total: {total}.",
                         "Mais {count} itens. Total: {total}.",
                         len(new_results),
-                    ).format(count=len(new_results), total=len(view.results))
+                    ).format(count=len(new_results), total=len(view.results)),
+                    ANNOUNCE_NAVIGATION
                 )
             else:
-                self._announce(_("Fim da lista: não há mais itens."))
+                self._announce(_("Fim da lista: não há mais itens."), ANNOUNCE_NAVIGATION)
 
         def on_error(exc):
             wx.MessageBox(

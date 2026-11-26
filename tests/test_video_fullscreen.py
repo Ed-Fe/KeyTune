@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from player.frames.fullscreen import FrameFullscreenMixin
 from player.widgets import wrap_text_to_width
+from player.announcements import ANNOUNCE_ERRORS
 
 
 class _FixedWidthControl:
@@ -51,7 +52,7 @@ class VideoFullscreenTests(unittest.TestCase):
 
         frame.on_toggle_video_fullscreen()
 
-        frame._announce.assert_called_once_with("Esta aba não tem área de vídeo.")
+        frame._announce.assert_called_once_with("Esta aba não tem área de vídeo.", ANNOUNCE_ERRORS)
         frame.ShowFullScreen.assert_not_called()
         self.assertFalse(frame._video_fullscreen_active())
 

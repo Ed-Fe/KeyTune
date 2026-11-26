@@ -13,6 +13,7 @@ from ... import interface_sounds
 from ...i18n import _
 from .comments import CommentsContext
 from .navigation import YouTubeResultsView
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 _BELL_CHOICES = (
@@ -53,7 +54,7 @@ class ChannelActionsMixin:
 
     def _announce_youtube_channel_action_done(self, message):
         interface_sounds.play_for(self, interface_sounds.SOUND_SUCCESS)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def manage_youtube_channel_subscription(self, channel):
         """Mostra a inscrição da conta em *channel* e deixa mudá-la."""
@@ -66,7 +67,7 @@ class ChannelActionsMixin:
         def on_error(exc):
             self._show_youtube_channel_error(_("Não foi possível consultar a inscrição neste canal."), exc)
 
-        self._announce(_("Consultando a inscrição em {channel}.").format(channel=channel.title))
+        self._announce(_("Consultando a inscrição em {channel}.").format(channel=channel.title), ANNOUNCE_PROGRESS)
         return self._run_youtube_music_background_task(
             worker,
             lambda subscription: self._choose_youtube_channel_subscription(channel, subscription),
@@ -147,7 +148,7 @@ class ChannelActionsMixin:
         def on_error(exc):
             self._show_youtube_channel_error(_("Não foi possível carregar os dados do canal agora."), exc)
 
-        self._announce(_("Carregando os dados do canal."))
+        self._announce(_("Carregando os dados do canal."), ANNOUNCE_PROGRESS)
         return self._run_youtube_music_background_task(worker, on_success, on_error=on_error)
 
     def search_youtube_channel(self, channel):
@@ -164,7 +165,7 @@ class ChannelActionsMixin:
         finally:
             dialog.Destroy()
         if not query:
-            self._announce(_("Digite algo para buscar no canal."))
+            self._announce(_("Digite algo para buscar no canal."), ANNOUNCE_ERRORS)
             return False
 
         def fetch_page(start, count):
@@ -173,7 +174,7 @@ class ChannelActionsMixin:
         view = YouTubeResultsView(
             title=youtube_channel_search.channel_search_view_title(query, channel.title), fetch_page=fetch_page
         )
-        self._announce(_("Pesquisando {query}.").format(query=query))
+        self._announce(_("Pesquisando {query}.").format(query=query), ANNOUNCE_PROGRESS)
         return self._load_youtube_music_results_view(
             view,
             mode="push",

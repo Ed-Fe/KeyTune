@@ -90,7 +90,7 @@ class ConvertSelectionTests(unittest.TestCase):
     def _frame(self):
         frame = FrameConvertMixin.__new__(FrameConvertMixin)
         frame.announcements = []
-        frame._announce = frame.announcements.append
+        frame._announce = lambda message, category=None: frame.announcements.append(message)
         frame._initialize_convert_state()
         return frame
 

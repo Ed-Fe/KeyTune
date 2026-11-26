@@ -18,6 +18,7 @@ from ..update import (
     take_failed_update,
     unsupported_install_message,
 )
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class FrameUpdateMixin:
@@ -37,7 +38,7 @@ class FrameUpdateMixin:
             "Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. "
             "Se o problema continuar, envie o arquivo de log ao desenvolvedor."
         ).format(target=failed_update.target_version, current=failed_update.current_version)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
         wx.MessageBox(message, _("Atualizações"), wx.OK | wx.ICON_WARNING, self)
 
     def on_check_for_updates(self, _event):
@@ -142,7 +143,7 @@ class FrameUpdateMixin:
             if error_message:
                 wx.MessageBox(error_message, _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             elif was_cancelled:
-                self._announce(_("Download da atualização cancelado."))
+                self._announce(_("Download da atualização cancelado."), ANNOUNCE_ERRORS)
             return
 
         try:
@@ -154,7 +155,10 @@ class FrameUpdateMixin:
             return
 
         self._update_restart_pending = True
-        self._announce(_("Atualização baixada. O player será reiniciado para concluir a instalação."))
+        self._announce(
+            _("Atualização baixada. O player será reiniciado para concluir a instalação."),
+            ANNOUNCE_CONFIRMATIONS,
+        )
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("Atualização baixada. Reiniciando para instalar..."), auto_clear_ms=0)
         self.Close()

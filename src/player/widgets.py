@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import wx
 
-from .accessibility import attach_named_accessible
+from .accessibility import attach_named_accessible, strip_mnemonic
 from .i18n import _
 
 # Margem em volta de cada linha de um grupo.
@@ -111,9 +111,11 @@ def add_choice_row(parent, sizer, label_text, help_text, labels):
     Um texto de ajuda visível seria lido por inteiro pelo leitor de tela ao abrir o
     diálogo, antes de qualquer controle.
     """
+    # O "&" do rótulo marca o atalho Alt+letra; o nome acessível vai sem ele.
+    name = strip_mnemonic(label_text)
     label = wx.StaticText(parent, label=f"{label_text}:")
-    choice = wx.Choice(parent, choices=labels, name=label_text)
-    describe_control(choice, label_text, help_text)
+    choice = wx.Choice(parent, choices=labels, name=name)
+    describe_control(choice, name, help_text)
     add_labeled_row(sizer, label, choice)
     return choice
 
@@ -124,9 +126,10 @@ def add_directory_row(parent, sizer, label_text, help_text, dialog_message, brow
     O botão fica em ``campo.browse_button`` para quem precisar habilitá-lo ou
     desabilitá-lo junto com o campo.
     """
+    name = strip_mnemonic(label_text)
     label = wx.StaticText(parent, label=f"{label_text}:")
-    directory_ctrl = wx.TextCtrl(parent, name=label_text)
-    describe_control(directory_ctrl, label_text, help_text)
+    directory_ctrl = wx.TextCtrl(parent, name=name)
+    describe_control(directory_ctrl, name, help_text)
     browse_button = wx.Button(parent, label=_("Escolher &pasta..."))
     browse_button.SetName(browse_name)
 

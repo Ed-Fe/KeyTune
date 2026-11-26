@@ -10,6 +10,7 @@ from ...library import is_audio_playback_media
 from ...radio.media import is_radio_media
 from ...youtube_music.live_streams import LiveEndedError
 from .helpers import is_youtube_music_media
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_TRACK_CHANGE
 
 
 class PlaybackEngineMixin:
@@ -23,7 +24,7 @@ class PlaybackEngineMixin:
 
         self._update_title()
         if getattr(self, "_pending_adopted_playback", None) is None:
-            self._announce(_("Nenhuma mídia tocando agora."))
+            self._announce(_("Nenhuma mídia tocando agora."), ANNOUNCE_ERRORS)
 
     def _next_playback_request_serial(self):
         self._playback_request_serial += 1
@@ -261,7 +262,7 @@ class PlaybackEngineMixin:
             return
 
         if announce_message:
-            self._announce(announce_message)
+            self._announce(announce_message, ANNOUNCE_TRACK_CHANGE)
         self._update_title()
         self._update_time_bar()
 
@@ -389,7 +390,7 @@ class PlaybackEngineMixin:
                 )
                 if error_message and not handled:
                     revert_message = f"{revert_message} {_('Detalhes: {error}.').format(error=error_message)}"
-                self._announce(revert_message)
+                self._announce(revert_message, ANNOUNCE_ERRORS)
                 # The "Resolvendo {label}..." status set when queuing the
                 # failed switch never auto-clears on its own: correct it back
                 # to what is actually playing instead of leaving it stuck on
@@ -400,7 +401,10 @@ class PlaybackEngineMixin:
                         auto_clear_ms=0,
                     )
             elif error_message and not handled:
-                self._announce(_("Não foi possível iniciar a mídia: {error}.").format(error=error_message))
+                self._announce(
+                    _("Não foi possível iniciar a mídia: {error}.").format(error=error_message),
+                    ANNOUNCE_ERRORS,
+                )
             return
 
         if request.get("crossfade"):
@@ -493,10 +497,10 @@ class PlaybackEngineMixin:
             self._set_status_message(status_template.format(name=now_playing_label), auto_clear_ms=0)
         if announce_message is not None:
             if announce_message:
-                self._announce(announce_message)
+                self._announce(announce_message, ANNOUNCE_TRACK_CHANGE)
             return
 
-        self._announce(self._describe_playlist_position(state))
+        self._announce(self._describe_playlist_position(state), ANNOUNCE_TRACK_CHANGE)
 
     def _refresh_lyrics_for_active_media(self, resolved_display_title, resolved_display_artist):
         """Kick off the lyrics lookup for the media that just became active.

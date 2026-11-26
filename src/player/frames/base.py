@@ -149,6 +149,7 @@ class MediaPlayerFrame(
         self._initialize_plugin_service()
         self._open_initial_paths()
         self._initialize_youtube_music_startup_state()
+        self._open_keytube_on_startup_if_enabled()
         # As abas restauradas ao abrir não fazem som; as abertas daqui em diante, sim.
         self._tab_sounds_ready = True
         self._schedule_startup_update_check()

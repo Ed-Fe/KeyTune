@@ -10,6 +10,7 @@ from ...log import get_logger, setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
 from ...preferences import AudioOutputDialog, PreferencesDialog
 from ...restart import request_restart
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 _logger = get_logger(__name__)
 
@@ -88,9 +89,12 @@ class AppCommandsMixin:
             handle_radio_preferences_change(previous_settings)
 
         if audio_output_updated:
-            self._announce(_("Preferências salvas."))
+            self._announce(_("Preferências salvas."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Preferências salvas, mas o dispositivo de áudio anterior foi mantido."))
+            self._announce(
+                _("Preferências salvas, mas o dispositivo de áudio anterior foi mantido."),
+                ANNOUNCE_CONFIRMATIONS,
+            )
 
         if self.settings.language != previous_settings.language:
             self._offer_restart_for_language()
@@ -313,7 +317,7 @@ class AppCommandsMixin:
         # "adicionar à fila" afeta o que toca a seguir, não a aba navegada.
         state = self._get_active_playlist_state()
         if not state:
-            self._announce(_("Nenhuma playlist ativa."))
+            self._announce(_("Nenhuma playlist ativa."), ANNOUNCE_ERRORS)
             return
 
         browser = self._get_browser_panel()
@@ -328,7 +332,7 @@ class AppCommandsMixin:
             paths = [state.current_media_path]
 
         if not paths:
-            self._announce(_("Nenhum item selecionado para adicionar à fila."))
+            self._announce(_("Nenhum item selecionado para adicionar à fila."), ANNOUNCE_ERRORS)
             return
 
         added = 0
@@ -353,7 +357,7 @@ class AppCommandsMixin:
         """Põe *media_paths* na fila da playlist que está tocando, sem alternar."""
         state = self._get_active_playlist_state()
         if not state or state.is_loading:
-            self._announce(_("Nenhuma playlist ativa."))
+            self._announce(_("Nenhuma playlist ativa."), ANNOUNCE_ERRORS)
             return False
 
         added = 0
@@ -369,7 +373,7 @@ class AppCommandsMixin:
         if added:
             self._announce_queue_toggle(added, 0, last_added_label, "")
         else:
-            self._announce(_("Os itens selecionados já estão na fila de reprodução."))
+            self._announce(_("Os itens selecionados já estão na fila de reprodução."), ANNOUNCE_ERRORS)
         return added > 0
 
     def _announce_queue_toggle(self, added, removed, added_label, removed_label):
@@ -381,18 +385,31 @@ class AppCommandsMixin:
             self._announce(
                 _("{added} itens adicionados e {removed} removidos da fila de reprodução.").format(
                     added=added, removed=removed
-                )
+                ),
+                ANNOUNCE_CONFIRMATIONS
             )
         elif added == 1:
-            self._announce(_("{item} adicionado à fila de reprodução.").format(item=added_label))
+            self._announce(
+                _("{item} adicionado à fila de reprodução.").format(item=added_label),
+                ANNOUNCE_CONFIRMATIONS,
+            )
         elif added > 1:
-            self._announce(_("{count} itens adicionados à fila de reprodução.").format(count=added))
+            self._announce(
+                _("{count} itens adicionados à fila de reprodução.").format(count=added),
+                ANNOUNCE_CONFIRMATIONS,
+            )
         elif removed == 1:
-            self._announce(_("{item} removido da fila de reprodução.").format(item=removed_label))
+            self._announce(
+                _("{item} removido da fila de reprodução.").format(item=removed_label),
+                ANNOUNCE_CONFIRMATIONS,
+            )
         elif removed > 1:
-            self._announce(_("{count} itens removidos da fila de reprodução.").format(count=removed))
+            self._announce(
+                _("{count} itens removidos da fila de reprodução.").format(count=removed),
+                ANNOUNCE_CONFIRMATIONS,
+            )
         else:
-            self._announce(_("Nenhum item pôde ser adicionado à fila."))
+            self._announce(_("Nenhum item pôde ser adicionado à fila."), ANNOUNCE_ERRORS)
 
     def _queue_entry_label(self, state, path):
         label = self._media_label_from_playlist_state(state, path)
@@ -401,11 +418,14 @@ class AppCommandsMixin:
     def _open_queue_manager(self):
         state = self._get_active_playlist_state()
         if not state:
-            self._announce(_("Nenhuma playlist ativa."))
+            self._announce(_("Nenhuma playlist ativa."), ANNOUNCE_ERRORS)
             return
 
         if not state.queue_paths():
-            self._announce(_("A fila de reprodução está vazia. Use Ctrl+Shift+F para adicionar itens."))
+            self._announce(
+                _("A fila de reprodução está vazia. Use Ctrl+Shift+F para adicionar itens."),
+                ANNOUNCE_ERRORS,
+            )
             return
 
         dialog = QueueManagerDialog(

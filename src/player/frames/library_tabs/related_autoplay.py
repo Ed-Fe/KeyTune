@@ -18,6 +18,7 @@ from ...youtube_music.playlists import (
     is_youtube_music_media,
 )
 from ...youtube_music.related import youtube_related_content
+from ...announcements import ANNOUNCE_PLAYBACK, ANNOUNCE_PROGRESS
 
 
 _logger = get_logger(__name__)
@@ -119,7 +120,7 @@ class RelatedAutoplayMixin:
                 # Proactive fetch still running: advance as soon as it lands.
                 request["advance_when_ready"] = True
                 _logger.debug("Related autoplay: awaiting in-flight prefetch for the seed track.")
-                self._announce(_("Buscando conteúdo relacionado no YouTube Music."))
+                self._announce(_("Buscando conteúdo relacionado no YouTube Music."), ANNOUNCE_PROGRESS)
                 return True
             if status == "appended":
                 # Items were already added proactively; advance into them now.
@@ -133,7 +134,7 @@ class RelatedAutoplayMixin:
             return False
 
         _logger.info("Fetching related content (radio) at end of playlist.")
-        self._announce(_("Buscando conteúdo relacionado no YouTube Music."))
+        self._announce(_("Buscando conteúdo relacionado no YouTube Music."), ANNOUNCE_PROGRESS)
         self._begin_related_youtube_music_fetch(seed_media_path, advance_when_ready=True)
         return True
 
@@ -263,7 +264,8 @@ class RelatedAutoplayMixin:
             if advance_when_ready:
                 self._related_autoplay = None
                 self._announce(
-                    _("Playlist {title} finalizada. Não foi possível buscar conteúdo relacionado: {error}.").format(title=state.title, error=error_message)
+                    _("Playlist {title} finalizada. Não foi possível buscar conteúdo relacionado: {error}.").format(title=state.title, error=error_message),
+                    ANNOUNCE_PLAYBACK
                 )
             return
 
@@ -275,7 +277,10 @@ class RelatedAutoplayMixin:
             request["status"] = "failed"
             if advance_when_ready:
                 self._related_autoplay = None
-                self._announce(_("Playlist {title} finalizada. Nenhum conteúdo relacionado encontrado.").format(title=state.title))
+                self._announce(
+                    _("Playlist {title} finalizada. Nenhum conteúdo relacionado encontrado.").format(title=state.title),
+                    ANNOUNCE_PLAYBACK,
+                )
             return
 
         if request.get("status") != "appended":
@@ -313,7 +318,7 @@ class RelatedAutoplayMixin:
         revert_snapshot = self._snapshot_playlist_state_for_revert(state)
         target = state.move_in_playback_order(1)
         if not target:
-            self._announce(_("Playlist {title} finalizada.").format(title=state.title))
+            self._announce(_("Playlist {title} finalizada.").format(title=state.title), ANNOUNCE_PLAYBACK)
             return False
 
         self._play_media(

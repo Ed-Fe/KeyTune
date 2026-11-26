@@ -18,6 +18,7 @@ from ._helpers import (
     find_all_available_javascript_runtimes,
     is_missing_javascript_runtime_error_message,
 )
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_PROGRESS
 
 
 class DependencyMixin:
@@ -76,7 +77,8 @@ class DependencyMixin:
             return False
 
         self._announce(
-            _("A instalação de {runtime} foi aberta em uma nova janela.").format(runtime=normalized_runtime_label)
+            _("A instalação de {runtime} foi aberta em uma nova janela.").format(runtime=normalized_runtime_label),
+            ANNOUNCE_CONFIRMATIONS
         )
         if hasattr(self, "_set_status_message"):
             self._set_status_message(
@@ -203,7 +205,7 @@ class DependencyMixin:
             self._refresh_youtube_music_screen_later()
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(status_message, auto_clear_ms=0)
-            self._announce(status_message)
+            self._announce(status_message, ANNOUNCE_PROGRESS)
 
         def on_success(result):
             self.settings.youtube_music_dependency_last_auto_update_epoch = int(time.time())
@@ -220,7 +222,7 @@ class DependencyMixin:
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(status_message)
             if manual or getattr(result, "updated", False):
-                self._announce(status_message)
+                self._announce(status_message, ANNOUNCE_CONFIRMATIONS)
 
             self._continue_youtube_music_startup_after_dependency_setup()
 
@@ -268,7 +270,7 @@ class DependencyMixin:
         self._refresh_youtube_music_screen_later()
         if hasattr(self, "_set_status_message"):
             self._set_status_message(normalized_message, auto_clear_ms=0)
-        self._announce(normalized_message)
+        self._announce(normalized_message, ANNOUNCE_PROGRESS)
 
     def _finish_youtube_music_dependency_update(self, on_success, on_error, result, error):
         self._youtube_music_dependency_update_in_progress = False
@@ -277,9 +279,9 @@ class DependencyMixin:
         if error is not None:
             if callable(on_error):
                 on_error(error)
-            return
-        if callable(on_success):
+        elif callable(on_success):
             on_success(result)
+        self._open_keytube_after_dependency_update_if_pending()
 
     def _maybe_auto_update_youtube_music_dependencies(self):
         self._configure_youtube_music_dependency_management()

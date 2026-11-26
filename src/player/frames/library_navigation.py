@@ -5,6 +5,7 @@ import wx
 from ..i18n import _, ngettext
 from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name
 from ..playlists import PlaylistState, build_playlist_title
+from ..announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_STATE
 
 
 class FrameLibraryNavigationMixin:
@@ -180,7 +181,7 @@ class FrameLibraryNavigationMixin:
 
         added_count, first_path = self._append_media_paths_to_playlist(paths, target_state, verified=verified)
         if not first_path:
-            self._announce(_("Nenhuma mídia compatível para adicionar."))
+            self._announce(_("Nenhuma mídia compatível para adicionar."), ANNOUNCE_ERRORS)
             return False
 
         target_state.sync_playback_order()
@@ -195,7 +196,7 @@ class FrameLibraryNavigationMixin:
             ).format(count=added_count, title=target_state.title)
         else:
             message = _("Os itens já estavam em {title}.").format(title=target_state.title)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
         return added_count > 0
@@ -207,7 +208,7 @@ class FrameLibraryNavigationMixin:
         self._update_title()
         self._refresh_playlist_browser()
         if announcement:
-            self._announce(announcement)
+            self._announce(announcement, ANNOUNCE_NAVIGATION)
 
     def _open_media_paths(self, paths, *, verified=False):
         normalized_paths = []
@@ -305,14 +306,14 @@ class FrameLibraryNavigationMixin:
         self._refresh_playlist_browser()
         browser.focus_current_item()
         if announce:
-            self._announce(_("Modo navegação de itens."))
+            self._announce(_("Modo navegação de itens."), ANNOUNCE_STATE)
 
     def _focus_player_controls(self, announce=True):
         # Focus the wx video panel (a restorable child) rather than the frame,
         # so returning to the window/closing a dialog lands back on the player.
         self._focus_player_surface()
         if announce:
-            self._announce(_("Modo controle do player."))
+            self._announce(_("Modo controle do player."), ANNOUNCE_STATE)
 
     def _toggle_navigation_mode(self):
         browser = self._get_browser_panel()

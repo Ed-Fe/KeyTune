@@ -12,6 +12,7 @@ from ...youtube_music.playlists import (
     extract_video_id_from_text,
     is_youtube_music_media,
 )
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 def _resume_key(media_path):
@@ -123,7 +124,7 @@ class SmartLibraryResumeMixin:
 
         pending = service.pending_resumes()
         if not pending:
-            self._announce(_("Nada para continuar ouvindo. Nenhuma mídia longa está pela metade."))
+            self._announce(_("Nada para continuar ouvindo. Nenhuma mídia longa está pela metade."), ANNOUNCE_ERRORS)
             return
 
         self._open_prepared_media_playlist(
@@ -144,9 +145,9 @@ class SmartLibraryResumeMixin:
             return
 
         if service.clear_resume_positions():
-            self._announce(_("Posições de retomada apagadas."))
+            self._announce(_("Posições de retomada apagadas."), ANNOUNCE_CONFIRMATIONS)
         else:
-            self._announce(_("Não foi possível apagar as posições de retomada."))
+            self._announce(_("Não foi possível apagar as posições de retomada."), ANNOUNCE_ERRORS)
 
     def on_continue_listening(self, _event):
         self._open_continue_listening_playlist()

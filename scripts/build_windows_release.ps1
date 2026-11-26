@@ -173,6 +173,9 @@ foreach ($guide in Get-ChildItem -Path "docs" -Filter "plugins*.md") {
     }
 }
 
+Write-Step "Empacotando o guia de conexão do YouTube (HTML pronto)"
+Copy-Item -Path "docs\conectar-conta-youtube.html" -Destination "dist\KeyTune\docs" -Force
+
 Write-Step "Renderizando manual em HTML (por idioma)"
 & $PythonExe scripts\render_manual.py docs\manual.md dist\KeyTune\docs\manual.html
 if ($LASTEXITCODE -ne 0) {
@@ -188,6 +191,9 @@ foreach ($manual in Get-ChildItem -Path "docs" -Filter "manual.*.md" -ErrorActio
 Write-Step "Empacotando o histórico de mudanças (por idioma)"
 New-Item -ItemType Directory -Force "dist\KeyTune\docs\changelog" | Out-Null
 Copy-Item -Path "docs\changelog\*.md" -Exclude "unreleased*" -Destination "dist\KeyTune\docs\changelog" -Force
+
+Write-Step "Empacotando o manual em Markdown (a janela do manual lê estes arquivos)"
+Copy-Item -Path "docs\manual.md", "docs\manual.*.md" -Exclude "manual.preview*" -Destination "dist\KeyTune\docs" -Force
 
 Write-Step "Gerando créditos de bibliotecas e contribuidores (por idioma)"
 & $PythonExe scripts\generate_credits.py --language pt_BR --language en --language es

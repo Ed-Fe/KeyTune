@@ -164,7 +164,7 @@ class _DownloadHost(FrameDownloadMixin):
     def _set_status_message(self, message, *, auto_clear_ms=6000):
         self.statuses.append(message)
 
-    def _announce(self, _message):
+    def _announce(self, _message, category=None):
         pass
 
 

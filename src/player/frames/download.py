@@ -14,7 +14,12 @@ import time
 
 import wx
 
-from ..announcements import ANNOUNCE_DOWNLOADS
+from ..announcements import (
+    ANNOUNCE_CONFIRMATIONS,
+    ANNOUNCE_DOWNLOADS,
+    ANNOUNCE_ERRORS,
+    ANNOUNCE_PROGRESS,
+)
 from ..download.dialog import DownloadDialog
 from ..download.ffmpeg import (
     FFMPEG_APPROXIMATE_DOWNLOAD_MB,
@@ -117,7 +122,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         scope = focused_list_scope(self)
         if scope == SCOPE_EXPLORER:
             # O explorador só mostra arquivos do computador.
-            self._announce(_("Esta mídia já está no seu computador."))
+            self._announce(_("Esta mídia já está no seu computador."), ANNOUNCE_ERRORS)
         elif scope == SCOPE_SEARCH:
             self.download_youtube_music_search_selection()
         else:
@@ -130,19 +135,22 @@ class FrameDownloadMixin(TaskProgressMixin):
 
         media_path = self._current_download_media_path()
         if not media_path:
-            self._announce(_("Nenhuma mídia está tocando no momento."))
+            self._announce(_("Nenhuma mídia está tocando no momento."), ANNOUNCE_ERRORS)
             return
 
         player = getattr(self, "player", None)
         if player is not None and is_live_media(player.get_media()):
-            self._announce(_("Não é possível baixar uma transmissão ao vivo."))
+            self._announce(_("Não é possível baixar uma transmissão ao vivo."), ANNOUNCE_ERRORS)
             return
 
         if not download_source_url(media_path):
             if is_remote_media_path(media_path):
-                self._announce(_("Não é possível baixar esta mídia: rádios, transmissões e endereços de playlists ficam de fora."))
+                self._announce(
+                    _("Não é possível baixar esta mídia: rádios, transmissões e endereços de playlists ficam de fora."),
+                    ANNOUNCE_ERRORS,
+                )
             else:
-                self._announce(_("Esta mídia já está no seu computador."))
+                self._announce(_("Esta mídia já está no seu computador."), ANNOUNCE_ERRORS)
             return
 
         self._begin_download([(media_path, self._current_download_media_title())])
@@ -151,7 +159,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         """Baixa os itens selecionados na lista da aba atual."""
         entries = selected_list_entries(self)
         if not entries:
-            self._announce(_("Nenhum item selecionado para baixar."))
+            self._announce(_("Nenhum item selecionado para baixar."), ANNOUNCE_ERRORS)
             return
         self._begin_download(entries)
 
@@ -159,7 +167,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         """Baixa todos os itens da playlist da aba atual, numa pasta com o nome dela."""
         state = self._get_playlist_state()
         if state is None or getattr(state, "is_folder_tab", False) or not getattr(state, "items", None):
-            self._announce(_("Esta aba não tem uma playlist para baixar."))
+            self._announce(_("Esta aba não tem uma playlist para baixar."), ANNOUNCE_ERRORS)
             return
 
         labels = list(getattr(state, "browser_item_labels", None) or [])
@@ -182,7 +190,10 @@ class FrameDownloadMixin(TaskProgressMixin):
 
         selection = select_download_items(entries)
         if not selection.items:
-            self._announce(_("Nada para baixar: a seleção só tem arquivos do computador, rádios ou endereços de playlists."))
+            self._announce(
+                _("Nada para baixar: a seleção só tem arquivos do computador, rádios ou endereços de playlists."),
+                ANNOUNCE_ERRORS,
+            )
             return
 
         count = len(selection.items)
@@ -288,7 +299,8 @@ class FrameDownloadMixin(TaskProgressMixin):
 
         if not ffmpeg_install_supported():
             self._announce(
-                _("O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão.")
+                _("O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."),
+                ANNOUNCE_ERRORS
             )
             return False
 
@@ -327,9 +339,9 @@ class FrameDownloadMixin(TaskProgressMixin):
         self._download_batch_total = len(items)
 
         if len(items) > 1:
-            self._announce(_("Iniciando o download de {count} itens.").format(count=len(items)))
+            self._announce(_("Iniciando o download de {count} itens.").format(count=len(items)), ANNOUNCE_PROGRESS)
         else:
-            self._announce(_("Iniciando o download."))
+            self._announce(_("Iniciando o download."), ANNOUNCE_PROGRESS)
         self._set_status_message(_("Baixando..."), auto_clear_ms=0)
         self._set_task_progress("download", None)
 
@@ -591,7 +603,7 @@ class FrameDownloadMixin(TaskProgressMixin):
             return
         message = _("Não foi possível baixar a mídia: {reason}").format(reason=reason)
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_ERRORS)
 
     def _on_download_cancelled(self, token, done=0, total=1):
         if not self._finish_download_state(token):
@@ -603,7 +615,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         else:
             message = _("Download cancelado.")
         self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def _offer_to_cancel_download(self):
         percent = self._download_percent

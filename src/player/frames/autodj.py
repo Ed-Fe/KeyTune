@@ -19,6 +19,12 @@ from ..i18n import _
 from ..library import build_supported_media_wildcard, is_audio_playback_media
 from ..log import get_logger
 from ..session import get_app_storage_dir
+from ..announcements import (
+    ANNOUNCE_CONFIRMATIONS,
+    ANNOUNCE_ERRORS,
+    ANNOUNCE_PROGRESS,
+    ANNOUNCE_STATE,
+)
 
 
 _logger = get_logger(__name__)
@@ -63,7 +69,7 @@ class FrameAutoDJMixin:
             return False
         self._autodj_dependency_install_in_progress = True
         start_message = _("Preparando as bibliotecas opcionais do AutoDJ...")
-        self._announce(start_message)
+        self._announce(start_message, ANNOUNCE_PROGRESS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(start_message, auto_clear_ms=0)
 
@@ -87,7 +93,7 @@ class FrameAutoDJMixin:
             return
         if hasattr(self, "_set_status_message"):
             self._set_status_message(normalized_message, auto_clear_ms=0)
-        self._announce(normalized_message)
+        self._announce(normalized_message, ANNOUNCE_PROGRESS)
 
     def _finish_autodj_dependency_install(self, error):
         self._autodj_dependency_install_in_progress = False
@@ -96,12 +102,12 @@ class FrameAutoDJMixin:
             message = _("Não foi possível instalar as bibliotecas opcionais do AutoDJ: {error}").format(error=error)
             if hasattr(self, "_set_status_message"):
                 self._set_status_message(message)
-            self._announce(message)
+            self._announce(message, ANNOUNCE_ERRORS)
             return
         message = _("Recursos do AutoDJ instalados e prontos para uso.")
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def _handle_autodj_remote_download_retry(self, media_path, error):
         service = self._get_youtube_music_service()
@@ -138,17 +144,20 @@ class FrameAutoDJMixin:
 
     def on_start_autodj_session(self, _event):
         if not bool(getattr(self.settings, "autodj_enabled", False)):
-            self._announce(_("Ative o AutoDJ no menu Reprodução para iniciar uma sessão."))
+            self._announce(_("Ative o AutoDJ no menu Reprodução para iniciar uma sessão."), ANNOUNCE_ERRORS)
             return False
         if not autodj_dependencies_available():
-            self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."))
+            self._announce(
+                _("Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."),
+                ANNOUNCE_ERRORS,
+            )
             return False
         source = self._get_playlist_state()
         if source is None or source.is_folder_tab or source.is_loading or source.autodj_session:
-            self._announce(_("Abra uma playlist comum para iniciar uma sessão AutoDJ."))
+            self._announce(_("Abra uma playlist comum para iniciar uma sessão AutoDJ."), ANNOUNCE_ERRORS)
             return False
         if len(source.items) < 2:
-            self._announce(_("A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."))
+            self._announce(_("A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."), ANNOUNCE_ERRORS)
             return False
 
         seed_index = source.current_index if 0 <= source.current_index < len(source.items) else 0
@@ -187,7 +196,7 @@ class FrameAutoDJMixin:
     def on_stop_autodj_session(self, _event):
         state = self._get_playlist_state()
         if state is None or not state.autodj_session:
-            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."))
+            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."), ANNOUNCE_ERRORS)
             return False
         self._cancel_autodj_session(state)
         state.autodj_session = False
@@ -207,18 +216,21 @@ class FrameAutoDJMixin:
                 self.notebook.SetPageText(tab_index, state.title)
         self._refresh_playlist_browser()
         self._refresh_autodj_menu_state()
-        self._announce(_("Sessão AutoDJ encerrada. A sequência preparada foi preservada como playlist."))
+        self._announce(
+            _("Sessão AutoDJ encerrada. A sequência preparada foi preservada como playlist."),
+            ANNOUNCE_STATE,
+        )
         return True
 
     def on_replace_autodj_next(self, _event):
         state = self._get_playlist_state()
         if state is None or not state.autodj_session:
-            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."))
+            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."), ANNOUNCE_ERRORS)
             return False
         next_path = state.peek_in_playback_order(1, wrap=False)
         alternatives = [path for path in state.autodj_remaining_items if path != next_path]
         if not next_path or not alternatives:
-            self._announce(_("Não há outra faixa disponível para substituir a próxima."))
+            self._announce(_("Não há outra faixa disponível para substituir a próxima."), ANNOUNCE_ERRORS)
             return False
 
         self._cancel_autodj_session(state)
@@ -227,18 +239,18 @@ class FrameAutoDJMixin:
         state.autodj_remaining_items = alternatives + [next_path]
         self._discard_autodj_transition_requests()
         self._refresh_playlist_browser()
-        self._announce(_("Escolhendo outra próxima faixa."))
+        self._announce(_("Escolhendo outra próxima faixa."), ANNOUNCE_PROGRESS)
         self._maybe_fill_autodj_session(state)
         return True
 
     def on_recalculate_autodj_session(self, _event):
         state = self._get_playlist_state()
         if state is None or not state.autodj_session:
-            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."))
+            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."), ANNOUNCE_ERRORS)
             return False
         prepared_paths = list(state.items[state.current_index + 1:])
         if not prepared_paths and not state.autodj_remaining_items:
-            self._announce(_("Não há faixas restantes para recalcular a sequência."))
+            self._announce(_("Não há faixas restantes para recalcular a sequência."), ANNOUNCE_ERRORS)
             return False
 
         self._cancel_autodj_session(state)
@@ -247,14 +259,14 @@ class FrameAutoDJMixin:
         state.autodj_remaining_items = list(dict.fromkeys(combined))
         self._discard_autodj_transition_requests()
         self._refresh_playlist_browser()
-        self._announce(_("Recalculando a sequência AutoDJ."))
+        self._announce(_("Recalculando a sequência AutoDJ."), ANNOUNCE_PROGRESS)
         self._maybe_fill_autodj_session(state)
         return True
 
     def on_add_media_to_autodj_session(self, _event):
         state = self._get_playlist_state()
         if state is None or not state.autodj_session:
-            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."))
+            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."), ANNOUNCE_ERRORS)
             return False
 
         with wx.FileDialog(
@@ -281,7 +293,7 @@ class FrameAutoDJMixin:
             if path not in known_paths and is_audio_playback_media(path)
         ]
         if not added_paths:
-            self._announce(_("Nenhuma música nova foi adicionada à sessão AutoDJ."))
+            self._announce(_("Nenhuma música nova foi adicionada à sessão AutoDJ."), ANNOUNCE_ERRORS)
             return False
 
         state.autodj_source_items.extend(added_paths)
@@ -295,7 +307,8 @@ class FrameAutoDJMixin:
             register_in_library(added_paths, [Path(path).name or path for path in added_paths])
         self._refresh_playlist_browser()
         self._announce(
-            _("{count} músicas adicionadas à sessão AutoDJ.").format(count=len(added_paths))
+            _("{count} músicas adicionadas à sessão AutoDJ.").format(count=len(added_paths)),
+            ANNOUNCE_CONFIRMATIONS
         )
         self._maybe_fill_autodj_session(state)
         return True
@@ -303,7 +316,7 @@ class FrameAutoDJMixin:
     def on_toggle_autodj_preparation(self, _event):
         state = self._get_playlist_state()
         if state is None or not state.autodj_session:
-            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."))
+            self._announce(_("Nenhuma sessão AutoDJ está ativa nesta aba."), ANNOUNCE_ERRORS)
             return False
         state.autodj_preparation_paused = not state.autodj_preparation_paused
         if state.autodj_preparation_paused:
@@ -318,7 +331,7 @@ class FrameAutoDJMixin:
             }
             message = _("Preparação da sessão AutoDJ retomada.")
         self._refresh_playlist_browser()
-        self._announce(message)
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
         if not state.autodj_preparation_paused:
             self._maybe_fill_autodj_session(state)
         return True
@@ -770,7 +783,10 @@ class FrameAutoDJMixin:
     def on_toggle_autodj(self, _event):
         enabling = not bool(getattr(self.settings, "autodj_enabled", False))
         if enabling and not autodj_dependencies_available():
-            self._announce(_("Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."))
+            self._announce(
+                _("Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."),
+                ANNOUNCE_ERRORS,
+            )
             return False
         self.settings.autodj_enabled = enabling
         self._discard_autodj_transition_requests()
@@ -780,7 +796,7 @@ class FrameAutoDJMixin:
             apply_filters()
         self._save_settings()
         status = _("ativado") if self.settings.autodj_enabled else _("desativado")
-        self._announce(_("AutoDJ {status}.").format(status=status))
+        self._announce(_("AutoDJ {status}.").format(status=status), ANNOUNCE_STATE)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(_("AutoDJ: {status}.").format(status=status))
 

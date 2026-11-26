@@ -46,6 +46,8 @@ The first time you open it, the window shows an empty playlist tab. It has these
 
 `Tab` or `Ctrl+B` switch focus between the item browser and the player (with the explorer open, `Tab` goes through it too). `F1`, at any time, opens the quick shortcuts help.
 
+In Preferences and in the dialogs, each field's label has an underlined letter: `Alt` plus that letter moves the focus straight to the field, without going through the others with `Tab`.
+
 ## How to open media
 
 There are three ways to put media into KeyTune: open, paste and use the folder explorer. All three work the same way: what comes in goes to the **current playlist** and starts playing. With `Shift`, it goes in **without playing**, at the end of the list, and whatever was playing keeps playing.
@@ -403,7 +405,7 @@ The list works like the folder explorer (see [How lists work](#how-lists-work)) 
 - **Liked YouTube videos**: the videos you liked on YouTube. Requires a connected account and YouTube.js turned on.
 - **Shorts**: `Enter` opens a **Shorts** tab and plays the first short of the sequence YouTube suggests to the account. As on a phone, each short **repeats until you move on**: the next-item key goes to the following one, and KeyTune fetches more shorts when the queue is running out. The screen reader speaks each one's title and channel. Requires a connected account and YouTube.js turned on.
 - **Videos from subscriptions**: the new videos from the channels you are subscribed to, with duration, views and date. Requires a connected account and YouTube.js turned on.
-- **Subscribed channels**: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts, playlists and posts. Requires a connected account and YouTube.js turned on. To subscribe, unsubscribe or change what a channel notifies you of, see [A channel's subscription and notifications](#a-channels-subscription-and-notifications).
+- **Subscribed channels**: the channels you are subscribed to. Each one opens like any channel, so you can choose between videos, Shorts, live broadcasts, playlists and posts. Requires a connected account and YouTube.js turned on. To subscribe, unsubscribe or change what a channel notifies you of, see [A channel's subscription and notifications](#a-channel-s-subscription-and-notifications).
 - **Notifications**: your YouTube account's notification inbox. Requires a connected account and YouTube.js turned on. See [YouTube notifications](#youtube-notifications).
 - **Trending**: *Global* and the continents. Go into a continent, choose the country, and the charts and highlights that are trending appear as playlists you can play, open or save to the library. Does not require an account.
 - **Moods and genres**: YouTube Music's mood and genre categories (*Focus*, *Workout*, *Pop*, *Rock*...). Go into a category to see its playlists. Does not require an account.
@@ -665,6 +667,10 @@ In addition to the keys in [How lists work](#how-lists-work):
 
 Type the name of a radio station in the search field and press `Enter`. The **In** box chooses where to search: **Worldwide** or only your country. If you paste a stream address into the field, it plays right away, with no search.
 
+### Add a radio manually
+
+When a station is not in the Radio Browser directory, the **Add radio manually...** button (reached with `Tab`, right after the search field, or from the **Actions...** menu) opens a box with two fields: the station **name** and the **stream address or M3U file address**. When you confirm with **OK**, the station is saved and goes straight to **Favorite radio stations**, and KeyTune confirms with a status announcement.
+
 ### How the radio plays
 
 The station goes into the current playlist under the station's name. It plays as an audio-only live broadcast: you can't rewind or fast-forward, and it stays out of AutoDJ and crossfade.
@@ -791,7 +797,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 ### General
 
-**Restore session on startup**, **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
+**Restore session on startup**, **Open KeyTube on startup** (unchecked by default and available only with the YouTube integration turned on in **Additional resources**; it opens the KeyTube tab together with the app), **Remember window size**, **Remember last used folder** and **Confirm on exit** do what the name says. **Use the quick player when opening files from Windows** comes checked and decides whether an audio file opened from File Explorer plays in the small window or in the main window (see [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
 The **System tray** section has **When minimizing, hide to the system tray** and **When closing, hide to the system tray**; see [System tray](#system-tray).
 
@@ -812,9 +818,9 @@ With AutoDJ installed, there are two more options: **AutoDJ profile** (*Smooth* 
 
 ### Accessibility
 
-The first option is **Enable accessibility announcements**. When on, the player announces changes of time, volume, tab switching and status to the screen reader. When off, those announcements stop. The on-demand announcement shortcuts (`T`, `V` and `S`) work either way. See [Accessibility features](#accessibility-features).
+The first option is **Enable accessibility announcements**. It is the master switch: when off, the player says nothing by itself; when on, your choice for each notice in the **Notices that speak** list applies. See [Accessibility features](#accessibility-features).
 
-**Interrupt the screen reader speech** comes off: the announcement waits for the reader to finish what it is saying instead of cutting it off. When on, the announcement speaks at once, over it. **Speak event notices while KeyTune is active** decides whether the notices that arrive by themselves speak while you are in the KeyTune window; when off, they only speak with KeyTune in the background (the sounds keep playing). The **Event notices that speak** list turns each one on or off: new live chat messages, message sent or chat ended, new YouTube notifications, finished download and sleep timer warnings.
+**Interrupt the screen reader speech** comes off: the announcement waits for the reader to finish what it is saying instead of cutting it off. When on, the announcement speaks at once, over it. **Speak event notices while KeyTune is active** decides whether the notices that arrive by themselves speak while you are in the KeyTune window; when off, they only speak with KeyTune in the background (the sounds keep playing). The **Notices that speak** list turns each kind of notice on or off separately: playback (pause, resume, start and end of the file, audio device); track change and SponsorBlock (the track that started and the skipped or muted segments); speed and pitch when they change; modes turned on or off (shuffle, repeat, equalizer, AutoDJ); navigation (tabs, start and end of lists, opening items); progress (loading, searching, starting); confirmations (copied, saved, added, removed); errors and unavailable actions; new live chat messages; message sent or chat ended; new YouTube notifications; finished download; and sleep timer warnings. Only the last five, which arrive by themselves, follow the option to speak while KeyTune is active. All of them come on. What you ask for with `T` (time), `V` (volume) and `S` (status), and the volume when you raise or lower it, does not depend on the list: it always speaks as long as the master switch is on. The notices that dialogs give about themselves (for example, when you turn on an option in Preferences) follow only the master switch.
 
 The **Alert sounds** group has **Play alert sounds**, which turns all of them on or off at once, **Alert sounds volume** and the **Sounds that play** list, with one box per sound: `Space` turns the item's sound on or off and, when turned on, it plays so you know which one it is. Below the list, **Listen to the sound** plays the selected item's, **Choose a file for the sound...** puts an audio file from your computer in its place and **Back to the original sound** undoes the change. The chosen file is copied into KeyTune's data and cut at 5 seconds; with FFmpeg installed any audio format works, without it only 16-bit WAV. They are short sounds, each for one event:
 

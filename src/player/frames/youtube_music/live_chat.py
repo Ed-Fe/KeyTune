@@ -16,7 +16,13 @@ from player.youtube_music.models import YouTubeResultPage
 from player.youtube_music.playlists import extract_video_id_from_text
 
 from ... import interface_sounds
-from ...announcements import ANNOUNCE_CHAT_MESSAGES, ANNOUNCE_CHAT_STATUS
+from ...announcements import (
+    ANNOUNCE_CHAT_MESSAGES,
+    ANNOUNCE_CHAT_STATUS,
+    ANNOUNCE_ERRORS,
+    ANNOUNCE_NAVIGATION,
+    ANNOUNCE_STATE,
+)
 from ...i18n import _
 from ...log import get_logger
 from .navigation import YouTubeResultsView
@@ -58,7 +64,8 @@ class LiveChatMixin:
         self._announce(
             _("As mensagens do chat serão faladas.")
             if self._youtube_live_chat_speech
-            else _("As mensagens do chat não serão mais faladas.")
+            else _("As mensagens do chat não serão mais faladas."),
+            ANNOUNCE_STATE
         )
         return True
 
@@ -68,7 +75,7 @@ class LiveChatMixin:
             result = self._selected_youtube_music_search_result()
         media_url = self._youtube_music_comments_url(result)
         if not media_url:
-            self._announce(_("Este item não tem chat ao vivo."))
+            self._announce(_("Este item não tem chat ao vivo."), ANNOUNCE_ERRORS)
             return False
         return self._open_youtube_music_live_chat_view(media_url, getattr(result, "title", ""))
 
@@ -77,7 +84,7 @@ class LiveChatMixin:
         state = self._get_active_playlist_state()
         media_path = str(getattr(state, "current_media_path", "") or "").strip()
         if not media_path or not extract_video_id_from_text(media_path):
-            self._announce(_("A mídia atual não é do YouTube: não há chat ao vivo."))
+            self._announce(_("A mídia atual não é do YouTube: não há chat ao vivo."), ANNOUNCE_ERRORS)
             return False
         media_title = self._media_label(media_path)
         self.on_open_youtube_music(None)
@@ -106,7 +113,7 @@ class LiveChatMixin:
             fetch_page=fetch_page,
             context=LiveChatContext(media_url=media_url),
         )
-        self._announce(_("Abrindo {title}.").format(title=view.title))
+        self._announce(_("Abrindo {title}.").format(title=view.title), ANNOUNCE_NAVIGATION)
         started = self._load_youtube_music_results_view(
             view,
             mode="push",
@@ -205,7 +212,7 @@ class LiveChatMixin:
         """Pede o texto e o envia ao chat da lista na tela; com *restriction*, só diz por que não dá."""
         if restriction:
             interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
-            self._announce(_("Você não pode escrever neste chat: {reason}").format(reason=restriction))
+            self._announce(_("Você não pode escrever neste chat: {reason}").format(reason=restriction), ANNOUNCE_ERRORS)
             return False
         view = self._youtube_music_current_results_view()
         if not isinstance(view.context, LiveChatContext) or not self._ensure_youtube_music_authenticated():
@@ -220,7 +227,7 @@ class LiveChatMixin:
         finally:
             dialog.Destroy()
         if not text:
-            self._announce(_("Nada foi escrito: a mensagem não foi enviada."))
+            self._announce(_("Nada foi escrito: a mensagem não foi enviada."), ANNOUNCE_ERRORS)
             return False
         media_url = view.context.media_url
 

@@ -8,6 +8,7 @@ from player.youtube_music.playlists import looks_like_link
 from .navigation import YouTubeResultsView
 
 from ...playlists import PlaylistState
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
 
 class SearchMixin:
@@ -49,9 +50,12 @@ class SearchMixin:
             return False
 
         if len(lists) == 1:
-            self._announce(_("Carregando as faixas de {title} para baixar.").format(title=lists[0].title))
+            self._announce(
+                _("Carregando as faixas de {title} para baixar.").format(title=lists[0].title),
+                ANNOUNCE_PROGRESS,
+            )
         else:
-            self._announce(_("Carregando as faixas das listas selecionadas para baixar."))
+            self._announce(_("Carregando as faixas das listas selecionadas para baixar."), ANNOUNCE_PROGRESS)
 
         def worker():
             return self._youtube_music_download_entries_with_folders(search_results)
@@ -190,14 +194,17 @@ class SearchMixin:
                 "{count} itens da seleção foram ignorados.",
                 skipped_count,
             ).format(count=skipped_count)
-        self._announce(normalized_message)
+        self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
         if hasattr(self, "_set_status_message"):
             self._set_status_message(normalized_message)
 
     def _open_youtube_music_search_results_in_new_playlist(self):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce(_("Selecione ao menos um resultado da busca para abrir em uma nova playlist."))
+            self._announce(
+                _("Selecione ao menos um resultado da busca para abrir em uma nova playlist."),
+                ANNOUNCE_ERRORS,
+            )
             return False
 
         def worker():
@@ -208,7 +215,7 @@ class SearchMixin:
             target_index = self._create_empty_playlist_tab(select=False)
             target_state = self._get_playlist_state(target_index)
             if not isinstance(target_state, PlaylistState):
-                self._announce(_("Não foi possível criar uma nova playlist para a seleção atual."))
+                self._announce(_("Não foi possível criar uma nova playlist para a seleção atual."), ANNOUNCE_ERRORS)
                 return
 
             target_state.finish_library_load()
@@ -256,12 +263,15 @@ class SearchMixin:
     def _add_youtube_music_search_results_to_playlist_tab(self, target_index):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce(_("Selecione ao menos um resultado da busca para adicionar à playlist escolhida."))
+            self._announce(
+                _("Selecione ao menos um resultado da busca para adicionar à playlist escolhida."),
+                ANNOUNCE_ERRORS,
+            )
             return False
 
         target_state = self._get_playlist_state(target_index)
         if not isinstance(target_state, PlaylistState) or target_state.is_folder_tab or target_state.is_loading:
-            self._announce(_("A playlist escolhida não está disponível para receber a seleção atual."))
+            self._announce(_("A playlist escolhida não está disponível para receber a seleção atual."), ANNOUNCE_ERRORS)
             return False
 
         def worker():
@@ -276,7 +286,10 @@ class SearchMixin:
             )
 
             if added_count == 0:
-                self._announce(_("Os itens selecionados já estavam presentes na playlist: {title}.").format(title=target_state.title))
+                self._announce(
+                    _("Os itens selecionados já estavam presentes na playlist: {title}.").format(title=target_state.title),
+                    ANNOUNCE_ERRORS,
+                )
                 return
 
             self._add_recent_media_paths(prepared_items)
@@ -315,7 +328,7 @@ class SearchMixin:
     def _save_youtube_music_search_result(self):
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce(_("Selecione ao menos um resultado da busca para salvar."))
+            self._announce(_("Selecione ao menos um resultado da busca para salvar."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -345,7 +358,7 @@ class SearchMixin:
             ).format(count=success_count)
             self._youtube_music_library_status_message = normalized_message
             self._refresh_youtube_music_screen_later()
-            self._announce(normalized_message)
+            self._announce(normalized_message, ANNOUNCE_CONFIRMATIONS)
             if playlist_saved:
                 self.on_refresh_youtube_music_library(None, announce=False)
 
@@ -363,7 +376,10 @@ class SearchMixin:
         """Põe a seleção da busca na playlist atual; com *play*, toca o primeiro item dela."""
         search_results = self._selected_youtube_music_search_results()
         if not search_results:
-            self._announce(_("Selecione ao menos um resultado da busca para adicionar à playlist atual."))
+            self._announce(
+                _("Selecione ao menos um resultado da busca para adicionar à playlist atual."),
+                ANNOUNCE_ERRORS,
+            )
             return False
 
         if len(search_results) == 1 and getattr(search_results[0], "result_type", "") == "comment":
@@ -383,7 +399,7 @@ class SearchMixin:
 
         target_state = self._resolve_youtube_music_player_playlist_target()
         if not isinstance(target_state, PlaylistState):
-            self._announce(_("Não foi possível localizar uma playlist de destino no player."))
+            self._announce(_("Não foi possível localizar uma playlist de destino no player."), ANNOUNCE_ERRORS)
             return False
 
         service = self._get_youtube_music_service()
@@ -400,7 +416,7 @@ class SearchMixin:
             )
 
             if added_count == 0 and not play:
-                self._announce(_("Os itens selecionados já estavam presentes na playlist atual."))
+                self._announce(_("Os itens selecionados já estavam presentes na playlist atual."), ANNOUNCE_ERRORS)
                 return
 
             if added_count:
@@ -447,7 +463,7 @@ class SearchMixin:
 
         query = panel.get_search_query()
         if not query:
-            self._announce(_("Digite algo para pesquisar no YouTube Music ou no YouTube."))
+            self._announce(_("Digite algo para pesquisar no YouTube Music ou no YouTube."), ANNOUNCE_ERRORS)
             return False
         if looks_like_link(query):
             return self._open_youtube_music_link(query)
@@ -458,7 +474,7 @@ class SearchMixin:
             return False
 
         service = self._get_youtube_music_service()
-        self._announce(_("Pesquisando {query}.").format(query=query))
+        self._announce(_("Pesquisando {query}.").format(query=query), ANNOUNCE_PROGRESS)
 
         def fetch_page(start, count):
             return service.fetch_search_page(query, search_scope=search_scope_id, start=start, count=count)

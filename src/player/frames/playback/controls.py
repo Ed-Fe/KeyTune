@@ -1,6 +1,7 @@
 from ...constants import PROGRESS_GAUGE_RANGE, REPEAT_OFF
 from ...i18n import _
 from .live import is_live_media
+from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK, ANNOUNCE_SPEED_PITCH
 
 PLAYBACK_RATE_STEP = 0.25
 PLAYBACK_RATE_MIN = 0.25
@@ -168,7 +169,8 @@ class PlaybackControlsMixin:
 
     def _announce_current_playback_rate(self):
         self._announce(
-            _("Velocidade de reprodução: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate))
+            _("Velocidade de reprodução: {rate}.").format(rate=self._format_playback_rate(self.current_playback_rate)),
+            ANNOUNCE_SPEED_PITCH
         )
 
     def _format_pitch_label(self, semitones):
@@ -188,7 +190,10 @@ class PlaybackControlsMixin:
         self._announce_current_pitch()
 
     def _announce_current_pitch(self):
-        self._announce(_("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)))
+        self._announce(
+            _("Tom: {pitch}.").format(pitch=self._format_pitch_label(self.current_pitch_semitones)),
+            ANNOUNCE_SPEED_PITCH,
+        )
 
     def _seek_to_start(self):
         if self._crossfade_state:
@@ -209,7 +214,7 @@ class PlaybackControlsMixin:
 
         self.player.set_time(0)
         self._update_time_bar()
-        self._announce(_("Início do arquivo."))
+        self._announce(_("Início do arquivo."), ANNOUNCE_PLAYBACK)
 
     def _seek_to_end(self):
         if self._crossfade_state:
@@ -235,7 +240,7 @@ class PlaybackControlsMixin:
             self.player.set_time(max(0, media_length - 1000))
 
         self._update_time_bar()
-        self._announce(_("Fim do arquivo."))
+        self._announce(_("Fim do arquivo."), ANNOUNCE_PLAYBACK)
 
     def _play_selected_playlist(self):
         # Enter no player: a playlist à vista assume a reprodução, de onde
@@ -246,7 +251,7 @@ class PlaybackControlsMixin:
         selected_index = self._get_selected_playlist_index()
         state = self._get_playlist_state(selected_index)
         if not state or state.is_loading or not state.current_media_path:
-            self._announce(_("A playlist atual está vazia."))
+            self._announce(_("A playlist atual está vazia."), ANNOUNCE_ERRORS)
             return
 
         if self._is_active_playlist_state(state) and self.player.get_media():
@@ -262,7 +267,7 @@ class PlaybackControlsMixin:
         if not self.player.get_media():
             media_start_is_pending = getattr(self, "_media_start_is_pending", None)
             if callable(media_start_is_pending) and media_start_is_pending():
-                self._announce(_("A mídia ainda está carregando."))
+                self._announce(_("A mídia ainda está carregando."), ANNOUNCE_ERRORS)
                 return
             # Player vazio: a playlist à vista retoma de onde tinha parado.
             selected_index = self._get_selected_playlist_index()
@@ -295,7 +300,7 @@ class PlaybackControlsMixin:
                 if state:
                     state.was_playing = False
                 self._update_time_bar()
-                self._announce(_("Pausado."))
+                self._announce(_("Pausado."), ANNOUNCE_PLAYBACK)
                 if hasattr(self, "_set_status_message") and state and state.current_media_path:
                     self._set_status_message(
                         _("Pausado: {name}").format(name=self._media_label(state.current_media_path)),
@@ -312,7 +317,7 @@ class PlaybackControlsMixin:
             if state:
                 state.was_playing = True
             self._update_time_bar()
-            self._announce(_("Reprodução retomada."))
+            self._announce(_("Reprodução retomada."), ANNOUNCE_PLAYBACK)
             if hasattr(self, "_set_status_message") and state and state.current_media_path:
                 self._set_status_message(
                     _("Tocando: {name}").format(name=self._media_label(state.current_media_path)),
@@ -323,12 +328,12 @@ class PlaybackControlsMixin:
                 refresh_smtc()
 
     def _announce_live_seek_unavailable(self):
-        self._announce(_("Não é possível avançar ou voltar em uma transmissão ao vivo."))
+        self._announce(_("Não é possível avançar ou voltar em uma transmissão ao vivo."), ANNOUNCE_ERRORS)
 
     def _announce_playback_time(self):
         media = self.player.get_media()
         if not media:
-            self._announce(_("Nenhuma mídia carregada."))
+            self._announce(_("Nenhuma mídia carregada."), ANNOUNCE_ERRORS)
             return
 
         current_time = self.player.get_time()
@@ -336,7 +341,9 @@ class PlaybackControlsMixin:
             # MPV joins a live partway into its buffer, so measure from where we started.
             watched_ms = max(0, (current_time or 0) - (getattr(self, "_live_watch_baseline_ms", None) or 0))
             watched_label = self._format_time_ms(watched_ms)
-            self._announce(_("Transmissão ao vivo. Você está assistindo há {time}.").format(time=watched_label))
+            self._announce(
+                _("Transmissão ao vivo. Você está assistindo há {time}.").format(time=watched_label),
+            )
             return
 
         if current_time is None or current_time < 0:
@@ -351,7 +358,9 @@ class PlaybackControlsMixin:
 
         total_label = self._format_time_ms(total_time)
         percentage = int(max(0, min(100, round((max(0, current_time) / total_time) * 100)))) if total_time > 0 else 0
-        self._announce(_("{current} de {total}. {percent}%.").format(current=current_label, total=total_label, percent=percentage))
+        self._announce(
+            _("{current} de {total}. {percent}%.").format(current=current_label, total=total_label, percent=percentage),
+        )
 
     def _announce_current_volume(self):
         self._announce(f"{self.current_volume}%.")

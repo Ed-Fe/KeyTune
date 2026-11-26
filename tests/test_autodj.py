@@ -1150,7 +1150,7 @@ class AutoDJTests(unittest.TestCase):
             def _play_media(self, **kwargs): self.played.append(kwargs)
             def _maybe_fill_autodj_session(self, _state=None): return True
             def _refresh_autodj_menu_state(self): pass
-            def _announce(self, _message): pass
+            def _announce(self, _message, category=None): pass
 
         frame = Frame()
         self.assertTrue(frame.on_start_autodj_session(None))
@@ -1213,7 +1213,7 @@ class AutoDJTests(unittest.TestCase):
             def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, _state=None): return True
-            def _announce(self, _message): pass
+            def _announce(self, _message, category=None): pass
 
         frame = Frame()
         self.assertTrue(frame.on_recalculate_autodj_session(None))
@@ -1246,7 +1246,7 @@ class AutoDJTests(unittest.TestCase):
             def _get_active_playlist_state(self): return self.state
             def _refresh_playlist_browser(self): pass
             def _maybe_fill_autodj_session(self, _state=None): self.fill_count += 1; return True
-            def _announce(self, _message): pass
+            def _announce(self, _message, category=None): pass
 
         frame = Frame()
         self.assertTrue(frame.on_toggle_autodj_preparation(None))

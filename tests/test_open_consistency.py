@@ -25,6 +25,7 @@ from player.frames.library_navigation import FrameLibraryNavigationMixin
 from player.frames.youtube_music.search import SearchMixin
 from player.playlists import PlaylistState
 from player.youtube_music.panel import YouTubeMusicTabPanel
+from player.announcements import ANNOUNCE_ERRORS
 
 
 class RecentFilesTests(unittest.TestCase):
@@ -57,7 +58,7 @@ class RecentFilesTests(unittest.TestCase):
 
         frame._play_media_paths_in_current_playlist.assert_not_called()
         frame._remove_recent_path.assert_called_once_with("recent_media_files", missing)
-        frame._announce.assert_called_once_with("O item recente selecionado não está mais disponível.")
+        frame._announce.assert_called_once_with("O item recente selecionado não está mais disponível.", ANNOUNCE_ERRORS)
 
 
 class _SearchFrame(SearchMixin, FrameLibraryNavigationMixin):

@@ -46,6 +46,8 @@ La primera vez que lo abres, la ventana muestra una pestaña de playlist vacía.
 
 `Tab` o `Ctrl+B` alternan el foco entre el navegador de elementos y el reproductor (con el explorador abierto, `Tab` también pasa por él). `F1`, en cualquier momento, abre la ayuda rápida de atajos.
 
+En Preferencias y en los diálogos, la etiqueta de cada campo tiene una letra subrayada: `Alt` con esa letra lleva el foco directo al campo, sin pasar por los demás con `Tab`.
+
 ## Cómo abrir medios
 
 Hay tres formas de poner medios en KeyTune: abrir, pegar y usar el explorador de carpetas. Las tres funcionan igual: lo que entra va a la **playlist actual** y empieza a sonar. Con `Shift`, entra **sin reproducir**, al final de la lista, y lo que sonaba continúa.
@@ -665,6 +667,10 @@ Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas
 
 Escribe el nombre de una radio en el campo de búsqueda y pulsa `Enter`. El cuadro **En** elige dónde buscar: **Todo el mundo** o solo tu país. Si pegas en el campo la dirección de un stream, suena directamente, sin búsqueda.
 
+### Añadir una radio manualmente
+
+Cuando una radio no esté en el directorio de Radio Browser, el botón **Añadir radio manualmente...** (se alcanza con `Tab`, justo después del campo de búsqueda, o desde el menú **Acciones...**) abre un cuadro con dos campos: el **nombre** de la radio y la **dirección del stream o de un archivo M3U**. Al confirmar con **OK**, la radio se guarda y va directo a **Radios favoritas**, y KeyTune avisa con un anuncio de estado.
+
 ### Cómo suena la radio
 
 La radio entra en la playlist actual con el nombre de la emisora. Suena como una transmisión en vivo solo de audio: no se puede avanzar ni retroceder, y queda fuera de AutoDJ y del crossfade.
@@ -791,7 +797,7 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 
 ### General
 
-**Restaurar sesión al iniciar**, **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre. **Usar el reproductor rápido al abrir archivos desde Windows** viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
+**Restaurar sesión al iniciar**, **Abrir KeyTube al iniciar** (viene desmarcada y solo está disponible con la integración con YouTube activada en **Recursos adicionales**; abre la pestaña KeyTube junto con la app), **Recordar tamaño de la ventana**, **Recordar última carpeta usada** y **Confirmar al salir** hacen lo que dice su nombre. **Usar el reproductor rápido al abrir archivos desde Windows** viene marcado y decide si un archivo de audio abierto desde el Explorador de archivos suena en la ventana pequeña o en la ventana principal (consulta [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
 
 La sección **Bandeja del sistema** tiene **Al minimizar, ocultar en la bandeja del sistema** y **Al cerrar, ocultar en la bandeja del sistema**; consulta [Bandeja del sistema](#bandeja-del-sistema).
 
@@ -812,9 +818,9 @@ Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace 
 
 ### Accesibilidad
 
-La primera opción es **Activar anuncios de accesibilidad**. Activada, el reproductor anuncia al lector de pantalla los cambios de tiempo, volumen, cambio de pestañas y estado. Desactivada, esos anuncios se detienen. Los atajos de anuncio bajo demanda (`T`, `V` y `S`) funcionan en cualquier caso. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
+La primera opción es **Activar anuncios de accesibilidad**. Es el interruptor general: desactivada, el reproductor no dice nada por sí solo; activada, vale la elección de cada aviso de la lista **Avisos que hablan**. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
 
-**Interrumpir la voz del lector de pantalla** viene desactivada: el anuncio espera a que el lector termine lo que está diciendo, en lugar de cortarlo. Activada, el anuncio habla al instante, por encima. **Decir los avisos de eventos con KeyTune activo** decide si los avisos que llegan solos hablan mientras estás en la ventana de KeyTune; desactivada, solo hablan con KeyTune en segundo plano (los sonidos siguen sonando). La lista **Avisos de eventos que hablan** activa y desactiva cada uno: mensajes nuevos del chat en vivo, mensaje enviado o chat terminado, notificaciones nuevas de YouTube, descarga terminada y avisos del temporizador.
+**Interrumpir la voz del lector de pantalla** viene desactivada: el anuncio espera a que el lector termine lo que está diciendo, en lugar de cortarlo. Activada, el anuncio habla al instante, por encima. **Decir los avisos de eventos con KeyTune activo** decide si los avisos que llegan solos hablan mientras estás en la ventana de KeyTune; desactivada, solo hablan con KeyTune en segundo plano (los sonidos siguen sonando). La lista **Avisos que hablan** activa y desactiva cada tipo de aviso por separado: reproducción (pausa, reanudación, inicio y fin del archivo, dispositivo de audio); cambio de pista y SponsorBlock (la pista que empezó y los tramos saltados o silenciados); velocidad y tono al cambiar; modos activados o desactivados (aleatorio, repetición, ecualizador, AutoDJ); navegación (pestañas, inicio y fin de listas, apertura de elementos); progreso (cargando, buscando, iniciando); confirmaciones (copiado, guardado, añadido, quitado); errores y acciones no disponibles; mensajes nuevos del chat en vivo; mensaje enviado o chat terminado; notificaciones nuevas de YouTube; descarga terminada; y avisos del temporizador. Solo los cinco últimos, que llegan solos, obedecen a la opción de hablar con KeyTune activo. Todos vienen activados. Lo que pides con `T` (tiempo), `V` (volumen) y `S` (estado), y el volumen al subir o bajar, no depende de la lista: siempre habla mientras el interruptor general esté activado. Los avisos que dan los propios diálogos (por ejemplo, al activar una opción en Preferencias) siguen solo el interruptor general.
 
 El grupo **Sonidos de aviso** tiene **Reproducir sonidos de aviso**, que los activa o desactiva todos a la vez, **Volumen de los sonidos de aviso** y la lista **Sonidos que suenan**, con una casilla por sonido: `Espacio` activa o desactiva el sonido del elemento y, al activarlo, suena para que sepas cuál es. Debajo de la lista, **Escuchar el sonido** reproduce el del elemento seleccionado, **Elegir un archivo para el sonido...** pone un audio de tu equipo en su lugar y **Volver al sonido original** deshace el cambio. El archivo elegido se copia a los datos de KeyTune y se corta a los 5 segundos; con FFmpeg instalado sirve cualquier formato de audio, sin él solo WAV de 16 bits. Son sonidos cortos, cada uno para un suceso:
 

@@ -135,6 +135,11 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar documentação de plugins: $($guide.Name)." }
           }
 
+      - name: Bundle YouTube connection guide (ready-made HTML)
+        shell: powershell
+        run: |
+          Copy-Item -Path "docs\conectar-conta-youtube.html" -Destination "dist\KeyTune\docs" -Force
+
       - name: Render manual as HTML (per language)
         shell: powershell
         run: |
@@ -164,6 +169,11 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force "dist\KeyTune\docs\changelog" | Out-Null
           Copy-Item -Path "docs\changelog\*.md" -Exclude "unreleased*" -Destination "dist\KeyTune\docs\changelog" -Force
+
+      - name: Bundle user manual (Markdown, read by the manual window)
+        shell: powershell
+        run: |
+          Copy-Item -Path "docs\manual.md", "docs\manual.*.md" -Exclude "manual.preview*" -Destination "dist\KeyTune\docs" -Force
 
       - name: Bundle MPV runtime into dist
         shell: powershell

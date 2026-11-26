@@ -6,6 +6,7 @@ from player.youtube_music.playlists import build_youtube_watch_url
 
 from ... import interface_sounds
 from ...i18n import _
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 
 class WatchLaterMixin:
@@ -53,12 +54,13 @@ class WatchLaterMixin:
 
         def on_done(_result):
             interface_sounds.play_for(self, interface_sounds.SOUND_SUCCESS)
-            self._announce(done_message.format(title=result.title))
+            self._announce(done_message.format(title=result.title), ANNOUNCE_CONFIRMATIONS)
 
         def on_error(exc):
             interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
             self._announce(
-                error_message + " " + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc))
+                error_message + " " + _("Detalhes: {detail}").format(detail=self._format_youtube_music_error_detail(exc)),
+                ANNOUNCE_ERRORS
             )
 
         return self._run_youtube_music_background_task(worker, on_done, on_error=on_error)

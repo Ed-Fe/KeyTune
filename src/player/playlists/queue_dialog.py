@@ -46,7 +46,7 @@ class QueueManagerDialog(wx.Dialog):
         intro_label.Wrap(520)
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
-        list_label = wx.StaticText(panel, label=_("Itens na fila:"))
+        list_label = wx.StaticText(panel, label=_("&Itens na fila:"))
         root_sizer.Add(list_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 10)
 
         self.queue_list = wx.ListBox(panel, style=wx.LB_SINGLE)

@@ -55,7 +55,7 @@ class _EqualizerFrame(FrameEqualizerMixin):
         self.playing = playing
         self.playlists = [playing]
         self.announcements = []
-        self._announce = self.announcements.append
+        self._announce = lambda message, category=None: self.announcements.append(message)
         self._save_settings = Mock()
         self._refresh_equalizer_screen = Mock()
         self._apply_equalizer_state_to_current_playback = Mock(return_value=True)

@@ -86,7 +86,7 @@ class ConvertDialog(wx.Dialog):
         self.format_choice = add_choice_row(
             panel,
             options_sizer,
-            _("Formato de destino"),
+            _("&Formato de destino"),
             self._format_help_text(),
             labels,
         )
@@ -101,7 +101,7 @@ class ConvertDialog(wx.Dialog):
             self.bitrate_choice = add_choice_row(
                 panel,
                 options_sizer,
-                _("Qualidade do áudio"),
+                _("&Qualidade do áudio"),
                 _("Taxa de bits dos formatos com perdas (MP3, M4A, OGG e Opus). FLAC e WAV não usam esta opção."),
                 [bitrate_label(bitrate) for bitrate in AUDIO_BITRATES],
             )
@@ -111,7 +111,7 @@ class ConvertDialog(wx.Dialog):
             self.sample_rate_choice = add_choice_row(
                 panel,
                 options_sizer,
-                _("Taxa de amostragem do áudio"),
+                _("Taxa de &amostragem do áudio"),
                 _("Original mantém a taxa do arquivo. O Opus sempre usa 48000 Hz."),
                 [sample_rate_label(rate) for rate in SAMPLE_RATES],
             )
@@ -120,7 +120,7 @@ class ConvertDialog(wx.Dialog):
             self.height_choice = add_choice_row(
                 panel,
                 options_sizer,
-                _("Resolução do vídeo"),
+                _("&Resolução do vídeo"),
                 _("Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."),
                 [video_height_label(height) for height in VIDEO_HEIGHTS],
             )
@@ -138,7 +138,7 @@ class ConvertDialog(wx.Dialog):
         self.destination_choice = add_choice_row(
             panel,
             options_sizer,
-            _("Salvar em"),
+            _("&Salvar em"),
             _(
                 "Mesma pasta do arquivo original ou outra pasta à sua escolha. "
                 "O arquivo original nunca é alterado."
@@ -148,7 +148,7 @@ class ConvertDialog(wx.Dialog):
         self.directory_ctrl = add_directory_row(
             panel,
             options_sizer,
-            _("Outra pasta"),
+            _("&Outra pasta"),
             _("Pasta onde o arquivo convertido será salvo. Só vale com a opção Outra pasta."),
             _("Escolha a pasta de destino"),
             _("Escolher pasta de destino"),

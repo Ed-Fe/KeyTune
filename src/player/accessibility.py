@@ -68,6 +68,15 @@ class NamedControlAccessible(wx.Accessible):
         return wx.ACC_OK, str(value)
 
 
+def strip_mnemonic(text):
+    """*text* sem o ``&`` que marca o atalho Alt+letra; ``&&`` volta a ser um ``&``.
+
+    Use no nome de um controle tirado de um rótulo com atalho: o rótulo mostra a
+    letra sublinhada, mas o nome que o leitor de tela fala não leva o ``&``.
+    """
+    return str(text or "").replace("&&", "\0").replace("&", "").replace("\0", "&")
+
+
 def attach_named_accessible(window, name, description="", role=None, value_provider=None):
     if not hasattr(wx, "Accessible") or not hasattr(window, "SetAccessible"):
         return None

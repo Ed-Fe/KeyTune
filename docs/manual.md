@@ -46,6 +46,8 @@ Na primeira abertura, a janela mostra uma aba de playlist vazia. Ela tem estas �
 
 `Tab` ou `Ctrl+B` alternam o foco entre o navegador de itens e o player (com o explorador aberto, `Tab` passa por ele também). `F1`, em qualquer momento, abre a ajuda rápida de atalhos.
 
+Nas Preferências e nos diálogos, o rótulo de cada campo tem uma letra sublinhada: `Alt` com essa letra leva o foco direto ao campo, sem passar pelos outros com `Tab`.
+
 ## Como abrir mídia
 
 Há três jeitos de pôr mídia no KeyTune: abrir, colar e usar o explorador de pastas. Os três funcionam igual: o que entra vai para a **playlist atual** e começa a tocar. Com `Shift`, entra **sem tocar**, no fim da lista, e o que estava tocando continua.
@@ -803,7 +805,7 @@ As preferências abrem com `Ctrl+,` e se dividem em oito abas: **Geral**, **Repr
 
 ### Geral
 
-**Restaurar sessão ao iniciar**, **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
+**Restaurar sessão ao iniciar**, **Abrir o KeyTube ao iniciar** (vem desmarcado e só fica disponível com a integração com o YouTube ativada em **Recursos adicionais**; abre a aba KeyTube junto com o app), **Lembrar tamanho da janela**, **Lembrar última pasta usada** e **Confirmar ao sair** fazem o que o nome diz. **Usar o player rápido ao abrir arquivos pelo Windows** vem marcado e decide se um arquivo de áudio aberto pelo Explorador de Arquivos toca na janela pequena ou na janela principal (veja [Ouvir um arquivo direto do Explorador de Arquivos do Windows](#ouvir-um-arquivo-direto-do-explorador-de-arquivos-do-windows)).
 
 A seção **Bandeja do sistema** tem **Ao minimizar, ocultar na bandeja do sistema** e **Ao fechar, ocultar na bandeja do sistema**; veja [Bandeja do sistema](#bandeja-do-sistema).
 
@@ -824,9 +826,9 @@ Com o AutoDJ instalado, há duas opções a mais: **Perfil do AutoDJ** (*Suave* 
 
 ### Acessibilidade
 
-A primeira opção é **Ativar anúncios de acessibilidade**. Ligada, o player anuncia ao leitor de tela mudanças de tempo, volume, troca de abas e status. Desligada, esses anúncios param. Os atalhos de anúncio sob demanda (`T`, `V` e `S`) funcionam em qualquer caso. Veja [Acessibilidade](#recursos-de-acessibilidade).
+A primeira opção é **Ativar anúncios de acessibilidade**. É o interruptor geral: desligada, o player não fala nada sozinho; ligada, vale a escolha de cada aviso na lista **Avisos que falam**. Veja [Acessibilidade](#recursos-de-acessibilidade).
 
-**Interromper a fala do leitor de tela** vem desligada: o anúncio espera o leitor terminar o que está dizendo, em vez de cortá-lo. Ligada, o anúncio fala na hora, por cima. **Falar os avisos de eventos com o KeyTune ativo** decide se os avisos que chegam sozinhos falam enquanto você está na janela do KeyTune; desligada, eles só falam com o KeyTune em segundo plano (os sons continuam tocando). A lista **Avisos de eventos que falam** liga e desliga cada um: mensagens novas do chat ao vivo, mensagem enviada ou chat encerrado, notificações novas do YouTube, download concluído e avisos do temporizador.
+**Interromper a fala do leitor de tela** vem desligada: o anúncio espera o leitor terminar o que está dizendo, em vez de cortá-lo. Ligada, o anúncio fala na hora, por cima. **Falar os avisos de eventos com o KeyTune ativo** decide se os avisos que chegam sozinhos falam enquanto você está na janela do KeyTune; desligada, eles só falam com o KeyTune em segundo plano (os sons continuam tocando). A lista **Avisos que falam** liga e desliga cada tipo de aviso à parte: reprodução (pausa, retomada, início e fim do arquivo, dispositivo de áudio); troca de faixa e SponsorBlock (a faixa que começou e os trechos pulados ou silenciados); velocidade e tom ao mudar; modos ligados ou desligados (aleatório, repetição, equalizador, AutoDJ); navegação (abas, início e fim de listas, abertura de itens); progresso (carregando, pesquisando, iniciando); confirmações (copiado, salvo, adicionado, removido); erros e ações indisponíveis; mensagens novas do chat ao vivo; mensagem enviada ou chat encerrado; notificações novas do YouTube; download concluído; e avisos do temporizador. Só os cinco últimos, que chegam sozinhos, obedecem à opção de falar com o KeyTune ativo. Todas vêm ligadas. O que você pede com `T` (tempo), `V` (volume) e `S` (status), e o volume ao subir ou descer, não depende da lista: sempre falam, desde que o interruptor geral esteja ligado. Os avisos que os próprios diálogos dão (por exemplo, ao ligar uma opção em Preferências) seguem só o interruptor geral.
 
 O grupo **Sons de aviso** tem **Tocar sons de aviso**, que liga ou desliga todos de uma vez, **Volume dos sons de aviso** e a lista **Sons que tocam**, com uma caixa por som: `Espaço` liga ou desliga o som do item e, ao ligar, ele toca para você saber qual é. Abaixo da lista, **Ouvir o som** toca o do item selecionado, **Escolher um arquivo para o som...** põe um áudio do seu computador no lugar dele e **Voltar ao som original** desfaz a troca. O arquivo escolhido é copiado para os dados do KeyTune e cortado em 5 segundos; com o FFmpeg instalado serve qualquer formato de áudio, sem ele só WAV de 16 bits. São sons curtos, cada um para um acontecimento:
 

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Como conectar a conta do YouTube no KeyTune</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --text: #1f2328;
+  --muted: #5c6470;
+  --accent: #205375;
+  --accent-soft: #d9e7f0;
+  --border: #d7d0c4;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+  line-height: 1.65;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(32, 83, 117, 0.12), transparent 35%),
+    linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+}
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 18px 48px rgba(31, 35, 40, 0.08);
+  padding: 36px;
+}
+h1, h2, h3 { line-height: 1.2; }
+h1 { margin-top: 0; font-size: clamp(2rem, 4vw, 3rem); }
+h2 { margin-top: 2.25rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+h3 { margin-top: 1.5rem; }
+p, li { font-size: 1rem; }
+a { color: var(--accent); }
+code {
+  background: var(--accent-soft);
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+}
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #111827;
+  color: #f9fafb;
+}
+pre code { background: transparent; padding: 0; }
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  background: rgba(32, 83, 117, 0.04);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: rgba(32, 83, 117, 0.08); }
+footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.toc {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(32, 83, 117, 0.04);
+}
+.toc h2 {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.15rem;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.toc li { margin: 0.25rem 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+kbd {
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 0.92em;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 0.08rem 0.4rem;
+}
+</style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Como conectar a conta do YouTube no KeyTune</h1>
+      <p>Instruções detalhadas para conectar a conta do YouTube no KeyTune, usando o Google Chrome e o NVDA.</p>
+      <nav class="toc" aria-label="Etapas">
+        <h2>Etapas</h2>
+        <ol>
+          <li><a href="#antes">Antes de começar</a></li>
+          <li><a href="#extensao">Instalar a extensão no Google Chrome</a></li>
+          <li><a href="#anonima">Permitir a extensão na navegação anônima</a></li>
+          <li><a href="#cookies">Entrar na conta e copiar os cookies</a></li>
+          <li><a href="#keytune">Conectar no KeyTune</a></li>
+          <li><a href="#cuidados">Cuidados com os cookies</a></li>
+          <li><a href="#problemas">Se a conexão cair ou der erro</a></li>
+        </ol>
+      </nav>
+      <h2 id="antes">Antes de começar</h2>
+      <p>O KeyTune não pede a sua senha do Google. Ele usa os cookies do YouTube, pequenos arquivos em que o navegador guarda o seu login. Conectar a conta é entregar ao KeyTune uma cópia desses cookies, e este passo a passo mostra como gerá-la no Google Chrome com o NVDA.</p>
+      <p>Você vai precisar de:</p>
+<ul><li>O Google Chrome.</li><li>O NVDA em funcionamento.</li><li>A integração do KeyTune com o YouTube ligada. Em <strong>Preferências</strong>, na aba <strong>Recursos adicionais</strong>, marque <strong>Ativar a integração com YouTube e YouTube Music</strong>. Sem ela, a aba KeyTube não abre.</li></ul>
+      <h2 id="extensao">Instalar a extensão no Google Chrome</h2>
+      <ol>
+        <li>Abra o navegador Google Chrome e vá ao endereço: <a href="https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc">https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc</a></li>
+        <li>Localize e acione o botão "Usar no Chrome".</li>
+        <li>Surge uma caixa de diálogo para confirmar que você quer adicionar essa extensão ao Chrome. Acione "Adicionar".</li>
+      </ol>
+      <h2 id="anonima">Permitir a extensão na navegação anônima</h2>
+      <p>O KeyTune precisa de cookies de uma janela anônima, e a extensão só funciona lá se você permitir. Isso se faz uma vez só.</p>
+      <ol start="4">
+        <li>Pressione a tecla "Alt". O NVDA deve focar no menu do Chrome.</li>
+        <li>Use duas vezes o comando "Shift+Tab". Isso deve colocar o foco no botão "Extensões".</li>
+        <li>Pressione a barra de espaço no botão "Extensões".</li>
+        <li>Use a seta para a direita até localizar a extensão "Get cookies.txt LOCALLY".</li>
+        <li>Pressione mais duas vezes a seta para a direita e a barra de espaço em "More options".</li>
+        <li>Use a seta para baixo até "Gerenciar extensão" e pressione "Enter".</li>
+        <li>Pressione "Tab" até "Permitir na navegação anônima" e a barra de espaço para ativar.</li>
+        <li>Pressione "Ctrl+W" algumas vezes, se for necessário, até que se fechem todas as abas abertas do Google Chrome. Assim, a janela anônima do próximo passo será a única aberta.</li>
+      </ol>
+      <h2 id="cookies">Entrar na conta e copiar os cookies</h2>
+      <ol start="12">
+        <li>Abra novamente o Chrome e pressione "Ctrl+Shift+N". Isso deve abrir uma guia anônima.</li>
+        <li>Digite music.youtube.com e pressione "Enter".</li>
+        <li>Navegue com "Tab" até o botão de login e entre com a sua conta do Google.</li>
+        <li>Depois de logado, pressione "Alt", depois "Shift+Tab" duas vezes, e a barra de espaço em "Extensões". Use a seta para a direita até "Get cookies.txt LOCALLY", pressione a barra de espaço nela, use a seta para baixo até "Copycontent_paste" (é assim que o NVDA fala) e pressione "Enter". Os cookies ficam copiados na área de transferência.</li>
+        <li>Feche o Chrome. Não abra o YouTube de novo nessa janela: o YouTube troca os cookies de uma sessão que continua em uso, e os que você acabou de copiar deixariam de valer.</li>
+      </ol>
+      <h2 id="keytune">Conectar no KeyTune</h2>
+      <ol start="17">
+        <li>No KeyTune, abra o KeyTube: no menu <strong>Exibir</strong>, escolha <strong>KeyTube por aba</strong> (ou pressione "Ctrl+Shift+Y"). Se o KeyTube já estiver aberto, vá para o próximo passo.</li>
+        <li>Na seção <strong>Conta e biblioteca</strong>, ative o botão <strong>Conectar conta...</strong>. Abre a janela <strong>Conectar ao YouTube</strong>.</li>
+        <li>Em <strong>Modo de conexão</strong>, deixe marcado <strong>Informar manualmente (arquivo ou texto)</strong>. Ele já vem marcado.</li>
+        <li>Pressione "Tab" até o campo <strong>Dados copiados do navegador</strong> e pressione "Ctrl+V".</li>
+        <li>Pressione "Tab" até o botão <strong>Conectar</strong> e ative-o.</li>
+        <li>O NVDA anuncia "Conectando a conta do YouTube". Se a sessão tiver mais de uma conta Google, aparece a janela <strong>Escolher a conta do YouTube</strong>: escolha a conta e confirme.</li>
+        <li>Se tudo der certo, em alguns segundos surge uma janela chamada <strong>KeyTube</strong> informando o sucesso da conexão, com o nome da conta conectada. Pressione <strong>OK</strong>. A partir daí, o YouTube já deve estar autenticado no KeyTune.</li>
+      </ol>
+      <h2 id="cuidados">Cuidados com os cookies</h2>
+      <p>Os cookies copiados dão acesso à sua conta do YouTube enquanto valerem. Não os compartilhe nem os cole em outro lugar. Depois de conectar, copie qualquer outro texto para substituir o conteúdo da área de transferência. Se o histórico da área de transferência do Windows estiver ligado ("Win+V"), apague a entrada dos cookies de lá.</p>
+      <h2 id="problemas">Se a conexão cair ou der erro</h2>
+      <p>O YouTube troca os cookies com frequência enquanto a sessão é usada. Por isso a conta pode aparecer como desconectada mesmo que ontem funcionasse. Não é defeito do KeyTune nem da sua conta, e os cookies antigos não voltam a valer.</p>
+      <p>Para conectar de novo, repita as etapas "Entrar na conta e copiar os cookies" e "Conectar no KeyTune", com uma janela anônima nova. Com a conta já conectada, o botão passa a se chamar <strong>Atualizar acesso...</strong>.</p>
+      <p>Se a conta cair de novo logo em seguida, repita com um passo a mais, recomendado pelo yt-dlp: depois de entrar na conta e antes de copiar, pressione "Ctrl+L", digite youtube.com/robots.txt e pressione "Enter". Abre uma página só de texto, e não é preciso fazer nada nela. Copie os cookies com essa página aberta e feche o Chrome.</p>
+      <p>Se a janela de sucesso trouxer o aviso "os cookies não trazem o LOGIN_INFO", a biblioteca funciona, mas faixas que exigem a conta podem não tocar. Nesse caso, repita o processo.</p>
+      <p>Se aparecer "Não foi possível conectar a conta do YouTube", confira os detalhes que a janela mostra e repita as etapas com uma janela anônima nova. Na janela <strong>Conectar ao YouTube</strong>, o botão <strong>Como exportar os cookies...</strong> abre um resumo destas instruções dentro do KeyTune. O manual do KeyTune explica tudo na seção Conectar a conta.</p>
+    </section>
+  </main>
+</body>
+</html>

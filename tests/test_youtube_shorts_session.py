@@ -35,7 +35,7 @@ class _Frame(ShortsMixin):
         self.announced = []
         self.played = []
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         self.announced.append(message)
 
     def _resolve_playlist_state_index(self, state):
