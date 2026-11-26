@@ -273,6 +273,9 @@ msgstr "No se pudo abrir el enlace {text}."
 msgid "Não há link nesta linha."
 msgstr "No hay ningún enlace en esta línea."
 
+msgid "O site não tinha o áudio em {wanted} e, sem o FFmpeg para converter, ele veio em {formats}."
+msgstr "El sitio no tenía el audio en {wanted} y, sin FFmpeg para convertirlo, llegó en {formats}."
+
 msgid "O trecho \"{text}\" não foi encontrado no manual."
 msgstr "No se encontró la parte \"{text}\" en el manual."
 
@@ -5820,8 +5823,8 @@ msgstr "El servidor remoto no devolvió un medio de audio válido."
 msgid "Origem: {source}"
 msgstr "Origen: {source}"
 
-msgid "Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
-msgstr "Original no convierte. MP3 y FLAC convierten el audio y exigen FFmpeg."
+msgid "Original não converte. M4A vem pronto do YouTube, sem conversão, um pouco abaixo do Original; de outros sites, pode precisar do FFmpeg. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
+msgstr "Original no convierte. M4A viene listo de YouTube, sin conversión, un poco por debajo de Original; de otros sitios, puede necesitar FFmpeg. MP3 y FLAC convierten el audio y exigen FFmpeg."
 
 msgid "Os recursos adicionais do YouTube Music não estão disponíveis. Ative ou atualize os recursos adicionais e tente novamente."
 msgstr "Los recursos adicionales de YouTube Music no están disponibles. Activa o actualiza los recursos adicionales e inténtalo de nuevo."

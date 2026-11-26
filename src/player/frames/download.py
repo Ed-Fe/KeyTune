@@ -32,6 +32,7 @@ from ..download.options import DOWNLOAD_KIND_VIDEO, resolve_download_directory
 from ..download.plan import (
     DownloadChoice,
     build_download_plan,
+    describe_format_difference,
     describe_quality_difference,
     download_file_stem,
     download_source_url,
@@ -473,7 +474,7 @@ class FrameDownloadMixin(TaskProgressMixin):
         elif total == 1:
             self._on_download_failed(token, failures[0][1] if failures else "")
         else:
-            self._on_batch_download_finished(token, plan, results, failures, total)
+            self._on_batch_download_finished(token, choice, plan, results, failures, total)
 
     def _make_ffmpeg_progress_callback(self):
         def report(downloaded, total):
@@ -560,13 +561,16 @@ class FrameDownloadMixin(TaskProgressMixin):
         difference = describe_quality_difference(choice, result.height)
         if difference:
             parts.append(difference)
+        format_difference = describe_format_difference(choice, result.paths)
+        if format_difference:
+            parts.append(format_difference)
         message = " ".join(parts)
         _logger.info("Download finished: %s", file_name)
         interface_sounds.play_for(self, interface_sounds.SOUND_DOWNLOAD_DONE)
         self._set_status_message(message)
         self._announce(message, ANNOUNCE_DOWNLOADS)
 
-    def _on_batch_download_finished(self, token, plan, results, failures, total):
+    def _on_batch_download_finished(self, token, choice, plan, results, failures, total):
         if not self._finish_download_state(token):
             return
 
@@ -590,6 +594,11 @@ class FrameDownloadMixin(TaskProgressMixin):
         parts = [message]
         if done and plan.reduced_without_ffmpeg:
             parts.append(_("Sem o FFmpeg, os arquivos foram baixados na qualidade original, sem conversão."))
+        format_difference = describe_format_difference(
+            choice, [path for result in results for path in result.paths]
+        )
+        if format_difference:
+            parts.append(format_difference)
         message = " ".join(parts)
         for title, reason in failures:
             _logger.warning("Batch download item failed (%s): %s", title, reason)

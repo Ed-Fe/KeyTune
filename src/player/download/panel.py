@@ -8,7 +8,7 @@ from ..i18n import _
 from ..widgets import add_choice_row, add_directory_row
 from .options import (
     AUDIO_QUALITIES,
-    AUDIO_QUALITY_ORIGINAL,
+    AUDIO_QUALITY_SPECS,
     DOWNLOAD_KIND_AUDIO,
     DOWNLOAD_KINDS,
     SAMPLE_RATES,
@@ -50,7 +50,10 @@ class DownloadOptionsPanel(wx.Panel):
             self,
             sizer,
             _("&Qualidade do áudio"),
-            _("Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."),
+            _(
+                "Original não converte. M4A vem pronto do YouTube, sem conversão, um pouco abaixo do Original; "
+                "de outros sites, pode precisar do FFmpeg. MP3 e FLAC convertem o áudio e exigem o FFmpeg."
+            ),
             [audio_quality_label(quality) for quality in AUDIO_QUALITIES],
         )
         self.sample_rate_choice = add_choice_row(
@@ -108,7 +111,8 @@ class DownloadOptionsPanel(wx.Panel):
 
     def _refresh_enabled_controls(self):
         audio_selected = DOWNLOAD_KINDS[self.kind_choice.GetSelection()] == DOWNLOAD_KIND_AUDIO
-        converts = AUDIO_QUALITIES[self.audio_quality_choice.GetSelection()] != AUDIO_QUALITY_ORIGINAL
+        # Só quem recodifica o áudio (MP3, FLAC) aceita outra taxa de amostragem.
+        resamples = AUDIO_QUALITY_SPECS[AUDIO_QUALITIES[self.audio_quality_choice.GetSelection()]].resamples
         self.audio_quality_choice.Enable(audio_selected)
-        self.sample_rate_choice.Enable(audio_selected and converts)
+        self.sample_rate_choice.Enable(audio_selected and resamples)
         self.video_quality_choice.Enable(not audio_selected)

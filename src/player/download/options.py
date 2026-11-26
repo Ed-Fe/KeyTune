@@ -28,14 +28,32 @@ class AudioQualitySpec:
     codec: str = ""
     # Taxa de bits em kbps, só para codecs com perdas; 0 quando não se aplica.
     bitrate_kbps: int = 0
+    # Formato que o site às vezes já entrega pronto (o M4A do YouTube): ele é
+    # pedido primeiro e só trocado de recipiente, sem recodificar nem perder
+    # qualidade. Vazio quando o áudio sempre passa pela conversão.
+    native_ext: str = ""
 
     @property
     def converts(self):
         return bool(self.codec)
 
+    @property
+    def needs_ffmpeg(self):
+        # Com um formato nativo, o download dá certo sem o FFmpeg na maioria dos casos.
+        return self.converts and not self.native_ext
+
+    @property
+    def resamples(self):
+        # Mudar a taxa de amostragem obriga a recodificar; no formato nativo,
+        # o áudio é copiado como veio.
+        return self.converts and not self.native_ext
+
+
+AUDIO_QUALITY_M4A = "m4a"
 
 AUDIO_QUALITY_SPECS = {
     AUDIO_QUALITY_ORIGINAL: AudioQualitySpec(),
+    AUDIO_QUALITY_M4A: AudioQualitySpec("m4a", 0, native_ext="m4a"),
     "mp3_320": AudioQualitySpec("mp3", 320),
     "mp3_256": AudioQualitySpec("mp3", 256),
     "mp3_192": AudioQualitySpec("mp3", 192),
@@ -80,6 +98,8 @@ def download_kind_label(kind: str) -> str:
 def audio_quality_label(quality: str) -> str:
     if quality == AUDIO_QUALITY_ORIGINAL:
         return _("Original (sem conversão)")
+    if quality == AUDIO_QUALITY_M4A:
+        return _("M4A (AAC)")
     if quality == "flac":
         return _("FLAC (sem perdas)")
     spec = AUDIO_QUALITY_SPECS.get(quality)
