@@ -6,6 +6,7 @@ que todos se leiam do mesmo jeito.
 
 import wx
 
+from .accessibility import strip_mnemonic
 from .i18n import _
 
 # Sem quebra automática: cada seta lê uma linha inteira do texto (um parágrafo,
@@ -22,7 +23,8 @@ def create_reading_field(parent, name, text=""):
     sem rótulo visível recebe o nome por ``attach_named_accessible``.
     """
     text_ctrl = wx.TextCtrl(parent, value=text, style=READING_FIELD_STYLE)
-    text_ctrl.SetName(name)
+    # O rótulo pode ter um atalho (``&Texto``); o nome fica sem o ``&``.
+    text_ctrl.SetName(strip_mnemonic(name))
     text_ctrl.SetInsertionPoint(0)
     return text_ctrl
 

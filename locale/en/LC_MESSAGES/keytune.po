@@ -8029,20 +8029,20 @@ msgstr "Errors and unavailable actions"
 msgid "Manual do usuário"
 msgstr "User manual"
 
-msgid "Seções:"
-msgstr "Sections:"
+msgid "&Seções:"
+msgstr "Sec&tions:"
 
 msgid "Seções"
 msgstr "Sections"
 
-msgid "Tópicos da seção:"
-msgstr "Topics in the section:"
+msgid "Tó&picos da seção:"
+msgstr "T&opics in the section:"
 
 msgid "Tópicos da seção"
 msgstr "Topics in the section"
 
-msgid "Texto"
-msgstr "Text"
+msgid "&Texto"
+msgstr "Te&xt"
 
 msgid "Apresentação"
 msgstr "Introduction"
@@ -8068,8 +8068,8 @@ msgstr "No new related content found."
 msgid "Não foi possível trocar de faixa; a reprodução continua em {name}."
 msgstr "Could not switch tracks; playback continues on {name}."
 
-msgid "Buscar no manual:"
-msgstr "Search the manual:"
+msgid "&Buscar no manual:"
+msgstr "&Search the manual:"
 
 msgid "Buscar no manual"
 msgstr "Search the manual"

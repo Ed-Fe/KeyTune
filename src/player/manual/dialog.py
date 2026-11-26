@@ -30,27 +30,27 @@ class ManualDialog(wx.Dialog):
 
         # Cada controle nasce logo depois do seu rótulo: é desse texto vizinho que o
         # leitor de tela tira o nome dele.
-        search_label = wx.StaticText(self, label=_("Buscar no manual:"))
+        search_label = wx.StaticText(self, label=_("&Buscar no manual:"))
         self.search_ctrl = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
         self.search_ctrl.SetName(_("Buscar no manual"))
         root_sizer.Add(search_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
         root_sizer.Add(self.search_ctrl, 0, wx.ALL | wx.EXPAND, 10)
 
-        sections_label = wx.StaticText(self, label=_("Seções:"))
+        sections_label = wx.StaticText(self, label=_("&Seções:"))
         self.sections_list = wx.ListBox(self, choices=[section.title for section in self.sections])
         self.sections_list.SetName(_("Seções"))
         self.sections_list.SetMinSize(self.FromDIP(wx.Size(520, 130)))
         root_sizer.Add(sections_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
         root_sizer.Add(self.sections_list, 0, wx.ALL | wx.EXPAND, 10)
 
-        topics_label = wx.StaticText(self, label=_("Tópicos da seção:"))
+        topics_label = wx.StaticText(self, label=_("Tó&picos da seção:"))
         self.topics_list = wx.ListBox(self)
         self.topics_list.SetName(_("Tópicos da seção"))
         self.topics_list.SetMinSize(self.FromDIP(wx.Size(520, 110)))
         root_sizer.Add(topics_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
         root_sizer.Add(self.topics_list, 0, wx.ALL | wx.EXPAND, 10)
 
-        self.text_ctrl = add_reading_field(self, root_sizer, _("Texto"), self._empty_text())
+        self.text_ctrl = add_reading_field(self, root_sizer, _("&Texto"), self._empty_text())
         self.text_ctrl.SetMinSize(self.FromDIP(wx.Size(520, 240)))
 
         close_button = wx.Button(self, wx.ID_CLOSE, _("&Fechar"))

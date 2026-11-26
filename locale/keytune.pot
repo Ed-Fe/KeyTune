@@ -113,6 +113,10 @@ msgstr ""
 msgid "&Buscar na biblioteca...\tCtrl+G"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "&Buscar no manual:"
+msgstr ""
+
 #: src/player/convert/dialog.py
 #: src/player/download/dialog.py
 #: src/player/equalizer/dialog.py
@@ -514,6 +518,10 @@ msgstr ""
 msgid "&Sem avaliação\tCtrl+0"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "&Seções:"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Sobre o KeyTune"
 msgstr ""
@@ -532,6 +540,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Tempo restante"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "&Texto"
 msgstr ""
 
 #: src/player/frames/explorer.py
@@ -2368,10 +2380,6 @@ msgstr ""
 
 #: src/player/manual/dialog.py
 msgid "Buscar no manual"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "Buscar no manual:"
 msgstr ""
 
 #: src/player/frames/youtube_music/channel_actions.py
@@ -8800,10 +8808,6 @@ msgstr ""
 msgid "Seções"
 msgstr ""
 
-#: src/player/manual/dialog.py
-msgid "Seções:"
-msgstr ""
-
 #: src/player/frames/youtube_music/shorts.py
 #: src/player/youtube_music/folders.py
 #: src/player/youtube_music/models.py
@@ -9099,10 +9103,6 @@ msgstr ""
 msgid "Tenta trazer presença de palco e mais ambiência."
 msgstr ""
 
-#: src/player/manual/dialog.py
-msgid "Texto"
-msgstr ""
-
 #: src/player/library/search_dialog.py
 msgid "Texto a localizar"
 msgstr ""
@@ -9315,11 +9315,11 @@ msgid "Título das mudanças"
 msgstr ""
 
 #: src/player/manual/dialog.py
-msgid "Tópicos da seção"
+msgid "Tó&picos da seção:"
 msgstr ""
 
 #: src/player/manual/dialog.py
-msgid "Tópicos da seção:"
+msgid "Tópicos da seção"
 msgstr ""
 
 #: src/player/youtube_music/models.py

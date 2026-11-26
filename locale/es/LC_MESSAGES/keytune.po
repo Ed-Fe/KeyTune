@@ -8029,20 +8029,20 @@ msgstr "Errores y acciones no disponibles"
 msgid "Manual do usuário"
 msgstr "Manual del usuario"
 
-msgid "Seções:"
-msgstr "Secciones:"
+msgid "&Seções:"
+msgstr "&Secciones:"
 
 msgid "Seções"
 msgstr "Secciones"
 
-msgid "Tópicos da seção:"
-msgstr "Temas de la sección:"
+msgid "Tó&picos da seção:"
+msgstr "&Temas de la sección:"
 
 msgid "Tópicos da seção"
 msgstr "Temas de la sección"
 
-msgid "Texto"
-msgstr "Texto"
+msgid "&Texto"
+msgstr "Te&xto"
 
 msgid "Apresentação"
 msgstr "Presentación"
@@ -8068,8 +8068,8 @@ msgstr "No se encontró contenido relacionado nuevo."
 msgid "Não foi possível trocar de faixa; a reprodução continua em {name}."
 msgstr "No se pudo cambiar de pista; la reproducción continúa en {name}."
 
-msgid "Buscar no manual:"
-msgstr "Buscar en el manual:"
+msgid "&Buscar no manual:"
+msgstr "&Buscar en el manual:"
 
 msgid "Buscar no manual"
 msgstr "Buscar en el manual"
