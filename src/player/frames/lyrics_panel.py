@@ -125,16 +125,16 @@ class LyricsPanel(wx.Panel):
             value_provider=lambda: self.lyrics_text_ctrl.GetValue(),
         )
 
-    def _announce(self, message):
+    def _announce(self, message, category=None):
         # The panel has no announcer of its own; route feedback through the
-        # owning frame so it follows the app's screen-reader settings instead of
-        # popping a modal dialog.
+        # owning frame so it follows the app's screen-reader settings (and the
+        # per-category choice) instead of popping a modal dialog.
         if not message:
             return
         frame = wx.GetTopLevelParent(self)
         announce = getattr(frame, "_announce", None)
         if callable(announce):
-            announce(message)
+            announce(message, category)
 
     def _copy_to_clipboard(self, text):
         text = str(text or "")

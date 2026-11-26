@@ -170,6 +170,11 @@ jobs:
           New-Item -ItemType Directory -Force "dist\KeyTune\docs\changelog" | Out-Null
           Copy-Item -Path "docs\changelog\*.md" -Exclude "unreleased*" -Destination "dist\KeyTune\docs\changelog" -Force
 
+      - name: Bundle user manual (Markdown, read by the manual window)
+        shell: powershell
+        run: |
+          Copy-Item -Path "docs\manual.md", "docs\manual.*.md" -Exclude "manual.preview*" -Destination "dist\KeyTune\docs" -Force
+
       - name: Bundle MPV runtime into dist
         shell: powershell
         run: |
