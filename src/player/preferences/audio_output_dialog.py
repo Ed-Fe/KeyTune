@@ -29,7 +29,7 @@ class AudioOutputDialog(wx.Dialog):
         root_sizer = wx.BoxSizer(wx.VERTICAL)
         description = wx.StaticText(panel, label=_("Escolha a saída de áudio usada na reprodução."))
         description.Hide()
-        choice_label = wx.StaticText(panel, label=_("Dispositivo de áudio:"))
+        choice_label = wx.StaticText(panel, label=_("&Dispositivo de áudio:"))
         self.device_choice = wx.Choice(panel, choices=labels, name=_("Selecione o dispositivo de áudio"))
         self.device_choice.SetToolTip(_("Use as setas para escolher a saída de áudio."))
 

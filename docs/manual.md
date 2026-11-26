@@ -46,6 +46,8 @@ Na primeira abertura, a janela mostra uma aba de playlist vazia. Ela tem estas �
 
 `Tab` ou `Ctrl+B` alternam o foco entre o navegador de itens e o player (com o explorador aberto, `Tab` passa por ele também). `F1`, em qualquer momento, abre a ajuda rápida de atalhos.
 
+Nas Preferências e nos diálogos, o rótulo de cada campo tem uma letra sublinhada: `Alt` com essa letra leva o foco direto ao campo, sem passar pelos outros com `Tab`.
+
 ## Como abrir mídia
 
 Há três jeitos de pôr mídia no KeyTune: abrir, colar e usar o explorador de pastas. Os três funcionam igual: o que entra vai para a **playlist atual** e começa a tocar. Com `Shift`, entra **sem tocar**, no fim da lista, e o que estava tocando continua.

@@ -142,7 +142,7 @@ msgid "&Limpar histórico de reprodução"
 msgstr "C&lear playback history"
 
 msgid "&Limpar tudo"
-msgstr "&Clear all"
+msgstr "Clear &all"
 
 msgid "&Links do tópico:"
 msgstr "&Links in the topic:"
@@ -176,6 +176,9 @@ msgstr "&New..."
 
 msgid "&Ordenar por"
 msgstr "S&ort by"
+
+msgid "&Outra pasta"
+msgstr "&Another folder"
 
 msgid "&Preferências\tCtrl+,"
 msgstr "&Preferences\tCtrl+,"
@@ -257,6 +260,9 @@ msgstr "5 stars"
 
 msgid "Abrindo no navegador: {text}."
 msgstr "Opening in the browser: {text}."
+
+msgid "Idio&ma da interface"
+msgstr "I&nterface language"
 
 msgid "Links do tópico"
 msgstr "Links in the topic"
@@ -572,8 +578,8 @@ msgstr "Quick &shortcuts help\tF1"
 msgid "Ajuda rápida de atalhos"
 msgstr "Quick shortcuts help"
 
-msgid "Ajuda rápida de atalhos:"
-msgstr "Quick shortcuts help:"
+msgid "&Ajuda rápida de atalhos:"
+msgstr "&Quick shortcuts help:"
 
 msgid "Ajuda visual do player"
 msgstr "Player visual help"
@@ -644,8 +650,8 @@ msgstr "Introduces the player and what you can do with it."
 msgid "Argentina"
 msgstr "Argentina"
 
-msgid "Arquivo de conexão:"
-msgstr "Connection file:"
+msgid "&Arquivo de conexão:"
+msgstr "Connection &file:"
 
 msgid "Arquivo de mídia — {app}"
 msgstr "Media file — {app}"
@@ -705,7 +711,7 @@ msgid "Ativar a&núncios de acessibilidade"
 msgstr "Enable accessibility a&nnouncements"
 
 msgid "Ativar e&mbaralhamento em novas playlists"
-msgstr "Enable &shuffle on new playlists"
+msgstr "Enable s&huffle on new playlists"
 
 msgid "Ativar integração nas &Preferências..."
 msgstr "Enable integration in &Preferences..."
@@ -998,7 +1004,7 @@ msgid "Con&figurações"
 msgstr "&Settings"
 
 msgid "Con&firmar ao sair"
-msgstr "Con&firm on exit"
+msgstr "Confirm on e&xit"
 
 msgid "Concluir"
 msgstr "Finish"
@@ -1111,8 +1117,8 @@ msgstr "Create an editable copy of the selected preset."
 msgid "Critérios"
 msgstr "Criteria"
 
-msgid "Crossfade (segundos, 0 desativa)"
-msgstr "Crossfade (seconds, 0 disables)"
+msgid "Cr&ossfade (segundos, 0 desativa)"
+msgstr "C&rossfade (seconds, 0 disables)"
 
 msgid "Créditos do KeyTune"
 msgstr "KeyTune credits"
@@ -1129,8 +1135,8 @@ msgstr "V-shaped curve with strong bass and bright treble."
 msgid "Curva neutra, útil para manter o som original da mídia."
 msgstr "Neutral curve, useful to keep the original sound of the media."
 
-msgid "Dados copiados do navegador (opcional):"
-msgstr "Data copied from the browser (optional):"
+msgid "&Dados copiados do navegador (opcional):"
+msgstr "&Data copied from the browser (optional):"
 
 msgid "Dados de conexão do YouTube Music"
 msgstr "YouTube Music connection data"
@@ -1246,8 +1252,8 @@ msgstr "Decrease &speed ([)"
 msgid "Dinamarca"
 msgstr "Denmark"
 
-msgid "Dispositivo de áudio"
-msgstr "Audio device"
+msgid "&Dispositivo de áudio"
+msgstr "Audio &device"
 
 msgid "Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
 msgstr "Audio device '{label}' unavailable. Using the system default."
@@ -1276,8 +1282,8 @@ msgstr "Duplicate equalizer preset"
 msgid "Duplicar preset: {name}"
 msgstr "Duplicate preset: {name}"
 
-msgid "Duração mínima para lembrar a posição (minutos)"
-msgstr "Minimum duration to remember the position (minutes)"
+msgid "&Duração mínima para lembrar a posição (minutos)"
+msgstr "&Minimum duration to remember the position (minutes)"
 
 msgid "Dá mais corpo aos graves com médios mais relaxados."
 msgstr "Gives more body to the bass with more relaxed mids."
@@ -1333,8 +1339,8 @@ msgstr "Emphasizes the beat, sub-bass and electronic brightness."
 msgid "Enter ativa. Delete remove. Shift+F10 abre ações. Digite letras para localizar. Tab volta ao player."
 msgstr "Enter activates. Delete removes. Shift+F10 opens actions. Type letters to find. Tab returns to the player."
 
-msgid "Entradas guardadas no cache"
-msgstr "Entries kept in the cache"
+msgid "&Entradas guardadas no cache"
+msgstr "&Entries kept in the cache"
 
 msgid "Equador"
 msgstr "Ecuador"
@@ -1638,8 +1644,8 @@ msgstr "Playback backend instance unavailable."
 msgid "Interface"
 msgstr "Interface"
 
-msgid "Intervalo de atualização (horas)"
-msgstr "Update interval (hours)"
+msgid "&Intervalo de atualização (horas)"
+msgstr "Update &interval (hours)"
 
 msgid "Início do arquivo."
 msgstr "Beginning of the file."
@@ -1690,8 +1696,8 @@ msgstr "Item {current} of {total}."
 msgid "Itens"
 msgstr "Items"
 
-msgid "Itens na fila:"
-msgstr "Items in queue:"
+msgid "&Itens na fila:"
+msgstr "&Items in queue:"
 
 msgid "Itens recentes limpos."
 msgstr "Recent items cleared."
@@ -1712,7 +1718,7 @@ msgid "Leitor de tela"
 msgstr "Screen reader"
 
 msgid "Lembrar tamanho da &janela"
-msgstr "Remember window &size"
+msgstr "Remember &window size"
 
 msgid "Lembrar última &pasta usada"
 msgstr "Remember last used &folder"
@@ -1804,8 +1810,8 @@ msgstr "KeyTune manual"
 msgid "Marcadores"
 msgstr "Marks"
 
-msgid "Margem ignorada no início e no fim (segundos)"
-msgstr "Margin ignored at the start and at the end (seconds)"
+msgid "&Margem ignorada no início e no fim (segundos)"
+msgstr "M&argin ignored at the start and at the end (seconds)"
 
 msgid "Melhor avaliadas"
 msgstr "Highest rated"
@@ -1825,8 +1831,8 @@ msgstr "Mixes balance with a slight presence of voice and brightness."
 msgid "Mixes e rádios do YouTube Music não podem ser excluídos."
 msgstr "YouTube Music mixes and radios cannot be deleted."
 
-msgid "Mixes personalizadas para descobrir"
-msgstr "Custom mixes to discover"
+msgid "&Mixes personalizadas para descobrir"
+msgstr "Custom &mixes to discover"
 
 msgid "Modo aleatório {status}."
 msgstr "Shuffle mode {status}."
@@ -1903,8 +1909,8 @@ msgstr "Unrecognized browser: {browser}. Choose one from the list or use manual 
 msgid "Navegador para exportar cookies do YouTube Music"
 msgstr "Browser used to export YouTube Music cookies"
 
-msgid "Navegador:"
-msgstr "Browser:"
+msgid "&Navegador:"
+msgstr "Bro&wser:"
 
 msgid "Nenhum arquivo compatível foi recebido do Explorador."
 msgstr "No compatible file was received from Explorer."
@@ -2059,8 +2065,8 @@ msgstr "Smart playlist name"
 msgid "Nome do preset"
 msgstr "Preset name"
 
-msgid "Nome do preset:"
-msgstr "Preset name:"
+msgid "&Nome do preset:"
+msgstr "&Preset name:"
 
 msgid "Nome obrigatório"
 msgstr "Name required"
@@ -2323,8 +2329,8 @@ msgstr "not a favorite"
 msgid "Não é possível reordenar arquivos no navegador de pastas."
 msgstr "Files cannot be reordered in the folder browser."
 
-msgid "Nível de detalhe"
-msgstr "Detail level"
+msgid "&Nível de detalhe"
+msgstr "&Detail level"
 
 msgid "Número máximo de &itens"
 msgstr "Maximum number of &items"
@@ -2377,8 +2383,8 @@ msgstr "The selected recent item is no longer available."
 msgid "O KeyTune é um player de áudio e vídeo pensado para ser usado inteiramente pelo teclado e para funcionar bem com leitores de tela. Não é preciso usar o mouse em nenhum momento.\n\nVocê pode abrir arquivos de mídia, pastas e playlists, organizar tudo em abas e, opcionalmente, conectar sua conta do YouTube para tocar suas playlists e sua biblioteca.\n\nAs próximas páginas mostram como a interface é organizada, quais recursos estão disponíveis e onde encontrar ajuda sempre que precisar."
 msgstr "KeyTune is an audio and video player designed to be used entirely with the keyboard and to work well with screen readers. You never need to use the mouse.\n\nYou can open media files, folders and playlists, organize everything in tabs and, optionally, connect your YouTube account to play your playlists and your library.\n\nThe next pages show how the interface is organized, which features are available and where to find help whenever you need it."
 
-msgid "O que mudou nesta versão:"
-msgstr "What changed in this version:"
+msgid "&O que mudou nesta versão:"
+msgstr "&What changed in this version:"
 
 msgid "O resultado selecionado não pode ser salvo no YouTube Music."
 msgstr "The selected result cannot be saved to YouTube Music."
@@ -2515,11 +2521,11 @@ msgstr "Paraguay"
 msgid "Parou em"
 msgstr "Stopped at"
 
-msgid "Passo de busca (segundos)"
-msgstr "Seek step (seconds)"
+msgid "Passo de &busca (segundos)"
+msgstr "S&eek step (seconds)"
 
-msgid "Passo de volume"
-msgstr "Volume step"
+msgid "Passo de vo&lume"
+msgstr "Volume s&tep"
 
 msgid "Pasta"
 msgstr "Folder"
@@ -2884,8 +2890,8 @@ msgstr "Repeat: {mode}."
 msgid "Repetição desligada"
 msgstr "Repeat off"
 
-msgid "Repetição padrão"
-msgstr "Default repeat"
+msgid "&Repetição padrão"
+msgstr "Default re&peat"
 
 msgid "reproduzido {count} vez"
 msgid_plural "reproduzido {count} vezes"
@@ -2910,8 +2916,8 @@ msgstr "Plays"
 msgid "Reproduções &mínimas (0 ignora)"
 msgstr "&Minimum plays (0 ignores it)"
 
-msgid "Reproduções guardadas no histórico"
-msgstr "Plays kept in the history"
+msgid "&Reproduções guardadas no histórico"
+msgstr "&Plays kept in the history"
 
 msgid "Reproduções mínimas"
 msgstr "Minimum plays"
@@ -3347,8 +3353,8 @@ msgstr "You can only remove tracks from playlists you created or where you are a
 msgid "Voltar"
 msgstr "Back"
 
-msgid "Volume padrão"
-msgstr "Default volume"
+msgid "Volume &padrão"
+msgstr "Default vol&ume"
 
 msgid "vídeo"
 msgstr "video"
@@ -3683,14 +3689,14 @@ msgstr "AutoDJ {status}."
 msgid "AutoDJ: {status}."
 msgstr "AutoDJ: {status}."
 
-msgid "Duração da transição do AutoDJ"
-msgstr "AutoDJ transition length"
+msgid "Duração da &transição do AutoDJ"
+msgstr "AutoDJ &transition length"
 
 msgid "Eletrônica"
 msgstr "Electronic"
 
-msgid "Perfil do AutoDJ"
-msgstr "AutoDJ profile"
+msgid "&Perfil do AutoDJ"
+msgstr "AutoDJ &profile"
 
 msgid "{count} batidas"
 msgstr "{count} beats"
@@ -4250,8 +4256,8 @@ msgstr "Downloading..."
 msgid "Baixando... {percent}%"
 msgstr "Downloading... {percent}%"
 
-msgid "Baixar"
-msgstr "Download"
+msgid "&O que baixar"
+msgstr "&What to download"
 
 msgid "Baixar mídia"
 msgstr "Download media"
@@ -4358,8 +4364,8 @@ msgstr "Original (no conversion)"
 msgid "Para {what} o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nSim: instalar o FFmpeg e baixar.\nNão: baixar agora na qualidade original, sem conversão.\nCancelar: não baixar."
 msgstr "To {what}, KeyTune needs FFmpeg, which was not found. It will be downloaded from the official builds (about {size} MB) and stored in KeyTune's resources folder.\n\nYes: install FFmpeg and download.\nNo: download now in the original quality, without conversion.\nCancel: do not download."
 
-msgid "Pasta de download"
-msgstr "Download folder"
+msgid "Pasta de &download"
+msgstr "Download f&older"
 
 msgid "Pasta onde os arquivos baixados serão salvos."
 msgstr "Folder where the downloaded files will be saved."
@@ -4367,11 +4373,11 @@ msgstr "Folder where the downloaded files will be saved."
 msgid "Processando o arquivo..."
 msgstr "Processing the file..."
 
-msgid "Qualidade do vídeo"
-msgstr "Video quality"
+msgid "Qualidade do &vídeo"
+msgstr "&Video quality"
 
-msgid "Qualidade do áudio"
-msgstr "Audio quality"
+msgid "&Qualidade do áudio"
+msgstr "Audio &quality"
 
 msgid "Sem o FFmpeg, o arquivo foi baixado na qualidade original, sem conversão."
 msgstr "Without FFmpeg, the file was downloaded in the original quality, without conversion."
@@ -4380,16 +4386,16 @@ msgid "Sempre &mostrar este diálogo ao baixar"
 msgstr "Always &show this dialog when downloading"
 
 msgid "Sempre &mostrar o diálogo ao baixar"
-msgstr "Always &show the dialog when downloading"
+msgstr "Al&ways show the dialog when downloading"
 
 msgid "Sempre mostrar este diálogo ao baixar"
 msgstr "Always show this dialog when downloading"
 
-msgid "Taxa de amostragem do áudio"
-msgstr "Audio sample rate"
+msgid "Taxa de &amostragem do áudio"
+msgstr "Audio sample &rate"
 
-msgid "Tipo de download padrão"
-msgstr "Default download type"
+msgid "&Tipo de download padrão"
+msgstr "Default download &type"
 
 msgid "Vídeo"
 msgstr "Video"
@@ -4463,8 +4469,8 @@ msgstr "This file has no audio track to convert."
 msgid "Este tipo de arquivo não pode ser convertido."
 msgstr "This type of file cannot be converted."
 
-msgid "Formato de destino"
-msgstr "Target format"
+msgid "&Formato de destino"
+msgstr "&Target format"
 
 msgid "Formato do arquivo de áudio gerado."
 msgstr "Format of the generated audio file."
@@ -4538,8 +4544,8 @@ msgstr "Original keeps the file's rate. Opus always uses 48000 Hz."
 msgid "Para converter, o KeyTune precisa do FFmpeg, que não foi encontrado. Ele será baixado das versões oficiais (cerca de {size} MB) e guardado na pasta de recursos do KeyTune.\n\nDeseja instalar o FFmpeg e converter agora?"
 msgstr "To convert, KeyTune needs FFmpeg, which was not found. It will be downloaded from the official builds (about {size} MB) and stored in KeyTune's resources folder.\n\nDo you want to install FFmpeg and convert now?"
 
-msgid "Resolução do vídeo"
-msgstr "Video resolution"
+msgid "&Resolução do vídeo"
+msgstr "Video r&esolution"
 
 msgid "Tamanho do quadro do vídeo gerado. Resoluções maiores geram arquivos maiores."
 msgstr "Frame size of the generated video. Higher resolutions produce larger files."
@@ -4571,8 +4577,8 @@ msgstr "Audio to another audio format"
 msgid "Áudio para vídeo"
 msgstr "Audio to video"
 
-msgid "Salvar em"
-msgstr "Save in"
+msgid "&Salvar em"
+msgstr "&Save in"
 
 msgid "Mesma pasta do arquivo original ou outra pasta à sua escolha. O arquivo original nunca é alterado."
 msgstr "The same folder as the original file, or another folder of your choice. The original file is never changed."
@@ -5383,7 +5389,7 @@ msgid "Abrir o site da rádio no navegador"
 msgstr "Open the radio station's website in the browser"
 
 msgid "Abrir pasta de l&ogs"
-msgstr "Open lo&g folder"
+msgstr "Open log f&older"
 
 msgid "Acessar a internet e outros serviços de rede"
 msgstr "Access the internet and other network services"
@@ -5529,14 +5535,14 @@ msgstr "Set {country} as my country"
 msgid "Descrição: {description}"
 msgstr "Description: {description}"
 
-msgid "Detalhes do plugin"
-msgstr "Plugin details"
+msgid "&Detalhes do plugin"
+msgstr "Plugin &details"
 
 msgid "Detalhes do plugin selecionado"
 msgstr "Details of the selected plugin"
 
-msgid "Detalhes do plugin:"
-msgstr "Plugin details:"
+msgid "&Detalhes do plugin:"
+msgstr "Plugin &details:"
 
 msgid "Digite o nome da rádio e pressione Enter. O endereço de um stream colado aqui toca direto."
 msgstr "Type the name of the radio station and press Enter. A stream address pasted here plays right away."
@@ -5547,8 +5553,8 @@ msgstr "Type the name of a radio station to search."
 msgid "Disponível para instalar"
 msgstr "Available to install"
 
-msgid "Dispositivo de áudio:"
-msgstr "Audio device:"
+msgid "&Dispositivo de áudio:"
+msgstr "Audio &device:"
 
 msgid "Endereço do stream copiado."
 msgstr "Stream address copied."
@@ -5613,8 +5619,8 @@ msgstr "Genres: {value}"
 msgid "Horas entre as verificações."
 msgstr "Hours between checks."
 
-msgid "Idioma do conteúdo"
-msgstr "Content language"
+msgid "I&dioma do conteúdo"
+msgstr "Content &language"
 
 msgid "Idioma e região"
 msgstr "Language and region"
@@ -5697,8 +5703,8 @@ msgstr "Marketplace · catalog review: reviewed"
 msgid "Melhora a resolução e a reprodução."
 msgstr "Improves resolution and playback."
 
-msgid "Meu país"
-msgstr "My country"
+msgid "&Meu país"
+msgstr "&My country"
 
 msgid "Modo de repetição das playlists novas."
 msgstr "Repeat mode of new playlists."
@@ -5850,8 +5856,8 @@ msgstr "Asks for confirmation before closing."
 msgid "Permissões do plugin"
 msgstr "Plugin permissions"
 
-msgid "Permissões solicitadas e aviso de segurança"
-msgstr "Requested permissions and security notice"
+msgid "&Permissões solicitadas e aviso de segurança"
+msgstr "&Requested permissions and security notice"
 
 msgid "Playlists novas"
 msgstr "New playlists"
@@ -5874,11 +5880,11 @@ msgstr "Plugins"
 msgid "Plugins disponíveis no marketplace"
 msgstr "Plugins available in the marketplace"
 
-msgid "Plugins disponíveis:"
-msgstr "Available plugins:"
+msgid "&Plugins disponíveis:"
+msgstr "&Available plugins:"
 
-msgid "Plugins instalados:"
-msgstr "Installed plugins:"
+msgid "P&lugins instalados:"
+msgstr "Installed p&lugins:"
 
 msgid "Podcasts, audiolivros e vídeos longos voltam do ponto onde pararam."
 msgstr "Podcasts, audiobooks and long videos resume where they stopped."
@@ -5922,8 +5928,8 @@ msgstr "Records the tracks you listened to."
 msgid "Região"
 msgstr "Region"
 
-msgid "Região do conteúdo"
-msgstr "Content region"
+msgid "&Região do conteúdo"
+msgstr "Content &region"
 
 msgid "Remover das favoritas (Ctrl+D)"
 msgstr "Remove from favorites (Ctrl+D)"
@@ -6139,8 +6145,8 @@ msgstr "{name}, by {author}, requests:\n\n{permissions}\n\n{security_notice}"
 msgid "{station}: {title}"
 msgstr "{station}: {title}"
 
-msgid "Áudio dos vídeos dublados"
-msgstr "Audio of dubbed videos"
+msgid "Áudio dos &vídeos dublados"
+msgstr "Audio of &dubbed videos"
 
 msgid "{name}. Item {current} de {total}."
 msgstr "{name}. Item {current} of {total}."
@@ -6235,8 +6241,8 @@ msgstr "&Change history"
 msgid "Histórico de mudanças"
 msgstr "Change history"
 
-msgid "Mudanças da versão"
-msgstr "Changes in the version"
+msgid "&Mudanças da versão"
+msgstr "C&hanges in the version"
 
 msgid "Nenhum histórico de mudanças foi encontrado nesta instalação."
 msgstr "No change history was found in this installation."
@@ -6247,8 +6253,8 @@ msgstr "Unreleased"
 msgid "Versões"
 msgstr "Versions"
 
-msgid "Versões:"
-msgstr "Versions:"
+msgid "&Versões:"
+msgstr "&Versions:"
 
 msgid "{version} ({date})"
 msgstr "{version} ({date})"
@@ -7042,8 +7048,8 @@ msgstr "{count} items that cannot be downloaded will be skipped."
 msgid "Não é possível baixar uma transmissão ao vivo ou contínua, como uma rádio."
 msgstr "A live or continuous broadcast, such as a radio, cannot be downloaded."
 
-msgid "Itens carregados por vez"
-msgstr "Items loaded at a time"
+msgid "&Itens carregados por vez"
+msgstr "&Items loaded at a time"
 
 msgid "Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."
 msgstr "Applies to the lists of the tab: playlists, results and tracks. Smaller values open faster."
@@ -7078,8 +7084,8 @@ msgstr "Delete my comment"
 msgid "Apagar o meu comentário..."
 msgstr "Delete my comment..."
 
-msgid "Avisar das notificações novas"
-msgstr "Announce new notifications"
+msgid "&Avisar das notificações novas"
+msgstr "&Announce new notifications"
 
 msgid "Cancelar a inscrição"
 msgstr "Unsubscribe"
@@ -7498,20 +7504,20 @@ msgstr "{title}, newest first"
 msgid "Sons de aviso"
 msgstr "Alert sounds"
 
-msgid "Tocar &sons de aviso"
-msgstr "Play alert &sounds"
+msgid "T&ocar sons de aviso"
+msgstr "Play &alert sounds"
 
 msgid "Sons curtos para o chat, as notificações, as listas, a fila e os avisos do player."
 msgstr "Short sounds for the chat, notifications, lists, the queue and the player alerts."
 
-msgid "Volume dos sons de aviso"
-msgstr "Alert sounds volume"
+msgid "Vo&lume dos sons de aviso"
+msgstr "Alert sounds &volume"
 
 msgid "De 1 a 100, sem depender do volume da mídia."
 msgstr "From 1 to 100, apart from the media volume."
 
-msgid "Sons que tocam:"
-msgstr "Sounds that play:"
+msgid "Sons que &tocam:"
+msgstr "Sounds &that play:"
 
 msgid "Sons que tocam"
 msgstr "Sounds that play"
@@ -7680,8 +7686,8 @@ msgstr "Speak &event notices while KeyTune is active"
 msgid "Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."
 msgstr "Chat, notifications, download and sleep timer. When off, they only speak with KeyTune in the background."
 
-msgid "Avisos que falam:"
-msgstr "Notices that speak:"
+msgid "&Avisos que falam:"
+msgstr "N&otices that speak:"
 
 msgid "Avisos de eventos que falam"
 msgstr "Event notices that speak"
@@ -7852,17 +7858,17 @@ msgstr "The current media is not a YouTube video."
 msgid "Abertura"
 msgstr "Intro"
 
-msgid "Ajudar o SponsorBlock: enviar trechos novos e votar"
-msgstr "Help SponsorBlock: submit new segments and vote"
+msgid "A&judar o SponsorBlock: enviar trechos novos e votar"
+msgstr "Help SponsorBlock: submit new segments and &vote"
 
-msgid "Ao chegar num trecho"
-msgstr "When a segment is reached"
+msgid "Ao chegar num &trecho"
+msgstr "When a segmen&t is reached"
 
 msgid "Autopromoção"
 msgstr "Self-promotion"
 
-msgid "Categorias de trecho:"
-msgstr "Segment categories:"
+msgid "Cat&egorias de trecho:"
+msgstr "Segment cat&egories:"
 
 msgid "De volta ao início do trecho de {category}."
 msgstr "Back to the start of the {category} segment."
@@ -7945,8 +7951,8 @@ msgstr "Skip and announce"
 msgid "Pular sozinho ou só avisar; o comando Pular trecho do SponsorBlock pula quando avisado."
 msgstr "Skip automatically or only announce; the SponsorBlock skip command skips when announced."
 
-msgid "Pular trechos marcados pela comunidade SponsorBlock"
-msgstr "Skip segments marked by the SponsorBlock community"
+msgid "Pu&lar trechos marcados pela comunidade SponsorBlock"
+msgstr "S&kip segments marked by the SponsorBlock community"
 
 msgid "SponsorBlock"
 msgstr "SponsorBlock"

@@ -30,7 +30,7 @@ class DownloadDialog(wx.Dialog):
             intro_label.Wrap(520)
             root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
-        self.options_panel = DownloadOptionsPanel(panel, kind_label=_("Baixar"))
+        self.options_panel = DownloadOptionsPanel(panel, kind_label=_("&O que baixar"))
         self.options_panel.set_values(
             kind=settings.download_kind,
             audio_quality=settings.download_audio_quality,

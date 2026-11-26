@@ -49,7 +49,7 @@ class UpdateAvailableDialog(wx.Dialog):
         details_label.Wrap(560)
         details_label.SetName(_("Resumo da atualização"))
 
-        notes_label = wx.StaticText(panel, label=_("O que mudou nesta versão:"))
+        notes_label = wx.StaticText(panel, label=_("&O que mudou nesta versão:"))
         notes_label.SetName(_("Título das mudanças"))
 
         self.notes_ctrl = create_reading_field(

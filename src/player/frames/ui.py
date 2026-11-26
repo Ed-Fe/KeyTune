@@ -334,7 +334,7 @@ class FrameUIMixin:
         dialog.SetMinSize((520, 420))
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
-        instructions_label = wx.StaticText(dialog, label=_("Ajuda rápida de atalhos:"))
+        instructions_label = wx.StaticText(dialog, label=_("&Ajuda rápida de atalhos:"))
         instructions = create_reading_field(dialog, _("Ajuda rápida de atalhos"), self._keyboard_help_text())
 
         button_sizer = dialog.CreateStdDialogButtonSizer(wx.OK)

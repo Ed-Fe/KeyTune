@@ -55,6 +55,10 @@ msgstr ""
 msgid "&Adicionar à playlist sem tocar\tShift+Enter"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "&Ajuda rápida de atalhos:"
+msgstr ""
+
 #: src/player/keyboard/dialog.py
 msgid "&Alterar atalho..."
 msgstr ""
@@ -72,6 +76,10 @@ msgstr ""
 msgid "&Arquivo"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "&Arquivo de conexão:"
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "&Ativar"
 msgstr ""
@@ -86,6 +94,14 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "&Avançar"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Avisar das notificações novas"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Avisos que falam:"
 msgstr ""
 
 #: src/player/radio/panel.py
@@ -189,6 +205,10 @@ msgstr ""
 msgid "&Criar"
 msgstr ""
 
+#: src/player/youtube_music/dialog.py
+msgid "&Dados copiados do navegador (opcional):"
+msgstr ""
+
 #: src/player/playlists/queue_dialog.py
 msgid "&Descer"
 msgstr ""
@@ -201,12 +221,32 @@ msgstr ""
 msgid "&Desregistrar associações"
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "&Detalhes do plugin"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Detalhes do plugin:"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Diagnóstico"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Dispositivo de áudio"
+msgstr ""
+
+#: src/player/preferences/audio_output_dialog.py
+msgid "&Dispositivo de áudio:"
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "&Duplicar..."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Duração mínima para lembrar a posição (minutos)"
 msgstr ""
 
 #: src/player/equalizer/panel.py
@@ -220,6 +260,10 @@ msgstr ""
 
 #: src/player/radio/manual_dialog.py
 msgid "&Endereço do stream ou M3U"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Entradas guardadas no cache"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -270,6 +314,10 @@ msgstr ""
 msgid "&Filtrar por texto"
 msgstr ""
 
+#: src/player/convert/dialog.py
+msgid "&Formato de destino"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Gerenciar Fila de Reprodução\tCtrl+Shift+Q"
 msgstr ""
@@ -314,6 +362,18 @@ msgstr ""
 msgid "&Interromper a fala do leitor de tela"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Intervalo de atualização (horas)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Itens carregados por vez"
+msgstr ""
+
+#: src/player/playlists/queue_dialog.py
+msgid "&Itens na fila:"
+msgstr ""
+
 #: src/player/frames/ui.py
 #: src/player/frames/youtube_music/state.py
 msgid "&KeyTube por aba\tCtrl+Shift+Y"
@@ -355,12 +415,32 @@ msgstr ""
 msgid "&Marcar início de um trecho"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Margem ignorada no início e no fim (segundos)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Meu país"
+msgstr ""
+
 #: src/player/sleep_timer/dialog.py
 msgid "&Minutos personalizados"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Mixes personalizadas para descobrir"
+msgstr ""
+
 #: src/player/frames/tray.py
 msgid "&Mostrar KeyTune"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "&Mudanças da versão"
+msgstr ""
+
+#: src/player/youtube_music/dialog.py
+msgid "&Navegador:"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -373,6 +453,10 @@ msgstr ""
 
 #: src/player/radio/manual_dialog.py
 msgid "&Nome da rádio"
+msgstr ""
+
+#: src/player/equalizer/dialog.py
+msgid "&Nome do preset:"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -395,6 +479,18 @@ msgstr ""
 msgid "&Novo..."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Nível de detalhe"
+msgstr ""
+
+#: src/player/download/dialog.py
+msgid "&O que baixar"
+msgstr ""
+
+#: src/player/update/dialog.py
+msgid "&O que mudou nesta versão:"
+msgstr ""
+
 #: src/player/radio/manual_dialog.py
 msgid "&OK"
 msgstr ""
@@ -411,12 +507,28 @@ msgstr ""
 msgid "&Ordenar por"
 msgstr ""
 
+#: src/player/convert/dialog.py
+msgid "&Outra pasta"
+msgstr ""
+
 #: src/player/quick_player/panel.py
 msgid "&Pausar"
 msgstr ""
 
 #: src/player/frames/autodj_panel.py
 msgid "&Pausar preparação"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Perfil do AutoDJ"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Permissões solicitadas e aviso de segurança"
+msgstr ""
+
+#: src/player/plugins/dialog.py
+msgid "&Plugins disponíveis:"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -443,12 +555,21 @@ msgstr ""
 msgid "&Pular o trecho avisado"
 msgstr ""
 
+#: src/player/convert/dialog.py
+#: src/player/download/panel.py
+msgid "&Qualidade do áudio"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "&Recalcular sequência"
 msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Recentes"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Região do conteúdo"
 msgstr ""
 
 #: src/player/playlists/queue_dialog.py
@@ -469,6 +590,10 @@ msgstr ""
 msgid "&Remover entrada"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Repetição padrão"
+msgstr ""
+
 #: src/player/quick_player/panel.py
 #: src/player/smart_library/history_dialog.py
 #: src/player/smart_library/search_dialog.py
@@ -481,6 +606,14 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Reprodução"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "&Reproduções guardadas no histórico"
+msgstr ""
+
+#: src/player/convert/dialog.py
+msgid "&Resolução do vídeo"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -518,6 +651,10 @@ msgstr ""
 msgid "&Salvar cópia..."
 msgstr ""
 
+#: src/player/convert/dialog.py
+msgid "&Salvar em"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "&Sem avaliação\tCtrl+0"
 msgstr ""
@@ -550,6 +687,10 @@ msgstr ""
 msgid "&Texto"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Tipo de download padrão"
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "&Tocar agora"
 msgstr ""
@@ -564,6 +705,10 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "&Ver"
+msgstr ""
+
+#: src/player/changelog/dialog.py
+msgid "&Versões:"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -999,6 +1144,10 @@ msgstr ""
 msgid "A&juda"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "A&judar o SponsorBlock: enviar trechos novos e votar"
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "A&tualizar pastas indexadas"
 msgstr ""
@@ -1378,15 +1527,7 @@ msgid "Ajuda rápida de atalhos\n\nArquivos e playlists\nCtrl+O — Abrir arquiv
 msgstr ""
 
 #: src/player/frames/ui.py
-msgid "Ajuda rápida de atalhos:"
-msgstr ""
-
-#: src/player/frames/ui.py
 msgid "Ajuda visual do player"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Ajudar o SponsorBlock: enviar trechos novos e votar"
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -1522,7 +1663,7 @@ msgid "Ao atingir o limite, as mais antigas saem."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Ao chegar num trecho"
+msgid "Ao chegar num &trecho"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -1596,10 +1737,6 @@ msgstr ""
 
 #: src/player/plugins/manifest.py
 msgid "Armazenar configurações próprias"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Arquivo de conexão:"
 msgstr ""
 
 #: src/player/file_associations.py
@@ -2057,10 +2194,6 @@ msgstr ""
 msgid "Avanço e transição entre faixas"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Avisar das notificações novas"
-msgstr ""
-
 #: src/player/diagnostics/report.py
 msgid "Aviso"
 msgstr ""
@@ -2087,10 +2220,6 @@ msgstr ""
 
 #: src/player/announcements.py
 msgid "Avisos do temporizador"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Avisos que falam:"
 msgstr ""
 
 #: src/player/keyboard/dialog.py
@@ -2156,10 +2285,6 @@ msgstr ""
 
 #: src/player/frames/download.py
 msgid "Baixando... {percent}%"
-msgstr ""
-
-#: src/player/download/dialog.py
-msgid "Baixar"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -2566,6 +2691,10 @@ msgstr ""
 msgid "Carregar a lista inteira"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Cat&egorias de trecho:"
+msgstr ""
+
 #: src/player/keyboard/dialog.py
 msgid "Categoria"
 msgstr ""
@@ -2576,10 +2705,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Categorias de preferências"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Categorias de trecho:"
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -3039,6 +3164,10 @@ msgstr ""
 msgid "Costa Rica"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Cr&ossfade (segundos, 0 desativa)"
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "Crescente"
 msgstr ""
@@ -3079,10 +3208,6 @@ msgstr ""
 msgid "Critérios"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Crossfade (segundos, 0 desativa)"
-msgstr ""
-
 #: src/player/frames/ui.py
 msgid "Créditos do KeyTune"
 msgstr ""
@@ -3117,10 +3242,6 @@ msgstr ""
 
 #: src/player/equalizer/models.py
 msgid "Curva neutra, útil para manter o som original da mídia."
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Dados copiados do navegador (opcional):"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -3294,15 +3415,7 @@ msgid "Detalhes do download"
 msgstr ""
 
 #: src/player/plugins/dialog.py
-msgid "Detalhes do plugin"
-msgstr ""
-
-#: src/player/plugins/dialog.py
 msgid "Detalhes do plugin selecionado"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "Detalhes do plugin:"
 msgstr ""
 
 #: src/player/youtube_music/streams.py
@@ -3436,10 +3549,6 @@ msgstr ""
 msgid "Disponível para instalar"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Dispositivo de áudio"
-msgstr ""
-
 #: src/player/frames/playback/audio_output.py
 msgid "Dispositivo de áudio '{label}' indisponível. Usando o padrão do sistema."
 msgstr ""
@@ -3454,10 +3563,6 @@ msgstr ""
 
 #: src/player/frames/playback/audio_output.py
 msgid "Dispositivo de áudio alterado para {label}."
-msgstr ""
-
-#: src/player/preferences/audio_output_dialog.py
-msgid "Dispositivo de áudio:"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3535,11 +3640,7 @@ msgid "Duplicar preset: {name}"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Duração da transição do AutoDJ"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Duração mínima para lembrar a posição (minutos)"
+msgid "Duração da &transição do AutoDJ"
 msgstr ""
 
 #: src/player/youtube_music/details.py
@@ -3732,10 +3833,6 @@ msgstr ""
 
 #: src/player/keyboard/dialog.py
 msgid "Enter na lista faz o mesmo."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Entradas guardadas no cache"
 msgstr ""
 
 #: src/player/frames/playback/sponsorblock.py
@@ -4335,10 +4432,6 @@ msgid "Fones de ouvido"
 msgstr ""
 
 #: src/player/convert/dialog.py
-msgid "Formato de destino"
-msgstr ""
-
-#: src/player/convert/dialog.py
 msgid "Formato do arquivo de áudio gerado."
 msgstr ""
 
@@ -4474,8 +4567,16 @@ msgstr ""
 msgid "Há mais para carregar."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "I&dioma do conteúdo"
+msgstr ""
+
 #: src/player/equalizer/dialog.py
 msgid "Identificação do preset"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Idio&ma da interface"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -4483,12 +4584,7 @@ msgid "Idioma"
 msgstr ""
 
 #: src/player/frames/commands/app_commands.py
-#: src/player/preferences/dialog.py
 msgid "Idioma da interface"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Idioma do conteúdo"
 msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
@@ -4692,10 +4788,6 @@ msgstr ""
 msgid "Interrompe temporariamente a análise e preparação de novas faixas."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Intervalo de atualização (horas)"
-msgstr ""
-
 #: src/player/frames/radio/navigation.py
 #: src/player/frames/youtube_music/navigation.py
 msgid "Início"
@@ -4861,15 +4953,7 @@ msgid "Itens abaixo tocam antes da ordem normal, de cima para baixo."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Itens carregados por vez"
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Itens da página inicial varridos em busca de mixes."
-msgstr ""
-
-#: src/player/playlists/queue_dialog.py
-msgid "Itens na fila:"
 msgstr ""
 
 #: src/player/task_failures_dialog.py
@@ -5200,10 +5284,6 @@ msgstr ""
 msgid "Marcar como lida"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Margem ignorada no início e no fim (segundos)"
-msgstr ""
-
 #: src/player/plugins/dialog.py
 msgid "Marketplace de plugins"
 msgstr ""
@@ -5260,10 +5340,6 @@ msgstr ""
 msgid "Mesma pasta do arquivo original ou outra pasta à sua escolha. O arquivo original nunca é alterado."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Meu país"
-msgstr ""
-
 #: src/player/youtube_music/auth.py
 msgid "Microsoft Edge (pode falhar no Windows)"
 msgstr ""
@@ -5283,10 +5359,6 @@ msgstr ""
 #: src/player/frames/youtube_music/playlists.py
 #: src/player/youtube_music/library_manager.py
 msgid "Mixes e rádios do YouTube Music não podem ser excluídos."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Mixes personalizadas para descobrir"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -5391,10 +5463,6 @@ msgstr ""
 msgid "Mudanças da atualização"
 msgstr ""
 
-#: src/player/changelog/dialog.py
-msgid "Mudanças da versão"
-msgstr ""
-
 #: src/player/youtube_music/models.py
 msgid "México"
 msgstr ""
@@ -5478,10 +5546,6 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Navegador para exportar cookies do YouTube Music"
-msgstr ""
-
-#: src/player/youtube_music/dialog.py
-msgid "Navegador:"
 msgstr ""
 
 #: src/player/keyboard/shortcuts.py
@@ -5798,10 +5862,6 @@ msgstr ""
 
 #: src/player/equalizer/dialog.py
 msgid "Nome do preset"
-msgstr ""
-
-#: src/player/equalizer/dialog.py
-msgid "Nome do preset:"
 msgstr ""
 
 #: src/player/radio/manual_dialog.py
@@ -6514,10 +6574,6 @@ msgstr ""
 msgid "Não é possível reordenar arquivos no navegador de pastas."
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Nível de detalhe"
-msgstr ""
-
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Número máximo de &itens"
 msgstr ""
@@ -6971,10 +7027,6 @@ msgstr ""
 msgid "O que fazer: {advice}"
 msgstr ""
 
-#: src/player/update/dialog.py
-msgid "O que mudou nesta versão:"
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
 msgid "O que o KeyTune precisa"
 msgstr ""
@@ -7290,6 +7342,10 @@ msgstr ""
 msgid "P&arar\tCtrl+."
 msgstr ""
 
+#: src/player/plugins/dialog.py
+msgid "P&lugins instalados:"
+msgstr ""
+
 #: src/player/youtube_music/streams.py
 msgid "PO Token ausente"
 msgstr ""
@@ -7381,11 +7437,11 @@ msgid "Parou em"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Passo de busca (segundos)"
+msgid "Passo de &busca (segundos)"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Passo de volume"
+msgid "Passo de vo&lume"
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
@@ -7411,7 +7467,7 @@ msgid "Pasta da playlist inteligente"
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Pasta de download"
+msgid "Pasta de &download"
 msgstr ""
 
 #: src/player/frames/smart_library/indexing.py
@@ -7492,10 +7548,6 @@ msgstr ""
 msgid "Pedido de interação (curtir, inscrever-se)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Perfil do AutoDJ"
-msgstr ""
-
 #: src/player/youtube_music/streams.py
 msgid "Perfis testados: {count}."
 msgstr ""
@@ -7506,10 +7558,6 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Permissões do plugin"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "Permissões solicitadas e aviso de segurança"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -7690,14 +7738,6 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Plugins disponíveis no marketplace"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "Plugins disponíveis:"
-msgstr ""
-
-#: src/player/plugins/dialog.py
-msgid "Plugins instalados:"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7991,6 +8031,10 @@ msgstr ""
 msgid "Próximo resultado"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Pu&lar trechos marcados pela comunidade SponsorBlock"
+msgstr ""
+
 #: src/player/welcome/dialog.py
 msgid "Pu&lar tutorial"
 msgstr ""
@@ -8005,10 +8049,6 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Pular sozinho ou só avisar; o comando Pular trecho do SponsorBlock pula quando avisado."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Pular trechos marcados pela comunidade SponsorBlock"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -8032,12 +8072,7 @@ msgid "Pública"
 msgstr ""
 
 #: src/player/download/panel.py
-msgid "Qualidade do vídeo"
-msgstr ""
-
-#: src/player/convert/dialog.py
-#: src/player/download/panel.py
-msgid "Qualidade do áudio"
+msgid "Qualidade do &vídeo"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -8168,10 +8203,6 @@ msgstr ""
 msgid "Região"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Região do conteúdo"
-msgstr ""
-
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Regra"
 msgstr ""
@@ -8299,10 +8330,6 @@ msgstr ""
 msgid "Repetição desligada"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Repetição padrão"
-msgstr ""
-
 #: src/player/frames/library_navigation.py
 msgid "Reproduzindo item já presente em {title}."
 msgstr ""
@@ -8342,10 +8369,6 @@ msgstr ""
 msgid "Reproduções &mínimas (0 ignora)"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Reproduções guardadas no histórico"
-msgstr ""
-
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Reproduções mínimas"
 msgstr ""
@@ -8360,10 +8383,6 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "República Tcheca"
-msgstr ""
-
-#: src/player/convert/dialog.py
-msgid "Resolução do vídeo"
 msgstr ""
 
 #: src/player/frames/playback/engine.py
@@ -8575,10 +8594,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Salvar cópia do preset embutido"
-msgstr ""
-
-#: src/player/convert/dialog.py
-msgid "Salvar em"
 msgstr ""
 
 #: src/player/frames/youtube_music/watch_later.py
@@ -8921,7 +8936,7 @@ msgid "Sons de aviso"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Sons que tocam:"
+msgid "Sons que &tocam:"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -9002,6 +9017,10 @@ msgstr ""
 msgid "Só vale quando o áudio é convertido para MP3 ou FLAC."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "T&ocar sons de aviso"
+msgstr ""
+
 #: src/player/keyboard/dialog.py
 msgid "Tab sai do campo, Enter confirma e Esc cancela."
 msgstr ""
@@ -9016,7 +9035,7 @@ msgstr ""
 
 #: src/player/convert/dialog.py
 #: src/player/download/panel.py
-msgid "Taxa de amostragem do áudio"
+msgid "Taxa de &amostragem do áudio"
 msgstr ""
 
 #: src/player/convert/dialog.py
@@ -9140,10 +9159,6 @@ msgstr ""
 msgid "Tipo"
 msgstr ""
 
-#: src/player/preferences/dialog.py
-msgid "Tipo de download padrão"
-msgstr ""
-
 #: src/player/youtube_music/panel.py
 msgid "Tipo:"
 msgstr ""
@@ -9191,10 +9206,6 @@ msgstr ""
 #: src/player/frames/playback/controls.py
 #: src/player/frames/playback/engine.py
 msgid "Tocando: {name}"
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Tocar &sons de aviso"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -9647,12 +9658,12 @@ msgstr ""
 msgid "Versões"
 msgstr ""
 
-#: src/player/changelog/dialog.py
-msgid "Versões:"
-msgstr ""
-
 #: src/player/manual/service.py
 msgid "Visão geral da seção"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Vo&lume dos sons de aviso"
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -9734,20 +9745,16 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Volume &padrão"
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Volume dos sons de aviso"
-msgstr ""
-
-#: src/player/preferences/dialog.py
 msgid "Volume inicial, de 0 a 100."
-msgstr ""
-
-#: src/player/preferences/dialog.py
-msgid "Volume padrão"
 msgstr ""
 
 #: src/player/frames/playback/controls.py
@@ -10858,7 +10865,7 @@ msgid "Áudio"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Áudio dos vídeos dublados"
+msgid "Áudio dos &vídeos dublados"
 msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py

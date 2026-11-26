@@ -136,7 +136,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         browser_label = wx.StaticText(
             self._browser_panel,
-            label=_("Navegador:"),
+            label=_("&Navegador:"),
         )
         browser_label.SetName(_("Lista de navegadores disponíveis"))
 
@@ -173,7 +173,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
 
         headers_label = wx.StaticText(
             self._manual_panel,
-            label=_("Dados copiados do navegador (opcional):"),
+            label=_("&Dados copiados do navegador (opcional):"),
         )
         self.headers_value = wx.TextCtrl(
             self._manual_panel,
@@ -182,7 +182,7 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
         self.headers_value.SetName(_("Dados de conexão do YouTube Music"))
 
         file_row = wx.BoxSizer(wx.HORIZONTAL)
-        file_label = wx.StaticText(self._manual_panel, label=_("Arquivo de conexão:"))
+        file_label = wx.StaticText(self._manual_panel, label=_("&Arquivo de conexão:"))
         self.browser_file_picker = wx.FilePickerCtrl(
             self._manual_panel,
             wildcard=(
@@ -405,7 +405,8 @@ class YouTubeMusicCreatePlaylistDialog(wx.Dialog):
             ok_button.Bind(wx.EVT_BUTTON, self._on_confirm)
         cancel_button = self.FindWindow(wx.ID_CANCEL)
         if cancel_button is not None:
-            cancel_button.SetLabel(_("&Cancelar"))
+            # Sem mnemônico: o C já é do Criar, e Esc cancela.
+            cancel_button.SetLabel(_("Cancelar"))
 
         root_sizer.Add(intro, 0, wx.ALL | wx.EXPAND, 12)
         root_sizer.Add(name_label, 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)

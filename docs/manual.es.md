@@ -46,6 +46,8 @@ La primera vez que lo abres, la ventana muestra una pestaña de playlist vacía.
 
 `Tab` o `Ctrl+B` alternan el foco entre el navegador de elementos y el reproductor (con el explorador abierto, `Tab` también pasa por él). `F1`, en cualquier momento, abre la ayuda rápida de atajos.
 
+En Preferencias y en los diálogos, la etiqueta de cada campo tiene una letra subrayada: `Alt` con esa letra lleva el foco directo al campo, sin pasar por los demás con `Tab`.
+
 ## Cómo abrir medios
 
 Hay tres formas de poner medios en KeyTune: abrir, pegar y usar el explorador de carpetas. Las tres funcionan igual: lo que entra va a la **playlist actual** y empieza a sonar. Con `Shift`, entra **sin reproducir**, al final de la lista, y lo que sonaba continúa.

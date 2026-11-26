@@ -34,6 +34,7 @@ from ..download.panel import DownloadOptionsPanel
 from .. import interface_sounds
 from ..i18n import _, available_languages, language_display_name
 from ..interface_sounds.custom import CustomSoundError, import_custom_sound
+from ..accessibility import strip_mnemonic
 from ..announcements import announcement_labels
 from ..interface_sounds.labels import sound_labels
 from ..log import get_log_dir
@@ -129,7 +130,7 @@ class PreferencesDialog(wx.Dialog):
             self._language_choice_codes.append(code)
             language_labels.append(language_display_name(code))
         self.language_choice = self._add_choice(
-            box, sizer, _("Idioma da interface"), _("Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."), language_labels
+            box, sizer, _("Idio&ma da interface"), _("Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."), language_labels
         )
 
         box, sizer = self._create_group(page, page_sizer, _("Inicialização e sessão"))
@@ -194,7 +195,7 @@ class PreferencesDialog(wx.Dialog):
         self.logging_level_choice = self._add_choice(
             box,
             sizer,
-            _("Nível de detalhe"),
+            _("&Nível de detalhe"),
             _("Quanto mais detalhado, maior o arquivo."),
             [LOGGING_LEVEL_LABELS[lvl] for lvl in LOGGING_LEVELS],
         )
@@ -209,17 +210,17 @@ class PreferencesDialog(wx.Dialog):
 
         box, sizer = self._create_group(page, page_sizer, _("Volume"))
         self.default_volume_ctrl = self._add_spin(
-            box, sizer, _("Volume padrão"), _("Volume inicial, de 0 a 100."), 0, 100
+            box, sizer, _("Volume &padrão"), _("Volume inicial, de 0 a 100."), 0, 100
         )
         self.volume_step_ctrl = self._add_spin(
-            box, sizer, _("Passo de volume"), _("Quanto o volume muda a cada seta para cima ou para baixo."), 1, 25
+            box, sizer, _("Passo de vo&lume"), _("Quanto o volume muda a cada seta para cima ou para baixo."), 1, 25
         )
 
         box, sizer = self._create_group(page, page_sizer, _("Avanço e transição entre faixas"))
         self.seek_step_ctrl = self._add_spin(
             box,
             sizer,
-            _("Passo de busca (segundos)"),
+            _("Passo de &busca (segundos)"),
             _("Quanto a mídia avança ou volta a cada seta esquerda ou direita."),
             1,
             120,
@@ -227,7 +228,7 @@ class PreferencesDialog(wx.Dialog):
         self.crossfade_ctrl = self._add_spin(
             box,
             sizer,
-            _("Crossfade (segundos, 0 desativa)"),
+            _("Cr&ossfade (segundos, 0 desativa)"),
             _("Sobreposição entre duas faixas de áudio."),
             0,
             MAX_CROSSFADE_SECONDS,
@@ -243,7 +244,7 @@ class PreferencesDialog(wx.Dialog):
         self.repeat_mode_choice = self._add_choice(
             box,
             sizer,
-            _("Repetição padrão"),
+            _("&Repetição padrão"),
             _("Modo de repetição das playlists novas."),
             [REPEAT_MODE_LABELS[mode] for mode in REPEAT_MODES],
         )
@@ -258,7 +259,7 @@ class PreferencesDialog(wx.Dialog):
         self.audio_output_choice = self._add_choice(
             box,
             sizer,
-            _("Dispositivo de áudio"),
+            _("&Dispositivo de áudio"),
             _("Saída de áudio usada na reprodução."),
             self._audio_output_choice_labels(),
         )
@@ -295,7 +296,7 @@ class PreferencesDialog(wx.Dialog):
         )
         self._announcement_names = [name for name, _label in announcement_labels()]
         self._announcement_labels = [label for _name, label in announcement_labels()]
-        announcements_label = wx.StaticText(box, label=_("Avisos que falam:"))
+        announcements_label = wx.StaticText(box, label=_("&Avisos que falam:"))
         self.announcements_list = CheckList(
             box,
             [label for _name, label in announcement_labels()],
@@ -309,13 +310,13 @@ class PreferencesDialog(wx.Dialog):
         self.interface_sounds_enabled_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("Tocar &sons de aviso"),
+            _("T&ocar sons de aviso"),
             _("Sons curtos para o chat, as notificações, as listas, a fila e os avisos do player."),
         )
         self.interface_sounds_volume_ctrl = self._add_spin(
             box,
             sizer,
-            _("Volume dos sons de aviso"),
+            _("Vo&lume dos sons de aviso"),
             _("De 1 a 100, sem depender do volume da mídia."),
             1,
             100,
@@ -323,7 +324,7 @@ class PreferencesDialog(wx.Dialog):
         self._interface_sound_names = [name for name, _label in sound_labels()]
         self._interface_sound_labels = [label for _name, label in sound_labels()]
         self._interface_sounds_custom = {}
-        sounds_label = wx.StaticText(box, label=_("Sons que tocam:"))
+        sounds_label = wx.StaticText(box, label=_("Sons que &tocam:"))
         self.interface_sounds_list = CheckList(
             box, [label for _name, label in sound_labels()], size=self.FromDIP(wx.Size(-1, 190))
         )
@@ -376,7 +377,7 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_history_limit_ctrl = self._add_spin(
             box,
             sizer,
-            _("Reproduções guardadas no histórico"),
+            _("&Reproduções guardadas no histórico"),
             _("Acima desse número, as mais antigas saem."),
             MIN_SMART_LIBRARY_HISTORY_LIMIT,
             MAX_SMART_LIBRARY_HISTORY_LIMIT,
@@ -392,7 +393,7 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_resume_minimum_ctrl = self._add_spin(
             box,
             sizer,
-            _("Duração mínima para lembrar a posição (minutos)"),
+            _("&Duração mínima para lembrar a posição (minutos)"),
             _("Mídias mais curtas sempre recomeçam do início."),
             MIN_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
             MAX_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
@@ -400,7 +401,7 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_resume_edge_ctrl = self._add_spin(
             box,
             sizer,
-            _("Margem ignorada no início e no fim (segundos)"),
+            _("&Margem ignorada no início e no fim (segundos)"),
             _("Parar dentro dessa margem não cria ponto de retomada."),
             MIN_SMART_LIBRARY_RESUME_EDGE_SECONDS,
             MAX_SMART_LIBRARY_RESUME_EDGE_SECONDS,
@@ -410,7 +411,7 @@ class PreferencesDialog(wx.Dialog):
         self.smart_library_cache_limit_ctrl = self._add_spin(
             box,
             sizer,
-            _("Entradas guardadas no cache"),
+            _("&Entradas guardadas no cache"),
             _("Ao atingir o limite, as mais antigas saem."),
             MIN_SMART_LIBRARY_CACHE_LIMIT,
             MAX_SMART_LIBRARY_CACHE_LIMIT,
@@ -452,7 +453,7 @@ class PreferencesDialog(wx.Dialog):
         page, page_sizer = self._create_tab_page()
 
         box, sizer = self._create_group(page, page_sizer, _("Opções de download"))
-        self.download_options_panel = DownloadOptionsPanel(box, kind_label=_("Tipo de download padrão"))
+        self.download_options_panel = DownloadOptionsPanel(box, kind_label=_("&Tipo de download padrão"))
         sizer.Add(self.download_options_panel, 0, wx.EXPAND)
         self.download_always_ask_checkbox = self._add_checkbox(
             box,
@@ -479,7 +480,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_library_page_size_ctrl = self._add_spin(
             box,
             sizer,
-            _("Itens carregados por vez"),
+            _("&Itens carregados por vez"),
             _("Vale para as listas da aba: playlists, resultados e faixas. Valores menores abrem mais rápido."),
             MIN_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
             MAX_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE,
@@ -487,7 +488,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_home_discovery_limit_ctrl = self._add_spin(
             box,
             sizer,
-            _("Mixes personalizadas para descobrir"),
+            _("&Mixes personalizadas para descobrir"),
             _("Itens da página inicial varridos em busca de mixes."),
             MIN_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
             MAX_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
@@ -510,7 +511,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_notification_check_choice = self._add_choice(
             box,
             sizer,
-            _("Avisar das notificações novas"),
+            _("&Avisar das notificações novas"),
             _("O KeyTune consulta a caixa da conta e fala as notificações que chegaram."),
             [_("Nunca")]
             + [
@@ -531,7 +532,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_content_language_choice = self._add_choice(
             box,
             sizer,
-            _("Idioma do conteúdo"),
+            _("I&dioma do conteúdo"),
             _("Usado nas buscas, nos comentários e nos nomes das faixas de áudio."),
             [_("O mesmo do KeyTune")] + [label for _code, label in CONTENT_LANGUAGES],
         )
@@ -539,7 +540,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_content_region_choice = self._add_choice(
             box,
             sizer,
-            _("Região do conteúdo"),
+            _("&Região do conteúdo"),
             _("País usado nas buscas do YouTube e do YouTube Music."),
             [_("Automática")] + [label for _code, label in CONTENT_REGIONS],
         )
@@ -547,7 +548,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_audio_language_choice = self._add_choice(
             box,
             sizer,
-            _("Áudio dos vídeos dublados"),
+            _("Áudio dos &vídeos dublados"),
             _("Faixa tocada nos vídeos com mais de um áudio."),
             [_("A que o YouTube entregar"), _("Original do vídeo")] + [label for _code, label in AUDIO_LANGUAGES],
         )
@@ -563,19 +564,19 @@ class PreferencesDialog(wx.Dialog):
         self.sponsorblock_enabled_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("Pular trechos marcados pela comunidade SponsorBlock"),
+            _("Pu&lar trechos marcados pela comunidade SponsorBlock"),
             _("Patrocínios, pedidos de inscrição e trechos sem música nos vídeos do YouTube."),
         )
         self._sponsorblock_modes = list(sponsorblock.MODES)
         self.sponsorblock_mode_choice = self._add_choice(
             box,
             sizer,
-            _("Ao chegar num trecho"),
+            _("Ao chegar num &trecho"),
             _("Pular sozinho ou só avisar; o comando Pular trecho do SponsorBlock pula quando avisado."),
             [_("Pular e avisar"), _("Só avisar")],
         )
         self._sponsorblock_category_names = list(sponsorblock.CATEGORIES)
-        categories_label = wx.StaticText(box, label=_("Categorias de trecho:"))
+        categories_label = wx.StaticText(box, label=_("Cat&egorias de trecho:"))
         self.sponsorblock_categories_list = CheckList(
             box,
             [sponsorblock.category_label(name) for name in self._sponsorblock_category_names],
@@ -586,7 +587,7 @@ class PreferencesDialog(wx.Dialog):
         self.sponsorblock_contribute_checkbox = self._add_checkbox(
             box,
             sizer,
-            _("Ajudar o SponsorBlock: enviar trechos novos e votar"),
+            _("A&judar o SponsorBlock: enviar trechos novos e votar"),
             _("Libera os comandos de marcar, enviar e votar; o SponsorBlock conta os trechos pulados."),
         )
         self.sponsorblock_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_sponsorblock)
@@ -611,7 +612,7 @@ class PreferencesDialog(wx.Dialog):
         self.radio_country_choice = self._add_choice(
             box,
             sizer,
-            _("Meu país"),
+            _("&Meu país"),
             _("País do início da aba e da busca. Outros países: menu de ações do país, na aba."),
             [label for _code, label in self._radio_country_choices],
         )
@@ -644,7 +645,7 @@ class PreferencesDialog(wx.Dialog):
             _("Verifica atualizações ao abrir o KeyTube, no intervalo a seguir."),
         )
         self.youtube_music_dependency_update_interval_ctrl = self._add_spin(
-            box, sizer, _("Intervalo de atualização (horas)"), _("Horas entre as verificações."), 1, 720
+            box, sizer, _("&Intervalo de atualização (horas)"), _("Horas entre as verificações."), 1, 720
         )
 
         box, sizer = self._create_group(page, page_sizer, _("AutoDJ"))
@@ -657,14 +658,14 @@ class PreferencesDialog(wx.Dialog):
         self.autodj_profile_choice = self._add_choice(
             box,
             sizer,
-            _("Perfil do AutoDJ"),
+            _("&Perfil do AutoDJ"),
             _("Estilo da sequência e das transições."),
             [AUTODJ_PROFILE_LABELS[profile] for profile in AUTODJ_PROFILES],
         )
         self.autodj_beats_choice = self._add_choice(
             box,
             sizer,
-            _("Duração da transição do AutoDJ"),
+            _("Duração da &transição do AutoDJ"),
             _("Batidas de sobreposição entre duas faixas."),
             [_("{count} batidas").format(count=count) for count in AUTODJ_BEAT_COUNTS],
         )
@@ -710,9 +711,10 @@ class PreferencesDialog(wx.Dialog):
         return checkbox
 
     def _add_spin(self, box, sizer, label_text, help_text, min_value, max_value):
+        name = strip_mnemonic(label_text)
         label = wx.StaticText(box, label=f"{label_text}:")
-        control = wx.SpinCtrl(box, min=min_value, max=max_value, name=label_text)
-        describe_control(control, label_text, help_text)
+        control = wx.SpinCtrl(box, min=min_value, max=max_value, name=name)
+        describe_control(control, name, help_text)
         add_labeled_row(sizer, label, control)
         return control
 

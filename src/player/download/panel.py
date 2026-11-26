@@ -49,21 +49,21 @@ class DownloadOptionsPanel(wx.Panel):
         self.audio_quality_choice = add_choice_row(
             self,
             sizer,
-            _("Qualidade do áudio"),
+            _("&Qualidade do áudio"),
             _("Original não converte. MP3 e FLAC convertem o áudio e exigem o FFmpeg."),
             [audio_quality_label(quality) for quality in AUDIO_QUALITIES],
         )
         self.sample_rate_choice = add_choice_row(
             self,
             sizer,
-            _("Taxa de amostragem do áudio"),
+            _("Taxa de &amostragem do áudio"),
             _("Só vale quando o áudio é convertido para MP3 ou FLAC."),
             [sample_rate_label(rate) for rate in SAMPLE_RATES],
         )
         self.video_quality_choice = add_choice_row(
             self,
             sizer,
-            _("Qualidade do vídeo"),
+            _("Qualidade do &vídeo"),
             _("Altura máxima do vídeo; sem ela, vem a melhor disponível."),
             [video_quality_label(quality) for quality in VIDEO_QUALITIES],
         )
@@ -71,7 +71,7 @@ class DownloadOptionsPanel(wx.Panel):
         self.directory_ctrl = add_directory_row(
             self,
             sizer,
-            _("Pasta de download"),
+            _("Pasta de &download"),
             _("Pasta onde os arquivos baixados serão salvos."),
             _("Escolha a pasta de download"),
             _("Escolher pasta de download"),

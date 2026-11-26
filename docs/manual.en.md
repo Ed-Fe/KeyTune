@@ -46,6 +46,8 @@ The first time you open it, the window shows an empty playlist tab. It has these
 
 `Tab` or `Ctrl+B` switch focus between the item browser and the player (with the explorer open, `Tab` goes through it too). `F1`, at any time, opens the quick shortcuts help.
 
+In Preferences and in the dialogs, each field's label has an underlined letter: `Alt` plus that letter moves the focus straight to the field, without going through the others with `Tab`.
+
 ## How to open media
 
 There are three ways to put media into KeyTune: open, paste and use the folder explorer. All three work the same way: what comes in goes to the **current playlist** and starts playing. With `Shift`, it goes in **without playing**, at the end of the list, and whatever was playing keeps playing.

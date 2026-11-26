@@ -44,7 +44,7 @@ class EqualizerPresetDialog(wx.Dialog):
         root_sizer.Add(intro_label, 0, wx.ALL | wx.EXPAND, 10)
 
         box, name_box = create_group(panel, _("Identificação do preset"))
-        name_label = wx.StaticText(box, label=_("Nome do preset:"))
+        name_label = wx.StaticText(box, label=_("&Nome do preset:"))
         self.name_ctrl = wx.TextCtrl(box)
         self.name_ctrl.SetName(_("Nome do preset"))
         self.name_ctrl.SetToolTip(_("Digite um nome único e fácil de reconhecer para o preset."))

@@ -71,7 +71,7 @@ class PermissionDialog(wx.Dialog):
             security_notice=security_notice(manifest),
         )
         add_reading_field(
-            panel, root, _("Permissões solicitadas e aviso de segurança"), warning, border=12
+            panel, root, _("&Permissões solicitadas e aviso de segurança"), warning, border=12
         )
         buttons = wx.StdDialogButtonSizer()
         ok_button = wx.Button(panel, wx.ID_OK, _("&Ativar"))
@@ -93,7 +93,7 @@ class InstallationConfirmationDialog(wx.Dialog):
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
         add_reading_field(
-            panel, root, _("Detalhes do plugin"), installation_summary(manifest, source), border=12
+            panel, root, _("&Detalhes do plugin"), installation_summary(manifest, source), border=12
         )
         buttons = wx.StdDialogButtonSizer()
         install_button = wx.Button(panel, wx.ID_OK, _("&Instalar e ativar"))
@@ -136,11 +136,11 @@ class MarketplaceDialog(wx.Dialog):
 
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
-        root.Add(wx.StaticText(panel, label=_("Plugins disponíveis:")), 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
+        root.Add(wx.StaticText(panel, label=_("&Plugins disponíveis:")), 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
         self.items = wx.ListBox(panel, choices=[f"{entry.name} {entry.version}" for entry in self.entries], style=wx.LB_SINGLE)
         self.items.SetName(_("Plugins disponíveis no marketplace"))
         root.Add(self.items, 1, wx.ALL | wx.EXPAND, 12)
-        root.Add(wx.StaticText(panel, label=_("Detalhes do plugin:")), 0, wx.LEFT | wx.RIGHT, 12)
+        root.Add(wx.StaticText(panel, label=_("&Detalhes do plugin:")), 0, wx.LEFT | wx.RIGHT, 12)
         self.details = create_reading_field(panel, _("Detalhes do plugin selecionado"))
         self.details.SetMinSize((600, 130))
         root.Add(self.details, 0, wx.ALL | wx.EXPAND, 12)
@@ -187,7 +187,7 @@ class PluginManagerDialog(wx.Dialog):
         self._marketplace_entries = []
         panel = wx.Panel(self)
         root = wx.BoxSizer(wx.VERTICAL)
-        root.Add(wx.StaticText(panel, label=_("Plugins instalados:")), 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
+        root.Add(wx.StaticText(panel, label=_("P&lugins instalados:")), 0, wx.LEFT | wx.RIGHT | wx.TOP, 12)
         self.items = wx.ListCtrl(panel, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         self.items.SetName(_("Lista de plugins instalados"))
         for index, (label, width) in enumerate(((_("Plugin"), 210), (_("Versão"), 90), (_("Estado"), 120), (_("Isolamento"), 120))):
