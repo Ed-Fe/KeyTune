@@ -95,7 +95,7 @@ def load_manual(language: str | None = None, directories: list[Path] | None = No
         if path.is_file():
             try:
                 return parse_manual(path.read_text(encoding="utf-8"))
-            except OSError:
+            except (OSError, UnicodeDecodeError):
                 continue
     return []
 

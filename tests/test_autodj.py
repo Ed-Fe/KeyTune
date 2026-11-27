@@ -1489,7 +1489,7 @@ class AutoDJTests(unittest.TestCase):
                 self.player = Player()
                 self.play_request = None
 
-            def _block_sensitive_action_during_youtube_music(self, _action): return False
+            def _block_sensitive_action_during_youtube_music(self, _action, **_kwargs): return False
             def _get_playlist_state(self, _index=None): return self.state
             def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return transition
@@ -1519,7 +1519,7 @@ class AutoDJTests(unittest.TestCase):
                 self.player = Player()
                 self.play_request = None
 
-            def _block_sensitive_action_during_youtube_music(self, _action): return False
+            def _block_sensitive_action_during_youtube_music(self, _action, **_kwargs): return False
             def _get_playlist_state(self, _index=None): return self.state
             def _get_active_playlist_state(self): return self.state
             def _prepared_autodj_transition(self, _state): return None

@@ -10,6 +10,7 @@ from player.radio.manual_dialog import AddRadioManuallyDialog
 from player.radio.media import is_radio_media
 
 from ...i18n import _, ngettext
+from ...links import open_link
 from ...playlists import PlaylistState
 from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION
 
@@ -206,8 +207,7 @@ class RadioActionsMixin:
 
     def _open_radio_homepage(self, station):
         # O endereço vem do diretório: só um site http(s) vai para o navegador.
-        homepage = str(station.homepage or "").strip()
-        if not homepage.lower().startswith(("http://", "https://")) or not wx.LaunchDefaultBrowser(homepage):
+        if not open_link(station.homepage):
             self._announce(_("Não foi possível abrir o site desta rádio."), ANNOUNCE_ERRORS)
             return False
         self._announce(_("Abrindo o site de {name} no navegador.").format(name=station.name), ANNOUNCE_NAVIGATION)

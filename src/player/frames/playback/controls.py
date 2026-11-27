@@ -245,11 +245,11 @@ class PlaybackControlsMixin:
     def _play_selected_playlist(self):
         # Enter no player: a playlist à vista assume a reprodução, de onde
         # tinha parado. O Espaço continua valendo para o que já está tocando.
-        if self._block_sensitive_action_during_youtube_music("track-selection"):
-            return
-
         selected_index = self._get_selected_playlist_index()
         state = self._get_playlist_state(selected_index)
+        if self._block_sensitive_action_during_youtube_music("track-selection", state=state):
+            return
+
         if not state or state.is_loading or not state.current_media_path:
             self._announce(_("A playlist atual está vazia."), ANNOUNCE_ERRORS)
             return

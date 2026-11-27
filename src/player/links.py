@@ -7,6 +7,7 @@ na versão ``.html`` que a release gera, quando ela existe.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -45,5 +46,28 @@ def open_link(target: str, base_directories=()) -> bool:
         import wx
 
         return bool(wx.LaunchDefaultBrowser(address))
+    except Exception:
+        return False
+
+
+def open_local_document(path) -> bool:
+    """Abre um documento local (manual, créditos, guias) no visualizador do sistema.
+
+    No Windows usa o aplicativo associado ao arquivo (``os.startfile``); nos demais
+    sistemas, ou se isso falhar, cai para o navegador padrão.
+    """
+    document_path = Path(path)
+    if not document_path.is_file():
+        return False
+    if hasattr(os, "startfile"):
+        try:
+            os.startfile(str(document_path))
+            return True
+        except OSError:
+            pass
+    try:
+        import wx
+
+        return bool(wx.LaunchDefaultBrowser(document_path.resolve().as_uri()))
     except Exception:
         return False

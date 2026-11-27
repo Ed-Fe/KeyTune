@@ -324,7 +324,9 @@ class FrameExplorerMixin:
         run_in_background(self, lambda: collect_media_paths(paths), deliver)
 
     def _explorer_play_paths(self, paths):
-        if self._block_sensitive_action_during_youtube_music("track-selection"):
+        if self._block_sensitive_action_during_youtube_music(
+            "track-selection", media_path=paths[0] if paths else None
+        ):
             return
 
         self._explorer_with_media(paths, self._play_media_paths_in_current_playlist)

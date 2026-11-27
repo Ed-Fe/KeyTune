@@ -4,6 +4,7 @@ import threading
 import wx
 
 from player.youtube_music.auth import sanitize_sensitive_text
+from player.youtube_music.playlists import is_youtube_music_media
 from ... import interface_sounds
 from ...announcements import ANNOUNCE_ERRORS
 
@@ -32,8 +33,27 @@ class BackgroundTaskMixin:
     def _play_windows_youtube_music_blocked_sound(self):
         interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
 
-    def _block_sensitive_action_during_youtube_music(self, action_kind):
+    def _is_sensitive_youtube_music_target(self, *, media_path=None, state=None):
+        """Se *media_path* (ou o item/fonte de *state*) é mesmo do YouTube Music."""
+        if media_path is not None and is_youtube_music_media(media_path):
+            return True
+        if state is not None and (
+            is_youtube_music_media(getattr(state, "current_media_path", None))
+            or is_youtube_music_media(getattr(state, "source_path", None))
+        ):
+            return True
+        return False
+
+    def _block_sensitive_action_during_youtube_music(self, action_kind, *, media_path=None, state=None):
         if not self._is_youtube_music_operation_in_progress():
+            return False
+
+        # Quem passa media_path/state só é bloqueado se o alvo for mesmo do YouTube
+        # Music: rádio online e arquivos locais não correm risco de colidir com uma
+        # operação da central (busca, biblioteca, atualização de recursos).
+        if (media_path is not None or state is not None) and not self._is_sensitive_youtube_music_target(
+            media_path=media_path, state=state
+        ):
             return False
 
         messages = {

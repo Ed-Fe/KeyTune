@@ -227,6 +227,11 @@ class RadioNavigationMixin:
             view.next_start = start + RADIO_RESULTS_PAGE_SIZE
             # Uma página sem nada de novo encerra a lista, para não repetir o pedido sem fim.
             view.has_more = bool(page.has_more and new_results)
+            if new_results:
+                # Setinha pra baixo no último item pediu a página seguinte sem mexer no
+                # foco: sem isto o item novo manteria o foco (e o anúncio) parado no item
+                # antigo, e o leitor de tela perderia o primeiro item recém-chegado.
+                self._radio_pending_result_selection = new_results[0].stable_id
             self._show_radio_view(announce=False)
             if new_results:
                 self._announce(

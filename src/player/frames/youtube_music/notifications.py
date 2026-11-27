@@ -126,10 +126,10 @@ class NotificationsMixin:
             interface_sounds.play_for(
                 self, interface_sounds.SOUND_SUCCESS if notifications else interface_sounds.SOUND_FAILURE
             )
-            self._announce(
-                _("Notificação marcada como lida.") if notifications else _("Não foi possível marcar a notificação como lida."),
-                ANNOUNCE_ERRORS
-            )
+            if notifications:
+                self._announce(_("Notificação marcada como lida."), ANNOUNCE_CONFIRMATIONS)
+            else:
+                self._announce(_("Não foi possível marcar a notificação como lida."), ANNOUNCE_ERRORS)
 
     def _hide_youtube_notification(self, notification):
         def worker():

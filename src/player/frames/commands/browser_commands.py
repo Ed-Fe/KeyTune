@@ -24,7 +24,7 @@ class BrowserCommandsMixin:
         if not 0 <= item_index < len(state.items):
             return
 
-        if self._block_sensitive_action_during_youtube_music("track-selection"):
+        if self._block_sensitive_action_during_youtube_music("track-selection", state=state):
             return
 
         selected_index = self._get_selected_playlist_index()

@@ -132,7 +132,8 @@ class PlaylistPlaybackMixin:
             else None
         )
         chapter_pending = getattr(self, "_youtube_chapter_start_pending", None)
-        if allow_crossfade and not (callable(chapter_pending) and chapter_pending(state.current_media_path)) and self._can_crossfade_to_media(
+        chapter_is_pending = bool(callable(chapter_pending) and chapter_pending(state.current_media_path))
+        if allow_crossfade and not chapter_is_pending and self._can_crossfade_to_media(
             state.current_media_path,
             duration_override_ms=transition_duration_ms,
         ):
@@ -155,7 +156,8 @@ class PlaylistPlaybackMixin:
             resume_position_ms = library_resume_position(state.current_media_path)
             if resume_position_ms > 0:
                 state.last_position_ms = resume_position_ms
-                self._announce_resume_position(state.current_media_path, resume_position_ms)
+                if not chapter_is_pending:
+                    self._announce_resume_position(state.current_media_path, resume_position_ms)
         take_youtube_resume_hint = getattr(self, "_take_youtube_resume_hint_ms", None)
         if callable(take_youtube_resume_hint):
             # Vídeo do YouTube já assistido em parte pela conta: retoma de onde ela parou,
@@ -164,7 +166,8 @@ class PlaylistPlaybackMixin:
             if resume_position_ms <= 0 and youtube_resume_position_ms > 0:
                 resume_position_ms = youtube_resume_position_ms
                 state.last_position_ms = resume_position_ms
-                self._announce_resume_position(state.current_media_path, resume_position_ms)
+                if not chapter_is_pending:
+                    self._announce_resume_position(state.current_media_path, resume_position_ms)
         take_chapter_start = getattr(self, "_take_youtube_chapter_start_ms", None)
         if callable(take_chapter_start):
             chapter_start_ms = take_chapter_start(state.current_media_path)
@@ -349,12 +352,7 @@ class PlaylistPlaybackMixin:
             self._announce(_("Nenhuma playlist carregada."), ANNOUNCE_ERRORS)
             return
 
-        # A trava do YouTube Music só importa pra quem está tocando algo de lá:
-        # uma rádio online ou um arquivo local não corre risco de colidir com
-        # uma operação da central (busca, biblioteca, atualização de recursos).
-        if is_youtube_music_media(state.current_media_path) and self._block_sensitive_action_during_youtube_music(
-            "track-navigation"
-        ):
+        if self._block_sensitive_action_during_youtube_music("track-navigation", state=state):
             return
 
         if direction < 0 and self.player.get_media() is not None:
@@ -443,10 +441,10 @@ class PlaylistPlaybackMixin:
         }
 
     def _jump_to_playlist_boundary(self, to_last=False):
-        if self._block_sensitive_action_during_youtube_music("track-selection"):
+        state = self._get_active_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("track-selection", state=state):
             return
 
-        state = self._get_active_playlist_state()
         if not state or not state.items:
             self._announce(_("Nenhuma playlist carregada."), ANNOUNCE_ERRORS)
             return
@@ -461,10 +459,10 @@ class PlaylistPlaybackMixin:
         self._play_media(index=self._get_active_playlist_index())
 
     def _move_current_item(self, direction):
-        if self._block_sensitive_action_during_youtube_music("playback-order"):
+        state = self._get_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("playback-order", state=state):
             return
 
-        state = self._get_playlist_state()
         if not state or not state.items:
             self._announce(_("Nenhuma playlist carregada."), ANNOUNCE_ERRORS)
             return
@@ -513,10 +511,10 @@ class PlaylistPlaybackMixin:
         return self._get_playlist_state(self._get_selected_playlist_index())
 
     def _toggle_shuffle(self):
-        if self._block_sensitive_action_during_youtube_music("playback-order"):
+        state = self._playback_order_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("playback-order", state=state):
             return
 
-        state = self._playback_order_playlist_state()
         if not state:
             self._announce(_("Nenhuma playlist ativa."), ANNOUNCE_ERRORS)
             return
@@ -531,10 +529,10 @@ class PlaylistPlaybackMixin:
         self._refresh_playlist_browser()
 
     def _cycle_repeat_mode(self):
-        if self._block_sensitive_action_during_youtube_music("playback-order"):
+        state = self._playback_order_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("playback-order", state=state):
             return
 
-        state = self._playback_order_playlist_state()
         if not state:
             self._announce(_("Nenhuma playlist ativa."), ANNOUNCE_ERRORS)
             return

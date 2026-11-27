@@ -21,7 +21,7 @@ class PlaylistItemLabelsTests(unittest.TestCase):
                     frame = PlaylistItemRemovalMixin()
                     frame._get_playlist_state = lambda: state
                     frame._is_active_playlist_state = lambda state: False
-                    frame._block_sensitive_action_during_youtube_music = lambda action: False
+                    frame._block_sensitive_action_during_youtube_music = lambda action, **kwargs: False
                     frame._media_label = lambda path: path
                     frame._refresh_playlist_browser = Mock()
                     frame._announce = Mock()

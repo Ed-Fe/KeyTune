@@ -8,8 +8,9 @@ from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_
 from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
+from ..links import open_local_document
 from ..manual import ManualDialog, load_manual
-from ..secondary_window import show_secondary_window
+from ..secondary_window import is_secondary_window_open, show_secondary_window
 from ..radio.media import is_radio_media
 from ..reading_dialog import create_reading_field, show_reading_dialog
 from ..welcome import WelcomeDialog
@@ -56,6 +57,13 @@ class FrameUIMixin:
         return unique_candidates
 
     def _open_manual_document(self):
+        # Sem modo modal: o player continua usável, e pedir o manual de novo traz a
+        # janela que já está aberta (Alt+F6 também alterna entre as duas), sem reler
+        # e reparsear o manual.md do disco de novo.
+        if is_secondary_window_open(self, "manual"):
+            show_secondary_window(self, "manual", None)
+            return True
+
         sections = load_manual()
         if not sections:
             wx.MessageBox(
@@ -66,8 +74,6 @@ class FrameUIMixin:
             )
             return False
 
-        # Sem modo modal: o player continua usável, e pedir o manual de novo traz a
-        # janela que já está aberta (Alt+F6 também alterna entre as duas).
         show_secondary_window(
             self,
             "manual",
@@ -89,12 +95,7 @@ class FrameUIMixin:
             )
             return False
 
-        try:
-            launched = wx.LaunchDefaultBrowser(credits_path.resolve().as_uri())
-        except Exception:
-            launched = False
-
-        if not launched:
+        if not open_local_document(credits_path):
             wx.MessageBox(
                 _("Não foi possível abrir os créditos do KeyTune no visualizador padrão do sistema."),
                 _("Créditos do KeyTune"),

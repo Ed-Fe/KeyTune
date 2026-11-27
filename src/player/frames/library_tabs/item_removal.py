@@ -7,10 +7,10 @@ class PlaylistItemRemovalMixin:
     def _remove_item_from_current_playlist(self, item_index, announce_prefix=None):
         if announce_prefix is None:
             announce_prefix = _("Item removido")
-        if self._block_sensitive_action_during_youtube_music("close-media"):
+        state = self._get_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("close-media", state=state):
             return
 
-        state = self._get_playlist_state()
         if state and state.is_folder_tab:
             self._announce(
                 _("Use Ctrl+Shift+W para fechar a prévia atual ou Backspace para voltar de pasta."),
@@ -155,15 +155,15 @@ class PlaylistItemRemovalMixin:
         )
 
     def _close_current_media(self):
-        if self._block_sensitive_action_during_youtube_music("close-media"):
-            return
-
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
             self._announce(_("Nenhuma mídia carregada."), ANNOUNCE_ERRORS)
             return
 
         state = self._get_playlist_state()
+        if self._block_sensitive_action_during_youtube_music("close-media", state=state):
+            return
+
         if state and state.is_folder_tab and state.current_media_path:
             state.current_index = -1
             state.current_media_path = None

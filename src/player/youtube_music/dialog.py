@@ -5,6 +5,7 @@ from pathlib import Path
 import wx
 
 from ..i18n import _, ngettext
+from ..links import open_local_document
 from ..reading_dialog import show_reading_dialog
 from .auth import SUPPORTED_BROWSERS
 
@@ -272,12 +273,8 @@ class YouTubeMusicBrowserAuthDialog(wx.Dialog):
     def _on_show_export_help(self, _event):
         """Abre o guia HTML de conexão no navegador; sem ele, lê o resumo numa caixa de leitura."""
         guide_path = connect_guide_path()
-        if guide_path is not None:
-            try:
-                os.startfile(str(guide_path))
-                return
-            except OSError:
-                pass
+        if guide_path is not None and open_local_document(guide_path):
+            return
         show_reading_dialog(
             self,
             title=_("Como exportar os cookies"),

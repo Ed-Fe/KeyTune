@@ -37,7 +37,10 @@ class ResumeHintsMixin:
         chapter_video_id = str(getattr(search_result, "video_id", "") or "").strip()
         if chapter_start is not None and chapter_video_id:
             # Escolher um capítulo é pedido explícito: vale mesmo em vídeo curto ou já tocado.
-            self.__dict__.setdefault("_youtube_chapter_starts", {})[chapter_video_id] = int(chapter_start) * 1000
+            # Vários capítulos do mesmo vídeo geram itens com a mesma URL, então os começos
+            # ficam numa fila por vídeo e são consumidos na mesma ordem em que foram escolhidos.
+            starts = self.__dict__.setdefault("_youtube_chapter_starts", {})
+            starts.setdefault(chapter_video_id, []).append(int(chapter_start) * 1000)
             return
         position_ms = int(getattr(search_result, "resume_seconds", 0) or 0) * 1000
         duration_ms = int(getattr(search_result, "duration_seconds", 0) or 0) * 1000
@@ -57,12 +60,18 @@ class ResumeHintsMixin:
         return bool(video_id) and video_id in self.__dict__.get("_youtube_chapter_starts", {})
 
     def _take_youtube_chapter_start_ms(self, media_path):
-        """O começo do capítulo escolhido para *media_path* (ms), ou ``None``; vale uma vez só."""
+        """O começo do capítulo escolhido para *media_path* (ms), ou ``None``; consome o mais antigo da fila."""
         video_id = extract_video_id_from_text(media_path)
         starts = self.__dict__.get("_youtube_chapter_starts")
         if not video_id or not starts:
             return None
-        return starts.pop(video_id, None)
+        queue = starts.get(video_id)
+        if not queue:
+            return None
+        start_ms = queue.pop(0)
+        if not queue:
+            del starts[video_id]
+        return start_ms
 
     def _take_youtube_resume_hint_ms(self, media_path):
         """A posição de retomada do vídeo *media_path*, ou 0; chamar sempre que ele começa a tocar.

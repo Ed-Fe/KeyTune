@@ -37,6 +37,12 @@ def bring_to_front(window) -> None:
     window.Raise()
 
 
+def is_secondary_window_open(owner, key: str) -> bool:
+    """Se a janela secundária *key* de *owner* já está aberta (para não recriar seu conteúdo)."""
+    window = _registry(owner).get(key)
+    return window is not None and _alive(window)
+
+
 def show_secondary_window(owner, key: str, factory):
     """Mostra a janela *key* de *owner*, criando-a com *factory* só se não houver uma aberta.
 
