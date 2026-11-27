@@ -55,40 +55,61 @@ export async function playlistRemoveVideo(request) {
   return { ok: true };
 }
 
-// Os Shorts: o YouTube não tem uma lista para abrir, só uma sequência a partir de um
-// short. O primeiro vem do início da conta (ou da busca, sem conta).
-async function firstShortId(request) {
-  const home = await (await accountClientFor(request)).getHomeFeed();
-  for (const node of home.videos) {
-    const id = node.type === "ReelItem" ? node.id : node.type === "ShortsLockupView" ? node.on_tap_endpoint?.payload?.videoId : "";
-    if (id) {
-      return id;
-    }
-  }
-  return "";
+// Os Shorts abrem como a aba Shorts do site: sem um short de partida, o YouTube escolhe
+// o primeiro para a conta e devolve a continuação da sequência.
+const SEEDLESS_SHORTS_PARAMS = "CA8%3D";
+
+function isShortsAd(node) {
+  // Os anúncios vêm na sequência como shorts; só eles trazem "adClientParams".
+  return Boolean(node.payload?.adClientParams);
 }
 
-// Os shorts que o YouTube sugere depois de *seed*, com título e canal. A sequência vem
-// pela conta (são as recomendações dela) e só traz o endereço de cada um: o título e o
-// canal são dados públicos, lidos pelo cliente anônimo para não disparar uma rajada de
-// consultas com os cookies.
-async function shortsFrom(request, seed, limit) {
-  const account = await accountClientFor(request);
-  const innertube = await clientFor(request);
-  const info = await account.getShortsVideoInfo(seed);
-  const ids = [seed];
-  for (const node of info.watch_next_feed || []) {
-    // Os anúncios vêm na sequência como shorts; só eles trazem "adClientParams".
-    if (node.payload?.adClientParams) {
-      continue;
-    }
-    const id = node.payload?.videoId || node.payload?.reelWatchEndpoint?.videoId;
+function shortIdOf(node) {
+  return node.payload?.videoId || node.payload?.reelWatchEndpoint?.videoId || "";
+}
+
+function collectShortIds(ids, nodes) {
+  for (const node of nodes || []) {
+    const id = isShortsAd(node) ? "" : shortIdOf(node);
     if (id && !ids.includes(id)) {
       ids.push(id);
     }
   }
+  return ids;
+}
+
+async function seedlessShortIds(request) {
+  const account = await accountClientFor(request);
+  const first = await account.actions.execute("/reel/reel_item_watch", {
+    disablePlayerResponse: true,
+    params: SEEDLESS_SHORTS_PARAMS,
+    inputType: "REEL_WATCH_INPUT_TYPE_SEEDLESS",
+  });
+  const seed = first.data?.replacementEndpoint?.reelWatchEndpoint?.videoId || "";
+  const ids = seed ? [seed] : [];
+  const continuation = first.data?.sequenceContinuation;
+  if (continuation) {
+    const sequence = await account.actions.execute("/reel/reel_watch_sequence", {
+      sequenceParams: continuation,
+      parse: true,
+    });
+    collectShortIds(ids, sequence.entries);
+  }
+  return ids;
+}
+
+// A sequência que o YouTube sugere depois de *seed* (pela conta: são as recomendações dela).
+async function shortIdsAfter(request, seed) {
+  const info = await (await accountClientFor(request)).getShortsVideoInfo(seed);
+  return collectShortIds([seed], info.watch_next_feed);
+}
+
+// O título e o canal de cada short. A sequência só traz o endereço: o resto são dados
+// públicos, lidos pelo cliente anônimo para não disparar uma rajada de consultas com os cookies.
+async function describeShorts(request, ids) {
+  const innertube = await clientFor(request);
   const found = await Promise.all(
-    ids.slice(0, limit).map(async (id) => {
+    ids.map(async (id) => {
       try {
         const basic = (await innertube.getBasicInfo(id)).basic_info;
         return basic?.title
@@ -111,11 +132,11 @@ async function shortsFrom(request, seed, limit) {
 export function shorts(request) {
   return pagedFeed(JSON.stringify(["shorts", accountKey(request)]), request, {
     openFeed: async () => {
-      const seed = await firstShortId(request);
-      if (!seed) {
+      const ids = await seedlessShortIds(request);
+      if (!ids.length) {
         throw new Error("O YouTube não trouxe nenhum short agora.");
       }
-      return { items: await shortsFrom(request, seed, SHORTS_LIMIT), has_continuation: false };
+      return { items: await describeShorts(request, ids.slice(0, SHORTS_LIMIT)), has_continuation: false };
     },
     nodesOf: (feed) => feed.items,
     toEntry: (node) => node,
@@ -125,6 +146,7 @@ export function shorts(request) {
 // Mais shorts a partir do último que a conta viu: a sequência continua de onde parou.
 export async function shortsAfter(request) {
   const seed = requireVideoId(request);
-  const entries = (await shortsFrom(request, seed, SHORTS_LIMIT)).filter((entry) => entry.id !== seed);
+  const ids = (await shortIdsAfter(request, seed)).filter((id) => id !== seed);
+  const entries = await describeShorts(request, ids.slice(0, SHORTS_LIMIT));
   return { entries };
 }
