@@ -176,6 +176,10 @@ msgstr ""
 msgid "&Conteúdo Relacionado do YouTube Music (A)"
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "&Conteúdo:"
+msgstr ""
+
 #: src/player/quick_player/panel.py
 msgid "&Continuar no KeyTune completo"
 msgstr ""
@@ -401,10 +405,6 @@ msgstr ""
 
 #: src/player/playlists/queue_dialog.py
 msgid "&Limpar tudo"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "&Links do tópico:"
 msgstr ""
 
 #: src/player/library/search_dialog.py
@@ -661,10 +661,6 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Sem avaliação\tCtrl+0"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "&Seções:"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1296,6 +1292,10 @@ msgstr ""
 msgid "Abrindo no navegador: {text}."
 msgstr ""
 
+#: src/player/manual/dialog.py
+msgid "Abrindo o manual no navegador."
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 msgid "Abrindo o site de {name} no navegador."
 msgstr ""
@@ -1352,6 +1352,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Abrir manual do usuário"
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Abrir no &navegador"
 msgstr ""
 
 #: src/player/file_associations.py
@@ -3078,6 +3082,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Conta: {name}."
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Conteúdo"
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -5271,10 +5279,6 @@ msgstr ""
 msgid "Link da mídia atual copiado."
 msgstr ""
 
-#: src/player/manual/dialog.py
-msgid "Links do tópico"
-msgstr ""
-
 #: src/player/youtube_music/channel_about.py
 msgid "Links:"
 msgstr ""
@@ -6168,6 +6172,10 @@ msgstr ""
 
 #: src/player/manual/dialog.py
 msgid "Não foi possível abrir o link {text}."
+msgstr ""
+
+#: src/player/manual/dialog.py
+msgid "Não foi possível abrir o manual no navegador."
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
@@ -9157,10 +9165,6 @@ msgstr ""
 msgid "Seta esquerda"
 msgstr ""
 
-#: src/player/manual/dialog.py
-msgid "Seções"
-msgstr ""
-
 #: src/player/frames/youtube_music/shorts.py
 #: src/player/youtube_music/folders.py
 #: src/player/youtube_music/models.py
@@ -9661,14 +9665,6 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Título das mudanças"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "Tó&picos da seção:"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "Tópicos da seção"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -11113,14 +11109,6 @@ msgstr ""
 
 #: src/player/frames/radio/now_playing.py
 msgid "{station}: {title}"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "{text} (abre no navegador)"
-msgstr ""
-
-#: src/player/manual/dialog.py
-msgid "{text} (no manual)"
 msgstr ""
 
 #: src/player/frames/youtube_music/watch_later.py

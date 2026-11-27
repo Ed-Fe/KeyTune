@@ -1,10 +1,15 @@
 """Manual do usuário numa janela do programa, sem navegador.
 
-Cinco controles, nesta ordem de Tab: o campo de busca, a lista de seções, a
-lista de tópicos da seção escolhida, o texto do tópico e a lista de links dele.
-Enter numa lista leva ao controle seguinte; Enter na busca filtra o manual pelas
-palavras digitadas. Enter num link, ou no texto, numa linha com link, segue o
-link: um trecho do manual abre aqui mesmo, um endereço abre no navegador.
+Lado a lado, como a ajuda clássica do Windows: à esquerda a árvore do conteúdo
+(as seções, que se abrem com a seta para a direita e mostram os tópicos), à
+direita o texto do tópico escolhido. Ordem de Tab: o campo de busca, a árvore,
+o texto e os botões **Abrir no navegador** e **Fechar**.
+
+Enter na árvore leva ao texto; Enter na busca filtra o manual pelas palavras
+digitadas. Enter numa linha do texto que tenha um link segue o link: um trecho
+do manual abre aqui mesmo, um endereço abre no navegador. **Abrir no navegador**
+abre o ``manual.html`` que a release gera em ``docs/``; sem ele (rodando do
+código, por exemplo), o botão fica desativado.
 
 A janela não é modal: o player continua usável com ela aberta, e ``Alt+F6``
 alterna entre as duas (ver ``secondary_window``). Esc ou Fechar a destroem.
@@ -15,7 +20,7 @@ from __future__ import annotations
 import wx
 
 from ..i18n import _, ngettext
-from ..links import open_link
+from ..links import open_link, open_local_document
 from ..reading_dialog import add_reading_field
 from ..secondary_window import bring_to_front, is_switch_window_key
 from .service import (
@@ -26,8 +31,19 @@ from .service import (
     link_in_line,
     load_manual,
     manual_directories,
+    manual_html_path,
     search_manual,
 )
+
+
+def _child_topic_indexes(section: ManualSection) -> range:
+    """Os tópicos que viram filhos da seção na árvore.
+
+    A abertura da seção é mostrada pelo próprio nó da seção, para não aparecer
+    duas vezes; sem abertura, todos os tópicos são filhos.
+    """
+    start = 1 if section.topics and section.topics[0].is_overview else 0
+    return range(start, len(section.topics))
 
 
 class ManualDialog(wx.Dialog):
@@ -35,7 +51,7 @@ class ManualDialog(wx.Dialog):
         super().__init__(
             parent,
             title=_("Manual do usuário"),
-            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
+            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
         )
 
         self.all_sections = list(sections) if sections is not None else load_manual()
@@ -43,44 +59,49 @@ class ManualDialog(wx.Dialog):
         self._query = ""
         self._announce = announce
         self._current_links: list[ManualLink] = []
+        # (seção, tópico) -> nó da árvore; o tópico 0 de uma seção com abertura é o nó dela.
+        self._tree_items: dict[tuple[int, int], wx.TreeItemId] = {}
+        self._filling_tree = False
+        self._html_path = manual_html_path()
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # Cada controle nasce logo depois do seu rótulo: é desse texto vizinho que o
-        # leitor de tela tira o nome dele.
+        # leitor de tela tira o nome dele. A ordem de criação é a ordem do Tab.
         search_label = wx.StaticText(self, label=_("&Buscar no manual:"))
         self.search_ctrl = wx.TextCtrl(self, style=wx.TE_PROCESS_ENTER)
         self.search_ctrl.SetName(_("Buscar no manual"))
         root_sizer.Add(search_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
         root_sizer.Add(self.search_ctrl, 0, wx.ALL | wx.EXPAND, 10)
 
-        sections_label = wx.StaticText(self, label=_("&Seções:"))
-        self.sections_list = wx.ListBox(self, choices=[section.title for section in self.sections])
-        self.sections_list.SetName(_("Seções"))
-        self.sections_list.SetMinSize(self.FromDIP(wx.Size(520, 130)))
-        root_sizer.Add(sections_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
-        root_sizer.Add(self.sections_list, 0, wx.ALL | wx.EXPAND, 10)
+        body_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        contents_sizer = wx.BoxSizer(wx.VERTICAL)
+        contents_label = wx.StaticText(self, label=_("&Conteúdo:"))
+        self.contents_tree = wx.TreeCtrl(
+            self,
+            style=wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT | wx.TR_HIDE_ROOT | wx.TR_SINGLE,
+        )
+        self.contents_tree.SetName(_("Conteúdo"))
+        self.contents_tree.SetMinSize(self.FromDIP(wx.Size(280, 400)))
+        contents_sizer.Add(contents_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 10)
+        contents_sizer.Add(self.contents_tree, 1, wx.ALL | wx.EXPAND, 10)
+        body_sizer.Add(contents_sizer, 0, wx.EXPAND)
 
-        topics_label = wx.StaticText(self, label=_("Tó&picos da seção:"))
-        self.topics_list = wx.ListBox(self)
-        self.topics_list.SetName(_("Tópicos da seção"))
-        self.topics_list.SetMinSize(self.FromDIP(wx.Size(520, 110)))
-        root_sizer.Add(topics_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
-        root_sizer.Add(self.topics_list, 0, wx.ALL | wx.EXPAND, 10)
+        text_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.text_ctrl = add_reading_field(self, text_sizer, _("&Texto"), self._empty_text())
+        self.text_ctrl.SetMinSize(self.FromDIP(wx.Size(520, 400)))
+        body_sizer.Add(text_sizer, 1, wx.EXPAND)
+        root_sizer.Add(body_sizer, 1, wx.EXPAND)
 
-        self.text_ctrl = add_reading_field(self, root_sizer, _("&Texto"), self._empty_text())
-        self.text_ctrl.SetMinSize(self.FromDIP(wx.Size(520, 240)))
-
-        links_label = wx.StaticText(self, label=_("&Links do tópico:"))
-        self.links_list = wx.ListBox(self)
-        self.links_list.SetName(_("Links do tópico"))
-        self.links_list.SetMinSize(self.FromDIP(wx.Size(520, 70)))
-        root_sizer.Add(links_label, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
-        root_sizer.Add(self.links_list, 0, wx.ALL | wx.EXPAND, 10)
-
+        buttons_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.browser_button = wx.Button(self, wx.ID_ANY, _("Abrir no &navegador"))
+        self.browser_button.Bind(wx.EVT_BUTTON, lambda _event: self.open_in_browser())
+        # Desativado, não escondido, quando a instalação não traz o HTML.
+        self.browser_button.Enable(self._html_path is not None)
+        buttons_sizer.Add(self.browser_button, 0, wx.RIGHT, 8)
         close_button = wx.Button(self, wx.ID_CLOSE, _("&Fechar"))
-        close_button.SetDefault()
         close_button.Bind(wx.EVT_BUTTON, lambda _event: self.Close())
-        root_sizer.Add(close_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 10)
+        buttons_sizer.Add(close_button, 0)
+        root_sizer.Add(buttons_sizer, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.ALIGN_RIGHT, 10)
 
         self.SetEscapeId(wx.ID_CLOSE)
         self.Bind(wx.EVT_CLOSE, self._on_close)
@@ -90,17 +111,13 @@ class ManualDialog(wx.Dialog):
         self.CentreOnParent()
 
         self.search_ctrl.Bind(wx.EVT_TEXT_ENTER, self.on_search)
-        self.sections_list.Bind(wx.EVT_LISTBOX, self.on_select_section)
-        self.topics_list.Bind(wx.EVT_LISTBOX, self.on_select_topic)
-        self.sections_list.Bind(wx.EVT_KEY_DOWN, lambda event: self._on_enter(event, self.topics_list))
-        self.topics_list.Bind(wx.EVT_KEY_DOWN, lambda event: self._on_enter(event, self.text_ctrl))
+        self.contents_tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_select_item)
+        self.contents_tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, lambda _event: self.text_ctrl.SetFocus())
         self.text_ctrl.Bind(wx.EVT_KEY_DOWN, self._on_text_key)
-        self.links_list.Bind(wx.EVT_KEY_DOWN, self._on_links_key)
-        self.links_list.Bind(wx.EVT_LISTBOX_DCLICK, lambda _event: self._activate_selected_link())
+        self._fill_tree(expand=False)
         if self.sections:
-            self.sections_list.SetSelection(0)
-            self._show_section(0)
-        self.sections_list.SetFocus()
+            self._select(0, 0)
+        self.contents_tree.SetFocus()
 
     def _on_close(self, _event):
         # Aberta sem modo modal (o normal), fechar destrói a janela; a auditoria e
@@ -122,23 +139,66 @@ class ManualDialog(wx.Dialog):
     def _empty_text() -> str:
         return _("Não foi possível localizar o manual do KeyTune nesta instalação.")
 
-    @staticmethod
-    def _on_enter(event, target):
-        if event.GetKeyCode() in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and not event.HasModifiers():
-            target.SetFocus()
-            return
-        event.Skip()
-
     def _say(self, message: str):
         if callable(self._announce):
             self._announce(message)
 
-    def _show_section(self, index: int):
-        section = self.sections[index]
-        # Troca a lista de uma vez; mexer item a item faz o leitor de tela ler cada um.
-        self.topics_list.Set([topic.title for topic in section.topics])
-        self.topics_list.SetSelection(0)
-        self._show_topic(section, 0)
+    # ------------------------------------------------------------------
+    # Árvore do conteúdo
+    # ------------------------------------------------------------------
+
+    def _fill_tree(self, *, expand: bool):
+        """Monta a árvore com ``self.sections``; *expand* abre todas as seções (busca)."""
+        tree = self.contents_tree
+        self._filling_tree = True
+        tree.Freeze()
+        try:
+            tree.DeleteAllItems()
+            self._tree_items = {}
+            root = tree.AddRoot("")
+            for section_index, section in enumerate(self.sections):
+                section_item = tree.AppendItem(root, section.title, data=(section_index, 0))
+                self._tree_items[(section_index, 0)] = section_item
+                for topic_index in _child_topic_indexes(section):
+                    topic_item = tree.AppendItem(
+                        section_item, section.topics[topic_index].title, data=(section_index, topic_index)
+                    )
+                    self._tree_items[(section_index, topic_index)] = topic_item
+                if expand and tree.ItemHasChildren(section_item):
+                    tree.Expand(section_item)
+        finally:
+            tree.Thaw()
+            self._filling_tree = False
+
+    def _select(self, section_index: int, topic_index: int):
+        """Seleciona o tópico na árvore (abrindo a seção dele) e mostra o texto."""
+        item = self._tree_items.get((section_index, topic_index))
+        if item is None:
+            return
+        parent = self.contents_tree.GetItemParent(item)
+        if parent.IsOk() and parent != self.contents_tree.GetRootItem():
+            self.contents_tree.Expand(parent)
+        self._filling_tree = True
+        try:
+            self.contents_tree.SelectItem(item)
+        finally:
+            self._filling_tree = False
+        self.contents_tree.EnsureVisible(item)
+        self._show_topic(self.sections[section_index], topic_index)
+
+    def on_select_item(self, event):
+        # Ao fechar, a árvore se esvazia e avisa de cada seleção perdida: ignora.
+        if self._filling_tree or not self or self.IsBeingDeleted() or not self.contents_tree:
+            return
+        item = event.GetItem()
+        if not item.IsOk():
+            return
+        position = self.contents_tree.GetItemData(item)
+        if not position:
+            return
+        section_index, topic_index = position
+        if 0 <= section_index < len(self.sections):
+            self._show_topic(self.sections[section_index], topic_index)
 
     def _show_topic(self, section: ManualSection, index: int):
         if 0 <= index < len(section.topics):
@@ -148,40 +208,15 @@ class ManualDialog(wx.Dialog):
             # Com uma busca ativa, o texto abre na linha em que a palavra aparece.
             self.text_ctrl.SetInsertionPoint(first_match_line_start(text, self._query))
             self.text_ctrl.ShowPosition(self.text_ctrl.GetInsertionPoint())
-            self._show_links(topic.links)
+            self._current_links = list(topic.links)
         else:
             self.text_ctrl.SetValue(self._empty_text())
             self.text_ctrl.SetInsertionPoint(0)
-            self._show_links([])
+            self._current_links = []
 
     # ------------------------------------------------------------------
-    # Links
+    # Links e navegador
     # ------------------------------------------------------------------
-
-    @staticmethod
-    def _link_label(link: ManualLink) -> str:
-        if link.is_internal:
-            return _("{text} (no manual)").format(text=link.text)
-        return _("{text} (abre no navegador)").format(text=link.text)
-
-    def _show_links(self, links: list[ManualLink]):
-        self._current_links = list(links)
-        self.links_list.Set([self._link_label(link) for link in self._current_links])
-        # Sem links a lista fica desativada (e fora do Tab), não escondida.
-        self.links_list.Enable(bool(self._current_links))
-        if self._current_links:
-            self.links_list.SetSelection(0)
-
-    def _on_links_key(self, event):
-        if event.GetKeyCode() in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and not event.HasModifiers():
-            self._activate_selected_link()
-            return
-        event.Skip()
-
-    def _activate_selected_link(self):
-        index = self.links_list.GetSelection()
-        if 0 <= index < len(self._current_links):
-            self.activate_link(self._current_links[index])
 
     def _on_text_key(self, event):
         if event.GetKeyCode() not in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) or event.HasModifiers():
@@ -205,6 +240,13 @@ class ManualDialog(wx.Dialog):
         else:
             self._say(_("Não foi possível abrir o link {text}.").format(text=link.text))
 
+    def open_in_browser(self):
+        """Abre o ``manual.html`` da instalação no navegador padrão."""
+        if self._html_path is not None and open_local_document(self._html_path):
+            self._say(_("Abrindo o manual no navegador."))
+        else:
+            self._say(_("Não foi possível abrir o manual no navegador."))
+
     def _go_to_anchor(self, anchor: str, text: str):
         position = find_anchor(self.all_sections, anchor)
         if position is None:
@@ -215,34 +257,34 @@ class ManualDialog(wx.Dialog):
             self.search_ctrl.ChangeValue("")
             self._query = ""
             self.sections = list(self.all_sections)
-            self.sections_list.Set([section.title for section in self.sections])
+            self._fill_tree(expand=False)
         section_index, topic_index = position
         section = self.sections[section_index]
-        self.sections_list.SetSelection(section_index)
-        self.topics_list.Set([topic.title for topic in section.topics])
-        self.topics_list.SetSelection(topic_index)
-        self._show_topic(section, topic_index)
+        self._select(section_index, topic_index)
         self._say(
             _("{topic}, em {section}.").format(topic=section.topics[topic_index].title, section=section.title)
         )
         self.text_ctrl.SetFocus()
+
+    # ------------------------------------------------------------------
+    # Busca
+    # ------------------------------------------------------------------
 
     def on_search(self, _event):
         query = self.search_ctrl.GetValue().strip()
         self._query = query
         found = search_manual(self.all_sections, query)
         self.sections = found
-        self.sections_list.Set([section.title for section in found])
+        # Com resultado, todas as seções achadas ficam abertas, mostrando os tópicos.
+        self._fill_tree(expand=bool(query))
         if not found:
-            self.topics_list.Set([])
             self.text_ctrl.SetValue(_("Nada foi encontrado para esta busca."))
             self.text_ctrl.SetInsertionPoint(0)
-            self._show_links([])
+            self._current_links = []
             self._say(_("Nada foi encontrado para \"{query}\".").format(query=query))
             return
 
-        self.sections_list.SetSelection(0)
-        self._show_section(0)
+        self._select(0, 0)
         if not query:
             self._say(_("Busca limpa. O manual inteiro está de volta."))
             return
@@ -251,15 +293,4 @@ class ManualDialog(wx.Dialog):
         found_topics = ngettext("{count} tópico encontrado.", "{count} tópicos encontrados.", topics)
         in_sections = ngettext("Em {count} seção.", "Em {count} seções.", len(found))
         self._say(f"{found_topics.format(count=topics)} {in_sections.format(count=len(found))}")
-        self.sections_list.SetFocus()
-
-    def on_select_section(self, _event):
-        index = self.sections_list.GetSelection()
-        if 0 <= index < len(self.sections):
-            self._show_section(index)
-
-    def on_select_topic(self, _event):
-        section_index = self.sections_list.GetSelection()
-        topic_index = self.topics_list.GetSelection()
-        if 0 <= section_index < len(self.sections):
-            self._show_topic(self.sections[section_index], topic_index)
+        self.contents_tree.SetFocus()

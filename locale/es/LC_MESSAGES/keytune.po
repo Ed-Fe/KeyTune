@@ -144,9 +144,6 @@ msgstr "&Vaciar el historial de reproducción"
 msgid "&Limpar tudo"
 msgstr "Borrar &todo"
 
-msgid "&Links do tópico:"
-msgstr "&Enlaces del tema:"
-
 msgid "&Localizar"
 msgstr "&Localizar"
 
@@ -263,9 +260,6 @@ msgstr "Abriendo en el navegador: {text}."
 
 msgid "Idio&ma da interface"
 msgstr "Idio&ma de la interfaz"
-
-msgid "Links do tópico"
-msgstr "Enlaces del tema"
 
 msgid "Não foi possível abrir o link {text}."
 msgstr "No se pudo abrir el enlace {text}."
@@ -3638,12 +3632,6 @@ msgstr "{seconds} s"
 
 msgid "{semitones:+d} semitons"
 msgstr "{semitones:+d} semitonos"
-
-msgid "{text} (abre no navegador)"
-msgstr "{text} (se abre en el navegador)"
-
-msgid "{text} (no manual)"
-msgstr "{text} (en el manual)"
 
 msgid "{title} — carregando"
 msgstr "{title} — cargando"
@@ -7674,7 +7662,6 @@ msgstr "El idioma de la interfaz cambia cuando KeyTune se abre de nuevo. ¿Quier
 msgid "Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."
 msgstr "Vale cuando KeyTune se abre de nuevo; al confirmar, ofrece reiniciar."
 
-
 msgid "O processo do YouTube.js não respondeu."
 msgstr "El proceso de YouTube.js no respondió."
 
@@ -8088,18 +8075,6 @@ msgstr "Errores y acciones no disponibles"
 msgid "Manual do usuário"
 msgstr "Manual del usuario"
 
-msgid "&Seções:"
-msgstr "&Secciones:"
-
-msgid "Seções"
-msgstr "Secciones"
-
-msgid "Tó&picos da seção:"
-msgstr "&Temas de la sección:"
-
-msgid "Tópicos da seção"
-msgstr "Temas de la sección"
-
 msgid "&Texto"
 msgstr "Te&xto"
 
@@ -8151,9 +8126,6 @@ msgid "Em {count} seção."
 msgid_plural "Em {count} seções."
 msgstr[0] "En {count} sección."
 msgstr[1] "En {count} secciones."
-
-
-
 
 msgid "Procurando atualização do yt-dlp..."
 msgstr "Buscando una actualización de yt-dlp..."
@@ -8290,7 +8262,6 @@ msgstr "No se pudo aplicar la actualización portátil. Se restauró la versión
 msgid "Não foi possível aplicar a atualização. Restaurando a versão anterior."
 msgstr "No se pudo aplicar la actualización. Restaurando la versión anterior."
 
-
 msgid "Não foi possível concluir a atualização."
 msgstr "No se pudo completar la actualización."
 
@@ -8308,7 +8279,6 @@ msgstr "No se pudo preparar la actualización portátil."
 
 msgid "O KeyTune será aberto em instantes."
 msgstr "KeyTune se abrirá en un momento."
-
 
 msgid "Preparando a atualização portátil."
 msgstr "Preparando la actualización portátil."
@@ -8355,7 +8325,6 @@ msgstr "No se pudo encontrar el actualizador de la versión portátil."
 msgid "Atualização do KeyTune"
 msgstr "Actualización de KeyTune"
 
-
 msgid "A pasta de dados portátil {portable_path} está em modo somente leitura. Os dados ficarão neste computador, em {local_path}."
 msgstr "La carpeta de datos portátil {portable_path} es de solo lectura. Los datos se guardarán en este equipo, en {local_path}."
 
@@ -8382,3 +8351,23 @@ msgstr "El paquete de actualización está dañado o no se pudo leer."
 
 msgid "Versão portátil"
 msgstr "Versión portátil"
+
+#: src/player/manual/dialog.py
+msgid "&Conteúdo:"
+msgstr "C&ontenido:"
+
+#: src/player/manual/dialog.py
+msgid "Conteúdo"
+msgstr "Contenido"
+
+#: src/player/manual/dialog.py
+msgid "Abrir no &navegador"
+msgstr "Abrir en el &navegador"
+
+#: src/player/manual/dialog.py
+msgid "Abrindo o manual no navegador."
+msgstr "Abriendo el manual en el navegador."
+
+#: src/player/manual/dialog.py
+msgid "Não foi possível abrir o manual no navegador."
+msgstr "No se pudo abrir el manual en el navegador."
