@@ -236,11 +236,16 @@ def _stop_worker():
 
 
 def _youtubejs_cache_dir():
-    if os.name == "nt":
+    from ..portable import is_portable, portable_data_dir
+
+    if is_portable():
+        cache_dir = os.path.join(portable_data_dir(), "youtubejs-cache")
+    elif os.name == "nt":
         base_dir = os.environ.get("APPDATA") or os.path.expanduser("~")
+        cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
     else:
         base_dir = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
-    cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
+        cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
     os.makedirs(cache_dir, exist_ok=True)
     return cache_dir
 

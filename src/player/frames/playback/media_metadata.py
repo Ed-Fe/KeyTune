@@ -141,6 +141,7 @@ class MediaMetadataMixin:
             if (
                 len(state.items) == 1
                 and not state.source_path
+                and not getattr(state, "standalone_tab", False)
                 and not is_youtube_music_media(normalized_media_path)
                 and state.title != item_label
             ):

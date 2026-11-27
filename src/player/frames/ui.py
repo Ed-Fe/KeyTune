@@ -524,6 +524,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_cycle_repeat_id, _("Modo de &Repetição (R)"))
         autodj_item = playback_menu.AppendCheckItem(self.menu_toggle_autodj_id, _("Ativar Auto&DJ"))
         autodj_item.Check(bool(getattr(self.settings, "autodj_enabled", False)))
+        # Keep the command reachable so its handler can announce any blocker.
         playback_menu.Append(self.menu_start_autodj_session_id, _("Reproduzir playlist com AutoDJ"))
         playback_menu.Append(self.menu_stop_autodj_session_id, _("Encerrar sessão AutoDJ"))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))

@@ -69,9 +69,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 $PythonStableAbiDll = & $PythonExe -c "import pathlib, sys; print(pathlib.Path(sys.base_prefix) / 'python3.dll')"
 Require-Path -Path $PythonStableAbiDll -Description "DLL da ABI estável do Python"
-& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --hidden-import tomllib --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" --add-data "src\player\interface_sounds\sounds;player\interface_sounds\sounds" src/main.py
+# The Windows wheel statically links PortAudio into _portaudiowpatch.pyd.
+& $PythonExe -m PyInstaller --noconfirm --windowed --name KeyTune --hidden-import mpv --hidden-import _portaudiowpatch --copy-metadata pyaudiowpatch --hidden-import webbrowser --hidden-import sysconfig --hidden-import pydoc --hidden-import fileinput --hidden-import unittest --hidden-import timeit --hidden-import tomllib --collect-all mpv --collect-submodules accessible_output2 --collect-data accessible_output2 --collect-submodules winrt --collect-submodules winrt.windows.media --collect-submodules winrt.windows.media.playback --collect-submodules winrt.windows.foundation --exclude-module ytmusicapi --exclude-module librosa --exclude-module numpy --exclude-module scipy --exclude-module numba --exclude-module av --add-binary "$PythonStableAbiDll;." --add-data "src\player\autodj\sounds;player\autodj\sounds" --add-data "src\player\interface_sounds\sounds;player\interface_sounds\sounds" src/main.py
 if ($LASTEXITCODE -ne 0) {
     throw "Falha ao gerar o executável principal."
+}
+if (-not (Get-ChildItem -LiteralPath "dist\KeyTune\_internal" -Filter "_portaudiowpatch*.pyd" -File)) {
+    throw "O executável não incluiu a extensão de monitoração WASAPI."
 }
 & $PythonExe scripts\validate_main_bundle.py dist\KeyTune
 if ($LASTEXITCODE -ne 0) {
@@ -237,6 +241,24 @@ foreach ($file in $possibleLicenseFiles) {
     if (Test-Path $file) {
         Copy-Item -Path $file -Destination $licenseDir -Force
     }
+}
+
+Write-Step "Gerando o atualizador da versão portátil"
+# distpath separado para o KeyTuneUpdater.exe não entrar na pasta que o Inno empacota.
+& $PythonExe -m PyInstaller --noconfirm --onefile --windowed --name KeyTuneUpdater --distpath "build\portable-updater" --workpath "build\portable-updater-work" src/updater_main.py
+if ($LASTEXITCODE -ne 0) {
+    throw "Falha ao gerar o atualizador da versão portátil."
+}
+$portableUpdater = "build\portable-updater\KeyTuneUpdater.exe"
+Require-Path -Path $portableUpdater -Description "Atualizador da versão portátil"
+
+Write-Step "Gerando o pacote portátil"
+& (Join-Path $PSScriptRoot "package_portable_zip.ps1") -SourceDir "dist\KeyTune" -DestinationZip "dist\KeyTune-Portable.zip" -ExtraFile $portableUpdater
+if (-not (Test-Path -LiteralPath "dist\KeyTune-Portable.zip")) {
+    throw "Falha ao gerar o zip portátil."
+}
+if (-not (Test-Path -LiteralPath "dist\KeyTune-Portable.zip.sha256")) {
+    throw "Falha ao gerar o checksum do zip portátil."
 }
 
 Write-Step "Compilando instalador (Inno Setup)"

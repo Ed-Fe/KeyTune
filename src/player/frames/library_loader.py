@@ -6,7 +6,7 @@ import wx
 
 from ..library import (
     is_remote_media_path,
-    load_playlist,
+    load_playlist_entries,
     scan_folder_contents,
 )
 from ..i18n import _
@@ -123,9 +123,10 @@ class FrameLibraryLoaderMixin:
 
         if kind == "playlist":
             try:
-                items = load_playlist(request["playlist_source"])
+                entries = load_playlist_entries(request["playlist_source"])
+                items = [path for path, _title in entries]
                 item_index_map = {path: index for index, path in enumerate(items)}
-                browser_item_labels = [os.path.basename(path) or path for path in items]
+                browser_item_labels = [title or os.path.basename(path) or path for path, title in entries]
                 error_message = ""
             except OSError as exc:
                 items = []

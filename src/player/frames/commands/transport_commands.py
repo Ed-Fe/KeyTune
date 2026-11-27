@@ -1,5 +1,6 @@
 from ...i18n import _
 from ...announcements import ANNOUNCE_PLAYBACK
+from ..playback.monitor import monitoring_enabled, track_output_volume
 
 
 class TransportCommandsMixin:
@@ -23,7 +24,11 @@ class TransportCommandsMixin:
         def finish_stop():
             self._stop_all_players(unload=False)
             if active_player_key is not None:
-                self._apply_volume_to_player(active_player_key, self.current_volume)
+                volume = (
+                    track_output_volume(self)
+                    if monitoring_enabled(getattr(self, "settings", None)) else self.current_volume
+                )
+                self._apply_volume_to_player(active_player_key, volume)
             clear_youtube_music_history_tracking = getattr(self, "_clear_youtube_music_history_tracking", None)
             if callable(clear_youtube_music_history_tracking):
                 clear_youtube_music_history_tracking()

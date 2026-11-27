@@ -3,7 +3,14 @@ import os
 import wx
 
 from ..i18n import _, ngettext
-from ..library import folder_display_name, is_playlist_source, is_remote_media_path, playlist_display_name
+from ..constants import REPEAT_OFF
+from ..library import (
+    folder_display_name,
+    is_audio_playback_media,
+    is_playlist_source,
+    is_remote_media_path,
+    playlist_display_name,
+)
 from ..playlists import PlaylistState, build_playlist_title
 from ..announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_STATE
 
@@ -126,6 +133,74 @@ class FrameLibraryNavigationMixin:
         if target_index != wx.NOT_FOUND and hasattr(self, "notebook"):
             self.notebook.SetPageText(target_index, new_title)
 
+    def _standalone_tab_state(self):
+        for candidate in self.playlists:
+            if (
+                isinstance(candidate, PlaylistState)
+                and candidate.standalone_tab
+                and not candidate.is_loading
+                and not candidate.autodj_session
+            ):
+                return candidate
+        return None
+
+    def _can_play_alone(self, paths):
+        """Se *paths* podem tocar na aba Fora da playlist.
+
+        Com a saída de vídeo ligada, um vídeo precisa da aba à vista para
+        aparecer, e essa aba não é selecionada: vídeo segue o caminho de antes.
+        """
+        if not getattr(self.settings, "play_opened_files_alone", False):
+            return False
+        video_on = not bool(getattr(self.settings, "disable_video_output", False))
+        return not video_on or all(is_audio_playback_media(path) for path in paths)
+
+    def _play_media_paths_alone(self, paths, *, verified=False):
+        """Toca *paths* numa aba à parte, sem pôr nada na playlist atual.
+
+        A aba é reaproveitada e trocada a cada vez, então ao fim do arquivo a
+        reprodução para em vez de seguir pelo que foi tocado antes. Ela não é
+        selecionada: a aba à vista e o foco continuam onde estão. Serve ao Enter do
+        explorador de pastas e aos arquivos abertos pelo Windows.
+        """
+        normalized_paths = self._normalize_media_paths(paths, verified=verified)
+        if not normalized_paths:
+            return False
+
+        state = self._standalone_tab_state()
+        if state is None:
+            state = self._get_playlist_state(self._create_empty_playlist_tab(select=False))
+        if state is None:
+            return False
+        target_index = self._resolve_playlist_state_index(state)
+        if target_index == wx.NOT_FOUND:
+            return False
+
+        title = _("Fora da playlist")
+        state.finish_library_load()
+        state.clear_folder_location()
+        state.set_items(normalized_paths, start_index=0)
+        state.source_path = None
+        state.title = title
+        state.standalone_tab = True
+        # Toca o que foi aberto e para: sem repetir nem embaralhar, seja qual
+        # for o padrão das playlists novas.
+        state.repeat_mode = REPEAT_OFF
+        state.shuffle_enabled = False
+        state.reset_playback_order(preferred_index=0)
+
+        register_in_library = getattr(self, "_register_media_paths_in_library", None)
+        if callable(register_in_library):
+            register_in_library(state.items, state.browser_item_labels)
+
+        self.notebook.SetPageText(target_index, title)
+        if self._is_current_playlist_state(state):
+            self._refresh_playlist_browser()
+        self._play_media(index=target_index)
+        self._remember_directory(normalized_paths[0])
+        self._add_recent_media_paths(normalized_paths)
+        return True
+
     def _open_external_media_paths(self, paths, *, verified=False):
         target_state = self._playlist_state_for_external_media()
         if target_state is None:
@@ -168,8 +243,13 @@ class FrameLibraryNavigationMixin:
 
         return True
 
-    def _add_media_paths_without_playing(self, paths, *, verified=False):
-        """Põe *paths* no fim da playlist sem mexer no que está tocando."""
+    def _add_media_paths_without_playing(self, paths, *, verified=False, announce=True):
+        """Põe *paths* no fim da playlist sem mexer no que está tocando.
+
+        Com ``announce=False`` e itens novos, não fala o aviso de sucesso e
+        devolve a quantidade adicionada, para quem chamou anunciar do seu jeito.
+        Falha e duplicata continuam sendo anunciadas. O padrão devolve um bool.
+        """
         target_state = self._playlist_state_for_external_media()
         if target_state is None:
             target_state = self._get_playlist_state(self._create_empty_playlist_tab(select=False))
@@ -187,6 +267,9 @@ class FrameLibraryNavigationMixin:
         target_state.sync_playback_order()
         if self._is_current_playlist_state(target_state):
             self._refresh_playlist_browser()
+
+        if added_count and not announce:
+            return added_count
 
         if added_count:
             message = ngettext(
@@ -210,7 +293,7 @@ class FrameLibraryNavigationMixin:
         if announcement:
             self._announce(announcement, ANNOUNCE_NAVIGATION)
 
-    def _open_media_paths(self, paths, *, verified=False):
+    def _normalize_media_paths(self, paths, *, verified=False):
         normalized_paths = []
         for path in paths:
             normalized_path = str(path or "").strip()
@@ -222,7 +305,10 @@ class FrameLibraryNavigationMixin:
             normalized_path = self._normalize_path(normalized_path)
             if normalized_path and (verified or os.path.isfile(normalized_path)):
                 normalized_paths.append(normalized_path)
+        return normalized_paths
 
+    def _open_media_paths(self, paths, *, verified=False):
+        normalized_paths = self._normalize_media_paths(paths, verified=verified)
         if not normalized_paths:
             return False
 

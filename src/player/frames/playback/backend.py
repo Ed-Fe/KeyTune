@@ -1,5 +1,4 @@
 import contextlib
-import math
 import queue
 import sys
 import threading
@@ -13,6 +12,7 @@ from ...log import get_logger
 from ...mpv_backend import PlayerEventType, create_player_instance
 from .helpers import is_youtube_music_media
 from .live import is_live_media
+from .monitor import monitoring_enabled, playback_output_volume, track_output_volume
 from ...announcements import ANNOUNCE_ERRORS
 
 
@@ -120,7 +120,7 @@ class PlayerBackendMixin:
             media = self._autodj_sound_instance.media_new(str(path))
             self._autodj_sound_player.stop()
             self._autodj_sound_player.set_media(media)
-            self._autodj_sound_player.audio_set_volume(self.current_volume)
+            self._autodj_sound_player.audio_set_volume(playback_output_volume(self))
             self._autodj_sound_player.play()
             return True
         except Exception as exc:
@@ -426,9 +426,7 @@ class PlayerBackendMixin:
         if self._crossfade_state and self._crossfade_state.get("phase") == "running":
             return self._apply_crossfade_volumes()
 
-        gain_db = float(getattr(self, "_current_track_gain_db", 0.0) or 0.0)
-        adjusted_volume = self.current_volume * math.pow(10.0, gain_db / 20.0)
-        return self._apply_volume_to_player(self._active_player_key, adjusted_volume)
+        return self._apply_volume_to_player(self._active_player_key, track_output_volume(self))
 
     def _apply_playback_rate_to_player(self, player_key, rate):
         player = self._managed_player(player_key)
@@ -604,6 +602,9 @@ class PlayerBackendMixin:
             stop_crossfade_timer()
         self._set_active_player(active_player_key if active_player_key in self._players else self._player_keys[0])
         self._create_autodj_sound_player()
+        self._audio_device_observer_installed = False
+        if monitoring_enabled(getattr(self, "settings", None)):
+            self._refresh_monitor_output()
         self._bind_player_to_window()
         self._apply_equalizer_state()
         self._apply_current_volume()

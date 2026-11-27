@@ -10,7 +10,7 @@ from ...log import get_logger, setup_logging
 from ...playlists.queue_dialog import QueueManagerDialog
 from ...preferences import AudioOutputDialog, PreferencesDialog
 from ...restart import request_restart
-from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
+from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK
 
 _logger = get_logger(__name__)
 
@@ -36,11 +36,13 @@ class AppCommandsMixin:
             self,
             self.settings,
             audio_output_devices=self._audio_output_devices(),
+            monitor_volume=self.monitor_volume,
         )
         try:
             if dialog.ShowModal() != wx.ID_OK:
                 return
             self.settings = dialog.get_settings()
+            monitor_volume = dialog.get_monitor_volume()
         finally:
             dialog.Destroy()
 
@@ -70,6 +72,7 @@ class AppCommandsMixin:
         else:
             self._save_settings()
 
+        monitor_announcement = self._apply_monitor_preferences(previous_settings, monitor_volume)
         self._refresh_tray_icon()
 
         handle_youtube_music_preferences_change = getattr(self, "_handle_youtube_music_preferences_change", None)
@@ -88,7 +91,9 @@ class AppCommandsMixin:
         if callable(handle_radio_preferences_change):
             handle_radio_preferences_change(previous_settings)
 
-        if audio_output_updated:
+        if monitor_announcement:
+            self._announce(monitor_announcement, ANNOUNCE_PLAYBACK)
+        elif audio_output_updated:
             self._announce(_("Preferências salvas."), ANNOUNCE_CONFIRMATIONS)
         else:
             self._announce(
@@ -291,6 +296,7 @@ class AppCommandsMixin:
         step(self._flush_smart_library_playback_state)
 
         step(self._begin_library_loader_shutdown)
+        step(self._close_monitor_output)
         step(self._begin_player_backend_shutdown)
         step(self._begin_smart_library_shutdown)
         closing_sound = not restarting and interface_sounds.play_for(self, interface_sounds.SOUND_APP_CLOSED)

@@ -7,7 +7,7 @@ from .constants import APP_VERSION
 from .exit_watchdog import INTERPRETER_EXIT_DEADLINE_SECONDS, arm_exit_watchdog
 from .log import get_logger
 from .restart import relaunch, restart_requested
-from .single_instance import ACTION_FOCUS, ACTION_OPEN, UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer
+from .single_instance import UI_ACK_TIMEOUT_SECONDS, SingleInstanceServer, dispatch_instance_message
 
 _logger = get_logger(__name__)
 
@@ -53,14 +53,8 @@ def main(initial_paths=None):
         app.SetTopWindow(frame)
 
     def _deliver_message(message):
-        frame = current["frame"]
-        if not frame:
-            return
-        action = message.get("action")
-        if action == ACTION_OPEN:
-            frame.receive_external_files(message.get("paths") or [])
-        elif action == ACTION_FOCUS:
-            frame.focus_from_relaunch()
+        # Já estamos na thread da interface: ``_on_message`` fez o ``wx.CallAfter``.
+        dispatch_instance_message(current["frame"], message)
 
     def _on_message(message):
         # Roda na thread do pipe: só confirma depois que a interface tratou o

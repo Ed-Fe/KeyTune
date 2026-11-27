@@ -329,7 +329,13 @@ class FrameExplorerMixin:
         ):
             return
 
-        self._explorer_with_media(paths, self._play_media_paths_in_current_playlist)
+        def play(media_paths):
+            if self._can_play_alone(media_paths):
+                self._play_media_paths_alone(media_paths, verified=True)
+            else:
+                self._play_media_paths_in_current_playlist(media_paths)
+
+        self._explorer_with_media(paths, play)
 
     def _explorer_add_paths(self, paths):
         self._explorer_with_media(

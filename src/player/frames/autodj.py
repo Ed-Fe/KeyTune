@@ -15,6 +15,7 @@ from ..autodj import (
     TransitionProfile,
 )
 from ..autodj.dependencies import autodj_dependencies_available, install_autodj_dependencies
+from ..autodj.librosa_analyzer import AutoDJAnalysisCancelled
 from ..i18n import _
 from ..library import build_supported_media_wildcard, is_audio_playback_media
 from ..log import get_logger
@@ -29,6 +30,8 @@ from ..announcements import (
 
 _logger = get_logger(__name__)
 AUTODJ_SESSION_CANDIDATE_WAIT_SECONDS = 45
+_AUTODJ_SESSION_QUEUE_SIZE = 5
+_AUTODJ_SESSION_MAX_CANDIDATE_ATTEMPTS = 8
 
 
 def _reject_live_for_analysis(resolved_playback):
@@ -142,22 +145,32 @@ class FrameAutoDJMixin:
             kwargs.update(cancel_event=cancel_event, deadline=deadline)
         return service.analyze(media_path, **kwargs)
 
-    def on_start_autodj_session(self, _event):
+    def _autodj_session_start_error(self, source):
         if not bool(getattr(self.settings, "autodj_enabled", False)):
-            self._announce(_("Ative o AutoDJ no menu Reprodução para iniciar uma sessão."), ANNOUNCE_ERRORS)
-            return False
+            return _("O AutoDJ está desativado. Ative em Preferências, Recursos adicionais.")
+        if getattr(self, "_autodj_dependency_install_in_progress", False):
+            return _("Os recursos adicionais do AutoDJ estão sendo instalados. Aguarde a instalação terminar.")
         if not autodj_dependencies_available():
-            self._announce(
-                _("Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."),
-                ANNOUNCE_ERRORS,
-            )
-            return False
-        source = self._get_playlist_state()
-        if source is None or source.is_folder_tab or source.is_loading or source.autodj_session:
-            self._announce(_("Abra uma playlist comum para iniciar uma sessão AutoDJ."), ANNOUNCE_ERRORS)
-            return False
+            return _("O AutoDJ precisa dos recursos adicionais. Instale em Preferências, Recursos adicionais.")
+        if source is None or source.is_folder_tab:
+            return _("Abra uma playlist comum para iniciar uma sessão AutoDJ.")
+        if source.is_loading:
+            return _("A playlist ainda está carregando. Aguarde e tente novamente.")
+        if source.autodj_session:
+            return _("Esta playlist já é uma sessão AutoDJ. Abra outra playlist para iniciar uma nova sessão.")
+        if not source.items:
+            return _("A playlist atual está vazia. Adicione pelo menos duas faixas para iniciar o AutoDJ.")
         if len(source.items) < 2:
-            self._announce(_("A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."), ANNOUNCE_ERRORS)
+            return _("A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ.")
+        return None
+
+    def on_start_autodj_session(self, _event):
+        source = self._get_playlist_state()
+        error = self._autodj_session_start_error(source)
+        if error:
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(error)
+            self._announce(error, ANNOUNCE_ERRORS)
             return False
 
         seed_index = source.current_index if 0 <= source.current_index < len(source.items) else 0
@@ -321,6 +334,10 @@ class FrameAutoDJMixin:
         state.autodj_preparation_paused = not state.autodj_preparation_paused
         if state.autodj_preparation_paused:
             self._cancel_autodj_session(state)
+            if state is self._get_active_playlist_state():
+                pair = self._autodj_transition_pair(state)
+                request = getattr(self, "_autodj_transition_requests", {}).get(pair, {})
+                self._discard_autodj_transition_requests(keep_pair=pair if request.get("status") == "ready" else None)
             state.autodj_waiting_for_next = False
             message = _("Preparação da sessão AutoDJ pausada.")
         else:
@@ -362,7 +379,7 @@ class FrameAutoDJMixin:
         request = getattr(self, "_autodj_session_requests", {}).pop(state_key, None)
         if request is not None:
             request.set()
-        getattr(self, "_autodj_session_results", {}).pop(state_key, None)
+            getattr(self, "_autodj_session_results", {}).pop(request, None)
         getattr(self, "_autodj_session_retry_at", {}).pop(state_key, None)
 
     def _defer_autodj_advance(self, state):
@@ -437,7 +454,7 @@ class FrameAutoDJMixin:
             return False
         self._drain_autodj_session_result(state)
         upcoming_count = max(0, len(state.items) - state.current_index - 1)
-        needed = max(0, 5 - upcoming_count)
+        needed = max(0, _AUTODJ_SESSION_QUEUE_SIZE - upcoming_count)
         if needed <= 0 or not state.autodj_remaining_items:
             return False
         if not bool(getattr(self.settings, "autodj_enabled", False)):
@@ -456,7 +473,8 @@ class FrameAutoDJMixin:
         cancel_event = threading.Event()
         self._autodj_session_requests[state_key] = cancel_event
         current_path = str(state.current_media_path or "")
-        candidate_paths = list(state.autodj_remaining_items)
+        candidate_paths = state.autodj_remaining_items[:_AUTODJ_SESSION_MAX_CANDIDATE_ATTEMPTS]
+        candidate_artists = {path: self._autodj_source_artist(state, path) for path in candidate_paths}
         profile_name = str(getattr(self.settings, "autodj_profile", "smooth") or "smooth")
         beat_count = int(getattr(self.settings, "autodj_beats", 16) or 16)
         recent_artists = self._autodj_recent_artists(state)
@@ -478,20 +496,19 @@ class FrameAutoDJMixin:
                         deadline=analysis_deadline,
                     )
                 )
-                pending = iter(enumerate(candidate_paths))
                 worker_lock = threading.Lock()
                 candidates = []
                 preparation_finished = threading.Event()
 
                 def consume():
-                    while not cancel_event.is_set() and not preparation_finished.is_set():
-                        with worker_lock:
-                            if len(candidates) >= max(6, needed):
-                                return
-                            try:
-                                source_index, candidate_path = next(pending)
-                            except StopIteration:
-                                return
+                    for source_index, candidate_path in enumerate(candidate_paths):
+                        if (
+                            cancel_event.is_set()
+                            or preparation_finished.is_set()
+                            or time.monotonic() >= analysis_deadline
+                            or len(candidates) >= needed + 1
+                        ):
+                            return
                         try:
                             analysis = self._audio_analysis_from_result(
                                 self._analyze_autodj_media(
@@ -503,29 +520,23 @@ class FrameAutoDJMixin:
                             )
                             candidate = QueueCandidate(
                                 candidate_path,
-                                self._autodj_source_artist(state, candidate_path),
+                                candidate_artists[candidate_path],
                                 analysis,
                                 source_index,
                             )
                             with worker_lock:
                                 if not cancel_event.is_set() and not preparation_finished.is_set():
                                     candidates.append(candidate)
+                        except AutoDJAnalysisCancelled:
+                            return
                         except Exception as exc:
                             _logger.warning("AutoDJ session candidate analysis failed for %r: %s", candidate_path, exc)
 
-                worker_count = min(
-                    max(1, int(getattr(service, "max_parallel_analyses", 3))),
-                    max(1, len(candidate_paths)),
+                candidate_worker = threading.Thread(
+                    target=consume, daemon=True, name="autodj-session-candidates"
                 )
-                workers = [
-                    threading.Thread(target=consume, daemon=True, name=f"autodj-session-{index + 1}")
-                    for index in range(worker_count)
-                ]
-                for candidate_worker in workers:
-                    candidate_worker.start()
-                for candidate_worker in workers:
-                    remaining_wait = max(0.0, analysis_deadline - time.monotonic())
-                    candidate_worker.join(remaining_wait)
+                candidate_worker.start()
+                candidate_worker.join(max(0.0, analysis_deadline - time.monotonic()))
                 preparation_finished.set()
                 if cancel_event.is_set():
                     return
@@ -541,6 +552,8 @@ class FrameAutoDJMixin:
                 )
                 self._queue_autodj_session_fill(state, current_path, selections, "", cancel_event)
             except Exception as exc:
+                if cancel_event.is_set():
+                    return
                 _logger.warning("AutoDJ session planning failed for %r: %s", current_path, exc, exc_info=True)
                 self._queue_autodj_session_fill(
                     state,
@@ -558,20 +571,24 @@ class FrameAutoDJMixin:
 
     def _queue_autodj_session_fill(self, state, current_path, selections, error_message, cancel_event):
         """Publish a worker result for the UI thread to consume exactly once."""
-        state_key = id(state)
+        if cancel_event.is_set():
+            return
         results = getattr(self, "_autodj_session_results", None)
         if results is None:
             results = self._autodj_session_results = {}
-        results[state_key] = (current_path, selections, error_message, cancel_event)
+        results[cancel_event] = (current_path, selections, error_message)
+        if cancel_event.is_set():
+            results.pop(cancel_event, None)
+            return
         wx.CallAfter(self._drain_autodj_session_result, state)
 
     def _drain_autodj_session_result(self, state):
         """Finish a completed session analysis, including after a missed CallAfter."""
-        state_key = id(state)
-        result = getattr(self, "_autodj_session_results", {}).pop(state_key, None)
+        cancel_event = getattr(self, "_autodj_session_requests", {}).get(id(state))
+        result = getattr(self, "_autodj_session_results", {}).pop(cancel_event, None)
         if result is None:
             return False
-        current_path, selections, error_message, cancel_event = result
+        current_path, selections, error_message = result
         self._finish_autodj_session_fill(
             state,
             current_path,
@@ -596,7 +613,7 @@ class FrameAutoDJMixin:
             upcoming_count = max(0, len(state.items) - state.current_index - 1)
             selected_paths = self._append_autodj_session_paths(
                 state,
-                count=max(0, 5 - upcoming_count),
+                count=max(0, _AUTODJ_SESSION_QUEUE_SIZE - upcoming_count),
             )
         else:
             selected_paths = self._append_autodj_session_paths(state, selected_paths)
@@ -819,11 +836,8 @@ class FrameAutoDJMixin:
         if (
             self.settings.autodj_enabled
             and bool(getattr(self.settings, "autodj_optional_resources_confirmed", False))
-            and (
-                not getattr(previous_settings, "autodj_enabled", False)
-                or not getattr(previous_settings, "autodj_optional_resources_confirmed", False)
-            )
         ):
+            # Saving Preferences can retry a download that failed earlier.
             self._start_autodj_dependency_install()
         self._refresh_autodj_menu_state()
 
@@ -836,18 +850,7 @@ class FrameAutoDJMixin:
         if item is not None:
             item.Check(bool(getattr(self.settings, "autodj_enabled", False)))
         state = self._get_playlist_state() if hasattr(self, "_get_playlist_state") else None
-        start_item = menu.FindItemById(getattr(self, "menu_start_autodj_session_id", -1))
         stop_item = menu.FindItemById(getattr(self, "menu_stop_autodj_session_id", -1))
-        if start_item is not None:
-            start_item.Enable(bool(
-                getattr(self.settings, "autodj_enabled", False)
-                and autodj_dependencies_available()
-                and state
-                and not state.is_folder_tab
-                and not state.is_loading
-                and not state.autodj_session
-                and len(state.items) > 1
-            ))
         if stop_item is not None:
             stop_item.Enable(bool(state and state.autodj_session))
 
@@ -924,22 +927,23 @@ class FrameAutoDJMixin:
         )
 
     def _maybe_prepare_autodj_transition(self):
-        self._maybe_fill_autodj_session()
         service = getattr(self, "autodj_service", None)
         if service is None:
             return False
         player = getattr(self, "player", None)
         if player is None or player.get_media() is None or not player.is_playing():
+            self._maybe_fill_autodj_session()
             return False
 
         state = self._get_active_playlist_state()
         if state is not None and state.autodj_session and state.autodj_preparation_paused:
             return False
         pair = self._autodj_transition_pair(state)
+        self._discard_autodj_transition_requests(keep_pair=pair)
         if pair is None:
+            self._maybe_fill_autodj_session(state)
             return False
 
-        self._discard_autodj_transition_requests(keep_pair=pair)
         if pair in self._autodj_transition_requests:
             existing_request = self._autodj_transition_requests[pair]
             if (
@@ -948,8 +952,13 @@ class FrameAutoDJMixin:
             ):
                 self._autodj_transition_requests.pop(pair, None)
             else:
+                if existing_request.get("status") != "pending":
+                    self._maybe_fill_autodj_session(state)
                 return existing_request.get("status") == "ready"
 
+        if state.autodj_session:
+            # An immediate transition takes precedence over refilling the rolling queue.
+            self._cancel_autodj_session(state)
         analysis_cancel_event = threading.Event()
         request = {
             "status": "pending",
@@ -1026,45 +1035,31 @@ class FrameAutoDJMixin:
                             "analysis": incoming,
                             "plan": plan,
                         }
+                    except AutoDJAnalysisCancelled:
+                        return None
                     except Exception as exc:
                         _logger.warning("AutoDJ candidate analysis failed for %r: %s", candidate_path, exc)
                         return None
 
-                pending_candidates = iter(enumerate(candidate_paths))
                 candidate_lock = threading.Lock()
 
                 def consume_candidates():
-                    while not analysis_finished.is_set():
-                        with candidate_lock:
-                            if analysis_finished.is_set():
-                                return
-                            try:
-                                candidate_index, candidate_path = next(pending_candidates)
-                            except StopIteration:
-                                return
+                    for candidate_index, candidate_path in enumerate(candidate_paths):
+                        if analysis_finished.is_set() or time.monotonic() >= analysis_deadline:
+                            return
                         candidate = analyze_candidate(candidate_index, candidate_path)
                         if candidate is not None:
                             with candidate_lock:
                                 if not analysis_finished.is_set():
                                     analyzed_candidates.append(candidate)
 
-                worker_count = min(
-                    max(1, int(getattr(service, "max_parallel_analyses", 3))),
-                    max(1, len(candidate_paths)),
+                candidate_worker = threading.Thread(
+                    target=consume_candidates, daemon=True, name="autodj-transition-candidates"
                 )
-                candidate_workers = [
-                    threading.Thread(
-                        target=consume_candidates,
-                        daemon=True,
-                        name=f"autodj-candidate-{index + 1}",
-                    )
-                    for index in range(worker_count)
-                ]
-                for candidate_worker in candidate_workers:
-                    candidate_worker.start()
-                for candidate_worker in candidate_workers:
-                    remaining_wait = max(0.0, analysis_deadline - time.monotonic())
-                    candidate_worker.join(remaining_wait)
+                candidate_worker.start()
+                candidate_worker.join(max(0.0, analysis_deadline - time.monotonic()))
+                if analysis_cancel_event.is_set():
+                    return
                 analysis_finished.set()
                 with candidate_lock:
                     completed_candidates = list(analyzed_candidates)
@@ -1088,6 +1083,7 @@ class FrameAutoDJMixin:
                     chosen["analysis"],
                     chosen["plan"],
                     "",
+                    request,
                 )
             except Exception as exc:
                 _logger.warning("AutoDJ analysis failed for %r -> %r: %s", pair[0], pair[1], exc, exc_info=True)
@@ -1099,6 +1095,7 @@ class FrameAutoDJMixin:
                     None,
                     None,
                     str(exc) or exc.__class__.__name__,
+                    request,
                 )
             finally:
                 analysis_cancel_event.set()
@@ -1110,21 +1107,16 @@ class FrameAutoDJMixin:
         return True
 
     @staticmethod
-    def _warm_autodj_candidate(service, media_path):
-        try:
-            service.analyze(media_path)
-        except Exception as exc:
-            _logger.debug("AutoDJ cache warmup failed for %r: %s", media_path, exc)
-
-    @staticmethod
     def _audio_analysis_from_result(result):
         values = dict(result or {})
         values["beats_ms"] = tuple(values.get("beats_ms") or ())
         return AudioAnalysis(**values)
 
-    def _finish_autodj_transition_analysis(self, pair, selected_path, outgoing, incoming, plan, error_message):
+    def _finish_autodj_transition_analysis(
+        self, pair, selected_path, outgoing, incoming, plan, error_message, expected_request=None
+    ):
         request = getattr(self, "_autodj_transition_requests", {}).get(pair)
-        if request is None:
+        if request is None or (expected_request is not None and request is not expected_request):
             return
         if pair != self._autodj_transition_pair(self._get_active_playlist_state()):
             self._autodj_transition_requests.pop(pair, None)

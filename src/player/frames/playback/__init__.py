@@ -24,6 +24,7 @@ from .helpers import (
 )
 from .live import LivePlaybackMixin
 from .media_metadata import MediaMetadataMixin
+from .monitor import MonitorPlaybackMixin
 from .sponsorblock import SponsorBlockMixin
 from .youtube_history import YouTubeHistoryMixin
 
@@ -38,6 +39,7 @@ class FramePlaybackMixin(
     YouTubeHistoryMixin,
     SponsorBlockMixin,
     MediaMetadataMixin,
+    MonitorPlaybackMixin,
     PlaybackControlsMixin,
 ):
     """Aggregate playback mixin composed from focused sub-mixins."""

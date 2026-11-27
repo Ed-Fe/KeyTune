@@ -117,6 +117,10 @@ msgstr ""
 msgid "&Baixar da internet"
 msgstr ""
 
+#: src/player/frames/update.py
+msgid "&Baixar e atualizar"
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "&Baixar e instalar"
 msgstr ""
@@ -294,6 +298,7 @@ msgstr ""
 #: src/player/smart_library/search_dialog.py
 #: src/player/task_failures_dialog.py
 #: src/player/youtube_music/dialog.py
+#: src/updater_main.py
 msgid "&Fechar"
 msgstr ""
 
@@ -694,6 +699,10 @@ msgstr ""
 msgid "&Tocar agora"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "&Tocar arquivos abertos sem pôr na playlist"
+msgstr ""
+
 #: src/player/frames/youtube_music/channel_actions.py
 msgid "&Tocar o vídeo do post"
 msgstr ""
@@ -915,6 +924,22 @@ msgstr ""
 msgid "A mensagem está vazia."
 msgstr ""
 
+#: src/player/monitor_output.py
+msgid "A monitoração e a transmissão precisam usar dispositivos diferentes."
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "A monitoração está indisponível porque o componente de áudio do Windows não pôde ser carregado."
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "A monitoração parou. Confira os dispositivos de áudio."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "A monitoração precisa de uma saída de áudio WASAPI para a transmissão."
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 msgid "A mídia ainda está carregando."
 msgstr ""
@@ -985,13 +1010,29 @@ msgstr[1] ""
 msgid "A operação do YouTube Music demorou mais do que o esperado e foi cancelada para evitar travamento."
 msgstr ""
 
+#: src/main.py
+msgid "A pasta de dados portátil {portable_path} está em modo somente leitura. Os dados ficarão neste computador, em {local_path}."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "A pasta do KeyTune não foi encontrada."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "A pasta não está mais disponível."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "A playlist ainda está carregando. Aguarde e tente novamente."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
 #: src/player/frames/playback/controls.py
 msgid "A playlist atual está vazia."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "A playlist atual está vazia. Adicione pelo menos duas faixas para iniciar o AutoDJ."
 msgstr ""
 
 #: src/player/frames/youtube_music/search.py
@@ -1113,6 +1154,10 @@ msgstr ""
 
 #: src/player/frames/update.py
 msgid "A verificação já está em andamento."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "A versão anterior foi restaurada."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -1452,6 +1497,10 @@ msgstr ""
 msgid "Adicionar à playlist do YouTube Music..."
 msgstr ""
 
+#: src/player/file_associations.py
+msgid "Adicionar à playlist do {app}"
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 msgid "Adicionar às favoritas (Ctrl+D)"
 msgstr ""
@@ -1464,8 +1513,16 @@ msgstr ""
 msgid "Agrupado por mídia"
 msgstr ""
 
+#: src/player/portable_update.py
+msgid "Aguardando o KeyTune fechar."
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "Aguardando resposta do servidor..."
+msgstr ""
+
+#: src/updater_main.py
+msgid "Aguarde enquanto a atualização é aplicada."
 msgstr ""
 
 #: src/player/library/browser.py
@@ -1710,6 +1767,10 @@ msgstr ""
 msgid "Aplica o dispositivo de áudio selecionado."
 msgstr ""
 
+#: src/player/portable_update.py
+msgid "Aplicando a atualização."
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Aplicar crossfade ao trocar de fai&xa manualmente"
 msgstr ""
@@ -1748,6 +1809,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Arquivos JSON (*.json)"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Arquivos abertos"
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1947,6 +2012,10 @@ msgstr ""
 msgid "Ativar integração nas &Preferências..."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Ativar mo&nitoração"
+msgstr ""
+
 #: src/player/keyboard/shortcuts.py
 msgid "Ativar ou desativar a saída de vídeo"
 msgstr ""
@@ -1956,19 +2025,15 @@ msgid "Ative a integração do YouTube Music nas &Preferências...\tCtrl+Shift+Y
 msgstr ""
 
 #: src/player/frames/autodj.py
-msgid "Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."
-msgstr ""
-
-#: src/player/frames/autodj.py
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
-msgstr ""
-
-#: src/player/frames/autodj.py
-msgid "Ative o AutoDJ no menu Reprodução para iniciar uma sessão."
 msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Atuali&zar biblioteca"
+msgstr ""
+
+#: src/updater_main.py
+msgid "Atualizando KeyTune"
 msgstr ""
 
 #: src/player/frames/youtube_music/dependencies.py
@@ -2018,11 +2083,24 @@ msgid "Atualização avançada: {detail}"
 msgstr ""
 
 #: src/player/frames/update.py
+msgid "Atualização baixada. Fechando para atualizar..."
+msgstr ""
+
+#: src/player/frames/update.py
+msgid "Atualização baixada. O player será fechado para trocar os arquivos e aberto de novo."
+msgstr ""
+
+#: src/player/frames/update.py
 msgid "Atualização baixada. O player será reiniciado para concluir a instalação."
 msgstr ""
 
 #: src/player/frames/update.py
 msgid "Atualização baixada. Reiniciando para instalar..."
+msgstr ""
+
+#: src/player/portable_update.py
+#: src/updater_main.py
+msgid "Atualização concluída."
 msgstr ""
 
 #: src/player/update/dialog.py
@@ -2039,6 +2117,10 @@ msgstr ""
 
 #: src/player/frames/update.py
 msgid "Atualização disponível: versão {version}."
+msgstr ""
+
+#: src/updater_main.py
+msgid "Atualização do KeyTune"
 msgstr ""
 
 #: src/player/interface_sounds/labels.py
@@ -2075,6 +2157,10 @@ msgstr ""
 
 #: src/player/keyboard/shortcuts.py
 msgid "Aumentar volume"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Aumentar volume da transmissão"
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3127,6 +3213,10 @@ msgstr ""
 msgid "Converter seleção...\tCtrl+Shift+K"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Copia o som da saída de áudio para um fone ou caixas em outro dispositivo."
+msgstr ""
+
 #: src/player/frames/lyrics_panel.py
 msgid "Copia toda a letra exibida para a área de transferência."
 msgstr ""
@@ -3404,6 +3494,10 @@ msgstr ""
 msgid "Detalhes"
 msgstr ""
 
+#: src/updater_main.py
+msgid "Detalhes da atualização"
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 #: src/player/frames/youtube_music/details.py
 msgid "Detalhes de {title}"
@@ -3536,6 +3630,10 @@ msgstr ""
 msgid "Diminuir volume"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Diminuir volume da transmissão"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Dinamarca"
 msgstr ""
@@ -3546,6 +3644,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Disponível para instalar"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Dispositivo da mon&itoração"
 msgstr ""
 
 #: src/player/frames/playback/audio_output.py
@@ -3931,6 +4033,14 @@ msgstr ""
 msgid "Escolha se deseja exportar os cookies diretamente de um navegador instalado ou informar os dados manualmente por arquivo ou texto."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Escolha um dispositivo"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Escolha um dispositivo para a monitoração."
+msgstr ""
+
 #: src/player/frames/commands/open_commands.py
 msgid "Escolha um ou mais arquivos de mídia ou uma playlist"
 msgstr ""
@@ -4033,6 +4143,10 @@ msgstr ""
 msgid "Esta mídia tem só uma faixa de áudio."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Esta playlist já é uma sessão AutoDJ. Abra outra playlist para iniciar uma nova sessão."
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "Esta sessão do navegador tem mais de uma conta Google. Qual delas o KeyTune deve usar?"
 msgstr ""
@@ -4043,6 +4157,10 @@ msgstr ""
 
 #: src/player/youtube_music/live_streams.py
 msgid "Esta transmissão ao vivo ainda não começou."
+msgstr ""
+
+#: src/player/frames/update.py
+msgid "Esta é a versão portátil. A atualização troca os arquivos desta pasta, mantém o portable.ini e a pasta data, e abre o KeyTune de novo. O instalador do Windows não é usado."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -4430,6 +4548,10 @@ msgstr ""
 msgid "Fones de ouvido"
 msgstr ""
 
+#: src/player/frames/library_navigation.py
+msgid "Fora da playlist"
+msgstr ""
+
 #: src/player/convert/dialog.py
 msgid "Formato do arquivo de áudio gerado."
 msgstr ""
@@ -4556,6 +4678,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Hungria"
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "Há dispositivos de áudio com o mesmo nome. Renomeie-os ou escolha outra saída."
 msgstr ""
 
 #: src/player/frames/autodj.py
@@ -5252,6 +5378,10 @@ msgid_plural "Mais {count} itens. Total: {total}."
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/portable_update.py
+msgid "Mantendo o portable.ini que já está na pasta."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Mantém baixo firme com médios e agudos vivos."
 msgstr ""
@@ -5401,6 +5531,18 @@ msgstr ""
 msgid "Modos ligados ou desligados: aleatório, repetição, equalizador, AutoDJ"
 msgstr ""
 
+#: src/player/frames/playback/monitor.py
+msgid "Monitoração desativada. A saída de áudio voltou ao volume de {volume}%."
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "Monitoração retomada."
+msgstr ""
+
+#: src/player/frames/playback/monitor.py
+msgid "Monitoração {monitor}%. Transmissão {broadcast}%."
+msgstr ""
+
 #: src/player/youtube_music/browse.py
 #: src/player/youtube_music/library_manager.py
 #: src/player/youtube_music/service.py
@@ -5489,6 +5631,10 @@ msgstr ""
 
 #: src/player/frames/library_tabs/item_removal.py
 msgid "Mídia fechada"
+msgstr ""
+
+#: src/player/frames/library_tabs/item_removal.py
+msgid "Mídia fechada."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -5735,7 +5881,12 @@ msgid "Nenhuma mídia compatível foi encontrada no conteúdo colado."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
+msgid "Nenhuma mídia compatível foi recebida do Explorador."
+msgstr ""
+
+#: src/player/frames/commands/open_commands.py
 #: src/player/frames/library_navigation.py
+#: src/player/quick_player/frame.py
 msgid "Nenhuma mídia compatível para adicionar."
 msgstr ""
 
@@ -5833,6 +5984,10 @@ msgstr ""
 
 #: src/player/youtube_music/models.py
 msgid "Nigéria"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "No modo portátil, esta opção grava no Windows deste computador, não só na pasta do KeyTune. Deseja continuar?"
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -6068,6 +6223,18 @@ msgstr ""
 msgid "Não foi possível apagar o comentário."
 msgstr ""
 
+#: src/player/portable_update.py
+msgid "Não foi possível aplicar a atualização portátil."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível aplicar a atualização portátil. A versão anterior foi restaurada."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível aplicar a atualização. Restaurando a versão anterior."
+msgstr ""
+
 #: src/player/frames/smart_library/lifecycle.py
 msgid "Não foi possível ativar a biblioteca inteligente."
 msgstr ""
@@ -6123,6 +6290,10 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "Não foi possível baixar um recurso adicional do KeyTune."
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "Não foi possível capturar o áudio da saída de transmissão."
 msgstr ""
 
 #: src/player/frames/explorer.py
@@ -6185,6 +6356,10 @@ msgstr ""
 msgid "Não foi possível carregar os detalhes agora."
 msgstr ""
 
+#: src/updater_main.py
+msgid "Não foi possível concluir a atualização."
+msgstr ""
+
 #: src/player/frames/youtube_music/channel_actions.py
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível concluir a busca agora."
@@ -6238,12 +6413,25 @@ msgstr ""
 msgid "Não foi possível editar o comentário."
 msgstr ""
 
+#: src/player/update/portable_apply.py
+msgid "Não foi possível encontrar a pasta da versão portátil."
+msgstr ""
+
+#: src/player/update/portable_apply.py
 #: src/player/update/service.py
 msgid "Não foi possível encontrar o arquivo baixado."
 msgstr ""
 
+#: src/player/update/portable_apply.py
+msgid "Não foi possível encontrar o atualizador da versão portátil."
+msgstr ""
+
 #: src/player/frames/youtube_music/live_chat.py
 msgid "Não foi possível enviar a mensagem."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível esperar o KeyTune fechar."
 msgstr ""
 
 #: src/player/frames/youtube_music/playlists.py
@@ -6260,6 +6448,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
 msgid "Não foi possível favoritar os itens selecionados."
+msgstr ""
+
+#: src/player/update/portable_apply.py
+msgid "Não foi possível gravar na pasta do KeyTune. A atualização portátil precisa de permissão de escrita nessa pasta."
 msgstr ""
 
 #: src/player/frames/smart_library/indexing.py
@@ -6373,6 +6565,10 @@ msgstr ""
 msgid "Não foi possível ocultar a notificação."
 msgstr ""
 
+#: src/player/update/portable_apply.py
+msgid "Não foi possível preparar a atualização portátil."
+msgstr ""
+
 #: src/player/youtube_music/service.py
 msgid "Não foi possível preparar a autenticação do YouTube."
 msgstr ""
@@ -6387,6 +6583,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/comment_actions.py
 msgid "Não foi possível publicar o comentário."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível reabrir o KeyTune."
 msgstr ""
 
 #: src/player/frames/playback/live.py
@@ -6425,6 +6625,10 @@ msgstr ""
 #: src/player/frames/playback/backend.py
 #: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia: {detail}."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível restaurar todos os arquivos anteriores. Os arquivos de backup foram preservados em {path}."
 msgstr ""
 
 #: src/player/frames/youtube_music/watch_later.py
@@ -6574,6 +6778,14 @@ msgstr ""
 msgid "Não é possível reordenar arquivos no navegador de pastas."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Nível da saída principal enquanto a monitoração estiver ligada, de 0 a 100."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Nível do fone ou das caixas, de 0 a 100. As setas mudam este volume."
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "Número máximo de &itens"
 msgstr ""
@@ -6583,11 +6795,23 @@ msgid "Número máximo de itens"
 msgstr ""
 
 #: src/player/frames/autodj.py
+msgid "O AutoDJ está desativado. Ative em Preferências, Recursos adicionais."
+msgstr ""
+
+#: src/player/frames/autodj.py
 msgid "O AutoDJ não conseguiu analisar estas faixas. Será usada a transição normal."
 msgstr ""
 
 #: src/player/frames/autodj.py
 msgid "O AutoDJ não encontrou batidas compatíveis. Será usada a transição normal."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "O AutoDJ precisa dos recursos adicionais. Instale em Preferências, Recursos adicionais."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "O Enter no explorador de pastas e os arquivos abertos pelo Windows tocam na aba Fora da playlist."
 msgstr ""
 
 #: src/player/download/ffmpeg.py
@@ -6632,6 +6856,11 @@ msgstr ""
 
 #: src/player/diagnostics/checks.py
 msgid "O KeyTune oferece a instalação na primeira conversão ou download que precisar dele."
+msgstr ""
+
+#: src/player/portable_update.py
+#: src/updater_main.py
+msgid "O KeyTune será aberto em instantes."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -6939,6 +7168,30 @@ msgstr ""
 msgid "O pacote baixado não é compatível com esta versão do KeyTune."
 msgstr ""
 
+#: src/player/portable_update.py
+msgid "O pacote da atualização não foi encontrado."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O pacote de atualização contém a pasta de dados do KeyTune."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O pacote de atualização contém nomes de arquivo conflitantes."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O pacote de atualização contém um caminho inválido."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O pacote de atualização está corrompido ou não pôde ser lido."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O pacote de atualização não contém o programa."
+msgstr ""
+
 #: src/player/download/ffmpeg.py
 msgid "O pacote do FFmpeg veio sem os executáveis esperados."
 msgstr ""
@@ -7035,6 +7288,10 @@ msgstr ""
 msgid "O que você quer fazer com esta mídia?"
 msgstr ""
 
+#: src/player/frames/update.py
+msgid "O registro desta tentativa ficou em data/portable-update.log, ao lado do programa."
+msgstr ""
+
 #: src/player/autodj/service.py
 msgid "O resolvedor remoto não retornou uma URL reproduzível."
 msgstr ""
@@ -7065,6 +7322,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "O som voltou ao original."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "O tempo acabou esperando o KeyTune fechar."
 msgstr ""
 
 #: src/player/manual/dialog.py
@@ -7206,6 +7467,14 @@ msgstr ""
 msgid "Opções de download"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Opções de monitoração disponíveis."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Opções de monitoração indisponíveis."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "Ordem"
 msgstr ""
@@ -7274,6 +7543,10 @@ msgstr ""
 msgid "Os itens já estavam em {title}."
 msgstr ""
 
+#: src/player/quick_player/frame.py
+msgid "Os itens já estavam na lista."
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Os itens selecionados já estavam presentes na playlist atual."
 msgstr ""
@@ -7304,6 +7577,10 @@ msgstr ""
 
 #: src/player/youtube_music/posts.py
 msgid "Os posts dos canais precisam do YouTube.js, ativado em Preferências > Recursos adicionais."
+msgstr ""
+
+#: src/player/frames/autodj.py
+msgid "Os recursos adicionais do AutoDJ estão sendo instalados. Aguarde a instalação terminar."
 msgstr ""
 
 #: src/player/frames/youtube_music/lifecycle.py
@@ -7809,12 +8086,21 @@ msgstr ""
 msgid "Preparando Node.js e YouTube.js..."
 msgstr ""
 
+#: src/player/portable_update.py
+#: src/updater_main.py
+msgid "Preparando a atualização portátil."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Preparando as bibliotecas opcionais do AutoDJ..."
 msgstr ""
 
 #: src/player/update/dialog.py
 msgid "Preparando o download da versão {version}..."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Preparando os arquivos novos."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -7943,8 +8229,16 @@ msgstr ""
 msgid "Procurando as faixas de áudio desta mídia."
 msgstr ""
 
+#: src/player/youtube_music/dependencies.py
+msgid "Procurando atualização do yt-dlp..."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Procurar arquivo de conexão"
+msgstr ""
+
+#: src/updater_main.py
+msgid "Progresso da atualização"
 msgstr ""
 
 #: src/player/frames/task_progress.py
@@ -8068,7 +8362,7 @@ msgid "Página: {homepage}"
 msgstr ""
 
 #: src/player/preferences/dialog.py
-msgid "Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."
+msgid "Põe o KeyTune no menu de contexto do Explorador para áudio, vídeo e playlists, para abrir o arquivo ou adicionar à playlist."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -8629,6 +8923,18 @@ msgstr ""
 msgid "Salvar preset do equalizador"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Saída de monitoração"
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "Saída de monitoração indisponível. Confira a conexão do fone ou das caixas."
+msgstr ""
+
+#: src/player/monitor_output.py
+msgid "Saída de transmissão indisponível para a monitoração. Confira o dispositivo de áudio."
+msgstr ""
+
 #: src/player/frames/playback/engine.py
 msgid "Saída de vídeo ativada."
 msgstr ""
@@ -8651,6 +8957,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Saída de áudio usada na reprodução."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Saída do fone ou das caixas, diferente da saída de transmissão."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -9650,6 +9960,10 @@ msgstr ""
 msgid "Versão"
 msgstr ""
 
+#: src/main.py
+msgid "Versão portátil"
+msgstr ""
+
 #: src/player/diagnostics/checks.py
 msgid "Versão {version}."
 msgstr ""
@@ -9715,6 +10029,10 @@ msgstr ""
 msgid "Você só pode remover faixas de playlists que criou ou onde é colaborador."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Vol&ume da monitoração"
+msgstr ""
+
 #: src/player/keyboard/dialog.py
 msgid "Volta todos os atalhos da aba atual ao padrão."
 msgstr ""
@@ -9753,8 +10071,20 @@ msgstr ""
 msgid "Volume &padrão"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
+msgid "Volume da monitoração: {volume}%."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Volume da próxima faixa ajustado em {gain:.1f} dB."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Volume da tr&ansmissão"
+msgstr ""
+
+#: src/player/frames/playback/monitor.py
+msgid "Volume da transmissão: {volume}%."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -10298,6 +10628,13 @@ msgstr ""
 #: src/player/frames/radio/lifecycle.py
 msgid "{country} definido como o seu país nas rádios online."
 msgstr ""
+
+#: src/player/frames/commands/open_commands.py
+#: src/player/quick_player/frame.py
+msgid "{count} arquivo adicionado à playlist."
+msgid_plural "{count} arquivos adicionados à playlist."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/player/frames/convert.py
 msgid "{count} arquivos foram ignorados."

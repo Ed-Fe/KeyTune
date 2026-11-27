@@ -17,7 +17,7 @@ from .service import (
 
 
 class UpdateAvailableDialog(wx.Dialog):
-    def __init__(self, parent, update_info: UpdateInfo, *, install_message: str = ""):
+    def __init__(self, parent, update_info: UpdateInfo, *, install_message: str = "", confirm_label: str = ""):
         super().__init__(
             parent,
             title=_("Atualização disponível"),
@@ -70,7 +70,7 @@ class UpdateAvailableDialog(wx.Dialog):
             root_sizer.Add(warning_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         button_sizer = wx.StdDialogButtonSizer()
-        self.download_button = wx.Button(panel, wx.ID_OK, _("&Baixar e instalar"))
+        self.download_button = wx.Button(panel, wx.ID_OK, confirm_label or _("&Baixar e instalar"))
         self.cancel_button = wx.Button(panel, wx.ID_CANCEL, _("A&gora não"))
         self.download_button.SetDefault()
         button_sizer.AddButton(self.download_button)

@@ -2473,6 +2473,9 @@ msgstr "Origen"
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
 msgstr "Los botones de instalación abren el Windows Package Manager en una ventana separada. Según la configuración del sistema, Windows puede pedir confirmación."
 
+msgid "Os itens já estavam na lista."
+msgstr "Los elementos ya estaban en la lista."
+
 msgid "Os itens selecionados já estavam presentes na playlist atual."
 msgstr "Los elementos seleccionados ya estaban presentes en la playlist actual."
 
@@ -4018,15 +4021,27 @@ msgstr "La versión instalada de KeyTune no publicó el paquete opcional {name}.
 msgid "A resposta dos recursos adicionais veio em formato inválido."
 msgstr "La respuesta de los recursos adicionales tiene un formato no válido."
 
-msgid "Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."
-msgstr "Activa AutoDJ en Preferencias, Recursos adicionales, y espera a que termine la instalación."
+msgid "O AutoDJ precisa dos recursos adicionais. Instale em Preferências, Recursos adicionais."
+msgstr "AutoDJ necesita recursos adicionales. Instálalos en Preferencias, Recursos adicionales."
+
+msgid "Os recursos adicionais do AutoDJ estão sendo instalados. Aguarde a instalação terminar."
+msgstr "Se están instalando los recursos adicionales de AutoDJ. Espera a que termine la instalación."
+
+msgid "A playlist ainda está carregando. Aguarde e tente novamente."
+msgstr "La lista de reproducción aún se está cargando. Espera y vuelve a intentarlo."
+
+msgid "Esta playlist já é uma sessão AutoDJ. Abra outra playlist para iniciar uma nova sessão."
+msgstr "Esta lista de reproducción ya es una sesión de AutoDJ. Abre otra lista para iniciar una sesión nueva."
+
+msgid "A playlist atual está vazia. Adicione pelo menos duas faixas para iniciar o AutoDJ."
+msgstr "La lista de reproducción actual está vacía. Añade al menos dos pistas para iniciar AutoDJ."
 
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr "Activa AutoDJ en Preferencias, Recursos adicionales, para revisar e instalar las bibliotecas necesarias."
 
 #: src/player/frames/autodj.py
-msgid "Ative o AutoDJ no menu Reprodução para iniciar uma sessão."
-msgstr "Activa el AutoDJ en el menú Reproducción para iniciar una sesión."
+msgid "O AutoDJ está desativado. Ative em Preferências, Recursos adicionais."
+msgstr "AutoDJ está desactivado. Actívalo en Preferencias, Recursos adicionales."
 
 msgid "AutoDJ desativado."
 msgstr "AutoDJ desactivado."
@@ -4666,6 +4681,11 @@ msgstr "Sin FFmpeg, los archivos se descargaron en la calidad original, sin conv
 
 msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
 msgstr "Solo se descargarán los primeros {limit} elementos; {count} quedarán fuera."
+
+msgid "{count} arquivo adicionado à playlist."
+msgid_plural "{count} arquivos adicionados à playlist."
+msgstr[0] "{count} archivo añadido a la lista."
+msgstr[1] "{count} archivos añadidos a la lista."
 
 msgid "{count} arquivos foram ignorados."
 msgstr "Se omitieron {count} archivos."
@@ -5409,6 +5429,9 @@ msgstr "Añadir acciones y submenús"
 msgid "Adicionar telas ou painéis"
 msgstr "Añadir pantallas o paneles"
 
+msgid "Adicionar à playlist do {app}"
+msgstr "Añadir a la lista de {app}"
+
 msgid "Adicionar às favoritas (Ctrl+D)"
 msgstr "Añadir a favoritas (Ctrl+D)"
 
@@ -5901,8 +5924,8 @@ msgstr "Proceso separado"
 msgid "Página: {homepage}"
 msgstr "Página: {homepage}"
 
-msgid "Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."
-msgstr "Añade KeyTune al menú Abrir con de Windows para audio, vídeo y playlists."
+msgid "Põe o KeyTune no menu de contexto do Explorador para áudio, vídeo e playlists, para abrir o arquivo ou adicionar à playlist."
+msgstr "Añade KeyTune al menú contextual del Explorador de archivos para audio, vídeo y playlists, para abrir el archivo o añadirlo a la lista."
 
 msgid "Qualidade: {value}"
 msgstr "Calidad: {value}"
@@ -8128,3 +8151,234 @@ msgid "Em {count} seção."
 msgid_plural "Em {count} seções."
 msgstr[0] "En {count} sección."
 msgstr[1] "En {count} secciones."
+
+
+
+
+msgid "Procurando atualização do yt-dlp..."
+msgstr "Buscando una actualización de yt-dlp..."
+
+msgid "Fora da playlist"
+msgstr "Fuera de la playlist"
+
+msgid "Arquivos abertos"
+msgstr "Archivos abiertos"
+
+msgid "&Tocar arquivos abertos sem pôr na playlist"
+msgstr "Reproducir archivos abiertos &sin ponerlos en la playlist"
+
+msgid "O Enter no explorador de pastas e os arquivos abertos pelo Windows tocam na aba Fora da playlist."
+msgstr "Enter en el explorador de carpetas y los archivos abiertos desde Windows suenan en la pestaña Fuera de la playlist."
+
+msgid "A monitoração e a transmissão precisam usar dispositivos diferentes."
+msgstr "El monitoreo y la transmisión necesitan dispositivos distintos."
+
+msgid "A monitoração está indisponível porque o componente de áudio do Windows não pôde ser carregado."
+msgstr "El monitoreo no está disponible porque no se pudo cargar el componente de audio de Windows."
+
+msgid "A monitoração parou. Confira os dispositivos de áudio."
+msgstr "Se detuvo el monitoreo. Comprueba los dispositivos de audio."
+
+msgid "A monitoração precisa de uma saída de áudio WASAPI para a transmissão."
+msgstr "El monitoreo requiere una salida de audio WASAPI para la transmisión."
+
+msgid "Ativar mo&nitoração"
+msgstr "Activar mo&nitoreo"
+
+msgid "Aumentar volume da transmissão"
+msgstr "Subir el volumen de la transmisión"
+
+msgid "Copia o som da saída de áudio para um fone ou caixas em outro dispositivo."
+msgstr "Copia la salida de audio a auriculares o altavoces en otro dispositivo."
+
+msgid "Diminuir volume da transmissão"
+msgstr "Bajar el volumen de la transmisión"
+
+msgid "Dispositivo da mon&itoração"
+msgstr "Dispositivo de mon&itoreo"
+
+msgid "Escolha um dispositivo"
+msgstr "Elige un dispositivo"
+
+msgid "Escolha um dispositivo para a monitoração."
+msgstr "Elige un dispositivo para el monitoreo."
+
+msgid "Há dispositivos de áudio com o mesmo nome. Renomeie-os ou escolha outra saída."
+msgstr "Hay dispositivos de audio con el mismo nombre. Cámbiales el nombre o elige otra salida."
+
+msgid "Monitoração desativada. A saída de áudio voltou ao volume de {volume}%."
+msgstr "Monitoreo desactivado. La salida de audio volvió al {volume}%."
+
+msgid "Monitoração {monitor}%. Transmissão {broadcast}%."
+msgstr "Monitoreo {monitor}%. Transmisión {broadcast}%."
+
+msgid "Não foi possível capturar o áudio da saída de transmissão."
+msgstr "No se pudo capturar el audio de la salida de transmisión."
+
+msgid "Nível da saída principal enquanto a monitoração estiver ligada, de 0 a 100."
+msgstr "Nivel de la salida principal mientras el monitoreo está activo, de 0 a 100."
+
+msgid "Nível do fone ou das caixas, de 0 a 100. As setas mudam este volume."
+msgstr "Nivel de los auriculares o altavoces, de 0 a 100, ajustable con las flechas."
+
+msgid "Opções de monitoração disponíveis."
+msgstr "Opciones de monitoreo disponibles."
+
+msgid "Opções de monitoração indisponíveis."
+msgstr "Opciones de monitoreo no disponibles."
+
+msgid "Saída de monitoração"
+msgstr "Salida de monitoreo"
+
+msgid "Saída de monitoração indisponível. Confira a conexão do fone ou das caixas."
+msgstr "Salida de monitoreo no disponible. Comprueba la conexión de los auriculares o altavoces."
+
+msgid "Saída de transmissão indisponível para a monitoração. Confira o dispositivo de áudio."
+msgstr "Salida de transmisión no disponible para el monitoreo. Comprueba el dispositivo de audio."
+
+msgid "Saída do fone ou das caixas, diferente da saída de transmissão."
+msgstr "Salida de auriculares o altavoces separada de la salida de transmisión."
+
+msgid "Vol&ume da monitoração"
+msgstr "Vol&umen del monitoreo"
+
+msgid "Volume da monitoração: {volume}%."
+msgstr "Volumen del monitoreo: {volume}%."
+
+msgid "Volume da tr&ansmissão"
+msgstr "Volumen de la tr&ansmisión"
+
+msgid "Volume da transmissão: {volume}%."
+msgstr "Volumen de la transmisión: {volume}%."
+
+msgid "&Baixar e atualizar"
+msgstr "&Descargar y actualizar"
+
+msgid "O tempo acabou esperando o KeyTune fechar."
+msgstr "Se acabó el tiempo esperando a que KeyTune se cerrara."
+
+msgid "A versão anterior foi restaurada."
+msgstr "Se restauró la versión anterior."
+
+msgid "Aguardando o KeyTune fechar."
+msgstr "Esperando a que KeyTune se cierre."
+
+msgid "Aguarde enquanto a atualização é aplicada."
+msgstr "Espera mientras se aplica la actualización."
+
+msgid "Atualizando KeyTune"
+msgstr "Actualizando KeyTune"
+
+msgid "Atualização baixada. Fechando para atualizar..."
+msgstr "Actualización descargada. Cerrando para actualizar..."
+
+msgid "Atualização baixada. O player será fechado para trocar os arquivos e aberto de novo."
+msgstr "Actualización descargada. El reproductor se cerrará para sustituir los archivos y se abrirá de nuevo."
+
+msgid "Atualização concluída."
+msgstr "Actualización terminada."
+
+msgid "Mantendo o portable.ini que já está na pasta."
+msgstr "Se conserva el portable.ini que ya está en la carpeta."
+
+msgid "Não foi possível aplicar a atualização portátil."
+msgstr "No se pudo aplicar la actualización portátil."
+
+msgid "Não foi possível aplicar a atualização portátil. A versão anterior foi restaurada."
+msgstr "No se pudo aplicar la actualización portátil. Se restauró la versión anterior."
+
+msgid "Não foi possível aplicar a atualização. Restaurando a versão anterior."
+msgstr "No se pudo aplicar la actualización. Restaurando la versión anterior."
+
+
+msgid "Não foi possível concluir a atualização."
+msgstr "No se pudo completar la actualización."
+
+msgid "Não foi possível encontrar a pasta da versão portátil."
+msgstr "No se pudo encontrar la carpeta de la versión portátil."
+
+msgid "Não foi possível esperar o KeyTune fechar."
+msgstr "No se pudo esperar a que KeyTune se cerrara."
+
+msgid "Não foi possível gravar na pasta do KeyTune. A atualização portátil precisa de permissão de escrita nessa pasta."
+msgstr "No se pudo escribir en la carpeta de KeyTune. La actualización portátil necesita permiso de escritura en esa carpeta."
+
+msgid "Não foi possível preparar a atualização portátil."
+msgstr "No se pudo preparar la actualización portátil."
+
+msgid "O KeyTune será aberto em instantes."
+msgstr "KeyTune se abrirá en un momento."
+
+
+msgid "Preparando a atualização portátil."
+msgstr "Preparando la actualización portátil."
+
+msgid "Preparando os arquivos novos."
+msgstr "Preparando los archivos nuevos."
+
+msgid "Não foi possível reabrir o KeyTune."
+msgstr "No se pudo abrir KeyTune de nuevo."
+
+msgid "O pacote da atualização não foi encontrado."
+msgstr "No se encontró el paquete de la actualización."
+
+msgid "O pacote de atualização contém um caminho inválido."
+msgstr "El paquete de actualización contiene una ruta no válida."
+
+msgid "O pacote de atualização não contém o programa."
+msgstr "El paquete de actualización no contiene el programa."
+
+msgid "Progresso da atualização"
+msgstr "Progreso de la actualización"
+
+msgid "A pasta do KeyTune não foi encontrada."
+msgstr "No se encontró la carpeta de KeyTune."
+
+msgid "Detalhes da atualização"
+msgstr "Detalles de la actualización"
+
+msgid "Aplicando a atualização."
+msgstr "Aplicando la actualización."
+
+msgid "Esta é a versão portátil. A atualização troca os arquivos desta pasta, mantém o portable.ini e a pasta data, e abre o KeyTune de novo. O instalador do Windows não é usado."
+msgstr "Esta es la versión portátil. La actualización sustituye los archivos de esta carpeta, conserva portable.ini y la carpeta data, y abre KeyTune de nuevo. El instalador de Windows no se usa."
+
+msgid "No modo portátil, esta opção grava no Windows deste computador, não só na pasta do KeyTune. Deseja continuar?"
+msgstr "En el modo portátil, esta opción se escribe en el Windows de esta computadora, no solo en la carpeta de KeyTune. ¿Quieres continuar?"
+
+msgid "O registro desta tentativa ficou em data/portable-update.log, ao lado do programa."
+msgstr "El registro de este intento quedó en data/portable-update.log, junto al programa."
+
+msgid "Não foi possível encontrar o atualizador da versão portátil."
+msgstr "No se pudo encontrar el actualizador de la versión portátil."
+
+msgid "Atualização do KeyTune"
+msgstr "Actualización de KeyTune"
+
+
+msgid "A pasta de dados portátil {portable_path} está em modo somente leitura. Os dados ficarão neste computador, em {local_path}."
+msgstr "La carpeta de datos portátil {portable_path} es de solo lectura. Los datos se guardarán en este equipo, en {local_path}."
+
+msgid "Monitoração retomada."
+msgstr "Se reanudó el monitoreo."
+
+msgid "Mídia fechada."
+msgstr "Medio cerrado."
+
+msgid "Nenhuma mídia compatível foi recebida do Explorador."
+msgstr "No se recibió ningún medio compatible desde el Explorador."
+
+msgid "Não foi possível restaurar todos os arquivos anteriores. Os arquivos de backup foram preservados em {path}."
+msgstr "No se pudieron restaurar todos los archivos anteriores. La copia de seguridad se conservó en {path}."
+
+msgid "O pacote de atualização contém a pasta de dados do KeyTune."
+msgstr "El paquete de actualización contiene la carpeta de datos de KeyTune."
+
+msgid "O pacote de atualização contém nomes de arquivo conflitantes."
+msgstr "El paquete de actualización contiene nombres de archivo en conflicto."
+
+msgid "O pacote de atualização está corrompido ou não pôde ser lido."
+msgstr "El paquete de actualización está dañado o no se pudo leer."
+
+msgid "Versão portátil"
+msgstr "Versión portátil"

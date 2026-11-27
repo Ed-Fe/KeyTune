@@ -144,12 +144,16 @@ class FrameKeyboardMixin:
 
     # Os atalhos globais agem com a janela escondida: o volume novo é falado.
     def _shortcut_volume_up_announced(self):
-        self._shortcut_volume_up()
-        self._announce_current_volume()
+        self._change_volume(self.settings.volume_step, announce=True)
 
     def _shortcut_volume_down_announced(self):
-        self._shortcut_volume_down()
-        self._announce_current_volume()
+        self._change_volume(-self.settings.volume_step, announce=True)
+
+    def _shortcut_broadcast_volume_up(self):
+        self._change_broadcast_volume(self.settings.volume_step)
+
+    def _shortcut_broadcast_volume_down(self):
+        self._change_broadcast_volume(-self.settings.volume_step)
 
     def _shortcut_seek_forward(self):
         self._seek_relative(self.settings.seek_step_ms)

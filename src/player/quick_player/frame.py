@@ -11,14 +11,14 @@ import wx
 from ..accessibility import ScreenReaderAnnouncer
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
 from ..constants import APP_TITLE, LARGE_SEEK_STEP_MS, PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS
-from ..i18n import _
+from ..i18n import _, ngettext
 from ..log import get_logger
 from ..mpv_backend import PlayerEventType, create_player_instance
 from ..playback_handover import AdoptedPlayback
 from ..session import load_session
 from .launch import format_time_ms, initial_volume, quick_player_paths
 from .panel import QuickPlayerPanel
-from ..announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK, ANNOUNCE_SPEED_PITCH
+from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK, ANNOUNCE_SPEED_PITCH
 from ..announcements import should_speak as should_speak_announcement
 
 _logger = get_logger(__name__)
@@ -90,6 +90,27 @@ class QuickPlayerFrame(wx.Frame):
         self._index = 0
         self._show_current_media()
         self._play_current()
+
+    def receive_external_enqueue(self, paths):
+        """Acrescenta arquivos ao fim da lista sem trocar o que toca nem o foco."""
+        if not paths:
+            return
+        media_paths = quick_player_paths(paths, self.settings)
+        if not media_paths:
+            self._announce(_("Nenhuma mídia compatível para adicionar."), ANNOUNCE_ERRORS)
+            return
+        known = set(self._paths)
+        added = [path for path in media_paths if path not in known]
+        if not added:
+            self._announce(_("Os itens já estavam na lista."), ANNOUNCE_ERRORS)
+            return
+        self._paths.extend(added)
+        message = ngettext(
+            "{count} arquivo adicionado à playlist.",
+            "{count} arquivos adicionados à playlist.",
+            len(added),
+        ).format(count=len(added))
+        self._announce(message, ANNOUNCE_CONFIRMATIONS)
 
     def focus_from_relaunch(self):
         """Abrir o KeyTune de novo, sem arquivo, é pedir a janela principal."""

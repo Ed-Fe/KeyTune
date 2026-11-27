@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
 from ..audio_output import is_selectable_audio_output_device_id, normalize_audio_output_device_id
+from ..monitor_output import wasapi_endpoint_id
 from ..constants import (
     AUTODJ_BEAT_COUNTS,
     AUTODJ_PROFILES,
@@ -18,6 +19,7 @@ from ..constants import (
     DEFAULT_LOGGING_LEVEL,
     DEFAULT_NEW_PLAYLIST_SHUFFLE,
     DEFAULT_OPEN_KEYTUBE_ON_STARTUP,
+    DEFAULT_PLAY_OPENED_FILES_ALONE,
     DEFAULT_QUICK_PLAYER_ENABLED,
     DEFAULT_REMEMBER_LAST_FOLDER,
     DEFAULT_REMEMBER_WINDOW_SIZE,
@@ -115,6 +117,7 @@ class AppSettings:
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
+    play_opened_files_alone: bool = DEFAULT_PLAY_OPENED_FILES_ALONE
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     # Falar por cima do que o leitor de tela já está dizendo, ou esperar a vez.
     announcements_interrupt: bool = DEFAULT_ANNOUNCEMENTS_INTERRUPT
@@ -130,6 +133,9 @@ class AppSettings:
     interface_sounds_custom: dict = field(default_factory=dict)
     disable_video_output: bool = DEFAULT_DISABLE_VIDEO_OUTPUT
     audio_output_device_id: str = ""
+    monitor_output_enabled: bool = False
+    monitor_output_device_id: str = ""
+    broadcast_volume: int = 100
     default_volume: int = DEFAULT_VOLUME
     crossfade_seconds: int = DEFAULT_CROSSFADE_SECONDS
     crossfade_on_manual_track_change: bool = DEFAULT_CROSSFADE_ON_MANUAL_TRACK_CHANGE
@@ -238,6 +244,7 @@ class AppSettings:
             "remember_last_folder": self.remember_last_folder,
             "confirm_on_exit": self.confirm_on_exit,
             "quick_player_enabled": self.quick_player_enabled,
+            "play_opened_files_alone": self.play_opened_files_alone,
             "announcements_enabled": self.announcements_enabled,
             "announcements_interrupt": self.announcements_interrupt,
             "announcements_in_window": self.announcements_in_window,
@@ -250,6 +257,11 @@ class AppSettings:
             "audio_output_device_id": (
                 self.audio_output_device_id if is_selectable_audio_output_device_id(self.audio_output_device_id) else ""
             ),
+            "monitor_output_enabled": self.monitor_output_enabled,
+            "monitor_output_device_id": (
+                self.monitor_output_device_id if wasapi_endpoint_id(self.monitor_output_device_id) else ""
+            ),
+            "broadcast_volume": self.broadcast_volume,
             "default_volume": self.default_volume,
             "crossfade_seconds": self.crossfade_seconds,
             "crossfade_on_manual_track_change": self.crossfade_on_manual_track_change,
@@ -336,6 +348,7 @@ class AppSettings:
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
+        settings.play_opened_files_alone = bool(data.get("play_opened_files_alone", settings.play_opened_files_alone))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.announcements_interrupt = bool(
             data.get("announcements_interrupt", settings.announcements_interrupt)
@@ -356,6 +369,13 @@ class AppSettings:
         raw_audio_output_device_id = normalize_audio_output_device_id(data.get("audio_output_device_id"))
         settings.audio_output_device_id = (
             raw_audio_output_device_id if is_selectable_audio_output_device_id(raw_audio_output_device_id) else ""
+        )
+        settings.monitor_output_enabled = bool(data.get("monitor_output_enabled", settings.monitor_output_enabled))
+        monitor_device_id = normalize_audio_output_device_id(data.get("monitor_output_device_id"))
+        if wasapi_endpoint_id(monitor_device_id):
+            settings.monitor_output_device_id = monitor_device_id
+        settings.broadcast_volume = _clamp_int(
+            data.get("broadcast_volume"), minimum=0, maximum=100, fallback=settings.broadcast_volume
         )
         settings.default_volume = _clamp_int(data.get("default_volume"), minimum=0, maximum=100, fallback=settings.default_volume)
         settings.crossfade_seconds = _clamp_int(

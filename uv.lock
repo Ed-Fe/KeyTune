@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 resolution-markers = [
     "sys_platform == 'win32'",
@@ -273,9 +273,11 @@ wheels = [
 [[package]]
 name = "keytune"
 source = { editable = "." }
+default-groups = ["autodj", "dev", "youtube"]
 dependencies = [
     { name = "accessible-output2" },
     { name = "markdown" },
+    { name = "pyaudiowpatch", marker = "sys_platform == 'win32'" },
     { name = "python-mpv" },
     { name = "winrt-windows-foundation", marker = "sys_platform == 'win32'" },
     { name = "winrt-windows-media", marker = "sys_platform == 'win32'" },
@@ -303,6 +305,7 @@ youtube = [
 requires-dist = [
     { name = "accessible-output2" },
     { name = "markdown" },
+    { name = "pyaudiowpatch", marker = "sys_platform == 'win32'", specifier = ">=0.2.12.9" },
     { name = "python-mpv" },
     { name = "winrt-windows-foundation", marker = "sys_platform == 'win32'" },
     { name = "winrt-windows-media", marker = "sys_platform == 'win32'" },
@@ -621,6 +624,17 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/43/85ef45e8b36c6a48546af7b266592dc32d7f67837a6514d111bced6d7d75/pooch-1.9.0.tar.gz", hash = "sha256:de46729579b9857ffd3e741987a2f6d5e0e03219892c167c6578c0091fb511ed", size = 61788, upload-time = "2026-01-30T19:15:09.649Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/2d/d4bf65e47cea8ff2c794a600c4fd1273a7902f268757c531e0ee9f18aa58/pooch-1.9.0-py3-none-any.whl", hash = "sha256:f265597baa9f760d25ceb29d0beb8186c243d6607b0f60b83ecf14078dbc703b", size = 67175, upload-time = "2026-01-30T19:15:08.36Z" },
+]
+
+[[package]]
+name = "pyaudiowpatch"
+version = "0.2.12.9"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e7/5c/c45444bc928b6c40e2c36af9f2f721bb7ad3057debffe50f34e4081ab5d8/pyaudiowpatch-0.2.12.9-cp314-cp314-win32.whl", hash = "sha256:85b011276c882c6d302425a0a5d6bb3f00be45ef80a6c362d04b8d7234f5f5de", size = 99764, upload-time = "2026-10-06T16:13:22.148Z" },
+    { url = "https://files.pythonhosted.org/packages/87/4e/ce82cdfdcc37eadb7f405f278182d6b8bb8f6a7d177c83537ddfd53aee24/pyaudiowpatch-0.2.12.9-cp314-cp314-win_amd64.whl", hash = "sha256:dc3ae964530ffe70119a1e2f5b76c661b676aa1cf1b9755d8ecafe081ee85f53", size = 101621, upload-time = "2026-10-06T16:13:23.518Z" },
+    { url = "https://files.pythonhosted.org/packages/94/8e/fe6a70dac52966fe54d34aea4373deb8ac3226e27b96641a78bf0d716ae7/pyaudiowpatch-0.2.12.9-cp315-cp315-win32.whl", hash = "sha256:f76cdf7dd0a9deb74e95f0e9f04c2af0898eb055e1d3572bed0eb75a37de03dd", size = 99789, upload-time = "2026-10-06T16:13:24.806Z" },
+    { url = "https://files.pythonhosted.org/packages/06/9e/583c053cc5580b07a2a3ff4511bce40be32167c56b948893b728b5260d31/pyaudiowpatch-0.2.12.9-cp315-cp315-win_amd64.whl", hash = "sha256:81d51b5b88c9e2124c33d0f9f22bf51392b93a4328f34e135e861e0c2c953c7f", size = 101620, upload-time = "2026-10-06T16:13:26.186Z" },
 ]
 
 [[package]]

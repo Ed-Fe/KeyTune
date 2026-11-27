@@ -1,6 +1,7 @@
 from ...constants import PROGRESS_GAUGE_RANGE, REPEAT_OFF
 from ...i18n import _
 from .live import is_live_media
+from .monitor import monitoring_enabled, track_output_volume
 from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK, ANNOUNCE_SPEED_PITCH
 
 PLAYBACK_RATE_STEP = 0.25
@@ -149,9 +150,18 @@ class PlaybackControlsMixin:
         self.player.set_time(target_time)
         self._update_time_bar()
 
-    def _change_volume(self, delta):
+    def _change_volume(self, delta, *, announce=False):
+        if monitoring_enabled(getattr(self, "settings", None)):
+            self._set_monitor_volume(self.monitor_volume + delta)
+            self._announce(
+                _("Volume da monitoração: {volume}%.").format(volume=self.monitor_volume),
+                ANNOUNCE_PLAYBACK,
+            )
+            return
         self.current_volume = max(0, min(100, self.current_volume + delta))
         self._apply_current_volume()
+        if announce:
+            self._announce_current_volume()
 
     def _format_playback_rate(self, rate):
         return f"{rate:g}x"
@@ -296,7 +306,11 @@ class PlaybackControlsMixin:
                         player.pause()
                     except Exception:
                         pass
-                self._apply_volume_to_player(active_player_key, self.current_volume)
+                volume = (
+                    track_output_volume(self)
+                    if monitoring_enabled(getattr(self, "settings", None)) else self.current_volume
+                )
+                self._apply_volume_to_player(active_player_key, volume)
                 if state:
                     state.was_playing = False
                 self._update_time_bar()
@@ -363,7 +377,10 @@ class PlaybackControlsMixin:
         )
 
     def _announce_current_volume(self):
-        self._announce(f"{self.current_volume}%.")
+        if monitoring_enabled(getattr(self, "settings", None)):
+            self._announce(self._monitor_and_broadcast_volume_status())
+        else:
+            self._announce(f"{self.current_volume}%.")
 
     def _append_sleep_timer_status(self, status_parts):
         sleep_timer_sentence = getattr(self, "_sleep_timer_status_sentence", None)
@@ -430,7 +447,11 @@ class PlaybackControlsMixin:
                     _("Item {current} de {total}.").format(current=state.current_index + 1, total=state.item_count)
                 )
 
-        status_parts.append(_("Volume {volume}%.").format(volume=self.current_volume))
+        status_parts.append(
+            self._monitor_and_broadcast_volume_status()
+            if monitoring_enabled(getattr(self, "settings", None))
+            else _("Volume {volume}%.").format(volume=self.current_volume)
+        )
         status_parts.extend(self._status_setting_parts(state))
         if current_tab and current_tab is not state:
             status_parts.append(_("Aba atual: {title}.").format(title=current_tab.title))

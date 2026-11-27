@@ -272,6 +272,8 @@ def _local_actions():
         A("next_track_alt", "playback", _("Próxima faixa (alternativo)"), "Alt+Right", "on_next_track"),
         A("volume_up", "playback", _("Aumentar volume"), "Up", "_shortcut_volume_up"),
         A("volume_down", "playback", _("Diminuir volume"), "Down", "_shortcut_volume_down"),
+        A("broadcast_volume_up", "playback", _("Aumentar volume da transmissão"), "", "_shortcut_broadcast_volume_up"),
+        A("broadcast_volume_down", "playback", _("Diminuir volume da transmissão"), "", "_shortcut_broadcast_volume_down"),
         A("toggle_shuffle", "playback", _("Embaralhar"), "E", "on_toggle_shuffle", "menu_toggle_shuffle_id"),
         A("cycle_repeat", "playback", _("Modo de repetição"), "R", "on_cycle_repeat_mode", "menu_cycle_repeat_id"),
         A(
@@ -451,6 +453,8 @@ def _global_actions():
         A("stop", "playback", _("Parar"), "Ctrl+Alt+Shift+X", "on_stop"),
         A("volume_up", "playback", _("Aumentar volume"), "Ctrl+Alt+Shift+Up", "_shortcut_volume_up_announced"),
         A("volume_down", "playback", _("Diminuir volume"), "Ctrl+Alt+Shift+Down", "_shortcut_volume_down_announced"),
+        A("broadcast_volume_up", "playback", _("Aumentar volume da transmissão"), "", "_shortcut_broadcast_volume_up"),
+        A("broadcast_volume_down", "playback", _("Diminuir volume da transmissão"), "", "_shortcut_broadcast_volume_down"),
         A("seek_forward", "navigation", _("Avançar"), "", "_shortcut_seek_forward"),
         A("seek_backward", "navigation", _("Voltar"), "", "_shortcut_seek_backward"),
         A("toggle_shuffle", "playback", _("Embaralhar"), "", "on_toggle_shuffle"),

@@ -38,6 +38,8 @@ from ..accessibility import strip_mnemonic
 from ..announcements import announcement_labels
 from ..interface_sounds.labels import sound_labels
 from ..log import get_log_dir
+from ..monitor_output import monitor_conflict_message, same_monitor_device, wasapi_endpoint_id
+from ..session import DEFAULT_MONITOR_VOLUME
 from ..widgets import (
     ROW_BORDER,
     CheckList,
@@ -57,7 +59,7 @@ AUTODJ_PROFILE_LABELS = {
 
 
 class PreferencesDialog(wx.Dialog):
-    def __init__(self, parent, settings, *, audio_output_devices=None):
+    def __init__(self, parent, settings, *, audio_output_devices=None, monitor_volume=DEFAULT_MONITOR_VOLUME):
         super().__init__(
             parent,
             title=_("Preferências"),
@@ -70,6 +72,8 @@ class PreferencesDialog(wx.Dialog):
         )
         self._audio_output_devices = list(audio_output_devices or [])
         self._audio_output_choice_ids = []
+        self._monitor_choice_ids = []
+        self._monitor_volume = monitor_volume
 
         panel = wx.Panel(self)
         root_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -177,7 +181,7 @@ class PreferencesDialog(wx.Dialog):
             describe_control(
                 self._register_assoc_button,
                 self._register_assoc_button.GetLabelText(),
-                _("Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."),
+                _("Põe o KeyTune no menu de contexto do Explorador para áudio, vídeo e playlists, para abrir o arquivo ou adicionar à playlist."),
             )
             self._register_assoc_button.Bind(wx.EVT_BUTTON, self._on_register_associations)
             self._unregister_assoc_button.Bind(wx.EVT_BUTTON, self._on_unregister_associations)
@@ -255,6 +259,14 @@ class PreferencesDialog(wx.Dialog):
             _("Playlists novas já começam em modo aleatório."),
         )
 
+        box, sizer = self._create_group(page, page_sizer, _("Arquivos abertos"))
+        self.play_opened_files_alone_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("&Tocar arquivos abertos sem pôr na playlist"),
+            _("O Enter no explorador de pastas e os arquivos abertos pelo Windows tocam na aba Fora da playlist."),
+        )
+
         box, sizer = self._create_group(page, page_sizer, _("Saída de áudio e vídeo"))
         self.audio_output_choice = self._add_choice(
             box,
@@ -270,7 +282,60 @@ class PreferencesDialog(wx.Dialog):
             _("Toca só o áudio, mesmo em vídeos e transmissões ao vivo. Ctrl+Alt+V alterna."),
         )
 
+        if sys.platform == "win32":
+            self._build_monitor_group(page, page_sizer)
         self.notebook.AddPage(page, _("Reprodução"))
+
+    def _build_monitor_group(self, page, page_sizer):
+        box, sizer = self._create_group(page, page_sizer, _("Saída de monitoração"))
+        self.monitor_enabled_checkbox = self._add_checkbox(
+            box, sizer, _("Ativar mo&nitoração"),
+            _("Copia o som da saída de áudio para um fone ou caixas em outro dispositivo."),
+        )
+        self.monitor_enabled_checkbox.Bind(wx.EVT_CHECKBOX, self._on_toggle_monitor)
+
+        self._monitor_choice_ids = [""]
+        labels = [_("Escolha um dispositivo")]
+        seen = set()
+        for device in self._audio_output_devices:
+            endpoint = wasapi_endpoint_id(device.device_id)
+            if endpoint and endpoint not in seen:
+                seen.add(endpoint)
+                self._monitor_choice_ids.append(device.device_id)
+                labels.append(device.menu_label)
+        selected_id = self._settings.monitor_output_device_id
+        if selected_id and wasapi_endpoint_id(selected_id) not in seen:
+            self._monitor_choice_ids.append(selected_id)
+            labels.append(_("Dispositivo salvo indisponível — {device}").format(device=selected_id))
+
+        self.monitor_device_choice = self._add_choice(
+            box, sizer, _("Dispositivo da mon&itoração"),
+            _("Saída do fone ou das caixas, diferente da saída de transmissão."),
+            labels,
+        )
+        self.monitor_volume_ctrl = self._add_spin(
+            box, sizer, _("Vol&ume da monitoração"),
+            _("Nível do fone ou das caixas, de 0 a 100. As setas mudam este volume."),
+            0, 100,
+        )
+        self.broadcast_volume_ctrl = self._add_spin(
+            box, sizer, _("Volume da tr&ansmissão"),
+            _("Nível da saída principal enquanto a monitoração estiver ligada, de 0 a 100."),
+            0, 100,
+        )
+
+    def _on_toggle_monitor(self, event=None):
+        enabled = self.monitor_enabled_checkbox.GetValue()
+        for control in (self.monitor_device_choice, self.monitor_volume_ctrl, self.broadcast_volume_ctrl):
+            control.Enable(enabled)
+        if event is not None:
+            message = (
+                _("Opções de monitoração disponíveis.") if enabled else _("Opções de monitoração indisponíveis.")
+            )
+            self._announce_from_parent(message)
+
+    def get_monitor_volume(self):
+        return self.monitor_volume_ctrl.GetValue() if self._monitor_choice_ids else self._monitor_volume
 
     def _build_accessibility_tab(self):
         page, page_sizer = self._create_tab_page()
@@ -961,6 +1026,7 @@ class PreferencesDialog(wx.Dialog):
         self.autodj_beats_choice.SetSelection(AUTODJ_BEAT_COUNTS.index(settings.autodj_beats))
         self.volume_step_ctrl.SetValue(settings.volume_step)
         self.seek_step_ctrl.SetValue(settings.seek_step_seconds)
+        self.play_opened_files_alone_checkbox.SetValue(settings.play_opened_files_alone)
         self.shuffle_new_playlists_checkbox.SetValue(settings.shuffle_new_playlists)
         self.youtube_music_manage_dependencies_checkbox.SetValue(settings.youtube_music_manage_dependencies)
         self.youtube_music_auto_update_dependencies_checkbox.SetValue(settings.youtube_music_auto_update_dependencies)
@@ -1013,6 +1079,17 @@ class PreferencesDialog(wx.Dialog):
         except ValueError:
             audio_output_index = 0
         self.audio_output_choice.SetSelection(audio_output_index)
+        if self._monitor_choice_ids:
+            endpoint = wasapi_endpoint_id(settings.monitor_output_device_id)
+            monitor_index = next(
+                (index for index, device_id in enumerate(self._monitor_choice_ids)
+                 if wasapi_endpoint_id(device_id) == endpoint), 0
+            )
+            self.monitor_enabled_checkbox.SetValue(settings.monitor_output_enabled)
+            self.monitor_device_choice.SetSelection(monitor_index)
+            self.monitor_volume_ctrl.SetValue(self._monitor_volume)
+            self.broadcast_volume_ctrl.SetValue(settings.broadcast_volume)
+            self._on_toggle_monitor()
 
         self.radio_country_choice.SetSelection(
             self._choice_index([code for code, _label in self._radio_country_choices], settings.radio_country_code)
@@ -1080,6 +1157,7 @@ class PreferencesDialog(wx.Dialog):
         settings.volume_step = int(self.volume_step_ctrl.GetValue())
         settings.seek_step_seconds = int(self.seek_step_ctrl.GetValue())
         settings.shuffle_new_playlists = self.shuffle_new_playlists_checkbox.GetValue()
+        settings.play_opened_files_alone = self.play_opened_files_alone_checkbox.GetValue()
         settings.repeat_mode_new_playlists = REPEAT_MODES[self.repeat_mode_choice.GetSelection()]
         settings.youtube_music_manage_dependencies = self.youtube_music_manage_dependencies_checkbox.GetValue()
         settings.youtube_music_auto_update_dependencies = self.youtube_music_auto_update_dependencies_checkbox.GetValue()
@@ -1118,6 +1196,11 @@ class PreferencesDialog(wx.Dialog):
             settings.audio_output_device_id = self._audio_output_choice_ids[selected_audio_output_index]
         else:
             settings.audio_output_device_id = ""
+        if self._monitor_choice_ids:
+            settings.monitor_output_enabled = self.monitor_enabled_checkbox.GetValue()
+            selection = self.monitor_device_choice.GetSelection()
+            settings.monitor_output_device_id = self._monitor_choice_ids[max(0, selection)]
+            settings.broadcast_volume = self.broadcast_volume_ctrl.GetValue()
 
         if not settings.remember_last_folder:
             settings.last_open_dir = ""
@@ -1156,6 +1239,20 @@ class PreferencesDialog(wx.Dialog):
 
     def _on_save_preferences(self, _event):
         proposed_settings = self.get_settings()
+        if self._monitor_choice_ids and proposed_settings.monitor_output_enabled:
+            monitor_id = proposed_settings.monitor_output_device_id
+            source_id = proposed_settings.audio_output_device_id
+            error = ""
+            if not monitor_id:
+                error = _("Escolha um dispositivo para a monitoração.")
+            elif source_id and not wasapi_endpoint_id(source_id):
+                error = _("A monitoração precisa de uma saída de áudio WASAPI para a transmissão.")
+            elif same_monitor_device(source_id, monitor_id):
+                error = monitor_conflict_message()
+            if error:
+                self._announce_from_parent(error)
+                wx.MessageBox(error, _("Saída de monitoração"), wx.OK | wx.ICON_ERROR, self)
+                return
         components = []
         youtube_newly_enabled = (
             proposed_settings.youtube_music_manage_dependencies
@@ -1199,8 +1296,28 @@ class PreferencesDialog(wx.Dialog):
                 self._autodj_optional_resources_confirmed = True
         self.EndModal(wx.ID_OK)
 
+    def _confirm_portable_registry_change(self):
+        """No modo portátil, avisa que a associação grava no Windows deste computador."""
+        from ..portable import is_portable
+
+        if not is_portable():
+            return True
+        response = wx.MessageBox(
+            _(
+                "No modo portátil, esta opção grava no Windows deste computador, "
+                "não só na pasta do KeyTune. Deseja continuar?"
+            ),
+            _("Associação de arquivos"),
+            wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
+            self,
+        )
+        return response == wx.YES
+
     def _on_register_associations(self, _event):
         from ..file_associations import register_file_associations
+
+        if not self._confirm_portable_registry_change():
+            return
 
         if register_file_associations():
             response = wx.MessageBox(
@@ -1236,6 +1353,9 @@ class PreferencesDialog(wx.Dialog):
 
     def _on_unregister_associations(self, _event):
         from ..file_associations import unregister_file_associations
+
+        if not self._confirm_portable_registry_change():
+            return
 
         if unregister_file_associations():
             wx.MessageBox(

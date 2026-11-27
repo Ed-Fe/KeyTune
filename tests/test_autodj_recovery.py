@@ -33,7 +33,9 @@ class AutoDJRecoveryTests(unittest.TestCase):
         state = PlaylistState(title="AutoDJ")
         state.set_items(["current.mp3"])
         state.autodj_session = True
-        state.autodj_remaining_items = [f"bad{i}.mp3" for i in range(6)] + ["good.mp3"]
+        state.autodj_remaining_items = [f"bad{i}.mp3" for i in range(6)] + ["good.mp3"] + [
+            f"bad{i}.mp3" for i in range(7, 400)
+        ]
         frame = FrameAutoDJMixin()
         frame.settings = SimpleNamespace(autodj_enabled=True)
         frame.playlists = [state]
@@ -61,7 +63,7 @@ class AutoDJRecoveryTests(unittest.TestCase):
         frame._queue_autodj_session_fill = finish
         self.assertTrue(frame._maybe_fill_autodj_session(state))
         self.assertTrue(done.wait(3))
-        self.assertIn("good.mp3", attempted)
+        self.assertEqual(attempted, ["current.mp3", *state.autodj_remaining_items[:8]])
         self.assertEqual([selection.path for selection in results[0][2]], ["good.mp3"])
 
     def test_session_failure_keeps_playback_moving_with_the_next_normal_track(self):

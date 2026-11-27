@@ -40,7 +40,7 @@ Entry flow: `main.py` (bootstraps the MPV runtime; forwards CLI-opened paths to 
 
 ## Conventions
 
-- The updater contract spans `constants.py`, `installer/keytune.iss`, `.github/workflows/release-windows.yml`, and the release assets `KeyTune-Setup.exe` + `.sha256` — keep them in sync. Updates are installer-driven: the app downloads the setup and runs it `/VERYSILENT`; the Inno `[Run]` step relaunches; the installer also registers default-app `Capabilities`/`RegisteredApplications` (HKA).
+- The updater contract spans `constants.py`, `installer/keytune.iss`, `.github/workflows/release-windows.yml`, and the release assets `KeyTune-Setup.exe` + `.sha256` — keep them in sync. Updates are installer-driven: the app downloads the setup and runs it `/VERYSILENT`; the Inno `[Run]` step relaunches; the installer also registers default-app `Capabilities`/`RegisteredApplications` (HKA). Portable mode (`portable.ini` beside the exe) instead downloads `KeyTune-Portable.zip` + `.sha256` and runs the bundled `KeyTuneUpdater.exe` from a temp copy; see `instructions/update-release.instructions.md`.
 - The changelog is one file per version in `docs/changelog/` (`X.Y.Z.md` in Portuguese, plus `.en.md`/`.es.md`; `unreleased*.md` for the next one). The release publishes it as the release body and `release-notes.<lang>.md` assets, and the update dialog shows the active language; **Ajuda > Histórico de mudanças** reads the bundled files. Keep all three languages in step.
 - Preserve the `MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER`/`_NAME` env overrides so updater testing can target a separate repo.
 - Feature highlights: `README.md` (English) and `README.pt-BR.md`; full feature list and shortcut inventory: `docs/manual.md`.

@@ -29,10 +29,24 @@ Here you will find the app's features and step-by-step instructions for the most
 ## Getting started
 
 1. Download the latest `KeyTune-Setup.exe` from the [releases](https://github.com/ed-fe/KeyTune/releases) page.
-2. Run the installer and follow the steps. On the additional tasks page you can create a desktop shortcut and choose which audio, video and playlist formats to associate with KeyTune. All of this is optional and unchecked by default. Associating a format adds KeyTune to the *Open with* menu; for it to open those files on its own, you still need to set it as the default in the Windows settings.
+2. Run the installer and follow the steps. On the additional tasks page you can create a desktop shortcut and choose which audio, video and playlist formats to associate with KeyTune. All of this is optional and unchecked by default. Associating a format makes **Open with KeyTune** available in File Explorer. For associated audio and video formats, **Add to KeyTune playlist** appears even when another player is the default. For it to open those files on its own, you still need to set it as the default in the Windows settings.
 3. From then on, when a new version is available, KeyTune shows what's new and asks for confirmation before downloading and installing (see [Updates](#updates)).
 
 KeyTune plays media through the MPV runtime, and the installer already includes it. If the player opens but plays nothing, see [Troubleshooting](#troubleshooting).
+
+To run it without an installer, see [Portable version](#portable-version).
+
+## Portable version
+
+`KeyTune-Portable.zip` is KeyTune without an installer. Extract the zip to a folder or a USB drive and open `KeyTune.exe`. The `portable.ini` file in that same folder, even if empty, turns portable mode on. Without it, KeyTune stores its data in Windows, like the installed version.
+
+Settings, the session, the library, logs, plugins, the YouTube account and downloaded resources stay in the `data` folder, next to the executable. Deleting `data` starts over. If you take the whole folder to another computer, that data goes with it.
+
+If the portable folder is read-only, KeyTune warns you on startup and stores its data on this computer in `%APPDATA%\KeyTune`. Each portable folder opens in its own instance, even while the installed version is running.
+
+To update, use **Help > Check for updates**. KeyTune checks that `KeyTune-Portable.zip` is intact and contains the executable before closing. `KeyTuneUpdater.exe` replaces the program files, preserves `portable.ini` and `data`, and reopens KeyTune. If replacement fails, the updater tries to restore the previous files and reopen the old version. If a file cannot be restored, the updater shows where it kept the backup in `data`. The log is at `data/portable-update.log`.
+
+Portable mode does not register KeyTune as the default player on its own. If you ask for that in **Settings > Preferences > General > File association**, with **Register as default player** or **Unregister associations**, KeyTune warns that the option writes to this computer's Windows. File associations registered by the portable copy are separate from those of the installed version. Global shortcuts and the Windows media controls keep working.
 
 ## Interface
 
@@ -50,7 +64,7 @@ In Preferences and in the dialogs, each field's label has an underlined letter: 
 
 ## How to open media
 
-There are three ways to put media into KeyTune: open, paste and use the folder explorer. All three work the same way: what comes in goes to the **current playlist** and starts playing. With `Shift`, it goes in **without playing**, at the end of the list, and whatever was playing keeps playing.
+There are three ways to put media into KeyTune: open, paste and use the folder explorer. All three work the same way: what comes in goes to the **current playlist** and starts playing. The exception is `Enter` on a file in the folder explorer, which plays the file without adding it to the playlist, in the **Outside the playlist** tab (see [Folder explorer](#folder-explorer)). The same goes for a file opened from Windows File Explorer. With `Shift`, it goes in **without playing**, at the end of the list, and whatever was playing keeps playing.
 
 | To | Playing | Without playing |
 | --- | --- | --- |
@@ -80,6 +94,8 @@ With KeyTune set as the default player, `Enter` on an audio file in File Explore
 
 `Enter` on another file, with the quick player open, replaces what is playing with the new file, in the same window. Focus stays in File Explorer, and KeyTune announces nothing: you hear the new file start.
 
+In the context menu of an associated audio or video file (`Shift+F10` in File Explorer), choose **Add to KeyTune playlist**. The option appears even when another player is the default. With KeyTune open, the selected files go to the end of the playlist, the same way as `Ctrl+Shift+V`: the music keeps playing, the tab does not change and the window does not come to the front. You can select several at once, and the screen reader says how many went in. If KeyTune is closed, the files open as they do with **Open with KeyTune**.
+
 | Action | Shortcut |
 | --- | --- |
 | Play or pause | `Space` |
@@ -98,7 +114,7 @@ The keys and the announcements are the same as in the main window's player: chan
 
 The quick player saves nothing: the file does not enter the recent files, the history or the session, and a volume changed in it lasts only until you close it or continue in the full KeyTune, which keeps it. It starts with the volume of the last session, or with the default volume if the session is not restored.
 
-These open straight in the main window, as before: `.m3u` and `.m3u8` playlists, videos when video output is on, and any file when the full KeyTune is already open (it goes to the current playlist). To always use the main window, uncheck **Use the quick player when opening files from Windows** in `Ctrl+,` > **General**.
+These open straight in the main window, as before: `.m3u` and `.m3u8` playlists, videos when video output is on, and any file when the full KeyTune is already open. With the full KeyTune open, the file plays in the **Outside the playlist** tab, the same one used by `Enter` in the folder explorer: it is replaced on each file opened, playback stops when the file ends and your playlists stay as they are. To gather files in a playlist, use **Add to KeyTune playlist**. For the file to go into the current playlist, as before, uncheck **Play opened files without adding them to the playlist** in `Ctrl+,` > **Playback**. To always use the main window, uncheck **Use the quick player when opening files from Windows** in `Ctrl+,` > **General**.
 
 ## Playback
 
@@ -111,7 +127,8 @@ These open straight in the main window, as before: `.m3u` and `.m3u8` playlists,
 | `Left arrow` / `Right arrow` | Rewind or fast-forward the media (the step is in **Preferences > Playback**) |
 | `Shift+Left arrow` / `Shift+Right arrow` | Rewind or fast-forward 1 minute |
 | `Home` / `End` | Go to the start or the end of the media |
-| `Up arrow` / `Down arrow` | Raise or lower the volume |
+| `Up arrow` / `Down arrow` | Raise or lower the monitoring volume when enabled, or the playback volume |
+| Unassigned | **Raise broadcast volume** / **Lower broadcast volume**, while monitoring is enabled |
 | `Ctrl+.` | Stop |
 | `Ctrl+PageUp` / `Ctrl+PageDown` | Previous or next track |
 | `Alt+Left arrow` / `Alt+Right arrow` | The same, as an alternative |
@@ -135,6 +152,21 @@ These open straight in the main window, as before: `.m3u` and `.m3u8` playlists,
 The shortcuts for YouTube Music, download and convert are in [KeyTube](#keytube-youtube-and-youtube-music), [Download from the internet](#download-from-the-internet) and [Convert media](#convert-media).
 
 `Ctrl+W` closes the active tab. `Ctrl+Shift+W` closes, or unloads, only the current media.
+
+### Listen on headphones while broadcasting
+
+On Windows, KeyTune can copy the sound from the main output to another device. The copy includes audio from other apps that use the same Windows output and reaches the headphones with a small delay. The feature is off by default and works in the main window.
+
+1. Press `Ctrl+,` (or open **Settings > Preferences**) and go to the **Playback** tab.
+2. Under **Audio device**, choose the sound card that feeds RadioBOSS.
+3. In the **Monitoring output** group, check **Enable monitoring**.
+4. Under **Monitoring device**, choose headphones or speakers on another Windows output.
+5. Adjust **Monitoring volume** and **Broadcast volume**. The broadcast volume starts at 100%.
+6. Press **Save**.
+
+The volume keys, including the global shortcuts `Ctrl+Alt+Shift+Up arrow` and `Ctrl+Alt+Shift+Down arrow`, now adjust the headphones. Monitoring notices follow the **Playback** category in **Notices that speak**. `V` and `S` speak both volume levels. To adjust the level feeding RadioBOSS from the keyboard, assign keys to **Raise broadcast volume** and **Lower broadcast volume** in [Customizing the keyboard](#customizing-the-keyboard).
+
+If the headphones disconnect, KeyTune alerts you and the broadcast continues. To return the arrow keys to the main output, uncheck **Enable monitoring** and save. KeyTune announces the volume restored to that output.
 
 ### Playback queue
 
@@ -220,7 +252,8 @@ It starts at **This PC**, with the Music, Videos, Downloads, Desktop and Documen
 
 In addition to the keys in [How lists work](#how-lists-work):
 
-- `Enter` goes into the folder or plays the file, adding it to the current playlist. With `Shift+Enter`, all the media in a folder come in, including those in subfolders.
+- `Enter` goes into the folder or plays the file. The file plays in the **Outside the playlist** tab, without going into the current playlist: each `Enter` replaces that tab with the new file, so when it ends playback stops instead of going on through the ones you heard before. The visible tab and the focus stay in the explorer. With video output on, a video goes into the current playlist, as before, so the picture shows. `Ctrl+Shift+W` closes the file playing in **Outside the playlist** without touching the visible playlist. If you change the **Outside the playlist** tab (add, remove or load something else into it), it becomes a regular playlist and the next `Enter` creates another one.
+- `Shift+Enter` puts the file, or all the media in a folder, including those in subfolders, at the end of the current playlist, without playing. To build a playlist from the explorer, use `Shift+Enter`. If you prefer `Enter` to add the file to the current playlist and play it, as before, uncheck **Play opened files without adding them to the playlist** in `Ctrl+,` > **Playback**.
 - `Ctrl+Shift+F` adds the selection to the queue, and `Ctrl+Shift+K` converts the selected files (see [Convert media](#convert-media)).
 - `Backspace` goes up to the parent folder.
 - `Ctrl+C` copies the selected files or folders, to paste into a playlist or into Windows Explorer. `Ctrl+Shift+C` copies the paths as text.
@@ -801,7 +834,7 @@ Preferences open with `Ctrl+,` and are divided into eight tabs: **General**, **P
 
 The **System tray** section has **When minimizing, hide to the system tray** and **When closing, hide to the system tray**; see [System tray](#system-tray).
 
-The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the *Open with* menu for audio, video and playlist formats. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration.
+The **File association** section (Windows) has the **Register as default player** button, which adds KeyTune to the File Explorer context menu for audio, video and playlist formats. **Open with KeyTune** replaces what is playing. **Add to KeyTune playlist** appends the selected audio and video files without interrupting the music, even when another player is the default. After registering, set the app as the default in the Windows settings if you want those files to open directly in it. **Unregister associations** undoes the registration, including both menu items.
 
 The **Log recording** section helps investigate problems. **Record diagnostic logs** writes a log file, in English, to the data folder, useful to attach to a bug report. **Detail level** goes from *Errors only*, the quietest, to *Debug*, which produces large files. **Open log folder** takes you to them.
 
@@ -812,7 +845,7 @@ The **Log recording** section helps investigate problems. **Record diagnostic lo
 - **Audio device**: the sound output. *System default* follows the main Windows device.
 - **Disable video output (play audio only)**: plays only the audio, including from video files and live broadcasts. Avoids external video windows. `Ctrl+Alt+V` toggles it at any time.
 
-The **default volume**, the **volume** and **seek** steps (how much each arrow changes), the **default repeat** and **shuffle** for new playlists complete the tab and also do what the name says.
+The **default volume**, the **volume** and **seek** steps (how much each arrow changes), the **default repeat** and **shuffle** for new playlists also do what the name says. In the **Opened files** group, **Play opened files without adding them to the playlist** comes checked and decides whether `Enter` on a file in the folder explorer and a file opened from Windows play in a separate tab, **Outside the playlist**, or go into the current playlist (see [Folder explorer](#folder-explorer) and [Listening to a file straight from Windows File Explorer](#listening-to-a-file-straight-from-windows-file-explorer)).
 
 With AutoDJ installed, there are two more options: **AutoDJ profile** (*Smooth* makes a long, balanced mix; *Party* concentrates the bass swap in the middle and raises the energy gradually; *Electronic* uses sharper cuts and a faster swap, designed for strong beats) and **AutoDJ transition length** (8, 16 or 32 beats, independent of the regular crossfade).
 
@@ -820,7 +853,7 @@ With AutoDJ installed, there are two more options: **AutoDJ profile** (*Smooth* 
 
 The first option is **Enable accessibility announcements**. It is the master switch: when off, the player says nothing by itself; when on, your choice for each notice in the **Notices that speak** list applies. See [Accessibility features](#accessibility-features).
 
-**Interrupt the screen reader speech** comes off: the announcement waits for the reader to finish what it is saying instead of cutting it off. When on, the announcement speaks at once, over it. **Speak event notices while KeyTune is active** decides whether the notices that arrive by themselves speak while you are in the KeyTune window; when off, they only speak with KeyTune in the background (the sounds keep playing). The **Notices that speak** list turns each kind of notice on or off separately: playback (pause, resume, start and end of the file, audio device); track change and SponsorBlock (the track that started and the skipped or muted segments); speed and pitch when they change; modes turned on or off (shuffle, repeat, equalizer, AutoDJ); navigation (tabs, start and end of lists, opening items); progress (loading, searching, starting); confirmations (copied, saved, added, removed); errors and unavailable actions; new live chat messages; message sent or chat ended; new YouTube notifications; finished download; and sleep timer warnings. Only the last five, which arrive by themselves, follow the option to speak while KeyTune is active. All of them come on. What you ask for with `T` (time), `V` (volume) and `S` (status), and the volume when you raise or lower it, does not depend on the list: it always speaks as long as the master switch is on. The notices that dialogs give about themselves (for example, when you turn on an option in Preferences) follow only the master switch.
+**Interrupt the screen reader speech** comes off: the announcement waits for the reader to finish what it is saying instead of cutting it off. When on, the announcement speaks at once, over it. **Speak event notices while KeyTune is active** decides whether the notices that arrive by themselves speak while you are in the KeyTune window; when off, they only speak with KeyTune in the background (the sounds keep playing). The **Notices that speak** list turns each kind of notice on or off separately: playback (pause, resume, start and end of the file, audio device); track change and SponsorBlock (the track that started and the skipped or muted segments); speed and pitch when they change; modes turned on or off (shuffle, repeat, equalizer, AutoDJ); navigation (tabs, start and end of lists, opening items); progress (loading, searching, starting); confirmations (copied, saved, added, removed); errors and unavailable actions; new live chat messages; message sent or chat ended; new YouTube notifications; finished download; and sleep timer warnings. Only the last five, which arrive by themselves, follow the option to speak while KeyTune is active. All of them come on. Announcements requested with `T` (time), `V` (volume) and `S` (status) follow only the master switch. When monitoring is enabled, volume changes follow the **Playback** category. The notices that dialogs give about themselves (for example, when you turn on an option in Preferences) follow only the master switch.
 
 The **Alert sounds** group has **Play alert sounds**, which turns all of them on or off at once, **Alert sounds volume** and the **Sounds that play** list, with one box per sound: `Space` turns the item's sound on or off and, when turned on, it plays so you know which one it is. Below the list, **Listen to the sound** plays the selected item's, **Choose a file for the sound...** puts an audio file from your computer in its place and **Back to the original sound** undoes the change. The chosen file is copied into KeyTune's data and cut at 5 seconds; with FFmpeg installed any audio format works, without it only 16-bit WAV. They are short sounds, each for one event:
 
@@ -916,6 +949,8 @@ On startup, KeyTune can check for updates on its own. To check at any time, use 
 
 When there is a new version, the app shows the release notes, the file name and the download size before asking for confirmation. If you accept, it downloads the package, shows the progress and asks for permission to install when the file is ready. The notes come in the interface language.
 
+On the portable version, the downloaded file is `KeyTune-Portable.zip`. `KeyTuneUpdater.exe` replaces the files in the folder after the player closes and does not use the installer. If file replacement fails, the updater tries to restore and reopen the previous version. See [Portable version](#portable-version).
+
 To read what changed in each version, including earlier ones, use **Help > Change history**: choose the version in the list and read the text just below it.
 
 ## Troubleshooting
@@ -928,7 +963,7 @@ If the player cannot start when KeyTune opens, the same diagnostics run by thems
 
 **The player can't find the MPV runtime.** Check that it is in one of these places: an `mpv/` folder next to the executable, `MPV_HOME`, `MPV_DLL_DIR`, the cache saved from the previous run or a compatible Chocolatey installation.
 
-**File association doesn't work as expected.** There are two separate steps. First, KeyTune must be registered as an option (during installation, or later in **Settings > Preferences > General > Register as default player**). Second, it must be chosen as the default app for those formats in the Windows default apps settings. Registering alone doesn't make KeyTune the default.
+**File association doesn't work as expected.** There are two separate steps. First, KeyTune must be registered as an option (during installation, or later in **Settings > Preferences > General > Register as default player**). Second, it must be chosen as the default app for those formats in the Windows default apps settings. Registering alone doesn't make KeyTune the default. The same registration adds **Add to KeyTune playlist** to the context menu. If that item is missing, register again.
 
 **KeyTube doesn't load or shows dependency errors.** Open `Ctrl+,` > **Additional resources** and confirm that **Enable the YouTube and YouTube Music integration** is checked. The initial download may take a few minutes and requires internet. If the dependencies are already installed but the search or loading fails, use the nightly version of `yt-dlp`, in the same preferences: it usually gets fixes before the stable channel.
 

@@ -15,6 +15,7 @@ from ..update import (
     check_for_update,
     format_byte_count,
     launch_installer_update,
+    launch_portable_update,
     take_failed_update,
     unsupported_install_message,
 )
@@ -33,11 +34,17 @@ class FrameUpdateMixin:
         wx.CallLater(STARTUP_UPDATE_CHECK_DELAY_MS, self._start_update_check, False)
 
     def _warn_failed_update(self, failed_update):
+        from ..portable import is_portable
+
         message = _(
             "A última atualização, para a versão {target}, não foi concluída. "
             "Você continua na versão {current}. Tente de novo em Ajuda > Verificar atualizações. "
             "Se o problema continuar, envie o arquivo de log ao desenvolvedor."
         ).format(target=failed_update.target_version, current=failed_update.current_version)
+        if is_portable():
+            message = message + "\n\n" + _(
+                "O registro desta tentativa ficou em data/portable-update.log, ao lado do programa."
+            )
         self._announce(message, ANNOUNCE_ERRORS)
         wx.MessageBox(message, _("Atualizações"), wx.OK | wx.ICON_WARNING, self)
 
@@ -109,12 +116,27 @@ class FrameUpdateMixin:
         self._prompt_for_update(update_info, manual=manual)
 
     def _prompt_for_update(self, update_info, *, manual):
+        from ..portable import is_portable
+
         install_message = ""
-        if not can_self_update():
+        confirm_label = ""
+        if is_portable() and can_self_update():
+            install_message = _(
+                "Esta é a versão portátil. A atualização troca os arquivos desta pasta, "
+                "mantém o portable.ini e a pasta data, e abre o KeyTune de novo. "
+                "O instalador do Windows não é usado."
+            )
+            confirm_label = _("&Baixar e atualizar")
+        elif not can_self_update():
             install_message = unsupported_install_message()
 
         interface_sounds.play_for(self, interface_sounds.SOUND_UPDATE_AVAILABLE)
-        with UpdateAvailableDialog(self, update_info, install_message=install_message) as dialog:
+        with UpdateAvailableDialog(
+            self,
+            update_info,
+            install_message=install_message,
+            confirm_label=confirm_label,
+        ) as dialog:
             if dialog.ShowModal() != wx.ID_OK:
                 return
 
@@ -146,19 +168,33 @@ class FrameUpdateMixin:
                 self._announce(_("Download da atualização cancelado."), ANNOUNCE_ERRORS)
             return
 
+        from ..portable import is_portable
+
+        portable = is_portable()
         try:
             self._save_settings()
             self._save_session()
-            launch_installer_update(downloaded_file_path, target_version=update_info.latest_version)
+            if portable:
+                launch_portable_update(downloaded_file_path, target_version=update_info.latest_version)
+            else:
+                launch_installer_update(downloaded_file_path, target_version=update_info.latest_version)
         except UpdateError as exc:
             wx.MessageBox(str(exc), _("Atualizações"), wx.OK | wx.ICON_ERROR, self)
             return
 
         self._update_restart_pending = True
-        self._announce(
-            _("Atualização baixada. O player será reiniciado para concluir a instalação."),
-            ANNOUNCE_CONFIRMATIONS,
-        )
+        if portable:
+            self._announce(
+                _("Atualização baixada. O player será fechado para trocar os arquivos e aberto de novo."),
+                ANNOUNCE_CONFIRMATIONS,
+            )
+            status_message = _("Atualização baixada. Fechando para atualizar...")
+        else:
+            self._announce(
+                _("Atualização baixada. O player será reiniciado para concluir a instalação."),
+                ANNOUNCE_CONFIRMATIONS,
+            )
+            status_message = _("Atualização baixada. Reiniciando para instalar...")
         if hasattr(self, "_set_status_message"):
-            self._set_status_message(_("Atualização baixada. Reiniciando para instalar..."), auto_clear_ms=0)
+            self._set_status_message(status_message, auto_clear_ms=0)
         self.Close()

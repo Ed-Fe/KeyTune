@@ -35,6 +35,14 @@ class MainArgumentFilteringTests(unittest.TestCase):
             [r"C:\midia\track.mp3", r"C:\playlists\favoritas.m3u8"],
         )
 
+    def test_collect_initial_paths_ignores_the_enqueue_flag(self):
+        initial_paths = main._collect_initial_paths(
+            ["--enqueue", r"C:\midia\a.mp3", "--enqueue", r"C:\midia\b.mp3"],
+            launch_targets=[r"D:\git\Media-Player\dist\KeyTune.exe", r"D:\git\Media-Player\src\main.py"],
+        )
+
+        self.assertEqual(initial_paths, [r"C:\midia\a.mp3", r"C:\midia\b.mp3"])
+
     def test_development_instance_uses_a_separate_pipe(self):
         self.assertEqual(build_pipe_address(dev_mode=False), r"\\.\pipe\KeyTune_SingleInstance")
         self.assertEqual(build_pipe_address(dev_mode=True), r"\\.\pipe\KeyTune_SingleInstance_Dev")

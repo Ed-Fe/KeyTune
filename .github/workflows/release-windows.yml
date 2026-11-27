@@ -201,6 +201,23 @@ jobs:
             }
           }
 
+      - name: Build portable updater (PyInstaller)
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          # Fora de dist\KeyTune: o instalador não leva o atualizador da versão portátil.
+          pyinstaller --noconfirm --onefile --windowed --name KeyTuneUpdater --distpath build\portable-updater --workpath build\portable-updater-work src/updater_main.py
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao gerar o atualizador da versão portátil." }
+          if (-not (Test-Path "build\portable-updater\KeyTuneUpdater.exe")) { throw "KeyTuneUpdater.exe não foi gerado." }
+
+      - name: Create portable archive
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          & scripts\package_portable_zip.ps1 -SourceDir dist\KeyTune -DestinationZip dist\KeyTune-Portable.zip -ExtraFile build\portable-updater\KeyTuneUpdater.exe
+          if (-not (Test-Path "dist\KeyTune-Portable.zip")) { throw "Falha ao gerar o zip portátil." }
+          if (-not (Test-Path "dist\KeyTune-Portable.zip.sha256")) { throw "Falha ao gerar o checksum do zip portátil." }
+
       - name: Derive installer version
         id: version
         shell: powershell
@@ -234,6 +251,8 @@ jobs:
           path: |
             dist\KeyTune-Setup.exe
             dist\KeyTune-Setup.exe.sha256
+            dist\KeyTune-Portable.zip
+            dist\KeyTune-Portable.zip.sha256
             dist\optional-resources\*.zip
             dist\optional-resources\*.sha256
 
@@ -279,6 +298,8 @@ jobs:
           files: |
             artifacts/KeyTune-Setup.exe
             artifacts/KeyTune-Setup.exe.sha256
+            artifacts/KeyTune-Portable.zip
+            artifacts/KeyTune-Portable.zip.sha256
             artifacts/optional-resources/*.zip
             artifacts/optional-resources/*.sha256
             artifacts/release-notes.*.md

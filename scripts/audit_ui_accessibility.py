@@ -171,7 +171,9 @@ def audit_window(screen, root, verbose=False):
             elif isinstance(child, wx.StaticBox):
                 boxes.append(child)
                 walk(child, child.GetLabel())
-            elif isinstance(child, INPUT_CONTROLS):
+            elif isinstance(child, INPUT_CONTROLS) or (
+                screen == "PortableUpdateDialog" and isinstance(child, wx.Gauge)
+            ):
                 check(child, group)
             else:
                 walk(child, group)
@@ -259,6 +261,7 @@ def _update_info():
 
 def _build_screens():
     """Map each screen class name to a factory taking the parent window."""
+    from updater_main import _ProgressDialog
     from player.about.dialog import AboutDialog
     from player.changelog.dialog import ChangelogDialog
     from player.convert import dialog as convert_dialog
@@ -343,6 +346,7 @@ def _build_screens():
         "PermissionDialog": lambda parent: PermissionDialog(parent, _manifest()),
         "PlaybackHistoryDialog": lambda parent: PlaybackHistoryDialog(parent, _empty),
         "PlaylistBrowserPanel": lambda parent: PlaylistBrowserPanel(parent, _noop, _noop),
+        "PortableUpdateDialog": lambda parent: _ProgressDialog(parent).dialog,
         "PluginManagerDialog": lambda parent: PluginManagerDialog(parent, plugin_service),
         "PreferencesDialog": lambda parent: PreferencesDialog(parent, AppSettings()),
         "QuickPlayerPanel": lambda parent: QuickPlayerPanel(parent),

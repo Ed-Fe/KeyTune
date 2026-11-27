@@ -271,6 +271,12 @@ def install_or_update_yt_dlp_executable(
                 return version_text
 
         release_info = _fetch_latest_release(include_prerelease=include_prerelease)
+        if target_path.is_file():
+            # Atualização forçada (automática ou pedida) só baixa se a release
+            # for outra; senão o yt-dlp seria baixado de novo a cada verificação.
+            installed_version = get_yt_dlp_version(executable_path=target_path)
+            if installed_version and _same_yt_dlp_version(installed_version, release_info.version):
+                return installed_version
         download_dir = Path(tempfile.mkdtemp(prefix="keytune-ytdlp-"))
         download_path = download_dir / YTDLP_RELEASE_ASSET_NAME
         checksum_path = download_dir / YTDLP_RELEASE_CHECKSUM_ASSET_NAME
@@ -637,6 +643,19 @@ def _parse_yt_dlp_json(stdout_text: str) -> dict | list | None:
             return parsed_data
 
     return None
+
+
+def _normalize_yt_dlp_version(version_text: str) -> str:
+    normalized = str(version_text or "").strip().casefold()
+    # A tag pode vir como "nightly@2026.10.10.232412" ou "v2026.10.10".
+    normalized = normalized.rsplit("@", 1)[-1]
+    return normalized[1:] if normalized.startswith("v") else normalized
+
+
+def _same_yt_dlp_version(installed_version: str, release_version: str) -> bool:
+    installed = _normalize_yt_dlp_version(installed_version)
+    release = _normalize_yt_dlp_version(release_version)
+    return bool(installed) and installed == release
 
 
 def _fetch_latest_release(*, include_prerelease: bool) -> YtDlpReleaseInfo:

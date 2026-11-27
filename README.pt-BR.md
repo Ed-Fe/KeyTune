@@ -64,6 +64,8 @@ Arquivos do computador, YouTube e YouTube Music, rádios online, downloads, letr
 2. Execute. Dá para instalar só para o seu usuário, sem precisar de administrador, ou para todos os usuários do computador.
 3. Na página de tarefas adicionais, você pode criar um atalho na área de trabalho e associar formatos de áudio, vídeo e playlist ao KeyTune. Tudo isso é opcional.
 
+Sem instalador, baixe o **[KeyTune-Portable.zip](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Portable.zip)** da mesma página, extraia numa pasta ou num pendrive e abra o `KeyTune.exe`. As configurações e os downloads ficam na pasta `data`, ao lado do programa. O arquivo `portable.ini` nessa pasta liga esse modo. Veja [Versão portátil](docs/manual.md#versao-portatil) no manual.
+
 O KeyTune roda no Windows de 64 bits. O instalador já traz o MPV, então ele toca de cara. A integração com o YouTube e o AutoDJ são downloads opcionais: o KeyTune mostra o que vai instalar e pergunta antes de baixar qualquer coisa (**Configurações > Preferências > Recursos adicionais**).
 
 O KeyTune se atualiza sozinho. Quando sai uma versão nova, ele mostra o que mudou, no seu idioma, e pergunta antes de baixar e instalar.

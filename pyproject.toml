@@ -17,6 +17,7 @@ dependencies = [
     "winrt-Windows.Media; sys_platform == 'win32'",
     "winrt-Windows.Media.Playback; sys_platform == 'win32'",
     "winrt-Windows.Foundation; sys_platform == 'win32'",
+    "pyaudiowpatch>=0.2.12.9 ; sys_platform == 'win32'",
 ]
 
 [project.scripts]

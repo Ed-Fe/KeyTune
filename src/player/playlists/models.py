@@ -63,6 +63,8 @@ class PlaylistState:
     shorts_session: bool = False
     shorts_loading: bool = False
     shorts_advance_when_loaded: bool = False
+    # A aba Fora da playlist (Enter do explorador, arquivo aberto pelo Windows): trocada a cada vez.
+    standalone_tab: bool = False
     autodj_source_title: str | None = None
     autodj_source_items: list[str] = field(default_factory=list)
     autodj_source_labels: list[str] = field(default_factory=list)
@@ -155,6 +157,9 @@ class PlaylistState:
         return normalized_labels
 
     def _apply_prepared_items(self, items, item_index_map, browser_item_labels):
+        # Qualquer outra mudança nos itens faz da aba uma playlist comum: o
+        # próximo arquivo aberto não pode apagar o que o usuário pôs ali.
+        self.standalone_tab = False
         self.items = items if isinstance(items, list) else list(items)
         self.item_index_map = dict(item_index_map or {})
         self.browser_item_labels = self._normalize_browser_item_labels(browser_item_labels)
@@ -682,6 +687,7 @@ class PlaylistState:
             "autodj_remaining_items": list(self.autodj_remaining_items),
             "autodj_history": list(self.autodj_history),
             "autodj_preparation_paused": self.autodj_preparation_paused,
+            "standalone_tab": self.standalone_tab,
         }
 
     @classmethod
@@ -701,6 +707,7 @@ class PlaylistState:
         state.refresh_browser_item_labels()
         state.source_path = data.get("source_path")
         state.shuffle_enabled = bool(data.get("shuffle_enabled", False))
+        state.standalone_tab = bool(data.get("standalone_tab", False))
         tab_type = data.get("tab_type", TAB_TYPE_PLAYLIST)
         state.tab_type = tab_type if tab_type in {TAB_TYPE_PLAYLIST, TAB_TYPE_FOLDER} else TAB_TYPE_PLAYLIST
         state.folder_root_path = data.get("folder_root_path") or None

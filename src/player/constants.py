@@ -38,6 +38,9 @@ DEFAULT_QUICK_PLAYER_ENABLED = True
 DEFAULT_ANNOUNCEMENTS_ENABLED = True
 DEFAULT_DISABLE_VIDEO_OUTPUT = True
 DEFAULT_NEW_PLAYLIST_SHUFFLE = False
+# O Enter no explorador de pastas e o arquivo aberto pelo Windows tocam numa aba
+# à parte, trocada a cada vez, em vez de entrar na playlist atual.
+DEFAULT_PLAY_OPENED_FILES_ALONE = True
 DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES = False
 DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES = True
 DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP = True
@@ -117,6 +120,11 @@ GITHUB_REPOSITORY_NAME = "KeyTune"
 # Installer-driven updates: the app downloads and silently runs the setup .exe.
 WINDOWS_SETUP_EXECUTABLE_NAME = "KeyTune-Setup.exe"
 WINDOWS_SETUP_CHECKSUM_NAME = f"{WINDOWS_SETUP_EXECUTABLE_NAME}.sha256"
+# Portable updates: a zip laid over the program folder. The installer is not used.
+WINDOWS_PORTABLE_ARCHIVE_NAME = "KeyTune-Portable.zip"
+WINDOWS_PORTABLE_CHECKSUM_NAME = f"{WINDOWS_PORTABLE_ARCHIVE_NAME}.sha256"
+# Helper copied out of the portable folder before the files are replaced.
+WINDOWS_UPDATER_EXECUTABLE_NAME = "KeyTuneUpdater.exe"
 
 DEFAULT_LOGGING_ENABLED = True
 DEFAULT_LOGGING_LEVEL = "WARNING"

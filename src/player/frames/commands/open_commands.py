@@ -9,14 +9,18 @@ from ...library import (
     is_playlist_source,
     is_remote_media_path,
     is_supported_media,
+    load_playlist,
     playlist_display_name,
     save_playlist,
 )
 from ..background import run_in_background
-from ...i18n import _
+from ...i18n import _, ngettext
+from ...log import get_logger
 from ...playlists import ScreenTabState
 from ...youtube_music import extract_playlist_id_from_text
 from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
+
+_logger = get_logger(__name__)
 
 
 class OpenCommandsMixin:
@@ -390,6 +394,46 @@ class OpenCommandsMixin:
         )
         return False
 
+    def _enqueue_external_files(self, paths):
+        """Acrescenta *paths* ao fim da playlist, sem tocar e sem trocar de aba.
+
+        É o mesmo caminho de **Abrir sem tocar** e **Colar sem tocar**.
+        """
+
+        def prepare():
+            media_paths, playlist_paths = self._split_selected_files(paths)
+            media_paths = list(media_paths)
+            # Uma playlist selecionada entra pelas faixas dela, como no Abrir sem tocar.
+            for playlist_path in playlist_paths:
+                try:
+                    media_paths.extend(load_playlist(playlist_path))
+                except OSError as exc:
+                    _logger.warning("Playlist ignorada ao adicionar pelo Explorador: %r (%s)", playlist_path, exc)
+            return media_paths
+
+        def finish(media_paths):
+            if not media_paths:
+                self._announce(_("Nenhuma mídia compatível foi recebida do Explorador."), ANNOUNCE_ERRORS)
+                return
+            added_count = self._add_media_paths_without_playing(
+                media_paths,
+                verified=True,
+                announce=False,
+            )
+            # ``True`` vem da sessão AutoDJ, que já anunciou. Só um inteiro é contagem.
+            if type(added_count) is not int or added_count <= 0:
+                return
+            message = ngettext(
+                "{count} arquivo adicionado à playlist.",
+                "{count} arquivos adicionados à playlist.",
+                added_count,
+            ).format(count=added_count)
+            self._announce(message, ANNOUNCE_CONFIRMATIONS)
+            if hasattr(self, "_set_status_message"):
+                self._set_status_message(message)
+
+        run_in_background(self, prepare, finish)
+
     def _open_external_files(self, paths):
         run_in_background(
             self,
@@ -410,6 +454,8 @@ class OpenCommandsMixin:
             return False
 
         if media_paths:
+            if self._can_play_alone(media_paths):
+                return self._play_media_paths_alone(media_paths, verified=True)
             return self._open_external_media_paths(media_paths, verified=True)
 
         if playlist_paths:
@@ -442,7 +488,7 @@ class OpenCommandsMixin:
         if not os.path.splitext(playlist_path)[1]:
             playlist_path += ".m3u8"
 
-        save_playlist(playlist_path, state.items)
+        save_playlist(playlist_path, state.items, state.browser_item_labels)
         self._remember_directory(playlist_path)
         state.source_path = playlist_path
         state.title = playlist_display_name(playlist_path)

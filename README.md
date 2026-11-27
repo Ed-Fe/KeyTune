@@ -64,6 +64,8 @@ Local files, YouTube and YouTube Music, online radio, downloads, lyrics and an A
 2. Run it. You can install for your user only, without administrator rights, or for every user of the computer.
 3. On the additional tasks page you can create a desktop shortcut and associate audio, video and playlist formats with KeyTune. All of these are optional.
 
+To skip the installer, download **[KeyTune-Portable.zip](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Portable.zip)** from the same release, extract it to a folder or a USB drive and open `KeyTune.exe`. Settings and downloads stay in the `data` folder next to the program. The `portable.ini` file in that folder turns this mode on. See [Portable version](docs/manual.en.md#portable-version) in the manual.
+
 KeyTune runs on 64-bit Windows. The installer already includes the MPV runtime, so it plays right away. The YouTube integration and the AutoDJ are optional downloads: KeyTune lists what it will install and asks before downloading anything (**Settings > Preferences > Additional resources**).
 
 KeyTune updates itself. When a new version comes out, it shows what changed, in your language, and asks before downloading and installing it.
