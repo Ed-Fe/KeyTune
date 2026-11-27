@@ -169,7 +169,7 @@ Cambiar de pestaña no toca lo que está sonando: puedes recorrer las playlists,
 - Cada playlist guarda la pista y la posición en que se detuvo. `Enter` sobre esa pista, en una playlist que no es la que suena, retoma desde ese punto en vez de empezar de nuevo.
 - `Espacio`, las flechas de avance y de volumen, **Siguiente** y **Anterior** actúan siempre sobre lo que está sonando, sea cual sea la pestaña a la vista. Si no hay nada cargado, `Espacio` retoma la playlist a la vista.
 - `Enter`, con el foco en el reproductor, pasa la reproducción a la playlist a la vista: vuelve a sonar desde donde se había detenido, y la que sonaba guarda su posición.
-- Aleatorio y repetición también valen para la playlist que está sonando. Si no hay nada cargado, valen para la playlist a la vista.
+- Aleatorio y repetición también valen para la playlist que está sonando. Si no hay nada cargado, valen para la playlist a la vista. El modo de repetición tiene cuatro opciones: desactivada, repetir la pista actual, repetir la playlist y **Reproducir solo esta pista**, que reproduce la pista o el vídeo actual hasta el final y se detiene. Con la **Reproducción automática** desactivada (Preferencias, o el menú Reproducción), lo que eliges suena hasta el final y se detiene, sin reproducir la siguiente.
 - El título de la ventana y el estado (`S`) dicen qué está sonando. `S` también dice la pestaña a la vista cuando es otra.
 
 ### Atajos de pestañas y elementos

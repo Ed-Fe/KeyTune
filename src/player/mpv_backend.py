@@ -106,6 +106,7 @@ class MPVPlayer:
         self._video_output_default = video_output_enabled
         self._last_end_reason: int | None = None
         self._last_playback_error_detail = ""
+        self._recent_mpv_messages: list[str] = []
         # With ``keep-open=yes`` MPV does NOT send an end-file event at the
         # natural end of a track (the file stays loaded, paused on the last
         # frame). The documented way to detect a natural end is to observe the
@@ -220,7 +221,18 @@ class MPVPlayer:
             )
 
             if is_error:
-                _logger.warning("MPV reported a playback error (reason=%s)", reason)
+                media = self._media
+                media_path = str(getattr(media, "path", "") or "")
+                # Drop the query string: stream URLs carry signed tokens.
+                media_path = media_path.split("?", 1)[0] if "googlevideo" in media_path else media_path
+                _logger.warning(
+                    "MPV reported a playback error (reason=%s, live=%s, media=%s, mpv_messages=%s)",
+                    reason,
+                    getattr(media, "is_live", None),
+                    media_path[:300] or "(none)",
+                    " | ".join(self._recent_mpv_messages) or "(none)",
+                )
+                self._recent_mpv_messages.clear()
                 self._loaded_media_path = None
                 self._needs_load = True
                 self._eof_reached_state = False
@@ -274,8 +286,13 @@ class MPVPlayer:
         else:
             self._event_manager.emit(PlayerEventType.MEDIA_PLAYER_END_REACHED, event)
 
-    def _handle_log_message(self, _level, _prefix, message):
+    def _handle_log_message(self, level, prefix, message):
         normalized_message = " ".join(str(message or "").split())
+        if normalized_message:
+            # Keep the latest MPV warnings/errors so a failed load can be
+            # explained in the log (MPV only says "error", not why).
+            self._recent_mpv_messages.append(f"[{prefix}] {level}: {normalized_message}"[:300])
+            del self._recent_mpv_messages[:-8]
         match = re.search(r"\bHTTP error\s+(\d{3})\b", normalized_message, re.IGNORECASE)
         if match is not None:
             self._last_playback_error_detail = f"HTTP {match.group(1)}"
@@ -504,6 +521,33 @@ class MPVPlayer:
             except Exception:
                 continue
         return False
+
+    _DIAGNOSTIC_PROPERTIES = (
+        "pause",
+        "core-idle",
+        "paused-for-cache",
+        "time-pos",
+        "demuxer-cache-duration",
+        "cache-buffering-state",
+        "current-ao",
+        "audio-device",
+        "audio-out-params",
+    )
+
+    def get_diagnostics(self) -> dict:
+        """Estado do MPV que ajuda a explicar um corte de áudio (só leitura, nunca levanta erro)."""
+        return {name: self._get_runtime_property(name) for name in self._DIAGNOSTIC_PROPERTIES}
+
+    def is_fully_cached(self) -> bool:
+        """True quando a mídia inteira (do começo ao fim) já está no cache do MPV.
+
+        Só streams de rede usam o cache; para arquivo local o MPV não informa isso
+        e o resultado é False.
+        """
+        state = self._get_runtime_property("demuxer-cache-state", default=None)
+        if not isinstance(state, dict):
+            return False
+        return bool(state.get("eof-cached")) and bool(state.get("bof-cached"))
 
     def get_current_audio_output(self) -> str:
         """Return MPV's currently active audio output (e.g. ``wasapi`` or

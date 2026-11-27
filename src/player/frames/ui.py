@@ -4,7 +4,7 @@ import sys
 import wx
 
 from ..accessibility import attach_named_accessible
-from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
+from ..constants import APP_UPDATES_ENABLED, PROGRESS_GAUGE_RANGE,PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
 from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
@@ -489,6 +489,7 @@ class FrameUIMixin:
         self.menu_start_autodj_session_id = wx.NewIdRef()
         self.menu_stop_autodj_session_id = wx.NewIdRef()
         self.menu_toggle_related_autoplay_id = wx.NewIdRef()
+        self.menu_autoplay_next_id = wx.NewIdRef()
         self.menu_increase_playback_rate_id = wx.NewIdRef()
         self.menu_decrease_playback_rate_id = wx.NewIdRef()
         self.menu_reset_playback_rate_id = wx.NewIdRef()
@@ -526,6 +527,10 @@ class FrameUIMixin:
         autodj_item.Check(bool(getattr(self.settings, "autodj_enabled", False)))
         playback_menu.Append(self.menu_start_autodj_session_id, _("Reproduzir playlist com AutoDJ"))
         playback_menu.Append(self.menu_stop_autodj_session_id, _("Encerrar sessão AutoDJ"))
+        self.menu_autoplay_next_item = playback_menu.AppendCheckItem(
+            self.menu_autoplay_next_id, _("Reprodução a&utomática")
+        )
+        self.menu_autoplay_next_item.Check(bool(getattr(self.settings, "autoplay_next", True)))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
         playback_menu.Append(self.menu_increase_playback_rate_id, _("Aumentar &Velocidade (])"))
         playback_menu.Append(self.menu_decrease_playback_rate_id, _("Diminuir Ve&locidade ([)"))
@@ -596,7 +601,8 @@ class FrameUIMixin:
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
-        help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
+        if APP_UPDATES_ENABLED:
+            help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
         help_menu.Append(self.menu_diagnostics_id, _("&Diagnóstico"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
@@ -845,6 +851,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_start_autodj_session, id=self.menu_start_autodj_session_id)
         self.Bind(wx.EVT_MENU, self.on_stop_autodj_session, id=self.menu_stop_autodj_session_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_related_autoplay, id=self.menu_toggle_related_autoplay_id)
+        self.Bind(wx.EVT_MENU, self._toggle_autoplay_next, id=self.menu_autoplay_next_id)
         self.Bind(wx.EVT_MENU, self.on_increase_playback_rate, id=self.menu_increase_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_decrease_playback_rate, id=self.menu_decrease_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_reset_playback_rate, id=self.menu_reset_playback_rate_id)

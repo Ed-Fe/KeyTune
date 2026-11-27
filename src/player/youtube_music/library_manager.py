@@ -101,7 +101,10 @@ class YouTubeMusicLibraryManager:
             return catalog.youtube_playlist_page(playlist_id, start, count)
 
         # Uma playlist da biblioteca pode ser privada: só a conta consegue abri-la.
-        client = self._get_client(require_auth=bool(getattr(result, "library_playlist", False)))
+        client = self._get_client_for_playlist(
+            playlist_id if result_type == "playlist" else "",
+            require_auth=bool(getattr(result, "library_playlist", False)),
+        )
         if result_type == "artist":
             section_id = section_id or YOUTUBE_ARTIST_SECTIONS[0].section_id
             return catalog.music_artist_page(client, self._get_artist(client, browse_id), section_id, start, count)
@@ -110,6 +113,19 @@ class YouTubeMusicLibraryManager:
         if result_type == "playlist":
             return catalog.music_playlist_page(client, playlist_id, start, count, cache=self._playlist_tracks_cache)
         return YouTubeResultPage()
+
+    def _get_client_for_playlist(self, playlist_id, *, require_auth=False):
+        """Cliente para abrir *playlist_id*.
+
+        As mixes personalizadas ("RDTMAK…", como a "My Supermix") só respondem
+        com a conta: usa o cliente logado quando houver, sem exigir login.
+        """
+        if require_auth or not is_watch_playlist_id(playlist_id):
+            return self._get_client(require_auth=require_auth)
+        try:
+            return self._get_client(require_auth=True)
+        except Exception:
+            return self._get_client(require_auth=False)
 
     def _get_artist(self, client, channel_id):
         # A página do artista serve a todas as seções: guarda a última consultada.
@@ -747,8 +763,8 @@ class YouTubeMusicLibraryManager:
 
     def get_playlist_content(self, playlist_id, fallback_title="", *, require_auth=False):
         """Fetch the full track listing of a playlist."""
-        client = self._get_client(require_auth=require_auth)
         normalized_playlist_id = str(playlist_id or "").strip()
+        client = self._get_client_for_playlist(normalized_playlist_id, require_auth=require_auth)
 
         if is_watch_playlist_id(normalized_playlist_id):
             # Personalized mixes use the same Watch Next response as radios.

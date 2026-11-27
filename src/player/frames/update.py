@@ -4,7 +4,7 @@ import threading
 
 import wx
 
-from ..constants import STARTUP_UPDATE_CHECK_DELAY_MS
+from ..constants import APP_UPDATES_ENABLED, STARTUP_UPDATE_CHECK_DELAY_MS
 from .. import interface_sounds
 from ..i18n import _
 from ..update import (
@@ -23,6 +23,8 @@ from ..announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS
 
 class FrameUpdateMixin:
     def _schedule_startup_update_check(self):
+        if not APP_UPDATES_ENABLED:
+            return
         if self._startup_update_check_scheduled or not can_self_update():
             return
 

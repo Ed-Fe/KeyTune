@@ -1,4 +1,4 @@
-"""Páginas de resultados do YouTube e do YouTube Music.
+﻿"""Páginas de resultados do YouTube e do YouTube Music.
 
 Cada função devolve um :class:`YouTubeResultPage` com os itens de ``start`` até
 ``start + count`` e a indicação de que há mais depois deles. É o que permite às
@@ -228,11 +228,28 @@ def music_playlist_page(client, playlist_id, start, count, *, as_videos=False, b
 
     whole = count is None
     start, count = _page_bounds(start, count)
+    tracks = None
     if is_watch_playlist_id(normalized_playlist_id):
-        with tolerant_watch_playlist_parsing():
-            playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=WATCH_PLAYLIST_LIMIT)
-        tracks, complete = list(playlist.get("tracks") or []), True
-    else:
+        try:
+            with tolerant_watch_playlist_parsing():
+                playlist = client.get_watch_playlist(playlistId=normalized_playlist_id, limit=WATCH_PLAYLIST_LIMIT)
+            tracks, complete = list(playlist.get("tracks") or []), True
+        except Exception:
+            # Algumas mixes ("RDTMAK…") não respondem sem um vídeo de origem: tenta
+            # abri-las como playlist comum; se também falhar, usa a listagem do YouTube.
+            _logger.info("Mix %s sem resposta na fila; tentando como playlist.", normalized_playlist_id, exc_info=True)
+            cache = cache or PlaylistTracksCache()
+            try:
+                tracks, complete = cache.tracks(
+                    client, normalized_playlist_id, None if whole else start + count, refresh=start == 0
+                )
+            except Exception:
+                _logger.info("Mix %s não abre como playlist; usando a listagem do YouTube.", normalized_playlist_id)
+                page = youtube_playlist_page(normalized_playlist_id, start, None if whole else count)
+                if not page.results:
+                    raise
+                return page
+    if tracks is None:
         cache = cache or PlaylistTracksCache()
         # A primeira página é sempre pedida de novo: reabrir a lista mostra o que mudou.
         tracks, complete = cache.tracks(

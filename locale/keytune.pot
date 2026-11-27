@@ -3385,6 +3385,10 @@ msgstr ""
 msgid "Desmarcada, a aba segue o equalizador de todas as abas."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Desmarcada, o que você escolhe toca até o fim e para, sem tocar mais nada em seguida."
+msgstr ""
+
 #: src/player/download/dialog.py
 msgid "Desmarcado, o download começa direto com as opções da guia Download das Preferências, sem perguntar."
 msgstr ""
@@ -4249,6 +4253,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/audio_tracks.py
 msgid "Faixa de áudio desta mídia:"
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "Faixa finalizada."
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
@@ -7117,10 +7125,6 @@ msgstr ""
 msgid "O yt-dlp não conseguiu listar as faixas de áudio."
 msgstr ""
 
-#: src/player/youtube_music/catalog.py
-msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
-msgstr ""
-
 #: src/player/youtube_music/search.py
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
 msgstr ""
@@ -7438,6 +7442,10 @@ msgstr ""
 
 #: src/player/smart_library/history_dialog.py
 msgid "Parou em"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Passar &sozinho para a próxima faixa ou vídeo"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -8356,6 +8364,22 @@ msgstr ""
 msgid "Reprodução"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "Reprodução a&utomática"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Reprodução automática"
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "Reprodução automática {status}."
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "Reprodução automática: {status}."
+msgstr ""
+
 #: src/player/frames/playback/controls.py
 #: src/player/quick_player/frame.py
 msgid "Reprodução retomada."
@@ -9217,6 +9241,10 @@ msgstr ""
 msgid "Tocar (Enter)"
 msgstr ""
 
+#: src/player/constants.py
+msgid "Tocar apenas esta faixa"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Tocar efeitos de &DJ nas transições"
 msgstr ""
@@ -9939,6 +9967,10 @@ msgstr ""
 msgid "artista"
 msgstr ""
 
+#: src/player/frames/library_tabs/playback_control.py
+msgid "ativada"
+msgstr ""
+
 #: src/player/frames/autodj.py
 #: src/player/frames/library_tabs/playback_control.py
 msgid "ativado"
@@ -9978,6 +10010,10 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "desafio JavaScript (EJS)"
+msgstr ""
+
+#: src/player/frames/library_tabs/playback_control.py
+msgid "desativada"
 msgstr ""
 
 #: src/player/frames/autodj.py

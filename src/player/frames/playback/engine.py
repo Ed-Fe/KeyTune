@@ -270,6 +270,9 @@ class PlaybackEngineMixin:
         if request.get("serial") == getattr(self, "_pending_playback_request_serial", None):
             self._pending_playback_request_serial = None
         player_key = request.get("player_key", self._active_player_key)
+        if request.get("preload"):
+            self._finish_preload(request, success, error_message)
+            return
         if request.get("serial") != self._playback_request_serial:
             # Only stop the stale load if this slot still belongs to it.
             lock = getattr(self, "_playback_backend_lock", None)

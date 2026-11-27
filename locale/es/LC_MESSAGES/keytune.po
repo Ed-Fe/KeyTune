@@ -8128,3 +8128,33 @@ msgid "Em {count} seção."
 msgid_plural "Em {count} seções."
 msgstr[0] "En {count} sección."
 msgstr[1] "En {count} secciones."
+
+msgid "Tocar apenas esta faixa"
+msgstr "Reproducir solo esta pista"
+
+msgid "Faixa finalizada."
+msgstr "Pista finalizada."
+
+msgid "Reprodução automática"
+msgstr "Reproducción automática"
+
+msgid "Passar &sozinho para a próxima faixa ou vídeo"
+msgstr "Pasar &solo a la siguiente pista o vídeo"
+
+msgid "Desmarcada, o que você escolhe toca até o fim e para, sem tocar mais nada em seguida."
+msgstr "Desmarcada, lo que eliges suena hasta el final y se detiene, sin reproducir nada más después."
+
+msgid "Reprodução a&utomática"
+msgstr "Reproducción a&utomática"
+
+msgid "ativada"
+msgstr "activada"
+
+msgid "desativada"
+msgstr "desactivada"
+
+msgid "Reprodução automática {status}."
+msgstr "Reproducción automática {status}."
+
+msgid "Reprodução automática: {status}."
+msgstr "Reproducción automática: {status}."
