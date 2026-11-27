@@ -253,8 +253,10 @@ class NotificationCheckTests(unittest.TestCase):
         frame._youtube_notification_goes_to_windows = Mock(return_value=True)
         frame._show_youtube_windows_notification = Mock(return_value=True)
 
-        frame._on_youtube_notifications_checked([_notification(2)])
+        with patch.object(frame_notifications.interface_sounds, "play_for") as play_for:
+            frame._on_youtube_notifications_checked([_notification(2)])
 
+        play_for.assert_called_once_with(frame, frame_notifications.interface_sounds.SOUND_NOTIFICATION)
         frame._show_youtube_windows_notification.assert_called_once_with(
             "Nova notificação do YouTube: Canal enviou o vídeo 2"
         )
@@ -267,8 +269,10 @@ class NotificationCheckTests(unittest.TestCase):
         frame._youtube_notification_goes_to_windows = Mock(return_value=True)
         frame._show_youtube_windows_notification = Mock(return_value=False)
 
-        frame._on_youtube_notifications_checked([_notification(2)])
+        with patch.object(frame_notifications.interface_sounds, "play_for") as play_for:
+            frame._on_youtube_notifications_checked([_notification(2)])
 
+        play_for.assert_called_once_with(frame, frame_notifications.interface_sounds.SOUND_NOTIFICATION)
         self.assertEqual(len(frame.announcements), 1)
 
     def test_the_windows_notice_is_only_for_a_window_in_the_background(self):

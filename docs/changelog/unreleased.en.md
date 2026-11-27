@@ -10,3 +10,10 @@
 ### Changed
 
 - **`Alt`+letter shortcuts on dialog fields**: the fields on every Preferences tab and in the download, conversion, change history, update, playback queue, audio output, equalizer preset, plugin, YouTube connection and quick shortcuts help dialogs now have an underlined letter in their label. `Alt` plus that letter moves the focus straight to the field. Letters that were repeated within the same dialog changed, so each shortcut leads to one place only. In the download dialog, the **Download** list is now called **What to download**.
+
+### Fixed
+
+- **Alert sounds with KeyTune in the background**: when a new YouTube notification arrived with the window minimized, in the tray or unfocused, Windows played its own system sound instead of KeyTune's alert sound. The sound configured in KeyTune now plays the same way inside or outside the window, and trying to change tracks while KeyTube is still loading also uses KeyTune's failure sound instead of the Windows beep.
+- **First item of a new page not announced in the KeyTube hub**: scrolling with Down Arrow to the end of a search or radio list and loading the next page left the first item of that page unannounced by the screen reader (only the item after it spoke again). Focus now moves straight to the first newly loaded item.
+- **Next/previous track blocked by mistake**: changing tracks in a favorite online radio station, or in any playlist that isn't YouTube Music, was blocked while the YouTube Music hub was processing some operation (such as updating its additional resources or loading the library). That block now only applies to tracks that are actually YouTube Music.
+- **Related content not announcing the track name**: advancing into related content (similar tracks) at the end of a YouTube Music playlist only announced "Related content", without the track name or its position in the list.

@@ -830,7 +830,7 @@ The **Alert sounds** group has **Play alert sounds**, which turns all of them on
 - **Welcome screen**: the first time KeyTune opens, its sound plays through and only then the screen appears.
 - **Player**: KeyTune opened and KeyTune closed (on closing, the window goes away at once and the program ends when the sound finishes, in about 1 second), the welcome screen, a new KeyTune update, a tab opened or closed, an item put in the playback queue or taken out of it, a finished download, the sleep timer warning that little time is left and a confirmation question asked by the main window.
 
-Their volume does not depend on the media volume. When the alert goes to a Windows notification, the notification sound is the one from Windows itself.
+Their volume does not depend on the media volume, and they play even when the window is in the background; the Windows notification arrives without an extra sound so it does not clash with KeyTune's sound.
 
 ### Library
 

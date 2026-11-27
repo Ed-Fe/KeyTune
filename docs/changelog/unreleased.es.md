@@ -10,3 +10,10 @@
 ### Cambiado
 
 - **Atajos `Alt`+letra en los campos de los diálogos**: los campos de todas las pestañas de Preferencias y de los diálogos de descarga, conversión, historial de cambios, actualización, cola de reproducción, salida de audio, preset del ecualizador, plugins, conexión con YouTube y ayuda rápida de atajos ahora tienen una letra subrayada en su etiqueta. `Alt` con esa letra lleva el foco directo al campo. Las letras que se repetían en el mismo diálogo cambiaron, para que cada atajo lleve a un solo lugar. En el diálogo de descarga, la lista **Descargar** ahora se llama **Qué descargar**.
+
+### Corregido
+
+- **Sonidos de aviso con KeyTune en segundo plano**: cuando llegaba una notificación nueva de YouTube con la ventana minimizada, en la bandeja o sin foco, Windows reproducía el sonido del propio sistema en lugar del sonido de aviso de KeyTune. Ahora el sonido configurado en KeyTune suena igual dentro o fuera de la ventana, y tratar de cambiar de pista mientras KeyTube aún está cargando también usa el sonido de fallo de KeyTune en vez del pitido de Windows.
+- **Primer elemento de una página nueva sin anuncio en la central de KeyTube**: al navegar con Flecha abajo hasta el final de una lista de búsqueda o de una radio y cargar la página siguiente, el primer elemento de esa página no era anunciado por el lector de pantalla (solo el elemento siguiente volvía a hablarse). El foco ahora va directo al primer elemento recién cargado.
+- **Avanzar o retroceder de pista bloqueado por error**: cambiar de pista en una radio en línea favorita, o en cualquier lista de reproducción que no sea de YouTube Music, quedaba bloqueado mientras la central de YouTube Music procesaba alguna operación (como actualizar sus recursos adicionales o cargar la biblioteca). Ese bloqueo ahora solo aplica a pistas que sí son de YouTube Music.
+- **Contenido relacionado sin anunciar el nombre de la pista**: al avanzar al contenido relacionado (canciones similares) al final de una lista de YouTube Music, el aviso decía solo "Contenido relacionado", sin el nombre de la pista ni su posición en la lista.

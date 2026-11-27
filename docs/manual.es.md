@@ -830,7 +830,7 @@ El grupo **Sonidos de aviso** tiene **Reproducir sonidos de aviso**, que los act
 - **Pantalla de bienvenida**: la primera vez que se abre KeyTune, su sonido suena entero y solo después aparece la pantalla.
 - **Reproductor**: KeyTune abierto y KeyTune cerrado (al cerrar, la ventana desaparece al instante y el programa termina cuando acaba el sonido, en cerca de 1 segundo), pantalla de bienvenida, actualización nueva de KeyTune, pestaña abierta o cerrada, elemento puesto en la cola de reproducción o sacado de ella, descarga terminada, aviso del temporizador de que falta poco y pregunta de confirmación hecha por la ventana principal.
 
-Su volumen no depende del volumen del contenido. Cuando el aviso va a la notificación de Windows, el sonido de la notificación es el del propio Windows.
+Su volumen no depende del volumen del contenido, y suenan incluso con la ventana en segundo plano; la notificación de Windows llega sin sonido extra para no chocar con el sonido de KeyTune.
 
 ### Biblioteca
 

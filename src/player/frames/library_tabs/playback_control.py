@@ -344,12 +344,17 @@ class PlaylistPlaybackMixin:
             refresh_smtc()
 
     def _play_adjacent_item(self, direction):
-        if self._block_sensitive_action_during_youtube_music("track-navigation"):
-            return
-
         state = self._get_active_playlist_state()
         if not state or not state.items:
             self._announce(_("Nenhuma playlist carregada."), ANNOUNCE_ERRORS)
+            return
+
+        # A trava do YouTube Music só importa pra quem está tocando algo de lá:
+        # uma rádio online ou um arquivo local não corre risco de colidir com
+        # uma operação da central (busca, biblioteca, atualização de recursos).
+        if is_youtube_music_media(state.current_media_path) and self._block_sensitive_action_during_youtube_music(
+            "track-navigation"
+        ):
             return
 
         if direction < 0 and self.player.get_media() is not None:

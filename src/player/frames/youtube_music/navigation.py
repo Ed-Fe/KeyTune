@@ -378,7 +378,7 @@ class ResultsNavigationMixin:
             page = view.fetch_page(start, page_size)
             return page.results, page.has_more, start + page_size
 
-        return self._run_youtube_music_results_load(view, worker)
+        return self._run_youtube_music_results_load(view, worker, advance_focus=True)
 
     def on_load_all_youtube_music_results(self):
         """Traz de uma vez o que falta da lista, em vez de uma página por descida."""
@@ -408,7 +408,7 @@ class ResultsNavigationMixin:
 
         return self._run_youtube_music_results_load(view, worker)
 
-    def _run_youtube_music_results_load(self, view, worker):
+    def _run_youtube_music_results_load(self, view, worker, *, advance_focus=False):
         """Roda *worker*, que devolve ``(itens, se há mais, próximo início)``, e junta o que veio a *view*."""
 
         def on_success(loaded):
@@ -425,6 +425,12 @@ class ResultsNavigationMixin:
             view.next_start = next_start
             # Uma página sem nada de novo encerra a lista, para não repetir o pedido sem fim.
             view.has_more = bool(has_more and new_results)
+            if advance_focus and new_results:
+                # Setinha pra baixo no último item pediu a página seguinte sem
+                # mexer no foco: sem isto o item novo manteria o foco (e o
+                # anúncio) parado no item antigo, e o leitor de tela perderia
+                # o primeiro item recém-chegado quando a seta fosse pressionada de novo.
+                self._youtube_music_pending_result_selection = new_results[0].stable_id
             self._show_youtube_music_results_view(announce=False)
             if new_results:
                 self._announce(

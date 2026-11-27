@@ -838,7 +838,7 @@ O grupo **Sons de aviso** tem **Tocar sons de aviso**, que liga ou desliga todos
 - **Tela de boas-vindas**: na primeira vez que o KeyTune abre, o som dela toca inteiro e só depois a tela aparece.
 - **Player**: KeyTune aberto e KeyTune fechado (ao fechar, a janela some na hora e o programa termina quando o som acaba, em cerca de 1 segundo), tela de boas-vindas, atualização nova do KeyTune, aba aberta ou fechada, item posto na fila de reprodução ou tirado dela, download concluído, aviso do temporizador de que falta pouco e pergunta de confirmação feita pela janela principal.
 
-O volume deles não depende do volume da mídia. Com o aviso indo para a notificação do Windows, o som da notificação é o do próprio Windows.
+O volume deles não depende do volume da mídia, e eles tocam mesmo com a janela em segundo plano; a notificação do Windows chega sem som extra para não brigar com o som do KeyTune.
 
 ### Biblioteca
 

@@ -10,3 +10,10 @@
 ### Alterado
 
 - **Atalhos `Alt`+letra nos campos dos diálogos**: os campos de todas as abas das Preferências e dos diálogos de download, conversão, histórico de mudanças, atualização, fila de reprodução, saída de áudio, preset do equalizador, plugins, conexão com o YouTube e ajuda rápida de atalhos ganharam uma letra sublinhada no rótulo. `Alt` com essa letra leva o foco direto ao campo. Letras que se repetiam no mesmo diálogo mudaram, para cada atalho levar a um lugar só. No diálogo de download, a lista **Baixar** agora se chama **O que baixar**.
+
+### Corrigido
+
+- **Sons de aviso com o KeyTune em segundo plano**: quando uma notificação nova do YouTube chegava com a janela minimizada, na bandeja ou sem foco, o Windows tocava o som do próprio sistema no lugar do som de aviso do KeyTune. Agora o som configurado no KeyTune toca do mesmo jeito dentro ou fora da janela, e tentar trocar de faixa enquanto o KeyTube ainda carrega também usa o som de falha do KeyTune em vez do bipe do Windows.
+- **Primeiro item de uma página nova sem anúncio na central do KeyTube**: ao navegar com Seta Baixo até o fim de uma lista de busca ou de uma rádio e carregar a página seguinte, o primeiro item dela não era anunciado pelo leitor de tela (só o item seguinte voltava a ser falado). O foco agora vai direto para o primeiro item recém-carregado.
+- **Avançar ou voltar faixa bloqueado por engano**: trocar de faixa numa rádio online favorita, ou em qualquer playlist que não seja do YouTube Music, ficava bloqueado enquanto a central do YouTube Music processava alguma operação (como atualizar seus recursos adicionais ou carregar a biblioteca). Esse bloqueio agora só vale para faixas que são mesmo do YouTube Music.
+- **Conteúdo relacionado sem anunciar o nome da faixa**: ao avançar para conteúdo relacionado (músicas semelhantes) no fim de uma playlist do YouTube Music, o anúncio dizia só "Conteúdo relacionado", sem o nome da faixa nem a posição na lista.

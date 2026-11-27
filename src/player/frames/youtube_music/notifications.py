@@ -1,5 +1,6 @@
 """Notificações da conta do YouTube: a lista na aba do KeyTube e o aviso das que chegam."""
 
+import sys
 import threading
 from dataclasses import replace
 
@@ -161,7 +162,8 @@ class NotificationsMixin:
         minutes = int(getattr(self.settings, "youtube_notification_check_minutes", 0) or 0)
         return max(0, minutes) * 60_000
 
-    def _stop_youtube_notification_checks(self):
+    def _cancel_pending_youtube_notification_check(self):
+        """Só cancela a consulta marcada; não afeta o ícone de notificação do Windows ainda visível."""
         pending = getattr(self, "_youtube_notification_check_timer", None)
         self._youtube_notification_check_timer = None
         if pending is not None:
@@ -170,9 +172,25 @@ class NotificationsMixin:
             except Exception:
                 pass
 
+    def _stop_youtube_notification_checks(self):
+        """Desliga o aviso de vez: cancela a consulta marcada e fecha o ícone/janela do Windows.
+
+        Chamado ao desligar o recurso ou encerrar o app — nunca a cada
+        reagendamento, senão o ícone recém-criado para o aviso que acabou de
+        chegar seria destruído antes de a pessoa conseguir vê-lo ou clicar nele.
+        """
+        self._cancel_pending_youtube_notification_check()
+        notifier = getattr(self, "_youtube_windows_notifier", None)
+        self._youtube_windows_notifier = None
+        if notifier is not None:
+            try:
+                notifier.close()
+            except Exception:
+                pass
+
     def _schedule_youtube_notification_check(self, *, first=False):
         """Marca a próxima consulta da caixa, ou cancela a marcada quando o aviso está desligado."""
-        self._stop_youtube_notification_checks()
+        self._cancel_pending_youtube_notification_check()
         interval_ms = self._youtube_notification_check_interval_ms()
         if not interval_ms:
             return False
@@ -232,11 +250,12 @@ class NotificationsMixin:
             return False
         if hasattr(self, "_set_status_message"):
             self._set_status_message(message)
-        # Com o KeyTune em segundo plano o aviso vai para o Windows: fica na central de
-        # notificações e o leitor de tela o lê de lá, sem falar duas vezes.
+        # O som de aviso do KeyTune toca sempre, dentro ou fora da janela.
+        interface_sounds.play_for(self, interface_sounds.SOUND_NOTIFICATION)
+        # Com o KeyTune em segundo plano o texto vai silenciosamente para o Windows:
+        # fica na central de notificações e o leitor de tela o lê de lá, sem falar duas vezes.
         if self._youtube_notification_goes_to_windows() and self._show_youtube_windows_notification(message):
             return True
-        interface_sounds.play_for(self, interface_sounds.SOUND_NOTIFICATION)
         self._announce(message, ANNOUNCE_NOTIFICATIONS)
         return True
 
@@ -249,7 +268,25 @@ class NotificationsMixin:
             return False
 
     def _show_youtube_windows_notification(self, message):
-        """Mostra *message* como notificação do Windows; ``False`` quando o sistema não deixa."""
+        """Mostra *message* como notificação do Windows sem som do sistema; ``False`` se não der."""
+        if sys.platform.startswith("win"):
+            try:
+                from ...windows_notification import SilentWindowsNotifier
+
+                notifier = getattr(self, "_youtube_windows_notifier", None)
+                if notifier is None:
+                    notifier = SilentWindowsNotifier()
+                    self._youtube_windows_notifier = notifier
+                return bool(
+                    notifier.show(
+                        _("Notificações do YouTube"),
+                        message,
+                        on_click=lambda: self._on_youtube_windows_notification_click(None),
+                    )
+                )
+            except Exception as exc:
+                _logger.info("The Windows notification could not be shown: %s", exc)
+                return False
         try:
             import wx.adv
 

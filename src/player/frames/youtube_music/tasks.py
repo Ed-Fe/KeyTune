@@ -1,10 +1,10 @@
 from ...i18n import _
-import sys
 import threading
 
 import wx
 
 from player.youtube_music.auth import sanitize_sensitive_text
+from ... import interface_sounds
 from ...announcements import ANNOUNCE_ERRORS
 
 
@@ -30,15 +30,7 @@ class BackgroundTaskMixin:
         )
 
     def _play_windows_youtube_music_blocked_sound(self):
-        if not sys.platform.startswith("win"):
-            return
-
-        try:
-            import winsound
-
-            winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
-        except Exception:
-            pass
+        interface_sounds.play_for(self, interface_sounds.SOUND_FAILURE)
 
     def _block_sensitive_action_during_youtube_music(self, action_kind):
         if not self._is_youtube_music_operation_in_progress():
