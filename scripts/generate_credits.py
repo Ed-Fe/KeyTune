@@ -17,6 +17,14 @@ PYPROJECT_PATH = REPO_ROOT / "pyproject.toml"
 CREDITS_PATH = REPO_ROOT / "docs" / "credits.md"
 HTTP_TIMEOUT_SECONDS = 10
 
+# The GitHub API orders contributors by commit count. These come first, in this
+# order, right after the maintainer, and are shown by name instead of by login.
+MAINTAINER_LOGIN = "Ed-Fe"
+FEATURED_CONTRIBUTORS = {
+    "viniciusSiqueira195": "Vinicius Siqueira",
+    "paulosantesso1": "Paulo",
+}
+
 # Localized headings for the credits document. The actual library/contributor
 # data is language-neutral, so only the surrounding text is translated. ``pt_BR``
 # is the default and is written to ``docs/credits.md``; other languages are
@@ -98,8 +106,24 @@ def fetch_contributors() -> list[str] | None:
         login = entry.get("login")
         profile_url = entry.get("html_url")
         if login and profile_url:
-            contributors.append(f"- [{login}]({profile_url})")
-    return contributors
+            contributors.append((login, profile_url))
+    return order_contributors(contributors)
+
+
+def order_contributors(contributors: list[tuple[str, str]]) -> list[str]:
+    """Markdown lines: the maintainer, then FEATURED_CONTRIBUTORS, then the rest as GitHub sent them."""
+    featured = list(FEATURED_CONTRIBUTORS)
+
+    def rank(item: tuple[int, tuple[str, str]]) -> tuple[int, int]:
+        index, (login, _url) = item
+        if login == MAINTAINER_LOGIN:
+            return (0, 0)
+        if login in FEATURED_CONTRIBUTORS:
+            return (1, featured.index(login))
+        return (2, index)
+
+    ordered = [entry for _index, entry in sorted(enumerate(contributors), key=rank)]
+    return [f"- [{FEATURED_CONTRIBUTORS.get(login, login)}]({url})" for login, url in ordered]
 
 
 def read_previous_contributors_section(credits_text: str, pattern: str) -> list[str]:

@@ -22,8 +22,8 @@
 ## Contributors
 
 - [Ed-Fe](https://github.com/Ed-Fe)
-- [paulosantesso1](https://github.com/paulosantesso1)
+- [Vinicius Siqueira](https://github.com/viniciusSiqueira195)
+- [Paulo](https://github.com/paulosantesso1)
 - [claude](https://github.com/claude)
-- [viniciusSiqueira195](https://github.com/viniciusSiqueira195)
 - [reffehcsoibaf](https://github.com/reffehcsoibaf)
 - [diegovinicius95891-netizen](https://github.com/diegovinicius95891-netizen)
