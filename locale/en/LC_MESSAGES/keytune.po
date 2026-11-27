@@ -4831,8 +4831,8 @@ msgstr "Reading the pasted folders..."
 msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
 msgstr "A whole drive cannot be added at once. Open it and choose a folder."
 
-msgid "Conteúdo relacionado."
-msgstr "Related content."
+msgid "Conteúdo relacionado. {position}"
+msgstr "Related content. {position}"
 
 msgid "Sessão restaurada com {count} abas. {title}."
 msgstr "Session restored with {count} tabs. {title}."

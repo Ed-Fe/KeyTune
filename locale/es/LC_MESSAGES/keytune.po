@@ -4831,8 +4831,8 @@ msgstr "Leyendo las carpetas pegadas..."
 msgid "Uma unidade inteira não pode ser adicionada de uma vez. Entre nela e escolha uma pasta."
 msgstr "No se puede añadir una unidad entera de una vez. Entra en ella y elige una carpeta."
 
-msgid "Conteúdo relacionado."
-msgstr "Contenido relacionado."
+msgid "Conteúdo relacionado. {position}"
+msgstr "Contenido relacionado. {position}"
 
 msgid "Sessão restaurada com {count} abas. {title}."
 msgstr "Sesión restaurada con {count} pestañas. {title}."

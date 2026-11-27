@@ -3021,7 +3021,7 @@ msgid "Conteúdo relacionado do YouTube Music {status}."
 msgstr ""
 
 #: src/player/frames/library_tabs/related_autoplay.py
-msgid "Conteúdo relacionado."
+msgid "Conteúdo relacionado. {position}"
 msgstr ""
 
 #: src/player/frames/library_tabs/playback_control.py
