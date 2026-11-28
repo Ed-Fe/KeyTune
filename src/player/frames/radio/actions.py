@@ -288,6 +288,7 @@ class RadioActionsMixin:
         )
         append(_("Voltar à lista anterior (Backspace)"), self.on_radio_results_back, can_go_back)
         append(_("Adicionar rádio manualmente..."), self._add_radio_manually, True)
+        append(_("Adicionar rádio ao &diretório..."), self._add_radio_to_directory, True)
         if single_result is not None and getattr(single_result, "kind", "") == FOLDER_COUNTRY:
             country_code, country_name = single_result.payload
             append(

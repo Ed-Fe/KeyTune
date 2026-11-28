@@ -287,6 +287,7 @@ def _build_screens():
     from player.preferences.dialog import PreferencesDialog
     from player.preferences.models import AppSettings
     from player.quick_player.panel import QuickPlayerPanel
+    from player.radio.directory_dialog import AddRadioToDirectoryDialog, ConfirmRadioDirectoryDialog
     from player.radio.manual_dialog import AddRadioManuallyDialog
     from player.radio.panel import RadioTabPanel
     from player.sleep_timer.dialog import SleepTimerDialog
@@ -316,6 +317,8 @@ def _build_screens():
     return {
         "AboutDialog": lambda parent: AboutDialog(parent),
         "AddRadioManuallyDialog": lambda parent: AddRadioManuallyDialog(parent),
+        "AddRadioToDirectoryDialog": lambda parent: AddRadioToDirectoryDialog(parent),
+        "ConfirmRadioDirectoryDialog": lambda parent: ConfirmRadioDirectoryDialog(parent),
         "AudioOutputDialog": lambda parent: AudioOutputDialog(parent, [], ""),
         "AutoDJSessionPanel": lambda parent: AutoDJSessionPanel(
             parent, on_replace_next=_noop, on_recalculate=_noop, on_toggle_preparation=_noop, on_stop=_noop
@@ -367,6 +370,7 @@ def _build_screens():
             on_copy_stream_url=_noop,
             on_show_actions_menu=_noop,
             on_add_manually=_noop,
+            on_add_to_directory=_noop,
         ),
         "ReadingDialog": reading_dialog,
         "ShortcutCaptureDialog": lambda parent: ShortcutCaptureDialog(parent, "Reproduzir ou pausar", "Space"),

@@ -714,7 +714,7 @@ Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas
 
 - `Ctrl+D`: añade la radio a favoritas o la quita. Es el mismo favorito de las playlists, y la lista marca la radio como «favorita».
 - `Ctrl+C`: copia la dirección del stream de la radio seleccionada.
-- El botón **Acciones...** abre el menú con **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Añadir a favoritas** (o **Quitar de favoritas**), **Ver detalles de la radio**, **Abrir el sitio web de la radio en el navegador**, **Copiar la dirección del stream** y **Votar por esta radio en el directorio**. Con una radio sonando, el menú también permite marcarla como favorita aunque no esté seleccionada.
+- El botón **Acciones...** abre el menú con **Reproducir**, **Añadir sin reproducir**, **Ver contenido**, **Volver a la lista anterior**, **Añadir radio manualmente...**, **Añadir radio al directorio...**, **Añadir a favoritas** (o **Quitar de favoritas**), **Ver detalles de la radio**, **Abrir el sitio web de la radio en el navegador**, **Copiar la dirección del stream** y **Votar por esta radio en el directorio**. Con una radio sonando, el menú también permite marcarla como favorita aunque no esté seleccionada.
 
 **Ver detalles de la radio** abre un cuadro de lectura con nombre, país, estado o región, idioma, géneros, calidad (códec y tasa de bits), votos, oyentes en las últimas 24 horas, sitio web y dirección del stream, con un botón para abrir el sitio. **Votar por esta radio en el directorio** registra tu voto en Radio Browser.
 
@@ -724,7 +724,21 @@ Escribe el nombre de una radio en el campo de búsqueda y pulsa `Enter`. El cuad
 
 ### Añadir una radio manualmente
 
-Cuando una radio no esté en el directorio de Radio Browser, el botón **Añadir radio manualmente...** (se alcanza con `Tab`, justo después del campo de búsqueda, o desde el menú **Acciones...**) abre un cuadro con dos campos: el **nombre** de la radio y la **dirección del stream o de un archivo M3U**. Al confirmar con **OK**, la radio se guarda y va directo a **Radios favoritas**, y KeyTune avisa con un anuncio de estado.
+Cuando una radio no esté en el directorio de Radio Browser, el botón **Añadir radio manualmente...** (se alcanza con `Tab`, justo después del campo de búsqueda, o desde el menú **Acciones...**) abre un cuadro con dos campos: el **nombre** de la radio y la **dirección del stream o de un archivo M3U**. Al confirmar con **OK**, la radio se guarda y va directo a **Radios favoritas**, y KeyTune avisa con un anuncio de estado. Se queda solo en tus favoritas: el directorio público no recibe este registro.
+
+### Publicar una radio en el directorio
+
+Puedes registrar una radio en el directorio público de Radio Browser, para que otras personas la encuentren. El registro es público, y KeyTune no puede deshacerlo ni editarlo.
+
+1. En la pestaña **Radios en línea**, elige **Añadir radio al directorio...** (el botón junto a **Añadir radio manualmente...**, o el mismo elemento del menú **Acciones...**).
+2. Rellena el **nombre** (hasta 400 caracteres) y la **dirección del stream**, que empieza por `http://` o `https://`.
+3. Revisa el **código del país**: viene con tu país, y puede quedar en blanco o tener dos letras.
+4. Si quieres, rellena **códigos de idioma**, **géneros**, **sitio** y **dirección del icono**. El sitio y el icono, si los rellenas, también empiezan por `http://` o `https://`.
+5. Confirma con **OK**. KeyTune abre **Datos a publicar**: lo que se enviará, uno por línea, para releerlo y copiarlo, y el aviso de que el registro es público. La pregunta **¿Publicar en el directorio?** queda con **No** marcado. Enter en ese texto no publica. Elige **Sí** para enviar. **No** o Esc vuelve al formulario con los campos como los dejaste.
+
+KeyTune anuncia que está enviando. Si esa dirección ya está en el directorio, dice el nombre de la radio existente y no envía. Si el directorio rechaza, la comprobación falla o la respuesta no llega después del envío, muestra lo que pasó y pregunta **¿Volver al formulario?**, con **No** marcado. El cuadro se abre de nuevo, con los campos como los dejaste, solo si eliges **Sí**. Cuando la respuesta no llega, no hay forma de saber si la radio quedó grabada: búscala antes de intentarlo de nuevo.
+
+Cuando solo hay una radio seleccionada y todavía no está en el directorio, el nombre y la dirección ya vienen rellenados.
 
 ### Cómo suena la radio
 

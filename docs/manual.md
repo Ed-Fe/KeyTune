@@ -722,7 +722,7 @@ Além das teclas de [Como as listas funcionam](#como-as-listas-funcionam):
 
 - `Ctrl+D`: adiciona a rádio às favoritas ou a tira delas. É o mesmo favorito das playlists, e a lista marca a rádio como "favorita".
 - `Ctrl+C`: copia o endereço do stream da rádio selecionada.
-- O botão **Ações...** abre o menu com **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Adicionar rádio manualmente...**, **Adicionar às favoritas** (ou **Remover das favoritas**), **Ver detalhes da rádio**, **Abrir o site da rádio no navegador**, **Copiar o endereço do stream** e **Votar nesta rádio no diretório**. Com uma rádio tocando, o menu também deixa favoritá-la mesmo que ela não esteja selecionada.
+- O botão **Ações...** abre o menu com **Tocar**, **Adicionar sem tocar**, **Ver conteúdo**, **Voltar à lista anterior**, **Adicionar rádio manualmente...**, **Adicionar rádio ao diretório...**, **Adicionar às favoritas** (ou **Remover das favoritas**), **Ver detalhes da rádio**, **Abrir o site da rádio no navegador**, **Copiar o endereço do stream** e **Votar nesta rádio no diretório**. Com uma rádio tocando, o menu também deixa favoritá-la mesmo que ela não esteja selecionada.
 
 **Ver detalhes da rádio** abre uma caixa de leitura com nome, país, estado ou região, idioma, gêneros, qualidade (codec e taxa de bits), votos, ouvintes nas últimas 24 horas, site e endereço do stream, com um botão para abrir o site. **Votar nesta rádio no diretório** registra o seu voto no Radio Browser.
 
@@ -732,7 +732,21 @@ Digite o nome de uma rádio no campo de busca e pressione `Enter`. A caixa **Em*
 
 ### Adicionar rádio manualmente
 
-Quando uma rádio não estiver no diretório do Radio Browser, o botão **Adicionar rádio manualmente...** (alcançável com `Tab`, logo após o campo de busca, ou pelo menu **Ações...**) abre uma caixa com dois campos: o **nome** da rádio e o **endereço do stream ou de um arquivo M3U**. Ao confirmar com **OK**, a rádio é cadastrada e vai direto para as **Rádios favoritas**, e o KeyTune avisa com um anúncio de status.
+Quando uma rádio não estiver no diretório do Radio Browser, o botão **Adicionar rádio manualmente...** (alcançável com `Tab`, logo após o campo de busca, ou pelo menu **Ações...**) abre uma caixa com dois campos: o **nome** da rádio e o **endereço do stream ou de um arquivo M3U**. Ao confirmar com **OK**, a rádio é cadastrada e vai direto para as **Rádios favoritas**, e o KeyTune avisa com um anúncio de status. Ela fica só nas suas favoritas: o diretório público não recebe esse cadastro.
+
+### Publicar uma rádio no diretório
+
+Dá para cadastrar uma rádio no diretório público do Radio Browser, para outras pessoas a encontrarem. O cadastro fica público, e o KeyTune não consegue desfazê-lo nem editá-lo.
+
+1. Na aba **Rádios online**, escolha **Adicionar rádio ao diretório...** (o botão ao lado de **Adicionar rádio manualmente...**, ou o mesmo item no menu **Ações...**).
+2. Preencha o **nome** (até 400 caracteres) e o **endereço do stream**, que começa com `http://` ou `https://`.
+3. Confira o **código do país**: ele já vem com o seu país, pode ficar em branco ou ter duas letras.
+4. Se quiser, preencha **códigos de idioma**, **gêneros**, **site** e **endereço do ícone**. Site e ícone, se preenchidos, também começam com `http://` ou `https://`.
+5. Confirme com **OK**. O KeyTune abre **Dados do cadastro**: o que será enviado, um por linha, para reler e copiar, e o aviso de que o cadastro é público. A pergunta **Publicar no diretório?** fica com **Não** marcado. Enter nesse texto não publica. Escolha **Sim** para enviar. **Não** ou Esc volta ao formulário com os campos como você deixou.
+
+O KeyTune anuncia que está enviando. Se aquele endereço já estiver no diretório, ele fala o nome da rádio existente e não envia. Se o diretório recusar, a verificação falhar ou a resposta não chegar depois do envio, ele mostra o que aconteceu e pergunta **Voltar ao formulário?**, com **Não** marcado. Só se você escolher **Sim** a caixa abre de novo, com os campos como você deixou. Quando a resposta não chega, não dá para saber se a rádio foi gravada: procure por ela antes de tentar de novo.
+
+Quando só uma rádio está selecionada e ela ainda não tem cadastro no diretório, o nome e o endereço já vêm preenchidos.
 
 ### Como a rádio toca
 

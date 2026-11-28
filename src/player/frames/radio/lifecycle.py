@@ -80,6 +80,7 @@ class RadioLifecycleMixin:
             on_copy_stream_url=self._copy_selected_radio_stream_url,
             on_show_actions_menu=self._show_radio_actions_menu,
             on_add_manually=self._add_radio_manually,
+            on_add_to_directory=self._add_radio_to_directory,
         )
 
     def _get_radio_panel(self):

@@ -145,6 +145,7 @@ msgstr ""
 #: src/player/plugins/dialog.py
 #: src/player/preferences/audio_output_dialog.py
 #: src/player/preferences/dialog.py
+#: src/player/radio/directory_dialog.py
 #: src/player/radio/manual_dialog.py
 #: src/player/sleep_timer/dialog.py
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -216,6 +217,10 @@ msgstr ""
 msgid "&Dados copiados do navegador (opcional):"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "&Dados do cadastro"
+msgstr ""
+
 #: src/player/playlists/queue_dialog.py
 msgid "&Descer"
 msgstr ""
@@ -263,6 +268,10 @@ msgstr ""
 
 #: src/player/frames/autodj_panel.py
 msgid "&Encerrar AutoDJ"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "&Endereço do stream"
 msgstr ""
 
 #: src/player/radio/manual_dialog.py
@@ -332,6 +341,10 @@ msgstr ""
 
 #: src/player/frames/smart_library/smart_playlists.py
 msgid "&Gerenciar playlists inteligentes..."
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "&Gêneros"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -447,6 +460,10 @@ msgstr ""
 msgid "&Navegador:"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "&Nome"
+msgstr ""
+
 #: src/player/smart_library/smart_playlist_dialog.py
 msgid "&Nome da playlist"
 msgstr ""
@@ -483,6 +500,11 @@ msgstr ""
 msgid "&Novo..."
 msgstr ""
 
+#: src/player/frames/radio/directory.py
+#: src/player/radio/directory_dialog.py
+msgid "&Não"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "&Nível de detalhe"
 msgstr ""
@@ -495,6 +517,7 @@ msgstr ""
 msgid "&O que mudou nesta versão:"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
 #: src/player/radio/manual_dialog.py
 msgid "&OK"
 msgstr ""
@@ -661,6 +684,15 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "&Sem avaliação\tCtrl+0"
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+#: src/player/radio/directory_dialog.py
+msgid "&Sim"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "&Site"
 msgstr ""
 
 #: src/player/frames/ui.py
@@ -1486,6 +1518,16 @@ msgstr ""
 msgid "Adicionar rádio &manualmente..."
 msgstr ""
 
+#: src/player/frames/radio/actions.py
+#: src/player/radio/panel.py
+msgid "Adicionar rádio ao &diretório..."
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+#: src/player/radio/panel.py
+msgid "Adicionar rádio ao diretório"
+msgstr ""
+
 #: src/player/radio/manual_dialog.py
 #: src/player/radio/panel.py
 msgid "Adicionar rádio manualmente"
@@ -2191,6 +2233,10 @@ msgstr ""
 msgid "Atualize os recursos adicionais do YouTube Music e tente novamente. Faixas que exigem uma conta podem não estar disponíveis nos perfis de reprodução compatíveis."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Até {limit} caracteres."
+msgstr ""
+
 #: src/player/frames/ui.py
 msgid "Aumentar &Tom (Shift+])"
 msgstr ""
@@ -2696,6 +2742,14 @@ msgstr ""
 msgid "Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Cadastro incompleto"
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "Cadastro no diretório"
+msgstr ""
+
 #: src/player/frames/commands/open_commands.py
 #: src/player/frames/explorer.py
 msgid "Caminho copiado."
@@ -2917,6 +2971,10 @@ msgstr ""
 msgid "Classificar por"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Classificação"
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Club"
 msgstr ""
@@ -2996,6 +3054,10 @@ msgstr ""
 
 #: src/player/youtube_music/posts.py
 msgid "Comentários do post de {author}"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Começa com http:// ou https://."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -3426,6 +3488,26 @@ msgstr ""
 msgid "Curva neutra, útil para manter o som original da mídia."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Código do &país:"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Código do país"
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "Código do país: {value}"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Códigos de &idioma"
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "Códigos de idioma: {value}"
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Dados de conexão do YouTube Music"
 msgstr ""
@@ -3671,8 +3753,16 @@ msgstr ""
 msgid "Digite o endereço do stream ou do arquivo M3U."
 msgstr ""
 
+#: src/player/radio/submission.py
+msgid "Digite o endereço do stream."
+msgstr ""
+
 #: src/player/radio/panel.py
 msgid "Digite o nome da rádio e pressione Enter. O endereço de um stream colado aqui toca direto."
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "Digite o nome da rádio."
 msgstr ""
 
 #: src/player/frames/radio/navigation.py
@@ -3841,6 +3931,10 @@ msgstr ""
 msgid "Downloads do marketplace devem usar HTTPS."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Duas letras, como BR, ou em branco."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Duplicar preset do equalizador"
 msgstr ""
@@ -3960,6 +4054,10 @@ msgstr ""
 msgid "Empurra graves e agudos para uma escuta mais animada."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "En&dereço do ícone"
+msgstr ""
+
 #: src/player/frames/autodj_panel.py
 msgid "Encerra o AutoDJ sem remover as músicas que já foram preparadas."
 msgstr ""
@@ -3991,6 +4089,14 @@ msgstr ""
 
 #: src/player/radio/manual_dialog.py
 msgid "Endereço do stream ou M3U da rádio"
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "Endereço do stream: {value}"
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "Endereço do ícone: {value}"
 msgstr ""
 
 #: src/player/radio/manual_dialog.py
@@ -4051,6 +4157,10 @@ msgstr ""
 
 #: src/player/frames/playback/sponsorblock.py
 msgid "Enviando o trecho..."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "Enviando {name} ao diretório."
 msgstr ""
 
 #: src/player/frames/playback/sponsorblock.py
@@ -4300,6 +4410,10 @@ msgstr ""
 msgid "Estas funções não existem na DLL do sistema: {names}."
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Estação"
+msgstr ""
+
 #: src/player/convert/plan.py
 msgid "Este arquivo não tem faixa de vídeo para converter."
 msgstr ""
@@ -4314,6 +4428,14 @@ msgstr ""
 
 #: src/player/youtube_music/streams.py
 msgid "Este conteúdo exige um PO Token que o yt-dlp não consegue gerar sozinho. Atualize os recursos adicionais e tente novamente mais tarde."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "Este endereço já está no diretório, na rádio {name}."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "Este endereço já está no diretório."
 msgstr ""
 
 #: src/player/frames/smart_library/search.py
@@ -4763,6 +4885,7 @@ msgid "Gêneros"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
+#: src/player/radio/submission.py
 msgid "Gêneros: {value}"
 msgstr ""
 
@@ -4868,6 +4991,10 @@ msgstr ""
 
 #: src/player/radio/folders.py
 msgid "Idiomas"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Imagem http ou https. Pode ficar em branco."
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -6186,6 +6313,7 @@ msgid "Nome: {name}"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
+#: src/player/radio/submission.py
 msgid "Nome: {value}"
 msgstr ""
 
@@ -6266,6 +6394,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Nunca"
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "Não dá para saber se o cadastro de {name} foi gravado. Procure a rádio antes de tentar de novo."
 msgstr ""
 
 #: src/player/update/service.py
@@ -6862,6 +6994,10 @@ msgstr ""
 msgid "Não foi possível verificar as atualizações."
 msgstr ""
 
+#: src/player/frames/radio/directory.py
+msgid "Não foi possível verificar se este endereço já está no diretório. Nada foi enviado."
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 msgid "Não foi possível votar nesta rádio agora."
 msgstr ""
@@ -7241,6 +7377,15 @@ msgstr ""
 msgid "O aviso fica na central de notificações em vez de ser falado pelo KeyTune."
 msgstr ""
 
+#: src/player/frames/radio/directory.py
+msgid "O cadastro no diretório ainda está sendo enviado."
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+#: src/player/radio/submission.py
+msgid "O cadastro é público e o KeyTune não pode desfazê-lo."
+msgstr ""
+
 #: src/player/plugins/marketplace.py
 msgid "O campo verified deve ser verdadeiro ou falso."
 msgstr ""
@@ -7277,8 +7422,20 @@ msgstr ""
 msgid "O comentário está vazio."
 msgstr ""
 
+#: src/player/radio/submission.py
+msgid "O código do país fica em branco ou tem duas letras, como BR."
+msgstr ""
+
 #: src/player/frames/diagnostics.py
 msgid "O diagnóstico já está em andamento."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "O diretório não aceitou o cadastro."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "O diretório não aceitou o cadastro: {detail}"
 msgstr ""
 
 #: src/player/frames/radio/actions.py
@@ -7303,6 +7460,14 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O endereço de download do recurso adicional está vazio."
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "O endereço do stream precisa começar com http:// ou https://."
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "O endereço do ícone precisa começar com http:// ou https://."
 msgstr ""
 
 #: src/player/plugins/installer.py
@@ -7408,6 +7573,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "O navegador padrão anterior"
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "O nome pode ter no máximo {limit} caracteres."
 msgstr ""
 
 #: src/player/diagnostics/youtube_resolution.py
@@ -7608,6 +7777,10 @@ msgstr ""
 
 #: src/player/download/plan.py
 msgid "O site não tinha o áudio em {wanted} e, sem o FFmpeg para converter, ele veio em {formats}."
+msgstr ""
+
+#: src/player/radio/submission.py
+msgid "O site precisa começar com http:// ou https://."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -8664,8 +8837,20 @@ msgstr ""
 msgid "Pu&lar tutorial"
 msgstr ""
 
+#: src/player/radio/panel.py
+msgid "Publica a rádio no diretório do Radio Browser."
+msgstr ""
+
 #: src/player/youtube_music/details.py
 msgid "Publicado: {date}"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Publicar no diretório"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Publicar no diretório?"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -8678,6 +8863,10 @@ msgstr ""
 
 #: src/player/welcome/dialog.py
 msgid "Pular tutorial"
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Página http ou https. Pode ficar em branco."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -9460,6 +9649,14 @@ msgstr ""
 msgid "Sempre mostrar este diálogo ao baixar"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Separados por vírgula, como pt,en."
+msgstr ""
+
+#: src/player/radio/directory_dialog.py
+msgid "Separados por vírgula, como rock, jazz."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Sequência AutoDJ — {title}"
 msgstr ""
@@ -9530,7 +9727,12 @@ msgstr ""
 msgid "Sistema"
 msgstr ""
 
+#: src/player/radio/directory_dialog.py
+msgid "Site e ícone"
+msgstr ""
+
 #: src/player/frames/radio/actions.py
+#: src/player/radio/submission.py
 msgid "Site: {value}"
 msgstr ""
 
@@ -11264,6 +11466,10 @@ msgstr ""
 msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
 msgstr ""
 
+#: src/player/frames/radio/directory.py
+msgid "{detail}\n\nVoltar ao formulário?"
+msgstr ""
+
 #: src/player/update/dialog.py
 msgid "{downloaded} baixados."
 msgstr ""
@@ -11381,6 +11587,10 @@ msgstr ""
 
 #: src/player/frames/radio/actions.py
 msgid "{name} adicionada às rádios favoritas."
+msgstr ""
+
+#: src/player/frames/radio/directory.py
+msgid "{name} foi adicionada ao diretório."
 msgstr ""
 
 #: src/player/plugins/dialog.py

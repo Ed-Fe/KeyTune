@@ -714,7 +714,7 @@ In addition to the keys in [How lists work](#how-lists-work):
 
 - `Ctrl+D`: adds the station to favorites or takes it out. It is the same favorite as the playlists', and the list marks the station as "favorite".
 - `Ctrl+C`: copies the stream address of the selected station.
-- The **Actions...** button opens the menu with **Play**, **Add without playing**, **View contents**, **Back to the previous list**, **Add to favorites** (or **Remove from favorites**), **View radio station details**, **Open the radio station's website in the browser**, **Copy the stream address** and **Vote for this radio station in the directory**. With a station playing, the menu also lets you favorite it even if it isn't selected.
+- The **Actions...** button opens the menu with **Play**, **Add without playing**, **View contents**, **Back to the previous list**, **Add radio manually...**, **Add radio to the directory...**, **Add to favorites** (or **Remove from favorites**), **View radio station details**, **Open the radio station's website in the browser**, **Copy the stream address** and **Vote for this radio station in the directory**. With a station playing, the menu also lets you favorite it even if it isn't selected.
 
 **View radio station details** opens a reading box with name, country, state or region, language, genres, quality (codec and bitrate), votes, listeners in the last 24 hours, website and stream address, with a button to open the website. **Vote for this radio station in the directory** records your vote on Radio Browser.
 
@@ -724,7 +724,21 @@ Type the name of a radio station in the search field and press `Enter`. The **In
 
 ### Add a radio manually
 
-When a station is not in the Radio Browser directory, the **Add radio manually...** button (reached with `Tab`, right after the search field, or from the **Actions...** menu) opens a box with two fields: the station **name** and the **stream address or M3U file address**. When you confirm with **OK**, the station is saved and goes straight to **Favorite radio stations**, and KeyTune confirms with a status announcement.
+When a station is not in the Radio Browser directory, the **Add radio manually...** button (reached with `Tab`, right after the search field, or from the **Actions...** menu) opens a box with two fields: the station **name** and the **stream address or M3U file address**. When you confirm with **OK**, the station is saved and goes straight to **Favorite radio stations**, and KeyTune confirms with a status announcement. It stays only in your favorites: the public directory does not receive this entry.
+
+### Publish a radio station to the directory
+
+You can register a station in the public Radio Browser directory, so other people can find it. The listing is public, and KeyTune cannot undo or edit it.
+
+1. In the **Online radio** tab, choose **Add radio to the directory...** (the button next to **Add radio manually...**, or the same item in the **Actions...** menu).
+2. Fill in the **name** (up to 400 characters) and the **stream address**, which starts with `http://` or `https://`.
+3. Check the **country code**: it comes filled with your country, and it can stay blank or be two letters.
+4. If you want, fill in **language codes**, **genres**, **website** and **icon address**. Website and icon, when filled in, also start with `http://` or `https://`.
+5. Confirm with **OK**. KeyTune opens **Details to publish**: everything that will be sent, one line each, so you can reread and copy it, plus the warning that the listing is public. The question **Publish to the directory?** has **No** selected. Enter in that text does not publish. Choose **Yes** to send. **No** or Esc returns to the form with the fields as you left them.
+
+KeyTune announces that it is sending. If that address is already in the directory, it speaks the name of the existing station and does not send. If the directory refuses, the check fails, or the answer does not arrive after sending, it shows what happened and asks **Return to the form?**, with **No** selected. The box opens again, with the fields as you left them, only if you choose **Yes**. When the answer does not arrive, there is no way to tell whether the station was saved: search for it before trying again.
+
+When only one station is selected and it is not listed in the directory yet, the name and the address come already filled in.
 
 ### How the radio plays
 

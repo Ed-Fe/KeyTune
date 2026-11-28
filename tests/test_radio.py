@@ -1,16 +1,30 @@
+from email.message import EmailMessage
 from pathlib import Path
+import io
+import json
 import sys
 import tempfile
 import unittest
 import urllib.error
-from unittest.mock import Mock
+import urllib.parse
+from unittest.mock import Mock, patch
+
+import wx
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from player.announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 from player.frames.playback.media_metadata import MediaMetadataMixin
+from player.frames.radio.directory import RadioDirectoryMixin
 from player.frames.radio.now_playing import RadioNowPlayingMixin, clean_radio_stream_title
 from player.library import is_audio_playback_media
-from player.radio.client import FALLBACK_SERVERS, RadioBrowserClient, RadioBrowserError
+from player.radio.client import (
+    FALLBACK_SERVERS,
+    _REQUEST_TIMEOUT_SECONDS,
+    _USER_AGENT,
+    RadioBrowserClient,
+    RadioBrowserError,
+)
 from player.radio.folders import (
     FOLDER_COUNTRIES,
     FOLDER_COUNTRY,
@@ -27,7 +41,22 @@ from player.radio.media import (
     radio_stream_url,
 )
 from player.radio.models import RadioFolderItem, RadioStation
-from player.radio.service import RadioService
+from player.radio.service import (
+    DIRECTORY_ADDED,
+    DIRECTORY_CHECK_FAILED,
+    DIRECTORY_DUPLICATE,
+    DIRECTORY_REJECTED,
+    DIRECTORY_UNCERTAIN,
+    DirectoryAddResult,
+    RadioService,
+)
+from player.radio.submission import (
+    DIRECTORY_NAME_LIMIT,
+    RadioDirectorySubmission,
+    directory_submission_preview,
+    initial_directory_submission,
+    validate_directory_submission,
+)
 from player.radio.store import RadioLibraryStore
 from player.smart_library import SmartLibraryService
 
@@ -168,6 +197,169 @@ class RadioBrowserClientTests(unittest.TestCase):
         )
 
         self.assertEqual(client.vote(STATION_UUID), (False, "too often"))
+
+
+class _UrlopenDirectory:
+    """Substitui o urlopen do cliente. A descoberta dos espelhos não sai da máquina."""
+
+    def __init__(self, servers, on_request):
+        self.servers = list(servers)
+        self.on_request = on_request
+        self.add_urls = []
+
+    def __call__(self, request, timeout=None):
+        if request.full_url.endswith("/json/servers"):
+            body = json.dumps([{"name": name} for name in self.servers]).encode("utf-8")
+            return _JsonResponse(body)
+        if request.full_url.endswith("/json/add"):
+            self.add_urls.append(request.full_url)
+        return self.on_request(request, timeout)
+
+
+class _JsonResponse:
+    def __init__(self, body):
+        self._body = body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def read(self):
+        return self._body
+
+
+class RadioDirectoryClientTests(unittest.TestCase):
+    def _client(self, on_request, servers=("aa.example", "bb.example")):
+        transport = _UrlopenDirectory(servers, on_request)
+        patcher = patch("player.radio.client.urllib.request.urlopen", transport)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        return RadioBrowserClient(), transport
+
+    def test_add_posts_the_filled_fields_once_with_the_app_user_agent(self):
+        captured = {}
+
+        def on_request(request, timeout):
+            captured["request"] = request
+            captured["timeout"] = timeout
+            return _JsonResponse(b'{"ok": true, "message": "added", "uuid": "new-uuid"}')
+
+        client, transport = self._client(on_request)
+        result = client.add_station(
+            name="Rádio Exemplo",
+            url="https://stream.example/a",
+            homepage="  ",
+            favicon="https://example.com/icon.png",
+            countrycode="BR",
+            languagecodes="pt,en",
+            tags="rock,jazz",
+        )
+
+        self.assertEqual(result, (True, "added", "new-uuid"))
+        self.assertEqual(len(transport.add_urls), 1)
+        self.assertTrue(transport.add_urls[0].endswith("/json/add"))
+        self.assertTrue(
+            transport.add_urls[0].startswith("https://aa.example/")
+            or transport.add_urls[0].startswith("https://bb.example/")
+        )
+        request = captured["request"]
+        self.assertEqual(request.get_method(), "POST")
+        self.assertEqual(captured["timeout"], _REQUEST_TIMEOUT_SECONDS)
+        headers = {key.lower(): value for key, value in request.header_items()}
+        self.assertEqual(headers["user-agent"], _USER_AGENT)
+        self.assertIn("application/x-www-form-urlencoded", headers["content-type"])
+        body = urllib.parse.parse_qs(request.data.decode("utf-8"))
+        self.assertEqual(
+            body,
+            {
+                "name": ["Rádio Exemplo"],
+                "url": ["https://stream.example/a"],
+                "favicon": ["https://example.com/icon.png"],
+                "countrycode": ["BR"],
+                "languagecodes": ["pt,en"],
+                "tags": ["rock,jazz"],
+            },
+        )
+
+    def test_add_is_not_repeated_on_another_mirror(self):
+        def on_request(_request, _timeout):
+            raise urllib.error.URLError("timed out")
+
+        client, transport = self._client(on_request)
+
+        with self.assertRaises(RadioBrowserError):
+            client.add_station(name="Rádio", url="https://stream.example/a")
+
+        self.assertEqual(len(transport.add_urls), 1)
+
+    def test_http_error_is_a_communication_failure_and_is_not_retried(self):
+        def on_request(request, _timeout):
+            raise urllib.error.HTTPError(
+                request.full_url,
+                500,
+                "server error",
+                EmailMessage(),
+                io.BytesIO(b'{"ok": true, "message": "added", "uuid": "should-not-count"}'),
+            )
+
+        client, transport = self._client(on_request)
+
+        with self.assertRaises(RadioBrowserError):
+            client.add_station(name="Rádio", url="https://stream.example/a")
+
+        self.assertEqual(len(transport.add_urls), 1)
+
+    def test_add_reads_ok_as_text_or_boolean(self):
+        payloads = [
+            {"ok": True, "message": "added", "uuid": "abc"},
+            {"ok": "true", "uuid": "abc"},
+            {"ok": False, "message": "no"},
+            {"ok": "false", "message": "no"},
+            {"message": "no"},
+            ["not a result"],
+        ]
+        answers = iter(payloads)
+
+        def on_request(_request, _timeout):
+            return _JsonResponse(json.dumps(next(answers)).encode("utf-8"))
+
+        client, _transport = self._client(on_request)
+
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (True, "added", "abc"))
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (True, "", "abc"))
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (False, "no", ""))
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (False, "no", ""))
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (False, "no", ""))
+        self.assertEqual(client.add_station(name="Rádio", url="https://stream.example/a"), (False, "", ""))
+
+    def test_byurl_retries_the_next_mirror(self):
+        calls = []
+
+        def on_request(request, _timeout):
+            calls.append(request.full_url)
+            if len(calls) == 1:
+                raise urllib.error.URLError("down")
+            return _JsonResponse(json.dumps([API_STATION]).encode("utf-8"))
+
+        client, _transport = self._client(on_request)
+        stream_url = "https://stream.example/a"
+
+        self.assertEqual(client.stations_by_url(stream_url), [API_STATION])
+        self.assertEqual(len(calls), 2)
+        self.assertNotEqual(calls[0], calls[1])
+        encoded = urllib.parse.quote_plus(stream_url)
+        self.assertIn(f"/json/stations/byurl?url={encoded}", calls[0])
+        self.assertIn(f"/json/stations/byurl?url={encoded}", calls[1])
+
+    def test_byurl_keeps_an_unreadable_payload(self):
+        def on_request(_request, _timeout):
+            return _JsonResponse(b'{"ok": false}')
+
+        client, _transport = self._client(on_request)
+
+        self.assertEqual(client.stations_by_url("https://stream.example/a"), {"ok": False})
 
 
 class _LibraryTestCase(unittest.TestCase):
@@ -311,6 +503,390 @@ class RadioServiceTests(_LibraryTestCase):
         self.service.count_click(_station(uuid=""))
 
         self.client.count_click.assert_called_once_with(STATION_UUID)
+
+    def test_duplicate_station_is_not_sent(self):
+        self.client.stations_by_url.return_value = [
+            {"name": "", "url": STREAM_URL},
+            {"name": "Já existe", "url": STREAM_URL},
+        ]
+
+        result = self.service.add_to_directory(RadioDirectorySubmission(name="Nova", url=STREAM_URL))
+
+        self.assertEqual(result.status, DIRECTORY_DUPLICATE)
+        self.assertEqual(result.existing_name, "Já existe")
+        self.client.add_station.assert_not_called()
+
+    def test_failed_duplicate_check_does_not_send(self):
+        self.client.stations_by_url.side_effect = RadioBrowserError("offline")
+
+        result = self.service.add_to_directory(RadioDirectorySubmission(name="Nova", url=STREAM_URL))
+
+        self.assertEqual(result.status, DIRECTORY_CHECK_FAILED)
+        self.client.add_station.assert_not_called()
+
+    def test_unreadable_duplicate_check_does_not_send(self):
+        self.client.stations_by_url.return_value = {"ok": False}
+
+        result = self.service.add_to_directory(RadioDirectorySubmission(name="Nova", url=STREAM_URL))
+
+        self.assertEqual(result.status, DIRECTORY_CHECK_FAILED)
+        self.client.add_station.assert_not_called()
+
+    def test_new_address_is_sent_once_and_accepted(self):
+        self.client.stations_by_url.return_value = []
+        self.client.add_station.return_value = (True, "added", "uuid-1")
+        submission = RadioDirectorySubmission(
+            name="Nova",
+            url=STREAM_URL,
+            country_code="BR",
+            language_codes="pt",
+            tags="rock",
+            homepage="https://example.com",
+            favicon="",
+        )
+
+        result = self.service.add_to_directory(submission)
+
+        self.assertEqual((result.status, result.uuid, result.message), (DIRECTORY_ADDED, "uuid-1", "added"))
+        self.client.stations_by_url.assert_called_once_with(STREAM_URL)
+        self.client.add_station.assert_called_once_with(
+            name="Nova",
+            url=STREAM_URL,
+            homepage="https://example.com",
+            favicon="",
+            countrycode="BR",
+            languagecodes="pt",
+            tags="rock",
+        )
+
+    def test_rejected_add_keeps_the_directory_message(self):
+        self.client.stations_by_url.return_value = []
+        self.client.add_station.return_value = (False, "invalid url", "")
+
+        result = self.service.add_to_directory(RadioDirectorySubmission(name="Nova", url=STREAM_URL))
+
+        self.assertEqual((result.status, result.message), (DIRECTORY_REJECTED, "invalid url"))
+        self.assertEqual(self.client.add_station.call_count, 1)
+
+    def test_add_failure_is_uncertain_and_is_not_retried(self):
+        self.client.stations_by_url.return_value = []
+        self.client.add_station.side_effect = RadioBrowserError("timed out")
+
+        result = self.service.add_to_directory(RadioDirectorySubmission(name="Nova", url=STREAM_URL))
+
+        self.assertEqual(result.status, DIRECTORY_UNCERTAIN)
+        self.assertEqual(self.client.add_station.call_count, 1)
+
+
+class RadioDirectorySubmissionTests(unittest.TestCase):
+    def _validate(self, **fields):
+        values = {
+            "name": "Rádio Nova",
+            "url": "https://stream.example/a",
+            "country_code": "BR",
+            "language_codes": "",
+            "tags": "",
+            "homepage": "",
+            "favicon": "",
+        }
+        values.update(fields)
+        return validate_directory_submission(**values)
+
+    def test_accepts_a_complete_station_and_drops_blank_optional_parts(self):
+        submission, field, message = self._validate(
+            name="  Rádio Nova  ",
+            url=" https://stream.example/a ",
+            country_code=" br ",
+            language_codes=" pt, ,en ",
+            tags=" rock, jazz ",
+            homepage="",
+            favicon=" https://example.com/icon.png ",
+        )
+
+        self.assertEqual((field, message), ("", ""))
+        self.assertEqual(submission.name, "Rádio Nova")
+        self.assertEqual(submission.url, "https://stream.example/a")
+        self.assertEqual(submission.country_code, "BR")
+        self.assertEqual(submission.language_codes, "pt,en")
+        self.assertEqual(submission.tags, "rock,jazz")
+        self.assertEqual(submission.homepage, "")
+        self.assertEqual(submission.favicon, "https://example.com/icon.png")
+
+    def test_name_is_required_and_limited_to_400_characters(self):
+        _submission, field, message = self._validate(name="   ")
+        self.assertEqual(field, "name")
+        self.assertIn("nome", message.casefold())
+
+        submission, field, _message = self._validate(name="a" * DIRECTORY_NAME_LIMIT)
+        self.assertEqual(field, "")
+        self.assertEqual(len(submission.name), DIRECTORY_NAME_LIMIT)
+
+        _submission, field, message = self._validate(name="a" * (DIRECTORY_NAME_LIMIT + 1))
+        self.assertEqual(field, "name")
+        self.assertIn("400", message)
+
+    def test_stream_address_must_be_http_or_https(self):
+        for url in ("", "   ", "ftp://example.com/a", "notaurl", "http://", "https://"):
+            _submission, field, _message = self._validate(url=url)
+            self.assertEqual(field, "url", url)
+
+        submission, field, _message = self._validate(url="HTTP://Example.com/Live")
+        self.assertEqual(field, "")
+        self.assertEqual(submission.url, "HTTP://Example.com/Live")
+
+    def test_country_is_blank_or_two_letters(self):
+        for country_code in ("", "BR", "br", "bR"):
+            submission, field, _message = self._validate(country_code=country_code)
+            self.assertEqual(field, "", country_code)
+            self.assertEqual(submission.country_code, country_code.strip().upper())
+
+        for country_code in ("B", "BRA", "B1", "12"):
+            _submission, field, _message = self._validate(country_code=country_code)
+            self.assertEqual(field, "country_code", country_code)
+
+    def test_optional_pages_must_be_http_when_filled(self):
+        for field_name in ("homepage", "favicon"):
+            submission, field, _message = self._validate(**{field_name: ""})
+            self.assertEqual(field, "")
+            self.assertEqual(getattr(submission, field_name), "")
+
+            _submission, field, _message = self._validate(**{field_name: "ftp://example.com/a"})
+            self.assertEqual(field, field_name)
+
+            submission, field, _message = self._validate(**{field_name: "https://example.com/a"})
+            self.assertEqual(field, "")
+            self.assertEqual(getattr(submission, field_name), "https://example.com/a")
+
+            _submission, field, _message = self._validate(**{field_name: "http://[x"})
+            self.assertEqual(field, field_name)
+
+    def test_malformed_stream_address_stays_on_the_stream_field(self):
+        _submission, field, message = self._validate(url="http://[x")
+        self.assertEqual(field, "url")
+        self.assertIn("http://", message)
+
+    def test_the_first_invalid_field_is_the_one_reported(self):
+        _submission, field, _message = self._validate(name="", url="notaurl", country_code="BRASIL")
+        self.assertEqual(field, "name")
+
+    def test_preview_lists_each_filled_field_and_the_public_warning(self):
+        submission = RadioDirectorySubmission(
+            name="Rádio Nova",
+            url="https://stream.example/a",
+            country_code="BR",
+            language_codes="pt,en",
+            tags="rock,jazz",
+            homepage="https://example.com",
+            favicon="https://example.com/icon.png",
+        )
+
+        self.assertEqual(
+            directory_submission_preview(submission).splitlines(),
+            [
+                "Nome: Rádio Nova",
+                "Endereço do stream: https://stream.example/a",
+                "Código do país: BR",
+                "Códigos de idioma: pt,en",
+                "Gêneros: rock,jazz",
+                "Site: https://example.com",
+                "Endereço do ícone: https://example.com/icon.png",
+                "",
+                "O cadastro é público e o KeyTune não pode desfazê-lo.",
+            ],
+        )
+
+    def test_preview_skips_blank_optional_fields(self):
+        submission = RadioDirectorySubmission(name="Rádio Nova", url="https://stream.example/a")
+
+        self.assertEqual(
+            directory_submission_preview(submission).splitlines(),
+            [
+                "Nome: Rádio Nova",
+                "Endereço do stream: https://stream.example/a",
+                "",
+                "O cadastro é público e o KeyTune não pode desfazê-lo.",
+            ],
+        )
+
+    def test_only_one_unlisted_station_is_prefilled(self):
+        custom = RadioStation(name="Minha FM", stream_url="https://mine.example/live", station_uuid="")
+        listed = _station()
+        folder = RadioFolderItem("country", "Brasil")
+
+        prefilled = initial_directory_submission("br", [custom])
+        self.assertEqual((prefilled.name, prefilled.url, prefilled.country_code), ("Minha FM", "https://mine.example/live", "BR"))
+
+        empty = initial_directory_submission("BR", [listed])
+        self.assertEqual((empty.name, empty.url, empty.country_code), ("", "", "BR"))
+        self.assertEqual(initial_directory_submission("BR", [custom, custom]).name, "")
+        self.assertEqual(initial_directory_submission("", [folder]).country_code, "")
+        self.assertEqual(initial_directory_submission("BR", []).name, "")
+
+
+class _ImmediateThread:
+    def __init__(self, target=None, daemon=None, name=None):
+        self._target = target
+
+    def start(self):
+        self._target()
+
+
+class _DirectoryQuestion:
+    def __init__(self, parent, message, title, style):
+        self.parent = parent
+        self.message = message
+        self.title = title
+        self.style = style
+        self.labels = None
+        self.destroyed = False
+
+    def SetYesNoLabels(self, yes_label, no_label):
+        self.labels = (yes_label, no_label)
+
+    def ShowModal(self):
+        return self.parent.answer
+
+    def Destroy(self):
+        self.destroyed = True
+
+    def IsBeingDeleted(self):
+        return self.destroyed
+
+
+class DirectorySubmitFlowTests(unittest.TestCase):
+    def _host(self, result):
+        host = RadioDirectoryMixin.__new__(RadioDirectoryMixin)
+        host.result = result
+        host.answer = wx.ID_NO
+        host._deleted = False
+        host.announcements = []
+        host.reopened = []
+        host.questions = []
+        host._radio_directory_submit_running = False
+
+        def announce(message, category):
+            host.announcements.append((message, category))
+
+        def service():
+            double = Mock()
+            double.add_to_directory.side_effect = lambda submission: host.result
+            return double
+
+        host._announce = announce
+        host._get_radio_service = service
+        host._get_radio_panel = lambda: None
+        host._show_radio_directory_dialog = lambda initial: host.reopened.append(initial) or False
+        host.IsBeingDeleted = lambda: host._deleted
+        return host
+
+    def _submit(self, host, submission):
+        def question(*args, **kwargs):
+            dialog = _DirectoryQuestion(*args, **kwargs)
+            host.questions.append(dialog)
+            return dialog
+
+        with (
+            patch("player.frames.radio.directory.threading.Thread", _ImmediateThread),
+            patch("player.frames.radio.directory.wx.CallAfter", side_effect=lambda callback, *args: callback(*args)),
+            patch("player.frames.radio.directory.wx.MessageDialog", question),
+        ):
+            started = host._submit_radio_to_directory(submission)
+        return started
+
+    def test_rejection_asks_once_and_reopens_only_on_yes(self):
+        submission = RadioDirectorySubmission(name="Nova", url=STREAM_URL)
+        host = self._host(DirectoryAddResult(DIRECTORY_REJECTED, message="url inválida"))
+        host.answer = wx.ID_YES
+
+        self.assertTrue(self._submit(host, submission))
+
+        self.assertEqual(
+            host.announcements,
+            [("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS)],
+        )
+        self.assertNotIn("url inválida", host.announcements[0][0])
+        self.assertEqual(host.reopened, [submission])
+        self.assertFalse(host._radio_directory_submit_running)
+        question = host.questions[0]
+        self.assertEqual(len(host.questions), 1)
+        self.assertIn("url inválida", question.message)
+        self.assertIn("Voltar ao formulário?", question.message)
+        self.assertEqual(question.message.count("Voltar ao formulário?"), 1)
+        self.assertEqual(question.title, "Cadastro no diretório")
+        self.assertEqual(question.labels, ("&Sim", "&Não"))
+        self.assertTrue(question.style & wx.NO_DEFAULT)
+        self.assertTrue(question.style & wx.YES_NO)
+        self.assertTrue(question.destroyed)
+
+        host.answer = wx.ID_NO
+        host.reopened.clear()
+        host.questions.clear()
+        host.announcements.clear()
+        self._submit(host, submission)
+        self.assertEqual(host.reopened, [])
+        self.assertEqual(host.announcements, [("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS)])
+        self.assertEqual(len(host.questions), 1)
+
+    def test_success_and_duplicate_are_only_announced(self):
+        submission = RadioDirectorySubmission(name="Nova", url=STREAM_URL)
+        added = self._host(DirectoryAddResult(DIRECTORY_ADDED, uuid="abc"))
+        self._submit(added, submission)
+        self.assertEqual(added.questions, [])
+        self.assertEqual(added.reopened, [])
+        self.assertEqual(
+            added.announcements,
+            [
+                ("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS),
+                ("Nova foi adicionada ao diretório.", ANNOUNCE_CONFIRMATIONS),
+            ],
+        )
+
+        duplicate = self._host(DirectoryAddResult(DIRECTORY_DUPLICATE, existing_name="Já existe"))
+        self._submit(duplicate, submission)
+        self.assertEqual(duplicate.questions, [])
+        self.assertEqual(
+            duplicate.announcements,
+            [
+                ("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS),
+                ("Este endereço já está no diretório, na rádio Já existe.", ANNOUNCE_ERRORS),
+            ],
+        )
+
+    def test_check_failure_and_uncertain_result_ask_without_announcing(self):
+        submission = RadioDirectorySubmission(name="Nova", url=STREAM_URL)
+        failed = self._host(DirectoryAddResult(DIRECTORY_CHECK_FAILED))
+        self._submit(failed, submission)
+        self.assertEqual(failed.announcements, [("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS)])
+        self.assertIn("Nada foi enviado.", failed.questions[0].message)
+        self.assertNotIn("Nada foi enviado.", failed.announcements[0][0])
+        self.assertEqual(failed.reopened, [])
+
+        host = self._host(DirectoryAddResult(DIRECTORY_ADDED))
+
+        def explode(_submission):
+            raise RuntimeError("timed out")
+
+        host._get_radio_service = lambda: Mock(add_to_directory=explode)
+        self._submit(host, submission)
+        self.assertEqual(host.announcements, [("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS)])
+        self.assertIn("Não dá para saber", host.questions[0].message)
+        self.assertIn("Nova", host.questions[0].message)
+        self.assertNotIn("Não dá para saber", host.announcements[0][0])
+
+    def test_destroyed_window_skips_the_question_and_the_reopen(self):
+        submission = RadioDirectorySubmission(name="Nova", url=STREAM_URL)
+        host = self._host(DirectoryAddResult(DIRECTORY_REJECTED, message="não"))
+
+        def mark_deleted(_submission):
+            host._deleted = True
+            return host.result
+
+        host._get_radio_service = lambda: Mock(add_to_directory=mark_deleted)
+        self._submit(host, submission)
+        self.assertEqual(host.questions, [])
+        self.assertEqual(host.announcements, [("Enviando Nova ao diretório.", ANNOUNCE_PROGRESS)])
+        self.assertEqual(host.reopened, [])
+        self.assertFalse(host._radio_directory_submit_running)
 
 
 class RadioFolderTests(unittest.TestCase):

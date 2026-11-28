@@ -3,6 +3,7 @@ import wx
 from ..accessibility import attach_named_accessible
 from ..i18n import _
 from ..library.browser import VirtualItemsListCtrl
+from ..widgets import describe_control
 
 
 class RadioTabPanel(wx.Panel):
@@ -27,6 +28,7 @@ class RadioTabPanel(wx.Panel):
         on_copy_stream_url,
         on_show_actions_menu,
         on_add_manually,
+        on_add_to_directory,
     ):
         super().__init__(parent, style=wx.TAB_TRAVERSAL)
 
@@ -44,6 +46,7 @@ class RadioTabPanel(wx.Panel):
         self._on_copy_stream_url = on_copy_stream_url
         self._on_show_actions_menu = on_show_actions_menu
         self._on_add_manually = on_add_manually
+        self._on_add_to_directory = on_add_to_directory
 
         root_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -67,6 +70,12 @@ class RadioTabPanel(wx.Panel):
         self.add_manually_button.SetName(_("Adicionar rádio manualmente"))
         self.add_manually_button.SetToolTip(
             _("Cadastra pelo nome e pelo endereço do stream uma rádio que não está no diretório, e a leva às favoritas.")
+        )
+        self.add_to_directory_button = wx.Button(self, label=_("Adicionar rádio ao &diretório..."))
+        describe_control(
+            self.add_to_directory_button,
+            _("Adicionar rádio ao diretório"),
+            _("Publica a rádio no diretório do Radio Browser."),
         )
 
         self.results_label = wx.StaticText(self, label="")
@@ -97,8 +106,12 @@ class RadioTabPanel(wx.Panel):
         )
         help_label.Wrap(620)
 
+        button_row = wx.BoxSizer(wx.HORIZONTAL)
+        button_row.Add(self.add_manually_button, 0, wx.RIGHT, 8)
+        button_row.Add(self.add_to_directory_button, 0)
+
         root_sizer.Add(search_row, 0, wx.ALL | wx.EXPAND, 10)
-        root_sizer.Add(self.add_manually_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
+        root_sizer.Add(button_row, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
         root_sizer.Add(self.results_label, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         root_sizer.Add(self.results_list, 1, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
         root_sizer.Add(self.actions_button, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
@@ -107,6 +120,7 @@ class RadioTabPanel(wx.Panel):
 
         self.search_query_ctrl.Bind(wx.EVT_TEXT_ENTER, self._on_search_query_enter)
         self.add_manually_button.Bind(wx.EVT_BUTTON, self._on_add_manually_button)
+        self.add_to_directory_button.Bind(wx.EVT_BUTTON, self._on_add_to_directory_button)
         self.actions_button.Bind(wx.EVT_BUTTON, self._on_actions_button)
         self.results_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self._on_selection_changed)
         self.results_list.Bind(wx.EVT_LIST_ITEM_DESELECTED, self._on_selection_changed)
@@ -229,6 +243,9 @@ class RadioTabPanel(wx.Panel):
 
     def _on_add_manually_button(self, _event):
         self._on_add_manually()
+
+    def _on_add_to_directory_button(self, _event):
+        self._on_add_to_directory()
 
     def _on_list_context_menu(self, _event):
         self._on_show_actions_menu(self.results_list)

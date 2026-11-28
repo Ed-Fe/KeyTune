@@ -6,12 +6,39 @@ na thread da interface.
 """
 
 import threading
+from dataclasses import dataclass
 
 from .client import RadioBrowserClient, RadioBrowserError
 from .media import build_radio_media_path, is_radio_media, radio_station_uuid, radio_stream_url
 from .models import RadioResultPage, RadioStation
 
 _GROUP_LIST_LIMIT = 500
+
+DIRECTORY_ADDED = "added"
+DIRECTORY_DUPLICATE = "duplicate"
+DIRECTORY_REJECTED = "rejected"
+DIRECTORY_CHECK_FAILED = "check_failed"
+DIRECTORY_UNCERTAIN = "uncertain"
+
+
+@dataclass(frozen=True)
+class DirectoryAddResult:
+    """O que aconteceu ao publicar uma rádio. ``message`` é a do diretório, quando há."""
+
+    status: str
+    message: str = ""
+    uuid: str = ""
+    existing_name: str = ""
+
+
+def _existing_station_name(matches):
+    for entry in matches:
+        if not isinstance(entry, dict):
+            continue
+        name = str(entry.get("name") or "").strip()
+        if name:
+            return name
+    return ""
 
 
 class RadioService:
@@ -162,3 +189,33 @@ class RadioService:
         if not station.station_uuid:
             return False, ""
         return self._client.vote(station.station_uuid)
+
+    def add_to_directory(self, submission):
+        """Confere se o endereço já existe e, só então, publica. Uma tentativa de envio.
+
+        Se a consulta de duplicata falhar, nada é enviado. Se o envio em si falhar,
+        o resultado é incerto: a estação pode ter sido gravada mesmo assim.
+        """
+        try:
+            matches = self._client.stations_by_url(submission.url)
+        except RadioBrowserError as exc:
+            return DirectoryAddResult(DIRECTORY_CHECK_FAILED, message=str(exc).strip())
+        if not isinstance(matches, list):
+            return DirectoryAddResult(DIRECTORY_CHECK_FAILED)
+        if matches:
+            return DirectoryAddResult(DIRECTORY_DUPLICATE, existing_name=_existing_station_name(matches))
+        try:
+            accepted, message, station_uuid = self._client.add_station(
+                name=submission.name,
+                url=submission.url,
+                homepage=submission.homepage,
+                favicon=submission.favicon,
+                countrycode=submission.country_code,
+                languagecodes=submission.language_codes,
+                tags=submission.tags,
+            )
+        except RadioBrowserError:
+            return DirectoryAddResult(DIRECTORY_UNCERTAIN)
+        if not accepted:
+            return DirectoryAddResult(DIRECTORY_REJECTED, message=message)
+        return DirectoryAddResult(DIRECTORY_ADDED, message=message, uuid=station_uuid)

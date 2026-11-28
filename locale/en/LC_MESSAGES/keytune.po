@@ -96,6 +96,9 @@ msgstr "&Duplicate..."
 msgid "&Editar..."
 msgstr "&Edit..."
 
+msgid "&Endereço do stream"
+msgstr "Stream &address"
+
 msgid "&Escolher pasta..."
 msgstr "&Choose folder..."
 
@@ -122,6 +125,9 @@ msgstr "&Manage playback queue\tCtrl+Shift+Q"
 
 msgid "&Gerenciar playlists inteligentes..."
 msgstr "&Manage smart playlists..."
+
+msgid "&Gêneros"
+msgstr "&Genres"
 
 msgid "&Histórico de reprodução...\tCtrl+Shift+H"
 msgstr "Playback &history...\tCtrl+Shift+H"
@@ -153,6 +159,9 @@ msgstr "&Find item...\tCtrl+F"
 msgid "&Minutos personalizados"
 msgstr "Custom &minutes"
 
+msgid "&Nome"
+msgstr "&Name"
+
 msgid "&Nome da playlist"
 msgstr "Playlist &name"
 
@@ -170,6 +179,9 @@ msgstr "&New..."
 
 msgid "&Novo..."
 msgstr "&New..."
+
+msgid "&Não"
+msgstr "&No"
 
 msgid "&Ordenar por"
 msgstr "S&ort by"
@@ -225,6 +237,12 @@ msgstr "&Save copy..."
 msgid "&Sem avaliação\tCtrl+0"
 msgstr "&No rating\tCtrl+0"
 
+msgid "&Sim"
+msgstr "&Yes"
+
+msgid "&Site"
+msgstr "&Website"
+
 msgid "&Sobre o KeyTune"
 msgstr "&About KeyTune"
 
@@ -258,20 +276,146 @@ msgstr "5 stars"
 msgid "Abrindo no navegador: {text}."
 msgstr "Opening in the browser: {text}."
 
+msgid "Adicionar rádio ao &diretório..."
+msgstr "Add radio to the &directory..."
+
+msgid "Adicionar rádio ao diretório"
+msgstr "Add radio to the directory"
+
+msgid "Até {limit} caracteres."
+msgstr "Up to {limit} characters."
+
+msgid "Cadastro incompleto"
+msgstr "Incomplete entry"
+
+msgid "Cadastro no diretório"
+msgstr "Directory entry"
+
+msgid "Classificação"
+msgstr "Classification"
+
+msgid "Começa com http:// ou https://."
+msgstr "Starts with http:// or https://."
+
+msgid "Código do &país:"
+msgstr "Countr&y code:"
+
+msgid "Código do país"
+msgstr "Country code"
+
+msgid "Código do país: {value}"
+msgstr "Country code: {value}"
+
+msgid "Códigos de &idioma"
+msgstr "&Language codes"
+
+msgid "Códigos de idioma: {value}"
+msgstr "Language codes: {value}"
+
+msgid "Digite o endereço do stream."
+msgstr "Type the stream address."
+
+msgid "Digite o nome da rádio."
+msgstr "Type the station name."
+
+msgid "Duas letras, como BR, ou em branco."
+msgstr "Two letters, like BR, or blank."
+
+msgid "En&dereço do ícone"
+msgstr "&Icon address"
+
+msgid "Endereço do stream: {value}"
+msgstr "Stream address: {value}"
+
+msgid "Endereço do ícone: {value}"
+msgstr "Icon address: {value}"
+
+msgid "Enviando {name} ao diretório."
+msgstr "Sending {name} to the directory."
+
+msgid "Estação"
+msgstr "Station"
+
+msgid "Este endereço já está no diretório, na rádio {name}."
+msgstr "This address is already in the directory, on the station {name}."
+
+msgid "Este endereço já está no diretório."
+msgstr "This address is already in the directory."
+
 msgid "Idio&ma da interface"
 msgstr "I&nterface language"
+
+msgid "Imagem http ou https. Pode ficar em branco."
+msgstr "An http or https image. It can stay blank."
+
+msgid "Não dá para saber se o cadastro de {name} foi gravado. Procure a rádio antes de tentar de novo."
+msgstr "There is no way to tell whether the entry for {name} was saved. Search for the station before trying again."
 
 msgid "Não foi possível abrir o link {text}."
 msgstr "Could not open the link {text}."
 
+msgid "Não foi possível verificar se este endereço já está no diretório. Nada foi enviado."
+msgstr "Could not check whether this address is already in the directory. Nothing was sent."
+
 msgid "Não há link nesta linha."
 msgstr "There is no link on this line."
+
+msgid "O cadastro no diretório ainda está sendo enviado."
+msgstr "The directory entry is still being sent."
+
+msgid "O cadastro é público e o KeyTune não pode desfazê-lo."
+msgstr "The listing is public and KeyTune cannot undo it."
+
+msgid "O código do país fica em branco ou tem duas letras, como BR."
+msgstr "The country code stays blank or has two letters, like BR."
+
+msgid "O diretório não aceitou o cadastro."
+msgstr "The directory did not accept the entry."
+
+msgid "O diretório não aceitou o cadastro: {detail}"
+msgstr "The directory did not accept the entry: {detail}"
+
+msgid "O endereço do stream precisa começar com http:// ou https://."
+msgstr "The stream address must start with http:// or https://."
+
+msgid "O endereço do ícone precisa começar com http:// ou https://."
+msgstr "The icon address must start with http:// or https://."
+
+msgid "O nome pode ter no máximo {limit} caracteres."
+msgstr "The name can have at most {limit} characters."
 
 msgid "O site não tinha o áudio em {wanted} e, sem o FFmpeg para converter, ele veio em {formats}."
 msgstr "The site didn't have the audio in {wanted} and, without FFmpeg to convert it, it came in {formats}."
 
+msgid "O site precisa começar com http:// ou https://."
+msgstr "The website must start with http:// or https://."
+
 msgid "O trecho \"{text}\" não foi encontrado no manual."
 msgstr "The part \"{text}\" was not found in the manual."
+
+msgid "Publica a rádio no diretório do Radio Browser."
+msgstr "Publishes the station on the Radio Browser directory."
+
+msgid "Publicar no diretório"
+msgstr "Publish to the directory"
+
+msgid "Publicar no diretório?"
+msgstr "Publish to the directory?"
+
+msgid "Publicar {name} no diretório?\n{url}\n\nO cadastro é público e o KeyTune não pode desfazê-lo."
+msgstr "Publish {name} to the directory?\n{url}\n\nThe listing is public and KeyTune cannot undo it."
+
+msgid "Página http ou https. Pode ficar em branco."
+msgstr "An http or https page. It can stay blank."
+
+msgid "Separados por vírgula, como pt,en."
+msgstr "Separated by commas, like pt,en."
+
+msgid "Separados por vírgula, como rock, jazz."
+msgstr "Separated by commas, like rock, jazz."
+
+msgid "Site e ícone"
+msgstr "Website and icon"
 
 msgid "[{source}: {title} - {artist}]"
 msgstr "[{source}: {title} - {artist}]"
@@ -1128,6 +1272,9 @@ msgstr "Neutral curve, useful to keep the original sound of the media."
 
 msgid "&Dados copiados do navegador (opcional):"
 msgstr "&Data copied from the browser (optional):"
+
+msgid "&Dados do cadastro"
+msgstr "&Details to publish"
 
 msgid "Dados de conexão do YouTube Music"
 msgstr "YouTube Music connection data"
@@ -3558,6 +3705,9 @@ msgstr "{minutes} minutes"
 
 msgid "{name} (dB)"
 msgstr "{name} (dB)"
+
+msgid "{name} foi adicionada ao diretório."
+msgstr "{name} was added to the directory."
 
 msgid "{name} personalizado"
 msgstr "Custom {name}"
@@ -6074,6 +6224,9 @@ msgid "{count} rádio adicionada a {title}, sem tocar."
 msgid_plural "{count} rádios adicionadas a {title}, sem tocar."
 msgstr[0] "{count} radio station added to {title}, without playing."
 msgstr[1] "{count} radio stations added to {title}, without playing."
+
+msgid "{detail}\n\nVoltar ao formulário?"
+msgstr "{detail}\n\nReturn to the form?"
 
 msgid "{details}\n\nPermissões solicitadas:\n{permissions}\n\n{security_notice}"
 msgstr "{details}\n\nRequested permissions:\n{permissions}\n\n{security_notice}"

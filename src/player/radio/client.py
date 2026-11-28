@@ -33,15 +33,43 @@ class RadioBrowserError(Exception):
     """O diretório não respondeu ou respondeu algo que não dá para ler."""
 
 
+def _request_headers():
+    return {"Accept": "application/json", "User-Agent": _USER_AGENT}
+
+
 def _fetch_json(url):
-    request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": _USER_AGENT})
+    request = urllib.request.Request(url, headers=_request_headers())
     with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
+def _post_form(url, fields):
+    headers = _request_headers()
+    headers["Content-Type"] = "application/x-www-form-urlencoded"
+    request = urllib.request.Request(
+        url,
+        data=urllib.parse.urlencode(fields).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _directory_result(payload):
+    """``(aceito, mensagem, uuid)``. ``ok`` ausente ou falso, em texto ou booleano, é recusa."""
+    if not isinstance(payload, dict):
+        return False, "", ""
+    accepted = str(payload.get("ok")).strip().lower() == "true"
+    message = str(payload.get("message") or "").strip()
+    station_uuid = str(payload.get("uuid") or "").strip()
+    return accepted, message, station_uuid
+
+
 class RadioBrowserClient:
-    def __init__(self, fetch_json=_fetch_json):
+    def __init__(self, fetch_json=_fetch_json, post_form=None):
         self._fetch_json = fetch_json
+        self._post_form = post_form or _post_form
         self._servers = []
         self._lock = threading.Lock()
 
@@ -153,6 +181,42 @@ class RadioBrowserClient:
 
     def vote(self, station_uuid):
         payload = self._get(f"vote/{urllib.parse.quote(str(station_uuid or '').strip(), safe='')}")
-        if not isinstance(payload, dict):
-            return False, ""
-        return str(payload.get("ok")).strip().lower() == "true", str(payload.get("message") or "").strip()
+        accepted, message, _station_uuid = _directory_result(payload)
+        return accepted, message
+
+    def stations_by_url(self, url):
+        """Estações cujo endereço de stream é exatamente *url*.
+
+        Uma resposta que não seja uma lista volta como veio. Tratar isso como
+        lista vazia faria o cadastro seguir mesmo com a consulta ilegível.
+        """
+        return self._get("stations/byurl", {"url": str(url or "").strip()})
+
+    def add_station(self, *, name, url, homepage="", favicon="", countrycode="", languagecodes="", tags=""):
+        """Publica a estação com um único POST.
+
+        O espelho é escolhido antes, pela descoberta que as buscas já usam. Se o
+        envio falhar, não há segunda tentativa: um tempo esgotado pode ter gravado
+        a estação, e repetir noutro espelho criaria uma duplicata.
+        """
+        fields = {
+            "name": name,
+            "url": url,
+            "homepage": homepage,
+            "favicon": favicon,
+            "countrycode": countrycode,
+            "languagecodes": languagecodes,
+            "tags": tags,
+        }
+        payload = {key: str(value).strip() for key, value in fields.items() if str(value or "").strip()}
+        servers = self._server_candidates()
+        if not servers:
+            raise RadioBrowserError("no radio browser server")
+        server = servers[0]
+        post_url = f"https://{server}/json/add"
+        try:
+            response = self._post_form(post_url, payload)
+        except (urllib.error.URLError, OSError, TimeoutError, ValueError) as exc:
+            _logger.debug("Radio Browser add to %s failed: %s", server, exc)
+            raise RadioBrowserError(str(exc)) from exc
+        return _directory_result(response)
