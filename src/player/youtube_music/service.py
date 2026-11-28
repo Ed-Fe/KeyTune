@@ -636,7 +636,11 @@ class YouTubeMusicService:
 
     def get_connected_account_name(self):
         account_info = self.get_account_info()
-        return str(account_info.get("accountName") or account_info.get("channelHandle") or "Conta do YouTube Music").strip()
+        return str(
+            account_info.get("accountName")
+            or account_info.get("channelHandle")
+            or _("Conta do YouTube Music")
+        ).strip()
 
     # -- Client factory (delegated) --------------------------------------------
 

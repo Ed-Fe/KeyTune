@@ -78,33 +78,33 @@ class PluginManifest:
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "PluginManifest":
         if not isinstance(value, dict):
-            raise ManifestError("O manifesto deve ser um objeto JSON.")
+            raise ManifestError(_("O manifesto deve ser um objeto JSON."))
         required = ("id", "name", "version", "api_version", "entrypoint", "author")
         missing = [key for key in required if not str(value.get(key, "")).strip()]
         if missing:
-            raise ManifestError("Campos obrigatórios ausentes: " + ", ".join(missing))
+            raise ManifestError(_("Campos obrigatórios ausentes: {fields}").format(fields=", ".join(missing)))
         plugin_id = str(value["id"]).strip()
         if not PLUGIN_ID_RE.fullmatch(plugin_id):
-            raise ManifestError("O id deve ter de 3 a 64 caracteres minúsculos seguros.")
+            raise ManifestError(_("O id deve ter de 3 a 64 caracteres minúsculos seguros."))
         version = str(value["version"]).strip()
         if not VERSION_RE.fullmatch(version):
-            raise ManifestError("A versão deve seguir o versionamento semântico.")
+            raise ManifestError(_("A versão deve seguir o versionamento semântico."))
         api_version = str(value["api_version"]).strip()
         if not API_VERSION_RE.fullmatch(api_version):
-            raise ManifestError("api_version deve usar o formato principal.secundária.")
+            raise ManifestError(_("api_version deve usar o formato principal.secundária."))
         minimum_keytune_version = str(value.get("minimum_keytune_version", "2.0.0")).strip()
         if not VERSION_RE.fullmatch(minimum_keytune_version):
-            raise ManifestError("minimum_keytune_version deve seguir o versionamento semântico.")
+            raise ManifestError(_("minimum_keytune_version deve seguir o versionamento semântico."))
         entrypoint = str(value["entrypoint"]).strip()
         if not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*:[A-Za-z_]\w*", entrypoint):
-            raise ManifestError("O entrypoint deve usar o formato modulo:objeto.")
+            raise ManifestError(_("O entrypoint deve usar o formato modulo:objeto."))
         try:
             permissions = frozenset(PluginPermission(item) for item in value.get("permissions", []))
         except (TypeError, ValueError) as exc:
-            raise ManifestError(f"Permissão desconhecida: {exc}") from exc
+            raise ManifestError(_("Permissão desconhecida: {error}").format(error=exc)) from exc
         isolation = str(value.get("isolation", "process"))
         if isolation not in {"process", "in_process"}:
-            raise ManifestError("isolation deve ser process ou in_process.")
+            raise ManifestError(_("isolation deve ser process ou in_process."))
         return cls(
             id=plugin_id,
             name=str(value["name"]).strip(),

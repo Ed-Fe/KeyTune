@@ -836,6 +836,10 @@ msgstr ""
 msgid "A conta do YouTube foi desconectada desta instalação."
 msgstr ""
 
+#: src/player/plugins/service.py
+msgid "A contribuição do plugin precisa de tipo, id e rótulo válidos."
+msgstr ""
+
 #: src/player/frames/convert.py
 msgid "A conversão funciona com arquivos do computador. Para mídias do YouTube, use Baixar (Ctrl+Shift+B)."
 msgstr ""
@@ -908,6 +912,10 @@ msgstr ""
 msgid "A legenda deste vídeo veio vazia."
 msgstr ""
 
+#: src/player/plugins/marketplace.py
+msgid "A lista de plugins do catálogo é inválida."
+msgstr ""
+
 #: src/player/frames/explorer.py
 msgid "A lista de unidades não pode ser classificada."
 msgstr ""
@@ -916,8 +924,16 @@ msgstr ""
 msgid "A lista é montada toda vez que você abre a playlist, então ela acompanha as mudanças de avaliação e de histórico."
 msgstr ""
 
+#: src/player/plugins/service.py
+msgid "A mensagem do plugin excede o limite de 4 MB."
+msgstr ""
+
 #: src/player/youtube_music/live_chat.py
 msgid "A mensagem está vazia."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "A mensagem para o plugin excede o limite de 4 MB."
 msgstr ""
 
 #: src/player/monitor_output.py
@@ -994,6 +1010,14 @@ msgstr ""
 
 #: src/player/frames/library_tabs/station_radio.py
 msgid "A mídia atual não é uma faixa compatível do YouTube Music."
+msgstr ""
+
+#: src/player/autodj/librosa_analyzer.py
+msgid "A mídia não contém uma faixa de áudio."
+msgstr ""
+
+#: src/player/autodj/service.py
+msgid "A mídia não é local e nenhum resolvedor remoto está disponível."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
@@ -1154,6 +1178,14 @@ msgstr ""
 
 #: src/player/portable_update.py
 msgid "A versão anterior foi restaurada."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "A versão deve seguir o versionamento semântico."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "A versão do pacote não corresponde à entrada selecionada no catálogo."
 msgstr ""
 
 #: src/player/frames/commands/open_commands.py
@@ -1867,6 +1899,10 @@ msgstr ""
 msgid "Arábia Saudita"
 msgstr ""
 
+#: src/player/autodj/dependencies.py
+msgid "As bibliotecas do AutoDJ foram instaladas, mas não puderam ser carregadas."
+msgstr ""
+
 #: src/player/youtube_music/library_manager.py
 msgid "As faixas selecionadas não foram encontradas nesta playlist."
 msgstr ""
@@ -1889,6 +1925,10 @@ msgstr ""
 
 #: src/player/update/dialog.py
 msgid "As notas desta versão ainda não foram publicadas na release do GitHub."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "As permissões solicitadas ainda não foram integralmente aprovadas."
 msgstr ""
 
 #: src/player/youtube_music/comments.py
@@ -2336,6 +2376,10 @@ msgstr ""
 msgid "Ações do item selecionado"
 msgstr ""
 
+#: src/player/keyboard/shortcuts.py
+msgid "Backspace"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Baixa as bibliotecas de análise de áudio: librosa, NumPy, SciPy, Numba e PyAV."
 msgstr ""
@@ -2663,6 +2707,10 @@ msgstr ""
 msgid "Caminho do arquivo de conexão"
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "Campos obrigatórios ausentes: {fields}"
+msgstr ""
+
 #: src/player/youtube_music/models.py
 msgid "Canadá"
 msgstr ""
@@ -2756,12 +2804,21 @@ msgstr ""
 msgid "Carregando os detalhes."
 msgstr ""
 
+#: src/player/frames/library_navigation.py
+msgid "Carregando pasta como playlist: {title}."
+msgstr ""
+
 #: src/player/frames/youtube_music/lifecycle.py
 msgid "Carregando playlist do YouTube Music: {title}."
 msgstr ""
 
+#: src/player/frames/library_loader.py
 #: src/player/library/browser.py
 msgid "Carregando playlist..."
+msgstr ""
+
+#: src/player/frames/library_navigation.py
+msgid "Carregando playlist: {title}."
 msgstr ""
 
 #: src/player/frames/youtube_music/browse.py
@@ -2838,6 +2895,10 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "Chat, notificações, download e temporizador. Desligado, só falam com o KeyTune em segundo plano."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "Checksum SHA-256 inválido no catálogo."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -3048,6 +3109,10 @@ msgstr ""
 msgid "Conta do YouTube"
 msgstr ""
 
+#: src/player/youtube_music/service.py
+msgid "Conta do YouTube Music"
+msgstr ""
+
 #: src/player/frames/youtube_music/auth.py
 msgid "Conta do YouTube conectada: {name}."
 msgstr ""
@@ -3125,6 +3190,10 @@ msgstr ""
 #: src/player/frames/smart_library/resume.py
 #: src/player/keyboard/shortcuts.py
 msgid "Continuar ouvindo"
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "Contribuição duplicada: {kind}:{identifier}"
 msgstr ""
 
 #: src/player/plugins/manifest.py
@@ -3289,6 +3358,10 @@ msgstr ""
 msgid "Criar nova playlist no YouTube Music"
 msgstr ""
 
+#: src/player/frames/youtube_music/playlists.py
+msgid "Criar nova playlist..."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Criar playlist do YouTube Music"
 msgstr ""
@@ -3307,6 +3380,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Créditos do KeyTune"
+msgstr ""
+
+#: src/player/youtube_music/library_manager.py
+msgid "Curtida"
 msgstr ""
 
 #: src/player/youtube_music/comment_actions.py
@@ -3740,6 +3817,14 @@ msgstr ""
 msgid "Downloads"
 msgstr ""
 
+#: src/player/plugins/installer.py
+msgid "Downloads de plugins devem usar HTTPS."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "Downloads do marketplace devem usar HTTPS."
+msgstr ""
+
 #: src/player/equalizer/panel.py
 msgid "Duplicar preset do equalizador"
 msgstr ""
@@ -3944,6 +4029,10 @@ msgstr ""
 msgid "Enter na lista faz o mesmo."
 msgstr ""
 
+#: src/player/plugins/marketplace.py
+msgid "Entrada incompleta no catálogo."
+msgstr ""
+
 #: src/player/frames/playback/sponsorblock.py
 msgid "Enviando o trecho..."
 msgstr ""
@@ -4003,6 +4092,10 @@ msgstr ""
 
 #: src/player/announcements.py
 msgid "Erros e ações indisponíveis"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Esc"
 msgstr ""
 
 #: src/player/smart_library/smart_playlist_dialog.py
@@ -4401,6 +4494,14 @@ msgstr ""
 msgid "Falha desconhecida."
 msgstr ""
 
+#: src/player/frames/library_loader.py
+msgid "Falha inesperada ao carregar a pasta: {error}."
+msgstr ""
+
+#: src/player/frames/library_loader.py
+msgid "Falha inesperada ao carregar a playlist: {error}."
+msgstr ""
+
 #: src/player/frames/autodj.py
 msgid "Falha na análise"
 msgstr ""
@@ -4702,6 +4803,15 @@ msgstr ""
 
 #: src/player/preferences/dialog.py
 msgid "I&dioma do conteúdo"
+msgstr ""
+
+#: src/player/plugins/installer.py
+#: src/player/plugins/registry.py
+msgid "Id de plugin inválido."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "Identificador ou versão inválida no catálogo."
 msgstr ""
 
 #: src/player/equalizer/dialog.py
@@ -5974,6 +6084,10 @@ msgstr ""
 msgid "Nenhuma playlist recente."
 msgstr ""
 
+#: src/player/frames/autodj.py
+msgid "Nenhuma próxima faixa pôde ser analisada."
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 msgid "Nenhuma rádio tocando agora."
 msgstr ""
@@ -6207,6 +6321,10 @@ msgstr ""
 msgid "Não foi possível acessar as atualizações."
 msgstr ""
 
+#: src/player/plugins/marketplace.py
+msgid "Não foi possível acessar o marketplace: {error}"
+msgstr ""
+
 #: src/player/frames/youtube_music/search.py
 msgid "Não foi possível adicionar a seleção à playlist atual."
 msgstr ""
@@ -6274,6 +6392,10 @@ msgstr ""
 #: src/player/update/dialog.py
 #: src/player/update/service.py
 msgid "Não foi possível baixar a atualização."
+msgstr ""
+
+#: src/player/autodj/service.py
+msgid "Não foi possível baixar a faixa para análise."
 msgstr ""
 
 #: src/player/youtube_music/transcript.py
@@ -6462,6 +6584,10 @@ msgstr ""
 msgid "Não foi possível gravar na pasta do KeyTune. A atualização portátil precisa de permissão de escrita nessa pasta."
 msgstr ""
 
+#: src/player/plugins/service.py
+msgid "Não foi possível importar {module}."
+msgstr ""
+
 #: src/player/frames/smart_library/indexing.py
 msgid "Não foi possível iniciar a indexação."
 msgstr ""
@@ -6633,6 +6759,10 @@ msgstr ""
 #: src/player/frames/playback/backend.py
 #: src/player/quick_player/frame.py
 msgid "Não foi possível reproduzir a mídia: {detail}."
+msgstr ""
+
+#: src/player/portable_update.py
+msgid "Não foi possível restaurar o executável anterior."
 msgstr ""
 
 #: src/player/portable_update.py
@@ -6903,6 +7033,10 @@ msgstr ""
 msgid "O Node.js ou o pacote YouTube.js não pôde ser preparado."
 msgstr ""
 
+#: src/player/plugins/installer.py
+msgid "O SHA-256 do pacote não corresponde ao catálogo."
+msgstr ""
+
 #: src/player/youtube_music/sponsorblock.py
 msgid "O SponsorBlock não encontrou esse trecho."
 msgstr ""
@@ -7011,6 +7145,10 @@ msgstr ""
 msgid "O YouTube.js está ativado, mas o pacote ou o Node.js não está instalado. O KeyTune usa o yt-dlp no lugar."
 msgstr ""
 
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "O YouTube.js não retornou uma URL direta de áudio."
+msgstr ""
+
 #: src/player/autodj/librosa_analyzer.py
 msgid "O analisador opcional do AutoDJ falhou."
 msgstr ""
@@ -7047,6 +7185,26 @@ msgstr ""
 msgid "O aviso fica na central de notificações em vez de ser falado pelo KeyTune."
 msgstr ""
 
+#: src/player/plugins/marketplace.py
+msgid "O campo verified deve ser verdadeiro ou falso."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "O catálogo contém ids duplicados."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "O catálogo excede o limite de tamanho."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "O catálogo foi redirecionado para uma conexão não segura."
+msgstr ""
+
+#: src/player/plugins/marketplace.py
+msgid "O catálogo não contém JSON válido."
+msgstr ""
+
 #: src/player/youtube_music/live_chat.py
 msgid "O chat ao vivo precisa do YouTube.js, ativado em Preferências > Recursos adicionais."
 msgstr ""
@@ -7075,12 +7233,28 @@ msgstr ""
 msgid "O download do áudio para análise excedeu o tempo limite."
 msgstr ""
 
+#: src/player/plugins/installer.py
+msgid "O download excede o limite de 50 MB."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O download foi redirecionado para uma conexão não segura."
+msgstr ""
+
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O download pelo yt-dlp excedeu o tempo limite."
 msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O endereço de download do recurso adicional está vazio."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O entrypoint declarado não existe no pacote."
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "O entrypoint deve usar o formato modulo:objeto."
 msgstr ""
 
 #: src/player/frames/equalizer.py
@@ -7128,6 +7302,14 @@ msgstr ""
 msgid "O histórico está vazio."
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "O id deve ter de 3 a 64 caracteres minúsculos seguros."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O id do pacote não corresponde à entrada selecionada no catálogo."
+msgstr ""
+
 #: src/player/frames/commands/app_commands.py
 msgid "O idioma da interface muda quando o KeyTune é aberto de novo. Deseja reiniciar o KeyTune agora?"
 msgstr ""
@@ -7152,6 +7334,10 @@ msgstr ""
 msgid "O item recente selecionado não está mais disponível."
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "O manifesto deve ser um objeto JSON."
+msgstr ""
+
 #: src/player/optional_resources.py
 msgid "O manifesto do recurso adicional está incompleto."
 msgstr ""
@@ -7174,6 +7360,10 @@ msgstr ""
 
 #: src/player/optional_resources.py
 msgid "O pacote baixado não é compatível com esta versão do KeyTune."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O pacote contém caminhos inseguros."
 msgstr ""
 
 #: src/player/portable_update.py
@@ -7220,6 +7410,18 @@ msgstr ""
 msgid "O pacote do recurso adicional não possui um manifesto válido."
 msgstr ""
 
+#: src/player/plugins/installer.py
+msgid "O pacote excede o limite de 50 MB."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O pacote excede os limites de segurança."
+msgstr ""
+
+#: src/player/plugins/installer.py
+msgid "O pacote não contém {name} na raiz."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "O pacote não corresponde ao plugin selecionado no marketplace."
 msgstr ""
@@ -7252,6 +7454,10 @@ msgstr ""
 msgid "O plugin não concluiu a inicialização em 30 segundos."
 msgstr ""
 
+#: src/player/plugins/service.py
+msgid "O plugin não concluiu a inicialização em {timeout} segundos."
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "O plugin não iniciou e voltou a ficar desativado: {error}"
 msgstr ""
@@ -7266,6 +7472,18 @@ msgstr ""
 
 #: src/player/youtube_music/youtubejs_worker.py
 msgid "O processo do YouTube.js não respondeu."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "O processo do plugin não está disponível."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "O processo do plugin terminou antes de concluir a inicialização."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "O processo do plugin terminou com código {code}."
 msgstr ""
 
 #: src/player/autodj/librosa_analyzer.py
@@ -7298,6 +7516,10 @@ msgstr ""
 
 #: src/player/frames/update.py
 msgid "O registro desta tentativa ficou em data/portable-update.log, ao lado do programa."
+msgstr ""
+
+#: src/player/youtube_music/youtubejs_runtime.py
+msgid "O resolvedor experimental YouTube.js não está instalado."
 msgstr ""
 
 #: src/player/autodj/service.py
@@ -7639,6 +7861,10 @@ msgstr ""
 msgid "PO Token ausente"
 msgstr ""
 
+#: src/player/plugins/installer.py
+msgid "Pacote de plugin inválido: {error}"
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Pacote local selecionado"
 msgstr ""
@@ -7650,6 +7876,14 @@ msgstr ""
 #: src/player/preferences/audio_output_dialog.py
 #: src/player/preferences/dialog.py
 msgid "Padrão do sistema"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Page Down"
+msgstr ""
+
+#: src/player/keyboard/shortcuts.py
+msgid "Page Up"
 msgstr ""
 
 #: src/player/frames/lyrics_panel.py
@@ -7845,6 +8079,10 @@ msgstr ""
 msgid "Pergunta de confirmação"
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "Permissão desconhecida: {error}"
+msgstr ""
+
 #: src/player/plugins/dialog.py
 msgid "Permissões do plugin"
 msgstr ""
@@ -7955,6 +8193,7 @@ msgstr ""
 msgid "Playlist {name}"
 msgstr ""
 
+#: src/player/frames/youtube_music/search.py
 #: src/player/playlists/titles.py
 msgid "Playlist {number}"
 msgstr ""
@@ -7979,6 +8218,10 @@ msgstr ""
 
 #: src/player/frames/ui.py
 msgid "Playlists &inteligentes"
+msgstr ""
+
+#: src/player/frames/youtube_music/playlists.py
+msgid "Playlists do YouTube Music"
 msgstr ""
 
 #: src/player/library/open_dialog.py
@@ -8019,6 +8262,14 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Plugin em uso"
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "Plugin requer API {api_version}; o KeyTune oferece {host_version}."
+msgstr ""
+
+#: src/player/plugins/service.py
+msgid "Plugin requer KeyTune {required_version} ou posterior; esta versão é {app_version}."
 msgstr ""
 
 #: src/player/plugins/dialog.py
@@ -9412,6 +9663,7 @@ msgstr ""
 msgid "Tempo: {current} / duração desconhecida"
 msgstr ""
 
+#: src/player/frames/playback/controls.py
 #: src/player/quick_player/frame.py
 msgid "Tempo: {current} / {total} ({percent}%)"
 msgstr ""
@@ -9956,6 +10208,10 @@ msgstr ""
 msgid "Versão"
 msgstr ""
 
+#: src/player/plugins/marketplace.py
+msgid "Versão de catálogo incompatível."
+msgstr ""
+
 #: src/main.py
 msgid "Versão portátil"
 msgstr ""
@@ -10245,6 +10501,11 @@ msgstr ""
 msgid "YouTube — vídeos"
 msgstr ""
 
+#: src/player/library/explorer.py
+#: src/player/library/media_scan.py
+msgid "[..] Pasta acima"
+msgstr ""
+
 #: src/player/lyrics/service.py
 msgid "[{source}: {title} - {artist}]"
 msgstr ""
@@ -10259,6 +10520,10 @@ msgstr ""
 
 #: src/player/youtube_music/search.py
 msgid "ao vivo"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "api_version deve usar o formato principal.secundária."
 msgstr ""
 
 #: src/player/youtube_music/models.py
@@ -10373,12 +10638,24 @@ msgstr ""
 msgid "incluindo mídias remotas"
 msgstr ""
 
+#: src/player/plugins/manifest.py
+msgid "isolation deve ser process ou in_process."
+msgstr ""
+
 #: src/player/youtube_music/transcript.py
 msgid "legenda automática"
 msgstr ""
 
 #: src/player/youtube_music/transcript.py
 msgid "legenda do autor"
+msgstr ""
+
+#: src/player/plugins/manifest.py
+msgid "minimum_keytune_version deve seguir o versionamento semântico."
+msgstr ""
+
+#: src/player/youtube_music/playlists.py
+msgid "mix personalizada"
 msgstr ""
 
 #: src/player/smart_library/history_dialog.py
@@ -10658,6 +10935,12 @@ msgid_plural "{count} estrelas"
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/player/youtube_music/playlists.py
+msgid "{count} faixa"
+msgid_plural "{count} faixas"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/player/frames/youtube_music/playlists.py
 msgid "{count} faixa adicionada à playlist {title} no YouTube Music."
 msgid_plural "{count} faixas adicionadas à playlist {title} no YouTube Music."
@@ -10933,6 +11216,14 @@ msgstr ""
 
 #: src/player/frames/smart_library/ratings.py
 msgid "{item}: {rating}."
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "{label} (aba atual)"
+msgstr ""
+
+#: src/player/frames/youtube_music/search.py
+msgid "{label} (playlist ativa)"
 msgstr ""
 
 #: src/player/equalizer/dialog.py

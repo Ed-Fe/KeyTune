@@ -1,6 +1,7 @@
 import os
 
 from ..constants import AUDIO_ONLY_EXTENSIONS, SUPPORTED_MEDIA_EXTENSIONS
+from ..i18n import _
 from ..folder_sort import (
     FOLDER_SORT_CREATED,
     FOLDER_SORT_MODIFIED,
@@ -100,7 +101,7 @@ def scan_folder_contents(folder_path, *, sort_by=FOLDER_SORT_NAME, descending=Fa
         entries.append(
             FolderBrowserEntry(
                 path=parent_path,
-                label="[..] Pasta acima",
+                label=_("[..] Pasta acima"),
                 entry_type=FOLDER_ENTRY_PARENT,
             )
         )

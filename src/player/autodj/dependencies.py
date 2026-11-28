@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import sys
 
+from ..i18n import _
 from ..optional_resources import (
     get_optional_resource_dir,
     install_optional_resource,
@@ -66,7 +67,7 @@ def autodj_dependencies_available() -> bool:
 def install_autodj_dependencies(*, progress_callback=None) -> dict:
     manifest = install_optional_resource("autodj", progress_callback=progress_callback)
     if not autodj_dependencies_available():
-        raise RuntimeError("As bibliotecas do AutoDJ foram instaladas, mas não puderam ser carregadas.")
+        raise RuntimeError(_("As bibliotecas do AutoDJ foram instaladas, mas não puderam ser carregadas."))
     return manifest
 
 

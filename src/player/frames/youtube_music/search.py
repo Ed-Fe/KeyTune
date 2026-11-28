@@ -121,11 +121,11 @@ class SearchMixin:
             if not isinstance(state, PlaylistState) or state.is_folder_tab or state.is_loading:
                 continue
 
-            label = str(state.title or f"Playlist {index + 1}").strip()
+            label = str(state.title or _("Playlist {number}").format(number=index + 1)).strip()
             if index == current_index:
-                label = f"{label} (aba atual)"
+                label = _("{label} (aba atual)").format(label=label)
             elif index == active_index:
-                label = f"{label} (playlist ativa)"
+                label = _("{label} (playlist ativa)").format(label=label)
 
             targets.append({
                 "index": index,

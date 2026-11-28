@@ -148,7 +148,7 @@ def apply_portable_update(
         if relaunch:
             try:
                 if executable in failed_paths:
-                    raise OSError("Previous executable could not be restored")
+                    raise OSError(_("Não foi possível restaurar o executável anterior."))
                 _relaunch(executable)
             except Exception as restart_error:
                 restart_message = _("Não foi possível reabrir o KeyTune.")

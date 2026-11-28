@@ -749,7 +749,7 @@ class LibrosaAnalyzer:
             with av.open(str(path)) as container:
                 audio_stream = next((stream for stream in container.streams if stream.type == "audio"), None)
                 if audio_stream is None:
-                    raise ValueError("A mídia não contém uma faixa de áudio.")
+                    raise ValueError(_("A mídia não contém uma faixa de áudio."))
                 audio_stream.codec_context.thread_count = 1
                 for frame in chain(container.decode(audio_stream), (None,)):
                     for converted in resampler.resample(frame):

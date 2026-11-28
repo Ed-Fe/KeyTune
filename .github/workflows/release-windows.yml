@@ -135,11 +135,6 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Falha ao renderizar documentação de plugins: $($guide.Name)." }
           }
 
-      - name: Bundle YouTube connection guide (ready-made HTML)
-        shell: powershell
-        run: |
-          Copy-Item -Path "docs\conectar-conta-youtube.html" -Destination "dist\KeyTune\docs" -Force
-
       - name: Render manual as HTML (per language)
         shell: powershell
         run: |

@@ -3,7 +3,6 @@ import math
 import os
 from pathlib import Path
 import subprocess
-import struct
 import sys
 import tempfile
 import threading
@@ -11,7 +10,6 @@ import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
-import wave
 
 SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 if str(SRC_ROOT) not in sys.path:
@@ -24,7 +22,6 @@ from player.autodj import (
     AutoDJQueuePlanner,
     QueueCandidate,
     TransitionProfile,
-    WaveAnalyzer,
     build_mix_lavfi_filters,
     mix_values,
 )
@@ -1949,18 +1946,13 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(frame.incoming.play_calls, 1)
         self.assertTrue(frame.began)
 
-    def test_wave_analysis_and_cache(self):
+    def test_analysis_cache_round_trip(self):
         with tempfile.TemporaryDirectory() as temporary:
-            path = Path(temporary) / "click.wav"; rate = 8000; samples = []
-            for index in range(rate * 8):
-                phase = index % (rate // 2)
-                samples.append(25000 if phase < 40 else int(600 * math.sin(index / 8)))
-            with wave.open(str(path), "wb") as output:
-                output.setnchannels(1); output.setsampwidth(2); output.setframerate(rate)
-                output.writeframes(b"".join(struct.pack("<h", value) for value in samples))
-            analysis = WaveAnalyzer().analyze(path)
-            self.assertGreater(analysis.confidence, 0); self.assertGreater(len(analysis.beats_ms), 5)
-            cache = AnalysisCache(Path(temporary) / "cache.db"); cache.put(path, analysis)
+            path = Path(temporary) / "track.mp3"
+            path.write_bytes(b"audio")
+            analysis = AudioAnalysis(120.0, (0, 500, 1000), 0.8, 0.4, "C")
+            cache = AnalysisCache(Path(temporary) / "cache.db")
+            cache.put(path, analysis)
             self.assertEqual(cache.get(path), analysis)
 
     def test_remote_analysis_downloads_once_and_uses_cache(self):

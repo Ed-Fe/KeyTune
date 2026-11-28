@@ -177,9 +177,6 @@ foreach ($guide in Get-ChildItem -Path "docs" -Filter "plugins*.md") {
     }
 }
 
-Write-Step "Empacotando o guia de conexão do YouTube (HTML pronto)"
-Copy-Item -Path "docs\conectar-conta-youtube.html" -Destination "dist\KeyTune\docs" -Force
-
 Write-Step "Renderizando manual em HTML (por idioma)"
 & $PythonExe scripts\render_manual.py docs\manual.md dist\KeyTune\docs\manual.html
 if ($LASTEXITCODE -ne 0) {

@@ -1074,7 +1074,7 @@ class FrameAutoDJMixin:
                     profile=TransitionProfile(profile_name),
                 )
                 if chosen is None:
-                    raise RuntimeError("Nenhuma próxima faixa pôde ser analisada.")
+                    raise RuntimeError(_("Nenhuma próxima faixa pôde ser analisada."))
                 wx.CallAfter(
                     self._finish_autodj_transition_analysis,
                     pair,

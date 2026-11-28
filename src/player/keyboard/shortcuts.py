@@ -208,10 +208,10 @@ def _key_display_names():
             "Right": _("Seta direita"),
             "Up": _("Seta acima"),
             "Down": _("Seta abaixo"),
-            "PageUp": "Page Up",
-            "PageDown": "Page Down",
-            "Back": "Backspace",
-            "Escape": "Esc",
+            "PageUp": _("Page Up"),
+            "PageDown": _("Page Down"),
+            "Back": _("Backspace"),
+            "Escape": _("Esc"),
         }
     return _KEY_DISPLAY_NAMES
 

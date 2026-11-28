@@ -121,7 +121,13 @@ class PlaybackControlsMixin:
         gauge_value = int(round((bounded_current_time / total_time) * PROGRESS_GAUGE_RANGE)) if total_time > 0 else 0
         total_label = self._format_time_ms(total_time)
 
-        self._set_progress_label(f"Tempo: {current_label} / {total_label} ({percentage}%)")
+        self._set_progress_label(
+            _("Tempo: {current} / {total} ({percent}%)").format(
+                current=current_label,
+                total=total_label,
+                percent=percentage,
+            )
+        )
         self._set_progress_gauge_value(gauge_value)
         self._maybe_refresh_player_visual_hints()
 

@@ -151,10 +151,10 @@ class PlaylistEditMixin:
         """
         choice_labels = []
         if allow_create:
-            choice_labels.append("Criar nova playlist...")
+            choice_labels.append(_("Criar nova playlist..."))
         choice_labels.extend(playlist.choice_label for playlist in playlists)
 
-        dialog = wx.SingleChoiceDialog(self, prompt, "Playlists do YouTube Music", choice_labels)
+        dialog = wx.SingleChoiceDialog(self, prompt, _("Playlists do YouTube Music"), choice_labels)
         try:
             if dialog.ShowModal() != wx.ID_OK:
                 return None

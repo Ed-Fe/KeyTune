@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import threading
 
+from ..i18n import _
 from .installer import MANIFEST_NAME
 from .manifest import PLUGIN_ID_RE
 from .manifest import PluginManifest, PluginPermission
@@ -55,7 +56,7 @@ class PluginRegistry:
     def update(self, plugin_id: str, *, enabled: bool, granted_permissions) -> None:
         plugin_id = str(plugin_id)
         if not PLUGIN_ID_RE.fullmatch(plugin_id):
-            raise ValueError("Id de plugin inválido.")
+            raise ValueError(_("Id de plugin inválido."))
         with self._lock:
             state = self._state()
             state[plugin_id] = {
@@ -71,7 +72,7 @@ class PluginRegistry:
     def remove(self, plugin_id):
         plugin_id = str(plugin_id)
         if not PLUGIN_ID_RE.fullmatch(plugin_id):
-            raise ValueError("Id de plugin inválido.")
+            raise ValueError(_("Id de plugin inválido."))
         with self._lock:
             state = self._state()
             state.pop(plugin_id, None)

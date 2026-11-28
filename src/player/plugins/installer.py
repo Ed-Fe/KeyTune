@@ -11,6 +11,7 @@ import stat
 from urllib.request import Request, urlopen
 import zipfile
 
+from ..i18n import _
 from .manifest import PLUGIN_ID_RE, PluginManifest
 
 MANIFEST_NAME = "keytune-plugin.json"
@@ -30,7 +31,7 @@ class InstallationError(RuntimeError):
 def _safe_members(archive: zipfile.ZipFile):
     infos = archive.infolist()
     if len(infos) > MAX_FILES or sum(item.file_size for item in infos) > MAX_EXTRACTED_BYTES:
-        raise InstallationError("O pacote excede os limites de segurança.")
+        raise InstallationError(_("O pacote excede os limites de segurança."))
     seen = set()
     for info in infos:
         path = Path(info.filename)
@@ -54,7 +55,7 @@ def _safe_members(archive: zipfile.ZipFile):
             or is_link
             or bool(info.flag_bits & 0x1)
         ):
-            raise InstallationError("O pacote contém caminhos inseguros.")
+            raise InstallationError(_("O pacote contém caminhos inseguros."))
         seen.add(collision_key)
         yield info
 
@@ -64,17 +65,17 @@ def inspect_archive(path: str | Path) -> PluginManifest:
         with zipfile.ZipFile(path) as archive:
             names = {item.filename for item in _safe_members(archive)}
             if MANIFEST_NAME not in names:
-                raise InstallationError(f"O pacote não contém {MANIFEST_NAME} na raiz.")
+                raise InstallationError(_("O pacote não contém {name} na raiz.").format(name=MANIFEST_NAME))
             manifest = PluginManifest.from_dict(json.loads(archive.read(MANIFEST_NAME)))
             module_name = manifest.entrypoint.split(":", 1)[0]
             module_path = module_name.replace(".", "/")
             if f"{module_path}.py" not in names and f"{module_path}/__init__.py" not in names:
-                raise InstallationError("O entrypoint declarado não existe no pacote.")
+                raise InstallationError(_("O entrypoint declarado não existe no pacote."))
             return manifest
     except (OSError, zipfile.BadZipFile, json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
         if isinstance(exc, InstallationError):
             raise
-        raise InstallationError(f"Pacote de plugin inválido: {exc}") from exc
+        raise InstallationError(_("Pacote de plugin inválido: {error}").format(error=exc)) from exc
 
 
 def install_archive(
@@ -87,15 +88,15 @@ def install_archive(
 ) -> PluginManifest:
     source = Path(path)
     if source.stat().st_size > MAX_ARCHIVE_BYTES:
-        raise InstallationError("O pacote excede o limite de 50 MB.")
+        raise InstallationError(_("O pacote excede o limite de 50 MB."))
     digest = hashlib.sha256(source.read_bytes()).hexdigest()
     if expected_sha256 and digest.lower() != expected_sha256.lower():
-        raise InstallationError("O SHA-256 do pacote não corresponde ao catálogo.")
+        raise InstallationError(_("O SHA-256 do pacote não corresponde ao catálogo."))
     manifest = inspect_archive(source)
     if expected_plugin_id and manifest.id != expected_plugin_id:
-        raise InstallationError("O id do pacote não corresponde à entrada selecionada no catálogo.")
+        raise InstallationError(_("O id do pacote não corresponde à entrada selecionada no catálogo."))
     if expected_version and manifest.version != expected_version:
-        raise InstallationError("A versão do pacote não corresponde à entrada selecionada no catálogo.")
+        raise InstallationError(_("A versão do pacote não corresponde à entrada selecionada no catálogo."))
     destination_root = Path(plugins_dir)
     destination_root.mkdir(parents=True, exist_ok=True)
     destination = destination_root / manifest.id
@@ -123,24 +124,24 @@ def install_archive(
 
 def download_package(url: str, output: str | Path, *, timeout: int = 30) -> Path:
     if not str(url).startswith("https://"):
-        raise InstallationError("Downloads de plugins devem usar HTTPS.")
+        raise InstallationError(_("Downloads de plugins devem usar HTTPS."))
     request = Request(url, headers={"User-Agent": "KeyTune/2 plugin-marketplace"})
     target = Path(output)
     total = 0
     with urlopen(request, timeout=timeout) as response, target.open("wb") as stream:
         if not str(response.geturl()).startswith("https://"):
-            raise InstallationError("O download foi redirecionado para uma conexão não segura.")
+            raise InstallationError(_("O download foi redirecionado para uma conexão não segura."))
         while chunk := response.read(256 * 1024):
             total += len(chunk)
             if total > MAX_ARCHIVE_BYTES:
-                raise InstallationError("O download excede o limite de 50 MB.")
+                raise InstallationError(_("O download excede o limite de 50 MB."))
             stream.write(chunk)
     return target
 
 
 def uninstall_plugin(plugin_id: str, plugins_dir: str | Path) -> bool:
     if not PLUGIN_ID_RE.fullmatch(str(plugin_id)):
-        raise InstallationError("Id de plugin inválido.")
+        raise InstallationError(_("Id de plugin inválido."))
     target = Path(plugins_dir) / plugin_id
     if not target.is_dir():
         return False

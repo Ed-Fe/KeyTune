@@ -345,7 +345,11 @@ class FrameLibraryNavigationMixin:
                 "previous_source_path": previous_source_path,
             }
         )
-        self._show_loading_library_tab(target_index, state, announcement=f"Carregando pasta como playlist: {title}.")
+        self._show_loading_library_tab(
+            target_index,
+            state,
+            announcement=_("Carregando pasta como playlist: {title}.").format(title=title),
+        )
         return True
 
     def _open_playlist_source(self, playlist_source):
@@ -378,7 +382,11 @@ class FrameLibraryNavigationMixin:
                 "previous_source_path": previous_source_path,
             }
         )
-        self._show_loading_library_tab(target_index, state, announcement=f"Carregando playlist: {title}.")
+        self._show_loading_library_tab(
+            target_index,
+            state,
+            announcement=_("Carregando playlist: {title}.").format(title=title),
+        )
         return True
 
     def _open_playlist_path(self, playlist_path):
