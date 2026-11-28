@@ -8494,3 +8494,54 @@ msgid "{count} faixa"
 msgid_plural "{count} faixas"
 msgstr[0] "{count} pista"
 msgstr[1] "{count} pistas"
+
+msgid "Abre links do YouTube e do YouTube Music no {app}."
+msgstr "Abre los enlaces de YouTube y YouTube Music en {app}."
+
+msgid "Abre os Aplicativos padrão do Windows para escolher o KeyTune em HTTP e HTTPS."
+msgstr "Abre las Aplicaciones predeterminadas de Windows para elegir KeyTune en HTTP y HTTPS."
+
+msgid "Definir o KeyT&une como navegador padrão..."
+msgstr "&Hacer de KeyTune el navegador predeterminado..."
+
+msgid "Link da web — {app}"
+msgstr "Enlace web — {app}"
+
+msgid "Links do YouTube"
+msgstr "Enlaces de YouTube"
+
+msgid "Nas configurações que vão abrir, escolha o KeyTune para HTTP e HTTPS. Abrir agora?"
+msgstr "En la configuración que se abrirá, elige KeyTune para HTTP y HTTPS. ¿Abrirla ahora?"
+
+msgid "Navegador para os ou&tros links"
+msgstr "Navega&dor para los otros enlaces"
+
+msgid "Não foi possível registrar o KeyTune como navegador."
+msgstr "No se pudo registrar KeyTune como navegador."
+
+msgid "Não foi possível remover o registro de navegador."
+msgstr "No se pudo quitar el registro de navegador."
+
+msgid "O KeyTune saiu da lista de navegadores."
+msgstr "KeyTune ya no está en la lista de navegadores."
+
+msgid "O KeyTune só abre links do YouTube e não encontrou um navegador para este link. Escolha outro navegador padrão nas configurações do Windows ou em Preferências do KeyTune."
+msgstr "KeyTune solo abre enlaces de YouTube y no encontró un navegador para este enlace. Elige otro navegador predeterminado en la configuración de Windows o en las Preferencias de KeyTune."
+
+msgid "O Windows não deixa um programa abrir só os links de um site. Por isso o KeyTune entra como navegador: ele toca os links do YouTube e do YouTube Music e manda todos os outros para o navegador escolhido acima."
+msgstr "Windows no permite que un programa abra solo los enlaces de un sitio. Por eso KeyTune se registra como navegador: reproduce los enlaces de YouTube y YouTube Music y envía todos los demás al navegador elegido arriba."
+
+msgid "O navegador padrão anterior"
+msgstr "El navegador predeterminado anterior"
+
+msgid "Parar de rece&ber links"
+msgstr "Dejar de reci&bir enlaces"
+
+msgid "Recebe os links que não são do YouTube quando o KeyTune é o navegador padrão."
+msgstr "Recibe los enlaces que no son de YouTube cuando KeyTune es el navegador predeterminado."
+
+msgid "Se ele era o navegador padrão, escolha outro em Configurações > Aplicativos > Aplicativos padrão."
+msgstr "Si era el navegador predeterminado, elige otro en Configuración > Aplicaciones > Aplicaciones predeterminadas."
+
+msgid "Tira o KeyTune da lista de navegadores do Windows."
+msgstr "Quita KeyTune de la lista de navegadores de Windows."

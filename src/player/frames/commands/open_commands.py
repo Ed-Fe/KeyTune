@@ -17,6 +17,7 @@ from ..background import run_in_background
 from ...i18n import _, ngettext
 from ...log import get_logger
 from ...playlists import ScreenTabState
+from ...youtube_links import is_youtube_link, normalize_youtube_link, youtube_playlist_id
 from ...youtube_music import extract_playlist_id_from_text
 from ...announcements import ANNOUNCE_CONFIRMATIONS, ANNOUNCE_ERRORS, ANNOUNCE_PROGRESS
 
@@ -25,11 +26,18 @@ _logger = get_logger(__name__)
 
 class OpenCommandsMixin:
     def _split_selected_files(self, paths):
-        """Separa mídias e playlists existentes; consulta o disco, então roda fora da interface."""
+        """Separa mídias e playlists existentes; consulta o disco, então roda fora da interface.
+
+        Um link de vídeo do YouTube ou do YouTube Music (o KeyTune como navegador
+        padrão) entra como mídia, no endereço ``watch`` que o player já toca.
+        """
         media_paths = []
         playlist_paths = []
 
         for path in paths:
+            if is_youtube_link(path) and not youtube_playlist_id(path):
+                media_paths.append(normalize_youtube_link(path))
+                continue
             normalized_path = self._normalize_path(path)
             if not normalized_path or not os.path.isfile(normalized_path):
                 continue
@@ -435,11 +443,25 @@ class OpenCommandsMixin:
         run_in_background(self, prepare, finish)
 
     def _open_external_files(self, paths):
+        if self._open_external_youtube_playlist(paths):
+            return
         run_in_background(
             self,
             lambda: self._split_selected_files(paths),
             lambda split: self._open_split_external_files(*split),
         )
+
+    def _open_external_youtube_playlist(self, paths):
+        """Abre um link de playlist do YouTube recebido pelo Windows; devolve se era um."""
+        paths = [str(path or "").strip() for path in paths or ()]
+        if len(paths) != 1:
+            return False
+        playlist_id = youtube_playlist_id(paths[0])
+        open_youtube_music_playlist = getattr(self, "_load_youtube_music_playlist_by_id", None)
+        if not playlist_id or not callable(open_youtube_music_playlist):
+            return False
+        open_youtube_music_playlist(playlist_id, fallback_title=_("Playlist do YouTube Music"))
+        return True
 
     def _open_split_external_files(self, media_paths, playlist_paths):
         if playlist_paths and media_paths:

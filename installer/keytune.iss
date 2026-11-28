@@ -26,6 +26,8 @@
 #define AppId "{{A7F3C2E1-9B4D-4E6A-8C1F-2D5E7A9B3C4D}"
 #define ProgId "KeyTune.MediaFile"
 #define EnqueueVerb "KeyTune.enqueue"
+; Keep in sync with link_handler_names() in src/player/link_router.py.
+#define UrlProgId "KeyTuneURL"
 
 [Setup]
 AppId={#AppId}
@@ -93,6 +95,15 @@ spanish.EnqueueWithApp=Añadir a la lista de {#AppName}
 brazilianportuguese.AppDescription=Reprodutor de mídia acessível, controlado por teclado.
 english.AppDescription=Accessible, keyboard-driven media player.
 spanish.AppDescription=Reproductor multimedia accesible, controlado por teclado.
+brazilianportuguese.LinkGroup=Links da web (opcional):
+english.LinkGroup=Web links (optional):
+spanish.LinkGroup=Enlaces web (opcional):
+brazilianportuguese.LinkHandler=Oferecer o {#AppName} como navegador, para abrir links do YouTube (os outros links seguem para o seu navegador)
+english.LinkHandler=Offer {#AppName} as a browser, to open YouTube links (other links go on to your browser)
+spanish.LinkHandler=Ofrecer {#AppName} como navegador, para abrir enlaces de YouTube (los demás enlaces siguen a tu navegador)
+brazilianportuguese.UrlFileType=Link da web — {#AppName}
+english.UrlFileType=Web link — {#AppName}
+spanish.UrlFileType=Enlace web — {#AppName}
 brazilianportuguese.UninstallShortcut=Desinstalar o {#AppName}
 english.UninstallShortcut=Uninstall {#AppName}
 spanish.UninstallShortcut=Desinstalar {#AppName}
@@ -152,6 +163,12 @@ Name: "assocplaylist"; Description: "{cm:AssocPlaylistAll}"; GroupDescription: "
 Name: "assocplaylist\m3u"; Description: ".m3u"; Flags: unchecked
 Name: "assocplaylist\m3u8"; Description: ".m3u8"; Flags: unchecked
 
+; Opt-in: lists KeyTune as a web browser for http/https. Windows has no way to
+; hand an app only the YouTube links, so KeyTune receives every link once the
+; user makes it the default in Settings > Default apps; src/player/link_router.py
+; plays the YouTube ones and passes the rest on to the previous browser.
+Name: "linkhandler"; Description: "{cm:LinkHandler}"; GroupDescription: "{cm:LinkGroup}"; Flags: unchecked
+
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
@@ -184,6 +201,23 @@ Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\{#EnqueueVerb}\command"; Va
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{cm:AppDescription}"
 Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#AppName}"; ValueData: "Software\{#AppName}\Capabilities"; Flags: uninsdeletevalue
+
+; --- Web links (opt-in task "linkhandler"): the URL ProgId, a StartMenuInternet
+;     client so Windows lists KeyTune among the browsers, and URLAssociations in
+;     the Capabilities that RegisteredApplications already points to. ---
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}"; ValueType: string; ValueName: ""; ValueData: "{cm:UrlFileType}"; Flags: uninsdeletekey; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}"; ValueType: string; ValueName: ""; ValueData: "{#AppName}"; Flags: uninsdeletekey; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{cm:AppDescription}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "http"; ValueData: "{#UrlProgId}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "https"; ValueData: "{#UrlProgId}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "http"; ValueData: "{#UrlProgId}"; Flags: uninsdeletevalue; Tasks: linkhandler
+Root: HKA; Subkey: "Software\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "https"; ValueData: "{#UrlProgId}"; Flags: uninsdeletevalue; Tasks: linkhandler
 
 ; --- Per-extension registration, gated by the opt-in [Tasks]. Each extension
 ;     adds an OpenWithProgids entry ("Open with" list) and a Capabilities

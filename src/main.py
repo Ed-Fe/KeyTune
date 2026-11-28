@@ -12,10 +12,16 @@ _PLUGIN_WORKER_ARGUMENT = "--plugin-worker"
 _ENQUEUE_ARGUMENT = "--enqueue"
 
 
+def _is_web_link(value):
+    return str(value or "").strip().strip('"').lower().startswith(("http://", "https://"))
+
+
 def _normalize_launch_path(path):
     normalized_path = str(path or "").strip().strip('"')
     if not normalized_path:
         return ""
+    if _is_web_link(normalized_path):
+        return normalized_path
     return os.path.normcase(os.path.abspath(normalized_path))
 
 
@@ -37,7 +43,9 @@ def _collect_initial_paths(argv=None, *, launch_targets=None):
         normalized_path = _normalize_launch_path(path)
         if not normalized_path or normalized_path in normalized_launch_targets:
             continue
-        initial_paths.append(path)
+        # A link passed by Windows (KeyTune as the default browser) keeps its
+        # exact text; only the surrounding quotes some browsers add go away.
+        initial_paths.append(normalized_path if _is_web_link(path) else path)
 
     return initial_paths
 
@@ -154,9 +162,16 @@ def main():
     if _YOUTUBEJS_DEPENDENCIES_SMOKE_TEST_ARGUMENT in sys.argv[1:]:
         return _run_youtubejs_dependencies_smoke_test()
 
-    bootstrap_mpv_runtime()
-
     _setup_language()
+
+    # KeyTune as the default browser: a link that is not a YouTube video goes
+    # straight to a real browser, before the MPV runtime or the interface load.
+    from player.link_router import route_launch
+
+    if route_launch(sys.argv[1:]):
+        return 0
+
+    bootstrap_mpv_runtime()
 
     initial_paths = _collect_initial_paths()
     # ``--enqueue`` adds to the running playlist. With no instance yet, the

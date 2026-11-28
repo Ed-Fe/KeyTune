@@ -83,6 +83,44 @@ class FileAssociationTests(unittest.TestCase):
     def _values(self, key):
         return {name: data for name, (data, _) in self.keys[rf"Software\Classes\{key}".casefold()].items()}
 
+    def _key(self, path):
+        return {name: data for name, (data, _) in self.keys[path.casefold()].items()}
+
+    def test_link_handler_lists_keytune_as_a_browser_and_keeps_file_types(self):
+        self.assertTrue(self.associations.register_file_associations())
+        self.assertFalse(self.associations.is_link_handler_registered())
+        self.assertTrue(self.associations.register_link_handler())
+        self.assertTrue(self.associations.is_link_handler_registered())
+
+        self.assertEqual(self._values(r"KeyTuneURL")["url protocol"], "")
+        self.assertEqual(self._values(r"KeyTuneURL\shell\open\command")[""], f'"{sys.executable}" "%1"')
+        client = r"Software\Clients\StartMenuInternet\KeyTune"
+        self.assertEqual(self._key(client + r"\shell\open\command")[""], f'"{sys.executable}"')
+        self.assertEqual(
+            self._key(client + r"\Capabilities\URLAssociations"), {"http": "KeyTuneURL", "https": "KeyTuneURL"}
+        )
+        # The installer's Capabilities keep their place in RegisteredApplications.
+        self.assertEqual(self._key(r"Software\RegisteredApplications")["keytune"], r"Software\KeyTune\Capabilities")
+        self.assertEqual(self._key(r"Software\KeyTune\Capabilities\URLAssociations")["https"], "KeyTuneURL")
+
+        self.assertTrue(self.associations.unregister_link_handler())
+        self.assertFalse(self.associations.is_link_handler_registered())
+        self.assertNotIn(client.casefold(), self.keys)
+        self.assertNotIn(r"software\keytune\capabilities\urlassociations", self.keys)
+        self.assertTrue(self.associations.are_associations_registered())
+
+    def test_portable_link_handler_has_its_own_names(self):
+        self.portable.return_value = True
+        with patch.object(sys, "executable", r"E:\KeyTune\KeyTune.exe"):
+            self.assertTrue(self.associations.register_link_handler())
+            capabilities = r"Software\Clients\StartMenuInternet\KeyTune Portable\Capabilities"
+            self.assertEqual(self._key(r"Software\RegisteredApplications")["keytune portable"], capabilities)
+            self.assertEqual(self._key(capabilities + r"\URLAssociations")["http"], "KeyTune.PortableURL")
+            self.assertNotIn(r"software\keytune\capabilities", self.keys)
+            self.assertTrue(self.associations.unregister_link_handler())
+            self.assertNotIn("keytune portable", self._key(r"Software\RegisteredApplications"))
+            self.assertNotIn(r"software\classes\keytune.portableurl", self.keys)
+
     def test_portable_and_installed_progids_and_verbs_are_independent(self):
         self.assertTrue(self.associations.register_file_associations())
         with patch.object(sys, "executable", r"E:\KeyTune\KeyTune.exe"):

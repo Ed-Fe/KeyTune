@@ -117,6 +117,10 @@ class AppSettings:
     remember_last_folder: bool = DEFAULT_REMEMBER_LAST_FOLDER
     confirm_on_exit: bool = DEFAULT_CONFIRM_ON_EXIT
     quick_player_enabled: bool = DEFAULT_QUICK_PLAYER_ENABLED
+    # Navegador que recebe os links que não são do YouTube quando o KeyTune é o
+    # navegador padrão (nome do Windows). Vazio: o navegador padrão anterior.
+    # ``link_router`` lê esta chave direto do JSON, antes da interface carregar.
+    link_browser: str = ""
     play_opened_files_alone: bool = DEFAULT_PLAY_OPENED_FILES_ALONE
     announcements_enabled: bool = DEFAULT_ANNOUNCEMENTS_ENABLED
     # Falar por cima do que o leitor de tela já está dizendo, ou esperar a vez.
@@ -244,6 +248,7 @@ class AppSettings:
             "remember_last_folder": self.remember_last_folder,
             "confirm_on_exit": self.confirm_on_exit,
             "quick_player_enabled": self.quick_player_enabled,
+            "link_browser": self.link_browser,
             "play_opened_files_alone": self.play_opened_files_alone,
             "announcements_enabled": self.announcements_enabled,
             "announcements_interrupt": self.announcements_interrupt,
@@ -348,6 +353,8 @@ class AppSettings:
         settings.remember_last_folder = bool(data.get("remember_last_folder", settings.remember_last_folder))
         settings.confirm_on_exit = bool(data.get("confirm_on_exit", settings.confirm_on_exit))
         settings.quick_player_enabled = bool(data.get("quick_player_enabled", settings.quick_player_enabled))
+        link_browser = data.get("link_browser", settings.link_browser)
+        settings.link_browser = link_browser.strip() if isinstance(link_browser, str) else ""
         settings.play_opened_files_alone = bool(data.get("play_opened_files_alone", settings.play_opened_files_alone))
         settings.announcements_enabled = bool(data.get("announcements_enabled", settings.announcements_enabled))
         settings.announcements_interrupt = bool(

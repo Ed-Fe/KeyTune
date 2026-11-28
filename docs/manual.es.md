@@ -462,6 +462,28 @@ Justo encima de la lista, una línea indica dónde estás y cuántos elementos h
     - En *YouTube*: *Vídeos* (en general, sin exigir cuenta), *Canales* y *Playlists*.
 - **Dentro de un canal o artista**: al entrar, la lista muestra primero lo que hay para ver. En un canal de YouTube: *Vídeos*, *Shorts*, *En vivo*, *Playlists* y *Publicaciones*, seguidos de **Buscar en este canal...**, **Suscripción y notificaciones del canal...** y **Acerca del canal**. **Buscar en este canal...** pide un texto y muestra los vídeos del canal que coinciden con él. En un artista de YouTube Music: *Canciones*, *Álbumes*, *Sencillos y EP*, *Vídeos* y *Artistas similares*. Entra en lo que quieras; `Retroceso` vuelve para elegir otro.
 
+### Abrir en KeyTune los enlaces de YouTube pulsados en otros programas
+
+En Windows, KeyTune puede abrir los enlaces de YouTube y YouTube Music que pulsas en WhatsApp, en el correo o en cualquier otro programa: el vídeo empieza a sonar en el reproductor, sin pasar por el navegador.
+
+Ten en cuenta que esto es un apaño. Windows no permite que un programa abra solo los enlaces de un sitio: o recibe todos los enlaces `http` y `https`, o ninguno. Por eso KeyTune se registra como navegador. Cuando es el navegador predeterminado, todo enlace pasa por él, y KeyTune se queda solo con los de YouTube. Todos los demás enlaces siguen yendo, como siempre, al navegador que usabas antes, o al que elijas en **Navegador para los otros enlaces**. La diferencia que puedes notar es una fracción de segundo más para que se abra el navegador.
+
+KeyTune reproduce enlaces de vídeo (`watch`, `youtu.be`, Shorts, en directo) y de lista (`playlist?list=`). Un vídeo abierto desde dentro de una lista reproduce solo el vídeo. Los canales, las búsquedas y la página de inicio de YouTube se abren en el navegador.
+
+Para activarlo:
+
+1. Abre las preferencias con `Ctrl+,` y quédate en la pestaña **General**.
+2. En **Enlaces de YouTube**, elige en **Navegador para los otros enlaces** quién recibe el resto. **El navegador predeterminado anterior** es el que era el predeterminado antes de KeyTune.
+3. Pulsa **Hacer de KeyTune el navegador predeterminado...** y confirma. La configuración de **Aplicaciones predeterminadas** de Windows se abre en la página de KeyTune.
+4. Elige KeyTune para **HTTP** y **HTTPS**.
+5. Vuelve a KeyTune y pulsa **Guardar**.
+
+En el instalador, la opción **Ofrecer KeyTune como navegador** hace el registro durante la instalación; viene desmarcada. Aunque la marques, KeyTune solo pasa a ser el predeterminado cuando lo eliges en Windows.
+
+Para deshacerlo, elige otro navegador como predeterminado en **Configuración > Aplicaciones > Aplicaciones predeterminadas** de Windows. Para quitar también a KeyTune de la lista de navegadores, usa **Dejar de recibir enlaces** en **Preferencias > General**.
+
+Si ningún navegador acepta un enlace que no es de YouTube, KeyTune avisa y pide que elijas otro navegador predeterminado.
+
 ### Detalles de vídeos y canciones
 
 **Ver detalles**, en el menú **Acciones...** (o en el menú contextual de la playlist, para un elemento de YouTube), abre un cuadro de lectura con título, canal y suscriptores, duración, visualizaciones, «me gusta», fecha de publicación y la descripción completa. Para el medio que está sonando, usa `Ctrl+Shift+I` (**Reproducción > Ver detalles del medio actual**). El botón **Ir al canal**, o **Ir al artista** en una pista de YouTube Music, abre el canal o el artista en KeyTube; el mismo comando está en el menú **Acciones...**.
@@ -835,6 +857,8 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 La sección **Bandeja del sistema** tiene **Al minimizar, ocultar en la bandeja del sistema** y **Al cerrar, ocultar en la bandeja del sistema**; consulta [Bandeja del sistema](#bandeja-del-sistema).
 
 La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú contextual del Explorador para formatos de audio, vídeo y playlists. **Abrir con KeyTune** cambia lo que está sonando. **Añadir a la lista de KeyTune** añade los archivos de audio y vídeo seleccionados sin interrumpir la música, aunque otro reproductor sea el predeterminado. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro, incluidas las dos opciones del menú.
+
+La sección **Enlaces de YouTube** (Windows) hace que KeyTune abra los enlaces de YouTube pulsados en otros programas. Como Windows no permite tomar solo esos enlaces, KeyTune se registra como navegador y pasa todos los demás. **Navegador para los otros enlaces** elige adónde van; **El navegador predeterminado anterior** es el que era el predeterminado antes de KeyTune. **Hacer de KeyTune el navegador predeterminado...** abre las **Aplicaciones predeterminadas** de Windows, y **Dejar de recibir enlaces** quita a KeyTune de la lista de navegadores. Consulta [Abrir en KeyTune los enlaces de YouTube pulsados en otros programas](#abrir-en-keytune-los-enlaces-de-youtube-pulsados-en-otros-programas).
 
 La sección **Registro de logs** ayuda a investigar problemas. **Registrar logs de diagnóstico** escribe un archivo de registro, en inglés, en la carpeta de datos, útil para adjuntar a un informe de errores. **Nivel de detalle** va de *Solo errores*, el más silencioso, a *Depuración*, que genera archivos grandes. **Abrir la carpeta de logs** te lleva hasta ellos.
 

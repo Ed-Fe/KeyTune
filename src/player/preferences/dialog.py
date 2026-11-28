@@ -191,6 +191,8 @@ class PreferencesDialog(wx.Dialog):
             button_row.Add(self._unregister_assoc_button, 0, 0)
             sizer.Add(button_row, 0, wx.ALL, ROW_BORDER)
 
+            self._build_youtube_links_group(page, page_sizer)
+
         box, sizer = self._create_group(page, page_sizer, _("Registro de logs"))
         self.logging_enabled_checkbox = self._add_checkbox(
             box, sizer, _("Registrar &logs de diagnóstico"), _("Grava um arquivo de log, útil para relatar problemas.")
@@ -208,6 +210,47 @@ class PreferencesDialog(wx.Dialog):
         sizer.Add(open_log_folder_button, 0, wx.ALL, ROW_BORDER)
 
         self.notebook.AddPage(page, _("Geral"), select=True)
+
+    def _build_youtube_links_group(self, page, page_sizer):
+        """Grupo do KeyTune como navegador padrão, só no Windows (ver ``link_router``)."""
+        from ..link_router import registered_browsers
+
+        box, sizer = self._create_group(page, page_sizer, _("Links do YouTube"))
+        try:
+            self._link_browser_names = sorted(registered_browsers(), key=str.casefold)
+        except OSError:
+            self._link_browser_names = []
+        saved_browser = str(getattr(self._settings, "link_browser", "") or "")
+        if saved_browser and saved_browser not in self._link_browser_names:
+            # Um navegador desinstalado continua visível até a pessoa trocar.
+            self._link_browser_names.append(saved_browser)
+        self.link_browser_choice = self._add_choice(
+            box,
+            sizer,
+            _("Navegador para os ou&tros links"),
+            _("Recebe os links que não são do YouTube quando o KeyTune é o navegador padrão."),
+            [_("O navegador padrão anterior")] + self._link_browser_names,
+        )
+
+        self._set_default_browser_button = wx.Button(box, label=_("Definir o KeyT&une como navegador padrão..."))
+        self._unregister_link_button = wx.Button(box, label=_("Parar de rece&ber links"))
+        describe_control(
+            self._set_default_browser_button,
+            self._set_default_browser_button.GetLabelText(),
+            _("Abre os Aplicativos padrão do Windows para escolher o KeyTune em HTTP e HTTPS."),
+        )
+        describe_control(
+            self._unregister_link_button,
+            self._unregister_link_button.GetLabelText(),
+            _("Tira o KeyTune da lista de navegadores do Windows."),
+        )
+        self._set_default_browser_button.Bind(wx.EVT_BUTTON, self._on_set_default_browser)
+        self._unregister_link_button.Bind(wx.EVT_BUTTON, self._on_unregister_link_handler)
+
+        button_row = wx.BoxSizer(wx.HORIZONTAL)
+        button_row.Add(self._set_default_browser_button, 0, wx.RIGHT, 6)
+        button_row.Add(self._unregister_link_button, 0, 0)
+        sizer.Add(button_row, 0, wx.ALL, ROW_BORDER)
 
     def _build_playback_tab(self):
         page, page_sizer = self._create_tab_page()
@@ -993,6 +1036,10 @@ class PreferencesDialog(wx.Dialog):
         self.remember_last_folder_checkbox.SetValue(settings.remember_last_folder)
         self.confirm_on_exit_checkbox.SetValue(settings.confirm_on_exit)
         self.quick_player_checkbox.SetValue(settings.quick_player_enabled)
+        if hasattr(self, "link_browser_choice"):
+            link_browser = str(getattr(settings, "link_browser", "") or "")
+            link_index = self._link_browser_names.index(link_browser) + 1 if link_browser in self._link_browser_names else 0
+            self.link_browser_choice.SetSelection(link_index)
         self.minimize_to_tray_checkbox.SetValue(settings.minimize_to_tray)
         self.close_to_tray_checkbox.SetValue(settings.close_to_tray)
         self.announcements_enabled_checkbox.SetValue(settings.announcements_enabled)
@@ -1129,6 +1176,11 @@ class PreferencesDialog(wx.Dialog):
         settings.remember_last_folder = self.remember_last_folder_checkbox.GetValue()
         settings.confirm_on_exit = self.confirm_on_exit_checkbox.GetValue()
         settings.quick_player_enabled = self.quick_player_checkbox.GetValue()
+        if hasattr(self, "link_browser_choice"):
+            link_index = self.link_browser_choice.GetSelection()
+            settings.link_browser = (
+                self._link_browser_names[link_index - 1] if 1 <= link_index <= len(self._link_browser_names) else ""
+            )
         settings.minimize_to_tray = self.minimize_to_tray_checkbox.GetValue()
         settings.close_to_tray = self.close_to_tray_checkbox.GetValue()
         settings.announcements_enabled = self.announcements_enabled_checkbox.GetValue()
@@ -1348,6 +1400,63 @@ class PreferencesDialog(wx.Dialog):
                 + _("Abra manualmente: Configurações > Aplicativos > Aplicativos padrão."),
                 _("Aplicativos padrão"),
                 wx.OK | wx.ICON_INFORMATION,
+                self,
+            )
+
+    def _on_set_default_browser(self, _event):
+        from ..file_associations import is_link_handler_registered, register_link_handler
+        from ..link_router import default_apps_uri
+
+        title = _("Links do YouTube")
+        if not is_link_handler_registered():
+            if not self._confirm_portable_registry_change():
+                return
+            if not register_link_handler():
+                wx.MessageBox(
+                    _("Não foi possível registrar o KeyTune como navegador."),
+                    title,
+                    wx.OK | wx.ICON_ERROR,
+                    self,
+                )
+                return
+        response = wx.MessageBox(
+            _(
+                "O Windows não deixa um programa abrir só os links de um site. Por isso o KeyTune "
+                "entra como navegador: ele toca os links do YouTube e do YouTube Music e manda "
+                "todos os outros para o navegador escolhido acima."
+            )
+            + "\n\n"
+            + _("Nas configurações que vão abrir, escolha o KeyTune para HTTP e HTTPS. Abrir agora?"),
+            title,
+            wx.YES_NO | wx.ICON_INFORMATION,
+            self,
+        )
+        if response != wx.YES:
+            return
+        try:
+            os.startfile(default_apps_uri())
+        except OSError:
+            self._open_default_apps_settings()
+
+    def _on_unregister_link_handler(self, _event):
+        from ..file_associations import unregister_link_handler
+
+        if not self._confirm_portable_registry_change():
+            return
+        if unregister_link_handler():
+            wx.MessageBox(
+                _("O KeyTune saiu da lista de navegadores.")
+                + "\n\n"
+                + _("Se ele era o navegador padrão, escolha outro em Configurações > Aplicativos > Aplicativos padrão."),
+                _("Links do YouTube"),
+                wx.OK | wx.ICON_INFORMATION,
+                self,
+            )
+        else:
+            wx.MessageBox(
+                _("Não foi possível remover o registro de navegador."),
+                _("Links do YouTube"),
+                wx.OK | wx.ICON_ERROR,
                 self,
             )
 

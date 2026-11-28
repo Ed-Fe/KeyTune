@@ -1300,6 +1300,10 @@ msgstr ""
 msgid "Abre a janela principal com esta mídia numa playlist nova."
 msgstr ""
 
+#: src/player/file_associations.py
+msgid "Abre links do YouTube e do YouTube Music no {app}."
+msgstr ""
+
 #: src/player/youtube_music/panel.py
 msgid "Abre o diálogo para conectar uma conta do YouTube ou atualizar a autenticação salva."
 msgstr ""
@@ -1310,6 +1314,10 @@ msgstr ""
 
 #: src/player/youtube_music/panel.py
 msgid "Abre o menu com as ações do item selecionado: tocar, adicionar, ver conteúdo, baixar, salvar e outras."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Abre os Aplicativos padrão do Windows para escolher o KeyTune em HTTP e HTTPS."
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -3446,6 +3454,10 @@ msgstr ""
 msgid "Decrescente"
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Definir o KeyT&une como navegador padrão..."
+msgstr ""
+
 #: src/player/frames/radio/actions.py
 msgid "Definir {country} como o meu país"
 msgstr ""
@@ -5389,6 +5401,14 @@ msgstr ""
 msgid "Link da mídia atual copiado."
 msgstr ""
 
+#: src/player/file_associations.py
+msgid "Link da web — {app}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Links do YouTube"
+msgstr ""
+
 #: src/player/youtube_music/channel_about.py
 msgid "Links:"
 msgstr ""
@@ -5800,12 +5820,20 @@ msgstr ""
 msgid "Nada para continuar ouvindo. Nenhuma mídia longa está pela metade."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Nas configurações que vão abrir, escolha o KeyTune para HTTP e HTTPS. Abrir agora?"
+msgstr ""
+
 #: src/player/youtube_music/auth.py
 msgid "Navegador não reconhecido: {browser}. Escolha um da lista ou use a importação manual."
 msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "Navegador para exportar cookies do YouTube Music"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Navegador para os ou&tros links"
 msgstr ""
 
 #: src/player/keyboard/shortcuts.py
@@ -6736,6 +6764,10 @@ msgid "Não foi possível registrar as associações de arquivo."
 msgstr ""
 
 #: src/player/preferences/dialog.py
+msgid "Não foi possível registrar o KeyTune como navegador."
+msgstr ""
+
+#: src/player/preferences/dialog.py
 msgid "Não foi possível remover as associações de arquivo."
 msgstr ""
 
@@ -6749,6 +6781,10 @@ msgstr ""
 
 #: src/player/plugins/dialog.py
 msgid "Não foi possível remover o plugin: {error}"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Não foi possível remover o registro de navegador."
 msgstr ""
 
 #: src/player/frames/playback/backend.py
@@ -6996,9 +7032,17 @@ msgstr ""
 msgid "O KeyTune oferece a instalação na primeira conversão ou download que precisar dele."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "O KeyTune saiu da lista de navegadores."
+msgstr ""
+
 #: src/player/portable_update.py
 #: src/updater_main.py
 msgid "O KeyTune será aberto em instantes."
+msgstr ""
+
+#: src/player/link_router.py
+msgid "O KeyTune só abre links do YouTube e não encontrou um navegador para este link. Escolha outro navegador padrão nas configurações do Windows ou em Preferências do KeyTune."
 msgstr ""
 
 #: src/player/welcome/dialog.py
@@ -7055,6 +7099,10 @@ msgstr ""
 
 #: src/player/youtube_music/dialog.py
 msgid "O Windows Package Manager não está disponível nesta instalação. Use os botões abaixo para abrir os sites oficiais."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "O Windows não deixa um programa abrir só os links de um site. Por isso o KeyTune entra como navegador: ele toca os links do YouTube e do YouTube Music e manda todos os outros para o navegador escolhido acima."
 msgstr ""
 
 #: src/player/youtube_music/auth.py
@@ -7348,6 +7396,10 @@ msgstr ""
 
 #: src/player/youtube_music/yt_dlp_runtime.py
 msgid "O modelo do nome do arquivo não pode conter pastas."
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "O navegador padrão anterior"
 msgstr ""
 
 #: src/player/diagnostics/youtube_resolution.py
@@ -7949,6 +8001,10 @@ msgstr ""
 
 #: src/player/frames/youtube_music/live_chat.py
 msgid "Parar de falar as mensagens do chat"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Parar de rece&ber links"
 msgstr ""
 
 #: src/player/preferences/dialog.py
@@ -8688,6 +8744,10 @@ msgstr ""
 msgid "Recebe correções do YouTube antes da versão estável."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Recebe os links que não são do YouTube quando o KeyTune é o navegador padrão."
+msgstr ""
+
 #: src/player/frames/youtube_music/channel_actions.py
 msgid "Receber notificações personalizadas"
 msgstr ""
@@ -9226,6 +9286,10 @@ msgstr ""
 msgid "Se a sessão tiver mais de uma conta Google, o KeyTune pergunta qual usar logo depois de conectar."
 msgstr ""
 
+#: src/player/preferences/dialog.py
+msgid "Se ele era o navegador padrão, escolha outro em Configurações > Aplicativos > Aplicativos padrão."
+msgstr ""
+
 #: src/player/youtube_music/dialog.py
 msgid "Se preferir entender o cenário técnico antes de instalar, abra a guia oficial do yt-dlp sobre EJS e desafios JavaScript."
 msgstr ""
@@ -9735,6 +9799,10 @@ msgstr ""
 
 #: src/player/keyboard/dialog.py
 msgid "Tipos de atalho"
+msgstr ""
+
+#: src/player/preferences/dialog.py
+msgid "Tira o KeyTune da lista de navegadores do Windows."
 msgstr ""
 
 #: src/player/frames/youtube_music/watch_later.py
