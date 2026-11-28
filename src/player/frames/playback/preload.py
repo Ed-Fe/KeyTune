@@ -6,8 +6,8 @@ player acontecem todos no mesmo instante em que a faixa que sai está sendo
 mixada. Numa saída Bluetooth isso pode soar como uma interrupção curta.
 
 Aqui a faixa seguinte é carregada, parada e muda, no player livre, assim que a
-atual terminou de ser baixada (ou, no mais tardar, ``PRELOAD_LEAD_MS`` antes do
-fim dela). Na hora da transição o crossfade só dá o ``play``. Clipes (com vídeo
+atual terminou de ser baixada e faltam até ``PRELOAD_CACHED_LEAD_MS`` para o fim
+dela (ou, no mais tardar, ``PRELOAD_LEAD_MS`` antes do fim). Na hora da transição o crossfade só dá o ``play``. Clipes (com vídeo
 junto) entram do mesmo jeito: o MPV guarda o stream inteiro no cache.
 O pré-carregamento é descartado se a faixa seguinte deixar de ser a mesma
 (troca de playlist, fila, aleatório, repetição, parada, pulo).
@@ -28,6 +28,10 @@ _logger = get_logger(__name__)
 PRELOAD_LEAD_MS = 60_000
 # Tempo mínimo de reprodução da faixa atual antes de começar a baixar a próxima.
 PRELOAD_MIN_ELAPSED_MS = 3_000
+# Mesmo com a faixa atual toda baixada, a próxima só é carregada quando faltar
+# no máximo isto: numa faixa longa, não deixa outro stream aberto e parado (e
+# guardado na memória) por muitos minutos.
+PRELOAD_CACHED_LEAD_MS = 300_000
 # Folga mínima entre o fim do pré-carregamento e o começo da janela do crossfade.
 PRELOAD_MIN_MARGIN_MS = 2_000
 # Passado isto sem ficar pronto, o pré-carregamento é abandonado.
@@ -101,6 +105,8 @@ class PreloadMixin:
             return True
         # A faixa atual já está toda no dispositivo: a rede está livre para a próxima.
         # Espera um instante do começo dela para não disputar o primeiro buffer.
+        if remaining_ms > PRELOAD_CACHED_LEAD_MS:
+            return False
         is_fully_cached = getattr(player, "is_fully_cached", None)
         return current_time >= PRELOAD_MIN_ELAPSED_MS and callable(is_fully_cached) and bool(is_fully_cached())
 

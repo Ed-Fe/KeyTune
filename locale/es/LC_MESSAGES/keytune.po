@@ -8561,8 +8561,8 @@ msgstr "Pasar &solo a la siguiente pista o vídeo"
 msgid "Desmarcada, o que você escolhe toca até o fim e para, sem tocar mais nada em seguida."
 msgstr "Desmarcada, lo que eliges suena hasta el final y se detiene, sin reproducir nada más después."
 
-msgid "Reprodução a&utomática"
-msgstr "Reproducción a&utomática"
+msgid "R&eprodução automática"
+msgstr "Reproducc&ión automática"
 
 msgid "ativada"
 msgstr "activada"

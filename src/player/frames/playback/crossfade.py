@@ -455,9 +455,9 @@ class CrossfadeMixin:
             stage_times_ms[name] = int((now - since) * 1000)
             return now
 
-        if not crossfade_state.get("preloaded"):
-            # A faixa pré-carregada já recebeu o equalizador ao ficar pronta.
-            self._apply_equalizer_state_to_player(incoming_player, state)
+        # Também na faixa pré-carregada: o equalizador pode ter mudado desde
+        # que ela ficou pronta.
+        self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
         self._current_track_gain_db = 0.0
         state.playback_gain_db = self._current_track_gain_db

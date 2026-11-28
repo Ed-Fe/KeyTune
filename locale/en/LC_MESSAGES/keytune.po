@@ -8561,8 +8561,8 @@ msgstr "Move to the next track or video &automatically"
 msgid "Desmarcada, o que você escolhe toca até o fim e para, sem tocar mais nada em seguida."
 msgstr "When unchecked, what you choose plays to the end and stops, with nothing else after it."
 
-msgid "Reprodução a&utomática"
-msgstr "A&utoplay"
+msgid "R&eprodução automática"
+msgstr "Autopla&y"
 
 msgid "ativada"
 msgstr "on"

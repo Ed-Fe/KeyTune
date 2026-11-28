@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from player.constants import REPEAT_OFF, REPEAT_ONE, REPEAT_STOP  # noqa: E402
 from player.frames.playback.preload import (  # noqa: E402
+    PRELOAD_CACHED_LEAD_MS,
     PRELOAD_LEAD_MS,
     PRELOAD_MIN_MARGIN_MS,
     PreloadMixin,
@@ -153,6 +154,18 @@ class PreloadTests(unittest.TestCase):
         self.assertFalse(Host(player=FakePlayer(time_ms=10_000, cached=False))._preload_time_window_is_open())
         self.assertTrue(
             Host(player=FakePlayer(time_ms=total - PRELOAD_LEAD_MS, cached=False))._preload_time_window_is_open()
+        )
+        # Faixa longa com cache completo: espera chegar perto do fim.
+        long_total = PRELOAD_CACHED_LEAD_MS * 3
+        self.assertFalse(
+            Host(
+                player=FakePlayer(time_ms=10_000, length_ms=long_total, cached=True)
+            )._preload_time_window_is_open()
+        )
+        self.assertTrue(
+            Host(
+                player=FakePlayer(time_ms=long_total - PRELOAD_CACHED_LEAD_MS, length_ms=long_total, cached=True)
+            )._preload_time_window_is_open()
         )
         # Cache completo, mas perto demais do fim: tarde para carregar.
         self.assertFalse(Host(player=FakePlayer(time_ms=total - 5_000, cached=True))._preload_time_window_is_open())

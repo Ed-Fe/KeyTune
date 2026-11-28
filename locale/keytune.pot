@@ -7668,6 +7668,10 @@ msgstr ""
 msgid "O yt-dlp não conseguiu listar as faixas de áudio."
 msgstr ""
 
+#: src/player/youtube_music/catalog.py
+msgid "O yt-dlp não conseguiu listar o conteúdo do YouTube."
+msgstr ""
+
 #: src/player/youtube_music/search.py
 msgid "O yt-dlp não conseguiu pesquisar vídeos no YouTube."
 msgstr ""
@@ -8720,6 +8724,10 @@ msgstr ""
 msgid "Quênia"
 msgstr ""
 
+#: src/player/frames/ui.py
+msgid "R&eprodução automática"
+msgstr ""
+
 #: src/player/preferences/dialog.py
 msgid "Re&gistrar como player padrão"
 msgstr ""
@@ -8975,10 +8983,6 @@ msgstr ""
 #: src/player/keyboard/shortcuts.py
 #: src/player/preferences/dialog.py
 msgid "Reprodução"
-msgstr ""
-
-#: src/player/frames/ui.py
-msgid "Reprodução a&utomática"
 msgstr ""
 
 #: src/player/preferences/dialog.py

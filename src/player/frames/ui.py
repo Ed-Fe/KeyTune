@@ -529,7 +529,7 @@ class FrameUIMixin:
         playback_menu.Append(self.menu_start_autodj_session_id, _("Reproduzir playlist com AutoDJ"))
         playback_menu.Append(self.menu_stop_autodj_session_id, _("Encerrar sessão AutoDJ"))
         self.menu_autoplay_next_item = playback_menu.AppendCheckItem(
-            self.menu_autoplay_next_id, _("Reprodução a&utomática")
+            self.menu_autoplay_next_id, _("R&eprodução automática")
         )
         self.menu_autoplay_next_item.Check(bool(getattr(self.settings, "autoplay_next", True)))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
