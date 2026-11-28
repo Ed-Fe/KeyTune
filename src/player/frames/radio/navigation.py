@@ -13,6 +13,7 @@ import wx
 from player.radio.folders import FOLDER_FAVORITES, FOLDER_RECENTS, home_folder_items, open_radio_folder
 from player.radio.models import RADIO_RESULTS_PAGE_SIZE
 
+from ... import interface_sounds
 from ...i18n import _, ngettext
 from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_NAVIGATION, ANNOUNCE_PROGRESS
 
@@ -146,6 +147,7 @@ class RadioNavigationMixin:
         if mode == "push":
             views[-1].selected_id = self._radio_selected_result_id()
             views.append(view)
+            interface_sounds.play_for(self, interface_sounds.SOUND_OPEN)
         else:
             views[:] = [views[0], view]
             # Depois de pesquisar, o foco vai do campo de busca para a lista.
@@ -200,6 +202,7 @@ class RadioNavigationMixin:
 
         self._cancel_radio_task()
         views.pop()
+        interface_sounds.play_for(self, interface_sounds.SOUND_BACK)
         self._show_radio_view(announce=True, selected_id=views[-1].selected_id)
         return True
 
@@ -209,6 +212,7 @@ class RadioNavigationMixin:
             return False
 
         start = view.next_start
+        interface_sounds.play_for(self, interface_sounds.SOUND_LOADING)
         self._announce(_("Carregando mais itens."), ANNOUNCE_PROGRESS)
 
         def worker():
