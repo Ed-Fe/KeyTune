@@ -1,4 +1,4 @@
-﻿"""Páginas de resultados do YouTube e do YouTube Music.
+"""Páginas de resultados do YouTube e do YouTube Music.
 
 Cada função devolve um :class:`YouTubeResultPage` com os itens de ``start`` até
 ``start + count`` e a indicação de que há mais depois deles. É o que permite às

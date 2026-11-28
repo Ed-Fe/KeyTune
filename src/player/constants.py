@@ -25,9 +25,6 @@ SHORT_FADE_MS = 180
 SHORT_FADE_STEPS = 8
 PLAYBACK_RESTART_THRESHOLD_MS = 3000
 EXPLORER_PREVIEW_DELAY_MS = 120
-# Fork build: updates are disabled (no startup check, no Help menu item) until
-# the upstream developer answers our pull requests. Set to True to restore them.
-APP_UPDATES_ENABLED = False
 STARTUP_UPDATE_CHECK_DELAY_MS = 2000
 UPDATE_HTTP_TIMEOUT_SECONDS = 20
 UPDATE_DOWNLOAD_CHUNK_SIZE = 256 * 1024

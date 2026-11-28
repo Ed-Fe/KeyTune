@@ -4,7 +4,7 @@ import sys
 import wx
 
 from ..accessibility import attach_named_accessible
-from ..constants import APP_UPDATES_ENABLED, PROGRESS_GAUGE_RANGE,PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
+from ..constants import PROGRESS_GAUGE_RANGE, PROGRESS_TIMER_INTERVAL_MS, SLEEP_TIMER_PRESET_MINUTES
 from .. import interface_sounds
 from ..i18n import _, SOURCE_LANGUAGE, get_active_language
 from ..library import PlaylistBrowserPanel, is_audio_playback_media
@@ -602,8 +602,7 @@ class FrameUIMixin:
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_keyboard_help_id, _("Ajuda rápida de &atalhos\tF1"))
         help_menu.AppendSeparator()
-        if APP_UPDATES_ENABLED:
-            help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
+        help_menu.Append(self.menu_check_updates_id, _("Verificar at&ualizações"))
         help_menu.Append(self.menu_diagnostics_id, _("&Diagnóstico"))
         help_menu.AppendSeparator()
         help_menu.Append(self.menu_about_id, _("&Sobre o KeyTune"))
