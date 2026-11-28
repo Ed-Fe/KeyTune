@@ -2,7 +2,6 @@
 
 import wx
 
-from ..accessibility import strip_mnemonic
 from ..i18n import _
 from ..reading_dialog import add_reading_field
 from ..widgets import ROW_BORDER, add_labeled_row, create_group, describe_control, equalize_row_controls
@@ -73,10 +72,11 @@ class ConfirmRadioDirectoryDialog(wx.Dialog):
 
 
 def _add_text_field(parent, sizer, label_text, help_text, value=""):
-    name = strip_mnemonic(label_text)
     label = wx.StaticText(parent, label=f"{label_text}:")
     control = wx.TextCtrl(parent, value=value)
-    describe_control(control, name, help_text)
+    # Nome igual ao rótulo, com os dois-pontos: se diferir, o NVDA lê o rótulo
+    # também na descrição do diálogo.
+    describe_control(control, label.GetLabelText(), help_text)
     sizer.Add(label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, ROW_BORDER)
     sizer.Add(control, 0, wx.ALL | wx.EXPAND, ROW_BORDER)
     return control
@@ -127,7 +127,7 @@ class AddRadioToDirectoryDialog(wx.Dialog):
         self.country_ctrl.SetMinSize(self.FromDIP(wx.Size(72, -1)))
         describe_control(
             self.country_ctrl,
-            _("Código do país"),
+            country_label.GetLabelText(),
             _("Duas letras, como BR, ou em branco."),
         )
         add_labeled_row(class_sizer, country_label, self.country_ctrl)

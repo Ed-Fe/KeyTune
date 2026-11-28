@@ -3492,10 +3492,6 @@ msgstr ""
 msgid "Código do &país:"
 msgstr ""
 
-#: src/player/radio/directory_dialog.py
-msgid "Código do país"
-msgstr ""
-
 #: src/player/radio/submission.py
 msgid "Código do país: {value}"
 msgstr ""
