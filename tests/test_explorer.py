@@ -16,6 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from player.frames.commands.app_commands import AppCommandsMixin
+from player.frames.commands.open_commands import OpenCommandsMixin
 from player.frames.explorer import FrameExplorerMixin
 from player.frames.library_navigation import FrameLibraryNavigationMixin
 from player.frames.session import FrameSessionMixin
@@ -298,6 +299,96 @@ class AddWithoutPlayingTests(unittest.TestCase):
         self.assertFalse(frame._add_media_paths_without_playing(["https://example.com/a.mp3"]))
         self.assertEqual(len(state.items), 1)
         self.assertEqual(frame.announcements, ["Os itens já estavam em Rádio."])
+
+    def test_silent_add_returns_the_count_and_does_not_speak(self):
+        state = PlaylistState(title="Rádio", source_path="radio.m3u8")
+        state.set_items(["https://example.com/a.mp3"], start_index=0)
+        frame = _NavigationFrame(state)
+
+        added = frame._add_media_paths_without_playing(
+            ["https://example.com/b.mp3", "https://example.com/c.mp3"],
+            announce=False,
+        )
+
+        self.assertEqual(added, 2)
+        self.assertEqual(state.items, ["https://example.com/a.mp3", "https://example.com/b.mp3", "https://example.com/c.mp3"])
+        self.assertEqual(state.current_media_path, "https://example.com/a.mp3")
+        self.assertEqual(frame.announcements, [])
+        frame._play_media.assert_not_called()
+
+    def test_silent_add_still_reports_duplicates(self):
+        state = PlaylistState(title="Rádio", source_path="radio.m3u8")
+        state.set_items(["https://example.com/a.mp3"], start_index=0)
+        frame = _NavigationFrame(state)
+
+        self.assertFalse(
+            frame._add_media_paths_without_playing(["https://example.com/a.mp3"], announce=False)
+        )
+        self.assertEqual(frame.announcements, ["Os itens já estavam em Rádio."])
+
+
+class _EnqueueHost(OpenCommandsMixin):
+    def __init__(self, added_count):
+        self.added_count = added_count
+        self.calls = []
+        self.announcements = []
+        self.status = []
+
+    def _split_selected_files(self, paths):
+        return list(paths), []
+
+    def _add_media_paths_without_playing(self, paths, *, verified=False, announce=True):
+        self.calls.append((list(paths), verified, announce))
+        return self.added_count
+
+    def _announce(self, message, category=None):
+        self.announcements.append((message, category))
+
+    def _set_status_message(self, message):
+        self.status.append(message)
+
+
+class ExternalEnqueueTests(unittest.TestCase):
+    def test_enqueue_reuses_add_without_playing_and_announces_the_count(self):
+        frame = _EnqueueHost(2)
+
+        with patch("player.frames.commands.open_commands.run_in_background", _run_inline):
+            frame._enqueue_external_files([r"C:\a.mp3", r"C:\b.mp3"])
+
+        self.assertEqual(frame.calls, [([r"C:\a.mp3", r"C:\b.mp3"], True, False)])
+        self.assertEqual(
+            frame.announcements,
+            [("2 arquivos adicionados à playlist.", ANNOUNCE_CONFIRMATIONS)],
+        )
+        self.assertEqual(frame.status, ["2 arquivos adicionados à playlist."])
+
+    def test_enqueue_expands_a_selected_playlist(self):
+        frame = _EnqueueHost(3)
+        frame._split_selected_files = lambda paths: ([r"C:\a.mp3"], [r"C:\lista.m3u8"])
+
+        with patch("player.frames.commands.open_commands.run_in_background", _run_inline), patch(
+            "player.frames.commands.open_commands.load_playlist", return_value=[r"C:\b.mp3", r"C:\c.mp3"]
+        ):
+            frame._enqueue_external_files([r"C:\a.mp3", r"C:\lista.m3u8"])
+
+        self.assertEqual(frame.calls, [([r"C:\a.mp3", r"C:\b.mp3", r"C:\c.mp3"], True, False)])
+
+    def test_enqueue_does_not_announce_when_nothing_new_was_added(self):
+        frame = _EnqueueHost(0)
+
+        with patch("player.frames.commands.open_commands.run_in_background", _run_inline):
+            frame._enqueue_external_files([r"C:\a.mp3"])
+
+        self.assertEqual(frame.announcements, [])
+        self.assertEqual(frame.status, [])
+
+    def test_enqueue_leaves_the_autodj_announcement_alone(self):
+        frame = _EnqueueHost(True)
+
+        with patch("player.frames.commands.open_commands.run_in_background", _run_inline):
+            frame._enqueue_external_files([r"C:\a.mp3"])
+
+        self.assertEqual(frame.announcements, [])
 
 
 class EnqueuePathsTests(unittest.TestCase):

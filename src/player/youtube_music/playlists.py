@@ -2,7 +2,7 @@ import re
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from .models import YouTubeMusicPlaylistSummary
-from ..i18n import _
+from ..i18n import _, ngettext
 
 
 YTMUSIC_SOURCE_PREFIX = "ytmusic://"
@@ -13,8 +13,7 @@ VIDEO_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{11}$")
 def playlist_track_count_text(item):
     track_count = item.get("trackCount")
     if isinstance(track_count, int) and track_count > 0:
-        suffix = "faixa" if track_count == 1 else "faixas"
-        return f"{track_count} {suffix}"
+        return ngettext("{count} faixa", "{count} faixas", track_count).format(count=track_count)
 
     count_text = str(item.get("count") or item.get("description") or "").strip()
     return count_text
@@ -44,7 +43,7 @@ def extract_personalized_mix_summaries(home_rows):
                     playlist_id=playlist_id,
                     title=title,
                     track_count_text=track_count_text,
-                    source_badge="mix personalizada",
+                    source_badge=_("mix personalizada"),
                 )
             )
 

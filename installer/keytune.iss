@@ -13,7 +13,7 @@
 ;   /DSourceDir=...      overrides the PyInstaller payload folder (default ..\dist\KeyTune).
 
 #ifndef AppVersion
-  #define AppVersion "2.5.0"
+  #define AppVersion "2.6.0"
 #endif
 
 #ifndef SourceDir
@@ -25,6 +25,9 @@
 #define AppExeName "KeyTune.exe"
 #define AppId "{{A7F3C2E1-9B4D-4E6A-8C1F-2D5E7A9B3C4D}"
 #define ProgId "KeyTune.MediaFile"
+#define EnqueueVerb "KeyTune.enqueue"
+; Keep in sync with link_handler_names() in src/player/link_router.py.
+#define UrlProgId "KeyTuneURL"
 
 [Setup]
 AppId={#AppId}
@@ -86,9 +89,21 @@ spanish.MediaFileType=Archivo multimedia — {#AppName}
 brazilianportuguese.OpenWithApp=Abrir no {#AppName}
 english.OpenWithApp=Open with {#AppName}
 spanish.OpenWithApp=Abrir con {#AppName}
+brazilianportuguese.EnqueueWithApp=Adicionar à playlist do {#AppName}
+english.EnqueueWithApp=Add to {#AppName} playlist
+spanish.EnqueueWithApp=Añadir a la lista de {#AppName}
 brazilianportuguese.AppDescription=Reprodutor de mídia acessível, controlado por teclado.
 english.AppDescription=Accessible, keyboard-driven media player.
 spanish.AppDescription=Reproductor multimedia accesible, controlado por teclado.
+brazilianportuguese.LinkGroup=Links da web (opcional):
+english.LinkGroup=Web links (optional):
+spanish.LinkGroup=Enlaces web (opcional):
+brazilianportuguese.LinkHandler=Oferecer o {#AppName} como navegador, para abrir links do YouTube (os outros links seguem para o seu navegador)
+english.LinkHandler=Offer {#AppName} as a browser, to open YouTube links (other links go on to your browser)
+spanish.LinkHandler=Ofrecer {#AppName} como navegador, para abrir enlaces de YouTube (los demás enlaces siguen a tu navegador)
+brazilianportuguese.UrlFileType=Link da web — {#AppName}
+english.UrlFileType=Web link — {#AppName}
+spanish.UrlFileType=Enlace web — {#AppName}
 brazilianportuguese.UninstallShortcut=Desinstalar o {#AppName}
 english.UninstallShortcut=Uninstall {#AppName}
 spanish.UninstallShortcut=Desinstalar {#AppName}
@@ -148,6 +163,12 @@ Name: "assocplaylist"; Description: "{cm:AssocPlaylistAll}"; GroupDescription: "
 Name: "assocplaylist\m3u"; Description: ".m3u"; Flags: unchecked
 Name: "assocplaylist\m3u8"; Description: ".m3u8"; Flags: unchecked
 
+; Opt-in: lists KeyTune as a web browser for http/https. Windows has no way to
+; hand an app only the YouTube links, so KeyTune receives every link once the
+; user makes it the default in Settings > Default apps; src/player/link_router.py
+; plays the YouTube ones and passes the rest on to the previous browser.
+Name: "linkhandler"; Description: "{cm:LinkHandler}"; GroupDescription: "{cm:LinkGroup}"; Flags: unchecked
+
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
@@ -167,12 +188,36 @@ Root: HKA; Subkey: "Software\Classes\{#ProgId}"; ValueType: string; ValueName: "
 Root: HKA; Subkey: "Software\Classes\{#ProgId}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"
 Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\open"; ValueType: string; ValueName: ""; ValueData: "{cm:OpenWithApp}"
 Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
+; Player: Explorer runs this verb once and appends every selected file after
+; %1 (legacy static verbs cap the selection at 100 items). Document, the
+; default for a command verb, would start one process per file.
+Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\enqueue"; Flags: deletekey
+Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"
+Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"
+Root: HKA; Subkey: "Software\Classes\{#ProgId}\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""
 
 ; --- Capabilities + RegisteredApplications root: always present so KeyTune is
 ;     a registered application; per-extension entries below are opt-in. ---
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{cm:AppDescription}"
 Root: HKA; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#AppName}"; ValueData: "Software\{#AppName}\Capabilities"; Flags: uninsdeletevalue
+
+; --- Web links (opt-in task "linkhandler"): the URL ProgId, a StartMenuInternet
+;     client so Windows lists KeyTune among the browsers, and URLAssociations in
+;     the Capabilities that RegisteredApplications already points to. ---
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}"; ValueType: string; ValueName: ""; ValueData: "{cm:UrlFileType}"; Flags: uninsdeletekey; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Classes\{#UrlProgId}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}"; ValueType: string; ValueName: ""; ValueData: "{#AppName}"; Flags: uninsdeletekey; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"""; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{cm:AppDescription}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "http"; ValueData: "{#UrlProgId}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\Clients\StartMenuInternet\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "https"; ValueData: "{#UrlProgId}"; Tasks: linkhandler
+Root: HKA; Subkey: "Software\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "http"; ValueData: "{#UrlProgId}"; Flags: uninsdeletevalue; Tasks: linkhandler
+Root: HKA; Subkey: "Software\{#AppName}\Capabilities\URLAssociations"; ValueType: string; ValueName: "https"; ValueData: "{#UrlProgId}"; Flags: uninsdeletevalue; Tasks: linkhandler
 
 ; --- Per-extension registration, gated by the opt-in [Tasks]. Each extension
 ;     adds an OpenWithProgids entry ("Open with" list) and a Capabilities
@@ -209,6 +254,98 @@ Root: HKA; Subkey: "Software\Classes\.wv\OpenWithProgids"; ValueType: none; Valu
 Root: HKA; Subkey: "Software\Classes\.ape\OpenWithProgids"; ValueType: none; ValueName: "{#ProgId}"; Flags: uninsdeletevalue; Tasks: assocaudio\ape
 Root: HKA; Subkey: "Software\Classes\.m3u\OpenWithProgids"; ValueType: none; ValueName: "{#ProgId}"; Flags: uninsdeletevalue; Tasks: assocplaylist\m3u
 Root: HKA; Subkey: "Software\Classes\.m3u8\OpenWithProgids"; ValueType: none; ValueName: "{#ProgId}"; Flags: uninsdeletevalue; Tasks: assocplaylist\m3u8
+
+; Media verbs available even when another player owns the extension's ProgID.
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mp4
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mp4
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp4\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mp4
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4v\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\m4v
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4v\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\m4v
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4v\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\m4v
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mkv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mkv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mkv\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mkv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\avi
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\avi
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.avi\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\avi
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mov\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mov
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mov\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mov
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mov\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mov
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webm\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\webm
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webm\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\webm
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webm\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\webm
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\flv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\flv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flv\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\flv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wmv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\wmv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wmv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\wmv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wmv\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\wmv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mpg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mpg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpg\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mpg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpeg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mpeg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpeg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mpeg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mpeg\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mpeg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.3gp\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\3gp
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.3gp\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\3gp
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.3gp\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\3gp
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ts\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m2ts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\m2ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m2ts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\m2ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m2ts\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\m2ts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\mts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mts\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\mts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mts\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\mts
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocvideo\ogv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocvideo\ogv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogv\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocvideo\ogv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp3\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\mp3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp3\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\mp3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mp3\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\mp3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wav\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\wav
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wav\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\wav
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wav\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\wav
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flac\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\flac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flac\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\flac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.flac\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\flac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aac\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\aac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aac\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\aac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aac\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\aac
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\ogg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogg\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\ogg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ogg\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\ogg
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.oga\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\oga
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.oga\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\oga
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.oga\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\oga
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4a\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\m4a
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4a\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\m4a
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.m4a\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\m4a
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.opus\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\opus
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.opus\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\opus
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.opus\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\opus
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wma\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\wma
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wma\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\wma
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wma\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\wma
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aiff\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\aiff
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aiff\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\aiff
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aiff\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\aiff
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aif\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\aif
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aif\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\aif
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.aif\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\aif
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ac3\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\ac3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ac3\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\ac3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ac3\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\ac3
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mka\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\mka
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mka\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\mka
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.mka\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\mka
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\wv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wv\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\wv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.wv\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\wv
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ape\shell\{#EnqueueVerb}"; ValueType: string; ValueName: ""; ValueData: "{cm:EnqueueWithApp}"; Flags: uninsdeletekey; Tasks: assocaudio\ape
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ape\shell\{#EnqueueVerb}"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: assocaudio\ape
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.ape\shell\{#EnqueueVerb}\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" --enqueue ""%1"""; Tasks: assocaudio\ape
 
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".mp4"; ValueData: "{#ProgId}"; Tasks: assocvideo\mp4
 Root: HKA; Subkey: "Software\{#AppName}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".m4v"; ValueData: "{#ProgId}"; Tasks: assocvideo\m4v

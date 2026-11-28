@@ -154,7 +154,7 @@ def scan_explorer_folder(folder_path, *, sort_by=FOLDER_SORT_NAME, descending=Fa
         # Raiz de uma unidade: a pasta acima é a lista de unidades.
         entries.insert(
             0,
-            FolderBrowserEntry(path=EXPLORER_ROOT, label="[..] Pasta acima", entry_type=FOLDER_ENTRY_PARENT),
+            FolderBrowserEntry(path=EXPLORER_ROOT, label=_("[..] Pasta acima"), entry_type=FOLDER_ENTRY_PARENT),
         )
     return entries
 

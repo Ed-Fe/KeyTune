@@ -132,6 +132,11 @@ def get_browser_auth_cookie_file_path():
 
 
 def _get_storage_dir():
+    from ..portable import is_portable, portable_data_dir
+
+    if is_portable():
+        return portable_data_dir()
+
     if os.name == "nt":
         base_dir = os.environ.get("APPDATA") or os.path.expanduser("~")
     else:

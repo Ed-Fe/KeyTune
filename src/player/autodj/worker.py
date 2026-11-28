@@ -6,27 +6,17 @@ import os
 from pathlib import Path
 import sys
 
-from player.autodj.librosa_analyzer import LibrosaAnalyzer
-
-
-_WORKER_ENVIRONMENT_DEFAULTS = {
-    "NUMBA_THREADING_LAYER": "workqueue",
-    "NUMBA_NUM_THREADS": "1",
-    "OMP_NUM_THREADS": "1",
-    "OPENBLAS_NUM_THREADS": "1",
-    "MKL_NUM_THREADS": "1",
-    "VECLIB_MAXIMUM_THREADS": "1",
-}
+from .librosa_analyzer import LibrosaAnalyzer, WORKER_ENVIRONMENT
 
 
 def main(argv=None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if len(arguments) != 4:
         return 2
-    managed_environment = ("KEYTUNE_AUTODJ_ANALYZER_WORKER", *_WORKER_ENVIRONMENT_DEFAULTS)
+    managed_environment = ("KEYTUNE_AUTODJ_ANALYZER_WORKER", *WORKER_ENVIRONMENT)
     previous_environment = {name: os.environ.get(name) for name in managed_environment}
     os.environ["KEYTUNE_AUTODJ_ANALYZER_WORKER"] = "1"
-    for name, value in _WORKER_ENVIRONMENT_DEFAULTS.items():
+    for name, value in WORKER_ENVIRONMENT.items():
         os.environ[name] = value
     result_path = Path(arguments[3])
     try:

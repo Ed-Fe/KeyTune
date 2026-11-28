@@ -188,7 +188,10 @@ def install_or_update_youtube_dependencies(
             output_parts.append(f"ytmusicapi {installed_version}")
 
     if force or not yt_dlp_managed_exists:
-        _report_progress(progress_callback, _("Baixando yt-dlp..."))
+        _report_progress(
+            progress_callback,
+            _("Procurando atualização do yt-dlp...") if yt_dlp_managed_exists else _("Baixando yt-dlp..."),
+        )
         yt_dlp_version = install_or_update_yt_dlp_executable(
             force=force,
             include_prerelease=include_prerelease,

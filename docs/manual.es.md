@@ -29,10 +29,24 @@ Aquí encontrarás las funciones de la aplicación y el paso a paso de las tarea
 ## Primeros pasos
 
 1. Descarga el `KeyTune-Setup.exe` más reciente desde la página de [releases](https://github.com/ed-fe/KeyTune/releases).
-2. Ejecuta el instalador y sigue los pasos. En la página de tareas adicionales puedes crear un acceso directo en el escritorio y elegir qué formatos de audio, vídeo y playlist asociar a KeyTune. Todo es opcional y viene sin marcar. Asociar un formato añade KeyTune al menú *Abrir con*; para que abra esos archivos por sí solo, aún hay que definirlo como predeterminado en la configuración de Windows.
+2. Ejecuta el instalador y sigue los pasos. En la página de tareas adicionales puedes crear un acceso directo en el escritorio y elegir qué formatos de audio, vídeo y playlist asociar a KeyTune. Todo es opcional y viene sin marcar. Asociar un formato ofrece **Abrir con KeyTune** en el Explorador. Para formatos de audio y vídeo asociados, **Añadir a la lista de KeyTune** aparece aunque otro reproductor sea el predeterminado. Para que abra esos archivos por sí solo, aún hay que definirlo como predeterminado en la configuración de Windows.
 3. A partir de ahí, cuando haya una versión nueva, KeyTune muestra las novedades y pide confirmación antes de descargar e instalar (consulta [Actualizaciones](#actualizaciones)).
 
 KeyTune reproduce los medios con el runtime de MPV, y el instalador ya lo incluye. Si el reproductor se abre pero no reproduce nada, consulta [Solución de problemas](#solucion-de-problemas).
+
+Para usarlo sin instalador, consulta [Versión portátil](#version-portatil).
+
+## Versión portátil
+
+`KeyTune-Portable.zip` es KeyTune sin instalador. Extrae el zip en una carpeta o en un pendrive y abre `KeyTune.exe`. El archivo `portable.ini` en esa misma carpeta, aunque esté vacío, activa el modo portátil. Sin él, KeyTune guarda los datos en Windows, como la versión instalada.
+
+La configuración, la sesión, la biblioteca, los registros, los plugins, la cuenta de YouTube y los recursos descargados quedan en la carpeta `data`, junto al ejecutable. Borrar `data` empieza de cero. Si llevas la carpeta entera a otro equipo, esos datos van con ella.
+
+Si la carpeta portátil es de solo lectura, KeyTune avisa al abrirse y guarda los datos en este equipo, en `%APPDATA%\KeyTune`. Cada carpeta portátil se abre en su propia instancia, aunque la versión instalada esté abierta.
+
+Para actualizar, usa **Ayuda > Comprobar actualizaciones**. KeyTune comprueba la integridad de `KeyTune-Portable.zip` y que incluya el ejecutable antes de cerrarse. `KeyTuneUpdater.exe` sustituye los archivos del programa, conserva `portable.ini` y `data`, y vuelve a abrir KeyTune. Si la sustitución falla, el actualizador intenta restaurar los archivos y volver a abrir la versión anterior. Si algún archivo no se puede restaurar, el actualizador indica dónde guardó la copia de seguridad en `data`. El registro está en `data/portable-update.log`.
+
+El modo portátil no registra KeyTune como reproductor predeterminado por sí solo. Si lo pides en **Configuración > Preferencias > General > Asociación de archivos**, en **Registrar como reproductor predeterminado** o **Anular registro de asociaciones**, KeyTune avisa que la opción se guarda en el Windows de este equipo. Las asociaciones de la copia portátil se registran por separado de las de la versión instalada. Los atajos globales y los controles de multimedia de Windows siguen funcionando.
 
 ## Interfaz
 
@@ -50,7 +64,7 @@ En Preferencias y en los diálogos, la etiqueta de cada campo tiene una letra su
 
 ## Cómo abrir medios
 
-Hay tres formas de poner medios en KeyTune: abrir, pegar y usar el explorador de carpetas. Las tres funcionan igual: lo que entra va a la **playlist actual** y empieza a sonar. Con `Shift`, entra **sin reproducir**, al final de la lista, y lo que sonaba continúa.
+Hay tres formas de poner medios en KeyTune: abrir, pegar y usar el explorador de carpetas. Las tres funcionan igual: lo que entra va a la **playlist actual** y empieza a sonar. La excepción es `Enter` sobre un archivo del explorador de carpetas, que reproduce el archivo sin ponerlo en la playlist, en la pestaña **Fuera de la playlist** (consulta [Explorador de carpetas](#explorador-de-carpetas)). Lo mismo vale para un archivo abierto desde el Explorador de archivos de Windows. Con `Shift`, entra **sin reproducir**, al final de la lista, y lo que sonaba continúa.
 
 | Para | Reproduciendo | Sin reproducir |
 | --- | --- | --- |
@@ -80,6 +94,8 @@ Con KeyTune definido como reproductor predeterminado, `Enter` sobre un archivo d
 
 `Enter` sobre otro archivo, con el reproductor rápido abierto, cambia lo que suena por el archivo nuevo, en la misma ventana. El foco sigue en el Explorador de archivos, y KeyTune no anuncia nada: oyes empezar el archivo nuevo.
 
+En el menú contextual de un archivo de audio o vídeo asociado (`Shift+F10` en el Explorador), elige **Añadir a la lista de KeyTune**. La opción aparece aunque otro reproductor sea el predeterminado. Con KeyTune abierto, los archivos seleccionados entran al final de la lista, del mismo modo que `Ctrl+Shift+V`: la música sigue, la pestaña no cambia y la ventana no pasa al frente. Se pueden seleccionar varios a la vez, y el lector de pantalla dice cuántos entraron. Si KeyTune está cerrado, los archivos se abren como con **Abrir con KeyTune**.
+
 | Acción | Atajo |
 | --- | --- |
 | Reproducir o pausar | `Espacio` |
@@ -98,7 +114,7 @@ Las teclas y los anuncios son los mismos del reproductor de la ventana principal
 
 El reproductor rápido no guarda nada: el archivo no entra en los recientes, en el historial ni en la sesión, y el volumen cambiado en él vale solo hasta cerrarlo o hasta continuar en KeyTune completo, que lo mantiene. Empieza con el volumen de la última sesión, o con el volumen predeterminado si la sesión no se restaura.
 
-Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.m3u8`, vídeos cuando la salida de vídeo está activada, y cualquier archivo cuando KeyTune completo ya está abierto (va a la playlist actual). Para usar siempre la ventana principal, desmarca **Usar el reproductor rápido al abrir archivos desde Windows** en `Ctrl+,` > **General**.
+Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.m3u8`, vídeos cuando la salida de vídeo está activada, y cualquier archivo cuando KeyTune completo ya está abierto. Con KeyTune completo abierto, el archivo suena en la pestaña **Fuera de la playlist**, la misma de `Enter` en el explorador de carpetas: se reemplaza con cada archivo abierto, la reproducción se detiene cuando termina y tus playlists quedan como están. Para juntar archivos en una playlist, usa **Añadir a la lista de KeyTune**. Para que el archivo entre en la playlist actual, como antes, desmarca **Reproducir archivos abiertos sin ponerlos en la playlist** en `Ctrl+,` > **Reproducción**. Para usar siempre la ventana principal, desmarca **Usar el reproductor rápido al abrir archivos desde Windows** en `Ctrl+,` > **General**.
 
 ## Reproducción
 
@@ -111,7 +127,8 @@ Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.
 | `Flecha izquierda` / `Flecha derecha` | Retroceder o avanzar en el medio (el paso se configura en **Preferencias > Reproducción**) |
 | `Shift+Flecha izquierda` / `Shift+Flecha derecha` | Retroceder o avanzar 1 minuto |
 | `Inicio` / `Fin` | Ir al principio o al final del medio |
-| `Flecha arriba` / `Flecha abajo` | Subir o bajar el volumen |
+| `Flecha arriba` / `Flecha abajo` | Subir o bajar el volumen del monitoreo, si está activo, o de la reproducción |
+| Sin atajo predeterminado | **Subir el volumen de la transmisión** / **Bajar el volumen de la transmisión**, con el monitoreo activo |
 | `Ctrl+.` | Detener |
 | `Ctrl+RePág` / `Ctrl+AvPág` | Pista anterior o siguiente |
 | `Alt+Flecha izquierda` / `Alt+Flecha derecha` | Lo mismo, como alternativa |
@@ -135,6 +152,21 @@ Se abren directamente en la ventana principal, como antes: playlists `.m3u` y `.
 Los atajos de YouTube Music, de descargar y de convertir están en [KeyTube](#keytube-youtube-y-youtube-music), [Descargar de internet](#descargar-de-internet) y [Convertir medios](#convertir-medios).
 
 `Ctrl+W` cierra la pestaña activa. `Ctrl+Shift+W` cierra, o descarga de memoria, solo el medio actual.
+
+### Escuchar por auriculares mientras transmites
+
+En Windows, KeyTune puede copiar el sonido de la salida principal a otro dispositivo. La copia incluye el audio de otros programas que usan esa salida de Windows y llega a los auriculares con un pequeño retraso. La opción viene desactivada y funciona en la ventana principal.
+
+1. Pulsa `Ctrl+,` (o abre **Configuración > Preferencias**) y ve a la pestaña **Reproducción**.
+2. En **Dispositivo de audio**, elige la tarjeta que alimenta RadioBOSS.
+3. En el grupo **Salida de monitoreo**, marca **Activar monitoreo**.
+4. En **Dispositivo de monitoreo**, elige los auriculares o altavoces en otra salida de Windows.
+5. Ajusta el **Volumen del monitoreo** y el **Volumen de la transmisión**. El volumen de la transmisión empieza al 100 %.
+6. Pulsa **Guardar**.
+
+Las flechas de volumen, incluidos los atajos globales `Ctrl+Alt+Shift+Flecha arriba` y `Ctrl+Alt+Shift+Flecha abajo`, pasan a ajustar los auriculares. Los avisos de monitoreo siguen la categoría **Reproducción** en **Avisos que hablan**. `V` y `S` anuncian los dos volúmenes. Para ajustar desde el teclado el nivel que llega a RadioBOSS, asigna teclas a **Subir el volumen de la transmisión** y **Bajar el volumen de la transmisión** en [Personalizar el teclado](#personalizar-el-teclado).
+
+Si se desconectan los auriculares, KeyTune avisa y la transmisión continúa. Para que las flechas vuelvan a controlar la salida principal, desmarca **Activar monitoreo** y guarda. KeyTune anuncia el volumen recuperado para esa salida.
 
 ### Cola de reproducción
 
@@ -220,7 +252,8 @@ Empieza en **Este equipo**, con las carpetas Música, Vídeos, Descargas, Escrit
 
 Además de las teclas de [Cómo funcionan las listas](#como-funcionan-las-listas):
 
-- `Enter` entra en la carpeta o reproduce el archivo, añadiéndolo a la playlist actual. Con `Shift+Enter`, de una carpeta entran todos los medios, incluidos los de las subcarpetas.
+- `Enter` entra en la carpeta o reproduce el archivo. El archivo suena en la pestaña **Fuera de la playlist**, sin entrar en la playlist actual: cada `Enter` reemplaza esa pestaña por el archivo nuevo, así que cuando termina la reproducción se detiene en lugar de seguir por los que escuchaste antes. La pestaña visible y el foco siguen en el explorador. Con la salida de vídeo activada, un vídeo entra en la playlist actual, como antes, para que se vea la imagen. `Ctrl+Shift+W` cierra el archivo que suena en **Fuera de la playlist** sin tocar la playlist visible. Si cambias la pestaña **Fuera de la playlist** (añadir, quitar o cargar otra cosa en ella), se convierte en una playlist común y el próximo `Enter` crea otra.
+- `Shift+Enter` pone el archivo, o todos los medios de una carpeta, incluidos los de las subcarpetas, al final de la playlist actual, sin reproducir. Para armar una playlist desde el explorador, usa `Shift+Enter`. Si prefieres que `Enter` ponga el archivo en la playlist actual y lo reproduzca, como antes, desmarca **Reproducir archivos abiertos sin ponerlos en la playlist** en `Ctrl+,` > **Reproducción**.
 - `Ctrl+Shift+F` añade la selección a la cola, y `Ctrl+Shift+K` convierte los archivos seleccionados (consulta [Convertir medios](#convertir-medios)).
 - `Retroceso` sube a la carpeta superior.
 - `Ctrl+C` copia los archivos o carpetas seleccionados, para pegar en una playlist o en el Explorador de Windows. `Ctrl+Shift+C` copia las rutas como texto.
@@ -428,6 +461,28 @@ Justo encima de la lista, una línea indica dónde estás y cuántos elementos h
     - En *YouTube Music*: *Canciones* (pistas del catálogo), *Vídeos* (videoclips y vídeos de YouTube Music), *Álbumes* (álbumes, sencillos y EP), *Artistas* y *Playlists* (del catálogo de YouTube Music).
     - En *YouTube*: *Vídeos* (en general, sin exigir cuenta), *Canales* y *Playlists*.
 - **Dentro de un canal o artista**: al entrar, la lista muestra primero lo que hay para ver. En un canal de YouTube: *Vídeos*, *Shorts*, *En vivo*, *Playlists* y *Publicaciones*, seguidos de **Buscar en este canal...**, **Suscripción y notificaciones del canal...** y **Acerca del canal**. **Buscar en este canal...** pide un texto y muestra los vídeos del canal que coinciden con él. En un artista de YouTube Music: *Canciones*, *Álbumes*, *Sencillos y EP*, *Vídeos* y *Artistas similares*. Entra en lo que quieras; `Retroceso` vuelve para elegir otro.
+
+### Abrir en KeyTune los enlaces de YouTube pulsados en otros programas
+
+En Windows, KeyTune puede abrir los enlaces de YouTube y YouTube Music que pulsas en WhatsApp, en el correo o en cualquier otro programa: el vídeo empieza a sonar en el reproductor, sin pasar por el navegador.
+
+Ten en cuenta que esto es un apaño. Windows no permite que un programa abra solo los enlaces de un sitio: o recibe todos los enlaces `http` y `https`, o ninguno. Por eso KeyTune se registra como navegador. Cuando es el navegador predeterminado, todo enlace pasa por él, y KeyTune se queda solo con los de YouTube. Todos los demás enlaces siguen yendo, como siempre, al navegador que usabas antes, o al que elijas en **Navegador para los otros enlaces**. La diferencia que puedes notar es una fracción de segundo más para que se abra el navegador.
+
+KeyTune reproduce enlaces de vídeo (`watch`, `youtu.be`, Shorts, en directo) y de lista (`playlist?list=`). Un vídeo abierto desde dentro de una lista reproduce solo el vídeo. Los canales, las búsquedas y la página de inicio de YouTube se abren en el navegador.
+
+Para activarlo:
+
+1. Abre las preferencias con `Ctrl+,` y quédate en la pestaña **General**.
+2. En **Enlaces de YouTube**, elige en **Navegador para los otros enlaces** quién recibe el resto. **El navegador predeterminado anterior** es el que era el predeterminado antes de KeyTune.
+3. Pulsa **Hacer de KeyTune el navegador predeterminado...** y confirma. La configuración de **Aplicaciones predeterminadas** de Windows se abre en la página de KeyTune.
+4. Elige KeyTune para **HTTP** y **HTTPS**.
+5. Vuelve a KeyTune y pulsa **Guardar**.
+
+En el instalador, la opción **Ofrecer KeyTune como navegador** hace el registro durante la instalación; viene desmarcada. Aunque la marques, KeyTune solo pasa a ser el predeterminado cuando lo eliges en Windows.
+
+Para deshacerlo, elige otro navegador como predeterminado en **Configuración > Aplicaciones > Aplicaciones predeterminadas** de Windows. Para quitar también a KeyTune de la lista de navegadores, usa **Dejar de recibir enlaces** en **Preferencias > General**.
+
+Si ningún navegador acepta un enlace que no es de YouTube, KeyTune avisa y pide que elijas otro navegador predeterminado.
 
 ### Detalles de vídeos y canciones
 
@@ -801,7 +856,9 @@ Las preferencias se abren con `Ctrl+,` y se dividen en ocho pestañas: **General
 
 La sección **Bandeja del sistema** tiene **Al minimizar, ocultar en la bandeja del sistema** y **Al cerrar, ocultar en la bandeja del sistema**; consulta [Bandeja del sistema](#bandeja-del-sistema).
 
-La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú *Abrir con* para formatos de audio, vídeo y playlists. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro.
+La sección **Asociación de archivos** (Windows) tiene el botón **Registrar como reproductor predeterminado**, que añade KeyTune al menú contextual del Explorador para formatos de audio, vídeo y playlists. **Abrir con KeyTune** cambia lo que está sonando. **Añadir a la lista de KeyTune** añade los archivos de audio y vídeo seleccionados sin interrumpir la música, aunque otro reproductor sea el predeterminado. Después de registrar, define la aplicación como predeterminada en la configuración de Windows, si quieres que esos archivos se abran directamente en ella. **Anular registro de asociaciones** deshace el registro, incluidas las dos opciones del menú.
+
+La sección **Enlaces de YouTube** (Windows) hace que KeyTune abra los enlaces de YouTube pulsados en otros programas. Como Windows no permite tomar solo esos enlaces, KeyTune se registra como navegador y pasa todos los demás. **Navegador para los otros enlaces** elige adónde van; **El navegador predeterminado anterior** es el que era el predeterminado antes de KeyTune. **Hacer de KeyTune el navegador predeterminado...** abre las **Aplicaciones predeterminadas** de Windows, y **Dejar de recibir enlaces** quita a KeyTune de la lista de navegadores. Consulta [Abrir en KeyTune los enlaces de YouTube pulsados en otros programas](#abrir-en-keytune-los-enlaces-de-youtube-pulsados-en-otros-programas).
 
 La sección **Registro de logs** ayuda a investigar problemas. **Registrar logs de diagnóstico** escribe un archivo de registro, en inglés, en la carpeta de datos, útil para adjuntar a un informe de errores. **Nivel de detalle** va de *Solo errores*, el más silencioso, a *Depuración*, que genera archivos grandes. **Abrir la carpeta de logs** te lleva hasta ellos.
 
@@ -812,7 +869,7 @@ La sección **Registro de logs** ayuda a investigar problemas. **Registrar logs 
 - **Dispositivo de audio**: la salida de sonido. *Predeterminado del sistema* sigue el dispositivo principal de Windows.
 - **Desactivar salida de video (reproducir solo el audio)**: reproduce solo el audio, incluso de archivos de vídeo y transmisiones en vivo. Evita ventanas externas de vídeo. `Ctrl+Alt+V` la alterna en cualquier momento.
 
-El **volumen predeterminado**, los pasos de **volumen** y de **búsqueda** (cuánto cambia cada flecha), la **repetición predeterminada** y el **modo aleatorio** de las playlists nuevas completan la pestaña y también hacen lo que dice su nombre.
+El **volumen predeterminado**, los pasos de **volumen** y de **búsqueda** (cuánto cambia cada flecha), la **repetición predeterminada** y el **modo aleatorio** de las playlists nuevas completan la pestaña y también hacen lo que dice su nombre. En el grupo **Archivos abiertos**, **Reproducir archivos abiertos sin ponerlos en la playlist** viene marcado y decide si `Enter` sobre un archivo del explorador de carpetas y un archivo abierto desde Windows suenan en una pestaña aparte, **Fuera de la playlist**, o entran en la playlist actual (consulta [Explorador de carpetas](#explorador-de-carpetas) y [Escuchar un archivo directamente desde el Explorador de archivos de Windows](#escuchar-un-archivo-directamente-desde-el-explorador-de-archivos-de-windows)).
 
 Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace una mezcla larga y equilibrada; *Fiesta* concentra el cambio de graves en el centro y sube la energía poco a poco; *Electrónica* usa cortes más fuertes y un cambio más rápido, pensado para ritmos marcados) y **Duración de la transición de AutoDJ** (8, 16 o 32 pulsos, independiente del crossfade normal).
 
@@ -820,7 +877,7 @@ Con AutoDJ instalado, hay dos opciones más: **Perfil de AutoDJ** (*Suave* hace 
 
 La primera opción es **Activar anuncios de accesibilidad**. Es el interruptor general: desactivada, el reproductor no dice nada por sí solo; activada, vale la elección de cada aviso de la lista **Avisos que hablan**. Consulta [Funciones de accesibilidad](#funciones-de-accesibilidad).
 
-**Interrumpir la voz del lector de pantalla** viene desactivada: el anuncio espera a que el lector termine lo que está diciendo, en lugar de cortarlo. Activada, el anuncio habla al instante, por encima. **Decir los avisos de eventos con KeyTune activo** decide si los avisos que llegan solos hablan mientras estás en la ventana de KeyTune; desactivada, solo hablan con KeyTune en segundo plano (los sonidos siguen sonando). La lista **Avisos que hablan** activa y desactiva cada tipo de aviso por separado: reproducción (pausa, reanudación, inicio y fin del archivo, dispositivo de audio); cambio de pista y SponsorBlock (la pista que empezó y los tramos saltados o silenciados); velocidad y tono al cambiar; modos activados o desactivados (aleatorio, repetición, ecualizador, AutoDJ); navegación (pestañas, inicio y fin de listas, apertura de elementos); progreso (cargando, buscando, iniciando); confirmaciones (copiado, guardado, añadido, quitado); errores y acciones no disponibles; mensajes nuevos del chat en vivo; mensaje enviado o chat terminado; notificaciones nuevas de YouTube; descarga terminada; y avisos del temporizador. Solo los cinco últimos, que llegan solos, obedecen a la opción de hablar con KeyTune activo. Todos vienen activados. Lo que pides con `T` (tiempo), `V` (volumen) y `S` (estado), y el volumen al subir o bajar, no depende de la lista: siempre habla mientras el interruptor general esté activado. Los avisos que dan los propios diálogos (por ejemplo, al activar una opción en Preferencias) siguen solo el interruptor general.
+**Interrumpir la voz del lector de pantalla** viene desactivada: el anuncio espera a que el lector termine lo que está diciendo, en lugar de cortarlo. Activada, el anuncio habla al instante, por encima. **Decir los avisos de eventos con KeyTune activo** decide si los avisos que llegan solos hablan mientras estás en la ventana de KeyTune; desactivada, solo hablan con KeyTune en segundo plano (los sonidos siguen sonando). La lista **Avisos que hablan** activa y desactiva cada tipo de aviso por separado: reproducción (pausa, reanudación, inicio y fin del archivo, dispositivo de audio); cambio de pista y SponsorBlock (la pista que empezó y los tramos saltados o silenciados); velocidad y tono al cambiar; modos activados o desactivados (aleatorio, repetición, ecualizador, AutoDJ); navegación (pestañas, inicio y fin de listas, apertura de elementos); progreso (cargando, buscando, iniciando); confirmaciones (copiado, guardado, añadido, quitado); errores y acciones no disponibles; mensajes nuevos del chat en vivo; mensaje enviado o chat terminado; notificaciones nuevas de YouTube; descarga terminada; y avisos del temporizador. Solo los cinco últimos, que llegan solos, obedecen a la opción de hablar con KeyTune activo. Todos vienen activados. Los anuncios que pides con `T` (tiempo), `V` (volumen) y `S` (estado) siguen solo el interruptor general. Con el monitoreo activo, los avisos al cambiar el volumen siguen la categoría **Reproducción**. Los avisos que dan los propios diálogos (por ejemplo, al activar una opción en Preferencias) siguen solo el interruptor general.
 
 El grupo **Sonidos de aviso** tiene **Reproducir sonidos de aviso**, que los activa o desactiva todos a la vez, **Volumen de los sonidos de aviso** y la lista **Sonidos que suenan**, con una casilla por sonido: `Espacio` activa o desactiva el sonido del elemento y, al activarlo, suena para que sepas cuál es. Debajo de la lista, **Escuchar el sonido** reproduce el del elemento seleccionado, **Elegir un archivo para el sonido...** pone un audio de tu equipo en su lugar y **Volver al sonido original** deshace el cambio. El archivo elegido se copia a los datos de KeyTune y se corta a los 5 segundos; con FFmpeg instalado sirve cualquier formato de audio, sin él solo WAV de 16 bits. Son sonidos cortos, cada uno para un suceso:
 
@@ -916,6 +973,8 @@ Al iniciar, KeyTune puede comprobar las actualizaciones por sí solo. Para compr
 
 Cuando hay una versión nueva, la aplicación muestra las notas de la release, el nombre del archivo y el tamaño de la descarga antes de pedir confirmación. Si aceptas, descarga el paquete, muestra el progreso y pide permiso para instalar cuando el archivo esté listo. Las notas llegan en el idioma de la interfaz.
 
+En la versión portátil, el archivo descargado es `KeyTune-Portable.zip`. `KeyTuneUpdater.exe` sustituye los archivos de la carpeta después de que el reproductor se cierra y no usa el instalador. Si falla la sustitución de archivos, el actualizador intenta restaurar y volver a abrir la versión anterior. Consulta [Versión portátil](#version-portatil).
+
 Para leer qué cambió en cada versión, incluidas las anteriores, usa **Ayuda > Historial de cambios**: elige la versión en la lista y lee el texto justo debajo.
 
 ## Solución de problemas
@@ -928,7 +987,7 @@ Si el reproductor no consigue iniciarse al abrir KeyTune, el mismo diagnóstico 
 
 **El reproductor no encuentra el runtime de MPV.** Comprueba que está en uno de estos lugares: una carpeta `mpv/` junto al ejecutable, `MPV_HOME`, `MPV_DLL_DIR`, la caché guardada de la ejecución anterior o una instalación compatible de Chocolatey.
 
-**La asociación de archivos no funciona como esperabas.** Son dos pasos separados. Primero, KeyTune debe estar registrado como opción (durante la instalación, o después en **Configuración > Preferencias > General > Registrar como reproductor predeterminado**). Segundo, debe estar elegido como aplicación predeterminada para esos formatos en la configuración de aplicaciones predeterminadas de Windows. Registrar no basta para que KeyTune sea el predeterminado.
+**La asociación de archivos no funciona como esperabas.** Son dos pasos separados. Primero, KeyTune debe estar registrado como opción (durante la instalación, o después en **Configuración > Preferencias > General > Registrar como reproductor predeterminado**). Segundo, debe estar elegido como aplicación predeterminada para esos formatos en la configuración de aplicaciones predeterminadas de Windows. Registrar no basta para que KeyTune sea el predeterminado. El mismo registro incluye **Añadir a la lista de KeyTune** en el menú contextual. Si esa opción no aparece, registra de nuevo.
 
 **KeyTube no carga o muestra errores de dependencias.** Abre `Ctrl+,` > **Recursos adicionales** y comprueba que **Activar la integración con YouTube y YouTube Music** está marcada. La descarga inicial puede tardar unos minutos y requiere internet. Si las dependencias ya están instaladas pero la búsqueda o la carga fallan, usa la versión nightly de `yt-dlp`, en las mismas preferencias: suele recibir correcciones antes que el canal estable.
 

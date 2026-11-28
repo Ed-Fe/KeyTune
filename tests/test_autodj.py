@@ -3,7 +3,6 @@ import math
 import os
 from pathlib import Path
 import subprocess
-import struct
 import sys
 import tempfile
 import threading
@@ -11,7 +10,6 @@ import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
-import wave
 
 SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 if str(SRC_ROOT) not in sys.path:
@@ -24,7 +22,6 @@ from player.autodj import (
     AutoDJQueuePlanner,
     QueueCandidate,
     TransitionProfile,
-    WaveAnalyzer,
     build_mix_lavfi_filters,
     mix_values,
 )
@@ -37,6 +34,7 @@ from player.autodj.librosa_analyzer import (
     LibrosaAnalyzer,
 )
 from player.autodj import worker as autodj_worker
+from player.announcements import ANNOUNCE_ERRORS
 from player.frames.autodj import FrameAutoDJMixin
 from player.frames.library_tabs.playback_control import PlaylistPlaybackMixin
 from player.frames.playback.backend import PlayerBackendMixin
@@ -85,14 +83,26 @@ class AutoDJTests(unittest.TestCase):
         with patch(
             "player.autodj.dependencies.get_autodj_worker_command",
             return_value=["KeyTune.exe", "--autodj-analyzer"],
-        ), patch("player.autodj.librosa_analyzer.subprocess.run", side_effect=run) as run_worker:
+        ), patch.dict(os.environ, {"OPENBLAS_NUM_THREADS": "8"}), patch(
+            "player.autodj.librosa_analyzer.subprocess.run", side_effect=run
+        ) as run_worker:
             result = LibrosaAnalyzer().analyze("track.mp3")
+            self.assertEqual(os.environ["OPENBLAS_NUM_THREADS"], "8")
 
         self.assertEqual(result.beats_ms, (0, 500))
         self.assertEqual(result.phrase_boundaries_ms, (0,))
         self.assertEqual(result.section_boundaries_ms, (500,))
         run_worker.assert_called_once()
         self.assertEqual(run_worker.call_args.args[0][:2], ["KeyTune.exe", "--autodj-analyzer"])
+        self.assert_autodj_worker_options(run_worker.call_args.kwargs)
+
+    def assert_autodj_worker_options(self, options):
+        expected = 0
+        if os.name == "nt":
+            expected = subprocess.CREATE_NO_WINDOW | subprocess.BELOW_NORMAL_PRIORITY_CLASS
+        self.assertEqual(options["creationflags"], expected)
+        for name in ("OMP_NUM_THREADS", "NUMBA_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+            self.assertEqual(options["env"][name], "1")
 
     def test_librosa_analyzer_reports_native_worker_exit_code(self):
         def fail_worker(_command, **kwargs):
@@ -146,15 +156,23 @@ class AutoDJTests(unittest.TestCase):
 
         process = Process()
         cancel_event = threading.Event()
-        cancel_event.set()
 
-        with patch("player.autodj.librosa_analyzer.subprocess.Popen", return_value=process):
+        def start_worker(*_args, **_kwargs):
+            cancel_event.set()
+            return process
+
+        with patch("player.autodj.librosa_analyzer.subprocess.Popen", side_effect=start_worker) as popen:
             with self.assertRaises(AutoDJAnalysisCancelled):
                 LibrosaAnalyzer()._analyze_with_worker(
                     ["worker"], "track.mp3", cancel_event=cancel_event
                 )
 
         self.assertTrue(process.terminated)
+        self.assert_autodj_worker_options(popen.call_args.kwargs)
+        with patch("player.autodj.librosa_analyzer.subprocess.Popen") as popen:
+            with self.assertRaises(AutoDJAnalysisCancelled):
+                LibrosaAnalyzer()._analyze_with_worker(["worker"], "track.mp3", cancel_event=cancel_event)
+            popen.assert_not_called()
 
     def test_service_deadline_does_not_wait_for_a_busy_analysis(self):
         started = threading.Event()
@@ -174,17 +192,22 @@ class AutoDJTests(unittest.TestCase):
             first_path.touch()
             second_path.touch()
             service = AutoDJService(Path(temporary) / "cache.db", analyzer=Analyzer())
+            other_analyzer = Mock(analysis_version=1, **{"analyze.return_value": AudioAnalysis(120, (), .9, .5)})
+            other_service = AutoDJService(Path(temporary) / "other.db", analyzer=other_analyzer)
             first_thread = threading.Thread(target=service.analyze, args=(first_path,))
             first_thread.start()
             self.assertTrue(started.wait(1))
             try:
                 with self.assertRaises(AutoDJAnalysisCancelled):
-                    service.analyze(second_path, deadline=time.monotonic() + .02)
+                    other_service.analyze(second_path, deadline=time.monotonic() + .02)
+                other_analyzer.analyze.assert_not_called()
             finally:
                 release.set()
                 first_thread.join(1)
 
             self.assertFalse(first_thread.is_alive())
+            other_service.analyze(second_path)
+            other_analyzer.analyze.assert_called_once_with(str(second_path))
 
     def test_real_service_limits_parallel_scientific_analyses(self):
         self.assertEqual(AutoDJService.max_parallel_analyses, 1)
@@ -216,7 +239,7 @@ class AutoDJTests(unittest.TestCase):
 
         def analyze(_self, _path):
             observed_environment.update(
-                {name: os.environ.get(name) for name in autodj_worker._WORKER_ENVIRONMENT_DEFAULTS}
+                {name: os.environ.get(name) for name in autodj_worker.WORKER_ENVIRONMENT}
             )
             return analysis
 
@@ -438,8 +461,11 @@ class AutoDJTests(unittest.TestCase):
     def test_librosa_loader_falls_back_after_a_pyav_decode_error(self):
         import numpy as np
 
-        librosa = SimpleNamespace(load=Mock(return_value=(np.ones(20), 10)))
-        with patch("av.open", side_effect=OSError("unsupported container")):
+        librosa = SimpleNamespace(get_duration=Mock(return_value=2), load=Mock(return_value=(np.ones(20), 10)))
+        av = SimpleNamespace(
+            audio=Mock(), open=Mock(side_effect=OSError("unsupported container"))
+        )
+        with patch.dict(sys.modules, {"av": av}):
             samples, sample_rate, truncated = LibrosaAnalyzer(
                 sample_rate=10, maximum_duration_seconds=3
             )._load_audio("track.bin", librosa, np)
@@ -452,13 +478,136 @@ class AutoDJTests(unittest.TestCase):
     def test_librosa_loader_marks_the_analysis_duration_limit(self):
         import numpy as np
 
-        librosa = SimpleNamespace(load=Mock(return_value=(np.ones(30), 10)))
+        librosa = SimpleNamespace(get_duration=Mock(return_value=3), load=Mock(return_value=(np.ones(30), 10)))
         with patch.dict(sys.modules, {"av": None}):
             _samples, _sample_rate, truncated = LibrosaAnalyzer(
                 sample_rate=10, maximum_duration_seconds=3
             )._load_audio("track.wav", librosa, np)
 
         self.assertTrue(truncated)
+
+    def test_librosa_fallback_loads_bounded_windows(self):
+        import numpy as np
+
+        librosa = SimpleNamespace(
+            get_duration=Mock(return_value=120),
+            load=Mock(side_effect=lambda _path, *, duration, **_: (np.ones(duration * 10), 10)),
+        )
+        with patch.dict(sys.modules, {"av": None}):
+            samples, sample_rate, truncated = LibrosaAnalyzer(
+                sample_rate=10, maximum_duration_seconds=65
+            )._load_audio("track.wav", librosa, np)
+
+        self.assertEqual(len(samples), 650)
+        self.assertEqual(sample_rate, 10)
+        self.assertTrue(truncated)
+        self.assertEqual(
+            [(call.kwargs["offset"], call.kwargs["duration"]) for call in librosa.load.call_args_list],
+            [(0, 30), (30, 30), (60, 5)],
+        )
+
+    def test_librosa_fallback_continues_after_a_short_block(self):
+        import numpy as np
+
+        def load(_path, *, offset, duration, **_kwargs):
+            count = int(round(float(duration) * 10))
+            if offset == 0:
+                count -= 1
+            return np.ones(count, dtype=np.float32), 10
+
+        librosa = SimpleNamespace(get_duration=Mock(return_value=90), load=Mock(side_effect=load))
+        with patch.dict(sys.modules, {"av": None}):
+            samples, sample_rate, _truncated = LibrosaAnalyzer(
+                sample_rate=10, maximum_duration_seconds=90
+            )._load_audio("track.wav", librosa, np)
+
+        self.assertEqual(sample_rate, 10)
+        self.assertGreaterEqual(librosa.load.call_count, 3)
+        self.assertGreater(len(samples), 30 * 10)
+        self.assertLessEqual(len(samples), 90 * 10)
+        offsets = [call.kwargs["offset"] for call in librosa.load.call_args_list]
+        self.assertEqual(offsets[0], 0)
+        self.assertGreater(offsets[1], 29)
+        self.assertLess(offsets[1], 30)
+
+    def test_librosa_fallback_stops_on_an_empty_block(self):
+        import numpy as np
+
+        def load(_path, *, offset, duration, **_kwargs):
+            if offset > 0:
+                return np.zeros(0, dtype=np.float32), 10
+            return np.ones(max(0, int(round(float(duration) * 10)) - 1), dtype=np.float32), 10
+
+        librosa = SimpleNamespace(get_duration=Mock(return_value=90), load=Mock(side_effect=load))
+        with patch.dict(sys.modules, {"av": None}):
+            samples, _sample_rate, truncated = LibrosaAnalyzer(
+                sample_rate=10, maximum_duration_seconds=90
+            )._load_audio("track.wav", librosa, np)
+
+        self.assertEqual(len(samples), 299)
+        self.assertEqual(librosa.load.call_count, 2)
+        self.assertFalse(truncated)
+
+    def test_track_key_uses_windows_spread_across_the_recording(self):
+        import numpy as np
+
+        sample_rate = 10
+        samples = np.arange(400, dtype=float)
+        seen = []
+
+        def harmonic(y, margin):
+            self.assertEqual(margin, 4.0)
+            seen.append(int(y[0]))
+            return y
+
+        def chroma_cqt(y, sr):
+            self.assertEqual(sr, sample_rate)
+            self.assertEqual(len(y), 100)
+            column = np.zeros(12)
+            column[int(y[0]) % 12] = 1
+            return np.repeat(column[:, None], 2, axis=1)
+
+        librosa = SimpleNamespace(
+            effects=SimpleNamespace(harmonic=harmonic),
+            feature=SimpleNamespace(chroma_cqt=chroma_cqt),
+        )
+        musical_key, musical_mode, _confidence = LibrosaAnalyzer._estimate_track_key(
+            samples, sample_rate, librosa, np
+        )
+
+        self.assertEqual(seen, [0, 150, 300])
+        self.assertIsInstance(musical_key, str)
+        self.assertIn(musical_mode, ("major", "minor"))
+        self.assertEqual(LibrosaAnalyzer.analysis_version, 14)
+
+    def test_librosa_rhythm_blocks_keep_the_full_timeline(self):
+        import numpy as np
+
+        sample_rate = 512
+        samples = np.arange(100 * sample_rate + 1)
+        block_lengths = []
+
+        def frames(y, hop_length):
+            block_lengths.append(len(y))
+            return y[::hop_length][None, :]
+
+        librosa = SimpleNamespace(
+            stft=frames,
+            power_to_db=lambda mel: mel,
+            onset=SimpleNamespace(onset_strength=lambda S, **_: S[0]),
+            feature=SimpleNamespace(
+                melspectrogram=lambda S, **_: S,
+                rms=frames,
+                chroma_stft=lambda S, **_: S,
+            ),
+        )
+        onsets, rms, chroma = LibrosaAnalyzer._rhythm_features(samples, sample_rate, librosa, np)
+
+        self.assertGreater(len(block_lengths), 2)
+        self.assertLessEqual(max(block_lengths), 46 * sample_rate)
+        np.testing.assert_array_equal(rms[0], samples[::sample_rate])
+        np.testing.assert_array_equal(onsets, samples[::sample_rate] ** 2)
+        np.testing.assert_array_equal(chroma[0], onsets)
 
     def test_librosa_beat_estimator_avoids_numba_tracker(self):
         import numpy as np
@@ -978,7 +1127,9 @@ class AutoDJTests(unittest.TestCase):
                 self.state = PlaylistState(title="AutoDJ — Nova")
                 self.state.set_items(["a.mp3"])
                 self.state.autodj_session = True
-                self.state.autodj_source_items = ["a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"]
+                self.state.autodj_source_items = ["a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"] + [
+                    f"track-{number}.mp3" for number in range(393)
+                ]
                 self.state.autodj_source_labels = list(self.state.autodj_source_items)
                 self.state.autodj_remaining_items = list(self.state.autodj_source_items[1:])
                 self.playlists = [self.state]
@@ -1001,10 +1152,10 @@ class AutoDJTests(unittest.TestCase):
             self.assertTrue(finished.wait(5))
 
         self.assertEqual(len(frame.state.items), 6)
-        self.assertEqual(len(frame.state.autodj_remaining_items), 1)
+        self.assertEqual(len(frame.state.autodj_remaining_items), 394)
         self.assertEqual(
-            set(analyzed_paths),
-            {"a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"},
+            analyzed_paths,
+            ["a.mp3", "b.mp3", "c.mp3", "d.mp3", "e.mp3", "f.mp3", "g.mp3"],
         )
 
     def test_autodj_session_uses_completed_candidates_when_another_analysis_stalls(self):
@@ -1014,7 +1165,7 @@ class AutoDJTests(unittest.TestCase):
 
         class Service:
             def analyze(self, path):
-                if path == "b.mp3":
+                if path == "c.mp3":
                     stalled.wait(1)
                 return {
                     "bpm": 120,
@@ -1036,7 +1187,7 @@ class AutoDJTests(unittest.TestCase):
                 self.autodj_service = Service()
                 self._autodj_session_requests = {}
                 self._autodj_session_retry_at = {}
-                self._autodj_session_candidate_wait_seconds = .05
+                self._autodj_session_candidate_wait_seconds = .15
 
             def _get_active_playlist_state(self): return self.state
             def _get_playlist_state(self, _index=None): return self.state
@@ -1052,7 +1203,7 @@ class AutoDJTests(unittest.TestCase):
             self.assertTrue(frame._maybe_fill_autodj_session())
             self.assertTrue(finished.wait(1))
 
-        self.assertEqual(frame.state.items, ["a.mp3", "c.mp3"])
+        self.assertEqual(frame.state.items, ["a.mp3", "b.mp3"])
         stalled.set()
 
     def test_autodj_session_drains_completed_analysis_when_callafter_is_missed(self):
@@ -1124,6 +1275,68 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(state.current_media_path, "b.mp3")
         self.assertEqual(frame.play_requests, [{"index": 0}])
 
+    def test_start_autodj_session_announces_the_blocker(self):
+        frame = FrameAutoDJMixin()
+        frame._get_playlist_state = Mock()
+        frame._create_empty_playlist_tab = Mock()
+        frame._announce = Mock()
+        frame._set_status_message = Mock()
+        cases = [
+            ({}, False, False, False, "O AutoDJ está desativado. Ative em Preferências, Recursos adicionais."),
+            ({}, True, True, False,
+             "Os recursos adicionais do AutoDJ estão sendo instalados. Aguarde a instalação terminar."),
+            ({}, True, False, False,
+             "O AutoDJ precisa dos recursos adicionais. Instale em Preferências, Recursos adicionais."),
+            ({"is_folder_tab": True}, True, False, True,
+             "Abra uma playlist comum para iniciar uma sessão AutoDJ."),
+            ({"is_loading": True}, True, False, True,
+             "A playlist ainda está carregando. Aguarde e tente novamente."),
+            ({"autodj_session": True}, True, False, True,
+             "Esta playlist já é uma sessão AutoDJ. Abra outra playlist para iniciar uma nova sessão."),
+            ({}, True, False, True,
+             "A playlist atual está vazia. Adicione pelo menos duas faixas para iniciar o AutoDJ."),
+            ({"items": ["a.mp3"]}, True, False, True,
+             "A playlist precisa ter pelo menos duas faixas para iniciar o AutoDJ."),
+        ]
+        for values, enabled, installing, available, message in cases:
+            with self.subTest(message=message):
+                frame.settings = SimpleNamespace(autodj_enabled=enabled)
+                frame._autodj_dependency_install_in_progress = installing
+                frame._get_playlist_state.return_value = SimpleNamespace(**{
+                    "is_folder_tab": False, "is_loading": False, "autodj_session": False, "items": [], **values
+                })
+                frame._announce.reset_mock()
+                frame._set_status_message.reset_mock()
+                with patch("player.frames.autodj.autodj_dependencies_available", return_value=available):
+                    self.assertFalse(frame.on_start_autodj_session(None))
+                frame._announce.assert_called_once_with(message, ANNOUNCE_ERRORS)
+                frame._set_status_message.assert_called_once_with(message)
+        frame._create_empty_playlist_tab.assert_not_called()
+
+    def test_autodj_start_menu_item_stays_enabled_when_resources_are_missing(self):
+        frame = FrameAutoDJMixin()
+        frame.settings = SimpleNamespace(autodj_enabled=True)
+        frame._get_playlist_state = Mock(return_value=PlaylistState(title="Origem"))
+        frame.menu_toggle_autodj_id = 1
+        frame.menu_start_autodj_session_id = 2
+        frame.menu_stop_autodj_session_id = 3
+        start_item = Mock()
+        items = {1: Mock(), 2: start_item, 3: Mock()}
+        frame.playback_menu = SimpleNamespace(FindItemById=items.get)
+        with patch("player.frames.autodj.autodj_dependencies_available", return_value=False):
+            frame._refresh_autodj_menu_state()
+        start_item.Enable.assert_not_called()
+
+    def test_saving_preferences_retries_confirmed_autodj_resources(self):
+        frame = FrameAutoDJMixin()
+        settings = SimpleNamespace(autodj_enabled=True, autodj_optional_resources_confirmed=True)
+        frame.settings = settings
+        frame._start_autodj_dependency_install = Mock()
+
+        frame._handle_autodj_preferences_change(settings)
+
+        frame._start_autodj_dependency_install.assert_called_once_with()
+
     def test_start_autodj_session_creates_separate_dynamic_playlist(self):
         source = PlaylistState(title="Origem")
         source.set_items(["a.mp3", "b.mp3", "c.mp3"])
@@ -1153,7 +1366,8 @@ class AutoDJTests(unittest.TestCase):
             def _announce(self, _message, category=None): pass
 
         frame = Frame()
-        self.assertTrue(frame.on_start_autodj_session(None))
+        with patch("player.frames.autodj.autodj_dependencies_available", return_value=True):
+            self.assertTrue(frame.on_start_autodj_session(None))
 
         session = frame.playlists[1]
         self.assertEqual(source.items, ["a.mp3", "b.mp3", "c.mp3"])
@@ -1235,6 +1449,7 @@ class AutoDJTests(unittest.TestCase):
 
         class Frame(FrameAutoDJMixin):
             def __init__(self):
+                self.settings = SimpleNamespace(autodj_enabled=True)
                 self.state = state
                 self.playlists = [state]
                 self._autodj_session_requests = {id(state): request}
@@ -1731,18 +1946,13 @@ class AutoDJTests(unittest.TestCase):
         self.assertEqual(frame.incoming.play_calls, 1)
         self.assertTrue(frame.began)
 
-    def test_wave_analysis_and_cache(self):
+    def test_analysis_cache_round_trip(self):
         with tempfile.TemporaryDirectory() as temporary:
-            path = Path(temporary) / "click.wav"; rate = 8000; samples = []
-            for index in range(rate * 8):
-                phase = index % (rate // 2)
-                samples.append(25000 if phase < 40 else int(600 * math.sin(index / 8)))
-            with wave.open(str(path), "wb") as output:
-                output.setnchannels(1); output.setsampwidth(2); output.setframerate(rate)
-                output.writeframes(b"".join(struct.pack("<h", value) for value in samples))
-            analysis = WaveAnalyzer().analyze(path)
-            self.assertGreater(analysis.confidence, 0); self.assertGreater(len(analysis.beats_ms), 5)
-            cache = AnalysisCache(Path(temporary) / "cache.db"); cache.put(path, analysis)
+            path = Path(temporary) / "track.mp3"
+            path.write_bytes(b"audio")
+            analysis = AudioAnalysis(120.0, (0, 500, 1000), 0.8, 0.4, "C")
+            cache = AnalysisCache(Path(temporary) / "cache.db")
+            cache.put(path, analysis)
             self.assertEqual(cache.get(path), analysis)
 
     def test_remote_analysis_downloads_once_and_uses_cache(self):

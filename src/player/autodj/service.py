@@ -29,11 +29,10 @@ _logger = get_logger(__name__)
 
 
 class AutoDJService:
-    # Scientific analysis can briefly consume hundreds of megabytes. Keep one
-    # analyzer process active per service to prevent PyInstaller installations
-    # from being terminated under memory pressure.
+    # Share the worker slot even if more than one frame or service is active.
     max_parallel_analyses = 1
     supports_analysis_deadline = True
+    _analysis_lock = threading.Lock()
 
     def __init__(self, cache_path, *, remote_resolver=None, remote_retry_handler=None,
                  remote_fallback_resolver=None, analyzer=None):
@@ -42,7 +41,6 @@ class AutoDJService:
         self.remote_retry_handler = remote_retry_handler
         self.remote_fallback_resolver = remote_fallback_resolver
         self.analyzer = analyzer or LibrosaAnalyzer()
-        self._analysis_lock = threading.Lock()
         self._status_lock = threading.Lock()
         self._analysis_statuses = OrderedDict()
 
@@ -128,7 +126,7 @@ class AutoDJService:
             return asdict(cached)
         resolver = remote_resolver or self.remote_resolver
         if not callable(resolver):
-            raise ValueError("A mídia não é local e nenhum resolvedor remoto está disponível.")
+            raise ValueError(_("A mídia não é local e nenhum resolvedor remoto está disponível."))
         cached = self.cache.get_remote(normalized, self.analyzer.analysis_version)
         if cached is not None:
             return asdict(cached)
@@ -226,7 +224,7 @@ class AutoDJService:
                 else:
                     time.sleep(retry_delay)
                 self._check_cancelled(cancel_event, deadline)
-        raise last_error or RuntimeError("Não foi possível baixar a faixa para análise.")
+        raise last_error or RuntimeError(_("Não foi possível baixar a faixa para análise."))
 
     @staticmethod
     def _download(

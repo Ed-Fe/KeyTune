@@ -19,6 +19,8 @@ from ..constants import (
     GITHUB_REPOSITORY_OWNER,
     UPDATE_DOWNLOAD_CHUNK_SIZE,
     UPDATE_HTTP_TIMEOUT_SECONDS,
+    WINDOWS_PORTABLE_ARCHIVE_NAME,
+    WINDOWS_PORTABLE_CHECKSUM_NAME,
     WINDOWS_SETUP_CHECKSUM_NAME,
     WINDOWS_SETUP_EXECUTABLE_NAME,
 )
@@ -88,7 +90,7 @@ def fetch_latest_release() -> UpdateInfo:
         raise UpdateError(_("Não foi encontrado o arquivo da atualização."))
 
     checksum_asset = _select_checksum_asset(assets)
-    archive_name = str(archive_asset.get("name") or WINDOWS_SETUP_EXECUTABLE_NAME)
+    archive_name = str(archive_asset.get("name") or _preferred_archive_name())
     archive_url = str(archive_asset.get("browser_download_url") or "").strip()
     if not archive_url:
         raise UpdateError(_("Não foi possível abrir o arquivo da atualização."))
@@ -143,6 +145,13 @@ def download_release_archive(
     progress_callback=None,
     cancel_event: Event | None = None,
 ) -> Path:
+    from ..portable import is_portable
+
+    # A versão portátil substitui os arquivos no lugar. Sem o hash, não baixa.
+    portable = is_portable()
+    if portable and not update_info.checksum_url:
+        raise UpdateError(_("Não foi possível validar a integridade do arquivo."))
+
     download_dir = Path(tempfile.mkdtemp(prefix="keytune-update-"))
     target_path = download_dir / update_info.archive_name
     partial_path = target_path.with_suffix(f"{target_path.suffix}.part")
@@ -169,6 +178,22 @@ def download_release_archive(
             actual_checksum = _calculate_sha256(target_path)
             if actual_checksum.lower() != expected_checksum.lower():
                 raise UpdateError(_("O arquivo baixado não pôde ser validado."))
+
+        if portable:
+            from ..portable_update import PortableApplyError, validate_portable_archive
+
+            def check_cancelled():
+                if cancel_event is not None and cancel_event.is_set():
+                    raise UpdateCancelledError()
+
+            try:
+                check_cancelled()
+                validate_portable_archive(
+                    target_path, Path(sys.executable).name, check_cancelled=check_cancelled
+                )
+                check_cancelled()
+            except PortableApplyError as exc:
+                raise UpdateError(str(exc)) from exc
 
         _logger.info("Release archive integrity verified: %s", target_path)
         return target_path
@@ -376,12 +401,34 @@ def _version_key(version: str) -> tuple[int, ...]:
     return tuple(parts or [0])
 
 
+def _in_portable_mode() -> bool:
+    from ..portable import is_portable
+
+    return is_portable()
+
+
+def _preferred_archive_name() -> str:
+    if _in_portable_mode():
+        return WINDOWS_PORTABLE_ARCHIVE_NAME
+    return WINDOWS_SETUP_EXECUTABLE_NAME
+
+
+def _preferred_checksum_name() -> str:
+    if _in_portable_mode():
+        return WINDOWS_PORTABLE_CHECKSUM_NAME
+    return WINDOWS_SETUP_CHECKSUM_NAME
+
+
 def _select_archive_asset(assets: list[dict]) -> dict | None:
-    preferred_name = WINDOWS_SETUP_EXECUTABLE_NAME.casefold()
+    preferred_name = _preferred_archive_name().casefold()
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
         if name == preferred_name:
             return asset
+
+    # Sem o zip portátil não cai no instalador: rodá-lo gravaria no Windows.
+    if _in_portable_mode():
+        return None
 
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
@@ -392,15 +439,19 @@ def _select_archive_asset(assets: list[dict]) -> dict | None:
 
 
 def _select_checksum_asset(assets: list[dict]) -> dict | None:
-    preferred_name = WINDOWS_SETUP_CHECKSUM_NAME.casefold()
+    preferred_name = _preferred_checksum_name().casefold()
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
         if name == preferred_name:
             return asset
 
+    if _in_portable_mode():
+        return None
+
+    excluded = WINDOWS_PORTABLE_CHECKSUM_NAME.casefold()
     for asset in assets:
         name = str(asset.get("name") or "").casefold()
-        if name.endswith(".sha256"):
+        if name.endswith(".sha256") and name != excluded:
             return asset
 
     return None

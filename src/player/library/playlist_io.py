@@ -77,6 +77,15 @@ def _resolve_playlist_entry(base_dir, entry, base_url=None):
 
 
 def load_playlist(file_path):
+    return [item for item, _title in load_playlist_entries(file_path)]
+
+
+def load_playlist_entries(file_path):
+    """Read a playlist as ``(item, title)`` pairs.
+
+    *title* comes from the ``#EXTINF`` line right before the entry, or is
+    ``None`` when the file has none (a plain M3U).
+    """
     normalized_source = str(file_path or "").strip()
     if normalized_source.lower().startswith(REMOTE_PLAYLIST_PREFIXES):
         base_dir = ""
@@ -88,17 +97,37 @@ def load_playlist(file_path):
         base_url = None
         candidates = _read_local_playlist_lines(base_path)
 
-    items = []
+    entries = []
+    pending_title = None
     for raw_line in candidates:
         line = raw_line.strip()
-        if not line or line.startswith("#"):
+        if not line:
+            continue
+        if line.startswith("#"):
+            if line[:8].upper() == "#EXTINF:":
+                pending_title = _parse_extinf_title(line)
             continue
 
         resolved = _resolve_playlist_entry(base_dir, line, base_url=base_url)
         if resolved:
-            items.append(resolved)
+            entries.append((resolved, pending_title))
+        pending_title = None
 
-    return items
+    return entries
+
+
+def _parse_extinf_title(line):
+    # #EXTINF:<duração> [atributos],<título> — o título vem depois da primeira
+    # vírgula fora de aspas (atributos como tvg-name="a,b" podem ter vírgula).
+    payload = line[8:]
+    in_quotes = False
+    for index, char in enumerate(payload):
+        if char == '"':
+            in_quotes = not in_quotes
+        elif char == "," and not in_quotes:
+            title = payload[index + 1:].strip()
+            return title or None
+    return None
 
 
 def _read_local_playlist_lines(file_path):
@@ -134,21 +163,31 @@ def _download_playlist_lines(url):
     return payload.decode("latin-1").splitlines()
 
 
-def save_playlist(file_path, items):
+def save_playlist(file_path, items, labels=None):
+    """Write *items* as an extended M3U.
+
+    *labels* (optional, parallel to *items*) are the names shown in the list;
+    they go into ``#EXTINF`` so YouTube links and other streams keep their
+    titles when the playlist is opened again.
+    """
     base_dir = os.path.dirname(file_path)
+    labels = list(labels or [])
     lines = ["#EXTM3U"]
 
-    for item in items:
+    for index, item in enumerate(items):
+        label = labels[index] if index < len(labels) else ""
+        label = " ".join(str(label or "").split())
         if is_remote_media_path(item):
-            lines.append(item)
-            continue
+            stored_entry = item
+        else:
+            normalized_item = os.path.abspath(item)
+            try:
+                stored_entry = os.path.relpath(normalized_item, base_dir)
+            except ValueError:
+                stored_entry = normalized_item
 
-        normalized_item = os.path.abspath(item)
-        try:
-            stored_entry = os.path.relpath(normalized_item, base_dir)
-        except ValueError:
-            stored_entry = normalized_item
-
+        if label and label != (os.path.basename(str(item)) or str(item)):
+            lines.append(f"#EXTINF:-1,{label}")
         lines.append(stored_entry)
 
     with open(file_path, "w", encoding="utf-8") as playlist_file:

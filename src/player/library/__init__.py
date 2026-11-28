@@ -38,6 +38,7 @@ from .playlist_io import (
     is_playlist_source,
     is_remote_media_path,
     load_playlist,
+    load_playlist_entries,
     playlist_display_name,
     save_playlist,
 )
@@ -63,6 +64,7 @@ __all__ = [
     "is_remote_media_path",
     "is_supported_media",
     "load_playlist",
+    "load_playlist_entries",
     "normalize_search_text",
     "playlist_display_name",
     "save_playlist",

@@ -22,6 +22,7 @@ from player.manual.service import (
     link_in_line,
     load_manual,
     manual_candidate_paths,
+    manual_html_path,
     parse_manual,
     search_manual,
 )
@@ -71,6 +72,11 @@ class ParseManualTests(unittest.TestCase):
         topics = self.sections[1].topics
         self.assertEqual([t.title for t in topics][1:], ["Atalhos", "Modos"])
         self.assertEqual(topics[0].text, "Texto da seção, antes dos tópicos.")
+
+    def test_only_the_opening_topic_is_marked_as_the_section_overview(self):
+        topics = self.sections[1].topics
+        self.assertEqual([t.is_overview for t in topics], [True, False, False])
+        self.assertTrue(self.sections[0].topics[0].is_overview)
 
     def test_sections_and_topics_without_text_are_dropped(self):
         self.assertNotIn("Vazia", [s.title for s in self.sections])
@@ -237,6 +243,16 @@ class LoadManualTests(unittest.TestCase):
     def test_no_file_means_no_sections(self):
         with tempfile.TemporaryDirectory() as folder:
             self.assertEqual(load_manual("pt_BR", [pathlib.Path(folder)]), [])
+
+    def test_the_html_manual_prefers_the_active_language(self):
+        with tempfile.TemporaryDirectory() as folder:
+            directory = pathlib.Path(folder)
+            self.assertIsNone(manual_html_path("en", [directory]))
+            (directory / "manual.html").write_text("<p>pt</p>", encoding="utf-8")
+            self.assertEqual(manual_html_path("en", [directory]).name, "manual.html")
+            (directory / "manual.en.html").write_text("<p>en</p>", encoding="utf-8")
+            self.assertEqual(manual_html_path("en", [directory]).name, "manual.en.html")
+            self.assertEqual(manual_html_path("pt_BR", [directory]).name, "manual.html")
 
     def test_module_exposes_the_directories_helper(self):
         self.assertTrue(service.manual_directories())

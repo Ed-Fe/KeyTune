@@ -14,8 +14,9 @@ import sys
 import threading
 from typing import Any, Callable
 
-from ..session import get_app_storage_dir
 from ..constants import APP_VERSION
+from ..i18n import _
+from ..session import get_app_storage_dir
 from .api import API_VERSION, PluginAPI, PluginContext
 from .manifest import PluginManifest, PluginPermission
 from .host import METHOD_PERMISSIONS
@@ -101,7 +102,7 @@ class PluginService:
         try:
             self._check_compatibility(installed.manifest)
             if installed.granted_permissions != installed.manifest.permissions:
-                raise PermissionError("As permissões solicitadas ainda não foram integralmente aprovadas.")
+                raise PermissionError(_("As permissões solicitadas ainda não foram integralmente aprovadas."))
             if installed.manifest.isolation == "process":
                 self._start_process(runtime)
             else:
@@ -118,11 +119,17 @@ class PluginService:
         host_api = _version_tuple(API_VERSION, parts=2)
         if requested_api[0] != host_api[0] or requested_api > host_api:
             raise PluginCompatibilityError(
-                f"Plugin requer API {manifest.api_version}; o KeyTune oferece {API_VERSION}."
+                _("Plugin requer API {api_version}; o KeyTune oferece {host_version}.").format(
+                    api_version=manifest.api_version,
+                    host_version=API_VERSION,
+                )
             )
         if _version_tuple(manifest.minimum_keytune_version) > _version_tuple(APP_VERSION):
             raise PluginCompatibilityError(
-                f"Plugin requer KeyTune {manifest.minimum_keytune_version} ou posterior; esta versão é {APP_VERSION}."
+                _("Plugin requer KeyTune {required_version} ou posterior; esta versão é {app_version}.").format(
+                    required_version=manifest.minimum_keytune_version,
+                    app_version=APP_VERSION,
+                )
             )
 
     def _start_in_process(self, runtime):
@@ -133,7 +140,7 @@ class PluginService:
             module_path = runtime.installed.path / module_name.replace(".", "/") / "__init__.py"
         spec = importlib.util.spec_from_file_location(f"keytune_plugin_{manifest.id}", module_path)
         if not spec or not spec.loader:
-            raise ImportError(f"Não foi possível importar {module_name}.")
+            raise ImportError(_("Não foi possível importar {module}.").format(module=module_name))
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         factory = getattr(module, object_name)
@@ -190,7 +197,7 @@ class PluginService:
                 if not line:
                     break
                 if len(line) > MAX_RPC_LINE_CHARS and not line.endswith("\n"):
-                    raise ValueError("A mensagem do plugin excede o limite de 4 MB.")
+                    raise ValueError(_("A mensagem do plugin excede o limite de 4 MB."))
                 try:
                     message = json.loads(line)
                 except json.JSONDecodeError:
@@ -245,7 +252,9 @@ class PluginService:
                 self._disable_failed_plugin(runtime)
         finally:
             if not runtime.stopping and process.poll() is not None and not runtime.error:
-                runtime.error = f"O processo do plugin terminou com código {process.returncode}."
+                runtime.error = _("O processo do plugin terminou com código {code}.").format(
+                    code=process.returncode
+                )
                 self._write_diagnostic_message(runtime, runtime.error)
                 self._remove_contributions(runtime)
                 self._disable_failed_plugin(runtime)
@@ -279,21 +288,23 @@ class PluginService:
             or len(submenu) > 80
             or "\n" in submenu
         ):
-            raise ValueError("A contribuição do plugin precisa de tipo, id e rótulo válidos.")
+            raise ValueError(_("A contribuição do plugin precisa de tipo, id e rótulo válidos."))
         key = (kind, identifier)
         with runtime.contribution_lock:
             if key in runtime.contribution_ids:
-                raise ValueError(f"Contribuição duplicada: {kind}:{identifier}")
+                raise ValueError(
+                    _("Contribuição duplicada: {kind}:{identifier}").format(kind=kind, identifier=identifier)
+                )
             runtime.contribution_ids.add(key)
             runtime.contributions.append((kind, contribution))
 
     def _send_message(self, runtime, message):
         process = runtime.process
         if process is None or process.poll() is not None or process.stdin is None:
-            raise BrokenPipeError("O processo do plugin não está disponível.")
+            raise BrokenPipeError(_("O processo do plugin não está disponível."))
         encoded = json.dumps(message, ensure_ascii=False)
         if len(encoded) > MAX_RPC_LINE_CHARS:
-            raise ValueError("A mensagem para o plugin excede o limite de 4 MB.")
+            raise ValueError(_("A mensagem para o plugin excede o limite de 4 MB."))
         with runtime.write_lock:
             process.stdin.write(encoded + "\n")
             process.stdin.flush()
@@ -304,9 +315,11 @@ class PluginService:
         process = runtime.process
         if process is None or process.poll() is not None:
             if not runtime.error:
-                runtime.error = "O processo do plugin terminou antes de concluir a inicialização."
+                runtime.error = _("O processo do plugin terminou antes de concluir a inicialização.")
         else:
-            runtime.error = f"O plugin não concluiu a inicialização em {timeout} segundos."
+            runtime.error = _("O plugin não concluiu a inicialização em {timeout} segundos.").format(
+                timeout=timeout
+            )
             self._write_diagnostic_message(runtime, runtime.error)
             self._terminate_process(runtime)
         self._remove_contributions(runtime)

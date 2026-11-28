@@ -56,6 +56,8 @@ class ManualTopic:
     # As âncoras que levam a este tópico: a do título dele, as dos ``####`` de
     # dentro e, na abertura de uma seção, a do título da seção.
     anchors: list[str] = field(default_factory=list)
+    # A abertura da seção (o texto entre o ``##`` e o primeiro ``###``).
+    is_overview: bool = False
 
 
 @dataclass
@@ -87,6 +89,15 @@ def manual_candidate_paths(language: str | None = None, directories: list[Path] 
         names.append(f"manual.{language}.md")
     names.append("manual.md")
     return [directory / name for name in names for directory in (directories or manual_directories())]
+
+
+def manual_html_path(language: str | None = None, directories: list[Path] | None = None) -> Path | None:
+    """O ``manual.html`` gerado na release (o do idioma ativo primeiro), ou ``None``."""
+    for path in manual_candidate_paths(language, directories):
+        html_path = path.with_suffix(".html")
+        if html_path.is_file():
+            return html_path
+    return None
 
 
 def load_manual(language: str | None = None, directories: list[Path] | None = None) -> list[ManualSection]:
@@ -128,12 +139,12 @@ def parse_manual(markdown: str) -> list[ManualSection]:
         if level == 1:
             close_topic()
             section = open_section(_plain_inline(heading.group(2)))
-            current_topic = ManualTopic(title=_("Apresentação"), anchors=[anchor])
+            current_topic = ManualTopic(title=_("Apresentação"), anchors=[anchor], is_overview=True)
             section.topics.append(current_topic)
         elif level == 2:
             close_topic()
             section = open_section(_plain_inline(heading.group(2)))
-            current_topic = ManualTopic(title=_("Visão geral da seção"), anchors=[anchor])
+            current_topic = ManualTopic(title=_("Visão geral da seção"), anchors=[anchor], is_overview=True)
             section.topics.append(current_topic)
         elif level == 3 and section is not None:
             close_topic()

@@ -10,6 +10,7 @@ from ...constants import CROSSFADE_TIMER_INTERVAL_MS, SHORT_FADE_MS, SHORT_FADE_
 from ...library import is_audio_playback_media
 from ...log import get_logger
 from .helpers import is_youtube_music_media
+from .monitor import monitoring_enabled, playback_output_volume, track_output_volume
 from ...announcements import ANNOUNCE_TRACK_CHANGE
 
 
@@ -119,7 +120,7 @@ class CrossfadeMixin:
         outgoing_gain_db = float(getattr(self, "_current_track_gain_db", 0.0) or 0.0)
         self._apply_volume_to_player(
             outgoing_key,
-            self.current_volume * math.pow(10.0, outgoing_gain_db / 20.0),
+            playback_output_volume(self) * math.pow(10.0, outgoing_gain_db / 20.0),
         )
         if preloaded is None:
             request = self._queue_media_start(
@@ -262,6 +263,7 @@ class CrossfadeMixin:
 
         elapsed_ms = max(0, int(round((time.monotonic() - started_at) * 1000)))
         progress = max(0.0, min(1.0, elapsed_ms / duration_ms))
+        volume = playback_output_volume(self)
         if crossfade_state.get("autodj"):
             outgoing_player = self._managed_player(crossfade_state.get("outgoing_key"))
             outgoing_time = outgoing_player.get_time() if outgoing_player is not None else None
@@ -281,13 +283,13 @@ class CrossfadeMixin:
                 progress,
                 crossfade_state.get("autodj_profile") or TransitionProfile.SMOOTH,
             )
-            incoming_volume = int(round(self.current_volume * values.incoming_volume))
-            outgoing_volume = int(round(self.current_volume * values.outgoing_volume))
+            incoming_volume = int(round(volume * values.incoming_volume))
+            outgoing_volume = int(round(volume * values.outgoing_volume))
             self._apply_autodj_mix_filters(crossfade_state, progress, values)
             self._correct_autodj_phase(crossfade_state, outgoing_time)
         else:
-            incoming_volume = int(round(self.current_volume * math.sin((math.pi / 2.0) * progress)))
-            outgoing_volume = int(round(self.current_volume * math.cos((math.pi / 2.0) * progress)))
+            incoming_volume = int(round(volume * math.sin((math.pi / 2.0) * progress)))
+            outgoing_volume = int(round(volume * math.cos((math.pi / 2.0) * progress)))
         incoming_gain_db = float(crossfade_state.get("incoming_gain_db", 0.0) or 0.0)
         if crossfade_state.get("autodj"):
             # Loudness matching only protects the overlap. Restore the incoming
@@ -713,8 +715,10 @@ class CrossfadeMixin:
             finish()
             return
 
+        monitored = monitoring_enabled(getattr(self, "settings", None))
         try:
-            start_volume = max(0, min(100, int(self.current_volume)))
+            start_level = track_output_volume(self) if monitored else self.current_volume
+            start_volume = max(0, min(100, int(start_level)))
         except (TypeError, ValueError):
             start_volume = 0
 
@@ -731,7 +735,10 @@ class CrossfadeMixin:
                 with lock if lock is not None else contextlib.nullcontext():
                     if not is_current():
                         return
-                    fade_volume = int(round(start_volume * (1.0 - step / steps)))
+                    volume = start_volume
+                    if monitored or monitoring_enabled(getattr(self, "settings", None)):
+                        volume = max(0, min(100, track_output_volume(self)))
+                    fade_volume = int(round(volume * (1.0 - step / steps)))
                     self._apply_volume_to_player(player_key, fade_volume)
                 if step < steps:
                     time.sleep(step_delay_seconds)

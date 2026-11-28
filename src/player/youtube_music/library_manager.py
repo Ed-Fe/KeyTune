@@ -217,7 +217,7 @@ class YouTubeMusicLibraryManager:
             self._LIKED_SONGS_PLAYLIST_ID,
             start,
             count,
-            badge="Curtida",
+            badge=_("Curtida"),
             cache=self._playlist_tracks_cache,
         )
 

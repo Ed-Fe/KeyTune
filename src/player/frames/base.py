@@ -6,6 +6,7 @@ from ..announcements import should_speak as should_speak_announcement
 from ..constants import APP_TITLE, DEFAULT_WINDOW_SIZE
 from ..log import setup_logging
 from ..preferences import load_settings, save_settings
+from ..session import DEFAULT_MONITOR_VOLUME
 from .commands import FrameCommandMixin
 from .convert import FrameConvertMixin
 from .diagnostics import FrameDiagnosticsMixin
@@ -78,6 +79,10 @@ class MediaPlayerFrame(
         self._pending_adopted_playback = adopted_playback
         self._initialize_equalizer_support()
         self.current_volume = self.settings.default_volume
+        self.monitor_volume = DEFAULT_MONITOR_VOLUME
+        # The device observer can ask for a monitor before the session volume
+        # is known. Keep the copy closed until that restore has run.
+        self._monitor_volume_restored = False
         self.current_playback_rate = 1.0
         self.current_pitch_semitones = 0
         self.playlists = []
@@ -143,11 +148,14 @@ class MediaPlayerFrame(
         self._refresh_tray_icon()
 
         self._initialize_player_state()
+        self._monitor_volume_restored = True
         self._adopt_pending_playback()
+        self._refresh_monitor_output()
         # Plugins start only after session restore, so on_start can inspect the
         # playlists and active media that are actually visible to the user.
         self._initialize_plugin_service()
         self._open_initial_paths()
+        self._flush_pending_external_enqueue()
         self._initialize_youtube_music_startup_state()
         self._open_keytube_on_startup_if_enabled()
         # As abas restauradas ao abrir não fazem som; as abertas daqui em diante, sim.
@@ -205,6 +213,28 @@ class MediaPlayerFrame(
 
         if hasattr(self, "RequestUserAttention"):
             self.RequestUserAttention()
+
+    def receive_external_enqueue(self, paths):
+        """Append files from Explorer without playing, focusing, or switching tabs.
+
+        Same result as paste/open without playing.  A launch that arrives before
+        the window finishes starting is kept and applied once the playlists exist.
+        """
+        normalized = [str(path) for path in paths or [] if str(path or "").strip()]
+        if not normalized:
+            return
+        if not getattr(self, "_startup_ready", False):
+            pending = getattr(self, "_pending_enqueue_paths", [])
+            self._pending_enqueue_paths = [*pending, *normalized]
+            return
+        self._enqueue_external_files(normalized)
+
+    def _flush_pending_external_enqueue(self):
+        pending = getattr(self, "_pending_enqueue_paths", None)
+        if not pending:
+            return
+        self._pending_enqueue_paths = []
+        self._enqueue_external_files(pending)
 
     def focus_from_relaunch(self):
         """Bring the existing window to front when the app is launched again.

@@ -1,7 +1,7 @@
 from ..constants import DEFAULT_VOLUME
 from ..playlists import TAB_TYPE_FOLDER, PlaylistState
 from ..i18n import _
-from ..session import load_session, save_session
+from ..session import DEFAULT_MONITOR_VOLUME, load_session, save_session, session_monitor_volume
 from ..announcements import ANNOUNCE_CONFIRMATIONS
 
 
@@ -32,6 +32,7 @@ class FrameSessionMixin:
         if not session_payload:
             return False
 
+        self.monitor_volume = session_monitor_volume(session_payload)
         playlist_payloads = session_payload.get("playlists")
         if not isinstance(playlist_payloads, list) or not playlist_payloads:
             return False
@@ -159,6 +160,13 @@ class FrameSessionMixin:
     def _save_session(self):
         active_playlist_index = self._get_active_playlist_index()
         self._capture_active_playlist_state()
+        # A aba Fora da playlist toca sem ser a aba à vista: ao reabrir, volta a
+        # playlist que o usuário estava vendo, não o arquivo avulso.
+        active_state = self._get_tab_state(active_playlist_index) if active_playlist_index >= 0 else None
+        if getattr(active_state, "standalone_tab", False) and hasattr(self, "notebook"):
+            visible_index = self.notebook.GetSelection()
+            if isinstance(self._get_tab_state(visible_index), PlaylistState):
+                active_playlist_index = visible_index
 
         playlist_states = []
         selected_tab = 0
@@ -174,6 +182,7 @@ class FrameSessionMixin:
         payload = {
             "selected_tab": selected_tab,
             "volume": self.current_volume,
+            "monitor_volume": getattr(self, "monitor_volume", DEFAULT_MONITOR_VOLUME),
             "playback_rate": self.current_playback_rate,
             "pitch_semitones": self.current_pitch_semitones,
             "playlists": playlist_states,

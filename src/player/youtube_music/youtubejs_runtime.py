@@ -86,7 +86,7 @@ def install_youtubejs_dependencies(*, force=False, progress_callback=None):
         _stop_worker()
         install_optional_resource("youtubejs", progress_callback=progress_callback)
     if not youtubejs_dependencies_available():
-        raise RuntimeError("O Node.js ou o pacote YouTube.js não pôde ser preparado.")
+        raise RuntimeError(_("O Node.js ou o pacote YouTube.js não pôde ser preparado."))
     validate_youtubejs_dependencies()
     return youtubejs_dependency_versions()
 
@@ -114,7 +114,7 @@ def resolve_stream(media_url, *, cookie_header="", user_agent=""):
 
     stream_url = str(response.get("stream_url") or "").strip()
     if not stream_url:
-        raise RuntimeError("O YouTube.js não retornou uma URL direta de áudio.")
+        raise RuntimeError(_("O YouTube.js não retornou uma URL direta de áudio."))
 
     return YouTubeJSStreamInfo(
         stream_url=stream_url,
@@ -184,7 +184,7 @@ def _spawn_worker(script_name):
         resolver_script = resolver_dir / script_name
         youtubejs_package = _youtubejs_package_dir()
         if not node_executable or not os.path.isfile(resolver_script) or not os.path.isdir(youtubejs_package):
-            raise RuntimeError("O resolvedor experimental YouTube.js não está instalado.")
+            raise RuntimeError(_("O resolvedor experimental YouTube.js não está instalado."))
 
         creation_flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
         return subprocess.Popen(
@@ -236,11 +236,16 @@ def _stop_worker():
 
 
 def _youtubejs_cache_dir():
-    if os.name == "nt":
+    from ..portable import is_portable, portable_data_dir
+
+    if is_portable():
+        cache_dir = os.path.join(portable_data_dir(), "youtubejs-cache")
+    elif os.name == "nt":
         base_dir = os.environ.get("APPDATA") or os.path.expanduser("~")
+        cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
     else:
         base_dir = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
-    cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
+        cache_dir = os.path.join(base_dir, "KeyTune", "youtubejs-cache")
     os.makedirs(cache_dir, exist_ok=True)
     return cache_dir
 

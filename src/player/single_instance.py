@@ -2,9 +2,11 @@
 
 When the app starts, it forwards its launch to an already-running instance and
 exits.  A launch carrying file paths (e.g. from Explorer) is delivered as an
-``open`` message; a bare launch (Start Menu, shortcut) is delivered as a
-``focus`` message so the running window comes to front.  If no pipe exists, a
-background listener is started so future launches can forward here.
+``open`` message; ``--enqueue`` is delivered as an ``enqueue`` message so the
+files join the playlist without interrupting playback.  A bare launch (Start
+Menu, shortcut) is delivered as a ``focus`` message so the running window comes
+to front.  If no pipe exists, a background listener is started so future
+launches can forward here.
 """
 
 import os
@@ -15,15 +17,19 @@ from multiprocessing.connection import Client, Listener
 
 from .constants import APP_TITLE
 from .log import get_logger
+from .portable import portable_copy_id
 
 logger = get_logger(__name__)
 
 
 def build_pipe_address(*, dev_mode=None):
-    """Return the production or opt-in development named-pipe address."""
+    """Return the named-pipe address for this installed or portable copy."""
     if dev_mode is None:
         dev_mode = bool(os.environ.get("KEYTUNE_DEV_MODE"))
     pipe_suffix = "_Dev" if dev_mode else ""
+    copy_id = portable_copy_id()
+    if copy_id is not None:
+        pipe_suffix += f"_Portable_{copy_id}"
     return rf"\\.\pipe\{APP_TITLE}_SingleInstance{pipe_suffix}"
 
 
@@ -31,6 +37,7 @@ _PIPE_ADDRESS = build_pipe_address()
 _PIPE_AUTH_KEY = b"keytune-single-instance"
 
 ACTION_OPEN = "open"
+ACTION_ENQUEUE = "enqueue"
 ACTION_FOCUS = "focus"
 
 
@@ -43,12 +50,28 @@ _CLIENT_REPLY_TIMEOUT_SECONDS = 18.0
 _STALLED_EXIT_WAIT_SECONDS = 5.0
 
 
-def try_send_to_existing_instance(paths: list[str]) -> bool:
+def build_instance_message(paths, *, enqueue=False):
+    """Return the pipe message for this launch.
+
+    ``enqueue`` with at least one path asks the running instance to append the
+    files without playing them.  An enqueue launch with no paths falls back to
+    ``focus``, same as a bare launch.
+    """
+    normalized_paths = list(paths or [])
+    if enqueue and normalized_paths:
+        return {"action": ACTION_ENQUEUE, "paths": normalized_paths}
+    if normalized_paths:
+        return {"action": ACTION_OPEN, "paths": normalized_paths}
+    return {"action": ACTION_FOCUS}
+
+
+def try_send_to_existing_instance(paths: list[str], *, enqueue: bool = False) -> bool:
     """Forward this launch to an already-running instance.
 
     A non-empty *paths* sends an ``open`` request (the running instance plays
-    the files **without** stealing focus); an empty *paths* sends a ``focus``
-    request (the running window comes to front).
+    the files **without** stealing focus), unless *enqueue* is set, in which
+    case the files are appended and playback is left alone.  An empty *paths*
+    sends a ``focus`` request (the running window comes to front).
 
     Returns ``True`` if the running instance confirmed it handled the launch,
     meaning the caller should exit.  Returns ``False`` when no other instance is
@@ -56,10 +79,7 @@ def try_send_to_existing_instance(paths: list[str]) -> bool:
     its interface does not, e.g. a half-closed process left behind by an
     update); a stalled process is terminated and the caller starts normally.
     """
-    if paths:
-        message = {"action": ACTION_OPEN, "paths": list(paths)}
-    else:
-        message = {"action": ACTION_FOCUS}
+    message = build_instance_message(paths, enqueue=enqueue)
     try:
         conn = Client(_PIPE_ADDRESS, authkey=_PIPE_AUTH_KEY)
     except (ConnectionRefusedError, FileNotFoundError, OSError):
@@ -90,6 +110,29 @@ def try_send_to_existing_instance(paths: list[str]) -> bool:
     return False
 
 
+def dispatch_instance_message(target, message) -> bool:
+    """Route a pipe message to the running window.
+
+    Called on the UI thread (the pipe listener hops there with ``wx.CallAfter``
+    before invoking this).  Returns ``False`` when there is no window or the
+    action is unknown.
+    """
+    if target is None or not isinstance(message, dict):
+        return False
+    action = message.get("action")
+    paths = list(message.get("paths") or [])
+    if action == ACTION_OPEN:
+        target.receive_external_files(paths)
+        return True
+    if action == ACTION_ENQUEUE:
+        target.receive_external_enqueue(paths)
+        return True
+    if action == ACTION_FOCUS:
+        target.focus_from_relaunch()
+        return True
+    return False
+
+
 def _terminate_stalled_instance(pid) -> None:
     if not isinstance(pid, int) or pid <= 0 or pid == os.getpid():
         return
@@ -111,11 +154,12 @@ class SingleInstanceServer:
     """Background named-pipe listener that receives launches from new instances.
 
     *on_message_received* is called **from a background thread** with a message
-    dict (``{"action": "open", "paths": [...]}`` or ``{"action": "focus"}``).
-    Callers that need to touch the UI must bridge to the main thread (e.g.
-    ``wx.CallAfter``).  It should return ``False`` when the interface did not
-    handle the message in time, so the launching process knows this instance is
-    stalled; any other return value counts as handled.
+    dict (``{"action": "open", "paths": [...]}``, ``{"action": "enqueue",
+    "paths": [...]}`` or ``{"action": "focus"}``).  Callers that need to touch
+    the UI must bridge to the main thread (e.g. ``wx.CallAfter``).  It should
+    return ``False`` when the interface did not handle the message in time, so
+    the launching process knows this instance is stalled; any other return value
+    counts as handled.
     """
 
     def __init__(self, on_message_received):

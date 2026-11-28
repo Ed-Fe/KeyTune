@@ -10,6 +10,7 @@ from ...library import is_audio_playback_media
 from ...radio.media import is_radio_media
 from ...youtube_music.live_streams import LiveEndedError
 from .helpers import is_youtube_music_media
+from .monitor import monitoring_enabled, playback_output_volume
 from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_TRACK_CHANGE
 
 
@@ -115,6 +116,12 @@ class PlaybackEngineMixin:
                             pass
                     self._set_player_loaded_media_path(player_key, request["media_path"])
                     initial_volume = request.get("initial_volume", self.current_volume)
+                    if not request.get("crossfade") and (
+                        request.get("monitoring") or monitoring_enabled(getattr(self, "settings", None))
+                    ):
+                        # A stream may take time to resolve. Use the output
+                        # level in effect when the slot actually starts.
+                        initial_volume = playback_output_volume(self)
                     try:
                         player.audio_set_volume(max(0, min(100, int(initial_volume))))
                     except Exception:
@@ -211,6 +218,7 @@ class PlaybackEngineMixin:
             "pause_after_start": pause_after_start,
             "player_key": target_player_key,
             "initial_volume": self.current_volume if initial_volume is None else initial_volume,
+            "monitoring": monitoring_enabled(getattr(self, "settings", None)),
             "crossfade": bool(crossfade),
             "start_position_ms": start_position_ms,
             "expect_live": bool(expect_live),

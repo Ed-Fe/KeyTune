@@ -6,6 +6,8 @@ from ...audio_output import is_selectable_audio_output_device_id, normalize_audi
 from ...i18n import _
 from ...log import get_logger
 from ...announcements import ANNOUNCE_ERRORS, ANNOUNCE_PLAYBACK
+from ...monitor_output import monitor_conflict_message, same_monitor_device
+from .monitor import monitoring_enabled
 
 
 _logger = get_logger(__name__)
@@ -165,6 +167,13 @@ class AudioOutputMixin:
                 self._announce(announcement, ANNOUNCE_PLAYBACK)
             except Exception:
                 pass
+
+        if monitoring_enabled(getattr(self, "settings", None)):
+            monitor = getattr(self, "_monitor_output", None)
+            has_failed = getattr(monitor, "has_failed", None) if monitor is not None else None
+            # ``is True`` ignores a stand-in that is merely truthy.
+            retry = callable(has_failed) and has_failed() is True
+            self._refresh_monitor_output(devices, retry=retry)
 
     def _reload_audio_output_if_null(self):
         for player_key in getattr(self, "_player_keys", ()):
@@ -368,6 +377,15 @@ class AudioOutputMixin:
         if previous_normalized_device_id and not is_selectable_audio_output_device_id(previous_normalized_device_id):
             previous_normalized_device_id = ""
 
+        if monitoring_enabled(self.settings) and same_monitor_device(
+            normalized_device_id, self.settings.monitor_output_device_id
+        ):
+            self.settings.audio_output_device_id = previous_normalized_device_id
+            message = monitor_conflict_message()
+            self._set_status_message(message)
+            self._announce(message, ANNOUNCE_PLAYBACK)
+            return False
+
         _logger.info(
             "Changing audio output device to %r",
             normalized_device_id or "(system default)",
@@ -381,6 +399,8 @@ class AudioOutputMixin:
                 self._apply_audio_output_device_to_players(previous_normalized_device_id)
             except Exception:
                 pass
+            if monitoring_enabled(self.settings):
+                self._refresh_monitor_output()
             if announce:
                 self._announce(
                     _("Não foi possível trocar o dispositivo de áudio: {error}.").format(error=exc),
@@ -389,6 +409,8 @@ class AudioOutputMixin:
             return False
 
         self.settings.audio_output_device_id = normalized_device_id
+        if monitoring_enabled(self.settings):
+            self._refresh_monitor_output()
         self._save_settings()
         if announce:
             if normalized_device_id:

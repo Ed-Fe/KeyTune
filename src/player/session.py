@@ -6,7 +6,16 @@ import os
 _logger = logging.getLogger("keytune.session")
 SESSION_FILE_NAME = "session.json"
 APP_STORAGE_DIR = "KeyTune"
+DEFAULT_MONITOR_VOLUME = 50
 _LEGACY_APP_STORAGE_DIR = APP_STORAGE_DIR + "".join(("V", "L", "C"))
+
+
+def session_monitor_volume(payload):
+    try:
+        volume = int(payload.get("monitor_volume", DEFAULT_MONITOR_VOLUME))
+    except (TypeError, ValueError, OverflowError):
+        return DEFAULT_MONITOR_VOLUME
+    return max(0, min(100, volume))
 
 
 def _storage_base_dir():
@@ -17,11 +26,20 @@ def _storage_base_dir():
 
 
 def get_app_storage_dir():
+    from .portable import is_portable, portable_data_dir
+
+    if is_portable():
+        return portable_data_dir()
+
+    return _get_local_storage_dir()
+
+
+def _get_local_storage_dir(*, allow_legacy=True):
     base_dir = _storage_base_dir()
     storage_dir = os.path.join(base_dir, APP_STORAGE_DIR)
     legacy_storage_dir = os.path.join(base_dir, _LEGACY_APP_STORAGE_DIR)
 
-    if not os.path.exists(storage_dir) and os.path.isdir(legacy_storage_dir):
+    if allow_legacy and not os.path.exists(storage_dir) and os.path.isdir(legacy_storage_dir):
         return legacy_storage_dir
 
     os.makedirs(storage_dir, exist_ok=True)

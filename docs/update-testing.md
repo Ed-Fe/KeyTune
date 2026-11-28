@@ -54,6 +54,8 @@ Ao final, você terá (o instalador exige `ISCC.exe` do Inno Setup 6; instale po
 
 - `dist\KeyTune-Setup.exe`
 - `dist\KeyTune-Setup.exe.sha256`
+- `dist\KeyTune-Portable.zip`
+- `dist\KeyTune-Portable.zip.sha256`
 - `dist\optional-resources\KeyTune-NodeJS-win-x64.zip` + `.sha256`
 - `dist\optional-resources\KeyTune-YouTubePython-win-x64.zip` + `.sha256`
 - `dist\optional-resources\KeyTune-YouTubeJS-win-x64.zip` + `.sha256`
@@ -82,6 +84,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_release.ps1 -Ap
 4. Anexe os arquivos:
   - `KeyTune-Setup.exe`
   - `KeyTune-Setup.exe.sha256`
+  - `KeyTune-Portable.zip`
+  - `KeyTune-Portable.zip.sha256`
   - `release-notes.en.md` e `release-notes.es.md` (opcionais; sem eles o diálogo mostra o corpo da release, em português)
 5. Escreva no corpo da release as notas/changelog que devem aparecer no diálogo antes do download.
 
@@ -112,6 +116,33 @@ Depois inicie `KeyTune.exe` a partir da pasta extraída da versão antiga.
   - o instalador silencioso fecha o player, troca os arquivos e reinicia;
   - a nova versão passa a ser a instalada;
   - a versão em "Aplicativos e recursos" reflete a nova release.
+
+A versão portátil publica `KeyTune-Portable.zip` e `KeyTune-Portable.zip.sha256` junto do instalador. O zip traz o `KeyTuneUpdater.exe`. O instalador não leva esse executável.
+
+Para testar a atualização portátil, use o mesmo repositório de teste e as mesmas variáveis:
+
+```powershell
+$env:MEDIA_PLAYER_UPDATE_REPOSITORY_OWNER = "Ed-Fe"
+$env:MEDIA_PLAYER_UPDATE_REPOSITORY_NAME = "KeyTune-update-test"
+```
+
+Extraia o `KeyTune-Portable.zip` da versão antiga (ele já vem com `portable.ini`) numa pasta vazia. Não use o setup. Coloque uma frase em `portable.ini` e um arquivo em `data`, para reconhecer os dois depois. Abra o `KeyTune.exe` dessa pasta e confirme em **Ajuda > Verificar atualizações**.
+
+O que conferir:
+
+- o download é o `KeyTune-Portable.zip`, e o `KeyTune-Setup.exe` não abre;
+- a janela do atualizador aparece durante a troca e o leitor de tela anuncia o resultado;
+- `portable.ini` e a pasta `data` continuam com o que você tinha colocado;
+- o KeyTune abre de novo já na versão nova;
+- `data/portable-update.log` descreve a troca.
+
+Use uma cópia de teste para simular falhas.
+
+- Publique um ZIP sem `KeyTune.exe`, com `Data` na raiz ou com nomes que só diferem nas maiúsculas. Gere o checksum de cada ZIP. O KeyTune deve rejeitar cada pacote com o player ainda aberto.
+- Simule uma falha na extração depois que o player fecha. O atualizador deve tentar reabrir a versão antiga e registrar o erro em `data/portable-update.log`.
+- Simule uma falha na troca seguida de um arquivo bloqueado durante a restauração. Confira se o atualizador ainda restaura os demais arquivos e se o erro e o log informam o caminho do backup em `data/portable-update-backup-*`. Use `Tab` para chegar a **Fechar** ou `Esc` para sair depois do erro.
+- Abra a cópia portátil com a versão instalada em execução. Envie um arquivo com `--enqueue` para cada executável e confira se a mídia entra na instância correspondente. Repita com a pasta `data` sem permissão de escrita. Na abertura da cópia portátil, confira o aviso e o uso de `%APPDATA%\KeyTune`.
+- Com outro player como padrão, confira **Adicionar à playlist do KeyTune** no menu de contexto de cada formato de áudio ou vídeo escolhido na instalação. Os registros por extensão se limitam aos formatos selecionados. Repita o teste após registrar e desregistrar pela seção **Associação de arquivos** nas Preferências da cópia portátil. O desregistro da cópia portátil deve preservar as associações da versão instalada.
 
 ## Verificações extras úteis
 

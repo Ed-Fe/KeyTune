@@ -6,7 +6,7 @@ import wx
 
 from ..library import (
     is_remote_media_path,
-    load_playlist,
+    load_playlist_entries,
     scan_folder_contents,
 )
 from ..i18n import _
@@ -105,7 +105,7 @@ class FrameLibraryLoaderMixin:
                 media_files = []
                 item_index_map = {}
                 browser_item_labels = []
-                error_message = f"Falha inesperada ao carregar a pasta: {exc}."
+                error_message = _("Falha inesperada ao carregar a pasta: {error}.").format(error=exc)
                 _logger.error("Unexpected error loading folder playlist %r: %s", request["folder_path"], exc, exc_info=True)
 
             if self._library_stop_event.is_set():
@@ -123,9 +123,10 @@ class FrameLibraryLoaderMixin:
 
         if kind == "playlist":
             try:
-                items = load_playlist(request["playlist_source"])
+                entries = load_playlist_entries(request["playlist_source"])
+                items = [path for path, _title in entries]
                 item_index_map = {path: index for index, path in enumerate(items)}
-                browser_item_labels = [os.path.basename(path) or path for path in items]
+                browser_item_labels = [title or os.path.basename(path) or path for path, title in entries]
                 error_message = ""
             except OSError as exc:
                 items = []
@@ -136,7 +137,7 @@ class FrameLibraryLoaderMixin:
                 items = []
                 item_index_map = {}
                 browser_item_labels = []
-                error_message = f"Falha inesperada ao carregar a playlist: {exc}."
+                error_message = _("Falha inesperada ao carregar a playlist: {error}.").format(error=exc)
 
             if self._library_stop_event.is_set():
                 return
@@ -165,7 +166,7 @@ class FrameLibraryLoaderMixin:
         state.title = title
         state.source_path = None
         state.set_items([], auto_select=False)
-        state.begin_library_load("Carregando playlist...")
+        state.begin_library_load(_("Carregando playlist..."))
 
     def _finish_playlist_load_request(self, request, items, item_index_map, browser_item_labels, error_message):
         if self._library_stop_event.is_set():

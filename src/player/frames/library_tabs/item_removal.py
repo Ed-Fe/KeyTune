@@ -154,6 +154,18 @@ class PlaylistItemRemovalMixin:
             ANNOUNCE_CONFIRMATIONS
         )
 
+    def _close_standalone_media(self, state):
+        """Para e esvazia a aba Fora da playlist, sem tocar nas outras playlists."""
+        self._unload_player()
+        state.set_items([], start_index=0)
+        # Esvaziada por nós: continua sendo a aba avulsa.
+        state.standalone_tab = True
+        state.last_position_ms = 0
+        state.was_playing = False
+        self._update_title()
+        self._refresh_playlist_browser()
+        self._announce(_("Mídia fechada."), ANNOUNCE_CONFIRMATIONS)
+
     def _close_current_media(self):
         current_tab = self._get_tab_state()
         if isinstance(current_tab, ScreenTabState):
@@ -162,6 +174,18 @@ class PlaylistItemRemovalMixin:
 
         state = self._get_playlist_state()
         if self._block_sensitive_action_during_youtube_music("close-media", state=state):
+            return
+
+        # O que toca fora da playlist (aba à parte, não selecionada) é o que se
+        # fecha: a faixa atual da playlist à vista não pode ser removida no lugar.
+        active_state = self._get_active_playlist_state()
+        if (
+            active_state is not None
+            and active_state is not state
+            and getattr(active_state, "standalone_tab", False)
+            and active_state.current_media_path
+        ):
+            self._close_standalone_media(active_state)
             return
 
         if state and state.is_folder_tab and state.current_media_path:

@@ -144,9 +144,6 @@ msgstr "C&lear playback history"
 msgid "&Limpar tudo"
 msgstr "Clear &all"
 
-msgid "&Links do tópico:"
-msgstr "&Links in the topic:"
-
 msgid "&Localizar"
 msgstr "&Find"
 
@@ -263,9 +260,6 @@ msgstr "Opening in the browser: {text}."
 
 msgid "Idio&ma da interface"
 msgstr "I&nterface language"
-
-msgid "Links do tópico"
-msgstr "Links in the topic"
 
 msgid "Não foi possível abrir o link {text}."
 msgstr "Could not open the link {text}."
@@ -481,9 +475,6 @@ msgstr "Opens the dialog to connect a YouTube account or update the saved authen
 
 msgid "Abrindo créditos: {name}"
 msgstr "Opening credits: {name}"
-
-msgid "Abrindo manual: {name}"
-msgstr "Opening manual: {name}"
 
 msgid "Abrir &central do KeyTube...\tCtrl+Shift+Y"
 msgstr "Open KeyTube &hub...\tCtrl+Shift+Y"
@@ -898,9 +889,6 @@ msgstr "Bolivia"
 
 msgid "Brasil"
 msgstr "Brazil"
-
-msgid "Brave"
-msgstr "Brave"
 
 msgid "Busca \"{query}\": resultado {position} de {total}, voltando ao fim da lista."
 msgstr "Search \"{query}\": result {position} of {total}, wrapping to the end of the list."
@@ -1372,9 +1360,6 @@ msgstr "Unexpected error while exporting cookies from {browser}: {detail}"
 msgid "Escolha a pasta da playlist inteligente"
 msgstr "Choose the smart playlist folder"
 
-msgid "Escolha como deseja conectar sua conta do YouTube.\n\nOpção 1 — Navegador instalado: selecione o navegador na lista e clique em \"Conectar\". O player importará os cookies automaticamente.\n\nOpção 2 — Manual: cole os dados do navegador ou escolha um arquivo browser.json, JSON de cookies ou cookies.txt exportado anteriormente."
-msgstr "Choose how to connect your YouTube account.\n\nOption 1 — Installed browser: select the browser from the list and click \"Connect\". The player will import the cookies automatically.\n\nOption 2 — Manual: paste the browser data or choose a previously exported browser.json, cookie JSON, or cookies.txt file."
-
 msgid "Escolha quando o KeyTune deve pausar a reprodução automaticamente."
 msgstr "Choose when KeyTune should pause playback automatically."
 
@@ -1507,9 +1492,6 @@ msgstr "Finland"
 msgid "Firefox (recomendado)"
 msgstr "Firefox (recommended)"
 
-msgid "Firefox é a opção mais compatível. No Windows, Chrome, Edge e Brave podem exigir que o navegador seja completamente fechado ou impedir a extração; nesse caso, use o Firefox ou a importação manual."
-msgstr "Firefox is the most compatible option. On Windows, Chrome, Edge, and Brave may need to be completely closed or may prevent extraction; in that case, use Firefox or manual import."
-
 msgid "Foi tentada uma atualização avançada do yt-dlp."
 msgstr "An advanced yt-dlp update was attempted."
 
@@ -1533,9 +1515,6 @@ msgstr "Manage playback queue"
 
 msgid "Global"
 msgstr "Global"
-
-msgid "Google Chrome"
-msgstr "Google Chrome"
 
 msgid "Graves e agudos"
 msgstr "Bass and treble"
@@ -1578,9 +1557,6 @@ msgstr "Language"
 
 msgid "Idioma da interface"
 msgstr "Interface language"
-
-msgid "Importante — para a conexão durar: o Google troca os cookies da sessão por segurança sempre que você continua navegando no YouTube logado, o que invalida os cookies já exportados (a conta aparece como desconectada no dia seguinte, mesmo usando o mesmo arquivo). Para uma conexão estável, abra uma janela anônima/privada, faça login em music.youtube.com, exporte os cookies e feche a janela anônima sem abrir o YouTube de novo nela. Assim os cookies exportados não são mais trocados pelo navegador."
-msgstr "Important — for the connection to last: Google rotates the session cookies for security whenever you keep browsing YouTube while logged in, which invalidates the cookies you already exported (the account shows as disconnected the next day, even using the same file). For a stable connection, open an incognito/private window, log in to music.youtube.com, export the cookies and close the incognito window without opening YouTube again in it. That way the exported cookies are no longer rotated by the browser."
 
 msgid "incluindo mídias remotas"
 msgstr "including remote media"
@@ -1821,9 +1797,6 @@ msgstr "Highest rated"
 
 msgid "Mensagem da central do KeyTube"
 msgstr "KeyTube hub message"
-
-msgid "Microsoft Edge"
-msgstr "Microsoft Edge"
 
 msgid "Minutos personalizados"
 msgstr "Custom minutes"
@@ -2116,9 +2089,6 @@ msgstr "Could not open the update file."
 msgid "Não foi possível abrir o instalador da atualização."
 msgstr "Could not open the update installer."
 
-msgid "Não foi possível abrir o manual do KeyTune no visualizador padrão do sistema."
-msgstr "Could not open the KeyTune manual in the system default viewer."
-
 msgid "Não foi possível abrir o navegador para mostrar a página solicitada."
 msgstr "Could not open the browser to show the requested page."
 
@@ -2251,9 +2221,6 @@ msgstr "Could not list the YouTube Music playlists."
 msgid "Não foi possível localizar o checksum oficial do yt-dlp baixado."
 msgstr "Could not locate the official checksum of the downloaded yt-dlp."
 
-msgid "Não foi possível localizar o manual do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
-msgstr "Could not locate the KeyTune manual. Generate the HTML version of the release or check the project's docs folder."
-
 msgid "Não foi possível localizar os créditos do KeyTune. Gere a versão HTML da release ou verifique a pasta docs do projeto."
 msgstr "Could not locate the KeyTune credits. Generate the HTML version of the release or check the project's docs folder."
 
@@ -2295,9 +2262,6 @@ msgstr "Could not validate the YouTube authentication right now."
 
 msgid "Não foi possível validar a autenticação salva do YouTube agora. Tente novamente em instantes."
 msgstr "Could not validate the saved YouTube authentication right now. Try again in a moment."
-
-msgid "Não foi possível validar a autenticação salva do YouTube. Conecte a conta novamente."
-msgstr "Could not validate the saved YouTube authentication. Connect the account again."
 
 msgid "Não foi possível validar a integridade do arquivo."
 msgstr "Could not validate the file integrity."
@@ -2472,6 +2436,9 @@ msgstr "Source"
 
 msgid "Os botões de instalação abrem o Windows Package Manager em uma janela separada. Dependendo da configuração do sistema, o Windows pode pedir confirmação."
 msgstr "The install buttons open the Windows Package Manager in a separate window. Depending on the system configuration, Windows may ask for confirmation."
+
+msgid "Os itens já estavam na lista."
+msgstr "The items were already in the list."
 
 msgid "Os itens selecionados já estavam presentes na playlist atual."
 msgstr "The selected items were already present in the current playlist."
@@ -3595,9 +3562,6 @@ msgstr "{name} (dB)"
 msgid "{name} personalizado"
 msgstr "Custom {name}"
 
-msgid "{name}:"
-msgstr "{name}:"
-
 msgid "{name}: {count} item."
 msgid_plural "{name}: {count} itens."
 msgstr[0] "{name}: {count} item."
@@ -3635,12 +3599,6 @@ msgstr "{seconds} s"
 
 msgid "{semitones:+d} semitons"
 msgstr "{semitones:+d} semitones"
-
-msgid "{text} (abre no navegador)"
-msgstr "{text} (opens in the browser)"
-
-msgid "{text} (no manual)"
-msgstr "{text} (in the manual)"
 
 msgid "{title} — carregando"
 msgstr "{title} — loading"
@@ -4018,15 +3976,27 @@ msgstr "The installed KeyTune release did not publish the optional package {name
 msgid "A resposta dos recursos adicionais veio em formato inválido."
 msgstr "The additional resources response has an invalid format."
 
-msgid "Ative o AutoDJ em Preferências, Recursos adicionais, e aguarde a instalação terminar."
-msgstr "Enable AutoDJ under Preferences, Additional resources, and wait for installation to finish."
+msgid "O AutoDJ precisa dos recursos adicionais. Instale em Preferências, Recursos adicionais."
+msgstr "AutoDJ requires additional resources. Install them under Preferences, Additional resources."
+
+msgid "Os recursos adicionais do AutoDJ estão sendo instalados. Aguarde a instalação terminar."
+msgstr "The additional AutoDJ resources are being installed. Wait for the installation to finish."
+
+msgid "A playlist ainda está carregando. Aguarde e tente novamente."
+msgstr "The playlist is still loading. Wait and try again."
+
+msgid "Esta playlist já é uma sessão AutoDJ. Abra outra playlist para iniciar uma nova sessão."
+msgstr "This playlist is already an AutoDJ session. Open another playlist to start a new session."
+
+msgid "A playlist atual está vazia. Adicione pelo menos duas faixas para iniciar o AutoDJ."
+msgstr "The current playlist is empty. Add at least two tracks to start AutoDJ."
 
 msgid "Ative o AutoDJ em Preferências, Recursos adicionais, para revisar e instalar as bibliotecas necessárias."
 msgstr "Enable AutoDJ under Preferences, Additional resources, to review and install the required libraries."
 
 #: src/player/frames/autodj.py
-msgid "Ative o AutoDJ no menu Reprodução para iniciar uma sessão."
-msgstr "Turn on AutoDJ in the Playback menu to start a session."
+msgid "O AutoDJ está desativado. Ative em Preferências, Recursos adicionais."
+msgstr "AutoDJ is turned off. Enable it under Preferences, Additional resources."
 
 msgid "AutoDJ desativado."
 msgstr "AutoDJ disabled."
@@ -4235,9 +4205,6 @@ msgstr "A live broadcast can't be crossfaded."
 msgid "Transmissões ao vivo não podem ser analisadas pelo AutoDJ."
 msgstr "Live broadcasts can't be analyzed by AutoDJ."
 
-msgid "Mostrar o vídeo das &transmissões ao vivo"
-msgstr "Show the video of live &broadcasts"
-
 msgid "Transmissão ao vivo só com áudio\n\nA saída de vídeo está desativada.\nPressione Ctrl+Alt+V, ou abra Preferências > Reprodução, para ver a imagem."
 msgstr "Live broadcast, audio only\n\nVideo output is turned off.\nPress Ctrl+Alt+V, or open Preferences > Playback, to see the picture."
 
@@ -4345,9 +4312,6 @@ msgstr "The downloaded FFmpeg failed the integrity check."
 
 msgid "O FFmpeg não foi encontrado. O download seguirá na qualidade original, sem conversão."
 msgstr "FFmpeg was not found. The download will continue in the original quality, without conversion."
-
-msgid "O download só está disponível para mídias do YouTube e do YouTube Music."
-msgstr "Downloading is only available for YouTube and YouTube Music media."
 
 msgid "O pacote do FFmpeg veio sem os executáveis esperados."
 msgstr "The FFmpeg package did not contain the expected executables."
@@ -4601,9 +4565,6 @@ msgstr "Downloading {index} of {total}..."
 msgid "Baixando {index} de {total}... {percent}%"
 msgstr "Downloading {index} of {total}... {percent}%"
 
-msgid "Baixar {count} itens do YouTube para a pasta:"
-msgstr "Download {count} items from YouTube to the folder:"
-
 msgid "Conversão cancelada. {done} de {total} arquivos já foram convertidos."
 msgstr "Conversion cancelled. {done} of {total} files were already converted."
 
@@ -4643,9 +4604,6 @@ msgstr "Starting the conversion of {count} files."
 msgid "Iniciando o download de {count} itens."
 msgstr "Starting the download of {count} items."
 
-msgid "Nada para baixar: só mídias do YouTube e do YouTube Music podem ser baixadas."
-msgstr "Nothing to download: only YouTube and YouTube Music media can be downloaded."
-
 msgid "Nenhum arquivo de áudio ou vídeo do computador está selecionado."
 msgstr "No audio or video file from your computer is selected."
 
@@ -4664,14 +4622,13 @@ msgstr "Could not convert any of the {total} files: {reason}"
 msgid "Sem o FFmpeg, os arquivos foram baixados na qualidade original, sem conversão."
 msgstr "Without FFmpeg, the files were downloaded in the original quality, without conversion."
 
-msgid "Só os primeiros {limit} itens serão baixados; {count} ficarão de fora."
-msgstr "Only the first {limit} items will be downloaded; {count} will be left out."
+msgid "{count} arquivo adicionado à playlist."
+msgid_plural "{count} arquivos adicionados à playlist."
+msgstr[0] "{count} file added to the playlist."
+msgstr[1] "{count} files added to the playlist."
 
 msgid "{count} arquivos foram ignorados."
 msgstr "{count} files were skipped."
-
-msgid "{count} itens que não são do YouTube serão ignorados."
-msgstr "{count} items that are not from YouTube will be skipped."
 
 msgid "{mode} (arquivos: {count})"
 msgstr "{mode} (files: {count})"
@@ -5025,9 +4982,6 @@ msgstr "Add without playing (Shift+Enter)"
 
 msgid "Salvar no YouTube Music"
 msgstr "Save to YouTube Music"
-
-msgid "Selecione ao menos um item da lista para abrir o menu de ações."
-msgstr "Select at least one item in the list to open the actions menu."
 
 msgid "Excluir playlist do YouTube Music..."
 msgstr "Delete YouTube Music playlist..."
@@ -5409,6 +5363,9 @@ msgstr "Add actions and submenus"
 msgid "Adicionar telas ou painéis"
 msgstr "Add screens or panels"
 
+msgid "Adicionar à playlist do {app}"
+msgstr "Add to {app} playlist"
+
 msgid "Adicionar às favoritas (Ctrl+D)"
 msgstr "Add to favorites (Ctrl+D)"
 
@@ -5441,9 +5398,6 @@ msgstr "When the limit is reached, the oldest are removed."
 
 msgid "Aplica o dispositivo de áudio selecionado."
 msgstr "Applies the selected audio device."
-
-msgid "Aplicado na próxima vez que o KeyTune for aberto."
-msgstr "Applied the next time KeyTune opens."
 
 msgid "Aplicar crossfade ao trocar de fai&xa manualmente"
 msgstr "Apply crossfade when changing trac&k manually"
@@ -5691,9 +5645,6 @@ msgstr "Most listened in {country}"
 msgid "Mais ouvidas no mundo"
 msgstr "Most listened worldwide"
 
-msgid "Marca as faixas ouvidas no histórico da sua conta."
-msgstr "Marks the tracks you listened to in your account history."
-
 msgid "Marketplace de plugins"
 msgstr "Plugin marketplace"
 
@@ -5901,8 +5852,8 @@ msgstr "Separate process"
 msgid "Página: {homepage}"
 msgstr "Page: {homepage}"
 
-msgid "Põe o KeyTune no menu Abrir com do Windows para áudio, vídeo e playlists."
-msgstr "Adds KeyTune to the Windows Open with menu for audio, video and playlists."
+msgid "Põe o KeyTune no menu de contexto do Explorador para áudio, vídeo e playlists, para abrir o arquivo ou adicionar à playlist."
+msgstr "Adds KeyTune to the File Explorer context menu for audio, video and playlists, to open the file or add it to the playlist."
 
 msgid "Qualidade: {value}"
 msgstr "Quality: {value}"
@@ -5978,9 +5929,6 @@ msgstr "Online radio"
 
 msgid "Rádios online. Navegue pela lista, busque uma rádio ou cole o endereço de um stream."
 msgstr "Online radio. Browse the list, search for a radio station or paste a stream address."
-
-msgid "Salvar o que ouvi no &histórico do YouTube Music"
-msgstr "Save what I listened to in the YouTube Music &history"
 
 msgid "Saída de áudio e vídeo"
 msgstr "Audio and video output"
@@ -6071,9 +6019,6 @@ msgstr "Use the yt-dlp media resolver"
 
 msgid "Use as setas para escolher a saída de áudio."
 msgstr "Use the arrow keys to choose the audio output."
-
-msgid "Vale mesmo com a saída de vídeo desativada. Ctrl+Alt+V alterna."
-msgstr "Applies even with video output disabled. Ctrl+Alt+V toggles it."
 
 msgid "Ver &permissões"
 msgstr "View &permissions"
@@ -6517,9 +6462,6 @@ msgstr "Filter glo&bal actions:"
 msgid "Funcionam mesmo com o KeyTune minimizado, na bandeja ou com outro programa em foco."
 msgstr "They work even with KeyTune minimized, in the tray or with another program focused."
 
-msgid "Gostei da mídia atual (YouTube Music)"
-msgstr "Like current media (YouTube Music)"
-
 msgid "Iniciar rádio desta faixa"
 msgstr "Start radio from this track"
 
@@ -6570,9 +6512,6 @@ msgstr "New playlist"
 
 msgid "Novo atalho"
 msgstr "New shortcut"
-
-msgid "Não gostei da mídia atual (YouTube Music)"
-msgstr "Dislike current media (YouTube Music)"
 
 msgid "Ocultar na bandeja do sistema"
 msgstr "Hide to system tray"
@@ -7522,12 +7461,6 @@ msgstr "From 1 to 100, apart from the media volume."
 msgid "Sons que &tocam:"
 msgstr "Sounds &that play:"
 
-msgid "Sons que tocam"
-msgstr "Sounds that play"
-
-msgid "Espaço liga ou desliga o som do item; ao ligar, ele toca."
-msgstr "Space turns the item's sound on or off; when turned on, it plays."
-
 msgid "Chat ao vivo: mensagem nova"
 msgstr "Live chat: new message"
 
@@ -7651,7 +7584,6 @@ msgstr "The interface language changes when KeyTune is opened again. Do you want
 msgid "Vale quando o KeyTune é aberto de novo; ao confirmar, ele oferece reiniciar."
 msgstr "Applies when KeyTune is opened again; on confirming, it offers to restart."
 
-
 msgid "O processo do YouTube.js não respondeu."
 msgstr "The YouTube.js process did not respond."
 
@@ -7691,18 +7623,6 @@ msgstr "Chat, notifications, download and sleep timer. When off, they only speak
 
 msgid "&Avisos que falam:"
 msgstr "N&otices that speak:"
-
-msgid "Avisos de eventos que falam"
-msgstr "Event notices that speak"
-
-msgid "Espaço liga ou desliga o aviso do item."
-msgstr "Space turns the item's notice on or off."
-
-msgid "{item}: ligado"
-msgstr "{item}: on"
-
-msgid "{item}: desligado"
-msgstr "{item}: off"
 
 msgid "A legenda deste vídeo veio vazia."
 msgstr "This video's subtitle came back empty."
@@ -7820,9 +7740,6 @@ msgstr "YouTube did not bring any short right now."
 
 msgid "Não foi possível abrir os Shorts agora."
 msgstr "Could not open Shorts now."
-
-msgid "Buscando mais shorts."
-msgstr "Looking for more shorts."
 
 msgid "O YouTube não trouxe mais shorts agora."
 msgstr "YouTube did not bring more shorts right now."
@@ -8065,18 +7982,6 @@ msgstr "Errors and unavailable actions"
 msgid "Manual do usuário"
 msgstr "User manual"
 
-msgid "&Seções:"
-msgstr "Sec&tions:"
-
-msgid "Seções"
-msgstr "Sections"
-
-msgid "Tó&picos da seção:"
-msgstr "T&opics in the section:"
-
-msgid "Tópicos da seção"
-msgstr "Topics in the section"
-
 msgid "&Texto"
 msgstr "Te&xt"
 
@@ -8128,6 +8033,518 @@ msgid "Em {count} seção."
 msgid_plural "Em {count} seções."
 msgstr[0] "In {count} section."
 msgstr[1] "In {count} sections."
+
+msgid "Procurando atualização do yt-dlp..."
+msgstr "Checking for a yt-dlp update..."
+
+msgid "Fora da playlist"
+msgstr "Outside the playlist"
+
+msgid "Arquivos abertos"
+msgstr "Opened files"
+
+msgid "&Tocar arquivos abertos sem pôr na playlist"
+msgstr "Play opened files &without adding them to the playlist"
+
+msgid "O Enter no explorador de pastas e os arquivos abertos pelo Windows tocam na aba Fora da playlist."
+msgstr "Enter in the folder explorer and files opened from Windows play in the Outside the playlist tab."
+
+msgid "A monitoração e a transmissão precisam usar dispositivos diferentes."
+msgstr "Monitoring and broadcasting need separate devices."
+
+msgid "A monitoração está indisponível porque o componente de áudio do Windows não pôde ser carregado."
+msgstr "Monitoring is unavailable because the Windows audio component could not be loaded."
+
+msgid "A monitoração parou. Confira os dispositivos de áudio."
+msgstr "Monitoring stopped. Check the audio devices."
+
+msgid "A monitoração precisa de uma saída de áudio WASAPI para a transmissão."
+msgstr "Monitoring requires a WASAPI audio output for the broadcast."
+
+msgid "Ativar mo&nitoração"
+msgstr "Enable mo&nitoring"
+
+msgid "Aumentar volume da transmissão"
+msgstr "Raise broadcast volume"
+
+msgid "Copia o som da saída de áudio para um fone ou caixas em outro dispositivo."
+msgstr "Copies the audio output to headphones or speakers on another device."
+
+msgid "Diminuir volume da transmissão"
+msgstr "Lower broadcast volume"
+
+msgid "Dispositivo da mon&itoração"
+msgstr "Monitoring dev&ice"
+
+msgid "Escolha um dispositivo"
+msgstr "Choose a device"
+
+msgid "Escolha um dispositivo para a monitoração."
+msgstr "Choose a monitoring device."
+
+msgid "Há dispositivos de áudio com o mesmo nome. Renomeie-os ou escolha outra saída."
+msgstr "Some audio devices have the same name. Rename them or choose another output."
+
+msgid "Monitoração desativada. A saída de áudio voltou ao volume de {volume}%."
+msgstr "Monitoring disabled. The audio output is back at {volume}%."
+
+msgid "Monitoração {monitor}%. Transmissão {broadcast}%."
+msgstr "Monitoring {monitor}%. Broadcast {broadcast}%."
+
+msgid "Não foi possível capturar o áudio da saída de transmissão."
+msgstr "Could not capture audio from the broadcast output."
+
+msgid "Nível da saída principal enquanto a monitoração estiver ligada, de 0 a 100."
+msgstr "Level of the main output while monitoring is enabled, from 0 to 100."
+
+msgid "Nível do fone ou das caixas, de 0 a 100. As setas mudam este volume."
+msgstr "Headphone or speaker level, from 0 to 100, adjusted by the arrow keys."
+
+msgid "Opções de monitoração disponíveis."
+msgstr "Monitoring options are available."
+
+msgid "Opções de monitoração indisponíveis."
+msgstr "Monitoring options are unavailable."
+
+msgid "Saída de monitoração"
+msgstr "Monitoring output"
+
+msgid "Saída de monitoração indisponível. Confira a conexão do fone ou das caixas."
+msgstr "Monitoring output unavailable. Check the headphone or speaker connection."
+
+msgid "Saída de transmissão indisponível para a monitoração. Confira o dispositivo de áudio."
+msgstr "Broadcast output unavailable for monitoring. Check the audio device."
+
+msgid "Saída do fone ou das caixas, diferente da saída de transmissão."
+msgstr "Headphone or speaker output, separate from the broadcast output."
+
+msgid "Vol&ume da monitoração"
+msgstr "Monitoring v&olume"
+
+msgid "Volume da monitoração: {volume}%."
+msgstr "Monitoring volume: {volume}%."
+
+msgid "Volume da tr&ansmissão"
+msgstr "Bro&adcast volume"
+
+msgid "Volume da transmissão: {volume}%."
+msgstr "Broadcast volume: {volume}%."
+
+msgid "&Baixar e atualizar"
+msgstr "&Download and update"
+
+msgid "O tempo acabou esperando o KeyTune fechar."
+msgstr "Time ran out waiting for KeyTune to close."
+
+msgid "A versão anterior foi restaurada."
+msgstr "The previous version was restored."
+
+msgid "Aguardando o KeyTune fechar."
+msgstr "Waiting for KeyTune to close."
+
+msgid "Aguarde enquanto a atualização é aplicada."
+msgstr "Wait while the update is applied."
+
+msgid "Atualizando KeyTune"
+msgstr "Updating KeyTune"
+
+msgid "Atualização baixada. Fechando para atualizar..."
+msgstr "Update downloaded. Closing to update..."
+
+msgid "Atualização baixada. O player será fechado para trocar os arquivos e aberto de novo."
+msgstr "Update downloaded. The player will close to replace the files and then open again."
+
+msgid "Atualização concluída."
+msgstr "Update complete."
+
+msgid "Mantendo o portable.ini que já está na pasta."
+msgstr "Keeping the portable.ini that is already in the folder."
+
+msgid "Não foi possível aplicar a atualização portátil."
+msgstr "The portable update could not be applied."
+
+msgid "Não foi possível aplicar a atualização portátil. A versão anterior foi restaurada."
+msgstr "The portable update could not be applied. The previous version was restored."
+
+msgid "Não foi possível aplicar a atualização. Restaurando a versão anterior."
+msgstr "The update could not be applied. Restoring the previous version."
+
+msgid "Não foi possível concluir a atualização."
+msgstr "The update could not be completed."
+
+msgid "Não foi possível encontrar a pasta da versão portátil."
+msgstr "Could not find the portable version folder."
+
+msgid "Não foi possível esperar o KeyTune fechar."
+msgstr "Could not wait for KeyTune to close."
+
+msgid "Não foi possível gravar na pasta do KeyTune. A atualização portátil precisa de permissão de escrita nessa pasta."
+msgstr "Could not write to the KeyTune folder. The portable update needs permission to write in that folder."
+
+msgid "Não foi possível preparar a atualização portátil."
+msgstr "Could not prepare the portable update."
+
+msgid "O KeyTune será aberto em instantes."
+msgstr "KeyTune will open in a moment."
+
+msgid "Preparando a atualização portátil."
+msgstr "Preparing the portable update."
+
+msgid "Preparando os arquivos novos."
+msgstr "Preparing the new files."
+
+msgid "Não foi possível reabrir o KeyTune."
+msgstr "Could not open KeyTune again."
+
+msgid "O pacote da atualização não foi encontrado."
+msgstr "The update package could not be found."
+
+msgid "O pacote de atualização contém um caminho inválido."
+msgstr "The update package contains an invalid path."
+
+msgid "O pacote de atualização não contém o programa."
+msgstr "The update package does not contain the program."
+
+msgid "Progresso da atualização"
+msgstr "Update progress"
+
+msgid "A pasta do KeyTune não foi encontrada."
+msgstr "The KeyTune folder could not be found."
+
+msgid "Detalhes da atualização"
+msgstr "Update details"
+
+msgid "Aplicando a atualização."
+msgstr "Applying the update."
+
+msgid "Esta é a versão portátil. A atualização troca os arquivos desta pasta, mantém o portable.ini e a pasta data, e abre o KeyTune de novo. O instalador do Windows não é usado."
+msgstr "This is the portable version. The update replaces the files in this folder, keeps portable.ini and the data folder, and opens KeyTune again. The Windows installer is not used."
+
+msgid "No modo portátil, esta opção grava no Windows deste computador, não só na pasta do KeyTune. Deseja continuar?"
+msgstr "In portable mode, this option writes to the Windows of this computer, not only to the KeyTune folder. Do you want to continue?"
+
+msgid "O registro desta tentativa ficou em data/portable-update.log, ao lado do programa."
+msgstr "The record of this attempt is in data/portable-update.log, next to the program."
+
+msgid "Não foi possível encontrar o atualizador da versão portátil."
+msgstr "The portable updater could not be found."
+
+msgid "Atualização do KeyTune"
+msgstr "KeyTune update"
+
+msgid "A pasta de dados portátil {portable_path} está em modo somente leitura. Os dados ficarão neste computador, em {local_path}."
+msgstr "The portable data folder {portable_path} is read-only. Data will be stored on this computer in {local_path}."
+
+msgid "Monitoração retomada."
+msgstr "Monitoring resumed."
+
+msgid "Mídia fechada."
+msgstr "Media closed."
+
+msgid "Nenhuma mídia compatível foi recebida do Explorador."
+msgstr "No supported media was received from Explorer."
+
+msgid "Não foi possível restaurar todos os arquivos anteriores. Os arquivos de backup foram preservados em {path}."
+msgstr "Some previous files could not be restored. The backup files were kept in {path}."
+
+msgid "O pacote de atualização contém a pasta de dados do KeyTune."
+msgstr "The update package contains the KeyTune data folder."
+
+msgid "O pacote de atualização contém nomes de arquivo conflitantes."
+msgstr "The update package contains conflicting file names."
+
+msgid "O pacote de atualização está corrompido ou não pôde ser lido."
+msgstr "The update package is corrupt or could not be read."
+
+msgid "Versão portátil"
+msgstr "Portable version"
+
+#: src/player/manual/dialog.py
+msgid "&Conteúdo:"
+msgstr "C&ontents:"
+
+#: src/player/manual/dialog.py
+msgid "Conteúdo"
+msgstr "Contents"
+
+#: src/player/manual/dialog.py
+msgid "Abrir no &navegador"
+msgstr "Open in &browser"
+
+#: src/player/manual/dialog.py
+msgid "Abrindo o manual no navegador."
+msgstr "Opening the manual in the browser."
+
+#: src/player/manual/dialog.py
+msgid "Não foi possível abrir o manual no navegador."
+msgstr "Could not open the manual in the browser."
+
+msgid "A contribuição do plugin precisa de tipo, id e rótulo válidos."
+msgstr "A plugin contribution needs a valid type, id and label."
+
+msgid "A lista de plugins do catálogo é inválida."
+msgstr "The catalog's plugin list is invalid."
+
+msgid "A mensagem do plugin excede o limite de 4 MB."
+msgstr "The plugin message exceeds the 4 MB limit."
+
+msgid "A mensagem para o plugin excede o limite de 4 MB."
+msgstr "The message to the plugin exceeds the 4 MB limit."
+
+msgid "A mídia não contém uma faixa de áudio."
+msgstr "The media does not contain an audio track."
+
+msgid "A mídia não é local e nenhum resolvedor remoto está disponível."
+msgstr "The media is not local and no remote resolver is available."
+
+msgid "A versão deve seguir o versionamento semântico."
+msgstr "The version must follow semantic versioning."
+
+msgid "A versão do pacote não corresponde à entrada selecionada no catálogo."
+msgstr "The package version does not match the catalog entry you selected."
+
+msgid "As bibliotecas do AutoDJ foram instaladas, mas não puderam ser carregadas."
+msgstr "The AutoDJ libraries were installed, but they could not be loaded."
+
+msgid "As permissões solicitadas ainda não foram integralmente aprovadas."
+msgstr "The requested permissions have not been fully approved yet."
+
+msgid "Backspace"
+msgstr "Backspace"
+
+msgid "Campos obrigatórios ausentes: {fields}"
+msgstr "Missing required fields: {fields}"
+
+msgid "Carregando pasta como playlist: {title}."
+msgstr "Loading folder as playlist: {title}."
+
+msgid "Carregando playlist: {title}."
+msgstr "Loading playlist: {title}."
+
+msgid "Checksum SHA-256 inválido no catálogo."
+msgstr "Invalid SHA-256 checksum in the catalog."
+
+msgid "Conta do YouTube Music"
+msgstr "YouTube Music account"
+
+msgid "Contribuição duplicada: {kind}:{identifier}"
+msgstr "Duplicate contribution: {kind}:{identifier}"
+
+msgid "Criar nova playlist..."
+msgstr "Create new playlist..."
+
+msgid "Curtida"
+msgstr "Liked"
+
+msgid "Downloads de plugins devem usar HTTPS."
+msgstr "Plugin downloads must use HTTPS."
+
+msgid "Downloads do marketplace devem usar HTTPS."
+msgstr "Marketplace downloads must use HTTPS."
+
+msgid "Entrada incompleta no catálogo."
+msgstr "Incomplete catalog entry."
+
+msgid "Esc"
+msgstr "Esc"
+
+msgid "Falha inesperada ao carregar a pasta: {error}."
+msgstr "Unexpected failure while loading the folder: {error}."
+
+msgid "Falha inesperada ao carregar a playlist: {error}."
+msgstr "Unexpected failure while loading the playlist: {error}."
+
+msgid "Id de plugin inválido."
+msgstr "Invalid plugin id."
+
+msgid "Identificador ou versão inválida no catálogo."
+msgstr "Invalid identifier or version in the catalog."
+
+msgid "Nenhuma próxima faixa pôde ser analisada."
+msgstr "No next track could be analyzed."
+
+msgid "Não foi possível acessar o marketplace: {error}"
+msgstr "Could not reach the marketplace: {error}"
+
+msgid "Não foi possível baixar a faixa para análise."
+msgstr "Could not download the track for analysis."
+
+msgid "Não foi possível importar {module}."
+msgstr "Could not import {module}."
+
+msgid "Não foi possível restaurar o executável anterior."
+msgstr "Could not restore the previous executable."
+
+msgid "O SHA-256 do pacote não corresponde ao catálogo."
+msgstr "The package SHA-256 does not match the catalog."
+
+msgid "O YouTube.js não retornou uma URL direta de áudio."
+msgstr "YouTube.js did not return a direct audio URL."
+
+msgid "O campo verified deve ser verdadeiro ou falso."
+msgstr "The verified field must be true or false."
+
+msgid "O catálogo contém ids duplicados."
+msgstr "The catalog contains duplicate ids."
+
+msgid "O catálogo excede o limite de tamanho."
+msgstr "The catalog exceeds the size limit."
+
+msgid "O catálogo foi redirecionado para uma conexão não segura."
+msgstr "The catalog was redirected to an insecure connection."
+
+msgid "O catálogo não contém JSON válido."
+msgstr "The catalog does not contain valid JSON."
+
+msgid "O download excede o limite de 50 MB."
+msgstr "The download exceeds the 50 MB limit."
+
+msgid "O download foi redirecionado para uma conexão não segura."
+msgstr "The download was redirected to an insecure connection."
+
+msgid "O entrypoint declarado não existe no pacote."
+msgstr "The declared entrypoint does not exist in the package."
+
+msgid "O entrypoint deve usar o formato modulo:objeto."
+msgstr "The entrypoint must use the module:object format."
+
+msgid "O id deve ter de 3 a 64 caracteres minúsculos seguros."
+msgstr "The id must be 3 to 64 safe lowercase characters."
+
+msgid "O id do pacote não corresponde à entrada selecionada no catálogo."
+msgstr "The package id does not match the catalog entry you selected."
+
+msgid "O manifesto deve ser um objeto JSON."
+msgstr "The manifest must be a JSON object."
+
+msgid "O pacote contém caminhos inseguros."
+msgstr "The package contains unsafe paths."
+
+msgid "O pacote excede o limite de 50 MB."
+msgstr "The package exceeds the 50 MB limit."
+
+msgid "O pacote excede os limites de segurança."
+msgstr "The package exceeds the safety limits."
+
+msgid "O pacote não contém {name} na raiz."
+msgstr "The package does not contain {name} at the root."
+
+msgid "O plugin não concluiu a inicialização em {timeout} segundos."
+msgstr "The plugin did not finish starting within {timeout} seconds."
+
+msgid "O processo do plugin não está disponível."
+msgstr "The plugin process is not available."
+
+msgid "O processo do plugin terminou antes de concluir a inicialização."
+msgstr "The plugin process ended before it finished starting."
+
+msgid "O processo do plugin terminou com código {code}."
+msgstr "The plugin process ended with code {code}."
+
+msgid "O resolvedor experimental YouTube.js não está instalado."
+msgstr "The experimental YouTube.js resolver is not installed."
+
+msgid "Pacote de plugin inválido: {error}"
+msgstr "Invalid plugin package: {error}"
+
+msgid "Page Down"
+msgstr "Page Down"
+
+msgid "Page Up"
+msgstr "Page Up"
+
+msgid "Permissão desconhecida: {error}"
+msgstr "Unknown permission: {error}"
+
+msgid "Playlists do YouTube Music"
+msgstr "YouTube Music playlists"
+
+msgid "Plugin requer API {api_version}; o KeyTune oferece {host_version}."
+msgstr "Plugin requires API {api_version}; KeyTune provides {host_version}."
+
+msgid "Plugin requer KeyTune {required_version} ou posterior; esta versão é {app_version}."
+msgstr "Plugin requires KeyTune {required_version} or later; this version is {app_version}."
+
+msgid "Versão de catálogo incompatível."
+msgstr "Incompatible catalog version."
+
+msgid "[..] Pasta acima"
+msgstr "[..] Parent folder"
+
+msgid "api_version deve usar o formato principal.secundária."
+msgstr "api_version must use the major.minor format."
+
+msgid "isolation deve ser process ou in_process."
+msgstr "isolation must be process or in_process."
+
+msgid "minimum_keytune_version deve seguir o versionamento semântico."
+msgstr "minimum_keytune_version must follow semantic versioning."
+
+msgid "mix personalizada"
+msgstr "custom mix"
+
+msgid "{label} (aba atual)"
+msgstr "{label} (current tab)"
+
+msgid "{label} (playlist ativa)"
+msgstr "{label} (active playlist)"
+
+#: src/player/youtube_music/playlists.py
+msgid "{count} faixa"
+msgid_plural "{count} faixas"
+msgstr[0] "{count} track"
+msgstr[1] "{count} tracks"
+
+msgid "Abre links do YouTube e do YouTube Music no {app}."
+msgstr "Opens YouTube and YouTube Music links in {app}."
+
+msgid "Abre os Aplicativos padrão do Windows para escolher o KeyTune em HTTP e HTTPS."
+msgstr "Opens Windows Default apps to choose KeyTune for HTTP and HTTPS."
+
+msgid "Definir o KeyT&une como navegador padrão..."
+msgstr "&Make KeyTune the default browser..."
+
+msgid "Link da web — {app}"
+msgstr "Web link — {app}"
+
+msgid "Links do YouTube"
+msgstr "YouTube links"
+
+msgid "Nas configurações que vão abrir, escolha o KeyTune para HTTP e HTTPS. Abrir agora?"
+msgstr "In the settings that open, choose KeyTune for HTTP and HTTPS. Open them now?"
+
+msgid "Navegador para os ou&tros links"
+msgstr "Browser for o&ther links"
+
+msgid "Não foi possível registrar o KeyTune como navegador."
+msgstr "Could not register KeyTune as a browser."
+
+msgid "Não foi possível remover o registro de navegador."
+msgstr "Could not remove the browser registration."
+
+msgid "O KeyTune saiu da lista de navegadores."
+msgstr "KeyTune is no longer in the browser list."
+
+msgid "O KeyTune só abre links do YouTube e não encontrou um navegador para este link. Escolha outro navegador padrão nas configurações do Windows ou em Preferências do KeyTune."
+msgstr "KeyTune only opens YouTube links and found no browser for this link. Choose another default browser in Windows settings or in KeyTune Preferences."
+
+msgid "O Windows não deixa um programa abrir só os links de um site. Por isso o KeyTune entra como navegador: ele toca os links do YouTube e do YouTube Music e manda todos os outros para o navegador escolhido acima."
+msgstr "Windows does not let a program open only the links of one site. So KeyTune registers as a browser: it plays YouTube and YouTube Music links and sends every other link to the browser chosen above."
+
+msgid "O navegador padrão anterior"
+msgstr "The previous default browser"
+
+msgid "Parar de rece&ber links"
+msgstr "Stop recei&ving links"
+
+msgid "Recebe os links que não são do YouTube quando o KeyTune é o navegador padrão."
+msgstr "Gets the links that are not from YouTube when KeyTune is the default browser."
+
+msgid "Se ele era o navegador padrão, escolha outro em Configurações > Aplicativos > Aplicativos padrão."
+msgstr "If it was the default browser, choose another in Settings > Apps > Default apps."
+
+msgid "Tira o KeyTune da lista de navegadores do Windows."
+msgstr "Removes KeyTune from the Windows browser list."
 
 msgid "Tocar apenas esta faixa"
 msgstr "Play this track only"

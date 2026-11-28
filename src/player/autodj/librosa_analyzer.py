@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from array import array
+from itertools import chain
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -18,7 +21,19 @@ MINOR_PROFILE = (6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.3
 PHRASE_BEATS = 16
 MINIMUM_ENTRY_MS = 4_000
 _ONSET_HOP_LENGTH = 512
+_FEATURE_BLOCK_SECONDS = 30
+_KEY_WINDOW_SECONDS = 10
+_KEY_WINDOW_COUNT = 3
+_TEMPO_HINT_SECONDS = 30
 _WORKER_TIMEOUT_SECONDS = 15 * 60
+WORKER_ENVIRONMENT = {
+    "NUMBA_THREADING_LAYER": "workqueue",
+    "NUMBA_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+}
 
 
 def _bounded_worker_output(output_file, *, maximum_bytes=4096) -> str:
@@ -49,8 +64,9 @@ class LibrosaAnalyzer:
     """
 
     supports_analysis_deadline = True
-    # Older remote results may have been computed from silently truncated audio.
-    analysis_version = 13
+    # Raise when a cached feature changes meaning. 14 drops results whose key
+    # or vocal probability came from a single mix-point window.
+    analysis_version = 14
 
     def __init__(self, *, sample_rate=22050, maximum_duration_seconds=15 * 60):
         self.sample_rate = sample_rate
@@ -84,7 +100,12 @@ class LibrosaAnalyzer:
             process.wait()
 
     def _analyze_with_worker(self, worker_command, path, *, cancel_event=None, deadline=None):
-        # Prioridade baixa: a análise não deve competir com a reprodução.
+        if self._cancelled(cancel_event, deadline):
+            raise AutoDJAnalysisCancelled(
+                _("A análise do AutoDJ foi cancelada porque o resultado não é mais necessário.")
+            )
+        # Set native thread limits before the child can import scientific libraries.
+        environment = {**os.environ, **WORKER_ENVIRONMENT}
         creation_flags = (
             subprocess.CREATE_NO_WINDOW | subprocess.BELOW_NORMAL_PRIORITY_CLASS
             if os.name == "nt"
@@ -112,6 +133,7 @@ class LibrosaAnalyzer:
                             stderr=subprocess.STDOUT,
                             timeout=_WORKER_TIMEOUT_SECONDS,
                             creationflags=creation_flags,
+                            env=environment,
                         )
                     except subprocess.TimeoutExpired as exc:
                         worker_output = _bounded_worker_output(worker_output_file)
@@ -125,6 +147,7 @@ class LibrosaAnalyzer:
                         stdout=worker_output_file,
                         stderr=subprocess.STDOUT,
                         creationflags=creation_flags,
+                        env=environment,
                     )
                     worker_deadline = time.monotonic() + _WORKER_TIMEOUT_SECONDS
                     try:
@@ -188,7 +211,7 @@ class LibrosaAnalyzer:
         samples, sample_rate, analysis_truncated = self._load_audio(path, librosa, np)
         if samples.size == 0:
             return AudioAnalysis(0, (), 0, 0)
-        onset_envelope = librosa.onset.onset_strength(y=samples, sr=sample_rate)
+        onset_envelope, rms, chroma = self._rhythm_features(samples, sample_rate, librosa, np)
         tempo_hint = self._tempo_hint(onset_envelope, sample_rate, librosa, np)
         tempo_value, beat_frames, beat_confidence = self._estimate_beats_from_onsets(
             onset_envelope,
@@ -207,15 +230,11 @@ class LibrosaAnalyzer:
             beat_confidence,
             np,
         )
-        rms = librosa.feature.rms(y=samples)
         if rms.size:
             mean_rms_db = 20.0 * np.log10(max(float(np.mean(rms)), 1e-8))
             energy = float(np.clip((mean_rms_db + 35.0) / 30.0, 0.0, 1.0))
         else:
             energy = 0.0
-        harmonic = librosa.effects.harmonic(y=samples, margin=4.0)
-        chroma = librosa.feature.chroma_cqt(y=harmonic, sr=sample_rate)
-        musical_key, musical_mode, key_confidence = self._estimate_key(chroma, np)
         entry_ms, exit_ms = self._mix_points(beats_ms, beat_frames, rms, np)
         downbeat_offset = self._downbeat_offset(beat_frames, onset_envelope, rms, np)
         phrase_boundaries_ms = tuple(
@@ -237,6 +256,9 @@ class LibrosaAnalyzer:
             beats_ms,
         )
         exit_ms = self._align_mix_point(exit_ms, section_boundaries_ms or phrase_boundaries_ms, after=False)
+        musical_key, musical_mode, key_confidence = self._estimate_track_key(
+            samples, sample_rate, librosa, np
+        )
         entry_energy = self._energy_around(entry_ms, beats_ms, beat_frames, rms, np, forward=True)
         exit_energy = self._energy_around(exit_ms, beats_ms, beat_frames, rms, np, forward=False)
         entry_loudness_db = self._loudness_around(
@@ -246,10 +268,10 @@ class LibrosaAnalyzer:
             exit_ms, samples, sample_rate, tempo_value, np, forward=False
         )
         entry_vocal_probability = self._vocal_probability_around(
-            entry_ms, samples, harmonic, sample_rate, tempo_value, librosa, np, forward=True
+            entry_ms, samples, sample_rate, tempo_value, librosa, np, forward=True
         )
         exit_vocal_probability = self._vocal_probability_around(
-            exit_ms, samples, harmonic, sample_rate, tempo_value, librosa, np, forward=False
+            exit_ms, samples, sample_rate, tempo_value, librosa, np, forward=False
         )
         return AudioAnalysis(
             bpm=round(tempo_value, 2),
@@ -275,12 +297,36 @@ class LibrosaAnalyzer:
         )
 
     @staticmethod
+    def _rhythm_features(samples, sample_rate, librosa, np):
+        """Keep beats across the track for manual skips, with bounded spectral buffers."""
+        hop = _ONSET_HOP_LENGTH
+        frames_per_block = max(1, _FEATURE_BLOCK_SECONDS * sample_rate // hop)
+        frame_count = 1 + len(samples) // hop
+        # Retain neighbors for the centered FFT and onset lag across block boundaries.
+        context = 8
+        onsets, levels, chromas = [], [], []
+        for start in range(0, frame_count, frames_per_block):
+            stop = min(frame_count, start + frames_per_block)
+            block_start = max(0, start - context)
+            block = samples[block_start * hop:(stop + context) * hop]
+            center = slice(start - block_start, stop - block_start)
+            power = np.abs(librosa.stft(block, hop_length=hop)) ** 2
+            mel = librosa.feature.melspectrogram(S=power, sr=sample_rate)
+            onset = librosa.onset.onset_strength(S=librosa.power_to_db(mel), sr=sample_rate, hop_length=hop)
+            onsets.append(onset[center].copy())
+            levels.append(librosa.feature.rms(y=block, hop_length=hop)[..., center].copy())
+            chromas.append(librosa.feature.chroma_stft(S=power, sr=sample_rate, tuning=0.0)[..., center].copy())
+        return np.concatenate(onsets), np.concatenate(levels, axis=-1), np.concatenate(chromas, axis=-1)
+
+    @staticmethod
     def _tempo_hint(onset_envelope, sample_rate, librosa, np):
-        """Estimate a prior-weighted global tempo without invoking the beat tracker."""
+        """Sample the middle of the track for the hint's memory-intensive tempogram."""
+        frame_limit = _TEMPO_HINT_SECONDS * sample_rate // _ONSET_HOP_LENGTH
+        start = max(0, (len(onset_envelope) - frame_limit) // 2)
         try:
             values = np.asarray(
                 librosa.feature.tempo(
-                    onset_envelope=onset_envelope,
+                    onset_envelope=onset_envelope[start:start + frame_limit],
                     sr=sample_rate,
                     hop_length=_ONSET_HOP_LENGTH,
                     max_tempo=200.0,
@@ -459,6 +505,46 @@ class LibrosaAnalyzer:
         return KEY_NAMES[root], mode, confidence
 
     @staticmethod
+    def _key_window_starts(sample_count, sample_rate):
+        """Start, middle and end of the track, without overlapping identical slices."""
+        window_samples = _KEY_WINDOW_SECONDS * sample_rate
+        if sample_count <= 0 or window_samples <= 0:
+            return ()
+        if sample_count <= window_samples or _KEY_WINDOW_COUNT <= 1:
+            return (0,)
+        last = sample_count - window_samples
+        starts = [
+            (last * index) // (_KEY_WINDOW_COUNT - 1)
+            for index in range(_KEY_WINDOW_COUNT)
+        ]
+        return tuple(dict.fromkeys(int(start) for start in starts))
+
+    @staticmethod
+    def _estimate_track_key(samples, sample_rate, librosa, np):
+        """Estimate the key from a few windows spread across the recording.
+
+        Harmonic CQT on the whole file at once is unnecessary. Three 10 s
+        windows, at the start, middle and end, still represent the track.
+        """
+        window_samples = _KEY_WINDOW_SECONDS * sample_rate
+        chromas = []
+        for start in LibrosaAnalyzer._key_window_starts(len(samples), sample_rate):
+            window = samples[start:start + window_samples]
+            if len(window) == 0:
+                continue
+            harmonic = librosa.effects.harmonic(y=window, margin=4.0)
+            if harmonic is None or len(harmonic) == 0:
+                continue
+            chroma = librosa.feature.chroma_cqt(y=harmonic, sr=sample_rate)
+            if chroma is None or not getattr(chroma, "size", 0):
+                continue
+            chromas.append(chroma)
+        if not chromas:
+            return None, None, 0.0
+        combined = chromas[0] if len(chromas) == 1 else np.concatenate(chromas, axis=1)
+        return LibrosaAnalyzer._estimate_key(combined, np)
+
+    @staticmethod
     def _downbeat_offset(beat_frames, onset_envelope, rms, np):
         if len(beat_frames) < 8:
             return 0
@@ -558,7 +644,7 @@ class LibrosaAnalyzer:
         return round(float(np.clip((mean_db + 35.0) / 30.0, 0.0, 1.0)), 4)
 
     @staticmethod
-    def _vocal_probability_around(position_ms, samples, harmonic, sample_rate, bpm, librosa, np, *, forward):
+    def _vocal_probability_around(position_ms, samples, sample_rate, bpm, librosa, np, *, forward):
         if position_ms is None or not len(samples):
             return 0.0
         window_seconds = max(2.0, min(8.0, 8.0 * 60.0 / max(float(bpm or 0), 60.0)))
@@ -567,13 +653,17 @@ class LibrosaAnalyzer:
         start = anchor if forward else max(0, anchor - window_samples)
         end = min(len(samples), anchor + window_samples if forward else anchor)
         mixture = np.asarray(samples[start:end])
-        harmonic_window = np.asarray(harmonic[start:end])
-        if not mixture.size or not harmonic_window.size:
+        if not mixture.size:
             return 0.0
         mixture_rms = float(np.sqrt(np.mean(mixture * mixture)))
-        harmonic_rms = float(np.sqrt(np.mean(harmonic_window * harmonic_window)))
         if mixture_rms <= 1e-8:
             return 0.0
+        # A little context avoids separating vocals at the edge of the FFT window.
+        clip_start = max(0, start - sample_rate)
+        clip_end = min(len(samples), end + sample_rate)
+        harmonic = librosa.effects.harmonic(y=samples[clip_start:clip_end], margin=4.0)
+        harmonic_window = harmonic[start - clip_start:end - clip_start]
+        harmonic_rms = float(np.sqrt(np.mean(harmonic_window * harmonic_window)))
         harmonic_ratio = min(1.0, harmonic_rms / mixture_rms)
         spectrum = np.abs(librosa.stft(harmonic_window, n_fft=2048, hop_length=512))
         if not spectrum.size:
@@ -648,43 +738,72 @@ class LibrosaAnalyzer:
 
     def _load_audio(self, path, librosa, np):
         """Prefer bundled FFmpeg codecs from PyAV, then fall back to librosa."""
+        maximum_samples = self.sample_rate * self.maximum_duration_seconds
         try:
             import av
 
-            maximum_samples = self.sample_rate * self.maximum_duration_seconds
-            chunks = []
-            sample_count = 0
+            samples = array("f")
             resampler = av.audio.resampler.AudioResampler(
                 format="fltp", layout="mono", rate=self.sample_rate
             )
             with av.open(str(path)) as container:
                 audio_stream = next((stream for stream in container.streams if stream.type == "audio"), None)
                 if audio_stream is None:
-                    raise ValueError("A mídia não contém uma faixa de áudio.")
-                for frame in container.decode(audio_stream):
+                    raise ValueError(_("A mídia não contém uma faixa de áudio."))
+                audio_stream.codec_context.thread_count = 1
+                for frame in chain(container.decode(audio_stream), (None,)):
                     for converted in resampler.resample(frame):
                         values = converted.to_ndarray().reshape(-1).astype("float32", copy=False)
-                        remaining = maximum_samples - sample_count
-                        if remaining <= 0:
-                            break
-                        values = values[:remaining]
-                        chunks.append(values)
-                        sample_count += values.size
-                    if sample_count >= maximum_samples:
+                        remaining = maximum_samples - len(samples)
+                        samples.frombytes(values[:remaining].tobytes())
+                    if len(samples) >= maximum_samples:
                         break
-            if chunks:
+            if samples:
                 return (
-                    np.concatenate(chunks),
+                    np.frombuffer(samples, dtype=np.float32),
                     self.sample_rate,
-                    sample_count >= maximum_samples,
+                    len(samples) >= maximum_samples,
                 )
         except (ImportError, OSError, RuntimeError):
             pass
         except Exception as exc:
             if not type(exc).__module__.startswith("av."):
                 raise
-        samples, sample_rate = librosa.load(
-            str(path), sr=self.sample_rate, mono=True, duration=self.maximum_duration_seconds
-        )
-        maximum_samples = self.sample_rate * self.maximum_duration_seconds
-        return samples, sample_rate, len(samples) >= maximum_samples
+
+        # librosa decodes at the source rate and channel count before resampling.
+        # Limit that temporary buffer even when the primary decoder fails.
+        # A block a few samples short of the request is a resampling remainder,
+        # not the end of the file: advance by what was stored and stop only on
+        # an empty read or when the duration is reached.
+        def as_librosa_time(seconds):
+            whole = round(float(seconds))
+            if math.isclose(float(seconds), whole, abs_tol=1e-6):
+                return int(whole)
+            return float(seconds)
+
+        samples = array("f")
+        duration = min(self.maximum_duration_seconds, math.ceil(librosa.get_duration(path=str(path))))
+        offset = 0.0
+        while offset < duration and len(samples) < maximum_samples:
+            block_seconds = min(_FEATURE_BLOCK_SECONDS, duration - offset)
+            requested_samples = int(round(block_seconds * self.sample_rate))
+            if requested_samples <= 0:
+                break
+            block, _ = librosa.load(
+                str(path),
+                sr=self.sample_rate,
+                mono=True,
+                offset=as_librosa_time(offset),
+                duration=as_librosa_time(requested_samples / self.sample_rate),
+            )
+            if len(block) == 0:
+                break
+            stored = block[:requested_samples].astype("float32", copy=False)
+            if len(stored) == 0:
+                break
+            samples.frombytes(stored.tobytes())
+            consumed = len(stored) / self.sample_rate
+            if consumed <= 0:
+                break
+            offset += consumed
+        return np.frombuffer(samples, dtype=np.float32), self.sample_rate, len(samples) >= maximum_samples

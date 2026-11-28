@@ -140,5 +140,44 @@ class YouTubeMusicYtDlpRuntimeTests(unittest.TestCase):
                 )
 
 
+class YtDlpForcedUpdateTests(unittest.TestCase):
+    def _run_forced_update(self, installed_version, release_version):
+        release = yt_dlp_runtime.YtDlpReleaseInfo(
+            version=release_version,
+            executable_url="https://example.invalid/yt-dlp.exe",
+            checksum_url="https://example.invalid/SHA2-256SUMS",
+        )
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            target_dir = pathlib.Path(temporary_dir)
+            target_path = target_dir / "yt-dlp.exe"
+            target_path.write_bytes(b"old")
+            with patch.object(yt_dlp_runtime, "get_managed_yt_dlp_dir", return_value=target_dir), patch.object(
+                yt_dlp_runtime, "get_managed_yt_dlp_executable_path", return_value=target_path
+            ), patch.object(yt_dlp_runtime, "_fetch_latest_release", return_value=release), patch.object(
+                yt_dlp_runtime, "get_yt_dlp_version", return_value=installed_version
+            ), patch.object(
+                yt_dlp_runtime, "_download_binary_file", side_effect=RuntimeError("download")
+            ) as download:
+                try:
+                    result = yt_dlp_runtime.install_or_update_yt_dlp_executable(force=True)
+                except RuntimeError:
+                    result = None
+                return result, download.called
+
+    def test_forced_update_skips_download_when_already_latest(self):
+        result, downloaded = self._run_forced_update("2026.10.10.232412", "2026.10.10.232412")
+        self.assertEqual(result, "2026.10.10.232412")
+        self.assertFalse(downloaded)
+
+    def test_forced_update_downloads_when_release_is_newer(self):
+        _result, downloaded = self._run_forced_update("2026.10.10", "2026.11.20")
+        self.assertTrue(downloaded)
+
+    def test_version_comparison_ignores_channel_prefix(self):
+        self.assertTrue(yt_dlp_runtime._same_yt_dlp_version("2026.10.10", "v2026.10.10"))
+        self.assertTrue(yt_dlp_runtime._same_yt_dlp_version("2026.10.10.1", "nightly@2026.10.10.1"))
+        self.assertFalse(yt_dlp_runtime._same_yt_dlp_version("", "2026.10.10"))
+
+
 if __name__ == "__main__":
     unittest.main()

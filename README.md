@@ -1,86 +1,44 @@
 # KeyTune
 
-**A keyboard-first music and video player for Windows, built for screen readers.**
-Local files, YouTube and YouTube Music, online radio, downloads, lyrics and an AutoDJ, all in one window you can drive without ever touching the mouse.
+A music and video player for Windows, made for people who use a keyboard and a screen reader. It plays local files, YouTube and YouTube Music, online radio and podcasts, downloads and converts media, shows lyrics and has an AutoDJ.
 
 [![Latest release](https://img.shields.io/github/v/release/Ed-Fe/KeyTune?label=latest%20release)](https://github.com/Ed-Fe/KeyTune/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/Ed-Fe/KeyTune/total?label=downloads)](https://github.com/Ed-Fe/KeyTune/releases)
 [![License: MIT](https://img.shields.io/github/license/Ed-Fe/KeyTune)](LICENSE)
-![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D4)
 
-**[Download KeyTune for Windows](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Setup.exe)** · [User manual](docs/manual.en.md) · [What's new](docs/changelog/) · [Leia em português](README.pt-BR.md)
+**[Download KeyTune](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Setup.exe)** · [Manual](docs/manual.en.md) · [What's new](docs/changelog/) · [Português](README.pt-BR.md)
 
-<!-- Screenshot: add docs/images/main-window.png (main window with a playlist and the time panel) and uncomment the line below.
-![KeyTune main window with a playlist open and the time panel at the bottom](docs/images/main-window.png)
--->
+## What it does
 
-## Why KeyTune
+- Plays audio and video with speed, pitch and output device control. Playlists live in tabs, with a queue, a folder browser and `.m3u` support.
+- Library with global search (`Ctrl+G`), favorites, ratings, history and smart playlists. Podcasts and audiobooks pick up where you left off.
+- KeyTube (`Ctrl+Shift+Y`): YouTube and YouTube Music in one list, with search, your playlists, subscriptions, comments, live chat, notifications, chapters and transcripts. SponsorBlock is available, off by default.
+- Online radio from [Radio Browser](https://www.radio-browser.info/), by country, genre and language (`Ctrl+Shift+N`).
+- Downloads songs, videos and playlists with [yt-dlp](https://github.com/yt-dlp/yt-dlp) (`Ctrl+Shift+B`) and converts between formats with FFmpeg (`Ctrl+Shift+K`).
+- Lyrics for the current track (`Ctrl+Alt+L`), an equalizer, a sleep timer and an AutoDJ that mixes on the beat.
+- Every shortcut can be changed. There are global hotkeys, a tray icon and plugins (see the [plugin guide](docs/plugins.en.md)).
+- Interface in English, Portuguese and Spanish.
 
-- **Every feature works from the keyboard.** Playback, playlists, search, YouTube, radio, downloads and settings all have shortcuts, and you can change any of them.
-- **Made for screen readers.** Built and tested with NVDA. Every field, button, list and group has a proper name, focus never jumps to the video area, and KeyTune speaks what changes (track, volume, time, status) through your screen reader. You decide which notices speak.
-- **One player instead of five.** Your music folder, YouTube, YouTube Music, radio stations from around the world and podcasts live side by side, in tabs.
-- **Picks up where you left off.** Tabs, the current track, the position and the volume come back the next time you open it.
+It is built and tested with NVDA. KeyTune speaks what changes (track, volume, time), and you choose which announcements you want. When you open it again, your tabs, track and position come back as they were.
 
-## Features
+## Installing
 
-### Playback and library
+Download [KeyTune-Setup.exe](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Setup.exe) and run it. It runs on 64-bit Windows. If you'd rather not install, use [KeyTune-Portable.zip](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Portable.zip): extract it and open `KeyTune.exe` (see [portable version](docs/manual.en.md#portable-version)).
 
-- Audio and video playback powered by [MPV](https://mpv.io/), with speed and pitch control and audio output selection.
-- Playlists in tabs, `.m3u` and `.m3u8` support, a playback queue and a folder explorer next to the tabs (`Ctrl+E`).
-- Smart library: global search across your indexed music (`Ctrl+G`), favorites, star ratings, playback history and smart playlists built from rules.
-- Resume per file for podcasts, audiobooks and long videos, with a "continue listening" list.
-- Lyrics panel that finds the lyrics of the current track on its own (`Ctrl+Alt+L`).
-- Equalizer with built-in and custom presets, sleep timer and full-screen video (`Alt+Enter`).
-- A quick player: press `Enter` on a song in File Explorer and it plays right away in a small window.
+YouTube and the AutoDJ are installed separately, from **Preferences > Additional resources**.
 
-### KeyTube: YouTube and YouTube Music
+## Getting started
 
-- YouTube and YouTube Music in one accessible list (`Ctrl+Shift+Y`): search, your playlists and mixes, likes, history, subscriptions, channels and trending.
-- Comments, live chat, notifications, chapters and transcripts, all readable and writable from the keyboard.
-- Live broadcasts, Shorts, a radio from the current track (`Ctrl+R`) and resume that stays in sync with your phone and TV.
-- [SponsorBlock](https://sponsor.ajay.app/) support to skip sponsor segments and the non-music parts of music videos (off by default).
+- `Ctrl+O` opens files; `Ctrl+V` plays what you copied (a file, folder or link).
+- `Space` plays and pauses, `Ctrl+PageUp` and `Ctrl+PageDown` change tracks, the up and down arrows change the volume.
+- `T`, `V` and `S` speak the time, volume and status.
+- `F1` lists the shortcuts and `Ctrl+,` opens preferences.
 
-### Radio, downloads and conversion
+Everything else is in the [manual](docs/manual.en.md), which also opens from the **Help** menu. If something won't play, **Help > Diagnostics** shows what's wrong.
 
-- Online radio from the open [Radio Browser](https://www.radio-browser.info/) directory, with favorites and browsing by country, genre and language (`Ctrl+Shift+N`).
-- Download songs, videos and whole playlists from YouTube and YouTube Music with [yt-dlp](https://github.com/yt-dlp/yt-dlp), in the original quality, MP3 or FLAC (`Ctrl+Shift+B`).
-- Convert audio and video between formats with FFmpeg (`Ctrl+Shift+K`), one file or many at once.
+## Running from source
 
-### AutoDJ
-
-- An optional AutoDJ that mixes your playlist like a DJ: it analyzes tempo, beats, phrases, key and loudness, and lines up each transition on the beat.
-
-### Make it yours
-
-- Customize every shortcut, with conflict checks (**Settings > Customize keyboard**).
-- Global shortcuts that work while KeyTune is minimized, a system tray icon and Windows media controls.
-- Alert sounds for events, which you can turn off or replace with your own.
-- Plugins with explicit permissions, a plugin manager and a community marketplace. See the [plugin guide](docs/plugins.en.md).
-- Interface in Portuguese, English and Spanish.
-
-## Installation
-
-1. Download **[KeyTune-Setup.exe](https://github.com/Ed-Fe/KeyTune/releases/latest/download/KeyTune-Setup.exe)** from the [latest release](https://github.com/Ed-Fe/KeyTune/releases/latest).
-2. Run it. You can install for your user only, without administrator rights, or for every user of the computer.
-3. On the additional tasks page you can create a desktop shortcut and associate audio, video and playlist formats with KeyTune. All of these are optional.
-
-KeyTune runs on 64-bit Windows. The installer already includes the MPV runtime, so it plays right away. The YouTube integration and the AutoDJ are optional downloads: KeyTune lists what it will install and asks before downloading anything (**Settings > Preferences > Additional resources**).
-
-KeyTune updates itself. When a new version comes out, it shows what changed, in your language, and asks before downloading and installing it.
-
-## First steps
-
-- `Ctrl+O` opens files, and `Ctrl+V` plays a file, a folder or a link you copied.
-- `Space` plays or pauses, `Ctrl+PageUp` and `Ctrl+PageDown` change tracks, and the up and down arrows change the volume.
-- `T`, `V` and `S` say the time, the volume and the status.
-- `F1` opens the quick shortcuts help at any time.
-- `Ctrl+,` opens the preferences.
-
-The full list is in the [user manual](docs/manual.en.md), which you can also open inside KeyTune from the **Help** menu. If something doesn't play, **Help > Diagnostics** tells you what is wrong and what to do.
-
-## Building from source
-
-You need Windows, [uv](https://docs.astral.sh/uv/) and Git. uv installs Python 3.14 for you.
+You need Windows, [uv](https://docs.astral.sh/uv/) and Git.
 
 ```powershell
 git clone https://github.com/Ed-Fe/KeyTune.git
@@ -90,29 +48,23 @@ uv run python scripts/download_mpv_runtime.py
 uv run keytune
 ```
 
-- `uv sync` creates `.venv` with the exact versions from `uv.lock`, including the optional YouTube and AutoDJ dependencies.
-- `scripts/download_mpv_runtime.py` downloads the latest libmpv build into `./mpv/` and needs 7-Zip to unpack it. If you already have libmpv, point `MPV_HOME` or `MPV_DLL_DIR` to it instead.
-- `iniciar_player.bat` is a shortcut that runs `uv run keytune` for you.
-
-Run the tests with `python -m unittest discover -s tests`. The Windows release (app, MPV runtime and Inno Setup installer) is built by `.github/workflows/release-windows.yml`, or locally with `scripts/build_windows_release.ps1`.
+The MPV script uses 7-Zip to extract. Tests: `python -m unittest discover -s tests`. The Windows build comes from `scripts/build_windows_release.ps1`.
 
 ## Contributing
 
-Bug reports, ideas, translations and code are all welcome.
-
-- Found a bug? [Open an issue](https://github.com/Ed-Fe/KeyTune/issues/new/choose). The report from **Help > Diagnostics** helps a lot.
-- Have an idea or a question? Start a [discussion](https://github.com/Ed-Fe/KeyTune/discussions).
-- Want to write code? Read [CONTRIBUTING.md](CONTRIBUTING.md) and look for issues labeled [good first issue](https://github.com/Ed-Fe/KeyTune/labels/good%20first%20issue).
-- Want KeyTune in your language? See the [translation guide](docs/translations.md).
+- Bugs: [open an issue](https://github.com/Ed-Fe/KeyTune/issues/new/choose) and, if you can, attach the **Help > Diagnostics** report.
+- Ideas and questions: [discussions](https://github.com/Ed-Fe/KeyTune/discussions).
+- Code: read [CONTRIBUTING.md](CONTRIBUTING.md).
+- Translations: see the [translation guide](docs/translations.md).
 
 ## Credits
 
-KeyTune is created and maintained by [Eduardo Ferreira](https://github.com/Ed-Fe), with code contributions from [reffehcsoibaf](https://github.com/reffehcsoibaf) and [paulosantesso1](https://github.com/paulosantesso1). See everyone on the [contributors page](https://github.com/Ed-Fe/KeyTune/graphs/contributors).
+Created by [Eduardo Ferreira](https://github.com/Ed-Fe). [Vinicius Siqueira](https://github.com/viniciusSiqueira195) and [Paulo](https://github.com/paulosantesso1) contributed the most, along with [reffehcsoibaf](https://github.com/reffehcsoibaf). The full list of contributors and libraries is in [docs/credits.en.md](docs/credits.en.md).
 
-KeyTune stands on the shoulders of [MPV](https://mpv.io/), [wxPython](https://wxpython.org/), [yt-dlp](https://github.com/yt-dlp/yt-dlp), [ytmusicapi](https://github.com/sigma67/ytmusicapi), [YouTube.js](https://github.com/LuanRT/YouTube.js), [FFmpeg](https://ffmpeg.org/), [librosa](https://librosa.org/), [accessible-output2](https://pypi.org/project/accessible-output2/), [Radio Browser](https://www.radio-browser.info/), [LRCLIB](https://lrclib.net/) and [SponsorBlock](https://sponsor.ajay.app/). The full list of libraries is in [docs/credits.en.md](docs/credits.en.md).
+Built on [MPV](https://mpv.io/), [wxPython](https://wxpython.org/), [yt-dlp](https://github.com/yt-dlp/yt-dlp), [ytmusicapi](https://github.com/sigma67/ytmusicapi), [YouTube.js](https://github.com/LuanRT/YouTube.js), [FFmpeg](https://ffmpeg.org/), [librosa](https://librosa.org/), [Radio Browser](https://www.radio-browser.info/), [LRCLIB](https://lrclib.net/) and [SponsorBlock](https://sponsor.ajay.app/).
 
-The project is developed with the help of AI coding assistants, including GitHub Copilot, OpenAI Codex and Anthropic's Claude Code.
+Some of the code was written with help from AI assistants (GitHub Copilot, OpenAI Codex and Claude Code).
 
 ## License
 
-KeyTune is free software under the [MIT License](LICENSE).
+[MIT](LICENSE).

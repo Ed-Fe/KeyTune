@@ -1,4 +1,5 @@
 from .dialog import UpdateAvailableDialog, UpdateDownloadDialog
+from .portable_apply import launch_portable_update
 from .service import (
     UpdateCancelledError,
     UpdateError,
@@ -30,6 +31,7 @@ __all__ = [
     "format_byte_count",
     "is_newer_version",
     "launch_installer_update",
+    "launch_portable_update",
     "normalize_version",
     "take_failed_update",
     "unsupported_install_message",
