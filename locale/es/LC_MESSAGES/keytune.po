@@ -8728,3 +8728,6 @@ msgstr "Reproducción automática {status}."
 
 msgid "Reprodução automática: {status}."
 msgstr "Reproducción automática: {status}."
+
+msgid "Curto e fácil de reconhecer."
+msgstr "Corto y fácil de reconocer."

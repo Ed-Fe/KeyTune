@@ -7,3 +7,7 @@
 ### Changed
 
 - **Sounds in the radio lists**: the **Online radio** tab now plays the same notification sounds as KeyTube when opening a list, going back to the previous one and loading more items.
+
+### Fixed
+
+- **Equalizer preset editor description**: when it opens, the screen reader now reads only the introduction, without the help texts and band labels.

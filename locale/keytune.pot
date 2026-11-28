@@ -3476,6 +3476,10 @@ msgstr ""
 msgid "Curtir o comentário"
 msgstr ""
 
+#: src/player/equalizer/dialog.py
+msgid "Curto e fácil de reconhecer."
+msgstr ""
+
 #: src/player/equalizer/models.py
 msgid "Curva divertida para volumes casuais e músicas animadas."
 msgstr ""
@@ -3779,10 +3783,6 @@ msgstr ""
 
 #: src/player/frames/equalizer.py
 msgid "Digite um nome para o preset."
-msgstr ""
-
-#: src/player/equalizer/dialog.py
-msgid "Digite um nome único e fácil de reconhecer para o preset."
 msgstr ""
 
 #: src/player/smart_library/search_dialog.py
@@ -6290,10 +6290,6 @@ msgstr ""
 
 #: src/player/radio/manual_dialog.py
 msgid "Nome da rádio"
-msgstr ""
-
-#: src/player/equalizer/dialog.py
-msgid "Nome do preset"
 msgstr ""
 
 #: src/player/radio/manual_dialog.py
@@ -10321,10 +10317,6 @@ msgstr ""
 msgid "Use quando não achar a rádio na busca: digite um nome para ela e o endereço direto do stream ou de um arquivo M3U. Ao confirmar, ela vai para as rádios favoritas."
 msgstr ""
 
-#: src/player/equalizer/dialog.py
-msgid "Use um nome curto e claro. Exemplo: Graves profundos personalizados."
-msgstr ""
-
 #: src/player/youtube_music/dialog.py
 msgid "Use uma sessão que o navegador nunca mais vai abrir:\n1. Instale no navegador uma extensão que exporta o cookies.txt e permita que ela funcione em janelas anônimas.\n2. Abra uma janela anônima e entre na sua conta em music.youtube.com.\n3. Exporte os cookies com a extensão.\n4. Feche a janela anônima sem abrir mais nada nela.\n5. No KeyTune, escolha o arquivo exportado e ative Conectar."
 msgstr ""
@@ -10343,10 +10335,6 @@ msgstr ""
 
 #: src/player/update/service.py
 msgid "Validando integridade do pacote..."
-msgstr ""
-
-#: src/player/equalizer/dialog.py
-msgid "Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."
 msgstr ""
 
 #: src/player/diagnostics/checks.py

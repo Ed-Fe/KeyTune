@@ -8728,3 +8728,6 @@ msgstr "Autoplay {status}."
 
 msgid "Reprodução automática: {status}."
 msgstr "Autoplay: {status}."
+
+msgid "Curto e fácil de reconhecer."
+msgstr "Short and easy to recognize."

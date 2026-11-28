@@ -7,3 +7,7 @@
 ### Cambiado
 
 - **Sonidos en las listas de radios**: la pestaña **Radios en línea** ahora reproduce los mismos sonidos de aviso que KeyTube al abrir una lista, al volver a la anterior y al cargar más elementos.
+
+### Corregido
+
+- **Descripción del editor de ajustes del ecualizador**: al abrirse, el lector de pantalla ahora lee solo la introducción, sin las ayudas ni las etiquetas de las bandas.

@@ -1,7 +1,8 @@
 import wx
 
+from ..accessibility import attach_named_accessible
 from ..i18n import _
-from ..widgets import create_group
+from ..widgets import create_group, describe_control
 from .models import (
     DEFAULT_EQUALIZER_PREAMP_DB,
     EQUALIZER_GAIN_MAX_DB,
@@ -46,16 +47,9 @@ class EqualizerPresetDialog(wx.Dialog):
         box, name_box = create_group(panel, _("Identificação do preset"))
         name_label = wx.StaticText(box, label=_("&Nome do preset:"))
         self.name_ctrl = wx.TextCtrl(box)
-        self.name_ctrl.SetName(_("Nome do preset"))
-        self.name_ctrl.SetToolTip(_("Digite um nome único e fácil de reconhecer para o preset."))
-        name_help = wx.StaticText(
-            box,
-            label=_("Use um nome curto e claro. Exemplo: Graves profundos personalizados."),
-        )
-        name_help.Wrap(540)
+        describe_control(self.name_ctrl, name_label.GetLabelText(), _("Curto e fácil de reconhecer."))
         name_box.Add(name_label, 0, wx.LEFT | wx.RIGHT | wx.TOP | wx.EXPAND, 6)
         name_box.Add(self.name_ctrl, 0, wx.ALL | wx.EXPAND, 6)
-        name_box.Add(name_help, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 6)
         root_sizer.Add(name_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         box, preamp_box = create_group(panel, _("Pré-amplificação"))
@@ -68,13 +62,6 @@ class EqualizerPresetDialog(wx.Dialog):
         root_sizer.Add(preamp_box, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 10)
 
         box, bands_box = create_group(panel, _("Bandas do equalizador"))
-        bands_help = wx.StaticText(
-            box,
-            label=_("Valores positivos reforçam a frequência. Valores negativos atenuam. Faça ajustes sutis para evitar distorção."),
-        )
-        bands_help.Wrap(540)
-        bands_box.Add(bands_help, 0, wx.ALL | wx.EXPAND, 6)
-
         bands_grid = wx.FlexGridSizer(cols=2, hgap=10, vgap=8)
         bands_grid.AddGrowableCol(0, 1)
         bands_grid.AddGrowableCol(1, 1)
@@ -167,6 +154,10 @@ class EqualizerPresetDialog(wx.Dialog):
     def _build_gain_control_group(self, parent, *, label_text, help_text):
         label = wx.StaticText(parent, label=_("{label}:").format(label=label_text))
         label.Wrap(250)
+        # O NVDA junta à descrição do diálogo todo texto que não dá nome ao
+        # controle seguinte, e o campo de ganho não herda nome. O rótulo fica
+        # só visual: quem o fala é o anúncio de foco.
+        attach_named_accessible(label, name=label.GetLabelText(), role=wx.ROLE_SYSTEM_WHITESPACE)
         control = self._build_gain_control(parent, name=label_text, help_text=help_text)
 
         # Plain vertical sizer instead of a per-control StaticBox: each gain

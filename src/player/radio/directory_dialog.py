@@ -197,6 +197,8 @@ class AddRadioToDirectoryDialog(wx.Dialog):
         self.SetSize((min(wanted.width, display_size.width), min(wanted.height, display_size.height)))
         self.SetEscapeId(wx.ID_CANCEL)
         self.CentreOnParent()
+        # Sem isto o wx não enxerga os campos dentro da área rolável e foca o OK.
+        self.name_ctrl.SetFocus()
 
     def _focus_field(self, field):
         control = self._fields.get(field)
