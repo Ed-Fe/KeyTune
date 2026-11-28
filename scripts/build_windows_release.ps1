@@ -4,7 +4,7 @@
     [string]$MpvRuntimeArchive = "",
     [ValidateSet("stable", "nightly")]
     [string]$YtDlpChannel = "stable",
-    [string]$AppVersion = "2.5.0"
+    [string]$AppVersion = "2.6.0"
 )
 
 $ErrorActionPreference = "Stop"
