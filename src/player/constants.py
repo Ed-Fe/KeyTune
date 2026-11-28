@@ -49,6 +49,9 @@ DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS = 24
 DEFAULT_YOUTUBE_MUSIC_LIBRARY_PAGE_SIZE = 25
 DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT = 30
 DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED = False
+# Reprodução automática: ao fim da faixa, segue para a próxima da lista. Desligada,
+# o que o usuário escolheu toca e para (como no YouTube).
+DEFAULT_AUTOPLAY_NEXT = True
 DEFAULT_YOUTUBE_MUSIC_SAVE_HISTORY = True
 # SponsorBlock: categorias de trecho que a comunidade marca nos vídeos do YouTube.
 SPONSORBLOCK_CATEGORIES = (
@@ -153,11 +156,14 @@ SLEEP_TIMER_WARNING_MINUTES = (5, 1)
 REPEAT_OFF = "off"
 REPEAT_ONE = "one"
 REPEAT_ALL = "all"
-REPEAT_MODES = (REPEAT_OFF, REPEAT_ONE, REPEAT_ALL)
+# Toca só a faixa atual e para no fim, sem avançar nem repetir.
+REPEAT_STOP = "stop"
+REPEAT_MODES = (REPEAT_OFF, REPEAT_ONE, REPEAT_ALL, REPEAT_STOP)
 REPEAT_MODE_LABELS = {
     REPEAT_OFF: _("Repetição desligada"),
     REPEAT_ONE: _("Repetir faixa atual"),
     REPEAT_ALL: _("Repetir playlist"),
+    REPEAT_STOP: _("Tocar apenas esta faixa"),
 }
 
 PLAYLIST_WILDCARD = (

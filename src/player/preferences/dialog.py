@@ -287,6 +287,14 @@ class PreferencesDialog(wx.Dialog):
             _("Usa o crossfade também ao avançar ou voltar pelos controles."),
         )
 
+        box, sizer = self._create_group(page, page_sizer, _("Reprodução automática"))
+        self.autoplay_next_checkbox = self._add_checkbox(
+            box,
+            sizer,
+            _("Passar &sozinho para a próxima faixa ou vídeo"),
+            _("Desmarcada, o que você escolhe toca até o fim e para, sem tocar mais nada em seguida."),
+        )
+
         box, sizer = self._create_group(page, page_sizer, _("Playlists novas"))
         self.repeat_mode_choice = self._add_choice(
             box,
@@ -1082,6 +1090,7 @@ class PreferencesDialog(wx.Dialog):
         self.youtube_music_dependency_update_interval_ctrl.SetValue(settings.youtube_music_dependency_update_interval_hours)
         self.youtube_music_library_page_size_ctrl.SetValue(settings.youtube_music_library_page_size)
         self.youtube_music_home_discovery_limit_ctrl.SetValue(settings.youtube_music_home_discovery_limit)
+        self.autoplay_next_checkbox.SetValue(settings.autoplay_next)
         self.youtube_music_autoplay_related_checkbox.SetValue(settings.youtube_music_autoplay_related)
         self.youtube_music_save_history_checkbox.SetValue(settings.youtube_music_save_history)
         self.sponsorblock_enabled_checkbox.SetValue(settings.sponsorblock_enabled)
@@ -1220,6 +1229,7 @@ class PreferencesDialog(wx.Dialog):
         )
         settings.youtube_music_library_page_size = int(self.youtube_music_library_page_size_ctrl.GetValue())
         settings.youtube_music_home_discovery_limit = int(self.youtube_music_home_discovery_limit_ctrl.GetValue())
+        settings.autoplay_next = self.autoplay_next_checkbox.GetValue()
         settings.youtube_music_autoplay_related = self.youtube_music_autoplay_related_checkbox.GetValue()
         settings.youtube_music_save_history = self.youtube_music_save_history_checkbox.GetValue()
         settings.sponsorblock_enabled = self.sponsorblock_enabled_checkbox.GetValue()

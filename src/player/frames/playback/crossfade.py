@@ -8,9 +8,22 @@ import wx
 from ...autodj import TransitionProfile, mix_values
 from ...constants import CROSSFADE_TIMER_INTERVAL_MS, SHORT_FADE_MS, SHORT_FADE_STEPS
 from ...library import is_audio_playback_media
+from ...log import get_logger
 from .helpers import is_youtube_music_media
 from .monitor import monitoring_enabled, playback_output_volume, track_output_volume
 from ...announcements import ANNOUNCE_TRACK_CHANGE
+
+
+_logger = get_logger(__name__)
+
+# Passo normal do temporizador do crossfade é ~15 ms; acima disto a rampa de
+# volume dá "degraus" que podem soar como falha no áudio.
+_CROSSFADE_TICK_LAG_WARN_S = 0.15
+
+# Letra e busca da faixa seguinte esperam este tempo depois do início da transição.
+_CROSSFADE_DEFERRED_WORK_MS = 2500
+# Quando registrar o estado dos players depois do início da transição.
+_CROSSFADE_SAMPLE_DELAYS_MS = (150, 500, 1000, 2000)
 
 
 class CrossfadeMixin:
@@ -94,22 +107,34 @@ class CrossfadeMixin:
         if not outgoing_key or not incoming_key:
             return False
 
-        self._stop_player(incoming_key, unload=True)
+        discard_preload = getattr(self, "_discard_preload", None)
+        take_preloaded = getattr(self, "_take_preloaded_incoming", None)
+        if autodj_transition is not None:
+            if callable(discard_preload):
+                discard_preload("AutoDJ")
+            preloaded = None
+        else:
+            preloaded = take_preloaded(media_path, tab_index, incoming_key) if callable(take_preloaded) else None
+        if preloaded is None:
+            self._stop_player(incoming_key, unload=True)
         outgoing_gain_db = float(getattr(self, "_current_track_gain_db", 0.0) or 0.0)
         self._apply_volume_to_player(
             outgoing_key,
             playback_output_volume(self) * math.pow(10.0, outgoing_gain_db / 20.0),
         )
-        request = self._queue_media_start(
-            media_path,
-            tab_index=tab_index,
-            announce_message=announce_message,
-            player_key=incoming_key,
-            initial_volume=0,
-            crossfade=True,
-            start_position_ms=getattr(autodj_plan, "incoming_start_ms", 0) or 0,
-            pause_after_start=autodj_transition is not None,
-        )
+        if preloaded is None:
+            request = self._queue_media_start(
+                media_path,
+                tab_index=tab_index,
+                announce_message=announce_message,
+                player_key=incoming_key,
+                initial_volume=0,
+                crossfade=True,
+                start_position_ms=getattr(autodj_plan, "incoming_start_ms", 0) or 0,
+                pause_after_start=autodj_transition is not None,
+            )
+        else:
+            request = {"serial": preloaded["serial"]}
         self._crossfade_state = {
             "phase": "pending",
             "duration_ms": duration_ms,
@@ -135,14 +160,42 @@ class CrossfadeMixin:
             "incoming_start_ms": getattr(autodj_plan, "incoming_start_ms", None),
             "scheduled_outgoing_start_ms": getattr(autodj_plan, "outgoing_start_ms", None),
             "scheduled_outgoing_end_ms": getattr(autodj_plan, "outgoing_end_ms", None),
-            "incoming_ready": False,
+            "incoming_ready": preloaded is not None,
+            "preloaded": preloaded is not None,
+            "resolved_display_title": preloaded["resolved_display_title"] if preloaded is not None else "",
+            "resolved_display_artist": preloaded["resolved_display_artist"] if preloaded is not None else "",
             "next_phase_correction_at": 0.0,
             "phase_rate": None,
             "outgoing_gain_db": outgoing_gain_db,
             "incoming_gain_db": float(getattr(autodj_plan, "incoming_gain_db", 0.0) or 0.0),
         }
         self._ensure_crossfade_timer_running()
+        try:
+            self._log_crossfade_start(
+                outgoing_key, media_path, duration_ms, autodj_transition is not None, preloaded is not None
+            )
+        except Exception:
+            _logger.debug("Crossfade start diagnostics failed.", exc_info=True)
         return True
+
+    def _log_crossfade_start(self, outgoing_key, media_path, duration_ms, autodj, preloaded=False):
+        outgoing_player = self._managed_player(outgoing_key)
+        outgoing_time = outgoing_player.get_time() if outgoing_player is not None else None
+        outgoing_length = outgoing_player.get_length() if outgoing_player is not None else None
+        _logger.debug(
+            "Crossfade start: duration=%sms outgoing=%r at %sms of %sms (remaining %sms) "
+            "incoming=%r autodj=%s stream=%s preloaded=%s outgoing: %s",
+            duration_ms,
+            outgoing_key,
+            outgoing_time,
+            outgoing_length,
+            (outgoing_length - outgoing_time) if outgoing_time is not None and outgoing_length else None,
+            media_path,
+            autodj,
+            is_youtube_music_media(media_path),
+            preloaded,
+            ", ".join(f"{name}={value}" for name, value in self._player_diagnostics(outgoing_key).items()),
+        )
 
     def _cancel_crossfade_transition(
         self,
@@ -167,6 +220,13 @@ class CrossfadeMixin:
         incoming_key = crossfade_state.get("incoming_key")
         outgoing_key = crossfade_state.get("outgoing_key")
         phase = crossfade_state.get("phase")
+        _logger.debug(
+            "Crossfade cancelled in phase %r (stop_incoming=%s stop_outgoing=%s outgoing_ended=%s).",
+            phase,
+            stop_incoming,
+            stop_outgoing,
+            crossfade_state.get("outgoing_ended"),
+        )
 
         if restore_selection and phase == "pending":
             state = self._get_playlist_state(crossfade_state.get("tab_index"))
@@ -258,6 +318,12 @@ class CrossfadeMixin:
             return
 
         outgoing_key = crossfade_state.get("outgoing_key")
+        started_at = crossfade_state.get("started_at")
+        _logger.debug(
+            "Crossfade finished: ran %sms (planned %sms).",
+            int((time.monotonic() - started_at) * 1000) if started_at is not None else None,
+            crossfade_state.get("duration_ms"),
+        )
         if outgoing_key:
             self._apply_volume_to_player(outgoing_key, 0)
             self._stop_player(outgoing_key, unload=True)
@@ -304,12 +370,27 @@ class CrossfadeMixin:
                 crossfade_state["pending_timeout_seconds"] = pending_timeout_seconds
 
             if created_at is not None and (time.monotonic() - created_at) > pending_timeout_seconds:
+                _logger.warning(
+                    "Crossfade: incoming %r not playing after %.1fs (outgoing_ended=%s); falling back.",
+                    crossfade_state.get("media_path"),
+                    time.monotonic() - created_at,
+                    crossfade_state.get("outgoing_ended"),
+                )
                 if not self._fallback_pending_crossfade_to_regular_playback():
                     self._cancel_crossfade_transition(
                         stop_incoming=True, stop_outgoing=False, invalidate_requests=False,
                     )
                 return
             incoming_player = self._managed_player(crossfade_state.get("incoming_key"))
+            if crossfade_state.get("preloaded"):
+                # A faixa já está carregada e parada: só falta dar o play.
+                if incoming_player is not None:
+                    if crossfade_state.get("play_requested_at") is None:
+                        crossfade_state["play_requested_at"] = time.monotonic()
+                    incoming_player.play()
+                    if incoming_player.is_playing():
+                        self._begin_pending_crossfade()
+                return
             if crossfade_state.get("autodj"):
                 if not self._autodj_transition_due(crossfade_state):
                     return
@@ -323,6 +404,15 @@ class CrossfadeMixin:
             return
 
         if crossfade_state.get("phase") == "running":
+            now = time.monotonic()
+            last_tick = crossfade_state.get("last_tick_at")
+            crossfade_state["last_tick_at"] = now
+            if last_tick is not None and now - last_tick > _CROSSFADE_TICK_LAG_WARN_S:
+                _logger.warning(
+                    "Crossfade: UI thread stalled %.0fms between volume steps (expected ~%sms).",
+                    (now - last_tick) * 1000,
+                    CROSSFADE_TIMER_INTERVAL_MS,
+                )
             self._apply_crossfade_volumes()
 
     def _autodj_transition_due(self, crossfade_state):
@@ -357,6 +447,16 @@ class CrossfadeMixin:
         if crossfade_state.get("autodj") and not incoming_player.is_playing():
             return False
 
+        begin_started_at = time.monotonic()
+        stage_times_ms = {}
+
+        def mark_stage(name, since):
+            now = time.monotonic()
+            stage_times_ms[name] = int((now - since) * 1000)
+            return now
+
+        # Também na faixa pré-carregada: o equalizador pode ter mudado desde
+        # que ela ficou pronta.
         self._apply_equalizer_state_to_player(incoming_player, state)
         self._set_active_player(player_key)
         self._current_track_gain_db = 0.0
@@ -370,9 +470,11 @@ class CrossfadeMixin:
         remember_radio_playback = getattr(self, "_remember_youtube_music_radio_playback", None)
         if callable(remember_radio_playback):
             remember_radio_playback(media_path)
+        stage_started_at = mark_stage("activate", begin_started_at)
         self._update_title()
         self._update_time_bar()
         self._refresh_playlist_browser()
+        stage_started_at = mark_stage("ui", stage_started_at)
 
         # The incoming track's _finish_media_start returned early (crossfade
         # branch) before applying display metadata / fetching lyrics, so do it
@@ -380,7 +482,10 @@ class CrossfadeMixin:
         resolved_display_title = str(crossfade_state.get("resolved_display_title", "") or "").strip()
         resolved_display_artist = str(crossfade_state.get("resolved_display_artist", "") or "").strip()
         self._apply_media_display_metadata(media_path, resolved_display_title, resolved_display_artist)
-        self._refresh_lyrics_for_active_media(resolved_display_title, resolved_display_artist)
+        # A letra e a resolução da faixa seguinte (rede e CPU) esperam o começo
+        # da transição passar: não disputam a saída de áudio no primeiro segundo.
+        self._schedule_after_crossfade_start(media_path, state, resolved_display_title, resolved_display_artist)
+        stage_started_at = mark_stage("metadata", stage_started_at)
 
         announce_message = crossfade_state.get("announce_message")
         if announce_message is not None:
@@ -388,6 +493,7 @@ class CrossfadeMixin:
                 self._announce(announce_message, ANNOUNCE_TRACK_CHANGE)
         else:
             self._announce(self._describe_playlist_position(state), ANNOUNCE_TRACK_CHANGE)
+        stage_started_at = mark_stage("announce", stage_started_at)
 
         self._apply_volume_to_player(player_key, 0)
         tempo_ratio = float(crossfade_state.get("tempo_ratio", 1.0) or 1.0)
@@ -421,13 +527,75 @@ class CrossfadeMixin:
 
         crossfade_state["phase"] = "running"
         crossfade_state["started_at"] = time.monotonic()
+        waited_ms = int((crossfade_state["started_at"] - (crossfade_state.get("created_at") or crossfade_state["started_at"])) * 1000)
+        play_requested_at = crossfade_state.get("play_requested_at")
+        play_to_playing_ms = (
+            int((crossfade_state["started_at"] - play_requested_at) * 1000) if play_requested_at is not None else None
+        )
+        begin_total_ms = int((crossfade_state["started_at"] - begin_started_at) * 1000)
+        log = _logger.warning if crossfade_state.get("outgoing_ended") or begin_total_ms > 100 else _logger.debug
+        log(
+            "Crossfade running: incoming took %sms to start (play->playing %sms; preloaded=%s); "
+            "outgoing_ended=%s; final duration=%sms; UI work %sms %s.",
+            waited_ms,
+            play_to_playing_ms,
+            bool(crossfade_state.get("preloaded")),
+            bool(crossfade_state.get("outgoing_ended")),
+            crossfade_state.get("duration_ms"),
+            begin_total_ms,
+            stage_times_ms,
+        )
+        self._schedule_crossfade_samples(crossfade_state)
         if crossfade_state.get("autodj") and bool(
             getattr(self.settings, "autodj_transition_sounds_enabled", False)
         ):
             self._play_autodj_transition_sound(crossfade_state.get("autodj_profile"))
         self._apply_crossfade_volumes()
-        self._prefetch_upcoming_media_stream(state)
         return True
+
+    def _schedule_after_crossfade_start(self, media_path, state, title, artist):
+        """Letra e pré-busca da faixa seguinte, um pouco depois do começo da transição."""
+
+        def run():
+            try:
+                if self._get_active_playlist_state() is not state or state.current_media_path != media_path:
+                    return
+                self._refresh_lyrics_for_active_media(title, artist)
+                self._prefetch_upcoming_media_stream(state)
+            except Exception:
+                _logger.debug("Deferred post-crossfade work failed.", exc_info=True)
+
+        wx.CallLater(_CROSSFADE_DEFERRED_WORK_MS, run)
+
+    def _schedule_crossfade_samples(self, crossfade_state):
+        """Registra o estado dos dois players logo depois do início da transição.
+
+        Mostra se algum ficou parado esperando dados (``core-idle``,
+        ``paused-for-cache``), em que saída de áudio cada um está e quanto
+        a janela demorou para responder.
+        """
+        incoming_key = crossfade_state.get("incoming_key")
+        outgoing_key = crossfade_state.get("outgoing_key")
+        started_at = crossfade_state.get("started_at") or time.monotonic()
+
+        def sample(delay_ms):
+            def run():
+                try:
+                    late_ms = int((time.monotonic() - started_at) * 1000) - delay_ms
+                    _logger.debug(
+                        "Crossfade sample +%dms (UI late by %dms): outgoing[%s] incoming[%s]",
+                        delay_ms,
+                        late_ms,
+                        ", ".join(f"{k}={v}" for k, v in self._player_diagnostics(outgoing_key).items()),
+                        ", ".join(f"{k}={v}" for k, v in self._player_diagnostics(incoming_key).items()),
+                    )
+                except Exception:
+                    _logger.debug("Crossfade sample failed.", exc_info=True)
+
+            wx.CallLater(delay_ms, run)
+
+        for delay_ms in _CROSSFADE_SAMPLE_DELAYS_MS:
+            sample(delay_ms)
 
     def _correct_autodj_phase(self, crossfade_state, outgoing_time):
         if outgoing_time is None or time.monotonic() < float(crossfade_state.get("next_phase_correction_at", 0.0)):

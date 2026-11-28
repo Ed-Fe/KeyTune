@@ -8,6 +8,7 @@ from ...constants import (
     REPEAT_MODES,
     REPEAT_OFF,
     REPEAT_ONE,
+    REPEAT_STOP,
 )
 from ...i18n import _
 from ...log import get_logger
@@ -218,7 +219,10 @@ class PlaylistPlaybackMixin:
             return False
 
         state = self._get_active_playlist_state()
-        if not state or state.is_folder_tab or not state.current_media_path or state.repeat_mode == REPEAT_ONE:
+        if not state or state.is_folder_tab or not state.current_media_path or state.repeat_mode in (REPEAT_ONE, REPEAT_STOP):
+            return False
+
+        if self._autoplay_next_is_off(state):
             return False
 
         if self.player.get_media() is None or not self.player.is_playing():
@@ -545,6 +549,26 @@ class PlaylistPlaybackMixin:
             self._set_status_message(_("Repetir: {mode}.").format(mode=mode_label))
         self._refresh_playlist_browser()
 
+    def _autoplay_next_is_off(self, state):
+        """Reprodução automática desligada: o item escolhido toca e para.
+
+        A sessão AutoDJ é pedida pelo usuário e segue sozinha de propósito.
+        """
+        if getattr(state, "autodj_session", None):
+            return False
+        return not getattr(getattr(self, "settings", None), "autoplay_next", True)
+
+    def _toggle_autoplay_next(self, _event=None):
+        self.settings.autoplay_next = not self.settings.autoplay_next
+        status = _("ativada") if self.settings.autoplay_next else _("desativada")
+        self._announce(_("Reprodução automática {status}.").format(status=status), ANNOUNCE_STATE)
+        if hasattr(self, "_set_status_message"):
+            self._set_status_message(_("Reprodução automática: {status}.").format(status=status))
+        menu_item = getattr(self, "menu_autoplay_next_item", None)
+        if menu_item is not None:
+            menu_item.Check(self.settings.autoplay_next)
+        self._save_settings()
+
     def _toggle_related_autoplay(self):
         self.settings.youtube_music_autoplay_related = not self.settings.youtube_music_autoplay_related
         status = _("ativado") if self.settings.youtube_music_autoplay_related else _("desativado")
@@ -593,6 +617,14 @@ class PlaylistPlaybackMixin:
                 index=self._get_active_playlist_index(),
                 announce_message=_("Repetindo faixa atual. {position}").format(position=self._describe_playlist_position(state)),
             )
+            return
+
+        if state.repeat_mode == REPEAT_STOP or self._autoplay_next_is_off(state):
+            _logger.debug("Media end: no automatic next track, stopping.")
+            self._suppress_next_auto_advance = False
+            self._update_time_bar()
+            self._refresh_playlist_browser()
+            self._announce(_("Faixa finalizada."), ANNOUNCE_PLAYBACK)
             return
 
         if getattr(self, "_suppress_next_auto_advance", False):

@@ -344,6 +344,9 @@ class PlayerBackendMixin:
             player_key,
             error_detail or "no detail",
         )
+        handle_preload_error = getattr(self, "_handle_preload_player_error", None)
+        if callable(handle_preload_error) and handle_preload_error(player_key, error_detail):
+            return
         crossfade_state = getattr(self, "_crossfade_state", None)
         media_path = self._player_loaded_media_path(player_key)
         is_http_403 = str(error_detail or "").strip().upper() == "HTTP 403"

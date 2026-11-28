@@ -190,6 +190,9 @@ class AppCommandsMixin:
         # The crossfade window already includes startup headroom, so 500 ms
         # granularity is plenty to decide when to begin the transition — and
         # the 15 ms timer can stay idle until a crossfade is actually running.
+        maybe_preload_next_track = getattr(self, "_maybe_preload_next_track", None)
+        if callable(maybe_preload_next_track):
+            maybe_preload_next_track()
         maybe_start_crossfade = getattr(self, "_maybe_start_automatic_crossfade", None)
         if callable(maybe_start_crossfade) and getattr(self, "_crossfade_state", None) is None:
             maybe_start_crossfade()

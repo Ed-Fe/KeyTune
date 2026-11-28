@@ -5,6 +5,7 @@ import wx
 from ...constants import (
     REPEAT_ALL,
     REPEAT_ONE,
+    REPEAT_STOP,
     YOUTUBE_MUSIC_RADIO_FETCH_LIMIT,
     YOUTUBE_MUSIC_RADIO_MAX_SEED_ATTEMPTS,
     YOUTUBE_MUSIC_RADIO_PREFETCH_LEAD_MS,
@@ -42,7 +43,7 @@ class RelatedAutoplayMixin:
         # Repeat-one replays forever and repeat-all wraps back to the start, so
         # the playlist never actually ends — related content is only needed when
         # we would otherwise run out of items.
-        if state.repeat_mode in (REPEAT_ONE, REPEAT_ALL):
+        if state.repeat_mode in (REPEAT_ONE, REPEAT_ALL, REPEAT_STOP) or self._autoplay_next_is_off(state):
             return "", ""
 
         # Only act on the genuine last item (no next track without wrapping).

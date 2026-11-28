@@ -201,7 +201,7 @@ Switching tabs does not touch what is playing: you can walk through the playlist
 - Each playlist keeps the track and the position where it stopped. `Enter` on that track, in a playlist that is not the one playing, resumes from that point instead of starting over.
 - `Space`, the seek and volume arrows, **Next** and **Previous** always act on what is playing, whatever tab is on screen. If nothing is loaded, `Space` resumes the playlist on screen.
 - `Enter`, with focus on the player, hands playback to the playlist on screen: it plays again from where it had stopped, and the one that was playing keeps its position.
-- Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen.
+- Shuffle and repeat also apply to the playlist that is playing. If nothing is loaded, they apply to the playlist on screen. Repeat mode has four options: off, repeat the current track, repeat the playlist and **Play this track only**, which plays the current track or video to the end and stops. With **Autoplay** off (Preferences, or the Playback menu), what you choose plays to the end and stops, without playing the next one.
 - The window title and the status (`S`) tell what is playing. `S` also names the tab on screen when it is another one.
 
 ### Tab and item shortcuts

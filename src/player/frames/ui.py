@@ -489,6 +489,7 @@ class FrameUIMixin:
         self.menu_start_autodj_session_id = wx.NewIdRef()
         self.menu_stop_autodj_session_id = wx.NewIdRef()
         self.menu_toggle_related_autoplay_id = wx.NewIdRef()
+        self.menu_autoplay_next_id = wx.NewIdRef()
         self.menu_increase_playback_rate_id = wx.NewIdRef()
         self.menu_decrease_playback_rate_id = wx.NewIdRef()
         self.menu_reset_playback_rate_id = wx.NewIdRef()
@@ -527,6 +528,10 @@ class FrameUIMixin:
         # Keep the command reachable so its handler can announce any blocker.
         playback_menu.Append(self.menu_start_autodj_session_id, _("Reproduzir playlist com AutoDJ"))
         playback_menu.Append(self.menu_stop_autodj_session_id, _("Encerrar sessão AutoDJ"))
+        self.menu_autoplay_next_item = playback_menu.AppendCheckItem(
+            self.menu_autoplay_next_id, _("R&eprodução automática")
+        )
+        self.menu_autoplay_next_item.Check(bool(getattr(self.settings, "autoplay_next", True)))
         playback_menu.Append(self.menu_toggle_related_autoplay_id, _("&Conteúdo Relacionado do YouTube Music (A)"))
         playback_menu.Append(self.menu_increase_playback_rate_id, _("Aumentar &Velocidade (])"))
         playback_menu.Append(self.menu_decrease_playback_rate_id, _("Diminuir Ve&locidade ([)"))
@@ -846,6 +851,7 @@ class FrameUIMixin:
         self.Bind(wx.EVT_MENU, self.on_start_autodj_session, id=self.menu_start_autodj_session_id)
         self.Bind(wx.EVT_MENU, self.on_stop_autodj_session, id=self.menu_stop_autodj_session_id)
         self.Bind(wx.EVT_MENU, self.on_toggle_related_autoplay, id=self.menu_toggle_related_autoplay_id)
+        self.Bind(wx.EVT_MENU, self._toggle_autoplay_next, id=self.menu_autoplay_next_id)
         self.Bind(wx.EVT_MENU, self.on_increase_playback_rate, id=self.menu_increase_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_decrease_playback_rate, id=self.menu_decrease_playback_rate_id)
         self.Bind(wx.EVT_MENU, self.on_reset_playback_rate, id=self.menu_reset_playback_rate_id)

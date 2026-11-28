@@ -34,6 +34,7 @@ from ..constants import (
     DEFAULT_SMART_LIBRARY_RESUME_MINIMUM_MINUTES,
     DEFAULT_VOLUME,
     DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES,
+    DEFAULT_AUTOPLAY_NEXT,
     DEFAULT_YOUTUBE_MUSIC_AUTOPLAY_RELATED,
     DEFAULT_YOUTUBE_MUSIC_DEPENDENCY_UPDATE_INTERVAL_HOURS,
     DEFAULT_YOUTUBE_MUSIC_HOME_DISCOVERY_LIMIT,
@@ -152,6 +153,7 @@ class AppSettings:
     seek_step_seconds: int = SEEK_STEP_MS // 1000
     shuffle_new_playlists: bool = DEFAULT_NEW_PLAYLIST_SHUFFLE
     repeat_mode_new_playlists: str = REPEAT_OFF
+    autoplay_next: bool = DEFAULT_AUTOPLAY_NEXT
     youtube_music_manage_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_MANAGE_DEPENDENCIES
     youtube_music_auto_update_dependencies: bool = DEFAULT_YOUTUBE_MUSIC_AUTO_UPDATE_DEPENDENCIES
     youtube_music_use_nightly_yt_dlp: bool = DEFAULT_YOUTUBE_MUSIC_USE_NIGHTLY_YT_DLP
@@ -279,6 +281,7 @@ class AppSettings:
             "seek_step_seconds": self.seek_step_seconds,
             "shuffle_new_playlists": self.shuffle_new_playlists,
             "repeat_mode_new_playlists": self.repeat_mode_new_playlists,
+            "autoplay_next": self.autoplay_next,
             "youtube_music_manage_dependencies": self.youtube_music_manage_dependencies,
             "youtube_music_auto_update_dependencies": self.youtube_music_auto_update_dependencies,
             "youtube_music_use_nightly_yt_dlp": self.youtube_music_use_nightly_yt_dlp,
@@ -433,6 +436,7 @@ class AppSettings:
         settings.youtube_music_use_youtubejs = bool(
             data.get("youtube_music_use_youtubejs", False)
         )
+        settings.autoplay_next = bool(data.get("autoplay_next", settings.autoplay_next))
         settings.youtube_music_autoplay_related = bool(
             data.get("youtube_music_autoplay_related", settings.youtube_music_autoplay_related)
         )
